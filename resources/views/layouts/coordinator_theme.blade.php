@@ -1,46 +1,39 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
+  <!--begin::Head-->
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{config('app.name')}}</title>
-    {{-- <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"> --}}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    {{-- <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free/css/all.min.css"> --}}
-    {{-- <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/solid.css" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/brands.css" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/v5-font-face.css" rel="stylesheet" /> --}}
-    <!-- overlayScrollbars -->
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
-    <!-- Bootstrap Switch -->
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/bootstrap-switch/css/bootstrap-switch.min.css">
-    <!-- BS Stepper -->
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/bs-stepper/css/bs-stepper.min.css">
-    <!-- Summernote CSS and JS -->
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
-    <!-- SweetAlert2 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <!-- daterange picker -->
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/daterangepicker/daterangepicker.css">
-    <!-- iCheck for checkboxes and radio inputs -->
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-    <!-- Tempusdominus Bootstrap 4 -->
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
 
-    <!-- DataTables -->
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <!-- jQuery as classic sync script - MUST be before Vite modules -->
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Vite Compiled Assets -->
+    @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/flash.js'])
+
+    {{-- Flash Messages as meta tags --}}
+    @if ($message = Session::get('success'))
+        <meta name="flash-success" content="{{ $message }}">
+    @endif
+    @if ($message = Session::get('info'))
+        <meta name="flash-info" content="{{ $message }}">
+    @endif
+    @if ($message = Session::get('warning'))
+        <meta name="flash-warning" content="{{ $message }}">
+    @endif
+    @if ($message = Session::get('fail'))
+        <meta name="flash-fail" content="{{ $message }}">
+    @endif
+    @if(View::shared('errors', false) != false && $errors->any())
+        <meta name="flash-errors" content="<ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>">
+    @endif
 
 <script>
 window.onload = function () {
@@ -54,38 +47,21 @@ window.onload = function () {
 </script>
 
 <style>
-    .email-column a {
-        display: inline-block;
-        text-decoration: none;
-        color: inherit;
+    /* Sidebar font size */
+    .app-sidebar .sidebar-wrapper {
+        font-size: 0.95rem !important;
     }
 
-  .fa-layers {
-        display: inline-block;
-        position: relative;
-        width: 1.25em;
-        height: 1em;
-        vertical-align: middle;
-    }
-    .fa-layers .fas {
-        position: absolute;
-        top: 0;
-        left: 0;
+    .app-sidebar .nav-link {
+        font-size: 0.95rem !important;
+        line-height: 1.2 !important;
     }
 
-    .sidebar {
-        font-size: 0.90rem;
-        line-height: 1;
-    }
+    .sidebar-menu .nav-icon {
+    font-size: 1.3rem !important;
+}
 
-    .nav-icon {
-        margin-right: 10px;
-    }
-    .nav-link {
-        display: flex;
-        align-items: center;
-    }
-
+    /* Logo size and position in sidebar */
     .custom-logo {
         width: 70px; /* Adjust width as needed */
         height: 70px; /* Adjust height as needed */
@@ -100,7 +76,7 @@ window.onload = function () {
         margin-top: 10px; /* Adds top margin */
     }
 
-    /* Adjust spacing for SweetAlert2 buttons */
+     /* Adjust spacing for SweetAlert2 buttons */
     .swal2-confirm {
         margin-right: 5px; /* Adjust the spacing between buttons */
     }
@@ -116,6 +92,16 @@ window.onload = function () {
     .swal2-checkbox {
         margin-right: 5px;
     }
+
+     .email-column a {
+        display: inline-block;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    label, .col-form-label {
+    font-weight: bold;
+}
 
     .notification-badge {
         position: absolute;
@@ -145,49 +131,96 @@ window.onload = function () {
         background-color: #28a745;
     }
 
+h1, h2, h3, h4, h5, h6,
+.card-title {
+    font-weight: normal !important;
+}
+
+h1 { font-size: 2rem !important; }
+h2 { font-size: 1.75rem !important; }
+h3 { font-size: 1.25rem !important; }
+h4 { font-size: 1.rem !important; }
+h5 { font-size: 0.87rem !important; }
+h6 { font-size: 0.75rem !important; }
+
+.btn-xs {
+    --bs-btn-padding-y: 0.25rem;
+    --bs-btn-padding-x: 0.5rem;
+    --bs-btn-font-size: 0.75rem;
+    --bs-btn-border-radius: 0.25rem;
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 </style>
-</head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
-    <!-- Site wrapper -->
-    <div class="wrapper">
-         <!-- Navbar -->
-        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-            <!-- Left navbar links -->
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-                </li>
-            </ul>
-            <!-- Right navbar links -->
-            <ul class="navbar-nav ml-auto">
-                <!-- Navbar Link -->
-                <li class="nav-item">
-                    <a href="https://momsclub.org/" target="_blank" class="hidden-xs">Return to Main Site</a>
-                </li>
-            </ul>
-        </nav>
-        <!-- /.navbar -->
-
-        <!-- Main Sidebar Container -->
-        <aside class="main-sidebar main-sidebar-custom sidebar-dark-primary elevation-4">
-            <!-- Brand Logo -->
-            <a href="{{ route('home') }}" class="band-link">
-                <img src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" class="brand-image img-circle elevation-3 custom-logo">
+  </head>
+  <!--end::Head-->
+  <!--begin::Body-->
+  <body class="layout-fixed sidebar-expand-lg sidebar-mini bg-body-tertiary">
+    <!--begin::App Wrapper-->
+    <div class="app-wrapper">
+      <!--begin::Header-->
+      <nav class="app-header navbar navbar-expand bg-body">
+        <!--begin::Container-->
+        <div class="container-fluid">
+          <!--begin::Start Navbar Links-->
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+                <i class="bi bi-list"></i>
+              </a>
+            </li>
+          </ul>
+          <!--end::Start Navbar Links-->
+          <ul class="navbar-nav ms-auto">
+            <!-- Navbar Link -->
+            <li class="nav-item">
+                <a class="nav-link"  href="https://momsclub.org/" target="_blank" >Return to Main Site</a>
+            </li>
+          </ul>
+          <!--end::End Navbar Links-->
+        </div>
+        <!--end::Container-->
+      </nav>
+      <!--end::Header-->
+      <!--begin::Sidebar-->
+      <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+          <!--begin::Brand Link-->
+           <a href="{{ route('home') }}" class="brand-link d-flex justify-content-center align-items-center">
+                <img src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" class="custom-logo">
             </a>
-            <!-- Sidebar -->
-            <div class="sidebar">
-                <!-- Sidebar Menu -->
-                <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
-
-                    <!-- Menu for Logged In Users -->
+          <!--end::Brand Link-->
+        <!--begin::Sidebar Wrapper-->
+        <div class="sidebar-wrapper">
+          <nav class="mt-2">
+            <!--begin::Sidebar Menu-->
+            <ul
+              class="nav sidebar-menu flex-column"
+              data-lte-toggle="treeview"
+              role="navigation"
+              aria-label="Main navigation"
+              data-accordion="false"
+              id="navigation"
+            >
+              <!-- Menu for Logged In Users -->
                     @auth
 
-                        <!-- Coordinator Dashboard Menu Item -->
+     <!-- Coordinator Dashboard Menu Item -->
                         <li class="nav-item">
                             <a href="{{ route('coordinators.viewprofile') }}" class="nav-link {{ Request::is('viewprofile') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <i class="nav-icon bi bi-speedometer2"></i>
                                 <p>Dashboard</p>
                             </a>
                         </li>
@@ -210,7 +243,7 @@ window.onload = function () {
                         @if (isset($chaptersRoute))
                             <li class="nav-item">
                                 <a href="{{ $chaptersRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeChpaterRoutes) }}">
-                                    <i class="nav-icon fas fa-home"></i>
+                                    <i class="nav-icon bi bi-house-fill"></i>
                                     <p>Chapters</p>
                                 </a>
                             </li>
@@ -230,7 +263,7 @@ window.onload = function () {
                         @if (isset($coordinatorsRoute))
                             <li class="nav-item">
                                 <a href="{{ $coordinatorsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeCoordinatorsRoutes) }}">
-                                    <i class="nav-icon fas fa-user-friends"></i>
+                                    <i class="nav-icon bi bi-people-fill"></i>
                                     <p>Coordinators</p>
                                 </a>
                             </li>
@@ -250,7 +283,7 @@ window.onload = function () {
                         @if (isset($paymentsRoute))
                             <li class="nav-item">
                                 <a href="{{ $paymentsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activePaymentsRoutes) }}">
-                                    <i class="nav-icon fas fa-credit-card"></i>
+                                    <i class="nav-icon bi bi-credit-card-2-back-fill"></i>
                                     <p>Payments/Donations</p>
                                 </a>
                             </li>
@@ -272,7 +305,7 @@ window.onload = function () {
                         @if (isset($websiteRoute))
                             <li class="nav-item">
                                 <a href="{{ $websiteRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeWebsiteRoutes) }}">
-                                    <i class="nav-icon fas fa-laptop"></i>
+                                    <i class="nav-icon bi bi-laptop"></i>
                                     <p>Website/Social Media</p>
                                 </a>
                             </li>
@@ -292,7 +325,7 @@ window.onload = function () {
                         @if (isset($inquiriesRoute))
                             <li class="nav-item">
                                 <a href="{{ $inquiriesRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeInquiriesRoutes) }}">
-                                    <i class="nav-icon fas fa-location-dot"></i>
+                                    <i class="nav-icon bi bi-pin-map-fill"></i>
                                     <p>Inquiries</p>
                                 </a>
                             </li>
@@ -312,7 +345,7 @@ window.onload = function () {
                         @if (isset($newChaptersRoute))
                             <li class="nav-item">
                                 <a href="{{ $newChaptersRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeNewChpaterRoutes) }}">
-                                    <i class="nav-icon fas fa-star-of-life"></i>
+                                    <i class="nav-icon bi bi-asterisk"></i>
                                     <p>New Chapters/Coordinators</p>
                                 </a>
                             </li>
@@ -333,7 +366,7 @@ window.onload = function () {
                         @if (isset($listSubscriptionRoute))
                             <li class="nav-item">
                                 <a href="{{ $listSubscriptionRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeChpaterRoutes) }}">
-                                    <i class="nav-icon fas fa-rectangle-list"></i>
+                                    <i class="nav-icon bi bi-card-list"></i>
                                     <p>List Subscriptions</p>
                                 </a>
                             </li>
@@ -351,7 +384,7 @@ window.onload = function () {
                         @if (isset($boardlistRoute))
                             <li class="nav-item">
                                 <a href="{{ $boardlistRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardlistRoutes) }}">
-                                    <i class="nav-icon fas fa-rectangle-list"></i>
+                                    <i class="nav-icon bi bi-card-list"></i>
                                     <p>BoardList Emails - OLD</p>
                                 </a>
                             </li>
@@ -373,12 +406,12 @@ window.onload = function () {
                         @if (isset($chapterReportsRoute))
                             <li class="nav-item">
                                 <a href="{{ $chapterReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeChapterReportsRoutes) }}">
-                                    <span class="fa-layers fa-fw nav-icon">
-                                    <i class="fa-solid fa-clipboard"></i>
-                                        <span style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 0.8em; font-weight: bold;">▬</span>
-                                    <i class="fa-solid fa-house" data-fa-transform="shrink-9 down-2" style=" color: rgba(0, 0, 0, 0.5);"></i>
-                                    </span>
-                                    {{-- <i class="nav-icon fas fa-clipboard-list"></i> --}}
+                                    {{-- <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em; font-size: 1.2em;">
+                                            <i class="fa-solid fa-clipboard position-absolute"></i>
+                                            <span style="ptop: 0.50em">▬</span>
+                                            <i class="fa-solid fa-house position-absolute" style="font-size: 0.6em; color: rgba(0, 0, 0, 0.6); top: 0.50em;"></i>
+                                        </span> --}}
+                                    <i class="nav-icon bi bi-house-gear-fill"></i>
                                     <p>Chapter Reports</p>
                                 </a>
                             </li>
@@ -400,12 +433,15 @@ window.onload = function () {
                         @if (isset($coordReportsRoute))
                             <li class="nav-item">
                                 <a href="{{ $coordReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeCoordReportsRoutes) }}">
-                                    <span class="fa-layers fa-fw nav-icon">
-                                    <i class="fa-solid fa-clipboard"></i>
-                                        <span style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 0.8em; font-weight: bold;">▬</span>
-                                    <i class="fa-solid fa-user-friends" data-fa-transform="shrink-9 down-2" style=" color: rgba(0, 0, 0, 0.5);"></i>
-                                    </span>
-                                    {{-- <i class="nav-icon fas fa-clipboard-user"></i> --}}
+                                     {{-- <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em; font-size: 1.2em;">
+                                            <i class="fa-solid fa-clipboard position-absolute"></i>
+                                            <span style="ptop: 0.50em">▬</span>
+                                            <i class="fa-solid fa-user-friends position-absolute" style="font-size: 0.5em; color: rgba(0, 0, 0, 0.6); top: 0.50em;"></i>
+                                        </span> --}}
+                                        <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em;">
+                                            <i class="bi bi-people-fill position-absolute"></i>
+                                            <i class="bi bi-gear-fill position-absolute" style="font-size: 0.5em; bottom: -0.1em; right: -0.1em; background-color: #343a40; border-radius: 90%;"></i>
+                                        </span>
                                     <p>Coordinator Reports</p>
                                 </a>
                             </li>
@@ -427,12 +463,15 @@ window.onload = function () {
                             @if (isset($eoyReportsRoute))
                                 <li class="nav-item">
                                     <a href="{{ $eoyReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeEOYReportsRoutes) }}">
-                                        <span class="fa-layers fa-fw nav-icon">
-                                        <i class="fa-solid fa-clipboard"></i>
-                                            <span style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 0.8em; font-weight: bold;">▬</span>
-                                        <i class="fa-solid fa-dollar-sign" data-fa-transform="shrink-7 down-2" style=" color: rgba(0, 0, 0, 0.5);"></i>
+                                         {{-- <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em; font-size: 1.2em;">
+                                            <i class="fa-solid fa-clipboard position-absolute"></i>
+                                            <span style="ptop: 0.50em">▬</span>
+                                            <i class="fa-solid fa-dollar-sign position-absolute" style="font-size: 0.6em; color: rgba(0, 0, 0, 0.8); top: 0.50em;"></i>
+                                        </span> --}}
+                                        <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em;">
+                                            <i class=" bi bi-calculator-fill position-absolute"></i>
+                                            <i class="bi bi-gear-fill position-absolute" style="font-size: 0.5em; bottom: -0.1em; right: -0.1em; background-color: #343a40; border-radius: 90%;"></i>
                                         </span>
-                                        {{-- <i class="nav-icon fas fa-clipboard-check"></i> --}}
                                         <p>EOY Reports
                                             @if ($ITCondition && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
                                             @if ($eoyTestCondition && $displayTESTING) *TESTING*@endif
@@ -452,14 +491,17 @@ window.onload = function () {
                             ];
                         @endphp
                         @if (isset($adminReportsRoute))
-                            <li class="nav-item">
+                           <li class="nav-item">
                                 <a href="{{ $adminReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeAdminReportsRoutes) }}">
-                                    <span class="fa-layers fa-fw nav-icon">
-                                    <i class="fa-solid fa-clipboard"></i>
-                                        <span style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 0.8em; font-weight: bold;">▬</span>
-                                    <i class="fa-solid fa-shield-halved" data-fa-transform="shrink-8 down-2" style=" color: rgba(0, 0, 0, 0.5);"></i>
-                                    </span>
-                                    {{-- <i class="nav-icon fas fa-clipboard"></i> --}}
+                            {{-- <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em; font-size: 1.2em;">
+                                <i class="fa-solid fa-clipboard position-absolute"></i>
+                                <span style="ptop: 0.50em">▬</span>
+                                <i class="fa-solid fa-shield-halved position-absolute" style="font-size: 0.6em; color: rgba(0, 0, 0, 0.6); top: 0.50em;"></i>
+                            </span> --}}
+                             <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em;">
+                                            <i class="bi bi-shield-shaded position-absolute"></i>
+                                            <i class="bi bi-gear-fill position-absolute" style="font-size: 0.5em; bottom: -0.1em; right: -0.1em; background-color: #343a40; border-radius: 90%;"></i>
+                                        </span>
                                     <p>Admin Reports</p>
                                 </a>
                             </li>
@@ -477,7 +519,10 @@ window.onload = function () {
                         @if (isset($userReportsRoute))
                             <li class="nav-item">
                                 <a href="{{ $userReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeUserReportsRoutes) }}">
+                                {{-- <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em; font-size: 1.25em;">
                                     <i class="nav-icon fas fa-clipboard-user"></i>
+                                </span> --}}
+                                       <i class="nav-icon bi bi-person-fill-gear"></i>
                                     <p>User Reports</p>
                                 </a>
                             </li>
@@ -495,12 +540,12 @@ window.onload = function () {
                         @if (isset($techReportsRoute))
                             <li class="nav-item">
                                 <a href="{{ $techReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeTechReportsRoutes) }}">
-                                    <span class="fa-layers fa-fw nav-icon">
-                                    <i class="fa-solid fa-clipboard"></i>
-                                        <span style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 0.8em; font-weight: bold;">▬</span>
-                                    <i class="fa-solid fa-screwdriver-wrench" data-fa-transform="shrink-9 down-2" style=" color: rgba(0, 0, 0, 0.8);"></i>
-                                    </span>
-                            {{-- <i class="nav-icon fas fa-clipboard-question"></i> --}}
+                                     {{-- <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em; font-size: 1.2em;">
+                                            <i class="fa-solid fa-clipboard position-absolute"></i>
+                                            <span style="ptop: 0.50em">▬</span>
+                                            <i class="fa-solid fa-screwdriver-wrench position-absolute" style="font-size: 0.5em; color: rgba(0, 0, 0, 0.6); top: 0.65em;"></i>
+                                        </span> --}}
+                                        <i class="nav-icon bi bi-database-fill-gear"></i>
                                     <p>IT Reports</p>
                                 </a>
                             </li>
@@ -518,7 +563,7 @@ window.onload = function () {
                         @if (isset($resourcesRoute))
                             <li class="nav-item">
                                 <a href="{{ $resourcesRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeResourcesRoutes) }}">
-                                    <i class="nav-icon fas fa-toolbox"></i>
+                                    <i class="nav-icon bi bi-briefcase-fill"></i>
                                     <p>Resources</p>
                                 </a>
                             </li>
@@ -527,7 +572,7 @@ window.onload = function () {
                          <!-- CoordinatorList Menu Item -->
                          <li class="nav-item position-relative">
                             <a href="{{ url(config('forum.frontend.router.prefix') . '/unread') }}" target="_blank" class="nav-link">
-                                <i class="nav-icon fas fa-comments"></i>
+                                <i class="nav-icon bi bi-chat-quote-fill"></i>
                                 <p>
                                     CoordinatorList Forum
                                     @if( $unreadForumCount > 0)
@@ -541,7 +586,7 @@ window.onload = function () {
 
                         <li class="nav-item">
                             <a href="{{ route('coordinators.profile') }}" class="nav-link {{ Request::is('coordprofile') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-user-edit"></i>
+                            <i class="nav-icon bi bi-person-circle"></i>
                             <p>Update Profile</p>
                             </a>
                         </li>
@@ -549,7 +594,7 @@ window.onload = function () {
                         <li class="nav-item">
                             <a href="{{ route('logout') }}" class="nav-link"
                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <i class="nav-icon fas fa-sign-out-alt"></i>
+                                <i class="nav-icon bi bi-arrow-counterclockwise"></i>
                                 <p>Logout</p>
                             </a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -577,11 +622,9 @@ window.onload = function () {
                                 <strong>{{ $errors->first('email') }}</strong>
                             </span>
                         @endif
-                        <div class="input-group-append">
                             <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
+                                <span class="bi bi-envelope"></span>
                             </div>
-                        </div>
                     </div>
 
                     <div class="input-group mb-3">
@@ -591,17 +634,15 @@ window.onload = function () {
                                 <strong>{{ $errors->first('password') }}</strong>
                             </span>
                         @endif
-                        <div class="input-group-append">
                             <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
+                                <span class="bi bi-lock-fill"></span>
                             </div>
-                        </div>
                     </div>
 
                     <div class="row">
                         <!-- /.col -->
                         <div class="col-12">
-                            <button type="submit" class="btn btn-secondary btn-block" onClick="this.form.submit(); this.disabled=true;">{{ __('Login') }}</button>
+                            <button type="submit" class="btn btn-secondary bg-gradient" onClick="this.form.submit(); this.disabled=true;">{{ __('Login') }}</button>
                         </div>
                         <!-- /.col -->
                     </div>
@@ -616,171 +657,59 @@ window.onload = function () {
                     </form>
 
                         </li>
-                    @endauth
+             @endauth
                     </ul>
-                </nav>
-                <!-- /.sidebar-menu -->
+            <!--end::Sidebar Menu-->
+          </nav>
+        </div>
+        <!--end::Sidebar Wrapper-->
+      </aside>
+      <!--end::Sidebar-->
+      <!--begin::App Main-->
+      <main class="app-main">
+        <!--begin::App Content Header-->
+        <div class="app-content-header">
+          <!--begin::Container-->
+          <div class="container-fluid">
+            <!--begin::Row-->
+            <div class="row">
+              <div class="col-sm-6"><h2 class="mb-0">@yield('page_title')</h2></div>
+              <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                  <li class="breadcrumb-item"><a href="{{ route('home') }}"><i class="fa fa-dashboard me-2"></i>Dashboard</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">@yield('breadcrumb')</li>
+                </ol></li>
+                </ol>
+              </div>
             </div>
-            <!-- /.sidebar -->
-        </aside>
-        <!-- /.menu -->
+            <!--end::Row-->
+          </div>
+          <!--end::Container-->
+        </div>
+        <!--end::App Content Header-->
+        <!--begin::App Content-->
+        <div class="app-content">
 
-        <!-- Main content -->
-        <section class="content">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12">
-                        <!-- Default box -->
-                        <div class="content-wrapper">
+            @yield('content')
 
-                             @if ($message = Session::get('success'))
-                            <script>
-                                document.addEventListener("DOMContentLoaded", function() {
-                                    Swal.fire({
-                                        position: 'top-end',
-                                        icon: 'success',
-                                        title: @json($message),
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                });
-                            </script>
-                        @endif
-
-                        @if ($message = Session::get('info'))
-                            <script>
-                                document.addEventListener("DOMContentLoaded", function() {
-                                    Swal.fire({
-                                        position: 'top-end',
-                                        icon: 'info',
-                                        title: @json($message),
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                });
-                            </script>
-                        @endif
-
-                        @if ($message = Session::get('warning'))
-                            <script>
-                                document.addEventListener("DOMContentLoaded", function() {
-                                    Swal.fire({
-                                        position: 'top-end',
-                                        icon: 'warning',
-                                        title: @json($message),
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                });
-                            </script>
-                        @endif
-
-                        @if ($message = Session::get('fail'))
-                            <script>
-                                document.addEventListener("DOMContentLoaded", function() {
-                                    Swal.fire({
-                                        position: 'top-end',
-                                        icon: 'error',
-                                        title: @json($message),
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                });
-                            </script>
-                        @endif
-
-                        @if(View::shared('errors', false) != false && $errors->any())
-                            <script>
-                                document.addEventListener("DOMContentLoaded", function() {
-                                    Swal.fire({
-                                        position: 'top-end',
-                                        icon: 'error',
-                                        title: 'There were some errors!',
-                                        html: '<ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>',
-                                        showConfirmButton: true,
-                                    });
-                                });
-                            </script>
-                        @endif
-
-                        <section class="content-header">
-                            <div class="container-fluid">
-                                <div class="row mb-2">
-                                    <div class="col-sm-6">
-                                        <h1>@yield('page_title')</h1>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <ol class="breadcrumb float-sm-right">
-                                            <li class="breadcrumb-item">
-                                                <a href="{{ route('home') }}"><i class="fa fa-dashboard"></i> Dashboard</a>
-                                            </li>
-                                            <li class="breadcrumb-item active">@yield('breadcrumb')</li>
-                                        </ol>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                            @yield('content')
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- /.content -->
-
+        </div>
+        <!--end::App Content-->
+      </main>
+      <!--end::App Main-->
+      <!--begin::Footer-->
+       <footer class="app-footer">
+        <!--begin::Copyright-->
+            <strong>Copyright &copy;{{$currentYear}} <a href="https://momsclub.org/" target="_blank">MOMS Club</a>.</strong> All rights reserved.
+        <!--end::Copyright-->
+      </footer>
+      <!--end::Footer-->
     </div>
-    <footer class="main-footer">
-        <strong>Copyright &copy;{{$currentYear}} <a href="https://momsclub.org/" target="_blank">MOMS Club</a>.</strong> All rights reserved.
-    </footer>
-</div>
+    <!--end::App Wrapper-->
 
-<!-- jQuery -->
-<script src="{{ config('settings.base_url') }}theme/plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="{{ config('settings.base_url') }}theme/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- FontAwesome -->
-<script defer src="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/js/all.js"></script>
-<!-- overlayScrollbars -->
-<script src="{{ config('settings.base_url') }}theme/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-<!-- AdminLTE App -->
-<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
-<!-- Bootstrap Switch -->
-<script src="{{ config('settings.base_url') }}theme/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
-<!-- BS-Stepper -->
-<script src="{{ config('settings.base_url') }}theme/plugins/bs-stepper/js/bs-stepper.min.js"></script>
-<!-- Summernote -->
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
-<!-- SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<!-- InputMask -->
-<script src="{{ config('settings.base_url') }}theme/plugins/moment/moment.min.js"></script>
-<script src="{{ config('settings.base_url') }}theme/plugins/inputmask/jquery.inputmask.min.js"></script>
-<!-- date-range-picker -->
-<script src="{{ config('settings.base_url') }}theme/plugins/daterangepicker/daterangepicker.js"></script>
-<!-- Tempusdominus Bootstrap 4 -->
-<script src="{{ config('settings.base_url') }}theme/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-
-<!-- DataTables  & Plugins -->
-<script src="{{ config('settings.base_url') }}theme/plugins/datatables/jquery.dataTables.min.js"></script>
-<script src="{{ config('settings.base_url') }}theme/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-<script src="{{ config('settings.base_url') }}theme/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-<script src="{{ config('settings.base_url') }}theme/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-<script src="{{ config('settings.base_url') }}theme/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-<script src="{{ config('settings.base_url') }}theme/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-<script src="{{ config('settings.base_url') }}theme/plugins/jszip/jszip.min.js"></script>
-<script src="{{ config('settings.base_url') }}theme/plugins/pdfmake/pdfmake.min.js"></script>
-<script src="{{ config('settings.base_url') }}theme/plugins/pdfmake/vfs_fonts.js"></script>
-<script src="{{ config('settings.base_url') }}theme/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-<script src="{{ config('settings.base_url') }}theme/plugins/datatables-buttons/js/buttons.print.min.js"></script>
-<script src="{{ config('settings.base_url') }}theme/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
-
-<!-- Sript Functions -->
 @include('layouts.scripts.alert')
 @include('layouts.scripts.boards')
 @include('layouts.scripts.boardreport')
 @include('layouts.scripts.boardactivate')
-@include('layouts.scripts.bootstrapswitch')
 @include('layouts.scripts.checkboxes')
 @include('layouts.scripts.coordinatorlist')
 @include('layouts.scripts.datatable')
@@ -803,6 +732,10 @@ window.onload = function () {
 @yield('customscript')
 @stack('scripts')
 
-</body>
+  </body>
+  <!--end::Body-->
 </html>
 
+  </body>
+  <!--end::Body-->
+</html>

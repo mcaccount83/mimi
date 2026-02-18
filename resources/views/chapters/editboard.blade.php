@@ -29,80 +29,82 @@
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                  <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
-                  <p class="text-center">{{ $conferenceDescription }} Conference, {{ $regionLongName }} Region
-                  </p>
+                <div class="card-body">
+                    <div class="card-header text-center bg-transparent">
+                    <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
+                    <p class="mb-0">{{ $chDetails->confname }} Conference, {{ $chDetails->regname }} Region
+  </p>
+                    </div>
 
-                  <ul class="list-group list-group-unbordered mb-3">
-                      <li class="list-group-item">
+                  <ul class="list-group list-group-flush mb-3">
+                      <li cclass="list-group-item mt-2">
                           <div class="d-flex align-items-center justify-content-between w-100">
                             <div class="d-flex align-items-center">
-                                <label class="col-form-label mb-0 mr-2">President:</label>
+                                <label class="col-form-label mb-0 me-2">President:</label>
                             </div>
-                            <div class="ml-auto">
+                            <div class="ms-auto">
                                 <span>{{ $PresDetails->first_name }} {{ $PresDetails->last_name }}</span>
                             </div>
                           </div>
 
                           <div class="d-flex align-items-center justify-content-between w-100">
                             <div class="d-flex align-items-center">
-                                <label class="col-form-label mb-0 mr-2">AVP:</label>
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" name="AVPVacant" id="AVPVacant" class="custom-control-input"
+                                <label class="col-form-label mb-0 me-2">AVP:</label>
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" name="AVPVacant" id="AVPVacant" class="form-check-input"
                                            {{$AVPDetails->id == '' ? 'checked' : ''}} onchange="ConfirmVacant(this.id)">
-                                    <label class="custom-control-label" for="AVPVacant">Vacant</label>
+                                    <label class="form-check-label" for="AVPVacant">Vacant</label>
                                 </div>
                             </div>
-                            <div class="avp-field ml-auto" style="display: {{ $AVPDetails->id == '' ? 'none' : 'block' }};">
+                            <div class="avp-field ms-auto" style="display: {{ $AVPDetails->id == '' ? 'none' : 'block' }};">
                                 <span>{{ $AVPDetails->first_name }} {{ $AVPDetails->last_name }}</span>
                             </div>
                           </div>
 
                           <div class="d-flex align-items-center justify-content-between w-100">
                             <div class="d-flex align-items-center">
-                                <label class="col-form-label mb-0 mr-2">MVP:</label>
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" name="MVPVacant" id="MVPVacant" class="custom-control-input"
+                                <label class="col-form-label mb-0 me-2">MVP:</label>
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" name="MVPVacant" id="MVPVacant" class="form-check-input"
                                            {{$MVPDetails->id == '' ? 'checked' : ''}} onchange="ConfirmVacant(this.id)">
-                                    <label class="custom-control-label" for="MVPVacant">Vacant</label>
+                                    <label class="form-check-label" for="MVPVacant">Vacant</label>
                                 </div>
                             </div>
-                            <div class="mvp-field ml-auto" style="display: {{ $MVPDetails->id == '' ? 'none' : 'block' }};">
+                            <div class="mvp-field ms-auto" style="display: {{ $MVPDetails->id == '' ? 'none' : 'block' }};">
                                 <span>{{ $MVPDetails->first_name }} {{ $MVPDetails->last_name }}</span>
                             </div>
                           </div>
 
                           <div class="d-flex align-items-center justify-content-between w-100">
                             <div class="d-flex align-items-center">
-                                <label class="col-form-label mb-0 mr-2">Treasurer:</label>
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" name="TreasVacant" id="TreasVacant" class="custom-control-input"
+                                <label class="col-form-label mb-0 me-2">Treasurer:</label>
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" name="TreasVacant" id="TreasVacant" class="form-check-input"
                                            {{$TRSDetails->id == '' ? 'checked' : ''}} onchange="ConfirmVacant(this.id)">
-                                    <label class="custom-control-label" for="TreasVacant">Vacant</label>
+                                    <label class="form-check-label" for="TreasVacant">Vacant</label>
                                 </div>
                             </div>
-                            <div class="trs-field ml-auto" style="display: {{ $TRSDetails->id == '' ? 'none' : 'block' }};">
+                            <div class="trs-field ms-auto" style="display: {{ $TRSDetails->id == '' ? 'none' : 'block' }};">
                                 <span>{{ $TRSDetails->first_name }} {{ $TRSDetails->last_name }}</span>
                             </div>
                           </div>
 
                           <div class="d-flex align-items-center justify-content-between w-100">
                             <div class="d-flex align-items-center">
-                                <label class="col-form-label mb-0 mr-2">Secretary:</label>
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" name="SecVacant" id="SecVacant" class="custom-control-input"
+                                <label class="col-form-label mb-0 me-2">Secretary:</label>
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" name="SecVacant" id="SecVacant" class="form-check-input"
                                            {{$SECDetails->id == '' ? 'checked' : ''}} onchange="ConfirmVacant(this.id)">
-                                    <label class="custom-control-label" for="SecVacant">Vacant</label>
+                                    <label class="form-check-label" for="SecVacant">Vacant</label>
                                 </div>
                             </div>
-                            <div class="sec-field ml-auto" style="display: {{ $SECDetails->id == '' ? 'none' : 'block' }};">
+                            <div class="sec-field ms-auto" style="display: {{ $SECDetails->id == '' ? 'none' : 'block' }};">
                                 <span>{{ $SECDetails->first_name }} {{ $SECDetails->last_name }}</span>
                             </div>
                           </div>
 
                           <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
-                          <li class="list-group-item" id="display_corlist" class="list-group-item"></li>
+                          <li class="list-group-item mt-2" id="display_corlist" ></li>
                   </ul>
                  <div class="text-center">
                       @if ($chDetails->active_status == 1 )
@@ -134,7 +136,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <!-- /.form group -->
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <label class="col-sm-2 mb-1 col-form-label">President:</label>
                                 <div class="col-sm-5 mb-1">
                                 <input type="text" name="ch_pre_fname" id="ch_pre_fname" class="form-control" value="{{ $PresDetails->first_name }}" required placeholder="First Name" >
@@ -186,7 +188,7 @@
                             </div>
 
                             <!-- /.form group -->
-                            <div class="avp-field form-group row">
+                            <div class="avp-field row mb-3">
                                 <label class="col-sm-2 mb-1 col-form-label">AVP:</label>
                                 <div class="col-sm-5 mb-1">
                                 <input type="text" name="ch_avp_fname" id="ch_avp_fname" class="form-control" value="{{$AVPDetails->first_name != ''  ? $AVPDetails->first_name : ''}}" required placeholder="First Name" >
@@ -237,7 +239,7 @@
                             </div>
 
                              <!-- /.form group -->
-                             <div class="mvp-field form-group row">
+                             <div class="mvp-field row mb-3">
                                 <label class="col-sm-2 mb-1 col-form-label">MVP:</label>
                                 <div class="col-sm-5 mb-1">
                                 <input type="text" name="ch_mvp_fname" id="ch_mvp_fname" class="form-control" value="{{$MVPDetails->first_name != ''  ? $MVPDetails->first_name : ''}}" required placeholder="First Name" >
@@ -288,7 +290,7 @@
                             </div>
 
                             <!-- /.form group -->
-                            <div class="trs-field form-group row">
+                            <div class="trs-field row mb-3">
                                 <label class="col-sm-2 mb-1 col-form-label">Treasurer:</label>
                                 <div class="col-sm-5 mb-1">
                                 <input type="text" name="ch_trs_fname" id="ch_trs_fname" class="form-control" value="{{$TRSDetails->first_name != ''  ? $TRSDetails->first_name : ''}}" required placeholder="First Name" >
@@ -339,7 +341,7 @@
                             </div>
 
                             <!-- /.form group -->
-                            <div class="sec-field form-group row">
+                            <div class="sec-field row mb-3">
                                 <label class="col-sm-2 mb-1 col-form-label">Secretary:</label>
                                 <div class="col-sm-5 mb-1">
                                 <input type="text" name="ch_sec_fname" id="ch_sec_fname" class="form-control" value="{{$SECDetails->first_name != ''  ? $SECDetails->first_name : ''}}" required placeholder="First Name" >
@@ -399,11 +401,11 @@
                       </div>
           <!-- /.col -->
           <div class="col-md-12">
-            <div class="card-body text-center">
+            <div class="card-body text-center mt-3">
                 @if ($coordinatorCondition)
-                    <button type="submit" class="btn bg-gradient-primary mb-3" onclick="return validateEmailsBeforeSubmit();"><i class="fas fa-save mr-2"></i>Save Board Information</button>
+                    <button type="submit" class="btn btn-primary bg-gradient mb-2" onclick="return validateEmailsBeforeSubmit();"><i class="bi bi-floppy-fill me-2"></i>Save Board Information</button>
                 @endif
-                <button type="button" id="back-details" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
+                <button type="button" id="back-details" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Chapter Details</button>
         </div>
         </div>
         <!-- /.row -->

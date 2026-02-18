@@ -13,7 +13,7 @@
                 <div class="card card-outline card-primary">
                     <div class="card-header">
                         <div class="dropdown">
-                            <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Re-Registration Report
                             </h3>
                             @include('layouts.dropdown_menus.menu_reports_admin')
@@ -38,7 +38,7 @@
                 <tbody>
                     @foreach($chapterList as $list)
                   <tr>
-                        <td class="text-center align-middle"><a href="{{ url("/adminreports/reregedit/{$list->id}") }}"><i class="fas fa-edit"></i></a></td>
+                        <td class="text-center align-middle"><a href="{{ url("/adminreports/reregedit/{$list->id}") }}"><i class="bi bi-pencil-square"></i></a></td>
                         <td>
                             @if ($list->state->conference_id > 0)
                                 {{ $list->state->conference->short_name }} / {{ $list->state->region->short_name }}
@@ -78,26 +78,32 @@
                   @endforeach
                   </tbody>
                 </table>
-            </div>
+           </div>
+            <!-- /.card-body -->
 
+            <div class="card-body">
               @if ($ITCondition)
                     <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="custom-control-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
-                            <label class="custom-control-label" for="showIntl">Show All International Chapters</label>
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <label class="form-check-label" for="showIntl">Show All International Chapters</label>
                         </div>
                     </div>
                 @endif
-            <div class="card-body text-center">
+                 </div>
+            <!-- /.card-body for checkboxes -->
+
+            <div class="card-body text-center mt-3">
             </div>
-          </div>
-          <!-- /.card -->
+            <!-- /.card-body for buttons -->
+
         </div>
-        <!-- /.col -->
+        <!-- /.card -->
       </div>
-      <!-- /.row -->
+      <!-- /.col -->
     </div>
-    <!-- /.container-fluid -->
-  </section>
-  <!-- /.content -->
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
 @endsection

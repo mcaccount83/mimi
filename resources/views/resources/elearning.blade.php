@@ -19,7 +19,7 @@
             <div class="card card-outline card-primary">
                 <div class="card-header">
                   <div class="dropdown">
-                      <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         eLearning Library
                       </h3>
                       @include('layouts.dropdown_menus.menu_resources')

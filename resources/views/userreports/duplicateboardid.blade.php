@@ -12,7 +12,7 @@
                     <div class="card card-outline card-primary">
                         <div class="card-header">
                             <div class="dropdown">
-                                <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Duplicate Board Details
                                 </h3>
                                 @include('layouts.dropdown_menus.menu_reports_user')
@@ -53,12 +53,24 @@
                     @endforeach
                   </tbody>
                 </table>
-		        </div>
-			</div>
-          <!-- /.box -->
-        </div>
+		      </div>
+              <!-- /.card-body -->
+
+              <div class="card-body">
+            </div>
+            <!-- /.card-body for checkboxes -->
+
+                <div class="card-body text-center mt-3">
+            </div>
+            <!-- /.card-body for buttons -->
+
+         </div>
+        <!-- /.card -->
       </div>
+      <!-- /.col -->
     </div>
-    </section>
-    <!-- /.content -->
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
 @endsection

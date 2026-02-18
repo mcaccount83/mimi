@@ -13,7 +13,7 @@
                 <div class="card card-outline card-primary">
                     <div class="card-header">
                         <div class="dropdown">
-                            <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Grant Request Report
                             </h3>
                             @include('layouts.dropdown_menus.menu_reports_admin')
@@ -39,7 +39,7 @@
                 <tbody>
                     @foreach($grantList as $list)
                   <tr>
-                        <td class="text-center align-middle"><a href="{{ url("/payment/grantdetailsedit/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                        <td class="text-center align-middle"><a href="{{ url("/payment/grantdetailsedit/{$list->id}") }}"><i class="bi bi-eye-fill"></i></a></td>
                         <td>
                             @if ($list->chapterstate->region?->short_name != "None" )
                                 {{ $list->chapterstate->conference->short_name }} / {{ $list->chapterstate->region?->short_name }}
@@ -75,27 +75,34 @@
                   @endforeach
                   </tbody>
                 </table>
-            </div>
+             </div>
+            <!-- /.card-body -->
 
+            <div class="card-body">
                 @if ($ITCondition)
-                    <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="custom-control-input"
+                <div class="col-sm-12">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input"
                                 {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
-                            <label class="custom-control-label" for="showIntl">Show All International Requests</label>
+                            <label class="form-check-label" for="showIntl">Show All International Requests</label>
                         </div>
                     </div>
                 @endif
-            <div class="card-body text-center">
+                    </div>
+            <!-- /.card-body for checkboxes -->
+
+            <div class="card-body text-center mt-3">
             </div>
-          </div>
-          <!-- /.card -->
+            <!-- /.card-body for buttons -->
+
         </div>
-        <!-- /.col -->
+        <!-- /.card -->
       </div>
-      <!-- /.row -->
+      <!-- /.col -->
     </div>
-    <!-- /.container-fluid -->
-  </section>
-  <!-- /.content -->
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
 @endsection
+

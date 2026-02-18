@@ -13,7 +13,7 @@
                 <div class="card card-outline card-primary">
                     <div class="card-header">
                         <div class="dropdown">
-                            <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Mail Log
                             </h3>
                             @include('layouts.dropdown_menus.menu_reports_admin')
@@ -24,9 +24,9 @@
                     <div class="card-body">
                         <!-- Nav Tabs -->
                         <ul class="nav nav-pills mb-3">
-                            <li class="nav-item"><a class="nav-link active" href="#to" data-toggle="tab">INBOX (TO)</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#cc" data-toggle="tab">INBOX (CC/BCC)</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#from" data-toggle="tab">SENT (FROM)</a></li>
+                            <li class="nav-item"><a class="nav-link active" href="#to" data-bs-toggle="tab">INBOX (TO)</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#cc" data-bs-toggle="tab">INBOX (CC/BCC)</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#from" data-bs-toggle="tab">SENT (FROM)</a></li>
                         </ul>
 
                         <!-- Tab Content -->
@@ -55,7 +55,7 @@
                                                    data-to="{{ $log->to }}"
                                                    data-cc="{{ $log->cc ?? '' }}"
                                                    data-bcc="{{ $log->bcc ?? '' }}">
-                                                    <i class="fas fa-eye"></i>
+                                                    <i class="bi bi-eye-fill"></i>
                                                 </a>
                                             </td>
                                             <td>{{ $log->date }}</td>
@@ -63,16 +63,16 @@
                                             <td>{{ $log->from }}</td>
                                             <td>{!! str_replace(',', '<br>', $log->to) !!}</td>
                                             <td>
-    @if($log->cc)
-        cc: {!! str_replace(',', '<br>', $log->cc) !!}
-    @endif
-    @if ($log->cc && $log->bcc)
-        <br>
-    @endif
-    @if($log->bcc)
-        bcc: {!! str_replace(',', '<br>', $log->bcc) !!}
-    @endif
-</td>
+                                                @if($log->cc)
+                                                    cc: {!! str_replace(',', '<br>', $log->cc) !!}
+                                                @endif
+                                                @if ($log->cc && $log->bcc)
+                                                    <br>
+                                                @endif
+                                                @if($log->bcc)
+                                                    bcc: {!! str_replace(',', '<br>', $log->bcc) !!}
+                                                @endif
+                                            </td>
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -103,7 +103,7 @@
                                                    data-to="{{ $log->to }}"
                                                    data-cc="{{ $log->cc ?? '' }}"
                                                    data-bcc="{{ $log->bcc ?? '' }}">
-                                                    <i class="fas fa-eye"></i>
+                                                    <i class="bi bi-eye-fill"></i>
                                                 </a>
                                             </td>
                                             <td>{{ $log->date }}</td>
@@ -111,16 +111,16 @@
                                             <td>{{ $log->from }}</td>
                                             <td>{!! str_replace(',', '<br>', $log->to) !!}</td>
                                             <td>
-    @if($log->cc)
-        cc: {!! str_replace(',', '<br>', $log->cc) !!}
-    @endif
-    @if ($log->cc && $log->bcc)
-        <br>
-    @endif
-    @if($log->bcc)
-        bcc: {!! str_replace(',', '<br>', $log->bcc) !!}
-    @endif
-</td>
+                                                @if($log->cc)
+                                                    cc: {!! str_replace(',', '<br>', $log->cc) !!}
+                                                @endif
+                                                @if ($log->cc && $log->bcc)
+                                                    <br>
+                                                @endif
+                                                @if($log->bcc)
+                                                    bcc: {!! str_replace(',', '<br>', $log->bcc) !!}
+                                                @endif
+                                            </td>
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -151,7 +151,7 @@
                                                    data-to="{{ $log->to }}"
                                                    data-cc="{{ $log->cc ?? '' }}"
                                                    data-bcc="{{ $log->bcc ?? '' }}">
-                                                    <i class="fas fa-eye"></i>
+                                                    <i class="bi bi-eye-fill"></i>
                                                 </a>
                                             </td>
                                             <td>{{ $log->date }}</td>
@@ -159,16 +159,16 @@
                                             <td>{{ $log->from }}</td>
                                             <td>{!! str_replace(',', '<br>', $log->to) !!}</td>
                                            <td>
-    @if($log->cc)
-        cc: {!! str_replace(',', '<br>', $log->cc) !!}
-    @endif
-    @if ($log->cc && $log->bcc)
-        <br>
-    @endif
-    @if($log->bcc)
-        bcc: {!! str_replace(',', '<br>', $log->bcc) !!}
-    @endif
-</td>
+                                                @if($log->cc)
+                                                    cc: {!! str_replace(',', '<br>', $log->cc) !!}
+                                                @endif
+                                                @if ($log->cc && $log->bcc)
+                                                    <br>
+                                                @endif
+                                                @if($log->bcc)
+                                                    bcc: {!! str_replace(',', '<br>', $log->bcc) !!}
+                                                @endif
+                                            </td>
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -176,48 +176,53 @@
                             </div>
                         </div>
 
+                        <div class="card-body">
                            @if ($listAdminCondition || $ITCondition)
                     <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showListAdmin" id="showListAdmin" class="custom-control-input" {{ $checkBox5Status ? 'checked' : '' }} onchange="showListAdmin()" />
-                            <label class="custom-control-label" for="showListAdmin">Show ListAdmin Emails</label>
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showListAdmin" id="showListAdmin" class="form-check-input" {{ $checkBox5Status ? 'checked' : '' }} onchange="showListAdmin()" />
+                            <label class="form-check-label" for="showListAdmin">Show ListAdmin Emails</label>
                         </div>
                     </div>
                 @endif
                 @if(($coordinatorCondition && $conferenceCoordinatorCondition) || $inquiriesCondition || $inquiriesInternationalCondition || $ITCondition)
                 <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showInquiries" id="showInquiries" class="custom-control-input" {{ $checkBox7Status ? 'checked' : '' }} onchange="showInquiries()" />
-                            <label class="custom-control-label" for="showInquiries">Show Inquiry Emails</label>
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showInquiries" id="showInquiries" class="form-check-input" {{ $checkBox7Status ? 'checked' : '' }} onchange="showInquiries()" />
+                            <label class="form-check-label" for="showInquiries">Show Inquiry Emails</label>
                         </div>
                     </div>
                 @endif
                 @if ($ITCondition)
                      <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showIntlInquiries" id="showIntlInquiries" class="custom-control-input" {{ $checkBox57Status ? 'checked' : '' }} onchange="showIntlInquiries()" />
-                            <label class="custom-control-label" for="showIntlInquiries">Show All Inquiry Emails</label>
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showIntlInquiries" id="showIntlInquiries" class="form-check-input" {{ $checkBox57Status ? 'checked' : '' }} onchange="showIntlInquiries()" />
+                            <label class="form-check-label" for="showIntlInquiries">Show All Inquiry Emails</label>
                         </div>
                     </div>
                     <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showAdminAll" id="showAdminAll" class="custom-control-input" {{ $checkBox81Status ? 'checked' : '' }} onchange="showAdminAll()" />
-                            <label class="custom-control-label" for="showAdminAll">Show All Emails</label>
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showAdminAll" id="showAdminAll" class="form-check-input" {{ $checkBox81Status ? 'checked' : '' }} onchange="showAdminAll()" />
+                            <label class="form-check-label" for="showAdminAll">Show All Emails</label>
                         </div>
                     </div>
                 @endif
-                    </div>
-                    <!-- /.card-body -->
-                </div>
-                <!-- /.card -->
-            </div>
-            <!-- /.col -->
+                  </div>
+            <!-- /.card-body for checkboxes -->
+
+             <div class="card-body text-center mt-3">
+                 </div>
+            <!-- /.card-body for buttons -->
+
         </div>
-        <!-- /.row -->
+        <!-- /.card -->
+      </div>
+      <!-- /.col -->
     </div>
-    <!-- /.container-fluid -->
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
 </section>
-  <!-- /.content -->
 
   <!-- Email Modal -->
   <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="emailModalLabel" aria-hidden="true">
@@ -225,7 +230,7 @@
       <div class="modal-content">
         <div class="modal-header">
             <h4 class="modal-title" id="emailModalLabel">Message Details</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -241,12 +246,12 @@
           <hr>
           <div id="emailBody">
             <div class="text-center">
-              <i class="fas fa-spinner fa-spin"></i> Loading...
+              <i class="bi bi-arrow-repeat spin"></i> Loading...
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn bg-gradient-danger btn-sm" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
@@ -273,7 +278,7 @@ $(document).ready(function() {
     }
 
     // Initialize tables when their tab is shown
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
         var target = $(e.target).attr("href");
 
         if (target === '#cc' && !$.fn.DataTable.isDataTable('#ccTable')) {
@@ -339,7 +344,7 @@ $(document).ready(function() {
             $('#emailBccWrapper').hide();
         }
 
-        $('#emailBody').html('<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading...</div>');
+        $('#emailBody').html('<div class="text-center"><i class="bi bi-arrow-repeat spin"></i>Loading...</div>');
         $('#emailModal').modal('show');
 
         fetch(emailBodyUrl + '/' + emailId)

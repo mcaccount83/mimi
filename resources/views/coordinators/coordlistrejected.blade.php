@@ -12,10 +12,10 @@
                 <div class="card card-outline card-primary">
                     <div class="card-header">
                     <div class="dropdown">
-                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Not Approved Coordinator List
                         </h3>
-                        <span class="ml-2">New Coordinator Applications Not Approved</span>
+                        <span class="ms-2">New Coordinator Applications Not Approved</span>
                         @include('layouts.dropdown_menus.menu_chapters_new')
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                 <tbody>
                   @foreach($coordinatorList as $list)
                     <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/application/coordapplication/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                    <td class="text-center align-middle"><a href="{{ url("/application/coordapplication/{$list->id}") }}"><i class="bi bi-eye-fill"></i></a></td>
                     <td>
                         @if ($list->region->short_name != "None")
                             {{ $list->conference->short_name }} / {{ $list->region->short_name }}
@@ -63,30 +63,32 @@
                 </tbody>
               </table>
             </div>
-              <!-- /.card-body -->
+            <!-- /.card-body -->
+
+            <div class="card-body">
               @if ($ITCondition)
-                    <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="custom-control-input" {{$checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
-                            <label class="custom-control-label" for="showIntl">Show All International Coordinators</label>
+                <div class="col-sm-12">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{$checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <label class="form-check-label" for="showIntl">Show All International Coordinators</label>
                         </div>
                     </div>
                 @endif
+    </div>
+            <!-- /.card-body for checkboxes -->
 
-              <div class="col-sm-12">
+                <div class="card-body text-center mt-3">
+  </div>
+            <!-- /.card-body for buttons -->
 
-
-            </div>
-
-                <div class="card-body text-center">
-
-            </div>
-         </div>
-          <!-- /.box -->
         </div>
+        <!-- /.card -->
       </div>
-    </section>
-    <!-- Main content -->
-
-    <!-- /.content -->
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
 @endsection
+

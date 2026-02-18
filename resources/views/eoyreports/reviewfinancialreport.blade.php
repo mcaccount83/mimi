@@ -25,7 +25,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-4">
-            <form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("eoyreports.updatefinancialreport", $chDetails->id) }}' novalidate>
+            <form id="financial_report" name="financial_report" role="form" data-bs-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("eoyreports.updatefinancialreport", $chDetails->id) }}' novalidate>
                 @csrf
                 <input type="hidden" name="submitted" id="submitted" value="{{ $chEOYDocuments->financial_report_received ?? '' }}" />
                 <input type="hidden" name="FurthestStep" id="FurthestStep" value="{{ $chFinancialReport->farthest_step_visited_coord > 0 ? $chFinancialReport->farthest_step_visited_coord : '0' }}" />
@@ -33,22 +33,25 @@
 
           <!-- Profile Image -->
           <div class="card card-primary card-outline">
-            <div class="card-body box-profile">
-                <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
-
-          <ul class="list-group list-group-unbordered mb-3">
-            <li class="list-group-item">
+           <div class="card-body">
+                    <div class="card-header text-center bg-transparent">
+                    <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
+                    <p class="mb-0">{{ $chDetails->confname }} Conference, {{ $chDetails->regname }} Region
+                  </p>
+                    </div>
+          <ul class="list-group list-group-flush mb-3">
+            <li class="list-group-item mt-2">
                <h5>Review Summary</h5>
             Answers from questios in previous sections will show up here after they have been saved.<br>
             <br>
             @if ($chEOYDocuments->financial_report_received)
             @if ($chEOYDocuments->$yearColumnName != null)
                 <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                    <b>Financial Report PDF:</b> <span class="float-right"><a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->$yearColumnName }}">Download PDF</a></span>
+                    <b>Financial Report PDF:</b> <span class="float-end"><a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->$yearColumnName }}">Download PDF</a></span>
                 </div>
             @endif
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Chapter Roster File:</b> <span class="float-right">
+                <b>Chapter Roster File:</b> <span class="float-end">
                 @if ($chEOYDocuments->roster_path != null)
                     <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->roster_path }}">Chapter Roster</a></span>
                 @else
@@ -56,7 +59,7 @@
                 @endif
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Primary Bank Statement:</b> <span class="float-right">
+                <b>Primary Bank Statement:</b> <span class="float-end">
                 @if ($chEOYDocuments->statement_1_path != null)
                     <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->statement_1_path }}">Primary Statement</a></span>
                 @else
@@ -64,7 +67,7 @@
                 @endif
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Additional Bank Statement:</b> <span class="float-right">
+                <b>Additional Bank Statement:</b> <span class="float-end">
                 @if ($chEOYDocuments->statement_2_path != null)
                     <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->statement_2_path }}">Additional Statement</a></span>
                 @else
@@ -72,7 +75,7 @@
                 @endif
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>990N Filing:</b> <span class="float-right">
+                <b>990N Filing:</b> <span class="float-end">
                 @if ($chEOYDocuments->irs_path != null)
                     <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->irs_path }}">990N Confirmation</a></span>
                 @else
@@ -81,24 +84,24 @@
             </div>
             @endif
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Excel roster attached and complete:</b> <span class="float-right">{{ is_null($chFinancialReport->check_roster_attached) ? 'Please Review'
+                <b>Excel roster attached and complete:</b> <span class="float-end">{{ is_null($chFinancialReport->check_roster_attached) ? 'Please Review'
                     : ($chFinancialReport->check_roster_attached == 0 ? 'NO' : ($chFinancialReport->check_roster_attached == 1 ? 'YES' : 'Please Review' )) }}</span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Number of members/dues/renewal "seem right":</b> <span class="float-right">{{ is_null($chFinancialReport->check_renewal_seems_right) ? 'Please Review'
+                <b>Number of members/dues/renewal "seem right":</b> <span class="float-end">{{ is_null($chFinancialReport->check_renewal_seems_right) ? 'Please Review'
                     : ($chFinancialReport->check_renewal_seems_right == 0 ? 'NO' : ($chFinancialReport->check_renewal_seems_right == 1 ? 'YES' : 'Please Review' )) }}</span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Minimum of one service project completed:</b> <span class="float-right">{{ is_null($chFinancialReport->check_minimum_service_project) ? 'Please Review'
+                <b>Minimum of one service project completed:</b> <span class="float-end">{{ is_null($chFinancialReport->check_minimum_service_project) ? 'Please Review'
                     : ( $chFinancialReport->check_minimum_service_project == 0 ? 'NO' : ($chFinancialReport->check_minimum_service_project == 1 ? 'YES' : 'Please Review' )) }}</span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Donation to M2M Fund:</b> <span class="float-right">{{ is_null($chFinancialReport->check_m2m_donation) ? 'Please Review'
+                <b>Donation to M2M Fund:</b> <span class="float-end">{{ is_null($chFinancialReport->check_m2m_donation) ? 'Please Review'
                     : ($chFinancialReport->check_m2m_donation == 0 ? 'NO' : ($chFinancialReport->check_m2m_donation == 1 ? 'YES' : 'Please Review' )) }}</span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b>Party Percentage:</b>
-                <span class="float-right">
+                <span class="float-end">
                     @php
                         $newMembers = $chFinancialReport->total_new_members * $chFinancialReport->dues_per_member;
                         $renewalMembers = $chFinancialReport->total_renewed_members * $chFinancialReport->dues_per_member;
@@ -150,10 +153,10 @@
                     @endphp
                 </span>
 
-    <span class="float-right">{{ number_format($partyPercentage * 100, 2) }}%</span>
+    <span class="float-end">{{ number_format($partyPercentage * 100, 2) }}%</span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b> Party Percentage less than 15%:</b> <span class="float-right" style="
+                <b> Party Percentage less than 15%:</b> <span class="float-end" style="
                     @if(is_null($chFinancialReport->check_party_percentage))
                         background-color: #FFFFFF; color: #000000;
                     @elseif($chFinancialReport->check_party_percentage == 2)
@@ -180,15 +183,15 @@
                 </span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Total income/revenue less than $50,000:</b> <span class="float-right">{{ is_null($chFinancialReport->check_total_income_less) ? 'Please Review'
+                <b>Total income/revenue less than $50,000:</b> <span class="float-end">{{ is_null($chFinancialReport->check_total_income_less) ? 'Please Review'
                     : ( $chFinancialReport->check_total_income_less == 0 ? 'NO' : ($chFinancialReport->check_total_income_less == 1 ? 'YES' : 'Please Review' )) }}</span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Current bank statement included:</b> <span class="float-right">{{ is_null($chFinancialReport->check_bank_statement_included) ? 'Please Review'
+                <b>Current bank statement included:</b> <span class="float-end">{{ is_null($chFinancialReport->check_bank_statement_included) ? 'Please Review'
                     : ( $chFinancialReport->check_bank_statement_included == 0 ? 'NO' : ($chFinancialReport->check_bank_statement_included == 1 ? 'YES' : 'Please Review')) }}</span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Treasury & Reconciled Balances Match:</b> <span class="float-right" style="
+                <b>Treasury & Reconciled Balances Match:</b> <span class="float-end" style="
                     @if(is_null($chFinancialReport->check_bank_statement_matches))
                         background-color: #FFFFFF; color: #000000;
                     @elseif($chFinancialReport->check_bank_statement_matches == 1)
@@ -211,7 +214,7 @@
                 </span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Proof of 990N Filing for 7/1/{{ $lastYear}} - 6/30/{{ $currentYear }}:</b> <span class="float-right" style="
+                <b>Proof of 990N Filing for 7/1/{{ $lastYear}} - 6/30/{{ $currentYear }}:</b> <span class="float-end" style="
                     @if(is_null($chFinancialReport->check_current_990N_included))
                         background-color: #FFFFFF; color: #000000;
                     @elseif($chFinancialReport->check_current_990N_included == 1)
@@ -235,32 +238,32 @@
             </div>
 
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Purchased membership pins or had leftovers:</b> <span class="float-right">{{ is_null($chFinancialReport->check_purchased_pins) ? 'Please Review'
+                <b>Purchased membership pins or had leftovers:</b> <span class="float-end">{{ is_null($chFinancialReport->check_purchased_pins) ? 'Please Review'
                     : ( $chFinancialReport->check_purchased_pins == 0 ? 'NO' : ($chFinancialReport->check_purchased_pins == 1 ? 'YES' : 'Please Review' )) }}</span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Purchased MOMS Club merchandise:</b> <span class="float-right">{{ is_null($chFinancialReport->check_purchased_mc_merch) ? 'Please Review'
+                <b>Purchased MOMS Club merchandise:</b> <span class="float-end">{{ is_null($chFinancialReport->check_purchased_mc_merch) ? 'Please Review'
                     : ($chFinancialReport->check_purchased_mc_merch == 0 ? 'NO' : ($chFinancialReport->check_purchased_mc_merch == 1 ? 'YES' : 'Please Review' )) }}</span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Offered MOMS Club merchandise or info to members:</b> <span class="float-right">{{ is_null($chFinancialReport->check_offered_merch) ? 'Please Review'
+                <b>Offered MOMS Club merchandise or info to members:</b> <span class="float-end">{{ is_null($chFinancialReport->check_offered_merch) ? 'Please Review'
                     : ( $chFinancialReport->check_offered_merch == 0 ? 'NO' : ( $chFinancialReport->check_offered_merch == 1 ? 'YES' : 'Pleae Review' )) }}</span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Manual/by-laws made available to members:</b> <span class="float-right">{{ is_null($chFinancialReport->check_bylaws_available) ? 'Please Review'
+                <b>Manual/by-laws made available to members:</b> <span class="float-end">{{ is_null($chFinancialReport->check_bylaws_available) ? 'Please Review'
                     : ( $chFinancialReport->check_bylaws_available == 0 ? 'NO' : ($chFinancialReport->check_bylaws_available == 1 ? 'YES' : 'Please Review' )) }}</span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Attended International Event:</b> <span class="float-right">{{ is_null($chFinancialReport->check_attended_training) ? 'Please Review'
+                <b>Attended International Event:</b> <span class="float-end">{{ is_null($chFinancialReport->check_attended_training) ? 'Please Review'
                     : ($chFinancialReport->check_attended_training == 0 ? 'NO' : ($chFinancialReport->check_attended_training == 1 ? 'YES' : 'Please Review' )) }}</span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Sistered another chapter:</b> <span class="float-right">{{ is_null($chFinancialReport->check_sistered_another_chapter) ? 'Please Review'
+                <b>Sistered another chapter:</b> <span class="float-end">{{ is_null($chFinancialReport->check_sistered_another_chapter) ? 'Please Review'
                     : ($chFinancialReport->check_sistered_another_chapter == 0 ? 'NO' : ($chFinancialReport->check_sistered_another_chapter == 1 ? 'YES' : 'Please Review' )) }}</span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Chapter Awards:</b> <span class="float-right">
-                    <button type="button" id="back-eoy" class="btn btn-xs bg-gradient-primary" onclick="window.location.href='{{ route('eoyreports.editawards', ['id' => $chDetails->id]) }}'">View/Update Award Information</button>
+                <b>Chapter Awards:</b> <span class="float-end">
+                    <button type="button" id="back-eoy" class="btn btn-xs btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.editawards', ['id' => $chDetails->id]) }}'">View/Update Award Information</button>
                 </span>
             </div>
 
@@ -270,7 +273,7 @@
             @endphp
 
             </li>
-            <li class="list-group-item">
+            <li class="list-group-item mt-2">
                 <strong>Reviewer Notes Logged for this Report (not visible to chapter):</strong><br>
                 @php
                     $financial_report_notes = [];
@@ -284,12 +287,12 @@
                 @endphp
                 {!! empty($financial_report_notes) ? 'No notes logged for this report.' : implode('<br>', $financial_report_notes) !!}
             </li>
-            <li class="list-group-item">
+            <li class="list-group-item mt-2">
             <div class="d-flex justify-content-between w-100">
-                <b>Report Completed By:</b> <span class="float-right">{{ !is_null($chFinancialReport) ? $chFinancialReport->completed_name : '' }}</span>
+                <b>Report Completed By:</b> <span class="float-end">{{ !is_null($chFinancialReport) ? $chFinancialReport->completed_name : '' }}</span>
             </div>
             <div class="d-flex justify-content-between w-100">
-                <b>Contact Email:</b> <span class="float-right"><a href="mailto:{{ !is_null($chFinancialReport) ? $chFinancialReport->completed_email : '' }}">{{ !is_null($chFinancialReport) ? $chFinancialReport->completed_email : '' }}</a></span>
+                <b>Contact Email:</b> <span class="float-end"><a href="mailto:{{ !is_null($chFinancialReport) ? $chFinancialReport->completed_email : '' }}">{{ !is_null($chFinancialReport) ? $chFinancialReport->completed_email : '' }}</a></span>
             </div>
 
             <div class="d-flex align-items-center justify-content-between w-100">
@@ -309,46 +312,46 @@
             </div>
                 <input type="hidden" id="ch_reportrev" value="{{ $chFinancialReport->reviewer_id }}">
 
-                <div class="form-group" id="emailMessageGroup" style="display: none;">
+                <div class="mb-3" id="emailMessageGroup" style="display: none;">
                 <label for="AssignedReviewer"><strong>Additional Email Message for Reviewer:</strong></label>
                 <textarea class="form-control" style="width:100%" rows="8" name="reviewer_email_message" id="reviewer_email_message">{{ $chFinancialReport->reviewer_email_message }}</textarea>
             </div>
 
             <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
 
-        <li class="list-group-item" id="display_corlist" class="list-group-item"></li>
-        <div class="card-body text-center">
+        <li class="list-group-item mt-2" id="display_corlist"></li>
+        <div class="card-body text-center mt-3">
             <br>
-            <button type="submit" id="btn-step-14" class="btn bg-gradient-primary mb-2"><i class="fas fa-save mr-2"></i>Save Report Review</button>
-            <button class="btn bg-gradient-primary mb-2" type="button" id="email-chapter" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}', 'Financial Report Review')">
-                <i class="fa fa-envelope mr-2"></i>Email Board</button>
+            <button type="submit" id="btn-step-14" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
+            <button class="btn btn-primary bg-gradient mb-2" type="button" id="email-chapter" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}', 'Financial Report Review')">
+                <i class="fa fa-envelope me-2"></i>Email Board</button>
             <br>
             @if ($chEOYDocuments->financial_review_complete != "" && $chEOYDocuments->financial_report_received)
                 @if ($regionalCoordinatorCondition)
-                    <button type="button" class="btn bg-gradient-success" id="review-clear"><i class="fas fa-minus-circle mr-2"></i>Clear Review Complete</button>
+                    <button type="button" class="btn btn-success bg-gradient mb-2" id="review-clear"><i class="fas fa-minus-circle me-2"></i>Clear Review Complete</button>
                 @else
-                    <button type="button" class="btn bg-gradient-success disabled" disabled><i class="fas fa-minus-circle mr-2"></i>Clear Review Complete</button>
+                    <button type="button" class="btn btn-success bg-gradient mb-2 disabled" disabled><i class="fas fa-minus-circle me-2"></i>Clear Review Complete</button>
                 @endif
             @else
-                <button type="button" class="btn bg-gradient-success" id="review-complete"><i class="fas fa-check mr-2"></i>Mark as Review Complete</button>
+                <button type="button" class="btn btn-success bg-gradient mb-2" id="review-complete"><i class="fas fa-check me-2"></i>Mark as Review Complete</button>
             @endif
-                <button type="button" class="btn bg-gradient-danger" id="unsubmit"><i class="fas fa-undo mr-2"></i>UnSubmit Report</button>
+                <button type="button" class="btn btn-danger bg-gradient mb-2" id="unsubmit"><i class="fas fa-undo me-2"></i>UnSubmit Report</button>
             @if ($chEOYDocuments->financial_review_complete != 1)
                 <br>
                 <span style="color:red;"><b>"Mark as Review Complete" is for FINAL REVIEWER USE ONLY!</b></span>
             @endif
             <br><br>
             @if ($chEOYDocuments->$yearColumnName != null)
-                <button class="btn bg-gradient-primary mb-2" type="button" id="financial-pdf" onclick="openPdfViewer('{{ $chEOYDocuments->$yearColumnName }}')"><i class="fas fa-file-pdf mr-2"></i>View/Download Financial Report PDF</button>
+                <button class="btn btn-primary bg-gradient mb-2" type="button" id="financial-pdf" onclick="openPdfViewer('{{ $chEOYDocuments->$yearColumnName }}')"><i class="fas fa-file-pdf me-2"></i>View/Download Financial Report PDF</button>
             @else
-                <button class="btn bg-gradient-primary mb-2 disabled" type="button" id="financial-pdf" disabled><i class="fas fa-file-pdf mr-2"></i>No PDF Report Available</button>
+                <button class="btn btn-primary bg-gradient mb-2 disabled" type="button" id="financial-pdf" disabled><i class="fas fa-file-pdf me-2"></i>No PDF Report Available</button>
             @endif
             @if ($chEOYDocuments->$yearColumnName != null && $chEOYDocuments->financial_report_received)
                 <br>
-                <button type="button" id="generate-pdf" class="btn bg-gradient-primary btn-sm" onclick="generateFinancialReport()"><i class="fas fa-rotate mr-2"></i>Regenerate Financial PDF</button>
+                <button type="button" id="generate-pdf" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="generateFinancialReport()"><i class="fas fa-rotate me-2"></i>Regenerate Financial PDF</button>
             @elseif ($chEOYDocuments->$yearColumnName == null && $chEOYDocuments->financial_report_received)
                 <br>
-                <button type="button" id="generate-pdf" class="btn bg-gradient-primary btn-sm" onclick="generateFinancialReport()"><i class="fas fa-rotate mr-2"></i>Generate Financial PDF</button>
+                <button type="button" id="generate-pdf" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="generateFinancialReport()"><i class="fas fa-rotate me-2"></i>Generate Financial PDF</button>
             @endif
         </div>
         </li>
@@ -389,7 +392,7 @@
                     <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '1' ? 'active' : '' }}">
                         <div class="card-header" id="accordion-header-members">
                             <h4 class="card-title w-100">
-                                <a class="d-block" data-toggle="collapse" href="#collapseOne" style="width: 100%;">CHAPTER DUES</a>
+                                <a class="d-block" data-bs-toggle="collapse" href="#collapseOne" style="width: 100%;">CHAPTER DUES</a>
                             </h4>
                         </div>
                         <div id="collapseOne" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '1' ? 'show' : '' }}" data-parent="#accordion">
@@ -559,13 +562,13 @@
                                         <div class="col-12" id="RosterBlock">
                                             <strong style="color:red">Please Note</strong><br>
                                                 This will refresh the screen - be sure to save all work before clicking button to Replace Roster File.<br>
-                                            <button type="button" class="btn btn-sm btn-primary" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Roster File</button>
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Roster File</button>
                                     </div>
                                 @else
                                     <div class="col-12" id="RosterBlock">
                                             <strong style="color:red">Please Note</strong><br>
                                                 This will refresh the screen - be sure to save all work before clicking button to Upload Roster File.<br>
-                                            <button type="button" class="btn btn-sm btn-primary" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Roster File</button>
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Roster File</button>
                                     </div>
                                 @endif
                                 <input type="hidden" name="RosterPath" id="RosterPath" value="{{ $chEOYDocuments->roster_path }}">
@@ -573,7 +576,7 @@
                                 <div class="col-12"><br></div>
                                 <div class="col-12">
                                     <div class="col-12">
-                                        <div class="form-group row">
+                                        <div class="row mb-3">
                                             <label>Excel roster attached and complete:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
@@ -586,7 +589,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group row">
+                                        <div class="row mb-3">
                                             <label>Number of members listed, dues received, and renewal paid "seem right":<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
@@ -599,11 +602,11 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group row">
+                                        <div class="row mb-3">
                                             <label for="Step1_Note">Add New Note:</label>
                                             <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(1)" name="Step1_Note" id="Step1_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
-                                            <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-                                                <button type="button" id="AddNote1" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(1)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                            <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
+                                                <button type="button" id="AddNote1" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(1)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                             </div>
                                         </div>
                                     </div>
@@ -618,7 +621,7 @@
 
                             <!-- end:report_review -->
                             <div class="col-12 text-center">
-								  <button type="submit" id="btn-step-1" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
+								  <button type="submit" id="btn-step-1" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
 							</div>
                         </div>
                     </div>
@@ -632,7 +635,7 @@
                 <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '2' ? 'active' : '' }}">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
-                            <a class="d-block" data-toggle="collapse" href="#collapseTwo" style="width: 100%;">MONTHLY MEETING EXPENSES</a>
+                            <a class="d-block" data-bs-toggle="collapse" href="#collapseTwo" style="width: 100%;">MONTHLY MEETING EXPENSES</a>
                         </h4>
                     </div>
                     <div id="collapseTwo" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '2' ? 'show' : '' }}" data-parent="#accordion">
@@ -749,11 +752,11 @@
 
                                             <div class="col-12">
                                             <div class="col-12">
-                                                <div class="form-group row">
+                                                <div class="row mb-3">
                                                     <label for="Step2_Note">Add New Note:</label>
                                                     <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(2)" name="Step2_Note" id="Step2_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
-                                                    <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-                                                        <button type="button" id="AddNote2" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(2)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                                    <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
+                                                        <button type="button" id="AddNote2" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(2)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                                 </div>
                                                 </div>
                                             </div>
@@ -770,7 +773,7 @@
 								<!-- end:report_review -->
 
                                 <div class="col-12 text-center">
-									<button type="submit" id="btn-step-2" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
+									<button type="submit" id="btn-step-2" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
                                 </div>
                             </div>
                         </div>
@@ -784,7 +787,7 @@
                 <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '3' ? 'active' : '' }}">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
-                            <a class="d-block" data-toggle="collapse" href="#collapseThree" style="width: 100%;">SERVICE PROJECTS</a>
+                            <a class="d-block" data-bs-toggle="collapse" href="#collapseThree" style="width: 100%;">SERVICE PROJECTS</a>
                         </h4>
                     </div>
                     <div id="collapseThree" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '3' ? 'show' : '' }}" data-parent="#accordion">
@@ -880,7 +883,7 @@
                                 <div class="col-md-12">
 
                                     <div class="col-12">
-                                        <div class="form-group row">
+                                        <div class="row mb-3">
                                             <label>Minimum of one service project completed:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-md-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
@@ -893,7 +896,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group row">
+                                        <div class="row mb-3">
                                             <label>Made a donation to the M2M Fund:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
@@ -908,11 +911,11 @@
                                         </div>
 
                                     <div class="col-12">
-                                        <div class="form-group row">
+                                        <div class="row mb-3">
 										<label for="Step3_Note">Add New Note:</label>
                                         <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(3)" name="Step3_Note" id="Step3_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
-                                        <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-                                            <button type="button" id="AddNote3" class="btn btn-sm btn-success disabled" onclick="AddNote(3)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                        <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
+                                            <button type="button" id="AddNote3" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(3)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 								        </div>
                                         </div>
                                     </div>
@@ -927,7 +930,7 @@
 
 						<!-- end:report_review -->
                         <div class="col-12 text-center">
-						  <button type="submit" id="btn-step-3" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
+						  <button type="submit" id="btn-step-3" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
 					    </div>
                     </div>
                 </div>
@@ -941,7 +944,7 @@
                 <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '4' ? 'active' : '' }}">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
-                            <a class="d-block" data-toggle="collapse" href="#collapseFour" style="width: 100%;">PARTIES & MEMBER BENEFITS</a>
+                            <a class="d-block" data-bs-toggle="collapse" href="#collapseFour" style="width: 100%;">PARTIES & MEMBER BENEFITS</a>
                         </h4>
                     </div>
                     <div id="collapseFour" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '4' ? 'show' : '' }}" data-parent="#accordion">
@@ -1026,7 +1029,7 @@
                             <div class="col-12">
 
                                 <div class="col-12">
-                                    <div class="form-group row">
+                                    <div class="row mb-3">
                                         <label>Is the Chapter's Party Expense under 15%?<span class="field-required">*&nbsp;</span></label>
                                         <div class="col-12 row">
                                             <div class="form-check" style="margin-right: 20px;">
@@ -1046,11 +1049,11 @@
                                 </div>
 
                                 <div class="col-12">
-                                    <div class="form-group row">
+                                    <div class="row mb-3">
                                         <label for="Step4_Note">Add New Note:</label>
                                         <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(4)" name="Step4_Note" id="Step4_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
-                                    <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-                                        <button type="button" id="AddNote4" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(4)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                    <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
+                                        <button type="button" id="AddNote4" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(4)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                     </div>
                                 </div>
                             </div>
@@ -1066,7 +1069,7 @@
 
 					<!-- end:report_review -->
                     <div class="col-12 text-center">
-                        <button type="submit" id="btn-step-4" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
+                        <button type="submit" id="btn-step-4" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
                     </div>
                 </div>
             </div>
@@ -1080,7 +1083,7 @@
                 <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '5' ? 'active' : '' }}">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
-                            <a class="d-block" data-toggle="collapse" href="#collapseFive" style="width: 100%;">OFFICE & OPERATING EXPENSES</a>
+                            <a class="d-block" data-bs-toggle="collapse" href="#collapseFive" style="width: 100%;">OFFICE & OPERATING EXPENSES</a>
                         </h4>
                     </div>
                     <div id="collapseFive" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '5' ? 'show' : '' }}" data-parent="#accordion">
@@ -1147,11 +1150,11 @@
 
                             <div class="col-12">
                                 <div class="col-12">
-                                    <div class="form-group row">
+                                    <div class="row mb-3">
 								<label for="Step5_Note">Add New Note:</label>
                                         <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(5)" name="Step5_Note" id="Step5_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
-                                <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-								<button type="button" id="AddNote5" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(5)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
+								<button type="button" id="AddNote5" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(5)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 						    </div>
                         </div>
                     </div>
@@ -1167,7 +1170,7 @@
 
                     <!-- end:report_review -->
                     <div class="col-12 text-center">
-                        <button type="submit" id="btn-step-5" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
+                        <button type="submit" id="btn-step-5" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
                     </div>
                 </div>
             </div>
@@ -1181,7 +1184,7 @@
             <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '6' ? 'active' : '' }}">
                 <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
-                        <a class="d-block" data-toggle="collapse" href="#collapseSix" style="width: 100%;">INTERNATIONAL EVENTS & RE-REGISTRATION</a>
+                        <a class="d-block" data-bs-toggle="collapse" href="#collapseSix" style="width: 100%;">INTERNATIONAL EVENTS & RE-REGISTRATION</a>
                     </h4>
                 </div>
                 <div id="collapseSix" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '6' ? 'show' : '' }}" data-parent="#accordion">
@@ -1261,7 +1264,7 @@
 
                                 <div class="col-12">
                                 <div class="col-12">
-                                    <div class="form-group row">
+                                    <div class="row mb-3">
                                         <label>Did they attended an in person or virtual International Event?<span class="field-required">*&nbsp;</span></label>
                                         <div class="col-12 row">
                                             <div class="form-check" style="margin-right: 20px;">
@@ -1274,11 +1277,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
+                                    <div class="row mb-3">
                                     <label for="Step6_Note">Add New Note:</label>
                                             <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(6)" name="Step6_Note" id="Step6_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
-                                    <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-                                        <button type="button" id="AddNote6" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(6)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                    <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
+                                        <button type="button" id="AddNote6" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(6)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                 </div>
                             </div>
                         </div>
@@ -1294,7 +1297,7 @@
 
                     <!-- end:report_review -->
                     <div class="col-12 text-center">
-                          <button type="submit" id="btn-step-6" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
+                          <button type="submit" id="btn-step-6" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
                     </div>
                 </div>
             </div>
@@ -1308,7 +1311,7 @@
             <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '7' ? 'active' : '' }}">
                 <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
-                        <a class="d-block" data-toggle="collapse" href="#collapseSeven" style="width: 100%;">DONATIONS TO YOUR CHAPTER</a>
+                        <a class="d-block" data-bs-toggle="collapse" href="#collapseSeven" style="width: 100%;">DONATIONS TO YOUR CHAPTER</a>
                     </h4>
                 </div>
                 <div id="collapseSeven" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '7' ? 'show' : '' }}" data-parent="#accordion">
@@ -1423,11 +1426,11 @@
 
                                     <div class="col-12">
                                     <div class="col-12">
-                                        <div class="form-group row">
+                                        <div class="row mb-3">
 										<label for="Step7_Note">Add New Note:</label>
                                             <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(7)" name="Step7_Note" id="Step7_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
-                                        <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-										<button type="button" id="AddNote7" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(7)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                        <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
+										<button type="button" id="AddNote7" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(7)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 								</div>
                             </div>
                         </div>
@@ -1443,7 +1446,7 @@
 
 						<!-- end:report_review -->
                         <div class="col-12 text-center">
-							  <button type="submit" id="btn-step-7" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
+							  <button type="submit" id="btn-step-7" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
                         <div>
                         </div>
                     </div>
@@ -1457,7 +1460,7 @@
                 <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '8' ? 'active' : '' }}">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
-                            <a class="d-block" data-toggle="collapse" href="#collapseEight" style="width: 100%;">OTHER INCOME & EXPENSES</a>
+                            <a class="d-block" data-bs-toggle="collapse" href="#collapseEight" style="width: 100%;">OTHER INCOME & EXPENSES</a>
                         </h4>
                     </div>
                     <div id="collapseEight" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '8' ? 'show' : '' }}" data-parent="#accordion">
@@ -1531,11 +1534,11 @@
 
                                 <div class="col-12">
                                 <div class="col-12">
-                                    <div class="form-group row">
+                                    <div class="row mb-3">
 									<label for="Step8_Note">Add New Note:</label>
                                         <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(8)" name="Step8_Note" id="Step8_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
-                                    <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-									<button type="button" id="AddNote8" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(8)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                    <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
+									<button type="button" id="AddNote8" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(8)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 							</div>
                         </div>
                     </div>
@@ -1549,7 +1552,7 @@
                     <div class="col-12"><br></div>
 					<!-- end:report_review -->
                     <div class="col-12 text-center">
-							  <button type="submit" id="btn-step-8" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
+							  <button type="submit" id="btn-step-8" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
 					</div>
                 </div>
             </div>
@@ -1563,7 +1566,7 @@
                 <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '9' ? 'active' : '' }}">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
-                            <a class="d-block" data-toggle="collapse" href="#collapseNine" style="width: 100%;">FINANCIAL SUMMARY</a>
+                            <a class="d-block" data-bs-toggle="collapse" href="#collapseNine" style="width: 100%;">FINANCIAL SUMMARY</a>
                         </h4>
                     </div>
                     <div id="collapseNine" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '9' ? 'show' : '' }}" data-parent="#accordion">
@@ -1658,13 +1661,13 @@
                 <div class="col-12">
 
                     <div class="col-12">
-                        <div class="form-group row">
+                        <div class="row mb-3">
                             <label>Total Income/Revenue:</label>
                         <div class="col-12">
                             <strong>{{ '$'.number_format($totalIncome, 2) }}</strong>
                         </div>
                     </div>
-                        <div class="form-group row">
+                        <div class="row mb-3">
                             <label>Is the Total Income/Revenue less than $50,000?<span class="field-required">*&nbsp;</span></label>
                             <div class="col-12 row">
                                 <div class="form-check" style="margin-right: 20px;">
@@ -1680,11 +1683,11 @@
                     </div>
 
                     <div class="col-12">
-                        <div class="form-group row">
+                        <div class="row mb-3">
                             <label for="Step9_Note">Add New Note:</label>
                             <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(9)" name="Step9_Note" id="Step9_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
-                            <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-                            <button type="button" id="AddNote9" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(9)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                            <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
+                            <button type="button" id="AddNote9" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(9)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                     </div>
                 </div>
             </div>
@@ -1698,7 +1701,7 @@
                 <div class="col-12"><br></div>
 		    <!-- end:report_review -->
                     <div class="col-12 text-center">
-                        <button type="submit" id="btn-step-9" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
+                        <button type="submit" id="btn-step-9" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
                         </div>
                     </div>
                 </div>
@@ -1712,7 +1715,7 @@
                 <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '10' ? 'active' : '' }}">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
-                            <a class="d-block" data-toggle="collapse" href="#collapseTen" style="width: 100%;">BANK RECONCILIATION</a>
+                            <a class="d-block" data-bs-toggle="collapse" href="#collapseTen" style="width: 100%;">BANK RECONCILIATION</a>
                         </h4>
                     </div>
                     <div id="collapseTen" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '10' ? 'show' : '' }}" data-parent="#accordion">
@@ -1841,9 +1844,9 @@
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Upload or Replace Bank Statement(s).<br>
                                         @if (!is_null($chEOYDocuments->statement_1_path))
-                                            <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Bank Statement</button>
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Bank Statement</button>
                                         @else
-                                            <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Bank Statement</button>
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Bank Statement</button>
                                         @endif
                                     </div>
                                         <input type="hidden" name="StatementFile" id="StatementPath" value="{{ $chEOYDocuments->statement_1_path }}">
@@ -1851,9 +1854,9 @@
                                     <div class="col-12"><br></div>
                                     <div class="col-12" id="Statement2Block">
                                         @if (!is_null($chEOYDocuments->statement_2_path))
-                                            <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Additional Bank Statement</button>
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Additional Bank Statement</button>
                                         @else
-                                            <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Additional Bank Statement</button>
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Additional Bank Statement</button>
                                         @endif
                                     </div>
                                         <input type="hidden" name="Statement2File" id="Statement2Path" value="{{ $chEOYDocuments->statement_2_path }}">
@@ -1863,14 +1866,14 @@
                                 <div class="col-12">
 
                                 <div class="col-12">
-                                    <div class="form-group row">
+                                    <div class="row mb-3">
                                         <label>Ending Balance on Last Year's Report:</label>
                                         <div class="col-md-12 row">
                                             <strong>{{ '$'.number_format($chFinancialReport->pre_balance, 2) }}</strong>
                                         </div>
                                     </div>
 
-                                    <div class="form-group row">
+                                    <div class="row mb-3">
                                         <label>Does this year's Beginning Balance match last year's Ending Balance?<span class="field-required">*&nbsp;</span></label>
                                         <div class="col-12 row">
                                             <div class="form-check" style="margin-right: 20px;">
@@ -1883,7 +1886,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
+                                    <div class="row mb-3">
                                         <label>Current bank statement included and balance matches chapter entry:<span class="field-required">*&nbsp;</span></label>
                                         <div class="col-12 row">
                                             <div class="form-check" style="margin-right: 20px;">
@@ -1896,7 +1899,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
+                                    <div class="row mb-3">
                                         <label>Treasury Balance Now matches Reconciled Bank Balance:<span class="field-required">*&nbsp;</span></label>
                                         <div class="col-md-12 row">
                                             <div class="form-check" style="margin-right: 20px;">
@@ -1910,7 +1913,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group row">
+                                    <div class="row mb-3">
                                         <div class="col-12">
                                         <div class="input-group row">
                                             <label for="post_balance">Enter Ending Balance (to be used as beginning balance on next year's report):</label>
@@ -1918,7 +1921,7 @@
                                              <div class="input-group-prepend">
                                               <span class="input-group-text">$</span>
                                             </div>
-<input type="text" class="form-control" min="0" step="0.01" name="post_balance" id="post_balance" style="width: 120px;" value="{{ !empty($chFinancialReport) ? $chFinancialReport->post_balance : '' }}">
+                                                <input type="text" class="form-control" min="0" step="0.01" name="post_balance" id="post_balance" style="width: 120px;" value="{{ !empty($chFinancialReport) ? $chFinancialReport->post_balance : '' }}">
                                         </div>
                                         </div>
                                     </div>
@@ -1926,10 +1929,10 @@
                             </div>
 
                     <div class="col-12">
-                                <div class="form-group row">
+                                <div class="row mb-3">
                                         <label for="Step10_Note">Add New Note:</label>
-<textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(10)" name="Step10_Note" id="Step10_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>                                        <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-                                        <button type="button" id="AddNote10" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(10)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                            <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(10)" name="Step10_Note" id="Step10_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>                                        <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
+                                        <button type="button" id="AddNote10" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(10)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                     </div>
                                 </div>
                             </div>
@@ -1945,7 +1948,7 @@
 
                     <!-- end:report_review -->
                     <div class="col-12 text-center">
-                        <button type="submit" id="btn-step-10" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
+                        <button type="submit" id="btn-step-10" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
                     </div>
                 </div>
             </div>
@@ -1959,7 +1962,7 @@
             <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '11' ? 'active' : '' }}">
                 <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
-                        <a class="d-block" data-toggle="collapse" href="#collapseEleven" style="width: 100%;">990N IRS FILING</a>
+                        <a class="d-block" data-bs-toggle="collapse" href="#collapseEleven" style="width: 100%;">990N IRS FILING</a>
                     </h4>
                 </div>
                 <div id="collapseEleven" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '11' ? 'show' : '' }}" data-parent="#accordion">
@@ -1988,13 +1991,13 @@
                                     <div class="col-12" id="990NBlock">
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Replace 990N File.<br>
-                                        <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace 990N Confirmation</button>
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace 990N Confirmation</button>
                                 </div>
                             @else
                                 <div class="col-12" id="990NBlock">
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Upload 990N File.<br>
-                                        <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload 990N Confirmation</button>
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload 990N Confirmation</button>
                                 </div>
                             @endif
 <input type="hidden" name="990NFiling" id="990NFiling" value="{{ $chEOYDocuments->irs_path }}">
@@ -2002,7 +2005,7 @@
                             <div class="col-12"><br></div>
                             <div class="col-12">
 
-                                <div class="form-group row">
+                                <div class="row mb-3">
                                     <label>Did the chapter file their {{ $irsFilingName }} with the date range of <strong>7/1/{{ $lastYear }} - 6/30/{{ $currentYear }}</strong>?<span class="field-required">*&nbsp;</span></label>
                                     <div class="col-12 row">
                                         <div class="form-check" style="margin-right: 20px;">
@@ -2017,10 +2020,10 @@
                                 </div>
 
                         <div class="col-12">
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                     <label for="Step11_Note">Add New Note:</label>
-<textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(11)" name="Step11_Note" id="Step11_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>                                    <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-                                    <button type="button" id="AddNote11" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(11)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                        <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(11)" name="Step11_Note" id="Step11_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>                                    <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
+                                    <button type="button" id="AddNote11" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(11)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                 </div>
                             </div>
                         </div>
@@ -2036,7 +2039,7 @@
 
                 <!-- end:report_review -->
                 <div class="col-12 text-center">
-                    <button type="submit" id="btn-step-11" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
+                    <button type="submit" id="btn-step-11" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
                 </div>
             </div>
         </div>
@@ -2050,7 +2053,7 @@
             <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '12' ? 'active' : '' }}">
                 <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
-                        <a class="d-block" data-toggle="collapse" href="#collapseTwelve" style="width: 100%;">CHAPTER QUESTIONS</a>
+                        <a class="d-block" data-bs-toggle="collapse" href="#collapseTwelve" style="width: 100%;">CHAPTER QUESTIONS</a>
                     </h4>
                 </div>
                 <div id="collapseTwelve" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '12' ? 'show' : '' }}" data-parent="#accordion">
@@ -2163,7 +2166,7 @@
 
                             <div class="col-12">
                                     <div class="col-12">
-                                        <div class="form-group row">
+                                        <div class="row mb-3">
                                             <label>Did they purchase or have leftover pins?:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
@@ -2176,7 +2179,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group row">
+                                        <div class="row mb-3">
                                             <label>Did they purchase MOMS Club merchandise?:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
@@ -2189,7 +2192,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group row">
+                                        <div class="row mb-3">
                                             <label>Did they offer MOMS Club merchandise or info on how to buy to members?:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
@@ -2203,7 +2206,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-group row">
+                                        <div class="row mb-3">
                                             <label>Did they make the Manual/By-Laws available to members?:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
@@ -2216,7 +2219,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group row">
+                                        <div class="row mb-3">
                                             <label>Did they Sistered another chapter?:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
@@ -2231,10 +2234,10 @@
                                         </div>
 
 
-                                        <div class="form-group row">
+                                        <div class="row mb-3">
                                             <label for="Step12_Note">Add New Note:</label>
-<textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(12)" name="Step12_Note" id="Step12_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>                                            <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-                                            <button type="button" id="AddNote12" class="btn btn-sm bg-gradient-success disabled" onclick="AddNote(12)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                                <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(12)" name="Step12_Note" id="Step12_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>                                            <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
+                                            <button type="button" id="AddNote12" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(12)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                         </div>
                                     </div>
                                 </div>
@@ -2250,7 +2253,7 @@
 
 				<!-- end:report_review -->
                 <div class="col-12 text-center">
-						<button type="submit" id="btn-step-12" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
+						<button type="submit" id="btn-step-12" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
 					</div>
                 </div>
             </div>
@@ -2267,13 +2270,13 @@
             <!-- /.card -->
             </div>
 
-            <div class="card-body text-center">
+            <div class="card-body text-center mt-3">
                 @if ($confId == $chConfId)
-                    <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyfinancialreport') }}'"><i class="fas fa-reply mr-2"></i>Back to Financial Report</button>
+                    <button type="button" id="back-eoy" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.eoyfinancialreport') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Financial Report</button>
                 @elseif ($confId != $chConfId && $ITCondition)
-                    <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyfinancialreport', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Financial Report</button>
+                    <button type="button" id="back-eoy" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.eoyfinancialreport', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Financial Report</button>
                 @endif
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Details</button>
+                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to EOY Details</button>
 
             </div>
         </form>

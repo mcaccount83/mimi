@@ -10,7 +10,7 @@
 
 <header class="flex flex-shrink-0 bg-gray-800">
     <div class="w-full flex-shrink-0 px-4 py-3">
-        <span class="ml-4 mr-2 text-lg font-medium text-white">{{ __('Sent Emails') }}</span>
+        <span class="ms-4 me-2 text-lg font-medium text-white">{{ __('Sent Emails') }}</span>
     </div>
 </header>
 

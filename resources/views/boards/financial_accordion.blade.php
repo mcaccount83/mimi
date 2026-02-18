@@ -12,7 +12,7 @@
     <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '1' ? 'active' : '' }}">
         <div class="card-header" id="accordion-header-members">
             <h4 class="card-title w-100">
-                <a class="d-block" data-toggle="collapse" href="#collapseOne" style="width: 100%;">CHAPTER DUES</a>
+                <a class="d-block" data-bs-toggle="collapse" href="#collapseOne" style="width: 100%;">CHAPTER DUES</a>
             </h4>
         </div>
         <div id="collapseOne" class="collapse {{ $chFinancialReport->farthest_step_visited == '1' ? 'show' : '' }}" data-parent="#accordion">
@@ -23,20 +23,20 @@
                     <label>Chapter Roster Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->roster_path }}">&nbsp; View Chapter Roster</a><br>
                     <strong style="color:red">Please Note</strong><br>
                         This will refresh the screen - be sure to save all work before clicking button to Replace Roster File.<br>
-                    <button type="button" class="btn btn-sm btn-primary" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Roster File</button>
+                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Roster File</button>
             </div>
         @else
             <div class="col-md-12" id="RosterBlock">
                     <strong style="color:red">Please Note</strong><br>
                         This will refresh the screen - be sure to save all work before clicking button to Upload Roster File.<br>
-                    <button type="button" class="btn btn-sm btn-primary" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Roster File</button>
+                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Roster File</button>
             </div>
         @endif
             <input type="hidden" name="RosterPath" id="RosterPath" value="{{ $chEOYDocuments->roster_path }}">
             <div class="clearfix"></div>
         <div class="col-md-12"><br></div>
     <div class="col-md-12 ">
-        <div class="col-12 form-group row">
+        <div class="col-12 row mb-3">
             <label>Did your chapter change your dues this year?<span class="field-required">*</span></label>
             <div class="col-md-12 row">
                 <div class="form-check" style="margin-right: 20px;">
@@ -49,7 +49,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 form-group row">
+        <div class="col-12 row mb-3">
             <label>Did your chapter charge different amounts for new and returning members?<span class="field-required">*</span></label>
             <div class="col-md-12 row">
                 <div class="form-check" style="margin-right: 20px;">
@@ -62,7 +62,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 form-group row">
+        <div class="col-12 row mb-3">
             <label>Did your chapter have any members who didn't pay full dues?<span class="field-required">*</span></label>
             <div class="col-md-12 row">
                 <div class="form-check" style="margin-right: 20px;">
@@ -80,16 +80,16 @@
        <div class="col-md-12">
         <p><i>Note: Count all members who paid dues, even if they are not still members.</i></p>
         </div>
-        <div class="col-md-6 float-left nopadding-l">
-            <div class="form-group">
+        <div class="col-md-6 float-start nopadding-l">
+            <div class="mb-3">
                 <label for="TotalNewMembers" id="lblTotalNewMembers">Total New Members (who paid dues)</label>
                 <div class="">
                 <input type="number" class="form-control txt-num" oninput="ChangeMemberCount()" name="TotalNewMembers" id="TotalNewMembers" value="{{ $chFinancialReport->total_new_members }}">
                 </div>
             </div>
         </div>
-        <div class="col-md-6 float-left">
-            <div class="form-group">
+        <div class="col-md-6 float-start">
+            <div class="mb-3">
             <label for="TotalRenewedMembers" id="lblTotalRenewedMembers">
                 Total Renewed Members (who paid dues)
             </label>
@@ -99,16 +99,16 @@
             </div>
         </div>
         <div class="col-md-12" id="ifChangeDues" style="display:none">
-            <div class="col-md-6 float-left nopadding-l">
-                <div class="form-group">
+            <div class="col-md-6 float-start nopadding-l">
+                <div class="mb-3">
                     <label for="TotalNewMembersNewFee">Total New Members (who paid NEW dues)</label>
                     <div class="input-group">
                         <input type="number" class="form-control " oninput="ChangeMemberCount()" name="TotalNewMembersNewFee" id="TotalNewMembersNewFee" value="{{ $chFinancialReport->total_new_members_changed_dues }}">
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 float-left nopadding">
-                <div class="form-group">
+            <div class="col-md-6 float-start nopadding">
+                <div class="mb-3">
                 <label for="TotalRenewedMembersNewFee">Total Renewed Members (who paid NEW dues)</label>
                 <div class="input-group">
                 <input type="number"  class="form-control" oninput="ChangeMemberCount()" name="TotalRenewedMembersNewFee" id="TotalRenewedMembersNewFee" value="{{ $chFinancialReport->total_renewed_members_changed_dues }}">
@@ -117,11 +117,11 @@
             </div>
         </div>
         <div class="col-md-6">
-            <div class="form-group">
+            <div class="mb-3">
                 <label for="MemberDues" id="lblMemberDues">
                     Member Dues
                 </label>
-                <div class="form-group">
+                <div class="mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text">$</span>
                 <input type="text" class="form-control" name="MemberDues" oninput="ChangeMemberCount()" id="MemberDues" value="{{ $chFinancialReport->dues_per_member }}"
@@ -131,11 +131,11 @@
             </div>
         </div>
         <div class="col-md-6" id="ifChangedDues1" style="visibility:hidden">
-            <div class="form-group">
+            <div class="mb-3">
                 <label for="NewMemberDues" id="lblNewMemberDues">
                     Member Dues (New Amount)
                 </label>
-                <div class="form-group">
+                <div class="mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text">$</span>
                 <input type="text" class="form-control" name="NewMemberDues" oninput="ChangeMemberCount()" id="NewMemberDues" value="{{ $chFinancialReport->dues_per_member_new_changed}}"
@@ -145,10 +145,10 @@
             </div>
         </div>
         <div class="col-md-12" id="ifChangedDuesDifferentPerMemberType" style="display:none">
-            <div class="col-md-6 float-left nopadding-l">
-                <div class="form-group">
+            <div class="col-md-6 float-start nopadding-l">
+                <div class="mb-3">
                     <label for="MemberDuesRenewal">Renewal Dues</label>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text">$</span>
                     <input type="text" class="form-control " name="MemberDuesRenewal" oninput="ChangeMemberCount()" id="MemberDuesRenewal" value="{{ $chFinancialReport->dues_per_member_renewal }}"
@@ -157,10 +157,10 @@
                 </div>
                 </div>
             </div>
-            <div class="col-md-6 float-left nopadding" id="ifChangedDuesDifferentPerMemberType1" style="visibility:hidden">
-                <div class="form-group">
+            <div class="col-md-6 float-start nopadding" id="ifChangedDuesDifferentPerMemberType1" style="visibility:hidden">
+                <div class="mb-3">
                 <label for="NewMemberDuesRenewal">Renewal Dues (NEW Amount)</label>
-                <div class="form-group">
+                <div class="mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text">$</span>
                 <input type="text" class="form-control" name="NewMemberDuesRenewal" oninput="ChangeMemberCount()" id="NewMemberDuesRenewal" value="{{ $chFinancialReport->dues_per_member_renewal_changed }}"
@@ -171,27 +171,27 @@
             </div>
         </div>
         <div class="col-md-12" id="ifMembersNoDues" style="display:none">
-            <div class="col-md-6 float-left nopadding-l">
-                <div class="form-group">
+            <div class="col-md-6 float-start nopadding-l">
+                <div class="mb-3">
                     <label for="MembersNoDues">Total Members Who Paid No Dues</label>
                     <input type="text" class="form-control" name="MembersNoDues" id="MembersNoDues" oninput="ChangeMemberCount()" value="{{ $chFinancialReport->members_who_paid_no_dues }}">
                 </div>
             </div>
-            <div class="col-md-6 float-left " style="visibility:hidden"><div class="form-group">
+            <div class="col-md-6 float-start " style="visibility:hidden"><div class="mb-3">
                     <label for="MembersNoDues">Hidden</label>
                     <input type="number" class="form-control" value="0">
                 </div></div>
 
-            <div class="col-md-6 float-left nopadding-l">
-                <div class="form-group">
+            <div class="col-md-6 float-start nopadding-l">
+                <div class="mb-3">
                 <label for="TotalPartialDuesMembers">Total Members Who Paid Partial Dues</label>
                 <input type="number" class="form-control" name="TotalPartialDuesMembers" id="TotalPartialDuesMembers" oninput="ChangeMemberCount()"value="{{ $chFinancialReport->members_who_paid_partial_dues }}">
                 </div>
             </div>
-            <div class="col-md-6 float-left nopadding">
-                <div class="form-group">
+            <div class="col-md-6 float-start nopadding">
+                <div class="mb-3">
                 <label for="PartialDuesMemberDues">Total Partial Dues Amount Collected</label>
-                <div class="form-group">
+                <div class="mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text">$</span>
                 <input type="text" class="form-control " name="PartialDuesMemberDues" id="PartialDuesMemberDues" oninput="ChangeMemberCount()" value="{{ $chFinancialReport->total_partial_fees_collected }}"
@@ -200,16 +200,16 @@
             </div>
                 </div>
             </div>
-            <div class="col-md-6 float-left nopadding-l">
-                <div class="form-group">
+            <div class="col-md-6 float-start nopadding-l">
+                <div class="mb-3">
                 <label for="TotalAssociateMembers">Total Associate Members</label>
                 <input type="number" class="form-control" name="TotalAssociateMembers" id="TotalAssociateMembers" oninput="ChangeMemberCount()" value="{{ $chFinancialReport->total_associate_members }}">
                 </div>
             </div>
-            <div class="col-md-6 float-left nopadding">
-                <div class="form-group">
+            <div class="col-md-6 float-start nopadding">
+                <div class="mb-3">
                 <label for="AssociateMemberDues">Associate Member Dues</label>
-                <div class="form-group">
+                <div class="mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text">$</span>
                 <input type="text" class="form-control" name="AssociateMemberDues" id="AssociateMemberDues" oninput="ChangeMemberCount()" value="{{ $chFinancialReport->associate_member_fee }}"
@@ -221,17 +221,17 @@
             <p><small><i>Note: Associate Members are not dues-waived or reduced members. They are a separate category of members. Many chapters do not have any Associate Members, but if your
                     chapter did have Associate Members this year, how many Associate Members did your chapter have?</i></small></p>
         </div>
-        <div class="col-md-6 float-left">
-            <div class="form-group">
+        <div class="col-md-6 float-start">
+            <div class="mb-3">
                 <label for="TotalMembers">Total Members</label>
                 <input type="number" class="form-control" name="TotalMembers" id="TotalMembers" readonly>
             </div>
         </div>
         <div class="col-md-6"><br></div>
-        <div class="col-md-6 float-left">
-            <div class="form-group">
+        <div class="col-md-6 float-start">
+            <div class="mb-3">
                 <label for="TotalDues">Total Dues Collected</label>
-                <div class="form-group">
+                <div class="mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text">$</span>
                 <input type="text" class="form-control " name="TotalDues" id="TotalDues"
@@ -243,8 +243,8 @@
         <hr>
     </div>
 
-    <div class="card-body text-center">
-              <button type="button" id="btn-step-1" class="btn btn-primary"  ><i class="fas fa-save" ></i>&nbsp; Save</button>
+    <div class="card-body text-center mt-3">
+              <button type="button" id="btn-step-1" class="btn btn-primary bg-gradient mb-2"  ><i class="bi bi-floppy-fill me-2"></i>Save</button>
     </div>
     </section>
 </div>
@@ -256,17 +256,17 @@
 <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '2' ? 'active' : '' }}">
 <div class="card-header" id="accordion-header-members">
     <h4 class="card-title w-100">
-        <a class="d-block" data-toggle="collapse" href="#collapseTwo" style="width: 100%;">MONTHLY MEETING EXPENSES</a>
+        <a class="d-block" data-bs-toggle="collapse" href="#collapseTwo" style="width: 100%;">MONTHLY MEETING EXPENSES</a>
     </h4>
 </div>
 <div id="collapseTwo" class="collapse {{ $chFinancialReport->farthest_step_visited == '2' ? 'show' : '' }}" data-parent="#accordion">
     <div class="card-body">
     <section>
-        <div class="col-12 form-row form-group">
-            <div class="col-md-6 float-left">
-                <div class="form-group">
+        <div class="col-12 form-row mb-3">
+            <div class="col-md-6 float-start">
+                <div class="mb-3">
                     <label for="ManditoryMeetingFeesPaid">Mandatory Meeting Room Fees Paid</label>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text">$</span>
                             <input type="text"  class="form-control" name="ManditoryMeetingFeesPaid" id="ManditoryMeetingFeesPaid" oninput="ChangeMeetingFees()" value="{{ $chFinancialReport->manditory_meeting_fees_paid }}"
@@ -275,10 +275,10 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 float-left">
-                <div class="form-group">
+            <div class="col-md-6 float-start">
+                <div class="mb-3">
                     <label for="VoluntaryDonationsPaid">Voluntary Donations Paid</label>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text">$</span>
                             <input type="text"  class="form-control" name="VoluntaryDonationsPaid" id="VoluntaryDonationsPaid" oninput="ChangeMeetingFees()" value="{{ $chFinancialReport->voluntary_donations_paid }}"
@@ -287,10 +287,10 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 float-left">
-                <div class="form-group">
+            <div class="col-md-6 float-start">
+                <div class="mb-3">
                     <label for="TotalMeetingRoomExpenses">Total Meeting Room Expenses</label>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text">$</span>
                             <input type="text" class="form-control" name="TotalMeetingRoomExpenses" id="TotalMeetingRoomExpenses"
@@ -302,8 +302,8 @@
             <hr>
         </div>
 
-        <div class="col-12 form-row form-group">
-            <div class="col-md-12 float-left">
+        <div class="col-12 form-row mb-3">
+            <div class="col-md-12 float-start">
             <label>Did you have speakers at any meetings?<span class="field-required">*</span></label>
             <div class="col-md-12 form-row">
                 <div class="form-check" >
@@ -316,7 +316,7 @@
                 </div>
             </div>
         </div>
-        <div class="form-group form-row" style="margin-left: 15px;" id="divMeetingSpeakersTopics">
+        <div class="mb-3 form-row" style="margin-left: 15px;" id="divMeetingSpeakersTopics">
             <label>If yes, check any of the topics that were covered:<span class="field-required">*</span></label>
             <div class="col-md-12 form-row">
                 @php
@@ -352,8 +352,8 @@
         </div>
     </div>
 
-        <div class="col-12 form-row form-group">
-            <div class="col-md-12 float-left">
+        <div class="col-12 form-row mb-3">
+            <div class="col-md-12 float-start">
             <label>Did you have any discussion topics at your meetings? If yes, how often?<span class="field-required">*</span></label>
             <div class="col-md-12 form-row">
                 <div class="col-md-12 row">
@@ -382,8 +382,8 @@
         </div>
     </div>
 
-        <div class="col-12 form-row form-group">
-            <div class="col-md-12 float-left">
+        <div class="col-12 form-row mb-3">
+            <div class="col-md-12 float-start">
             <label>Did you have a children’s room with babysitters?<span class="field-required">*</span></label>
             <div class="col-md-12 form-row">
                 <div class="form-check" >
@@ -402,11 +402,11 @@
         </div>
         </div>
 
-        <div class="col-12 form-row form-group">
-            <div class="col-md-6 float-left">
-                <div class="form-group">
+        <div class="col-12 form-row mb-3">
+            <div class="col-md-6 float-start">
+                <div class="mb-3">
                     <label for="PaidBabySitters">Paid Babysitter Expenses (if any)</label>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text">$</span>
                             <input type="text" class="form-control" name="PaidBabySitters" id="PaidBabySitters" oninput="ChangeChildrensRoomExpenses()" value="{{ $chFinancialReport->paid_baby_sitters }}"
@@ -415,7 +415,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 float-left">
+            <div class="col-md-12 float-start">
                 <p>
                     <strong>List all Children's Room Miscellaneous Expenses below.</strong> Briefly describe the expense and list any supplies or other expenses for each project.
                     </p>
@@ -449,12 +449,12 @@
                             @endphp
                             <tr>
                                 <td>
-                                    <div class="form-group">
+                                    <div class="mb-3">
                                         <input type="text" class="form-control" name="ChildrensRoomDesc{{ $row }}" id="ChildrensRoomDesc{{ $row }}" value="{{ $childrens_room[$row]['childrens_room_desc'] ?? '' }}">
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="form-group">
+                                    <div class="mb-3">
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">$</span>
@@ -465,7 +465,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="form-group">
+                                    <div class="mb-3">
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">$</span>
@@ -482,7 +482,7 @@
                         <tr>
                             <td><strong>Total</strong></td>
                             <td>
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">$</span>
@@ -492,7 +492,7 @@
                                 </div>
                             </td>
                             <td>
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">$</span>
@@ -505,15 +505,15 @@
                     </tfoot>
                 </table>
             </div>
-            <div class="col-md-12 float-left">
-                <button type="button" class="btn btn-sm btn-success" onclick="AddChildrenExpenseRow()" ><i class="fas fa-plus" ></i>&nbsp; Add Row</button>
-                <button type="button" class="btn btn-sm btn-danger " onclick="DeleteChildrenExpenseRow()" ><i class="fas fa-minus" ></i>&nbsp; Remove Row</button>
+            <div class="col-md-12 float-start">
+                <button type="button" class="btn btn-success bg-gradient btn-sm mb-2" onclick="AddChildrenExpenseRow()" ><i class="fas fa-plus" ></i>&nbsp; Add Row</button>
+                <button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" onclick="DeleteChildrenExpenseRow()" ><i class="fas fa-minus" ></i>&nbsp; Remove Row</button>
             </div>
             <div class="col-md-12"><br></div>
-            <div class="col-md-6 float-left">
+            <div class="col-md-6 float-start">
                 <div>
                     <label for="ChildrensRoomTotal">Total Children's Room Expenses</label>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text">$</span>
                             <input type="text"  class="form-control" value="0.00" name="ChildrensRoomTotal"  id="ChildrensRoomTotal"  readonly>
@@ -524,8 +524,8 @@
             <hr>
         </div>
         <input type="hidden" name="ChildrensExpenseRowCount" id="ChildrensExpenseRowCount" value="{{ $ChildrensExpenseRowCount }}" />
-        <div class="card-body text-center">
-            <button type="submit" id="btn-step-2" class="btn btn-primary"><i class="fas fa-save" ></i>&nbsp; Save</button>
+        <div class="card-body text-center mt-3">
+            <button type="submit" id="btn-step-2" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
         </div>
     </section>
 </div>
@@ -537,13 +537,13 @@
 <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '3' ? 'active' : '' }}">
 <div class="card-header" id="accordion-header-members">
     <h4 class="card-title w-100">
-        <a class="d-block" data-toggle="collapse" href="#collapseThree" style="width: 100%;">SERVICE PROJECTS</a>
+        <a class="d-block" data-bs-toggle="collapse" href="#collapseThree" style="width: 100%;">SERVICE PROJECTS</a>
     </h4>
 </div>
 <div id="collapseThree" class="collapse {{ $chFinancialReport->farthest_step_visited == '3' ? 'show' : '' }}" data-parent="#accordion">
     <div class="card-body">
 <section>
-    <div class="col-12 form-row form-group">
+    <div class="col-12 form-row mb-3">
       <p>
         A Service Project is one that benefits others OUTSIDE your chapter. However, a Service Project may also be a project to benefit a member-in-distress or one who has special emergency needs, if the needs are the reason for the project. For example, a fundraiser may benefit the International MOMS Club’s Mother-to-Mother Fund or may be used to help pay extreme medical expenses for a life-threatening illness suffered by a member’s child. (Any fundraisers or projects that benefited your chapter or members who are not suffering emergency or devastating situations should not be listed here. Those should be listed in Step 7.)
       </p>
@@ -552,7 +552,7 @@
       </p>
     </div>
 
-      <div class="col-12 form-row form-group">
+      <div class="col-12 form-row mb-3">
         <label>Did your chapter perform at least one service project to benefit mothers or children?<span class="field-required">*</span></label>
         <div class="col-md-12 form-row">
             <div class="form-check" >
@@ -572,7 +572,7 @@
     </div>
 </div>
 
-<div class="col-12 form-row form-group">
+<div class="col-12 form-row mb-3">
         <label>Did your chapter make any contributions to any organization or individual that is not registered with the government as a charity?<span class="field-required">*</span></label>
         <div class="col-md-12 form-row">
             <div class="form-check">
@@ -592,7 +592,7 @@
     </div>
     </div>
 
-    <div class="col-12 form-row form-group">
+    <div class="col-12 form-row mb-3">
       <p>
         <strong>List all Service Projects below, even if there was no income or expense.</strong> Briefly describe the project and who was benefited by it. List any income and expenses for each project.
       </p>
@@ -635,12 +635,12 @@
                 @endphp
                     <tr>
                         <td>
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <textarea class="form-control" rows="2" name="ServiceProjectDesc{{ $row }}" id="ServiceProjectDesc{{ $row }}">{{ $service_projects[$row]['service_project_desc'] ?? '' }}</textarea>
                             </div>
                         </td>
                         <td>
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">$</span>
@@ -651,7 +651,7 @@
                             </div>
                         </td>
                         <td>
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">$</span>
@@ -662,7 +662,7 @@
                             </div>
                         </td>
                         <td>
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">$</span>
@@ -673,7 +673,7 @@
                             </div>
                         </td>
                         <td>
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">$</span>
@@ -690,7 +690,7 @@
                 <tr>
                     <td><strong>Total</strong></td>
                     <td>
-                        <div class="form-group">
+                        <div class="mb-3">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">$</span>
@@ -700,7 +700,7 @@
                         </div>
                     </td>
                     <td>
-                        <div class="form-group">
+                        <div class="mb-3">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">$</span>
@@ -710,7 +710,7 @@
                         </div>
                     </td>
                     <td>
-                        <div class="form-group">
+                        <div class="mb-3">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">$</span>
@@ -720,7 +720,7 @@
                         </div>
                     </td>
                     <td>
-                        <div class="form-group">
+                        <div class="mb-3">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">$</span>
@@ -733,17 +733,17 @@
             </tfoot>
         </table>
     </div>
-    <div class="col-md-12 float-left">
-        <button type="button" class="btn btn-sm btn-success" onclick="AddServiceProjectRow()" ><i class="fas fa-plus" ></i>&nbsp; Add Row</button>
-        <button type="button" class="btn btn-sm btn-danger " onclick="DeleteServiceProjectRow()" ><i class="fas fa-minus" ></i>&nbsp; Remove Row</button>
+    <div class="col-md-12 float-start">
+        <button type="button" class="btn btn-success bg-gradient btn-sm mb-2" onclick="AddServiceProjectRow()" ><i class="fas fa-plus" ></i>&nbsp; Add Row</button>
+        <button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" onclick="DeleteServiceProjectRow()" ><i class="fas fa-minus" ></i>&nbsp; Remove Row</button>
     </div>
     <div class="col-md-12"><br></div>
-    <div class="col-md-6 float-left">
-        <div class="form-group">
+    <div class="col-md-6 float-start">
+        <div class="mb-3">
             <label for="ServiceProjectIncomeTotal">
                 Total Service Project Income
             </label>
-            <div class="form-group">
+            <div class="mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text">$</span>
             <input type="number" class="form-control" min="0"  step="0.01" name="ServiceProjectIncomeTotal"  id="ServiceProjectIncomeTotal" readonly>
@@ -752,12 +752,12 @@
     </div>
     </div>
     <div class="col-md-6"><br></div>
-    <div class="col-md-6 float-left">
-        <div class="form-group">
+    <div class="col-md-6 float-start">
+        <div class="mb-3">
             <label for="ServiceProjectExpenseTotal">
                 Total Service Project Expenses
             </label>
-            <div class="form-group">
+            <div class="mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text">$</span>
             <input type="number" class="form-control" min="0"  step="0.01" name="ServiceProjectExpenseTotal"  id="ServiceProjectExpenseTotal" readonly>
@@ -768,8 +768,8 @@
 </div>
 <input type="hidden" name="ServiceProjectRowCount" id="ServiceProjectRowCount" value="{{ $ServiceProjectRowCount }}" />
 
-<div class="card-body text-center">
-      <button type="button" class="btn btn-primary" id="btn-step-3" ><i class="fas fa-save" ></i>&nbsp; Save</button>
+<div class="card-body text-center mt-3">
+      <button type="button" class="btn btn-primary bg-gradient mb-2" id="btn-step-3" ><i class="bi bi-floppy-fill me-2"></i>Save</button>
 </div>
 </section>
 </div>
@@ -781,13 +781,13 @@
 <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '4' ? 'active' : '' }}">
 <div class="card-header" id="accordion-header-members">
     <h4 class="card-title w-100">
-        <a class="d-block" data-toggle="collapse" href="#collapseFour" style="width: 100%;">PARTIES & MEMBER BENEFITS</a>
+        <a class="d-block" data-bs-toggle="collapse" href="#collapseFour" style="width: 100%;">PARTIES & MEMBER BENEFITS</a>
     </h4>
 </div>
 <div id="collapseFour" class="collapse {{ $chFinancialReport->farthest_step_visited == '4' ? 'show' : '' }}" data-parent="#accordion">
     <div class="card-body">
 <section>
-<div class="col-12 form-row form-group">
+<div class="col-12 form-row mb-3">
   <p>
     If your members paid to attend any parties or members-only fun activities organized by your chapter, enter the amounts they paid your chapter here. For example, if your members paid money to the chapter to attend a Museum Day or Halloween Party, include those payments here. Include all Year-End Chapter Banquet income in this section. Do not include any money paid to or from your chapter for reservations at International MOMS Club events like Regional/State Luncheons or Workshops – that is listed in Step 5.
   </p>
@@ -830,12 +830,12 @@
 
             <tr>
                 <td>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <input type="text" class="form-control" name="PartyDesc{{ $row }}" id="PartyDesc{{ $row }}" value="{{ $party_expenses[$row]['party_expense_desc'] ?? '' }}">
                     </div>
                 </td>
              <td>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
@@ -847,7 +847,7 @@
                     </div>
                 </td>
                 <td>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
@@ -865,7 +865,7 @@
         <tr>
             <td><strong>Total</strong></td>
             <td>
-                <div class="form-group">
+                <div class="mb-3">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">$</span>
@@ -875,7 +875,7 @@
                 </div>
             </td>
             <td>
-                <div class="form-group">
+                <div class="mb-3">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">$</span>
@@ -889,16 +889,16 @@
 </table>
 
     <div class="col-md-12">
-        <button type="button" class="btn btn-sm btn-success" onclick="AddPartyExpenseRow()" ><i class="fas fa-plus" ></i>&nbsp; Add Row</button>
-        <button type="button" class="btn btn-sm btn-danger" onclick="DeletePartyExpenseRow()" ><i class="fas fa-minus" ></i>&nbsp; Remove Row</button>
+        <button type="button" class="btn btn-success bg-gradient btn-sm mb-2" onclick="AddPartyExpenseRow()" ><i class="fas fa-plus" ></i>&nbsp; Add Row</button>
+        <button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" onclick="DeletePartyExpenseRow()" ><i class="fas fa-minus" ></i>&nbsp; Remove Row</button>
     </div>
     <div class="col-md-12"><br></div>
-    <div class="col-md-6 float-left">
-        <div class="form-group">
+    <div class="col-md-6 float-start">
+        <div class="mb-3">
             <label for="PartyIncomeTotal">
                 Total Benefit Income
             </label>
-            <div class="form-group">
+            <div class="mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="PartyIncomeTotal" id="PartyIncomeTotal"
@@ -908,12 +908,12 @@
     </div>
     </div>
     <div class="col-md-6"><br></div>
-    <div class="col-md-6 float-left">
-        <div class="form-group">
+    <div class="col-md-6 float-start">
+        <div class="mb-3">
             <label for="PartyExpenseTotal">
                 Total Benefit Expenses
             </label>
-            <div class="form-group">
+            <div class="mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="PartyExpenseTotal" id="PartyExpenseTotal"
@@ -925,8 +925,8 @@
     <hr>
 </div>
 <input type="hidden" name="PartyExpenseRowCount" id="PartyExpenseRowCount" value="{{ $PartyExpenseRowCount }}" />
-<div class="card-body text-center">
-    <button type="submit" id="btn-step-4" class="btn btn-primary"><i class="fas fa-save" ></i>&nbsp; Save</button>
+<div class="card-body text-center mt-3">
+    <button type="submit" id="btn-step-4" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
 </div>
 </section>
 </div>
@@ -938,22 +938,22 @@
 <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '5' ? 'active' : '' }}">
 <div class="card-header" id="accordion-header-members">
     <h4 class="card-title w-100">
-        <a class="d-block" data-toggle="collapse" href="#collapseFive" style="width: 100%;">OFFICE & OPERATING EXPENSES</a>
+        <a class="d-block" data-bs-toggle="collapse" href="#collapseFive" style="width: 100%;">OFFICE & OPERATING EXPENSES</a>
     </h4>
 </div>
 <div id="collapseFive" class="collapse {{ $chFinancialReport->farthest_step_visited == '5' ? 'show' : '' }}" data-parent="#accordion">
     <div class="card-body">
 <section>
-<div class="col-12 form-row form-group">
+<div class="col-12 form-row mb-3">
   <p>
     Use this section to list individually any Office Expenses or other Operating Expenses. Please include only one expense type per line (i.e. website hosting, advertising, etc.).
   </p>
-<div class="col-md-4 float-left">
-    <div class="form-group">
+<div class="col-md-4 float-start">
+    <div class="mb-3">
         <label for="PrintingCosts">
             Printing Costs
         </label>
-        <div class="form-group">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
         <input type="text" class="form-control" name="PrintingCosts" id="PrintingCosts" oninput="ChangeOfficeExpenses()" value="{{ $chFinancialReport->office_printing_costs }}"
@@ -962,12 +962,12 @@
     </div>
     </div>
 </div>
-<div class="col-md-4 float-left">
-    <div class="form-group">
+<div class="col-md-4 float-start">
+    <div class="mb-3">
         <label for="PostageCosts">
             Postage Costs
         </label>
-        <div class="form-group">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
         <input type="text" class="form-control" name="PostageCosts" id="PostageCosts" oninput="ChangeOfficeExpenses()" value="{{ $chFinancialReport->office_postage_costs }}"
@@ -976,12 +976,12 @@
     </div>
     </div>
 </div>
-<div class="col-md-4 float-left">
-    <div class="form-group">
+<div class="col-md-4 float-start">
+    <div class="mb-3">
         <label for="MembershipPins">
             Membership Pins
         </label>
-        <div class="form-group">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
         <input type="text" class="form-control" name="MembershipPins" id="MembershipPins" oninput="ChangeOfficeExpenses()" value="{{ $chFinancialReport->office_membership_pins_cost }}"
@@ -991,7 +991,7 @@
     </div>
 </div>
 <div class="col-md-12"><br></div>
-<div class="col-md-12 float-left">
+<div class="col-md-12 float-start">
     <label for="office-expenses">
         Other Office & Operating Expenses
     </label>
@@ -1022,12 +1022,12 @@
         @endphp
             <tr>
                 <td>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <input type="text" class="form-control" name="OfficeDesc{{ $row }}" id="OfficeDesc{{ $row }}" value="{{ $other_office_expenses[$row]['office_other_desc'] ?? '' }}">
                     </div>
                 </td>
                 <td>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
@@ -1044,7 +1044,7 @@
         <tr>
             <td><strong>Total</strong></td>
             <td>
-                <div class="form-group">
+                <div class="mb-3">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">$</span>
@@ -1056,17 +1056,17 @@
         </tr>
     </tfoot>
 </table>
-<div class="col-md-12 float-left">
-    <button type="button" class="btn btn-sm btn-success " onclick="AddOfficeExpenseRow()" ><i class="fas fa-plus" ></i>&nbsp; Add Row</button>
-    <button type="button" class="btn btn-sm btn-danger " onclick="DeleteOfficeExpenseRow()" ><i class="fas fa-minus" ></i>&nbsp; Remove Row</button>
+<div class="col-md-12 float-start">
+    <button type="button" class="btn btn-success bg-gradient btn-sm mb-2" onclick="AddOfficeExpenseRow()" ><i class="fas fa-plus" ></i>&nbsp; Add Row</button>
+    <button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" onclick="DeleteOfficeExpenseRow()" ><i class="fas fa-minus" ></i>&nbsp; Remove Row</button>
 </div>
 <div class="col-md-12"><br></div>
-<div class="col-md-6 float-left">
-    <div class="form-group">
+<div class="col-md-6 float-start">
+    <div class="mb-3">
         <label for="TotalOperatingExpense">
             Total Office & Operating Expenses
         </label>
-        <div class="form-group">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
         <input type="text" class="form-control" name="TotalOperatingExpense" id="TotalOperatingExpense"
@@ -1077,8 +1077,8 @@
 </div>
 </div>
 <input type="hidden" name="OfficeExpenseRowCount" id="OfficeExpenseRowCount" value="{{ $OfficeExpenseRowCount }}" />
-<div class="card-body text-center">
-      <button type="button" id="btn-step-5" class="btn btn-primary" onSubmit="this.form.submit(); this.disabled=true;" ><i class="fas fa-save" ></i>&nbsp; Save</button>
+<div class="card-body text-center mt-3">
+      <button type="button" id="btn-step-5" class="btn btn-primary bg-gradient mb-2" onSubmit="this.form.submit(); this.disabled=true;" ><i class="bi bi-floppy-fill me-2"></i>Save</button>
 </div>
 </section>
 </div><!-- end of accordion body -->
@@ -1090,24 +1090,24 @@
 <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '6' ? 'active' : '' }}">
 <div class="card-header" id="accordion-header-members">
 <h4 class="card-title w-100">
-    <a class="d-block" data-toggle="collapse" href="#collapseSix" style="width: 100%;">INTERNATIONAL EVENTS & RE-REGISTRATION</a>
+    <a class="d-block" data-bs-toggle="collapse" href="#collapseSix" style="width: 100%;">INTERNATIONAL EVENTS & RE-REGISTRATION</a>
 </h4>
 </div>
 <div id="collapseSix" class="collapse {{ $chFinancialReport->farthest_step_visited == '6' ? 'show' : '' }}" data-parent="#accordion">
 <div class="card-body">
 <section>
-    <div class="col-12 form-row form-group">
+    <div class="col-12 form-row mb-3">
         <div class="col-md-12">
             <p>
                 Annual Chapter Registration Fee paid to International MOMS Club.  Due by the end of your chapter's anniversary month each year.
               </p>
         </div>
-        <div class="col-md-6 float-left">
-            <div class="form-group">
+        <div class="col-md-6 float-start">
+            <div class="mb-3">
                 <label for="AnnualRegistrationFee">
                     Chapter Registration Fee<span class="field-required">*</span>
                 </label>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text">$</span>
                 <input type="text" class="form-control" name="AnnualRegistrationFee" id="AnnualRegistrationFee" oninput="ChangeReRegistrationExpense()" value="{{ $chFinancialReport->annual_registration_fee }}"
@@ -1119,7 +1119,7 @@
         </div>
         <div class="col-md-12"><br></div>
 
-<div class="col-12 form-row form-group">
+<div class="col-12 form-row mb-3">
     <p>
         International Events include any State/Regional/Conference Luncheons, Workshops or other events sponsored or organized by the International MOMS Club.  These events could be attended In Person or Virtually.
     </p>
@@ -1131,7 +1131,7 @@
     </p>
     </div>
 
-    <div class="col-12 form-row form-group">
+    <div class="col-12 form-row mb-3">
         <label>Did your chapter attend an International Event (in person or virtual)?<span class="field-required">*</span></label>
         <div class="col-md-12 form-row">
             <div class="form-check" >
@@ -1146,11 +1146,11 @@
     </div>
 
 
-<div class="col-12 form-row form-group">
+<div class="col-12 form-row mb-3">
     <p>
       <strong>List all Event Information.</strong> Briefly describe the event and list any income and expenses.
     </p>
-<div class="form-group">
+<div class="mb-3">
    <label for="">
         International Event Registrations
    </label>
@@ -1185,14 +1185,14 @@
         @endphp
             <tr>
                 <td>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <input type="text" class="form-control" name="InternationalEventDesc{{ $row }}" id="InternationalEventDesc{{ $row }}"
                             value="{{ $international_event_array[$row]['intl_event_desc'] ?? '' }}"
                             onkeypress="if(this.value.length==30) return false;">
                     </div>
                 </td>
                 <td>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
@@ -1203,7 +1203,7 @@
                     </div>
                 </td>
                 <td>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
@@ -1220,7 +1220,7 @@
         <tr>
             <td><strong>Total</strong></td>
             <td>
-                <div class="form-group">
+                <div class="mb-3">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">$</span>
@@ -1230,7 +1230,7 @@
                 </div>
             </td>
             <td>
-                <div class="form-group">
+                <div class="mb-3">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">$</span>
@@ -1242,20 +1242,20 @@
         </tr>
     </tfoot>
 </table>
-<div class="col-md-12 float-left">
-<button type="button" class="btn btn-sm btn-success" onclick="AddInternationalEventRow()" ><i class="fas fa-plus" ></i>&nbsp; Add Row</button>
-<button type="button" class="btn btn-sm btn-danger" onclick="DeleteInternationalEventRow()" ><i class="fas fa-minus" ></i>&nbsp; Remove Row</button>
+<div class="col-md-12 float-start">
+<button type="button" class="btn btn-success bg-gradient btn-sm mb-2" onclick="AddInternationalEventRow()" ><i class="fas fa-plus" ></i>&nbsp; Add Row</button>
+<button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" onclick="DeleteInternationalEventRow()" ><i class="fas fa-minus" ></i>&nbsp; Remove Row</button>
 </div>
 <hr>
 </div>
 <div class="col-md-12"><br></div>
-<div class="col-12 form-row form-group">
-<div class="col-md-6 float-left">
-<div class="form-group">
+<div class="col-12 form-row mb-3">
+<div class="col-md-6 float-start">
+<div class="mb-3">
     <label for="InternationalEventIncomeTotal">
         Total Event Registration Income
     </label>
-    <div class="form-group">
+    <div class="mb-3">
         <div class="input-group-prepend">
             <span class="input-group-text">$</span>
     <input type="text" class="form-control" name="InternationalEventIncomeTotal" id="InternationalEventIncomeTotal"
@@ -1265,12 +1265,12 @@
 </div>
 </div>
 <div class="col-md-6"><br></div>
-<div class="col-md-6 float-left">
-<div class="form-group">
+<div class="col-md-6 float-start">
+<div class="mb-3">
     <label for="InternationalEventExpenseTotal">
         Total Event Registration Expenses
     </label>
-    <div class="form-group">
+    <div class="mb-3">
         <div class="input-group-prepend">
             <span class="input-group-text">$</span>
     <input type="text" class="form-control" name="InternationalEventExpenseTotal" id="InternationalEventExpenseTotal"
@@ -1283,8 +1283,8 @@
 </div>
 <input type="hidden" name="InternationalEventRowCount" name="InternationalEventRowCount" id="InternationalEventRowCount" value="{{ $InternationalEventRowCount }}" />
 
-<div class="card-body text-center">
-      <button type="button" id="btn-step-6" class="btn btn-primary" onSubmit="this.form.submit(); this.disabled=true;" ><i class="fas fa-save" ></i>&nbsp; Save</button>
+<div class="card-body text-center mt-3">
+      <button type="button" id="btn-step-6" class="btn btn-primary bg-gradient mb-2" onSubmit="this.form.submit(); this.disabled=true;" ><i class="bi bi-floppy-fill me-2"></i>Save</button>
 </div>
 </section>
 </div><!-- end of accordion body -->
@@ -1296,13 +1296,13 @@
 <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '7' ? 'active' : '' }}">
 <div class="card-header" id="accordion-header-members">
 <h4 class="card-title w-100">
-    <a class="d-block" data-toggle="collapse" href="#collapseSeven" style="width: 100%;">DONATIONS TO YOUR CHAPTER</a>
+    <a class="d-block" data-bs-toggle="collapse" href="#collapseSeven" style="width: 100%;">DONATIONS TO YOUR CHAPTER</a>
 </h4>
 </div>
 <div id="collapseSeven" class="collapse {{ $chFinancialReport->farthest_step_visited == '7' ? 'show' : '' }}" data-parent="#accordion">
 <div class="card-body">
 <section>
-<div class="col-12 form-row form-group">
+<div class="col-12 form-row mb-3">
 <label for="donation-income">
     Monetary Donations:
 </label>
@@ -1335,23 +1335,23 @@
         @endphp
         <tr>
             <td>
-                <div class="form-group">
+                <div class="mb-3">
                     <input type="text" class="form-control" name="DonationDesc{{ $row }}" id="DonationDesc{{ $row }}" value="{{ $monetary_dontations_to_chapter[$row]['mon_donation_desc'] ?? '' }}">
                 </div>
             </td>
             <td>
-                <div class="form-group">
+                <div class="mb-3">
                     <input type="text" class="form-control" name="DonorInfo{{ $row }}" id="DonorInfo{{ $row }}" value="{{ $monetary_dontations_to_chapter[$row]['mon_donation_info'] ?? '' }}">
                 </div>
             </td>
             <td>
-                <div class="form-group">
+                <div class="mb-3">
                     <input type="date" class="form-control" name="MonDonationDate{{ $row }}" id="MonDonationDate{{ $row }}" value="{{ $monetary_dontations_to_chapter[$row]['mon_donation_date'] ?? '' }}"
                         data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask >
                 </div>
             </td>
             <td>
-                <div class="form-group">
+                <div class="mb-3">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">$</span>
@@ -1368,7 +1368,7 @@
         <tr>
             <td colspan="3"><strong>Total</strong></td>
             <td>
-                <div class="form-group">
+                <div class="mb-3">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">$</span>
@@ -1382,14 +1382,14 @@
 </table>
 
 <div class="col-md-12">
-    <button type="button" class="btn btn-sm btn-success " onclick="AddMonDonationRow()" ><i class="fas fa-plus" ></i>&nbsp; Add Row</button>
-    <button type="button" class="btn btn-sm btn-danger " onclick="DeleteMonDonationRow()" ><i class="fas fa-minus" ></i>&nbsp; Remove Row</button>
+    <button type="button" class="btn btn-success bg-gradient btn-sm mb-2" onclick="AddMonDonationRow()" ><i class="fas fa-plus" ></i>&nbsp; Add Row</button>
+    <button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" onclick="DeleteMonDonationRow()" ><i class="fas fa-minus" ></i>&nbsp; Remove Row</button>
 </div>
 <div class="col-md-12"><br></div>
-<div class="col-md-6 float-left">
-<div class="form-group">
+<div class="col-md-6 float-start">
+<div class="mb-3">
     <label for="DonationTotal">Monetary Donation Total</label>
-    <div class="form-group">
+    <div class="mb-3">
         <div class="input-group-prepend">
             <span class="input-group-text">$</span>
     <input type="text" class="form-control"  name="DonationTotal" id="DonationTotal"
@@ -1401,7 +1401,7 @@
 </div>
 </div>
 <div class="col-md-12"><br></div>
-<div class="col-12 form-row form-group">
+<div class="col-12 form-row mb-3">
 <label for="donation-goods">
     Non-Monetary Donations:
 </label>
@@ -1428,17 +1428,17 @@
         @for ($row = 0; $row < $NonMonDonationRowCount; $row++)
         <tr>
             <td>
-                <div class="form-group">
+                <div class="mb-3">
                     <input type="text" class="form-control" name="NonMonDonationDesc{{ $row }}" id="NonMonDonationDesc{{ $row }}" value="{{ $non_monetary_dontations_to_chapter[$row]['nonmon_donation_desc'] ?? '' }}">
                 </div>
             </td>
             <td>
-                <div class="form-group">
+                <div class="mb-3">
                     <input type="text" class="form-control" name="NonMonDonorInfo{{ $row }}" id="NonMonDonorInfo{{ $row }}" value="{{ $non_monetary_dontations_to_chapter[$row]['nonmon_donation_info'] ?? '' }}">
                 </div>
             </td>
             <td>
-                <div class="form-group">
+                <div class="mb-3">
                     <input type="date" class="form-control" name="NonMonDonationDate{{ $row }}" id="NonMonDonationDate{{ $row }}" value="{{ $non_monetary_dontations_to_chapter[$row]['nonmon_donation_date'] ?? '' }}"
                         data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask >
                 </div>
@@ -1448,11 +1448,11 @@
     </tbody>
 </table>
 
-<div class="col-md-12 float-left">
-    <button type="button" class="btn btn-sm btn-success " onclick="AddNonMonDonationRow()">
+<div class="col-md-12 float-start">
+    <button type="button" class="btn btn-success bg-gradient btn-sm " onclick="AddNonMonDonationRow()">
         <i class="fas fa-plus"></i>&nbsp; Add Row
     </button>
-    <button type="button" class="btn btn-sm btn-danger" onclick="DeleteNonMonDonationRow()">
+    <button type="button" class="btn btn-danger bg-gradient btn-sm " onclick="DeleteNonMonDonationRow()">
         <i class="fas fa-minus"></i>&nbsp; Remove Row
     </button>
 </div>
@@ -1460,8 +1460,8 @@
 <input type="hidden" name="NonMonDonationRowCount" id="NonMonDonationRowCount" value="{{ $NonMonDonationRowCount }}" />
 <hr>
 </div>
-<div class="card-body text-center">
-          <button type="submit" id="btn-step-7" class="btn btn-primary"><i class="fas fa-save" ></i>&nbsp; Save</button>
+<div class="card-body text-center mt-3">
+          <button type="submit" id="btn-step-7" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
 </div>
 </section>
 </div><!-- end of accordion body -->
@@ -1473,13 +1473,13 @@
 <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '8' ? 'active' : '' }}">
 <div class="card-header" id="accordion-header-members">
     <h4 class="card-title w-100">
-        <a class="d-block" data-toggle="collapse" href="#collapseEight" style="width: 100%;">OTHER INCOME & EXPENSES</a>
+        <a class="d-block" data-bs-toggle="collapse" href="#collapseEight" style="width: 100%;">OTHER INCOME & EXPENSES</a>
     </h4>
 </div>
 <div id="collapseEight" class="collapse {{ $chFinancialReport->farthest_step_visited == '8' ? 'show' : '' }}" data-parent="#accordion">
     <div class="card-body">
 <section>
-<div class="col-12 form-row form-group">
+<div class="col-12 form-row mb-3">
 
     <p>If your chapter had any other income not listed elsewhere, enter those amounts and descriptions here. (If there are multiple entries of one type of income in your books, please group them together as one total for that type of entry below. For example, if local businesses paid for advertising in your newsletter, enter one amount for all the advertising sold by your chapter during the year.)</p>
     <p>Use this section to list any fundraisers your chapter may have had to benefit the chapter or the members. If your chapter participated in any programs offering rebates, matching contributions or bonus cards, include that information here.</p>
@@ -1514,13 +1514,13 @@
             @endphp
             <tr>
                 <td>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <input type="text" class="form-control" name="OtherOfficeDesc{{ $row }}" id="OtherOfficeDesc{{ $row }}"
                             value="{{ $other_income_and_expenses_array[$row]['other_desc'] ?? '' }}">
                     </div>
                 </td>
                 <td>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
@@ -1532,7 +1532,7 @@
                     </div>
                 </td>
                 <td>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
@@ -1550,7 +1550,7 @@
             <tr>
                 <td><strong>Total</strong></td>
                 <td>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
@@ -1560,7 +1560,7 @@
                     </div>
                 </td>
                 <td>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
@@ -1572,21 +1572,21 @@
             </tr>
         </tfoot>
     </table>
-    <div class="col-md-12 float-left">
-        <button type="button" class="btn btn-sm btn-success" onclick="AddOtherOfficeExpenseRow()">
+    <div class="col-md-12 float-start">
+        <button type="button" class="btn btn-success bg-gradient btn-sm mb-2" onclick="AddOtherOfficeExpenseRow()">
             <i class="fas fa-plus"></i>&nbsp; Add Row
         </button>
-        <button type="button" class="btn btn-sm btn-danger" onclick="DeleteOtherOfficeExpenseRow()">
+        <button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" onclick="DeleteOtherOfficeExpenseRow()">
             <i class="fas fa-minus"></i>&nbsp; Remove Row
         </button>
     </div>
     <div class="col-md-12"><br></div>
     <div class="col-md-6">
-        <div class="form-group">
+        <div class="mb-3">
             <label for="OtherOfficeIncomeTotal">
                 Total Other Income
             </label>
-            <div class="form-group">
+            <div class="mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="OtherOfficeIncomeTotal" id="OtherOfficeIncomeTotal"
@@ -1597,11 +1597,11 @@
     </div>
     <div class="col-md-6"><br></div>
     <div class="col-md-6 ">
-        <div class="form-group">
+        <div class="mb-3">
             <label for="OtherOfficeExpenseTotal">
                 Total Other Expenses
             </label>
-            <div class="form-group">
+            <div class="mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="OtherOfficeExpenseTotal" id="OtherOfficeExpenseTotal"
@@ -1613,8 +1613,8 @@
    <input type="hidden" name="OtherOfficeExpenseRowCount" id="OtherOfficeExpenseRowCount" value="{{ $OtherOfficeExpenseRowCount }}"/>
     <hr>
 </div>
-<div class="card-body text-center">
-          <button type="submit" id="btn-step-8" class="btn btn-primary"><i class="fas fa-save" ></i>&nbsp; Save</button>
+<div class="card-body text-center mt-3">
+          <button type="submit" id="btn-step-8" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
 </div>
 </section>
 </div><!-- end of accordion body -->
@@ -1626,13 +1626,13 @@
 <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '9' ? 'active' : '' }}">
 <div class="card-header" id="accordion-header-members">
 <h4 class="card-title w-100">
-    <a class="d-block" data-toggle="collapse" href="#collapseNine" style="width: 100%;">FINANCIAL SUMMARY</a>
+    <a class="d-block" data-bs-toggle="collapse" href="#collapseNine" style="width: 100%;">FINANCIAL SUMMARY</a>
 </h4>
 </div>
 <div id="collapseNine" class="collapse {{ $chFinancialReport->farthest_step_visited == '9' ? 'show' : '' }}" data-parent="#accordion">
 <div class="card-body">
 <section>
-<div class="col-12 form-row form-group">
+<div class="col-12 form-row mb-3">
 <div class="col-sm-12">
     @if($userTypeId != \App\Enums\UserTypeEnum::DISBANDED)
 <h3>July 1, {{ $lastYear }} - June 30, {{ $currentYear }}</h3>
@@ -1641,11 +1641,11 @@
 <div class="col-sm-12">
     <div class="box-brd">
     <h4>Income</h4>
-    <div class="col-sm-6 float-left">
+    <div class="col-sm-6 float-start">
         <p style="margin-left:10%;">Membership Dues Income:</p>
     </div>
-    <div class="col-sm-6 float-left">
-            <div class="form-group">
+    <div class="col-sm-6 float-start">
+            <div class="mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumMembershipDuesIncome" id="SumMembershipDuesIncome"
@@ -1653,11 +1653,11 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 float-left">
+    <div class="col-sm-6 float-start">
         <p style="margin-left:10%;">Service Project Income:</p>
     </div>
-    <div class="col-sm-6 float-left">
-        <div class="form-group">
+    <div class="col-sm-6 float-start">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumServiceProjectIncome" id="SumServiceProjectIncome"
@@ -1665,11 +1665,11 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 float-left">
+    <div class="col-sm-6 float-start">
         <p style="margin-left:10%;">Party Income:</p>
     </div>
-    <div class="col-sm-6 float-left">
-        <div class="form-group">
+    <div class="col-sm-6 float-start">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumPartyIncome" id="SumPartyIncome"
@@ -1677,11 +1677,11 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 float-left">
+    <div class="col-sm-6 float-start">
         <p style="margin-left:10%;">Monetary Donations to Chapter:</p>
     </div>
-    <div class="col-sm-6 float-left">
-        <div class="form-group">
+    <div class="col-sm-6 float-start">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumMonetaryDonationIncome" id="SumMonetaryDonationIncome"
@@ -1689,11 +1689,11 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 float-left">
+    <div class="col-sm-6 float-start">
         <p style="margin-left:10%;">International Event Reservation Income:</p>
     </div>
-    <div class="col-sm-6 float-left">
-        <div class="form-group">
+    <div class="col-sm-6 float-start">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumInternationalEventIncome" id="SumInternationalEventIncome"
@@ -1701,11 +1701,11 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 float-left">
+    <div class="col-sm-6 float-start">
         <p style="margin-left:10%;">Other Income:</p>
     </div>
-    <div class="col-sm-6 float-left">
-        <div class="form-group">
+    <div class="col-sm-6 float-start">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumOtherIncome" id="SumOtherIncome"
@@ -1714,11 +1714,11 @@
         </div>
     </div>
     <div class="bg-color">
-    <div class="col-sm-6 float-left">
+    <div class="col-sm-6 float-start">
         <p>Total Income:</p>
     </div>
-    <div class="col-sm-6 float-left">
-        <div class="form-group">
+    <div class="col-sm-6 float-start">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumTotalIncome" id="SumTotalIncome"
@@ -1733,11 +1733,11 @@
 <div class="box-brd">
     <h4>Expenses</h4>
     <div class="col-sm-12 nopadding">
-    <div class="col-sm-6 float-left">
+    <div class="col-sm-6 float-start">
         <p style="margin-left:10%;">Meeting Room Expense:</p>
     </div>
-    <div class="col-sm-6 float-left">
-        <div class="form-group">
+    <div class="col-sm-6 float-start">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumMeetingRoomExpense" id="SumMeetingRoomExpense"
@@ -1750,11 +1750,11 @@
     <div class="col-sm-6">
     <p style="margin-left:10%;">Children's Room Expenses:</p>
     </div>
-    <div class="col-sm-6 float-left">
+    <div class="col-sm-6 float-start">
         <p style="margin-left:15%;">Supplies:</p>
     </div>
-    <div class="col-sm-6 float-left">
-        <div class="form-group">
+    <div class="col-sm-6 float-start">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
         <input type="text" class="form-control" name="SumChildrensSuppliesExpense" id="SumChildrensSuppliesExpense"
@@ -1762,11 +1762,11 @@
         </div>
     </div>
 </div>
-    <div class="col-sm-6 float-left">
+    <div class="col-sm-6 float-start">
         <p style="margin-left:15%;">Paid Sitters:</p>
     </div>
-    <div class="col-sm-6 float-left">
-        <div class="form-group">
+    <div class="col-sm-6 float-start">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumPaidSittersExpense" id="SumPaidSittersExpense"
@@ -1774,11 +1774,11 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 float-left">
+    <div class="col-sm-6 float-start">
         <p style="margin-left:15%;">Other:</p>
     </div>
-    <div class="col-sm-6 float-left">
-        <div class="form-group">
+    <div class="col-sm-6 float-start">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumChildrensOtherExpense" id="SumChildrensOtherExpense"
@@ -1786,11 +1786,11 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 float-left">
+    <div class="col-sm-6 float-start">
         <p style="margin-left:10%;">Children's Room Expense Total:</p>
     </div>
-    <div class="col-sm-6 float-left">
-        <div class="form-group">
+    <div class="col-sm-6 float-start">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumTotalChildrensRoomExpense" id="SumTotalChildrensRoomExpense"
@@ -1805,11 +1805,11 @@
         Service Project Expenses:
     </p>
     </div>
-    <div class="col-sm-6 float-left">
+    <div class="col-sm-6 float-start">
         <p style="margin-left:15%;">Supplies:</p>
     </div>
-    <div class="col-sm-6 float-left">
-        <div class="form-group">
+    <div class="col-sm-6 float-start">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumServiceProjectExpense" id="SumServiceProjectExpense"
@@ -1817,11 +1817,11 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 float-left">
+    <div class="col-sm-6 float-start">
         <p style="margin-left:15%;">Amount Donated to Charity/Recipients:</p>
     </div>
-    <div class="col-sm-6 float-left">
-        <div class="form-group">
+    <div class="col-sm-6 float-start">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumDonationExpense" id="SumDonationExpense"
@@ -1829,11 +1829,11 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 float-left">
+    <div class="col-sm-6 float-start">
         <p style="margin-left:15%;">Mother-to-Mother Fund Donation:</p>
     </div>
-    <div class="col-sm-6 float-left">
-        <div class="form-group">
+    <div class="col-sm-6 float-start">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumM2MExpense" id="SumM2MExpense"
@@ -1841,11 +1841,11 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 float-left">
+    <div class="col-sm-6 float-start">
         <p style="margin-left:10%;">Service Project Expense Total:</p>
     </div>
-    <div class="col-sm-6 float-left">
-        <div class="form-group">
+    <div class="col-sm-6 float-start">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumTotalServiceProjectExpense" id="SumTotalServiceProjectExpense"
@@ -1854,11 +1854,11 @@
         </div>
     </div>
     </div>
-    <div class="col-sm-6 float-left">
+    <div class="col-sm-6 float-start">
         <p style="margin-left:10%;">Party/Members Only Expense:</p>
     </div>
-    <div class="col-sm-6 float-left">
-        <div class="form-group">
+    <div class="col-sm-6 float-start">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumPartyExpense" id="SumPartyExpense"
@@ -1870,11 +1870,11 @@
     <div class="col-sm-6">
         <p style="margin-left:10%;">Office and Operating Expenses:</p>
     </div>
-    <div class="col-sm-6 float-left">
+    <div class="col-sm-6 float-start">
         <p style="margin-left:15%;">Printing:</p>
     </div>
-    <div class="col-sm-6 float-left">
-        <div class="form-group">
+    <div class="col-sm-6 float-start">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumPrintingExpense" id="SumPrintingExpense"
@@ -1882,11 +1882,11 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 float-left">
+    <div class="col-sm-6 float-start">
         <p style="margin-left:15%;">Postage:</p>
     </div>
-    <div class="col-sm-6 float-left">
-        <div class="form-group">
+    <div class="col-sm-6 float-start">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumPostageExpense" id="SumPostageExpense"
@@ -1894,11 +1894,11 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 float-left">
+    <div class="col-sm-6 float-start">
         <p style="margin-left:15%;">Membership Pins:</p>
     </div>
-    <div class="col-sm-6 float-left">
-        <div class="form-group">
+    <div class="col-sm-6 float-start">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumPinsExpense" id="SumPinsExpense"
@@ -1906,11 +1906,11 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 float-left">
+    <div class="col-sm-6 float-start">
         <p style="margin-left:15%;">Other:</p>
     </div>
-    <div class="col-sm-6 float-left">
-        <div class="form-group">
+    <div class="col-sm-6 float-start">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumOtherOperatingExpense" id="SumOtherOperatingExpense"
@@ -1918,11 +1918,11 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 float-left">
+    <div class="col-sm-6 float-start">
         <p style="margin-left:10%;">Office/Operating Expense Total:</p>
     </div>
-    <div class="col-sm-6 float-left">
-        <div class="form-group">
+    <div class="col-sm-6 float-start">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumOperatingExpense" id="SumOperatingExpense"
@@ -1930,11 +1930,11 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 float-left">
+    <div class="col-sm-6 float-start">
         <p style="margin-left:10%;">Annual Chapter Registration Fee:</p>
     </div>
-    <div class="col-sm-6 float-left">
-        <div class="form-group">
+    <div class="col-sm-6 float-start">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumChapterReRegistrationExpense" id="SumChapterReRegistrationExpense"
@@ -1942,11 +1942,11 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 float-left">
+    <div class="col-sm-6 float-start">
         <p style="margin-left:10%;">International Event Registration:</p>
     </div>
-    <div class="col-sm-6 float-left">
-        <div class="form-group">
+    <div class="col-sm-6 float-start">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumInternationalEventExpense" id="SumInternationalEventExpense"
@@ -1954,11 +1954,11 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 float-left">
+    <div class="col-sm-6 float-start">
         <p style="margin-left:10%;">Other Expense:</p>
     </div>
-    <div class="col-sm-6 float-left">
-        <div class="form-group">
+    <div class="col-sm-6 float-start">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumOtherExpense" id="SumOtherExpense"
@@ -1967,11 +1967,11 @@
         </div>
     </div>
     <div class="bg-color">
-    <div class="col-sm-6 float-left">
+    <div class="col-sm-6 float-start">
         <p>Total Expenses:</p>
     </div>
-    <div class="col-sm-6 float-left">
-        <div class="form-group">
+    <div class="col-sm-6 float-start">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumTotalExpense" id="SumTotalExpense"
@@ -1986,11 +1986,11 @@
 <div class="col-sm-12">
     <div class="box-brd">
         <h4>Net Income</h4>
-        <div class="col-sm-6 float-left">
+        <div class="col-sm-6 float-start">
             <p style="margin-left:10%;">Profit/Loss:</p>
         </div>
-        <div class="col-sm-6 float-left">
-            <div class="form-group">
+        <div class="col-sm-6 float-start">
+            <div class="mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text">$</span>
                 <input type="text" class="form-control" name="SumTotalNetIncome" id="SumTotalNetIncome"
@@ -2011,7 +2011,7 @@
 <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '10' ? 'active' : '' }}">
 <div class="card-header" id="accordion-header-members">
     <h4 class="card-title w-100">
-        <a class="d-block" data-toggle="collapse" href="#collapseTen" style="width: 100%;">BANK RECONCILIATION</a>
+        <a class="d-block" data-bs-toggle="collapse" href="#collapseTen" style="width: 100%;">BANK RECONCILIATION</a>
     </h4>
 </div>
 <div id="collapseTen" class="collapse {{ $chFinancialReport->farthest_step_visited == '10' ? 'show' : '' }}" data-parent="#accordion">
@@ -2032,9 +2032,9 @@
         <strong style="color:red">Please Note</strong><br>
             This will refresh the screen - be sure to save all work before clicking button to Upload or Replace Bank Statement(s).<br>
         @if (!is_null($chEOYDocuments->statement_1_path))
-            <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Bank Statement</button>
+            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Bank Statement</button>
         @else
-        <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Bank Statement</button>
+        <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Bank Statement</button>
         @endif
     </div>
         <input type="hidden" name="StatementFile" id="StatementPath" value="{{ $chEOYDocuments->statement_1_path }}">
@@ -2042,18 +2042,18 @@
     <div class="col-md-12"><br></div>
     <div class="col-md-12" id="Statement2Block">
         @if (!is_null($chEOYDocuments->statement_2_path))
-            <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Additional Bank Statement</button>
+            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Additional Bank Statement</button>
         @else
-            <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Additional Bank Statement</button>
+            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Additional Bank Statement</button>
         @endif
     </div>
     <input type="hidden" name="Statement2File" id="Statement2Path" value="{{ $chEOYDocuments->statement_2_path }}">
     <div class="clearfix"></div>
     <div class="col-md-12"><br></div>
 
-    <div class="col-12 form-row form-group">
+    <div class="col-12 form-row mb-3">
         <div class="col-md-12 ">
-            <div class="form-group ">
+            <div class="mb-3 ">
             <label>Is a copy of your chapter’s most recent bank statement included?<span class="field-required">*</span></label>
             <div class="col-md-12 row">
                 <div class="form-check" style="margin-left: 20px;">
@@ -2081,9 +2081,9 @@
     </div>
 </div>
 
-    <div class="col-12 form-row form-group">
+    <div class="col-12 form-row mb-3">
     <div class="col-md-6 ">
-        <div class="form-group">
+        <div class="mb-3">
             <label for="AmountReservedFromLastYear">
                 @if($userTypeId == \App\Enums\UserTypeEnum::DISBANDED)
                 Beginning Balance:
@@ -2091,7 +2091,7 @@
                 This Year's Beginning Balance (July 1, {{ $lastYear }}):
                 @endif
             </label>
-            <div class="form-group">
+            <div class="mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text">$</span>
                     <input type="text" class="form-control" name="AmountReservedFromLastYear" id="AmountReservedFromLastYear" onchange="TreasuryBalanceChange()"
@@ -2102,7 +2102,7 @@
         </div>
     </div>
     <div class="col-md-6 ">
-        <div class="form-group">
+        <div class="mb-3">
             <label for="LastYearReportEnding">
                 @if($userTypeId == \App\Enums\UserTypeEnum::DISBANDED)
                 Last Report's Ending Balance:
@@ -2110,7 +2110,7 @@
                 Last Year's Report Ending Balance (June 30, {{ $lastYear }}):
                 @endif
             </label>
-            <div class="form-group">
+            <div class="mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text">$</span>
                     <input type="text" class="form-control" name="LastYearReportEnding" id="LastYearReportEnding"
@@ -2121,11 +2121,11 @@
         </div>
     </div>
     <div class="col-md-6 ">
-        <div class="form-group">
+        <div class="mb-3">
             <label for="TotalNetIncome">
                 Profit/Loss:
             </label>
-            <div class="form-group">
+            <div class="mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text">$</span>
             <input type="text"class="form-control" name="TotalNetIncome" id="TotalNetIncome"
@@ -2138,11 +2138,11 @@
         <br>
     </div>
     <div class="col-md-6 ">
-        <div class="form-group">
+        <div class="mb-3">
             <label for="TreasuryBalanceNow">
                 Ending Balance (Treasury Balance Now):
             </label>
-            <div class="form-group">
+            <div class="mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="TreasuryBalanceNow" id="TreasuryBalanceNow"
@@ -2152,7 +2152,7 @@
         </div>
     </div>
     <div class="col-md-6 ">
-        <div class="form-group">
+        <div class="mb-3">
             <label for="BankBalanceNow">
                 @if($userTypeId == \App\Enums\UserTypeEnum::DISBANDED)
                 Ending Bank Statement Balance:
@@ -2160,7 +2160,7 @@
                 Ending Bank Statement Balance (June 30, {{ $currentYear }}):
                 @endif
             </label>
-            <div class="form-group">
+            <div class="mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="BankBalanceNow" id="BankBalanceNow" oninput="ChangeBankRec()" value="{{ $chFinancialReport->bank_balance_now }}"
@@ -2172,7 +2172,7 @@
 
 <hr>
 </div>
-<div class="col-12 form-row form-group">
+<div class="col-12 form-row mb-3">
 <p>If your most recent bank statement’s ending balance does not match your “Treasury Balance Now”, you must reconcile your checking account using the worksheet below so that the balances match.</p>
 <p>To balance your account, start with your bank statement’s ending balance, then list any deposits and any outstanding payments. When done, the new reconciled balance will match your treasury balance.</p>
 <p>View a step by step instruction video <a href="https://momsclub.org/elearning/courses/annual-financial-report-bank-reconciliation/">HERE</a>.</p>
@@ -2201,26 +2201,26 @@
         @for ($row = 0; $row < $BankRecRowCount; $row++)
             <tr>
                 <td>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <input type="date" class="form-control" name="BankRecDate{{ $row }}" id="BankRecDate{{ $row }}"
                         data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $bank_rec_array[$row]['bank_rec_date'] ?? '' }}" >
                     </div>
                 </td>
 
                 <td>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <input type="text" class="form-control" name="BankRecCheckNo{{ $row }}" id="BankRecCheckNo{{ $row }}"
                             value="{{ $bank_rec_array[$row]['bank_rec_check_no'] ?? '' }}">
                     </div>
                 </td>
                 <td>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <input type="text" class="form-control" name="BankRecDesc{{ $row }}" id="BankRecDesc{{ $row }}"
                             value="{{ $bank_rec_array[$row]['bank_rec_desc'] ?? '' }}">
                     </div>
                 </td>
                 <td>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
@@ -2232,7 +2232,7 @@
                     </div>
                 </td>
                 <td>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
@@ -2248,21 +2248,21 @@
     </tbody>
 </table>
 <div class="col-md-12">
-    <button type="button" class="btn btn-sm btn-success" onclick="AddBankRecRow()">
+    <button type="button" class="btn btn-success bg-gradient btn-sm mb-2" onclick="AddBankRecRow()">
         <i class="fas fa-plus"></i>&nbsp; Add Row
     </button>
-    <button type="button" class="btn btn-sm btn-danger" onclick="DeleteBankRecRow()">
+    <button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" onclick="DeleteBankRecRow()">
         <i class="fas fa-minus"></i>&nbsp; Remove Row
     </button>
 </div>
 <div class="col-md-12"><br></div>
 <div class="col-md-12">
     <div class="col-md-6">
-        <div class="form-group">
+        <div class="mb-3">
             <label for="TreasuryBalanceNowR">
                 Ending Balance (Treasury Balance Now):
             </label>
-            <div class="form-group">
+            <div class="mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="TreasuryBalanceNowR" id="TreasuryBalanceNowR"
@@ -2272,11 +2272,11 @@
         </div>
     </div>
 <div class="col-md-6">
-    <div class="form-group">
+    <div class="mb-3">
         <label for="ReconciledBankBalance">
             Reconciled Bank Balance:
         </label>
-        <div class="form-group">
+        <div class="mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">$</span>
         <input type="text" class="form-control" name="ReconciledBankBalance" id="ReconciledBankBalance"
@@ -2294,8 +2294,8 @@
 <input type="hidden" name="BankRecRowCount" id="BankRecRowCount" value="{{ $BankRecRowCount }}" />
 <hr>
 </div>
-<div class="card-body text-center">
-          <button type="submit" id="btn-step-10" class="btn btn-primary"><i class="fas fa-save" ></i>&nbsp; Save</button>
+<div class="card-body text-center mt-3">
+          <button type="submit" id="btn-step-10" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
 </div>
 </section>
 </div><!-- end of accordion body -->
@@ -2307,7 +2307,7 @@
 <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '11' ? 'active' : '' }}">
 <div class="card-header" id="accordion-header-members">
     <h4 class="card-title w-100">
-        <a class="d-block" data-toggle="collapse" href="#collapseEleven" style="width: 100%;">990N IRS FILING</a>
+        <a class="d-block" data-bs-toggle="collapse" href="#collapseEleven" style="width: 100%;">990N IRS FILING</a>
     </h4>
 </div>
 <div id="collapseEleven" class="collapse {{ $chFinancialReport->farthest_step_visited == '11' ? 'show' : '' }}" data-parent="#accordion">
@@ -2323,9 +2323,9 @@
         <strong style="color:red">Please Note</strong><br>
             This will refresh the screen - be sure to save all work before clicking button to Upload or Replace Bank Statement(s).<br>
         @if (!is_null($chEOYDocuments->irs_path))
-            <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace 990N Confirmation</button>
+            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace 990N Confirmation</button>
         @else
-            <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload 990N Confirmation</button>
+            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload 990N Confirmation</button>
         @endif
     </div>
     <input type="hidden" name="IRSFiling" id="IRSFiling" value="{{ $chEOYDocuments->irs_path }}">
@@ -2339,9 +2339,9 @@
     </div>
 @endif
 
-    <div class="col-12 form-row form-group">
+    <div class="col-12 form-row mb-3">
         <div class="col-md-12 ">
-            <div class="form-group ">
+            <div class="mb-3 ">
              @if($userTypeId == \App\Enums\UserTypeEnum::DISBANDED)
                 <label>Is a copy of your chpater's most recent 990N IRS Filing included?<span class="field-required">*</span></label>
             @else
@@ -2418,8 +2418,8 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
 @endif
 <br>
 </div>
-<div class="card-body text-center">
-<button type="submit" id="btn-step-11" class="btn btn-primary"><i class="fas fa-save" ></i>&nbsp; Save</button>
+<div class="card-body text-center mt-3">
+<button type="submit" id="btn-step-11" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
 </div>
 </section>
 </div><!-- end of accordion body -->
@@ -2431,15 +2431,15 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
 <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '12' ? 'active' : '' }}">
 <div class="card-header" id="accordion-header-members">
 <h4 class="card-title w-100">
-    <a class="d-block" data-toggle="collapse" href="#collapseTwelve" style="width: 100%;">CHAPTER QUESTIONS</a>
+    <a class="d-block" data-bs-toggle="collapse" href="#collapseTwelve" style="width: 100%;">CHAPTER QUESTIONS</a>
 </h4>
 </div>
 <div id="collapseTwelve" class="collapse {{ $chFinancialReport->farthest_step_visited == '12' ? 'show' : '' }}" data-parent="#accordion">
 <div class="card-body">
 <section>
-<div id="form-step-8" role="form" data-toggle="validator" class="form-row form-group">
+<div id="form-step-8" role="form" data-bs-toggle="validator" class="form-row mb-3">
 <div class="col-md-12" style="margin-left: 10px">
-<div class="form-group row">
+<div class="row mb-3">
     <label>1. Did you make the Bylaws and/or manual available for any chapter members that requested them?<span class="field-required">*</span></label>
     <div class="col-md-12 row">
         <div class="form-check" style="margin-left: 20px;">
@@ -2458,7 +2458,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
         <textarea class="form-control" rows="2" name="ByLawsAvailableExplanation" id="ByLawsAvailableExplanation">{{ $chFinancialReport->bylaws_available_explanation }}</textarea>
     </div>
 </div>
-<div class="form-group row">
+<div class="row mb-3">
     <label>2. Did your chapter vote on all activities and expenditures during the fiscal year?<span class="field-required">*</span></label>
     <div class="col-md-12 row">
         <div class="form-check" style="margin-left: 20px;">
@@ -2477,7 +2477,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
         <textarea class="form-control" rows="2" name="VoteAllActivitiesExplanation" id="VoteAllActivitiesExplanation">{{ $chFinancialReport->vote_all_activities_explanation }}</textarea>
     </div>
 </div>
-<div class="form-group row">
+<div class="row mb-3">
     <label>3. Did you have any child focused outings or activities?<span class="field-required">*</span></label>
     <div class="col-md-12 row">
         <div class="form-check" style="margin-left: 20px;">
@@ -2496,7 +2496,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
         <textarea class="form-control" rows="2" name="ChildOutingsExplanation" id="ChildOutingsExplanation">{{ $chFinancialReport->child_outings_explanation }}</textarea>
     </div>
 </div>
-<div class="form-group row">
+<div class="row mb-3">
     <label>4. Did you have playgroups? If so, how were they arranged?<span class="field-required">*</span></label>
     <div class="col-md-12 row">
         <div class="col-md-12 row">
@@ -2521,7 +2521,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
         <textarea class="form-control" rows="2" name="PlaygroupsExplanation" id="PlaygroupsExplanation">{{ $chFinancialReport->playgroups_explanation }}</textarea>
     </div>
 </div>
-<div class="form-group row">
+<div class="row mb-3">
     <label>5. Did your chapter have scheduled park days? If yes, how often?<span class="field-required">*</span></label>
     <div class="col-md-12 row">
         <div class="col-md-12 row">
@@ -2554,7 +2554,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
         <textarea class="form-control" rows="2" name="ParkDaysExplanation" id="ParkDaysExplanation">{{ $chFinancialReport->park_day_frequency_explanation }}</textarea>
     </div>
 </div>
-<div class="form-group row">
+<div class="row mb-3">
     <label>6. Did you have any mother focused outings or activities?<span class="field-required">*</span></label>
     <div class="col-md-12 row">
         <div class="form-check" style="margin-left: 20px;">
@@ -2573,7 +2573,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
         <textarea class="form-control" rows="2" name="MotherOutingsExplanation" id="MotherOutingsExplanation">{{ $chFinancialReport->mother_outings_explanation }}</textarea>
     </div>
 </div>
-<div class="form-group row">
+<div class="row mb-3">
     <label>7. Did your chapter have any of the following activity groups?<span class="field-required">*</span></label>
     <div class="col-md-12 row">
         @php
@@ -2613,7 +2613,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
        <textarea class="form-control" rows="2" name="ActivityOtherExplanation" id="ActivityOtherExplanation">{{ $chFinancialReport->activity_other_explanation }}</textarea>
     </div>
 </div>
-<div class="form-group row">
+<div class="row mb-3">
     <label>8. Did you offer or inform your members about MOMS Club merchandise?<span class="field-required">*</span></label>
     <div class="col-md-12 row">
         <div class="form-check" style="margin-left: 20px;">
@@ -2632,7 +2632,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
         <textarea class="form-control" rows="2" name="OfferedMerchExplanation" id="OfferedMerchExplanation">{{ $chFinancialReport->offered_merch_explanation }}</textarea>
     </div>
 </div>
-<div class="form-group row">
+<div class="row mb-3">
     <label>9. Did you purchase any merchandise from International other than pins?<span class="field-required">*</span></label>
     <div class="col-md-12 row">
         <div class="form-check" style="margin-left: 20px;">
@@ -2651,7 +2651,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
         <textarea class="form-control" rows="2" name="BoughtMerchExplanation" id="BoughtMerchExplanation">{{ $chFinancialReport->bought_merch_explanation }}</textarea>
     </div>
 </div>
-<div class="form-group row">
+<div class="row mb-3">
     <label>10. Did you purchase pins from International?<span class="field-required">*</span></label>
     <div class="col-md-12 row">
         <div class="form-check" style="margin-left: 20px;">
@@ -2670,7 +2670,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
         <textarea class="form-control" rows="2" name="BoughtPinsExplanation" id="BoughtPinsExplanation">{{ $chFinancialReport->purchase_pins_explanation }}</textarea>
     </div>
 </div>
-<div class="form-group row">
+<div class="row mb-3">
     <label>11. Did anyone in your chapter receive any compensation or pay for their work with your chapter?<span class="field-required">*</span></label>
     <div class="col-md-12 row">
         <div class="form-check" style="margin-left: 20px;">
@@ -2690,7 +2690,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
         <div class="help-block with-errors"></div>
     </div>
 </div>
-<div class="form-group row">
+<div class="row mb-3">
     <label>12. Did any officer, member or family of a member benefit financially in any way from the member’s position with your chapter?<span class="field-required">*</span></label>
     <div class="col-md-12 row">
         <div class="form-check" style="margin-left: 20px;">
@@ -2709,7 +2709,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
         <textarea class="form-control" rows="2" name="FinancialBenefitExplanation" id="FinancialBenefitExplanation">{{ $chFinancialReport->financial_benefit_explanation }}</textarea>
     </div>
 </div>
-<div class="form-group row">
+<div class="row mb-3">
     <label>13. Did your chapter attempt to influence any national, state/provincial, or local legislation, or support any other organization that did?<span class="field-required">*</span></label>
     <div class="col-md-12 row">
         <div class="form-check" style="margin-left: 20px;">
@@ -2728,7 +2728,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
         <textarea class="form-control" rows="2" name="InfluencePoliticalExplanation" id="InfluencePoliticalExplanation" >{{ $chFinancialReport->influence_political_explanation }}</textarea>
     </div>
 </div>
-<div class="form-group row">
+<div class="row mb-3">
     <label>14. Did your chapter sister another chapter?<span class="field-required">*</span></label>
     <div class="col-md-12 row">
         <div class="form-check" style="margin-left: 20px;">
@@ -2750,8 +2750,8 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
 </div>
 
 </div>
-<div class="card-body text-center">
-          <button type="button" class="btn btn-primary" id="btn-step-12" ><i class="fas fa-save" ></i>&nbsp; Save</button>
+<div class="card-body text-center mt-3">
+          <button type="button" class="btn btn-primary bg-gradient mb-2" id="btn-step-12" ><i class="bi bi-floppy-fill me-2"></i>Save</button>
 </div>
 </section>
 </div><!-- end of accordion body -->
@@ -2764,13 +2764,13 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '13' ? 'active' : '' }}">
     <div class="card-header" id="accordion-header-members">
     <h4 class="card-title w-100">
-        <a class="d-block" data-toggle="collapse" href="#collapseThirteen" style="width: 100%;">AWARD NOMINATIONS</a>
+        <a class="d-block" data-bs-toggle="collapse" href="#collapseThirteen" style="width: 100%;">AWARD NOMINATIONS</a>
     </h4>
     </div>
     <div id="collapseThirteen" class="collapse {{ $chFinancialReport->farthest_step_visited == '13' ? 'show' : '' }}" data-parent="#accordion">
     <div class="card-body">
     <section>
-    <div class="col-12 form-row form-group">
+    <div class="col-12 form-row mb-3">
         <div class="box_brd_contentpad">
             <div class="box_brd_title_box">
                 <h4>Instructions for Recognition Entry</h4>
@@ -2806,7 +2806,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
             </div>
         </div>
 
-        <div class="col-12 form-row form-group">
+        <div class="col-12 form-row mb-3">
             <p>
                 <strong>List all Award Nominations below.</strong> Briefly describe each award and attach any necessary documents/photos.
             </p>
@@ -2832,7 +2832,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
                     @for ($row = 0; $row < $ChapterAwardsRowCount; $row++)
                     <tr>
                         <td>
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <select class="form-control" name="ChapterAwardsType{{ $row }}"
                                     id="ChapterAwardsType{{ $row }}"
                                     onchange="toggleOutstandingCriteria({{ $row }})">
@@ -2848,7 +2848,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
                             </div>
                         </td>
                         <td>
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <textarea class="form-control" rows="2" name="ChapterAwardsDesc{{ $row }}"
                                         id="ChapterAwardsDesc{{ $row }}">{{ $chapter_awards[$row]['awards_desc'] ?? '' }}</textarea>
                             </div>
@@ -2859,11 +2859,11 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
             </table>
 
             <!-- Add/Remove Row Buttons -->
-            <div class="col-md-12 float-left">
-                <button type="button" class="btn btn-sm btn-success" onclick="AddChapterAwardsRow()">
+            <div class="col-md-12 float-start">
+                <button type="button" class="btn btn-success bg-gradient btn-sm mb-2" onclick="AddChapterAwardsRow()">
                     <i class="fas fa-plus"></i>&nbsp; Add Row
                 </button>
-                <button type="button" class="btn btn-sm btn-danger" onclick="DeleteChapterAwardsRow()">
+                <button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" onclick="DeleteChapterAwardsRow()">
                     <i class="fas fa-minus"></i>&nbsp; Remove Row
                 </button>
             </div>
@@ -2878,7 +2878,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
             ($chapter_awards[$row]['awards_type'] == 5 || $chapter_awards[$row]['awards_type'] == 6)) ? 'block' : 'none' }}">
             <h4>Outstanding Chapter Criteria</h4>
             <div class="col-md-12" style="margin-left: 10px">
-                <div class="form-group row">
+                <div class="row mb-3">
                     <label>Did you follow the Bylaws and all instructions from International?<span class="field-required">*</span></label>
                     <div class="col-md-12 row">
                         <div class="form-check" style="margin-left: 20px;">
@@ -2891,7 +2891,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
                         </div>
                     </div>
                 </div>
-                <div class="form-group row">
+                <div class="row mb-3">
                     <label>Did you run a well-rounded program for your members?<span class="field-required">*</span></label>
                     <br>
                     <p>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings),
@@ -2908,7 +2908,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
                         </div>
                     </div>
                 </div>
-                <div class="form-group row">
+                <div class="row mb-3">
                     <label>Did you communicate with your Coordinator?<span class="field-required">*</span></label>
                     <br>
                     <p>Did you send in your newsletter regularly? Send updates? Return telephone calls?
@@ -2924,7 +2924,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
                         </div>
                     </div>
                 </div>
-                <div class="form-group row">
+                <div class="row mb-3">
                     <label>Did you support the International MOMS Club?<span class="field-required">*</span></label>
                     <br>
                     <p>Indications of supporting International MAY include but are not limited to:
@@ -2961,13 +2961,13 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
                         <label>Award Files Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->award_path }}">&nbsp; View Award Files</a><br>
                         <strong style="color:red">Please Note</strong><br>
                             Save award entry information before replacing file(s). This will refresh the screen - be sure to save all work before clicking button to Replace Award Files.<br>
-                        <button type="button" class="btn btn-sm btn-primary" onclick="showAwardUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Award Files</button>
+                        <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showAwardUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Replace Award Files</button>
                 </div>
             @else
                 <div class="col-md-12" id="AwardBlock">
                         <strong style="color:red">Please Note</strong><br>
                             Save award entry information before uploading file(s). This will refresh the screen - be sure to save all work before clicking button to Upload Award Files.<br>
-                        <button type="button" class="btn btn-sm btn-primary" onclick="showAwardUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Award Files</button>
+                        <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showAwardUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload"></i>&nbsp; Upload Award Files</button>
                 </div>
             @endif
                 <input type="hidden" name="AwardPath" id="AwardPath" value="{{ $chEOYDocuments->award_path }}">
@@ -2995,8 +2995,8 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
                 </div>
             </div>
     </div>
-    <div class="card-body text-center">
-            <button type="button" id="btn-step-13" class="btn btn-primary" ><i class="fas fa-save" ></i>&nbsp; Save</button>
+    <div class="card-body text-center mt-3">
+            <button type="button" id="btn-step-13" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save</button>
     </div>
     </div>
     </section>
@@ -3021,7 +3021,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
             }).join('');
 
             cell1.innerHTML = `
-                <div class="form-group">
+                <div class="mb-3">
                     <select class="form-control"
                             name="ChapterAwardsType${rowCount}"
                             id="ChapterAwardsType${rowCount}"
@@ -3031,7 +3031,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
                 </div>`;
 
             cell2.innerHTML = `
-                <div class="form-group">
+                <div class="mb-3">
                     <textarea class="form-control"
                               rows="2"
                               name="ChapterAwardsDesc${rowCount}"
@@ -3119,34 +3119,34 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
 <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '14' ? 'active' : '' }}">
 <div class="card-header" id="accordion-header-members">
     <h4 class="card-title w-100">
-        <a class="d-block" data-toggle="collapse" href="#collapseFourteen" style="width: 100%;">SUBMIT REPORT</a>
+        <a class="d-block" data-bs-toggle="collapse" href="#collapseFourteen" style="width: 100%;">SUBMIT REPORT</a>
     </h4>
 </div>
 <div id="collapseFourteen" class="collapse {{ $chFinancialReport->farthest_step_visited == '14' ? 'show' : '' }}" data-parent="#accordion">
     <div class="card-body">
     <section>
-        <div class="form-row form-group">
+        <div class="form-row mb-3">
             <div class="col-sm-12">
                 <strong>Contact information for the person who completed the report.</strong></div>
-                <div class="col-md-12 float-left">
+                <div class="col-md-12 float-start">
                     @if ($userTypeId != \App\Enums\UserTypeEnum::COORD)
                         <strong>Name: </strong>{{ $userName }}
                         </div>
-                        <div class="col-md-12 float-left">
+                        <div class="col-md-12 float-start">
                         <strong>Email: </strong><a href="mailto:{{ $userEmail }}">{{ $userEmail }}</a>
                         </div>
                     @else
                         <strong>Name: </strong>
                         </div>
-                        <div class="col-md-12 float-left">
+                        <div class="col-md-12 float-start">
                         <strong>Email: </strong>
                         </div>
                     @endif
         </div>
-        <div class="card-body text-center">
-            <button type="button" class="btn btn-primary" id="btn-step-14" ><i class="fas fa-save" ></i>&nbsp; Save</button>
+        <div class="card-body text-center mt-3">
+            <button type="button" class="btn btn-primary bg-gradient mb-2" id="btn-step-14" ><i class="bi bi-floppy-fill me-2"></i>Save</button>
             @if($displayEINInstructionsLIVE)
-            <button type="button" class="btn btn-success" id="final-submit" ><i class="fas fa-share-square" ></i>&nbsp; Submit Report</button>
+            <button type="button" class="btn btn-success bg-gradient mb-2" id="final-submit" ><i class="fas fa-share-square" ></i>&nbsp; Submit Report</button>
         </div>
     </section>
 </div><!-- end of accordion body -->
@@ -3428,9 +3428,9 @@ document.querySelectorAll('.input-field-selector').forEach(function(element) {
         var cell2 = row.insertCell(1);
         var cell3 = row.insertCell(2);
 
-        cell1.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="ChildrensRoomDesc${ExpenseCount}" id="ChildrensRoomDesc${ExpenseCount}"></div>`;
-        cell2.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ChildrensRoomSupplies${ExpenseCount}" id="ChildrensRoomSupplies${ExpenseCount}" oninput="ChangeChildrensRoomExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-        cell3.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ChildrensRoomOther${ExpenseCount}" id="ChildrensRoomOther${ExpenseCount}" oninput="ChangeChildrensRoomExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell1.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="ChildrensRoomDesc${ExpenseCount}" id="ChildrensRoomDesc${ExpenseCount}"></div>`;
+        cell2.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ChildrensRoomSupplies${ExpenseCount}" id="ChildrensRoomSupplies${ExpenseCount}" oninput="ChangeChildrensRoomExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell3.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ChildrensRoomOther${ExpenseCount}" id="ChildrensRoomOther${ExpenseCount}" oninput="ChangeChildrensRoomExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
 
         ExpenseCount++;
         document.getElementById('ChildrensExpenseRowCount').value = ExpenseCount;
@@ -3514,11 +3514,11 @@ document.querySelectorAll('.input-field-selector').forEach(function(element) {
         var cell4 = row.insertCell(3);
         var cell5 = row.insertCell(4);
 
-        cell1.innerHTML = `<div class="form-group"><textarea class="form-control" rows="4" name="ServiceProjectDesc${ExpenseCount}" id="ServiceProjectDesc${ExpenseCount}"></textarea></div>`;
-        cell2.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ServiceProjectIncome${ExpenseCount}" id="ServiceProjectIncome${ExpenseCount}" oninput="ChangeServiceProjectExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-        cell3.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ServiceProjectSupplies${ExpenseCount}" id="ServiceProjectSupplies${ExpenseCount}" oninput="ChangeServiceProjectExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-        cell4.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ServiceProjectDonatedCharity${ExpenseCount}" id="ServiceProjectDonatedCharity${ExpenseCount}" oninput="ChangeServiceProjectExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-        cell5.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ServiceProjectDonatedM2M${ExpenseCount}" id="ServiceProjectDonatedM2M${ExpenseCount}" oninput="ChangeServiceProjectExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell1.innerHTML = `<div class="mb-3"><textarea class="form-control" rows="4" name="ServiceProjectDesc${ExpenseCount}" id="ServiceProjectDesc${ExpenseCount}"></textarea></div>`;
+        cell2.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ServiceProjectIncome${ExpenseCount}" id="ServiceProjectIncome${ExpenseCount}" oninput="ChangeServiceProjectExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell3.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ServiceProjectSupplies${ExpenseCount}" id="ServiceProjectSupplies${ExpenseCount}" oninput="ChangeServiceProjectExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell4.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ServiceProjectDonatedCharity${ExpenseCount}" id="ServiceProjectDonatedCharity${ExpenseCount}" oninput="ChangeServiceProjectExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell5.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ServiceProjectDonatedM2M${ExpenseCount}" id="ServiceProjectDonatedM2M${ExpenseCount}" oninput="ChangeServiceProjectExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
 
         ExpenseCount++;
         document.getElementById('ServiceProjectRowCount').value = ExpenseCount;
@@ -3583,9 +3583,9 @@ function AddPartyExpenseRow() {
         var cell2 = row.insertCell(1);
         var cell3 = row.insertCell(2);
 
-        cell1.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="PartyDesc${ExpenseCount}" id="PartyDesc${ExpenseCount}"></div>`;
-        cell2.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="PartyIncome${ExpenseCount}" id="PartyIncome${ExpenseCount}" oninput="ChangePartyExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-        cell3.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="PartyExpenses${ExpenseCount}" id="PartyExpenses${ExpenseCount}" oninput="ChangePartyExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell1.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="PartyDesc${ExpenseCount}" id="PartyDesc${ExpenseCount}"></div>`;
+        cell2.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="PartyIncome${ExpenseCount}" id="PartyIncome${ExpenseCount}" oninput="ChangePartyExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell3.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="PartyExpenses${ExpenseCount}" id="PartyExpenses${ExpenseCount}" oninput="ChangePartyExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
 
         ExpenseCount++;
         document.getElementById('PartyExpenseRowCount').value = ExpenseCount;
@@ -3655,8 +3655,8 @@ function AddPartyExpenseRow() {
         var cell1 = row.insertCell(0);
         var cell2 = row.insertCell(1);
 
-        cell1.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="OfficeDesc${ExpenseCount}" id="OfficeDesc${ExpenseCount}"></div>`;
-        cell2.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="OfficeExpenses${ExpenseCount}" id="OfficeExpenses${ExpenseCount}" oninput="ChangeOfficeExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell1.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="OfficeDesc${ExpenseCount}" id="OfficeDesc${ExpenseCount}"></div>`;
+        cell2.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="OfficeExpenses${ExpenseCount}" id="OfficeExpenses${ExpenseCount}" oninput="ChangeOfficeExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
 
         ExpenseCount++;
         document.getElementById('OfficeExpenseRowCount').value = ExpenseCount;
@@ -3730,9 +3730,9 @@ function AddPartyExpenseRow() {
         var cell2 = row.insertCell(1);
         var cell3 = row.insertCell(2);
 
-        cell1.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="InternationalEventDesc${ExpenseCount}" id="InternationalEventDesc${ExpenseCount}"></div>`;
-        cell2.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="InternationalEventIncome${ExpenseCount}" id="InternationalEventIncome${ExpenseCount}" oninput="ChangeInternationalEventExpense()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-        cell3.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="InternationalEventExpense${ExpenseCount}" id="InternationalEventExpense${ExpenseCount}" oninput="ChangeInternationalEventExpense()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell1.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="InternationalEventDesc${ExpenseCount}" id="InternationalEventDesc${ExpenseCount}"></div>`;
+        cell2.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="InternationalEventIncome${ExpenseCount}" id="InternationalEventIncome${ExpenseCount}" oninput="ChangeInternationalEventExpense()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell3.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="InternationalEventExpense${ExpenseCount}" id="InternationalEventExpense${ExpenseCount}" oninput="ChangeInternationalEventExpense()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
 
         ExpenseCount++;
         document.getElementById('InternationalEventRowCount').value = ExpenseCount;
@@ -3783,10 +3783,10 @@ function AddPartyExpenseRow() {
         var cell3 = row.insertCell(2);
         var cell4 = row.insertCell(3);
 
-        cell1.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="DonationDesc${ExpenseCount}" id="DonationDesc${ExpenseCount}"></div>`;
-        cell2.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="DonorInfo${ExpenseCount}" id="DonorInfo${ExpenseCount}"></div>`;
-        cell3.innerHTML = `<div class="form-group"><input type="date" class="form-control" name="MonDonationDate${ExpenseCount}" id="MonDonationDate${ExpenseCount}"></div>`;
-        cell4.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="DonationAmount${ExpenseCount}" id="DonationAmount${ExpenseCount}" oninput="ChangeDonationAmount()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell1.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="DonationDesc${ExpenseCount}" id="DonationDesc${ExpenseCount}"></div>`;
+        cell2.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="DonorInfo${ExpenseCount}" id="DonorInfo${ExpenseCount}"></div>`;
+        cell3.innerHTML = `<div class="mb-3"><input type="date" class="form-control" name="MonDonationDate${ExpenseCount}" id="MonDonationDate${ExpenseCount}"></div>`;
+        cell4.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="DonationAmount${ExpenseCount}" id="DonationAmount${ExpenseCount}" oninput="ChangeDonationAmount()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
 
         ExpenseCount++;
         document.getElementById('MonDonationRowCount').value = ExpenseCount;
@@ -3818,9 +3818,9 @@ function AddPartyExpenseRow() {
         var cell2 = row.insertCell(1);
         var cell3 = row.insertCell(2);
 
-        cell1.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="NonMonDonationDesc${ExpenseCount}" id="NonMonDonationDesc${ExpenseCount}"></div>`;
-        cell2.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="NonMonDonorInfo${ExpenseCount}" id="NonMonDonorInfo${ExpenseCount}"></div>`;
-        cell3.innerHTML = `<div class="form-group"><input type="date" class="form-control" name="NonMonDonationDate${ExpenseCount}" id="NonMonDonationDate${ExpenseCount}"></div>`;
+        cell1.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="NonMonDonationDesc${ExpenseCount}" id="NonMonDonationDesc${ExpenseCount}"></div>`;
+        cell2.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="NonMonDonorInfo${ExpenseCount}" id="NonMonDonorInfo${ExpenseCount}"></div>`;
+        cell3.innerHTML = `<div class="mb-3"><input type="date" class="form-control" name="NonMonDonationDate${ExpenseCount}" id="NonMonDonationDate${ExpenseCount}"></div>`;
 
         ExpenseCount++;
         document.getElementById('NonMonDonationRowCount').value = ExpenseCount;
@@ -3880,9 +3880,9 @@ function AddPartyExpenseRow() {
         var cell2 = row.insertCell(1);
         var cell3 = row.insertCell(2);
 
-        cell1.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="OtherOfficeDesc${ExpenseCount}" id="OtherOfficeDesc${ExpenseCount}"></div>`;
-        cell2.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="OtherOfficeIncome${ExpenseCount}" id="OtherOfficeIncome${ExpenseCount}" oninput="ChangeOtherOfficeExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-        cell3.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="OtherOfficeExpenses${ExpenseCount}" id="OtherOfficeExpenses${ExpenseCount}" oninput="ChangeOtherOfficeExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell1.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="OtherOfficeDesc${ExpenseCount}" id="OtherOfficeDesc${ExpenseCount}"></div>`;
+        cell2.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="OtherOfficeIncome${ExpenseCount}" id="OtherOfficeIncome${ExpenseCount}" oninput="ChangeOtherOfficeExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell3.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="OtherOfficeExpenses${ExpenseCount}" id="OtherOfficeExpenses${ExpenseCount}" oninput="ChangeOtherOfficeExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
 
         ExpenseCount++;
         document.getElementById('OtherOfficeExpenseRowCount').value = ExpenseCount;
@@ -3963,11 +3963,11 @@ function AddPartyExpenseRow() {
         var cell4 = row.insertCell(3);
         var cell5 = row.insertCell(4);
 
-        cell1.innerHTML = `<div class="form-group"><input type="date" class="form-control" name="BankRecDate${ExpenseCount}" id="BankRecDate${ExpenseCount}" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $bank_rec_array[$row]['bank_rec_date'] ?? '' }}"></div>`;
-        cell2.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="BankRecCheckNo${ExpenseCount}" id="BankRecCheckNo${ExpenseCount}"  oninput="ChangeBankRec()"></div>`;
-        cell3.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="BankRecDesc${ExpenseCount}" id="BankRecDesc${ExpenseCount}"></div>`;
-        cell4.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="BankRecPaymentAmount${ExpenseCount}" id="BankRecPaymentAmount${ExpenseCount}" oninput="ChangeBankRec()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-        cell5.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="BankRecDepositAmount${ExpenseCount}" id="BankRecDepositAmount${ExpenseCount}" oninput="ChangeBankRec()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell1.innerHTML = `<div class="mb-3"><input type="date" class="form-control" name="BankRecDate${ExpenseCount}" id="BankRecDate${ExpenseCount}" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $bank_rec_array[$row]['bank_rec_date'] ?? '' }}"></div>`;
+        cell2.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="BankRecCheckNo${ExpenseCount}" id="BankRecCheckNo${ExpenseCount}"  oninput="ChangeBankRec()"></div>`;
+        cell3.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="BankRecDesc${ExpenseCount}" id="BankRecDesc${ExpenseCount}"></div>`;
+        cell4.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="BankRecPaymentAmount${ExpenseCount}" id="BankRecPaymentAmount${ExpenseCount}" oninput="ChangeBankRec()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell5.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="BankRecDepositAmount${ExpenseCount}" id="BankRecDepositAmount${ExpenseCount}" oninput="ChangeBankRec()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
 
         ExpenseCount++;
         document.getElementById('BankRecRowCount').value = ExpenseCount;

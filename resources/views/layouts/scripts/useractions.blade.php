@@ -283,9 +283,9 @@ function showResetProbationSubmisionModel() {
                 </div>
                 <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterid}">
                 <br>
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" id="disband_letter" class="custom-control-input">
-                    <label class="custom-control-label" for="disband_letter">Send Disband Letter to Chapter</label>
+                <div class="form-check form-switch">
+                    <input type="checkbox" id="disband_letter" class="form-check-input">
+                    <label class="form-check-label" for="disband_letter">Send Disband Letter to Chapter</label>
                 </div>
                 <br>
                 <div id="letterTypeContainer" style="display: none;">

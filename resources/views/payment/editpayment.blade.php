@@ -30,30 +30,32 @@
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                  <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
-                  <p class="text-center">{{ $conferenceDescription }} Conference, {{ $regionLongName }} Region
-                  <br>
+                <div class="card-body">
+                    <div class="card-header text-center bg-transparent">
+                    <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
+                    <p class="mb-0">{{ $chDetails->confname }} Conference, {{ $chDetails->regname }} Region
+  </p>
+                    </div>
                   EIN: {{$chDetails->ein}}
                   </p>
 
-                  <ul class="list-group list-group-unbordered mb-3">
-                      <li class="list-group-item">
-                          <b>Re-Registration Dues:</b><span class="float-right">
+                  <ul class="list-group list-group-flush mb-3">
+                      <li class="list-group-item mt-2">
+                          <b>Re-Registration Dues:</b><span class="float-end">
                               @if ($chPayments->rereg_members	)
                                   <b>{{ $chPayments->rereg_members }} Members</b> on <b><span class="date-mask">{{ $chPayments->rereg_date }}</span></b>
                               @else
                                   No Payment Recorded
                               @endif
                           </span><br>
-                          <b>M2M Donation:</b><span class="float-right">
+                          <b>M2M Donation:</b><span class="float-end">
                               @if ($chPayments->m2m_donation)
                                   <b>${{ $chPayments->m2m_donation }}</b> on <b><span class="date-mask">{{ $chPayments->m2m_date }}</span></b>
                               @else
                                   No Donation Recorded
                               @endif
                           </span><br>
-                          <b>Sustaining Chapter Donation: </b><span class="float-right">
+                          <b>Sustaining Chapter Donation: </b><span class="float-end">
                               @if ($chPayments->sustaining_donation)
                                   <b>${{ $chPayments->sustaining_donation }}</b> on <b><span class="date-mask">{{ $chPayments->sustaining_date }}</span></b>
                               @else
@@ -62,13 +64,13 @@
                           </span>
                           <br>
                       </li>
-                      <li class="list-group-item">
-                        <b>Founded:</b><span class="float-right">{{ $startMonthName }} {{ $chDetails->start_year }}</span>
+                      <li class="list-group-item mt-2">
+                        <b>Founded:</b><span class="float-end">{{ $startMonthName }} {{ $chDetails->start_year }}</span>
                            <br>
-                          <b>Status:</b><span class="float-right ">{{ $chapterStatus }}</span>
+                          <b>Status:</b><span class="float-end ">{{ $chapterStatus }}</span>
                       </li>
                       <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
-                      <li class="list-group-item" id="display_corlist" class="list-group-item"></li>
+                      <li class="list-group-item mt-2" id="display_corlist"></li>
                   </ul>
                   <div class="text-center">
                       @if ($chDetails->active_status == 1 )
@@ -100,7 +102,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <!-- /.form group -->
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <div class="col-sm-12">
                                     <h5>Re-Registration Payment
                                     <small>(Adding a re-reg payment will automatically move next renewal year forward)</small>
@@ -124,31 +126,31 @@
                                     <input type="number" name="members" id="members" onKeyPress="if(this.value.length==9) return false;" class="form-control"  />
                                 </div>
                             </div>
-                            <div class="form-group row mb-1">
+                            <div class="row mb-3 mb-1">
                                 <label class="col-sm-2 col-form-label">Re-Registration Notes:</label>
                                 <div class="col-sm-8">
                                   <input type="text" name="ch_regnotes" id="ch_regnotes" class="form-control"  value="{{ $chPayments->rereg_notes}}" >
                                 </div>
                             </div>
-                            <div class="form-group row ">
+                            <div class="row mb-3 ">
                                 <div class="col-md-12 d-flex align-items-center">
-                                    <label class="col-form-label mr-2">Send Payment Received Notification to Chapter:</label>
-                                        <div class="custom-control custom-switch">
-                                            <input type="checkbox" name="ch_notify" id="ch_notify" class="custom-control-input" >
-                                            <label class="custom-control-label" for="ch_notify"></label>
+                                    <label class="col-form-label me-2">Send Payment Received Notification to Chapter:</label>
+                                        <div class="form-check form-switch">
+                                            <input type="checkbox" name="ch_notify" id="ch_notify" class="form-check-input" >
+                                            <label class="form-check-label" for="ch_notify"></label>
                                         </div>
                                     </div>
                                 <div class="col-md-12 d-flex align-items-center">
-                                    <label class="col-form-label mr-2">Waive Late Fee:</label>
-                                        <div class="custom-control custom-switch">
-                                            <input type="checkbox" name="ch_waive_late" id="ch_waive_late" class="custom-control-input" {{$chPayments->rereg_waivelate == 1 ? 'checked' : ''}}>
-                                            <label class="custom-control-label" for="ch_waive_late"></label>
+                                    <label class="col-form-label me-2">Waive Late Fee:</label>
+                                        <div class="form-check form-switch">
+                                            <input type="checkbox" name="ch_waive_late" id="ch_waive_late" class="form-check-input" {{$chPayments->rereg_waivelate == 1 ? 'checked' : ''}}>
+                                            <label class="form-check-label" for="ch_waive_late"></label>
                                         </div>
                                     </div>
                                 </div>
                                 <hr>
                             <!-- /.form group -->
-                            <div class="form-group row mb-1">
+                            <div class="row mb-3 mb-1">
                                 <div class="col-sm-12">
                                     <h5>M2M Fund Donation Payment</h5>
                                 </div>
@@ -156,7 +158,7 @@
                                 <div class="col-sm-3">
                                     <input type="date" name="M2MPaymentDate" id="M2MPaymentDate"class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask />
                                 </div>
-                                <label class="col-sm-2 ml-1 col-form-label">Donation Amount:</label>
+                                <label class="col-sm-2 ms-1 col-form-label">Donation Amount:</label>
                                 <div class="col-sm-3">
                                     <div class="input-group row">
                                         <div class="input-group-prepend">
@@ -166,18 +168,18 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group row ">
+                            <div class="row mb-3 ">
                                 <div class="col-md-12 d-flex align-items-center">
-                                    <label class="col-form-label mr-2">Send M2M Donation Thank You to Chapter:</label>
-                                        <div class="custom-control custom-switch">
-                                            <input type="checkbox" name="ch_thanks" id="ch_thanks" class="custom-control-input" >
-                                            <label class="custom-control-label" for="ch_thanks"></label>
+                                    <label class="col-form-label me-2">Send M2M Donation Thank You to Chapter:</label>
+                                        <div class="form-check form-switch">
+                                            <input type="checkbox" name="ch_thanks" id="ch_thanks" class="form-check-input" >
+                                            <label class="form-check-label" for="ch_thanks"></label>
                                         </div>
                                     </div>
                                 </div>
                             <hr>
                                 <!-- /.form group -->
-                            <div class="form-group row mb-1">
+                            <div class="row mb-3 mb-1">
                                 <div class="col-sm-12">
                                     <h5>Sustaining Chapter Donation Payment</h5>
                                 </div>
@@ -185,7 +187,7 @@
                                 <div class="col-sm-3">
                                     <input type="date" name="SustainingPaymentDate" id="SustainingPaymentDate"class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask />
                                 </div>
-                                <label class="col-sm-2 ml-1 col-form-label">Donation Amount:</label>
+                                <label class="col-sm-2 ms-1 col-form-label">Donation Amount:</label>
                                 <div class="col-sm-3">
                                     <div class="input-group row">
                                         <div class="input-group-prepend">
@@ -195,12 +197,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group row ">
+                            <div class="row mb-3 ">
                                 <div class="col-md-12 d-flex align-items-center">
-                                    <label class="col-form-label mr-2">Send Sustaining Chapter Donation Thank You to Chapter:</label>
-                                        <div class="custom-control custom-switch">
-                                            <input type="checkbox" name="ch_sustaining" id="ch_sustaining" class="custom-control-input" >
-                                            <label class="custom-control-label" for="ch_sustaining"></label>
+                                    <label class="col-form-label me-2">Send Sustaining Chapter Donation Thank You to Chapter:</label>
+                                        <div class="form-check form-switch">
+                                            <input type="checkbox" name="ch_sustaining" id="ch_sustaining" class="form-check-input" >
+                                            <label class="form-check-label" for="ch_sustaining"></label>
                                         </div>
                                     </div>
                                 </div>
@@ -215,21 +217,21 @@
                       </div>
           <!-- /.col -->
           <div class="col-md-12">
-            <div class="card-body text-center">
+            <div class="card-body text-center mt-3">
                 @if ($coordinatorCondition)
-                    <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2"></i>Save Payment Information</button>
+                    <button type="submit" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Payment Information</button>
                 @endif
-                <button type="button" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('payment.paymenthistory', ['id' => $chDetails->id]) }}'"><i class="fas fa-file-invoice-dollar mr-2"></i>View Payment History</button>
+                <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('payment.paymenthistory', ['id' => $chDetails->id]) }}'"><i class="fas fa-file-invoice-dollar me-2"></i>View Payment History</button>
                 <br>
                 @if ($confId == $chConfId)
-                        <button type="button" id="back-rereg" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('payment.chapreregistration') }}'"><i class="fas fa-reply mr-2"></i>Back to Re-Registration Report</button>
-                        <button type="button" id="back-donation" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('payment.chapdonations') }}'"><i class="fas fa-reply mr-2"></i>Back to Donations Report</button>
+                        <button type="button" id="back-rereg" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('payment.chapreregistration') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Re-Registration Report</button>
+                        <button type="button" id="back-donation" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('payment.chapdonations') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Donations Report</button>
                 @elseif ($confId != $chConfId)
-                    <button type="button" id="back-rereg" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('payment.chapreregistration', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Re-Registration Report</button>
-                    <button type="button" id="back-donation" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('payment.chapdonations', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Donations Report</button>
+                    <button type="button" id="back-rereg" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('payment.chapreregistration', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Re-Registration Report</button>
+                    <button type="button" id="back-donation" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('payment.chapdonations', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Donations Report</button>
                 @endif
-                <button type="button" id="back-details" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
-                <button type="button" id="back-details" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('payment.paymenthistory', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Payment History</button>
+                <button type="button" id="back-details" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Chapter Details</button>
+                <button type="button" id="back-details" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('payment.paymenthistory', ['id' => $chDetails->id]) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Payment History</button>
         </div>
         </div>
         <!-- /.row -->

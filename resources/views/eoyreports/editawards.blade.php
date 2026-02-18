@@ -33,56 +33,58 @@
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
-              <div class="card-body box-profile">
-                <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
-                <p class="text-center">{{ $conferenceDescription }} Conference, {{ $regionLongName }} Region
-
-                <ul class="list-group list-group-unbordered mb-3">
-                    <li class="list-group-item">
+             <div class="card-body">
+                    <div class="card-header text-center bg-transparent">
+                    <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
+                    <p class="mb-0">{{ $chDetails->confname }} Conference, {{ $chDetails->regname }} Region
+                  </p>
+                    </div>
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item mt-2">
                         <div class="row">
                             <div class="col-sm-12">
                                 <label>New Board Submitted:</label>
-                                <span class="float-right">{{ $chDetails->documentsEOY->new_board_submitted == 1 ? 'YES' : 'NO' }}</span>
+                                <span class="float-end">{{ $chDetails->documentsEOY->new_board_submitted == 1 ? 'YES' : 'NO' }}</span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <label>New Board Activated:</label>
-                                <span class="float-right">{{ $chDetails->documentsEOY->new_board_active == 1 ? 'YES' : 'NO' }}</span>
+                                <span class="float-end">{{ $chDetails->documentsEOY->new_board_active == 1 ? 'YES' : 'NO' }}</span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <label>Financial Report Received</label>
-                                <span class="float-right">{{ $chDetails->documentsEOY->financial_report_received == 1 ? 'YES' : 'NO' }}</span>
+                                <span class="float-end">{{ $chDetails->documentsEOY->financial_report_received == 1 ? 'YES' : 'NO' }}</span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <label>Financial Review Complete:</label>
-                                <span class="float-right">{{ $chDetails->documentsEOY->financial_review_complete == 1 ? 'YES' : 'NO' }}</span>
+                                <span class="float-end">{{ $chDetails->documentsEOY->financial_review_complete == 1 ? 'YES' : 'NO' }}</span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <label>Report Extension Given:</label>
-                                <span class="float-right">{{ $chDetails->documentsEOY->report_extension == 1 ? 'YES' : 'NO' }}</span>
+                                <span class="float-end">{{ $chDetails->documentsEOY->report_extension == 1 ? 'YES' : 'NO' }}</span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <label>990N Verifed on irs.gov:</label>
-                                <span class="float-right">{{ $chFinancialReport->check_current_990N_verified_IRS == 1 ? 'YES' : 'NO' }}</span>
+                                <span class="float-end">{{ $chFinancialReport->check_current_990N_verified_IRS == 1 ? 'YES' : 'NO' }}</span>
                             </div>
                         </div>
                     </li>
 
-                    <li class="list-group-item">
+                    <li class="list-group-item mt-2">
                         <div class="row">
                             <div class="col-sm-12">
                                 <label>Assigned Reviewer:</label>
                                     @if($chFinancialReport->reviewer_id != null)
-                                    <span class="float-right">{{ $chDetails->reportReviewer->first_name }} {{ $chDetails->reportReviewer->last_name }}</span>
+                                    <span class="float-end">{{ $chDetails->reportReviewer->first_name }} {{ $chDetails->reportReviewer->last_name }}</span>
                                     @else
                                         No Reviewer Assigned
                                     @endif
@@ -91,7 +93,7 @@
                 </li>
 
                     <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
-                    <li class="list-group-item" id="display_corlist" class="list-group-item"></li>
+                    <li class="list-group-item mt-2" id="display_corlist"></li>
                 </ul>
                <div class="text-center">
                       @if ($chDetails->active_status == 1 )
@@ -146,7 +148,7 @@
                         @for ($row = 0; $row < $ChapterAwardsRowCount; $row++)
                         <tr>
                             <td>
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <select class="form-control" name="ChapterAwardsType{{ $row }}"
                                         id="ChapterAwardsType{{ $row }}">
                                         <option value="">Select an Award Type</option>
@@ -161,13 +163,13 @@
                                 </div>
                             </td>
                             <td>
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <textarea class="form-control" rows="2" name="ChapterAwardsDesc{{ $row }}"
                                             id="ChapterAwardsDesc{{ $row }}">{{ $chapter_awards[$row]['awards_desc'] ?? '' }}</textarea>
                                 </div>
                             </td>
                             <td>
-                                <div class="form-group row">
+                                <div class="row mb-3">
                                     <div class="col-12 row">
                                         <div class="form-check" style="margin-right: 20px;">
                                             <input class="form-check-input" type="radio"
@@ -194,11 +196,11 @@
                     </table>
 
                     <!-- Add/Remove Row Buttons -->
-                    <div class="col-md-12 float-left">
-                        <button type="button" class="btn btn-sm btn-success" onclick="AddChapterAwardsRow()">
+                    <div class="col-md-12 float-start">
+                        <button type="button" class="btn btn-success bg-gradient btn-sm mb-2" onclick="AddChapterAwardsRow()">
                             <i class="fas fa-plus"></i>&nbsp; Add Row
                         </button>
-                        <button type="button" class="btn btn-sm btn-danger" onclick="DeleteChapterAwardsRow()">
+                        <button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" onclick="DeleteChapterAwardsRow()">
                             <i class="fas fa-minus"></i>&nbsp; Remove Row
                         </button>
                     </div>
@@ -211,17 +213,17 @@
           </div>
           <!-- /.col -->
           <div class="col-md-12">
-            <div class="card-body text-center">
+            <div class="card-body text-center mt-3">
                 @if ($coordinatorCondition)
-                    <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2"></i>Save Chapter Awards</button>
+                    <button type="submit" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Chapter Awards</button>
                     <br>
                 @endif
                  @if ($confId == $chConfId)
-                        <button type="button" id="back-awards" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('eoyreports.eoyawards') }}'"><i class="fas fa-reply mr-2"></i>Back to Awards Report</button>
+                        <button type="button" id="back-awards" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('eoyreports.eoyawards') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Awards Report</button>
                     @elseif ($confId != $chConfId && $ITCondition)
-                        <button type="button" id="back-awards" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('eoyreports.eoyawards', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Awards Report</button>
+                        <button type="button" id="back-awards" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('eoyreports.eoyawards', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Awards Report</button>
                     @endif
-                <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Details</button>
+                <button type="button" id="back-eoy" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to EOY Details</button>
             </div>
         </div>
         </div>
@@ -252,7 +254,7 @@ function AddChapterAwardsRow() {
 
     // Create the cells
     cell1.innerHTML = `
-        <div class="form-group">
+        <div class="mb-3">
             <select class="form-control"
                     name="ChapterAwardsType${rowCount}"
                     id="ChapterAwardsType${rowCount}"
@@ -262,7 +264,7 @@ function AddChapterAwardsRow() {
         </div>`;
 
     cell2.innerHTML = `
-        <div class="form-group">
+        <div class="mb-3">
             <textarea class="form-control"
                       rows="2"
                       name="ChapterAwardsDesc${rowCount}"

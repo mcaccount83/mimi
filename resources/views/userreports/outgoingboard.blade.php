@@ -12,7 +12,7 @@
                     <div class="card card-outline card-primary">
                         <div class="card-header">
                             <div class="dropdown">
-                                <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Outgoing Board Members
                                 </h3>
                                 @include('layouts.dropdown_menus.menu_reports_user')
@@ -63,21 +63,31 @@
                         @endforeach
                       </tbody>
                     </table>
-                </div>
-            <div class="card-body text-center">
+                  </div>
+              <!-- /.card-body -->
+
+              <div class="card-body">
+                  </div>
+            <!-- /.card-body for checkboxes -->
+
+            <div class="card-body text-center mt-3">
 				@if ($regionalCoordinatorCondition)
                     @if ($countList > '0')
-                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="showUserInactiveModel()"><i class="fas fa-users-slash mr-2"></i>Make all Users Inactive</button>
+                        <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showUserInactiveModel()"><i class="fas fa-users-slash me-2"></i>Make all Users Inactive</button>
                     @else
-                        <button type="button" class="btn bg-gradient-primary mb-3" disabled><i class="fas fa-users-slash mr-2"></i>Make all Users Inactive</button>
+                        <button type="button" class="btn btn-primary bg-gradient mb-2" disabled><i class="fas fa-users-slash me-2"></i>Make all Users Inactive</button>
                     @endif
 				@endif
-             </div>
-        </div>
-          <!-- /.box -->
-        </div>
+              </div>
+            <!-- /.card-body for buttons -->
+
+         </div>
+        <!-- /.card -->
       </div>
+      <!-- /.col -->
     </div>
-    </section>
-    <!-- /.content -->
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
 @endsection

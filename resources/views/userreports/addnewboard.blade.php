@@ -22,33 +22,35 @@
 
         <!-- Profile Image -->
             <div class="card card-primary card-outline">
-              <div class="card-body box-profile">
-                <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
-                <p class="text-center">{{ $conferenceDescription }} Conference, {{ $regionLongName }} Region
-                <br>
+             <div class="card-body">
+                    <div class="card-header text-center bg-transparent">
+                    <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
+                    <p class="mb-0">{{ $chDetails->confname }} Conference, {{ $chDetails->regname }} Region
+                  </p>
+                    </div>
                 EIN: {{$chDetails->ein}}
                 </p>
-                <ul class="list-group list-group-unbordered mb-3">
-                    <li class="list-group-item">
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item mt-2">
 
                 <b>Boundaries:</b> {{$chDetails->territory}}
                     </li>
-                    <li class="list-group-item">
-                        <b>Re-Registration Dues:</b><span class="float-right">
+                    <li class="list-group-item mt-2">
+                        <b>Re-Registration Dues:</b><span class="float-end">
                             @if ($chPayments->rereg_members)
                                 <b>{{ $chPayments->rereg_members }} Members</b> on <b><span class="date-mask">{{ $chPayments->rereg_date }}</span></b>
                             @else
                                 No Payment Recorded
                             @endif
                         </span><br>
-                        <b>M2M Donation:</b><span class="float-right">
+                        <b>M2M Donation:</b><span class="float-end">
                             @if ($chPayments->m2m_donation)
                                 <b>${{ $chPayments->m2m_donation }}</b> on <b><span class="date-mask">{{ $chPayments->m2m_date }}</span></b>
                             @else
                                 No Donation Recorded
                             @endif
                         </span><br>
-                        <b>Sustaining Chapter Donation: </b><span class="float-right">
+                        <b>Sustaining Chapter Donation: </b><span class="float-end">
                             @if ($chPayments->sustaining_donation)
                                 <b>${{ $chPayments->sustaining_donation }}</b> on <b><span class="date-mask">{{ $chPayments->sustaining_date }}</span></b>
                             @else
@@ -56,15 +58,15 @@
                             @endif
                         </span><br>
                     </li>
-                    <li class="list-group-item">
-                        <b>Founded:</b> <span class="float-right">{{ $startMonthName }} {{ $chDetails->start_year }}</span>
+                    <li class="list-group-item mt-2">
+                        <b>Founded:</b> <span class="float-end">{{ $startMonthName }} {{ $chDetails->start_year }}</span>
                         <br>
-                        <b>Formerly Known As:</b> <span class="float-right">{{ $chDetails->former_name }}</span>
+                        <b>Formerly Known As:</b> <span class="float-end">{{ $chDetails->former_name }}</span>
                         <br>
-                        <b>Sistered By:</b> <span class="float-right">{{ $chDetails->sistered_by }}</span>
+                        <b>Sistered By:</b> <span class="float-end">{{ $chDetails->sistered_by }}</span>
                     </li>
                     <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
-                    <li class="list-group-item" id="display_corlist" class="list-group-item"></li>
+                    <li class="list-group-item mt-2" id="display_corlist" ></li>
                 </ul>
               <div class="text-center">
                       @if ($chDetails->active_status == 1 )
@@ -96,7 +98,7 @@
                     <div class="row">
                         <div class="col-md-12">
                          <!-- /.form group -->
-                        <div class="form-group row">
+                        <div class="row mb-3">
                             <label class="col-sm-2 mb-3 col-form-label">President:</label>
                             <div class="col-sm-5 mb-3">
                             <input type="text" name="ch_pre_fname" id="ch_pre_fname" class="form-control" required placeholder="First Name" >
@@ -153,12 +155,12 @@
                       </div>
           <!-- /.col -->
           <div class="col-md-12">
-            <div class="card-body text-center">
-                <button type="submit" class="btn bg-gradient-primary mb-3" onclick="return validateEmailsBeforeSubmit();"><i class="fas fa-save mr-2"></i>Save Board Member</button>
+            <div class="card-body text-center mt-3">
+                <button type="submit" class="btn btn-primary bg-gradient mb-2" onclick="return validateEmailsBeforeSubmit();"><i class="bi bi-floppy-fill me-2"></i>Save Board Member</button>
                 @if($chDetails->active_status == 1)
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('userreports.nopresident') }}'"><i class="fas fa-reply mr-2"></i>Back to No President List</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('userreports.nopresident') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to No President List</button>
                 @else
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('userreports.nopresidentinactive') }}'"><i class="fas fa-reply mr-2"></i>Back to No President List</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('userreports.nopresidentinactive') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to No President List</button>
                 @endif
             </div>
         </div>

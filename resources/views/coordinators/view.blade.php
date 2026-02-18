@@ -19,23 +19,24 @@
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
-              <div class="card-body box-profile">
-                <h3 class="profile-username text-center">{{ $cdDetails->first_name }}, {{ $cdDetails->last_name }}</h3>
-                <p class="text-center">{{ $conferenceDescription }} Conference
-                    @if ($regionLongName != "None")
-                    , {{ $regionLongName }} Region
-                    @else
-                    @endif
-                </p>
-                <ul class="list-group list-group-unbordered mb-3">
-                    <li class="list-group-item">
-                        <b>Supervising Coordinator:</b> <span class="float-right">{{ $ReportTo }}</span>
+              <div class="card-body">
+                    <div class="card-header text-center bg-transparent">
+                        <h3 class="mb-0">{{ $cdDetails->first_name }}, {{ $cdDetails->last_name }}</h3>
+                        <p class="mb-0">{{ $conferenceDescription }} Conference
+                            @if ($regionLongName != "None")
+                                , {{ $regionLongName }} Region
+                            @endif
+                        </p>
+                    </div>
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item mt-2">
+                        <b>Supervising Coordinator:</b> <span class="float-end">{{ $ReportTo }}</span>
                         <br>
-                        <b>Display Position:</b> <span class="float-right">{{ $displayPosition->long_title }}</span>
+                        <b>Display Position:</b> <span class="float-end">{{ $displayPosition->long_title }}</span>
                         <br>
                         <b>MIMI Position:</b><a href="javascript:void(0);" onclick="showPositionInformation()" title="Show Position Information">
                             <i class="fas fa-circle-question text-primary"></i></a>
-                        <span class="float-right">{{ $mimiPosition?->long_title }}</span>
+                        <span class="float-end">{{ $mimiPosition?->long_title }}</span>
                         <br>
                         <div style="display: flex; justify-content: space-between;">
                             <b>Secondary Positions:</b>
@@ -48,16 +49,16 @@
                             </span>
                         </div>
                         @if ($ITCondition)
-                        <b>MIMI Admin:</b> <span class="float-right">{{ $cdAdminRole->admin_role }}</span>
+                        <b>MIMI Admin:</b> <span class="float-end">{{ $cdAdminRole->admin_role }}</span>
                         @endif
 
                     </li>
-                    <li class="list-group-item">
-                        <b>Start Date:</b> <span class="float-right date-mask">{{ $cdDetails->coordinator_start_date }}</span>
+                    <li class="list-group-item mt-2">
+                        <b>Start Date:</b> <span class="float-end date-mask">{{ $cdDetails->coordinator_start_date }}</span>
                         <br>
-                        <b>Last Promotion Date:</b> <span class="float-right date-mask">{{ $cdDetails->last_promoted }}</span>
+                        <b>Last Promotion Date:</b> <span class="float-end date-mask">{{ $cdDetails->last_promoted }}</span>
                         <br>
-                        <b>Home Chapter:</b> <span class="float-right">{{ $cdDetails->home_chapter }}</span>
+                        <b>Home Chapter:</b> <span class="float-end">{{ $cdDetails->home_chapter }}</span>
                     </li>
                 </ul>
                <div class="text-center">
@@ -92,10 +93,10 @@
             <div class="card card-primary card-outline">
                 <div class="card-header p-2">
                 <ul class="nav nav-pills">
-                  <li class="nav-item"><a class="nav-link active" href="#general" data-toggle="tab">Chapters & Coordinators</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#contact" data-toggle="tab">Contact Information</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#subscriptions" data-toggle="tab">Subscriptions</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#recog" data-toggle="tab">Appreciation & Recognitions</a></li>
+                  <li class="nav-item"><a class="nav-link active" href="#general" data-bs-toggle="tab">Chapters & Coordinators</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#contact" data-bs-toggle="tab">Contact Information</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#subscriptions" data-bs-toggle="tab">Subscriptions</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#recog" data-bs-toggle="tab">Appreciation & Recognitions</a></li>
                 </ul>
               </div><!-- /.card-header -->
               <div class="card-body">
@@ -103,12 +104,12 @@
                   <div class="active tab-pane" id="general">
                     <div class="general-field">
                         <h3 class="profile-username">Chapters & Coordinators
-                            <button class="btn bg-gradient-primary btn-xs ml-2" onclick="window.location.href='{{ route('coordreports.coordrptreportingtree') }}'">View Coordinator Reporting Tree</button>
+                            <button class="btn btn-primary bg-gradient btn-xs ms-2" onclick="window.location.href='{{ route('coordreports.coordrptreportingtree') }}'">View Coordinator Reporting Tree</button>
                         </h3>
                         <div class="row">
                         <div class="col-sm-6">
-							<div class="form-group">
-							    <label class="mrg-b-25">Coordinators Directly Reporting to {{ $cdDetails->first_name }}:</label>
+							<div class="mb-3">
+							    <label class="meg-b-25">Coordinators Directly Reporting to {{ $cdDetails->first_name }}:</label>
 
                                 <table id="coordinator-list" width="100%">
                                     <thead>
@@ -147,8 +148,8 @@
 						</div>
 
 						<div class="col-sm-6">
-							<div class="form-group">
-                                <label class="mrg-b-25">{{ $cdDetails->first_name }} is Primary Coordinator For:</label>
+							<div class="mb-3">
+                                <label class="meg-b-25">{{ $cdDetails->first_name }} is Primary Coordinator For:</label>
                                     <table id="coordinator-list" width="100%">
                                         <thead>
                                             @if($chList->isEmpty())
@@ -204,7 +205,7 @@
                                 Birthday: {{$cdDetails->birthdayMonth->month_long_name}} {{$cdDetails->birthday_day}}<br>
                                 Card Sent: <span class="date-mask">{{ $cdDetails->card_sent }}</span><br>
                                 @if ($assistConferenceCoordinatorCondition)
-                                    <button class="btn bg-gradient-primary btn-sm" onclick="updateCardSent()">Update Birthday Card Sent</button>
+                                    <button class="btn btn-primary bg-gradient btn-sm mb-2" onclick="updateCardSent()">Update Birthday Card Sent</button>
                                 @endif
                             </div>
                         </div>
@@ -212,7 +213,7 @@
                             <br>
                             <p>This will reset password to default "TempPass4You" for this user only.
                             <br>
-                            <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $cdDetails->user_id }}">Reset Coordinator Password</button>
+                            <button type="button" class="btn btn-primary bg-gradient btn-xs reset-password-btn" data-user-id="{{ $cdDetails->user_id }}">Reset Coordinator Password</button>
                             </p>
                       </div>
                     </div>
@@ -229,9 +230,9 @@
                             @if ($assistConferenceCoordinatorCondition)
                                 <dd class="col-sm-6">
                                     @if (in_array(1, $Subscriptions))
-                                        <button class="btn bg-gradient-primary btn-sm" onclick="unsubscribe(1, {{ $cdDetails->user_id }})">Unsubscribe</button>
+                                        <button class="btn btn-primary bg-gradient btn-sm mb-2" onclick="unsubscribe(1, {{ $cdDetails->user_id }})">Unsubscribe</button>
                                     @else
-                                        <button class="btn bg-gradient-primary btn-sm" onclick="subscribe(1, {{ $cdDetails->user_id }})">Subscribe</button>
+                                        <button class="btn btn-primary bg-gradient btn-sm mb-2" onclick="subscribe(1, {{ $cdDetails->user_id }})">Subscribe</button>
                                     @endif
                                 </dd>
                             @endif
@@ -243,9 +244,9 @@
                             @if ($assistConferenceCoordinatorCondition)
                                 <dd class="col-sm-6">
                                     @if (in_array(2, $Subscriptions))
-                                        <button class="btn bg-gradient-primary btn-sm" onclick="unsubscribe(2, {{ $cdDetails->user_id }})">Unsubscribe</button>
+                                        <button class="btn btn-primary bg-gradient btn-sm mb-2" onclick="unsubscribe(2, {{ $cdDetails->user_id }})">Unsubscribe</button>
                                     @else
-                                        <button class="btn bg-gradient-primary btn-sm" onclick="subscribe(2, {{ $cdDetails->user_id }})">Subscribe</button>
+                                        <button class="btn btn-primary bg-gradient btn-sm mb-2" onclick="subscribe(2, {{ $cdDetails->user_id }})">Subscribe</button>
                                     @endif
                                 </dd>
                             @endif
@@ -295,54 +296,54 @@
           </div>
           <!-- /.col -->
           <div class="col-md-12">
-            <div class="card-body text-center">
+            <div class="card-body text-center mt-3">
                 @if ($regionalCoordinatorCondition)
-                    <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.editrole', ['id' => $cdDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Role, Chapters & Coordinators</button>
-                    <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.editdetails', ['id' => $cdDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Contact Information</button>
+                    <button class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.editrole', ['id' => $cdDetails->id]) }}'"><i class="bi bi-pencil-square me-2"></i>Update Role, Chapters & Coordinators</button>
+                    <button class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.editdetails', ['id' => $cdDetails->id]) }}'"><i class="bi bi-pencil-square me-2"></i>Update Contact Information</button>
                 @endif
                 @if($assistConferenceCoordinatorCondition)
-                    <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.editrecognition', ['id' => $cdDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Appreciation & Recognition</button>
+                    <button class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.editrecognition', ['id' => $cdDetails->id]) }}'"><i class="bi bi-pencil-square me-2"></i>Update Appreciation & Recognition</button>
                     <br>
                 @endif
                 @if($regionalCoordinatorCondition)
                 @if ($cdPositionid == \App\Enums\CoordinatorPosition::BS && $startDate->greaterThanOrEqualTo($threeMonthsAgo))
-                        <button id="BigSister" type="button" class="btn bg-gradient-primary mb-3" onclick="showBigSisterEmailModal({{ $cdDetails->id }})"><i class="fas fa-envelope mr-2"></i>Send Big Sister Welcome Email</button>
+                        <button id="BigSister" type="button" class="btn btn-primary bg-gradient mb-2" onclick="showBigSisterEmailModal({{ $cdDetails->id }})"><i class="fas fa-envelope me-2"></i>Send Big Sister Welcome Email</button>
                     @endif
 
                     @if($cdLeave != 1)
-                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="onLeaveCoordinator({{ $cdDetails->id }})"><i class="fas fa-ban mr-2"></i>Put Coordinator On Leave</button>
+                        <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="onLeaveCoordinator({{ $cdDetails->id }})"><i class="fas fa-ban me-2"></i>Put Coordinator On Leave</button>
                     @elseif($cdLeave == 1)
-                        <button type="button" id="removeleave" class="btn bg-gradient-primary mb-3" onclick="removeLeaveCoordinator({{ $cdDetails->id }})"><i class="fas fa-undo mr-2"></i>Remove Coordinator From Leave</button>
+                        <button type="button" id="removeleave" class="btn btn-primary bg-gradient mb-2" onclick="removeLeaveCoordinator({{ $cdDetails->id }})"><i class="fas fa-undo me-2"></i>Remove Coordinator From Leave</button>
                     @endif
 
                     @if($cdActiveId == 1)
-                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="retireCoordinator({{ $cdDetails->id }})"><i class="fas fa-ban mr-2"></i>Retire Coordinator</button>
+                        <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="retireCoordinator({{ $cdDetails->id }})"><i class="fas fa-ban me-2"></i>Retire Coordinator</button>
                     @elseif($cdActiveId != 1)
-                        <button type="button" id="unretire" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="unRetireCoordinator({{ $cdDetails->id }})"><i class="fas fa-undo mr-2"></i>UnRetire Coordinator</button>
+                        <button type="button" id="unretire" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="unRetireCoordinator({{ $cdDetails->id }})"><i class="fas fa-undo me-2"></i>UnRetire Coordinator</button>
                     @endif
                 @endif
                 <br>
                    @if ($cdConfId == $confId)
                         @if ($cdActiveId == \App\Enums\CoordinatorStatusEnum::ACTIVE)
-                            <button type="button" id="back-list" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="fas fa-reply mr-2"></i>Back to Active Coordinator List</button>
+                            <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Active Coordinator List</button>
                         @elseif ($cdActiveId == \App\Enums\CoordinatorStatusEnum::PENDING)
-                            <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordpending') }}'"><i class="fas fa-reply mr-2"></i>Back to Pending Coordinator List</button>
+                            <button type="button" id="back-pending" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordpending') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Pending Coordinator List</button>
                         @elseif ($cdActiveId == \App\Enums\CoordinatorStatusEnum::NOTAPPROVED)
-                            <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordrejected') }}'"><i class="fas fa-reply mr-2"></i>Back to Not Approved Coordinator List</button>
+                            <button type="button" id="back-declined" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordrejected') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Not Approved Coordinator List</button>
                         @elseif ($cdActiveId == \App\Enums\CoordinatorStatusEnum::RETIRED)
-                            <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordretired') }}'"><i class="fas fa-reply mr-2"></i>Back to Retired Coordinator List</button>
+                            <button type="button" id="back-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordretired') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Retired Coordinator List</button>
                         @endif
                     @else
                         @if ($cdConfId != $confId)
                             @if ($ITCondition)
                                 @if ($cdActiveId == \App\Enums\CoordinatorStatusEnum::ACTIVE)
-                                    <button type="button" id="back-list" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordlist', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Coordinator List</button>
+                                    <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordlist', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Active Coordinator List</button>
                                 @elseif ($cdActiveId == \App\Enums\CoordinatorStatusEnum::PENDING)
-                                    <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordpending', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Pending Coordinator List</button>
+                                    <button type="button" id="back-pending" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordpending', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Pending Coordinator List</button>
                                 @elseif ($cdActiveId == \App\Enums\CoordinatorStatusEnum::NOTAPPROVED)
-                                    <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordrejected', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Not Approved Coordinator List</button>
+                                    <button type="button" id="back-declined" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordrejected', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Not Approved Coordinator List</button>
                                 @elseif ($cdActiveId == \App\Enums\CoordinatorStatusEnum::RETIRED)
-                                    <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordretired', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Retired Coordinator List</button>
+                                    <button type="button" id="back-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordretired', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Retired Coordinator List</button>
                                 @endif
                             @endif
                         @endif

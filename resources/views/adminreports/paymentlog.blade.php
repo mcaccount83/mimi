@@ -13,7 +13,7 @@
                 <div class="card card-outline card-primary">
                     <div class="card-header">
                         <div class="dropdown">
-                            <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Payment Log
                             </h3>
                             @include('layouts.dropdown_menus.menu_reports_admin')
@@ -38,7 +38,7 @@
                                 <label for="date" >Date</label>
                                 <input type="date" name="date" id="date" value="{{ request('date') }}" >
 
-                                <button type="submit" class="btn bg-gradient-primary btn-sm ml-2">
+                                <button type="submit" class="btn btn-primary bg-gradient btn-sm ms-2">
                                     Filter
                                 </button>
                             </div>
@@ -65,7 +65,7 @@
                             <tr>
                                 <td  class="text-center align-middle">
                                     @if ($ITCondition)
-                                    <a href="{{ route('adminreports.paymentdetails', $log->id) }}"><i class="fas fa-eye"></i></a>
+                                    <a href="{{ route('adminreports.paymentdetails', $log->id) }}"><i class="bi bi-eye-fill"></i></a>
                                     @else
                                     @endif
                                 </td>
@@ -114,28 +114,33 @@
                             @endforeach
                         </tbody>
                     </table>
-                </div>
+                  </div>
+            <!-- /.card-body -->
 
+            <div class="card-body">
                 @if ($ITCondition)
                     <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="custom-control-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
-                            <label class="custom-control-label" for="showIntl">Show All International Chapters</label>
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <label class="form-check-label" for="showIntl">Show All International Chapters</label>
                         </div>
                     </div>
                 @endif
-            <div class="card-body text-center">
-            </div>
-          </div>
-          <!-- /.card -->
-        </div>
-        <!-- /.col -->
-      </div>
-      <!-- /.row -->
-    </div>
-    <!-- /.container-fluid -->
-  </section>
-  <!-- /.content -->
-@endsection
+                 </div>
+            <!-- /.card-body for checkboxes -->
 
+            <div class="card-body text-center mt-3">
+            </div>
+            <!-- /.card-body for buttons -->
+
+        </div>
+        <!-- /.card -->
+      </div>
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
+@endsection
 

@@ -42,10 +42,10 @@
 
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="col-md-4 float-left nopadding">
-                                <div class="form-group">
+                            <div class="col-md-4 float-start nopadding">
+                                <div class="mb-3">
                                     <label for="Q1Dues">Q1 Dues Income</label>
-                                    <div class="form-group">
+                                    <div class="mb-3">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">$</span>
                                         <input type="text" class="form-control " name="q1_dues" id="q1_dues" value="{{ $chDetails->probationSubmit?->q1_dues }}"
@@ -54,10 +54,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4 float-left nopadding">
-                                <div class="form-group">
+                            <div class="col-md-4 float-start nopadding">
+                                <div class="mb-3">
                                     <label for="Q1Benefit">Q1 Member Benefit Expenses</label>
-                                    <div class="form-group">
+                                    <div class="mb-3">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">$</span>
                                         <input type="text" class="form-control " name="q1_benefit" id="q1_benefit" value="{{ $chDetails->probationSubmit?->q1_benefit }}"
@@ -66,17 +66,17 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4 float-left nopadding">
+                            <div class="col-md-4 float-start nopadding">
                             </div>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="col-md-4 float-left nopadding">
-                                    <div class="form-group">
+                                <div class="col-md-4 float-start nopadding">
+                                    <div class="mb-3">
                                         <label for="Q1Dues">Q2 Dues Income</label>
-                                        <div class="form-group">
+                                        <div class="mb-3">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">$</span>
                                             <input type="text" class="form-control " name="q2_dues" id="q2_dues" value="{{ $chDetails->probationSubmit?->q2_dues }}"
@@ -85,10 +85,10 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4 float-left nopadding">
-                                    <div class="form-group">
+                                <div class="col-md-4 float-start nopadding">
+                                    <div class="mb-3">
                                         <label for="Q1Benefit">Q2 Member Benefit Expenses</label>
-                                        <div class="form-group">
+                                        <div class="mb-3">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">$</span>
                                             <input type="text" class="form-control " name="q2_benefit" id="q2_benefit" value="{{ $chDetails->probationSubmit?->q2_benefit }}"
@@ -97,17 +97,17 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4 float-left nopadding">
+                                <div class="col-md-4 float-start nopadding">
                                 </div>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-12">
-                                    <div class="col-md-4 float-left nopadding">
-                                        <div class="form-group">
+                                    <div class="col-md-4 float-start nopadding">
+                                        <div class="mb-3">
                                             <label for="Q1Dues">Q3 Dues Income</label>
-                                            <div class="form-group">
+                                            <div class="mb-3">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">$</span>
                                                 <input type="text" class="form-control " name="q3_dues" id="q3_dues" value="{{ $chDetails->probationSubmit?->q3_dues }}"
@@ -116,10 +116,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 float-left nopadding">
-                                        <div class="form-group">
+                                    <div class="col-md-4 float-start nopadding">
+                                        <div class="mb-3">
                                             <label for="Q1Benefit">Q3 Member Benefit Expenses</label>
-                                            <div class="form-group">
+                                            <div class="mb-3">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">$</span>
                                                 <input type="text" class="form-control " name="q3_benefit" id="q3_benefit" value="{{ $chDetails->probationSubmit?->q3_benefit }}"
@@ -128,17 +128,17 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 float-left nopadding">
+                                    <div class="col-md-4 float-start nopadding">
                                     </div>
                                     </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="col-md-4 float-left nopadding">
-                                            <div class="form-group">
+                                        <div class="col-md-4 float-start nopadding">
+                                            <div class="mb-3">
                                                 <label for="Q1Dues">Q4 Dues Income</label>
-                                                <div class="form-group">
+                                                <div class="mb-3">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">$</span>
                                                     <input type="text" class="form-control " name="q4_dues" id="q4_dues" value="{{ $chDetails->probationSubmit?->q4_dues }}"
@@ -147,10 +147,10 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 float-left nopadding">
-                                            <div class="form-group">
+                                        <div class="col-md-4 float-start nopadding">
+                                            <div class="mb-3">
                                                 <label for="Q1Benefit">Q4 Member Benefit Expenses</label>
-                                                <div class="form-group">
+                                                <div class="mb-3">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">$</span>
                                                     <input type="text" class="form-control " name="q4_benefit" id="q4_benefit" value="{{ $chDetails->probationSubmit?->q4_benefit }}"
@@ -159,17 +159,17 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 float-left nopadding">
+                                        <div class="col-md-4 float-start nopadding">
                                         </div>
                                         </div>
                                     </div>
 
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <div class="col-md-4 float-left nopadding">
-                                                <div class="form-group">
+                                            <div class="col-md-4 float-start nopadding">
+                                                <div class="mb-3">
                                                     <label for="Q1Dues">YTD Dues Income</label>
-                                                    <div class="form-group">
+                                                    <div class="mb-3">
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">$</span>
                                                         <input type="text" class="form-control " name="TotalDues" id="TotalDues" readonly
@@ -178,10 +178,10 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4 float-left nopadding">
-                                                <div class="form-group">
+                                            <div class="col-md-4 float-start nopadding">
+                                                <div class="mb-3">
                                                     <label for="Q1Benefit">YTD Benefit Expenses</label>
-                                                    <div class="form-group">
+                                                    <div class="mb-3">
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">$</span>
                                                         <input type="text" class="form-control " name="TotalBenefit" id="TotalBenefit" readonly
@@ -190,10 +190,10 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4 float-left nopadding">
-                                                <div class="form-group">
+                                            <div class="col-md-4 float-start nopadding">
+                                                <div class="mb-3">
                                                     <label for="Q1Percentage">YTD Benefit %</label>
-                                                    <div class="form-group">
+                                                    <div class="mb-3">
                                                         <div class="input-group-prepend">
                                                            <input type="text" class="form-control" name="TotalPercentage" id="TotalPercentage" value="0%" readonly>
                                                         </div>
@@ -210,15 +210,15 @@
                     <!-- /.col -->
                 </div>
 
-            <div class="card-body text-center">
-                <button id="Save" type="submit" class="btn btn-primary"><i class="fas fa-share" ></i>&nbsp; Submit</button>
+            <div class="card-body text-center mt-3">
+                <button id="Save" type="submit" class="btn btn-primary bg-gradient mb-2"><i class="fas fa-share" ></i>&nbsp; Submit</button>
 
             @if ($userTypeId == \App\Enums\UserTypeEnum::COORD)
-                <button type="button" id="btn-back" class="btn btn-primary" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2" ></i>Back to Profile</button>
+                <button type="button" id="btn-back" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Profile</button>
             @else
-                <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a>
+                <a href="{{ route('home') }}" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-left me-2"></i>Back to Profile</a>
             @endif
-                <button id="logout-btn" class="btn btn-primary" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fas fa-undo" ></i>&nbsp; Logout</button>
+                <button id="logout-btn" class="btn btn-primary bg-gradient mb-2" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fas fa-undo" ></i>&nbsp; Logout</button>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
                     </form>

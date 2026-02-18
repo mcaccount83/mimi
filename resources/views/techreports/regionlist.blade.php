@@ -12,7 +12,7 @@
                     <div class="card card-outline card-primary">
                         <div class="card-header">
                             <div class="dropdown">
-                                <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Region List
                                 </h3>
                                 @include('layouts.dropdown_menus.menu_reports_admin')
@@ -60,9 +60,9 @@
                 </td>
                 <td>
                     @if ($list->id != 0)
-                        <button class="btn btn-sm bg-gradient-primary edit-region-btn">Edit Conference</button>
-                        <button class="btn btn-sm bg-gradient-success save-region-btn" style="display: none;">Save</button>
-                        <button class="btn btn-sm bg-gradient-danger cancel-region-btn" style="display: none;">Cancel</button>
+                        <button class="btn btn-primary bg-gradient btn-sm edit-region-btn">Edit Conference</button>
+                        <button class="btn btn-success bg-gradient btn-sm save-region-btn" style="display: none;">Save</button>
+                        <button class="btn btn-danger bg-gradient btn-sm cancel-region-btn" style="display: none;">Cancel</button>
                     @endif
                 </td>
             </tr>
@@ -70,18 +70,25 @@
         </tbody>
     </table>
 </div>
-             <div class="card-body text-center">
+              <!-- /.card-body -->
+
+              <div class="card-body">
             </div>
-          </div>
-          <!-- /.card -->
-        </div>
-        <!-- /.col -->
+            <!-- /.card-body for checkboxes -->
+
+                <div class="card-body text-center mt-3">
+            </div>
+            <!-- /.card-body for buttons -->
+
+         </div>
+        <!-- /.card -->
       </div>
-      <!-- /.row -->
+      <!-- /.col -->
     </div>
-    <!-- /.container-fluid -->
-  </section>
-  <!-- /.content -->
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
 @endsection
 
 @push('scripts')

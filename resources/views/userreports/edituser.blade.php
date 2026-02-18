@@ -25,13 +25,13 @@
               <div class="card-body box-profile">
 
 
-                <ul class="list-group list-group-unbordered mb-3">
-                    <li class="list-group-item">
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item mt-2">
 
-                          <div class="form-group row mt-1">
+                          <div class="row mb-3">
                             <label class="col-form-label col-sm-6">Active Status:</label>
                             <div class="col-sm-6">
-                                <select id="status" name="status" class="form-control float-right text-right"required>
+                                <select id="status" name="status" class="form-control float-end text-end"required>
                                     @foreach($AllUserStatus as $status)
                                         <option value="{{$status->id}}"
                                             @if($userDetails->is_active == $status->id) selected @endif>
@@ -41,10 +41,10 @@
                                 </select>
                             </div>
                         </div>
-                           <div class="form-group row mt-1">
+                           <div class="row mb-3">
                             <label class="col-form-label col-sm-6">User Type:</label>
                             <div class="col-sm-6">
-                                <select id="type" name="type" class="form-control float-right text-right"required>
+                                <select id="type" name="type" class="form-control float-end text-end"required>
                                     @foreach($AllUserType as $type)
                                         <option value="{{$type->id}}"
                                             @if($userDetails->type_id == $type->id) selected @endif>
@@ -54,10 +54,10 @@
                                 </select>
                             </div>
                         </div>
-                           <div class="form-group row mt-1">
+                           <div class="row mb-3">
                             <label class="col-form-label col-sm-6">Admin Role:</label>
                             <div class="col-sm-6">
-                                <select id="role" name="role" class="form-control float-right text-right"required>
+                                <select id="role" name="role" class="form-control float-end text-end"required>
                                     @foreach($AllAdminRole as $role)
                                         <option value="{{$role->id}}"
                                             @if($userDetails->is_admin == $role->id) selected @endif>
@@ -87,7 +87,7 @@
                     <div class="row">
                         <div class="col-md-12">
                          <!-- /.form group -->
-                        <div class="form-group row">
+                        <div class="row mb-3">
 
                             <label class="col-sm-2 mb-3 col-form-label">Name:</label>
                             <div class="col-sm-5 mb-3">
@@ -112,16 +112,13 @@
                       </div>
           <!-- /.col -->
           <div class="col-md-12">
-            <div class="card-body text-center">
-                <button type="submit" class="btn bg-gradient-primary mb-3" onclick="return validateEmailsBeforeSubmit();"><i class="fas fa-save mr-2"></i>Save User Information</button>
+            <div class="card-body text-center mt-3">
+                <button type="submit" class="btn btn-primary bg-gradient mb-2" onclick="return validateEmailsBeforeSubmit();"><i class="bi bi-floppy-fill me-2"></i>Save User Information</button>
                 @if($userDetails->type_id == \App\Enums\UserTypeEnum::COORD)
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('userreports.usernoactivecoord') }}'"><i class="fas fa-reply mr-2"></i>Back to List</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('userreports.usernoactivecoord') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to List</button>
                 @elseif($userDetails->type_id == \App\Enums\UserTypeEnum::BOARD)
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('userreports.usernoactiveboard') }}'"><i class="fas fa-reply mr-2"></i>Back to List</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('userreports.usernoactiveboard') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to List</button>
                 @endif
-                {{-- <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ request('return') }}'">
-    <i class="fas fa-reply mr-2"></i>Back to List
-</button> --}}
             </div>
         </div>
         <!-- /.row -->

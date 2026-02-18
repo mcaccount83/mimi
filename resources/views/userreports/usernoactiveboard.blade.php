@@ -12,10 +12,10 @@
                     <div class="card card-outline card-primary">
                         <div class="card-header">
                             <div class="dropdown">
-                                <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Active User with No Active Board Member
                                 </h3>
-                                <span class="ml-2">Update User Active Status and/or Type</span>
+                                <span class="ms-2">Update User Active Status and/or Type</span>
                                 @include('layouts.dropdown_menus.menu_reports_user')
                             </div>
                         </div>
@@ -37,7 +37,7 @@
                 @foreach($bdNoChapterList as $list)
                   <tr>
                     <td>
-                            <a href="{{ url("/userreports/edituser/{$list->id}") }}"><i class="fas fa-eye"></i></a>
+                            <a href="{{ url("/userreports/edituser/{$list->id}") }}"><i class="bi bi-eye-fill"></i></a>
                     </td>
                         <td>{{ $list->id }}</td>
                         {{-- <td>{{ $list->board->chapter_id }}</td> --}}
@@ -50,11 +50,23 @@
                   </tbody>
                 </table>
             </div>
-        </div>
-           </div>
-          <!-- /.box -->
-        </div>
+              <!-- /.card-body -->
+
+              <div class="card-body">
+            </div>
+            <!-- /.card-body for checkboxes -->
+
+                <div class="card-body text-center mt-3">
+            </div>
+            <!-- /.card-body for buttons -->
+
+         </div>
+        <!-- /.card -->
       </div>
-    </section>
-    <!-- /.content -->
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
 @endsection

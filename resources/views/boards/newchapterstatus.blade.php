@@ -124,13 +124,13 @@
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Submitted</label>
                             <div class="col-sm-8">
-                                <span class="float-right">{{ $chDetails->created_at }}</span>
+                                <span class="float-end">{{ $chDetails->created_at }}</span>
                             </div>
                         </div>
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Status</label>
                             <div class="col-sm-8">
-                                <span class="float-right">{{ $chDetails->activeStatus->active_status }}</span>
+                                <span class="float-end">{{ $chDetails->activeStatus->active_status }}</span>
                             </div>
                         </div>
 
@@ -154,10 +154,10 @@
             <!-- /.col -->
         </div>
 
-    <div class="card-body text-center">
+    <div class="card-body text-center mt-3">
 
-        <button id="Password" type="button" class="btn btn-primary" onclick="showChangePasswordAlert('{{ $chDetails->pendingPresident->user_id }}')"><i class="fas fa-lock" ></i>&nbsp; Change Password</button>
-        <button id="logout-btn" class="btn btn-primary" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fas fa-undo" ></i>&nbsp; Logout</button>
+        <button id="Password" type="button" class="btn btn-primary bg-gradient mb-2" onclick="showChangePasswordAlert('{{ $chDetails->pendingPresident->user_id }}')"><i class="fas fa-lock" ></i>&nbsp; Change Password</button>
+        <button id="logout-btn" class="btn btn-primary bg-gradient mb-2" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fas fa-undo" ></i>&nbsp; Logout</button>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                 @csrf
             </form>

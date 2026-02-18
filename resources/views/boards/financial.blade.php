@@ -39,7 +39,7 @@
             </div>
 
         <div class="container-fluid">
-                    <form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("board.updatefinancialreport", $chDetails->id) }}'>
+                    <form id="financial_report" name="financial_report" role="form" data-bs-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("board.updatefinancialreport", $chDetails->id) }}'>
                     @csrf
 
             <div class="row">
@@ -51,22 +51,22 @@
 
             </form>
 
-            <div class="card-body text-center">
+            <div class="card-body text-center mt-3">
 
                 @if ($userTypeId != \App\Enums\UserTypeEnum::OUTGOING && $userTypeId != \App\Enums\UserTypeEnum::DISBANDED)
                     @if ($userTypeId == \App\Enums\UserTypeEnum::COORD)
-                        <button type="button" id="btn-back" class="btn btn-primary" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2" ></i>Back to Profile</button>
+                        <button type="button" id="btn-back" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Profile</button>
                     @else
-                        <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply mr-2" ></i>Back to Profile</a>
+                        <a href="{{ route('home') }}" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-left me-2"></i>Back to Profile</a>
                     @endif
                 @endif
 
                 @if($chEOYDocuments->financial_report_received !='1')
-                    <button type="button" id="btn-save" class="btn btn-primary"><i class="fas fa-save mr-2"></i>Save</button>
+                    <button type="button" id="btn-save" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
                 @endif
 
                 @if($chEOYDocuments->financial_report_received =='1')
-                    <button type="button" id="btn-download-pdf" class="btn btn-primary" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->$yearColumnName  }}'"><i class="fas fa-file-pdf"></i>&nbsp; Download PDF</button>
+                    <button type="button" id="btn-download-pdf" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->$yearColumnName  }}'"><i class="fas fa-file-pdf"></i>&nbsp; Download PDF</button>
                 @endif
             </div>
 

@@ -91,7 +91,7 @@
                         <div class="card card-primary">
                             <div class="card-header" id="heading{{ $loop->index + count($international) }}">
                                 <h4 class="card-title w-100">
-                                    <a class="d-block" data-toggle="collapse" href="#collapse{{ $loop->index + count($international) }}" >
+                                    <a class="d-block" data-bs-toggle="collapse" href="#collapse{{ $loop->index + count($international) }}" >
                                         {{ $chapter->state_long_name }}
                                     </a>
                                 </h4>

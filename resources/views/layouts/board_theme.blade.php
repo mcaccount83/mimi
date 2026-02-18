@@ -1,34 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
+<!doctype htms>
+<htms lang="en">
+  <!--begin::Head-->
+  <head>
+    <meta http-equiv="Content-Type" content="text/htms; charset=utf-8" />
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{config('app.name')}}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    {{-- <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free/css/all.min.css"> --}}
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/solid.css" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/brands.css" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/v5-font-face.css" rel="stylesheet" />
-    <!-- Theme style -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
-    <!-- SweetAlert2 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <!-- daterange picker -->
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/daterangepicker/daterangepicker.css">
-    <!-- iCheck for checkboxes and radio inputs -->
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-    <!-- Tempusdominus Bootstrap 4 -->
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
 
-<script src="https://www.google.com/recaptcha/enterprise.js?render={{ config('services.recaptcha.site_key') }}"></script>
+    <!-- jQuery as classic sync script - MUST be before Vite modules -->
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Vite Compiled Assets -->
+    @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/flash.js'])
+
+    <!-- Google Recaptcha -->
+    <script src="https://www.google.com/recaptcha/enterprise.js?render={{ config('services.recaptcha.site_key') }}"></script>
+
+    {{-- Flash Messages as meta tags --}}
+    @if ($message = Session::get('success'))
+        <meta name="flash-success" content="{{ $message }}">
+    @endif
+    @if ($message = Session::get('info'))
+        <meta name="flash-info" content="{{ $message }}">
+    @endif
+    @if ($message = Session::get('warning'))
+        <meta name="flash-warning" content="{{ $message }}">
+    @endif
+    @if ($message = Session::get('fail'))
+        <meta name="flash-fail" content="{{ $message }}">
+    @endif
+    @if(View::shared('errors', false) != false && $errors->any())
+        <meta name="flash-errors" content="<ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>">
+    @endif
 
 <script>
     window.onload = function () {
@@ -42,15 +50,15 @@
 </script>
 
 <style>
-    .ml-2 {
+    .ms-2 {
         margin-left: 0.5rem !important; /* Adjust the margin to control spacing for Vacant Buttons */
     }
 
-    .custom-control-input:checked ~ .custom-control-label {
+    .form-check-input:checked ~ .form-check-label {
         color: black; /* Label color when toggle is ON for Vacant Buttons */
     }
 
-    .custom-control-input:not(:checked) ~ .custom-control-label {
+    .form-check-input:not(:checked) ~ .form-check-label {
         color: #b0b0b0; /* Subdued label color when toggle is OFF for Vacant Buttons */
         opacity: 0.6;   /* Optional: Adds a subdued effectfor Vacant Buttons */
     }
@@ -82,13 +90,25 @@
         display: table-cell;
         padding: 2px 0;
     }
+
+    h1, h2, h3, h4, h5, h6 {
+    font-weight: normal !important;
+}
+
+h1 { font-size: 2rem !important; }
+h2 { font-size: 1.75rem !important; }
+h3 { font-size: 1.5rem !important; }
+h4 { font-size: 1.25rem !important; }
+h5 { font-size: 1rem !important; }
+h6 { font-size: 0.875rem !important; }
 </style>
 
-
 </head>
-
+  <!--end::Head-->
+  <!--begin::Body-->
 <body style="background-color: #f0f0f0 !important;" class="hold-transition layout-top-nav">
-    <div class="wrapper">
+    <!--begin::App Wrapper-->
+    <div class="app-wrapper">
         @php
             $user = Auth::user();
             $userName = $user->first_name.' '.$user->last_name;
@@ -97,8 +117,8 @@
         @endphp
 
     <!-- Navbar -->
-  <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
-    <div class="container">
+  <nav class="app-header navbar navbar-expand-md navbar-light navbar-white">
+        <div class="container-fluid">
 
     @if($userTypeId == \App\Enums\UserTypeEnum::BOARD)
 
@@ -126,7 +146,7 @@
 
     @if($userTypeId != \App\Enums\UserTypeEnum::COORD)
       <!-- Right navbar links -->
-      <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+      <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ms-auto">
 
         <li class="nav-item">
             <a href="{{ route('logout') }}" class="nav-link"
@@ -148,7 +168,7 @@
       @endphp
 
       @if ($id) <!-- Check if $id is not null -->
-          <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+          <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ms-auto">
               <li class="nav-item">
                 @if ($chDetails->active_status == \App\Enums\ChapterStatusEnum::PENDING)
                 <a class="nav-link" href="{{ route('chapters.editpending', ['id' => $id]) }}">
@@ -168,132 +188,42 @@
   </nav>
   <!-- /.navbar -->
 
-<!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container">
+ <!--begin::App Main-->
+      <main class="app-main">
+        <!--begin::App Content Header-->
+        <div class="app-content-header">
+      <!--begin::Container-->
+          <div class="container-fluid">
         @if($ITCondition == 1 )
             <p class="description text-center"><span style="color: red;">You are Viewing Chapter Pages as an Admin Coordinator -- All Information is Editable just as it is for Chapter Members.</p>
         @elseif($userTypeId == \App\Enums\UserTypeEnum::COORD && $ITCondition != 1)
             <p class="description text-center"><span style="color: red;">You are Viewing Chapter Pages as a Coordinator -- All Information is READ ONLY.</p>
         @endif
-      </div><!-- /.container-fluid -->
+      </div>
+          <!--end::Container-->
+        </div>
+        <!--end::App Content Header-->
+        <!--begin::App Content-->
+        <div class="app-content">
+          <!--begin::Container-->
+
+           @yield('content')
+
+     </div>
+        <!--end::App Content-->
+      </main>
+      <!--end::App Main-->
+      <!--begin::Footer-->
+      <footer class="app-footer">
+    <!--begin::Copyright-->
+    <div class="float-end d-none d-sm-inline">
+        Copyright &copy;{{$currentYear}} <a href="https://momsclub.org/" target="_blank">MOMS Club</a>.</strong> All rights reserved.
     </div>
-    <!-- /.content-header -->
-
-    <!-- Main content -->
-    <div class="content">
-         @if ($message = Session::get('success'))
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                Swal.fire({
-                    position: 'top-end',
-                    icon: 'success',
-                    title: @json($message),
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            });
-        </script>
-    @endif
-
-    @if ($message = Session::get('info'))
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                Swal.fire({
-                    position: 'top-end',
-                    icon: 'info',
-                    title: @json($message),
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            });
-        </script>
-    @endif
-
-    @if ($message = Session::get('warning'))
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                Swal.fire({
-                    position: 'top-end',
-                    icon: 'warning',
-                    title: @json($message),
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            });
-        </script>
-    @endif
-
-    @if ($message = Session::get('fail'))
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                Swal.fire({
-                    position: 'top-end',
-                    icon: 'error',
-                    title: @json($message),
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            });
-        </script>
-    @endif
-
-        @if ($errors->any())
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'error',
-                        title: 'There were some errors!',
-                        html: '<ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>',
-                        showConfirmButton: true,
-                    });
-                });
-            </script>
-        @endif
-
-        @yield('content')
-    </div>
-
-  <!-- Main Footer -->
-  <footer class="main-footer">
-    <!-- To the right -->
-    <div class="float-right d-none d-sm-inline">
-        Copyright &copy;
-        <script>
-            document.write(new Date().getFullYear())
-        </script>
-        <a href="https://momsclub.org/" target="_blank">MOMS Club</a>. &nbsp;All rights reserved.
-    </div>
-    <!-- Default to the left -->
-
+    <!--end::Copyright-->
   </footer>
-</div>
-<!-- ./wrapper -->
-
-
-<!-- jQuery -->
-<script src="{{ config('settings.base_url') }}theme/plugins/jquery/jquery.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="{{ config('settings.base_url') }}theme/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- FontAwesome -->
-<script defer src="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/js/all.js"></script>
-<!-- overlayScrollbars -->
-<script src="{{ config('settings.base_url') }}theme/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-<!-- AdminLTE App -->
-<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
-<!-- SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<!-- InputMask -->
-<script src="{{ config('settings.base_url') }}theme/plugins/moment/moment.min.js"></script>
-<script src="{{ config('settings.base_url') }}theme/plugins/inputmask/jquery.inputmask.min.js"></script>
-<!-- date-range-picker -->
-<script src="{{ config('settings.base_url') }}theme/plugins/daterangepicker/daterangepicker.js"></script>
-<!-- Tempusdominus Bootstrap 4 -->
-<script src="{{ config('settings.base_url') }}theme/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+      <!--end::Footer-->
+    </div>
+    <!--end::App Wrapper-->
 
 <!-- Sript Functions -->
 @include('layouts.scripts.alert')
@@ -314,4 +244,4 @@
 @stack('scripts')
 
 </body>
-</html>
+</htms>

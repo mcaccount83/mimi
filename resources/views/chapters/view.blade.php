@@ -19,43 +19,45 @@
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
-              <div class="card-body box-profile">
-                <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
-                <p class="text-center">{{ $conferenceDescription }} Conference, {{ $regionLongName }} Region
-                <br>
+              <div class="card-body">
+                    <div class="card-header text-center bg-transparent">
+                    <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
+                    <p class="mb-0">{{ $chDetails->confname }} Conference, {{ $chDetails->regname }} Region
+                    <br>
                 EIN: {{$chDetails->ein}}
                 @if ( $chDetails->ein == null && $conferenceCoordinatorCondition)
                     <br>
                     Apply for an EIN:
-                    <button class="btn bg-gradient-primary btn-xs ml-1" type="button" id="irs-ein" onclick="window.open('https://sa.www4.irs.gov/modiein/individual/index.jsp', '_blank')">Link to IRS</button>
+                    <button class="btn btn-primary bg-gradient btn-sm ms-1" type="button" id="irs-ein" onclick="window.open('https://sa.www4.irs.gov/modiein/individual/index.jsp', '_blank')">Link to IRS</button>
                     @foreach($resources as $resourceItem)
                     @if ($resourceItem->name == 'Applying for a Chapter EIN')
-                        <button class="btn bg-gradient-primary btn-xs ml-1" type="button" id="apply-ein" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">Instuctions</button>
+                        <button class="btn btn-primary bg-gradient btn-sm ms-1" type="button" id="apply-ein" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">Instuctions</button>
                     @endif
                     @endforeach
                 @endif
-                </p>
-                <ul class="list-group list-group-unbordered mb-3">
-                    <li class="list-group-item">
+                 </p>
+                 </div>
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item mt-2">
 
                 <b>EIN Notes:</b> {{$chDocuments->ein_notes}}
                     </li>
-                    <li class="list-group-item">
-                        <b>Re-Registration Dues:</b><span class="float-right">
+                    <li class="list-group-item mt-2">
+                        <b>Re-Registration Dues:</b><span class="float-end">
                             @if ($chPayments->rereg_members)
                                 <b>{{ $chPayments->rereg_members }} Members</b> on <b><span class="date-mask">{{ $chPayments->rereg_date }}</span></b>
                             @else
                                 No Payment Recorded
                             @endif
                         </span><br>
-                        <b>M2M Donation:</b><span class="float-right">
+                        <b>M2M Donation:</b><span class="float-end">
                             @if ($chPayments->m2m_donation)
                                 <b>${{ $chPayments->m2m_donation }}</b> on <b><span class="date-mask">{{ $chPayments->m2m_date }}</span></b>
                             @else
                                 No Donation Recorded
                             @endif
                         </span><br>
-                        <b>Sustaining Chapter Donation: </b><span class="float-right">
+                        <b>Sustaining Chapter Donation: </b><span class="float-end">
                             @if ($chPayments->sustaining_donation)
                                 <b>${{ $chPayments->sustaining_donation }}</b> on <b><span class="date-mask">{{ $chPayments->sustaining_date }}</span></b>
                             @else
@@ -63,15 +65,15 @@
                             @endif
                         </span><br>
                     </li>
-                    <li class="list-group-item">
-                        <b>Founded:</b> <span class="float-right">{{ $startMonthName }} {{ $chDetails->start_year }}</span>
+                    <li class="list-group-item mt-2">
+                        <b>Founded:</b> <span class="float-end">{{ $startMonthName }} {{ $chDetails->start_year }}</span>
                         <br>
-                        <b>Formerly Known As:</b> <span class="float-right">{{ $chDetails->former_name }}</span>
+                        <b>Formerly Known As:</b> <span class="float-end">{{ $chDetails->former_name }}</span>
                         <br>
-                        <b>Sistered By:</b> <span class="float-right">{{ $chDetails->sistered_by }}</span>
+                        <b>Sistered By:</b> <span class="float-end">{{ $chDetails->sistered_by }}</span>
                     </li>
                     <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
-                    <li class="list-group-item" id="display_corlist" class="list-group-item"></li>
+                    <li class="list-group-item mt-2" id="display_corlist"></li>
                 </ul>
               <div class="text-center">
                       @if ($chDetails->active_status == 1 )
@@ -99,19 +101,19 @@
             <div class="card card-primary card-outline">
                 <div class="card-header p-2">
                 <ul class="nav nav-pills">
-                    <li class="nav-item"><a class="nav-link active" href="#general" data-toggle="tab">General</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#com" data-toggle="tab">Documents</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#general" data-bs-toggle="tab">General</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#com" data-bs-toggle="tab">Documents</a></li>
                     @if (!isset($chDisbanded))
-                        <li class="nav-item"><a class="nav-link" href="#eoy" data-toggle="tab">End of Year</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#eoy" data-bs-toggle="tab">End of Year</a></li>
                     @endif
                     @if (isset($chDisbanded))
-                        <li class="nav-item"><a class="nav-link" href="#disband" data-toggle="tab">Disband Checklist</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#disband" data-bs-toggle="tab">Disband Checklist</a></li>
                     @endif
-                    <li class="nav-item"><a class="nav-link" href="#pre" data-toggle="tab">President</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#avp" data-toggle="tab">Administrative VP</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#mvp" data-toggle="tab">Membership VP</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#trs" data-toggle="tab">Treasurer</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#sec" data-toggle="tab">Secretary</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#pre" data-bs-toggle="tab">President</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#avp" data-bs-toggle="tab">Administrative VP</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#mvp" data-bs-toggle="tab">Membership VP</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#trs" data-bs-toggle="tab">Treasurer</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#sec" data-bs-toggle="tab">Secretary</a></li>
                 </ul>
               </div>
               <!-- /.card-header -->
@@ -119,84 +121,92 @@
                 <div class="tab-content">
                   <div class="active tab-pane" id="general">
                     <div class="general-field">
-                        <h3 class="profile-username">General Information
+                        <div class="card-header bg-transparent border-0">
+                            <h3>General Information
                             @if (!isset($chDisbanded))
-                            <button class="btn bg-gradient-primary btn-xs ml-2" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'">View Chapter Profile As President</button>
+                            <button class="btn btn-primary bg-gradient btn-xs ms-2" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'">View Chapter Profile As President</button>
                             @endif
                             @if (isset($chDisbanded))
-                            <button id="viewdisband" class="btn bg-gradient-primary btn-xs ml-2 keep-enabled" onclick="window.location.href='{{ route('board.editdisbandchecklist', ['id' => $chDetails->id]) }}'">View Disband Checklist As President</button>
+                            <button id="viewdisband" class="btn btn-primary bg-gradient btn-sm ms-2 keep-enabled" onclick="window.location.href='{{ route('board.editdisbandchecklist', ['id' => $chDetails->id]) }}'">View Disband Checklist As President</button>
                             @endif
                         </h3>
-                    <div class="row">
-                            <div class="col-md-12">
-                                <label>Boundaries:</label> {{ $chDetails->territory}}
-                        <br>
-                        <label>Status:</label> {{$chapterStatus}}
-                        @if ($chDetails->status_id != \App\Enums\OperatingStatusEnum::OK
-                        )
-                            <br>
-                            <label>Probation Reason:</label> {{$probationReason}}
-                        @endif
-                        <br>
-                        <label>Status Notes (not visible to board members):</label> {{ $chDetails->notes}}
-                        <br><br>
                         </div>
-                    </div>
-                        <div class="row">
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="row">
+                                    <div class="col-md-12">
+                                        <label>Boundaries:</label> {{ $chDetails->territory}}
+                                <br>
+                                <label>Status:</label> {{$chapterStatus}}
+                                @if ($chDetails->status_id != \App\Enums\OperatingStatusEnum::OK
+                                )
+                                    <br>
+                                    <label>Probation Reason:</label> {{$probationReason}}
+                                @endif
+                                <br>
+                                <label>Status Notes (not visible to board members):</label> {{ $chDetails->notes}}
+                                <br><br>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Chapter Email Address:</label> <a href="mailto:{{ $chDetails->email}}">{{ $chDetails->email}}</a>
+                                <br>
+                                <label>Email used for Inquiries:</label> <a href="mailto:{{ $chDetails->inquiries_contact}}">{{ $chDetails->inquiries_contact}}</a>
+                                <br>
+                                <label>Inquiries Notes (not visible to board members):</label><br>
+                                {{ $chDetails->inquiries_note}}
+                                <br><br>
+                            </div>
                             <div class="col-md-6">
-                                <label>Chapter Email Address:</label> <a href="mailto:{{ $chDetails->email}}">{{ $chDetails->email}}</a>
-                        <br>
-                        <label>Email used for Inquiries:</label> <a href="mailto:{{ $chDetails->inquiries_contact}}">{{ $chDetails->inquiries_contact}}</a>
-                        <br>
-                        <label>Inquiries Notes (not visible to board members):</label><br>
-                        {{ $chDetails->inquiries_note}}
-                        <br><br>
-                    </div>
+                                <label>PO Box/Mailing Address:</label> {{ $chDetails->po_box }}
+                                <br>
+                                <label>Additional Information (not visible to board members):</label><br>
+                                {!! nl2br(e($chDetails->additional_info)) !!}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
 
-                        <div class="col-md-6">
-                            <label>PO Box/Mailing Address:</label> {{ $chDetails->po_box }}
-                        <br>
-                        <label>Additional Information (not visible to board members):</label><br>
-                        {!! nl2br(e($chDetails->additional_info)) !!}
+                                <label>Website:</label>
+                                    @if($chDetails->website_url == 'http://' || empty($chDetails->website_url))
+                                        No Website
+                                    @else
+                                        <a href="{{$chDetails->website_url}}" target="_blank">{{$chDetails->website_url}}</a>
+                                    @endif
+                                <br>
+                                <label>Webiste Link Status:</label> {{$websiteLink}}
+                                <br>
+                                <label>Webiste Notes (not visible to board members):</label><br>
+                                {{ $chDetails->website_notes }}
+                            </div>
+                            <div class="col-md-6">
+                                <label>Forum/Group/App:</label> {{ $chDetails->egroup}}
+                                <br>
+                                <label>Facebook:</label> {{ $chDetails->social1}}
+                                <br>
+                                <label>Twitter:</label> {{ $chDetails->social2}}
+                                <br>
+                                <label>Instagram:</label> {{ $chDetails->social3}}
+                                <br><br>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
 
-                        <label>Website:</label>
-                            @if($chDetails->website_url == 'http://' || empty($chDetails->website_url))
-                                No Website
-                            @else
-                                <a href="{{$chDetails->website_url}}" target="_blank">{{$chDetails->website_url}}</a>
-                            @endif
-                        <br>
-                        <label>Webiste Link Status:</label> {{$websiteLink}}
-                        <br>
-                        <label>Webiste Notes (not visible to board members):</label><br>
-                        {{ $chDetails->website_notes }}
                     </div>
-                    <div class="col-md-6">
-                        <label>Forum/Group/App:</label> {{ $chDetails->egroup}}
-                        <br>
-                        <label>Facebook:</label> {{ $chDetails->social1}}
-                        <br>
-                        <label>Twitter:</label> {{ $chDetails->social2}}
-                        <br>
-                        <label>Instagram:</label> {{ $chDetails->social3}}
-                        <br><br>
-                    </div>
+                    <!-- /.card-body -->
                 </div>
+            </div>
+            <!-- /.tab-pane -->
 
-                    <br><br>
-                    </div>
-                  </div>
-                   <!-- /.tab-pane -->
                    <div class="tab-pane" id="com">
                     <div class="com-field">
                         <div class="row">
                             <div class="col-md-6">
-
-                        <h3 class="profile-username">PDF Letters</h3>
+                                 <div class="card-header bg-transparent border-0">
+                                        <h3>PDF Letters</h3>
+                                </div>
+                                <!-- /.card-header -->
+                            <div class="card-body">
                         @if($chDetails->active_status == \App\Enums\ChapterStatusEnum::ZAPPED)
                             <div class="row">
                                 <div class="col-sm-6 mb-2">
@@ -204,9 +214,9 @@
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     @if($chDocuments->disband_letter_path != null)
-                                        <button class="btn bg-gradient-primary btn-sm keep-enabled" type="button" id="disband-letter" onclick="openPdfViewer('{{ $chDocuments->disband_letter_path }}')">Disband Letter</button>
+                                        <button class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="disband-letter" onclick="openPdfViewer('{{ $chDocuments->disband_letter_path }}')">Disband Letter</button>
                                     @else
-                                        <button class="btn bg-gradient-primary btn-sm disabled" disabled>No Disband Letter on File</button>
+                                        <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No Disband Letter on File</button>
                                     @endif
                                 </div>
                             </div>
@@ -216,9 +226,9 @@
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     @if($chDisbanded?->file_financial == 1 && $chEOYDocuments->final_financial_pdf_path != null)
-                                        <button class="btn bg-gradient-primary btn-sm keep-enabled" type="button" id="final-pdf" onclick="openPdfViewer('{{ $chEOYDocuments->final_financial_pdf_path }}')">Final Financial PDF</button>
+                                        <button class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="final-pdf" onclick="openPdfViewer('{{ $chEOYDocuments->final_financial_pdf_path }}')">Final Financial PDF</button>
                                     @else
-                                        <button class="btn bg-gradient-primary btn-sm disabled" type="button" disabled>Final PDF Not Available</button>
+                                        <button class="btn btn-primary bg-gradient btn-sm disabled" type="button" disabled>Final PDF Not Available</button>
                                     @endif
                                 </div>
                             </div>
@@ -230,7 +240,7 @@
                                     <label>EIN Fax Coversheet:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button id="GoodStanding" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.open('{{ route('pdf.newchapfaxcover', ['id' => $chDetails->id]) }}', '_blank')">EIN Fax Coversheet</button><br>
+                                    <button id="GoodStanding" type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.open('{{ route('pdf.newchapfaxcover', ['id' => $chDetails->id]) }}', '_blank')">EIN Fax Coversheet</button><br>
                                 </div>
                             </div>
                         @endif
@@ -241,9 +251,9 @@
                             </div>
                             <div class="col-sm-6 mb-2">
                                 @if($chDocuments->ein_letter_path != null)
-                                    <button class="btn bg-gradient-primary btn-sm keep-enabled" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chDocuments->ein_letter_path }}')">EIN Letter from IRS</button>
+                                    <button class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chDocuments->ein_letter_path }}')">EIN Letter from IRS</button>
                                 @else
-                                    <button class="btn bg-gradient-primary btn-sm disabled" disabled>No EIN Letter on File</button>
+                                    <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No EIN Letter on File</button>
                                 @endif
                             </div>
                         </div>
@@ -254,9 +264,9 @@
                             </div>
                             <div class="col-sm-6 mb-2">
                                 @if($chEOYDocuments->roster_path != null)
-                                    <button class="btn bg-gradient-primary btn-sm keep-enabled" type="button" id="roster-file" onclick="openPdfViewer('{{ $chEOYDocuments->roster_path }}')">Most Current Roster</button>
+                                    <button class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="roster-file" onclick="openPdfViewer('{{ $chEOYDocuments->roster_path }}')">Most Current Roster</button>
                                 @else
-                                    <button class="btn bg-gradient-primary btn-sm disabled" disabled>No Roster on File</button>
+                                    <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No Roster on File</button>
                                 @endif
                             </div>
                         </div>
@@ -267,7 +277,7 @@
                                     <label>Chapter in Good Standing Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button id="GoodStanding" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}', '_blank')">Good Standing Chapter Letter</button><br>
+                                    <button id="GoodStanding" type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}', '_blank')">Good Standing Chapter Letter</button><br>
                                 </div>
                             </div>
 
@@ -277,9 +287,9 @@
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     @if($chDocuments->probation_path != null)
-                                        <button class="btn bg-gradient-primary btn-sm" type="button" id="probation-file" onclick="openPdfViewer('{{ $chDocuments->probation_path }}')">Probation Letter</button>
+                                        <button class="btn btn-primary bg-gradient btn-sm" type="button" id="probation-file" onclick="openPdfViewer('{{ $chDocuments->probation_path }}')">Probation Letter</button>
                                     @else
-                                        <button class="btn bg-gradient-primary btn-sm disabled" disabled>No Probation Letter on File</button>
+                                        <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No Probation Letter on File</button>
                                     @endif
                                 </div>
                             </div>
@@ -290,9 +300,9 @@
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     @if($chDocuments->probation_release_path != null)
-                                        <button class="btn bg-gradient-primary btn-sm" type="button" id="probaton-release-file" onclick="openPdfViewer('{{ $chDocuments->probation_release_path }}')">Probation Release Letter</button>
+                                        <button class="btn btn-primary bg-gradient btn-sm" type="button" id="probaton-release-file" onclick="openPdfViewer('{{ $chDocuments->probation_release_path }}')">Probation Release Letter</button>
                                     @else
-                                        <button class="btn bg-gradient-primary btn-sm disabled" disabled>No Probation Release Letter on File</button>
+                                        <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No Probation Release Letter on File</button>
                                     @endif
                                 </div>
                             </div>
@@ -303,24 +313,29 @@
                                     <label>Name Change Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="name-change-file" onclick="openPdfViewer('{{ $chDocuments->name_change_letter_path }}')">Name Change Letter</button>
+                                    <button class="btn btn-primary bg-gradient btn-sm" type="button" id="name-change-file" onclick="openPdfViewer('{{ $chDocuments->name_change_letter_path }}')">Name Change Letter</button>
                                 </div>
                             </div>
                             @endif
 
                         @endif
-
                         </div>
+                        </div>
+
 
                         @if($chDetails->active_status == \App\Enums\ChapterStatusEnum::ACTIVE)
                         <div class="col-md-6">
-                            <h3 class="profile-username">Preset Emails</h3>
+                            <div class="card-header bg-transparent border-0">
+                                        <h3>Preset Emails</h3>
+                                </div>
+                                <!-- /.card-header -->
+                            <div class="card-body">
                             <div class="row">
                                 <div class="col-sm-6 mb-2">
                                     <label>Custom Message:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">Email Board in MIMI</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">Email Board in MIMI</button>
                                 </div>
                             </div>
                             @php
@@ -333,7 +348,7 @@
                                     <label>Blank Email:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.location.href='mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $chDetails->name . ', ' . $stateShortName) }}'">Blank Email to Board</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $chDetails->name . ', ' . $stateShortName) }}'">Blank Email to Board</button>
                                 </div>
                             </div>
                             @if ($startDate->greaterThanOrEqualTo($threeMonthsAgo))
@@ -343,9 +358,9 @@
                                     </div>
                                     <div class="col-sm-6 mb-2">
                                         @if ($chDetails->ein != null)
-                                            <button id="NewChapter" type="button" class="btn bg-primary mb-1 btn-sm" onclick="showNewChapterEmailModal({{ $chDetails->id }})">Send New Chapter Email</button>
+                                            <button id="NewChapter" type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showNewChapterEmailModal({{ $chDetails->id }})">Send New Chapter Email</button>
                                         @else
-                                            <button type="button" class="btn bg-primary mb-1 btn-sm disabled" disabled>Must have EIN Number</button>
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>Must have EIN Number</button>
                                         @endif
                                     </div>
                                 </div>
@@ -356,7 +371,7 @@
                                     <label>Re-Registration Reminder:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="showChapterReRegEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }})">Email Re-Registration</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showChapterReRegEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }})">Email Re-Registration</button>
                                 </div>
                             </div>
 
@@ -365,7 +380,7 @@
                                     <label>Re-Registration Late Reminder:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="showChapterReRegLateEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }})">Email Late Notice</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showChapterReRegLateEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }})">Email Late Notice</button>
                                 </div>
                             </div>
 
@@ -374,7 +389,7 @@
                                     <label>Probation/Warning Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="showProbationLetterModal('{{ $chDetails->name }}', {{ $chDetails->id }})">Email Probation/Warning</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showProbationLetterModal('{{ $chDetails->name }}', {{ $chDetails->id }})">Email Probation/Warning</button>
                                 </div>
                             </div>
 
@@ -383,25 +398,32 @@
                                     <label>Probation Release Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="showProbationReleaseModal('{{ $chDetails->name }}', {{ $chDetails->id }})">Email Probation Release</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showProbationReleaseModal('{{ $chDetails->name }}', {{ $chDetails->id }})">Email Probation Release</button>
                                 </div>
                             </div>
-
+                        </div>
                         </div>
                         @endif
 
-                    </div>
-
-                    </div>
+                 </div>
+                    <!-- /.card-body -->
                 </div>
+            </div>
+            <!-- /.tab-pane -->
 
                   <!-- /.tab-pane -->
                   <div class="tab-pane" id="eoy">
                     <div class="eoy-field">
-                        <h3 class="profile-username">{{ $fiscalYear }} End of Year Information
+                        <div class="card-header bg-transparent border-0">
+                                        <h3>
+                                            {{ $fiscalYear }} End of Year Information
                             @if ($ITCondition && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
                             @if ($eoyTestCondition && $displayTESTING) *TESTING*@endif
-                        </h3>
+                            </h3>
+                                </div>
+
+                                <!-- /.card-header -->
+                            <div class="card-body">
                         @if($ITCondition || $eoyTestCondition && $displayTESTING || $displayLIVE)
                             <div class="row">
                                 <div class="col-sm-3">
@@ -412,7 +434,7 @@
                                         Chapter has reported boundary issues.
                                     </div>
                                     <div class="col-sm-4">
-                                        <label class="mr-2">Resolved:</label>{{ $chDetails->boundary_issue_resolved == 1 ? 'YES' : 'NO' }}
+                                        <label class="me-2">Resolved:</label>{{ $chDetails->boundary_issue_resolved == 1 ? 'YES' : 'NO' }}
                                     </div>
                                 @else
                                     <div class="col-sm-9">
@@ -430,7 +452,7 @@
                                         Board Election Report has been received.
                                     </div>
                                     <div class="col-sm-4">
-                                        <label class="mr-2">Activated:</label>{{ $chEOYDocuments->new_board_active == 1 ? 'YES' : 'NO' }}
+                                        <label class="me-2">Activated:</label>{{ $chEOYDocuments->new_board_active == 1 ? 'YES' : 'NO' }}
                                     </div>
                                 @else
                                     <div class="col-sm-9">
@@ -448,7 +470,7 @@
                                         Financial Report has been received.
                                     </div>
                                     <div class="col-sm-4">
-                                        <label class="mr-2">Review Complete:</label>{{ $chEOYDocuments->financial_review_complete == 1 ? 'YES' : 'NO' }}
+                                        <label class="me-2">Review Complete:</label>{{ $chEOYDocuments->financial_review_complete == 1 ? 'YES' : 'NO' }}
                                     </div>
                                 @else
                                     <div class="col-sm-9">
@@ -551,14 +573,20 @@
                             <strong>Report Status/Links are not available at this time.</strong>
                         @endif
                         <br><br>
-                    </div>
+                      </div>
+                    <!-- /.card-body -->
                 </div>
-                  <!-- /.tab-pane -->
+            </div>
+            <!-- /.tab-pane -->
 
                   <!-- /.tab-pane -->
                   <div class="tab-pane" id="disband">
                     <div class="disband-field">
-                        <h3 class="profile-username">Disband Checklist</h3>
+                        <div class="card-header bg-transparent border-0">
+                            <h3>Disband Checklist</h3>
+                    </div>
+                    <!-- /.card-header -->
+                            <div class="card-body">
                             <div class="row">
                                 <div class="col-sm-6 mb-2">
                                     <label>Final Re-Reg Payment:</label>
@@ -611,22 +639,29 @@
                                 <div class="col-sm-6 mb-2">
                                     {{ $chDisbanded?->file_financial == 1 ? 'YES' : 'NO' }}
                                     @if ( $chDisbanded?->file_financial == 1)
-                                    <button type="button" class="btn bg-gradient-danger btn-xs ml-2 keep-enabled keep-enabled" id="unsubmit">UnSubmit Report</button>
+                                    <button type="button" class="btn btn-danger bg-gradient btn-sm ms-2 keep-enabled keep-enabled" id="unsubmit">UnSubmit Report</button>
                                     @else
-                                    <button class="btn bg-gradient-danger btn-xs ml-2" disabled>UnSubmit Report</button>
+                                    <button class="btn btn-danger bg-gradient btn-sm ms-2" disabled>UnSubmit Report</button>
                                     @endif
                                 </div>
                             </div>
-                        </div>
                         <br><br>
-                    </div>
-                  <!-- /.tab-pane -->
+                     </div>
+                    <!-- /.card-body -->
+                </div>
+            </div>
+            <!-- /.tab-pane -->
 
                   <div class="tab-pane" id="pre">
                         <div class="pre-field">
-                                <h3 class="profile-username">{{$PresDetails->first_name}} {{$PresDetails->last_name}}</h3>
+                             <div class="card-header bg-transparent border-0">
+                                    <h3>President Information</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
+                                        <h3 class="mb-0">{{$PresDetails->first_name}} {{$PresDetails->last_name}}</h3>
                                         <a href="mailto:{{ $PresDetails->email }}">{{ $PresDetails->email }}</a>
                                         <br>
                                         <span class="phone-mask">{{$PresDetails->phone }}</span>
@@ -645,36 +680,45 @@
                                             $Subscriptions = $PresDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
                                         @endphp
                                         <dt class="col-sm-3">Public Announcements</dt>
-                                        <dd class="col-sm-2">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}</dd>
-                                            <dd class="col-sm-6">
+                                        <dd class="col-sm-9">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}
                                                 @if (in_array(1, $Subscriptions))
-                                                    <button class="btn bg-gradient-primary btn-sm" onclick="unsubscribe(1, {{ $PresDetails->user_id }})">Unsubscribe</button>
+                                                    <button class="btn btn-primary bg-gradient btn-xs ms-2" onclick="unsubscribe(1, {{ $PresDetails->user_id }})">Unsubscribe</button>
                                                 @else
-                                                    <button class="btn bg-gradient-primary btn-sm" onclick="subscribe(1, {{ $PresDetails->user_id }})">Subscribe</button>
+                                                    <button class="btn btn-primary bg-gradient btn-xs ms-2" onclick="subscribe(1, {{ $PresDetails->user_id }})">Subscribe</button>
                                                 @endif
                                             </dd>
                                         <div class="col-md-12">
                                     <p>This will reset password to default "TempPass4You" for this user only.
                                     <br>
-                                    <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn keep-enabled" data-user-id="{{ $PresDetails->user_id }}">Reset President Password</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-xs reset-password-btn keep-enabled" data-user-id="{{ $PresDetails->user_id }}">Reset President Password</button>
                                     </p>
                                 </div>
                             </div>
-                        </div>
+                  </div>
+                    <!-- /.card-body -->
                 </div>
+            </div>
+            <!-- /.tab-pane -->
 
                   <!-- /.tab-pane -->
                   <div class="tab-pane" id="avp">
                         @if ($AVPDetails->user_id == '')
                             <div class="avp-field-vacant">
-                                <h3 class="profile-username">Administrative Vice President Position is Vacant</h3>
+                                <div class="card-header bg-transparent border-0">
+                                        <h3>Administrative Vice President Position is Vacant</h3>
+                                </div>
                                 <br><br>
                             </div>
                         @else
                             <div class="avp-field">
-                                <h3 class="profile-username">{{$AVPDetails->first_name}} {{$AVPDetails->last_name}}</h3>
+                                <div class="card-header bg-transparent border-0">
+                                    <h3>Administrative Vice President Information</h3>
+                                </div>
+                                <!-- /.card-header -->
+                            <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
+                                        <h3 class="mb-0">{{$AVPDetails->first_name}} {{$AVPDetails->last_name}}</h3>
                                         <a href="mailto:{{ $AVPDetails->email }}">{{ $AVPDetails->email }}</a>
                                         <br>
                                         <span class="phone-mask">{{$AVPDetails->phone}}</span>
@@ -693,36 +737,45 @@
                                             $Subscriptions = $AVPDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
                                         @endphp
                                     <dt class="col-sm-3">Public Announcements</dt>
-                                    <dd class="col-sm-2">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}</dd>
-                                    <dd class="col-sm-6">
+                                    <dd class="col-sm-9">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}
                                         @if (in_array(1, $Subscriptions))
-                                            <button class="btn bg-gradient-primary btn-sm" onclick="unsubscribe(1, {{ $AVPDetails->user_id }})">Unsubscribe</button>
+                                            <button class="btn btn-primary bg-gradient btn-xs ms-2" onclick="unsubscribe(1, {{ $AVPDetails->user_id }})">Unsubscribe</button>
                                         @else
-                                            <button class="btn bg-gradient-primary btn-sm" onclick="subscribe(1, {{ $AVPDetails->user_id }})">Subscribe</button>
+                                            <button class="btn btn-primary bg-gradient btn-xs ms-2" onclick="subscribe(1, {{ $AVPDetails->user_id }})">Subscribe</button>
                                         @endif
                                     </dd>
                                 <div class="col-md-12">
                                     <p>This will reset password to default "TempPass4You" for this user only.
                                     <br>
-                                    <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn keep-enabled" data-user-id="{{ $AVPDetails->user_id }}">Reset AVP Password</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-xs reset-password-btn keep-enabled" data-user-id="{{ $AVPDetails->user_id }}">Reset AVP Password</button>
                                     </p>
                                 </div>
                                 </div>
-                            </div>
-                        @endif
-                    </div>
-                  <!-- /.tab-pane -->
+
+                         </div>
+                    <!-- /.card-body -->
+                </div>
+                @endif
+            </div>
+            <!-- /.tab-pane -->
                   <div class="tab-pane" id="mvp">
                         @if ($MVPDetails->user_id == '')
                             <div class="mvp-field-vacant">
-                                <h3 class="profile-username">Membership Vice President Position is Vacant</h3>
+                                 <div class="card-header bg-transparent border-0">
+                                        <h3>Membership Vice President Position is Vacant</h3>
+                                </div>
                                 <br><br>
                             </div>
                         @else
                             <div class="mvp-field">
-                                <h3 class="profile-username">{{$MVPDetails->first_name}} {{$MVPDetails->last_name}}</h3>
+                                 <div class="card-header bg-transparent border-0">
+                                        <h3>Membership Vice President Information</h3>
+                                </div>
+                                <!-- /.card-header -->
+                            <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
+                                        <h3 class="mb-0">{{$MVPDetails->first_name}} {{$MVPDetails->last_name}}</h3>
                                         <a href="mailto:{{ $MVPDetails->email }}">{{ $MVPDetails->email }}</a>
                                         <br>
                                         <span class="phone-mask">{{$MVPDetails->phone}}</span>
@@ -741,36 +794,45 @@
                                         $Subscriptions = $MVPDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
                                     @endphp
                                     <dt class="col-sm-3">Public Announcements</dt>
-                                    <dd class="col-sm-2">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}</dd>
-                                        <dd class="col-sm-6">
+                                    <dd class="col-sm-9">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}
                                             @if (in_array(1, $Subscriptions))
-                                                <button class="btn bg-gradient-primary btn-sm" onclick="unsubscribe(1, {{ $MVPDetails->user_id }})">Unsubscribe</button>
+                                                <button class="btn btn-primary bg-gradient btn-xs ms-2" onclick="unsubscribe(1, {{ $MVPDetails->user_id }})">Unsubscribe</button>
                                             @else
-                                                <button class="btn bg-gradient-primary btn-sm" onclick="subscribe(1, {{ $MVPDetails->user_id }})">Subscribe</button>
+                                                <button class="btn btn-primary bg-gradient btn-xs ms-2" onclick="subscribe(1, {{ $MVPDetails->user_id }})">Subscribe</button>
                                             @endif
                                         </dd>
                                     <div class="col-md-12">
                                         <p>This will reset password to default "TempPass4You" for this user only.
                                         <br>
-                                        <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn keep-enabled" data-user-id="{{ $MVPDetails->user_id }}">Reset MVP Password</button>
+                                        <button type="button" class="btn btn-primary bg-gradient btn-xs reset-password-btn keep-enabled" data-user-id="{{ $MVPDetails->user_id }}">Reset MVP Password</button>
                                         </p>
                                     </div>
                                 </div>
-                            </div>
-                        @endif
-                    </div>
-                  <!-- /.tab-pane -->
+
+                     </div>
+                    <!-- /.card-body -->
+                </div>
+                 @endif
+            </div>
+            <!-- /.tab-pane -->
                     <div class="tab-pane" id="trs">
                         @if ($TRSDetails->user_id == '')
                           <div class="trs-field-vacant">
-                              <h3 class="profile-username">Treasurer Position is Vacant</h3>
+                            <div class="card-header bg-transparent border-0">
+                                        <h3>Treasurer Position is Vacant</h3>
+                                </div>
                               <br><br>
                           </div>
                         @else
                           <div class="trs-field">
-                              <h3 class="profile-username">{{$TRSDetails->first_name}} {{$TRSDetails->last_name}}</h3>
+                            <div class="card-header bg-transparent border-0">
+                                        <h3>Treasurer Information</h3>
+                                </div>
+                                <!-- /.card-header -->
+                            <div class="card-body">
                               <div class="row">
                                 <div class="col-md-6">
+                                    <h3 class="mb-0">{{$TRSDetails->first_name}} {{$TRSDetails->last_name}}</h3>
                                     <a href="mailto:{{ $TRSDetails->email }}">{{ $TRSDetails->email }}</a>
                                     <br>
                                     <span class="phone-mask">{{$TRSDetails->phone}}</span>
@@ -789,36 +851,45 @@
                                         $Subscriptions = $TRSDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
                                     @endphp
                                     <dt class="col-sm-3">Public Announcements</dt>
-                                    <dd class="col-sm-2">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}</dd>
-                                        <dd class="col-sm-6">
+                                    <dd class="col-sm-9">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}
                                             @if (in_array(1, $Subscriptions))
-                                                <button class="btn bg-gradient-primary btn-sm" onclick="unsubscribe(1, {{ $TRSDetails->user_id }})">Unsubscribe</button>
+                                                <button class="btn btn-primary bg-gradient btn-xs ms-2" onclick="unsubscribe(1, {{ $TRSDetails->user_id }})">Unsubscribe</button>
                                             @else
-                                                <button class="btn bg-gradient-primary btn-sm" onclick="subscribe(1, {{ $TRSDetails->user_id }})">Subscribe</button>
+                                                <button class="btn btn-primary bg-gradient btn-xs ms-2" onclick="subscribe(1, {{ $TRSDetails->user_id }})">Subscribe</button>
                                             @endif
                                         </dd>
                                     <div class="col-md-12">
                                <p>This will reset password to default "TempPass4You" for this user only.
                               <br>
-                              <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn keep-enabled" data-user-id="{{ $TRSDetails->user_id }}">Reset Treasurer Password</button>
+                              <button type="button" class="btn btn-primary bg-gradient btn-xs reset-password-btn keep-enabled" data-user-id="{{ $TRSDetails->user_id }}">Reset Treasurer Password</button>
                             </p>
                         </div>
                     </div>
+
+                 </div>
+                    <!-- /.card-body -->
                 </div>
                 @endif
-                </div>
-                  <!-- /.tab-pane -->
+            </div>
+            <!-- /.tab-pane -->
                   <div class="tab-pane" id="sec">
                   @if ($SECDetails->user_id == '')
                     <div class="sec-field-vacant">
-                        <h3 class="profile-username">Secretary Position is Vacant</h3>
+                         <div class="card-header bg-transparent border-0">
+                                        <h3>Secretary Position is Vacant</h3>
+                                </div>
                         <br><br>
                     </div>
                   @else
                     <div class="sec-field">
-                        <h3 class="profile-username">{{$SECDetails->first_name}} {{$SECDetails->last_name}}</h3>
+                         <div class="card-header bg-transparent border-0">
+                                        <h3>Secretary Information</h3>
+                                </div>
+                                <!-- /.card-header -->
+                            <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
+                                <h3 class="mb-0">{{$SECDetails->first_name}} {{$SECDetails->last_name}}</h3>
                                 <a href="mailto:{{ $SECDetails->email }}">{{ $SECDetails->email }}</a>
                                 <br>
                                 <span class="phone-mask">{{$SECDetails->phone}}</span>
@@ -837,25 +908,28 @@
                                     $Subscriptions = $SECDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
                                 @endphp
                                 <dt class="col-sm-3">Public Announcements</dt>
-                                <dd class="col-sm-2">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}</dd>
-                                    <dd class="col-sm-6">
+                                <dd class="col-sm-9">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}
                                         @if (in_array(1, $Subscriptions))
-                                            <button class="btn bg-gradient-primary btn-sm" onclick="unsubscribe(1, {{ $SECDetails->user_id }})">Unsubscribe</button>
+                                            <button class="btn btn-primary bg-gradient btn-xs ms-2" onclick="unsubscribe(1, {{ $SECDetails->user_id }})">Unsubscribe</button>
                                         @else
-                                            <button class="btn bg-gradient-primary btn-sm" onclick="subscribe(1, {{ $SECDetails->user_id }})">Subscribe</button>
+                                            <button class="btn btn-primary bg-gradient btn-xs ms-2" onclick="subscribe(1, {{ $SECDetails->user_id }})">Subscribe</button>
                                         @endif
                                     </dd>
                                 <div class="col-md-12">
                         <p>This will reset password to default "TempPass4You" for this user only.
                         <br>
-                        <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn keep-enabled" data-user-id="{{ $SECDetails->user_id }}">Reset Secretary Password</button>
+                        <button type="button" class="btn btn-primary bg-gradient btn-xs reset-password-btn keep-enabled" data-user-id="{{ $SECDetails->user_id }}">Reset Secretary Password</button>
                         </p>
                     </div>
                 </div>
+
+     </div>
+                    <!-- /.card-body -->
+                </div>
+                 @endif
             </div>
-            @endif
-    </div>
-                  <!-- /.tab-pane -->
+            <!-- /.tab-pane -->
+
                  </div>
                 <!-- /.tab-content -->
               </div>
@@ -864,66 +938,67 @@
             <!-- /.card -->
           </div>
           <!-- /.col -->
+
           <div class="col-md-12">
-            <div class="card-body text-center">
+            <div class="card-body text-center mt-3">
                 @if ($coordinatorCondition)
                 @php
                     $emailData = app('App\Http\Controllers\UserController')->loadEmailDetails($chDetails->id);
                     $emailListChap = implode(',', $emailData['emailListChap']); // Convert array to comma-separated string
                     $emailListCoord = implode(',', $emailData['emailListCoord']); // Convert array to comma-separated string
                 @endphp
-                    <button class="btn bg-gradient-primary mb-3" type="button" id="email-chapter" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">
-                        <i class="fa fa-envelope mr-2"></i>Email Board</button>
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.edit', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Chapter Information</button>
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Board Information</button>
-                @endif
+                    <button class="btn btn-primary bg-gradient mb-2" type="button" id="email-chapter" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">
+                        <i class="fa fa-envelope me-2"></i>Email Board</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.edit', ['id' => $chDetails->id]) }}'"><i class="bi bi-pencil-square me-2"></i>>Update Chapter Information</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chDetails->id]) }}'"><i class="bi bi-pencil-square me-2"></i>Update Board Information</button>
+                    @endif
                 @if ( $ITCondition || $eoyTestCondition && $displayTESTING || $regionalCoordinatorCondition && $displayLIVE )
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update EOY Information
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-pencil-square me-2"></i>Update EOY Information
                         @if ($ITCondition && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
                         @if ($eoyTestCondition && $displayTESTING) *TESTING*@endif
                     </button>
                 @endif
                 @if($coordinatorCondition && $conferenceCoordinatorCondition)
                     <br>
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('payment.editpayment', ['id' => $chDetails->id]) }}'"><i class="fas fa-dollar-sign mr-2"></i>Enter Payment/Donation</button>
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="updateEIN('{{ $chDetails->id }}')"><i class="fas fa-university mr-2"></i>Update EIN Number</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('payment.editpayment', ['id' => $chDetails->id]) }}'"><i class="fas fa-dollar-sign me-2"></i>Enter Payment/Donation</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="updateEIN('{{ $chDetails->id }}')"><i class="fas fa-university me-2"></i>Update EIN Number</button>
                 @endif
                 @if($coordinatorCondition && $regionalCoordinatorCondition)
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="showFileUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload mr-2"></i>Update EIN Letter</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showFileUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload me-2"></i>Update EIN Letter</button>
                     @if($chActiveId == 1)
-                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="showDisbandChapterModal({{ $chDetails->id }})"><i class="fas fa-ban mr-2"></i>Disband Chapter</button>
+                        <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showDisbandChapterModal({{ $chDetails->id }})"><i class="fas fa-ban me-2"></i>Disband Chapter</button>
                     @elseif($chActiveId != 1)
-                        <button type="button" id="unzap" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="unZapChapter({{ $chDetails->id }})"><i class="fas fa-undo mr-2"></i>UnZap Chapter</button>
+                        <button type="button" id="unzap" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="unZapChapter({{ $chDetails->id }})"><i class="fas fa-undo me-2"></i>UnZap Chapter</button>
                     @endif
                 @endif
                 <br>
                 @if($coordinatorCondition)
                     @if ($confId == $chConfId)
                             @if ($chActiveId == \App\Enums\ChapterStatusEnum::ACTIVE)
-                                <button type="button" id="back-list" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplist') }}'"><i class="fas fa-reply mr-2"></i>Back to Active Chapter List</button>
+                                <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplist') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Active Chapter List</button>
                             @elseif ($chActiveId == \App\Enums\ChapterStatusEnum::ZAPPED)
-                                <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chapzapped') }}'"><i class="fas fa-reply mr-2"></i>Back to Zapped Chapter List</button>
+                                <button type="button" id="back-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapzapped') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Zapped Chapter List</button>
                             @endif
                             @if ($inquiriesCondition || $assistConferenceCoordinatorCondition)
                                 @if ($chActiveId == \App\Enums\ChapterStatusEnum::ACTIVE)
-                                    <button type="button" id="back-inquiries" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquiries', ['check3' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to Active Inquiries List</button>
+                                    <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquiries', ['check3' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Active Inquiries List</button>
                                 @elseif ($chActiveId == \App\Enums\ChapterStatusEnum::ZAPPED)
-                                    <button type="button" id="back-inquiries-zapped" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquirieszapped', ['check3' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to Zapped Inquiries List</button>
+                                    <button type="button" id="back-inquiries-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquirieszapped', ['check3' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Zapped Inquiries List</button>
                                 @endif
                             @endif
                      @elseif ($confId != $chConfId)
                         @if ($einCondition || $inquiriesInternationalCondition || $ITCondition)
                             @if ($chActiveId == \App\Enums\ChapterStatusEnum::ACTIVE)
-                                <button type="button" id="back-list" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplist', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Chapter List</button>
+                                <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplist', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Active Chapter List</button>
                             @elseif ($chActiveId == \App\Enums\ChapterStatusEnum::ZAPPED)
-                                <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chapzapped', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Zapped Chapter List</button>
+                                <button type="button" id="back-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapzapped', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Zapped Chapter List</button>
                             @endif
                         @endif
                          @if ($inquiriesInternationalCondition || $ITCondition)
                             @if ($chActiveId == \App\Enums\ChapterStatusEnum::ACTIVE)
-                                <button type="button" id="back-inquiries" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquiries', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Inquiries List</button>
+                                <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquiries', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Active Inquiries List</button>
                             @elseif ($chActiveId == \App\Enums\ChapterStatusEnum::ZAPPED)
-                                <button type="button" id="back-inquiries-zapped" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquirieszapped', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Zapped Inquiries List</button>
+                                <button type="button" id="back-inquiries-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquirieszapped', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Zapped Inquiries List</button>
                             @endif
                         @endif
                     @endif

@@ -16,7 +16,7 @@
             <div class="card card-primary">
                 <div class="card-header" id="accordion-header-left-{{ Str::slug($category->category_name) }}">
                     <h4 class="card-title w-100">
-                        <a class="d-block" data-toggle="collapse" href="#collapse-left-{{ Str::slug($category->category_name) }}" style="width: 100%;">{{ $category->category_name }}</a>
+                        <a class="d-block" data-bs-toggle="collapse" href="#collapse-left-{{ Str::slug($category->category_name) }}" style="width: 100%;">{{ $category->category_name }}</a>
                     </h4>
                 </div>
                 <div id="collapse-left-{{ Str::slug($category->category_name) }}" class="collapse" data-parent="#accordion-left">
@@ -72,7 +72,7 @@
             <div class="card card-primary">
                 <div class="card-header" id="accordion-header-right-{{ Str::slug($category->category_name) }}">
                     <h4 class="card-title w-100">
-                        <a class="d-block" data-toggle="collapse" href="#collapse-right-{{ Str::slug($category->category_name) }}" style="width: 100%;">{{ $category->category_name }}</a>
+                        <a class="d-block" data-bs-toggle="collapse" href="#collapse-right-{{ Str::slug($category->category_name) }}" style="width: 100%;">{{ $category->category_name }}</a>
                     </h4>
                 </div>
                 <div id="collapse-right-{{ Str::slug($category->category_name) }}" class="collapse" data-parent="#accordion-right">

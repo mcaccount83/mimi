@@ -12,7 +12,7 @@
             <div class="card card-outline card-primary">
                 <div class="card-header">
                 <div class="dropdown">
-                    <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Financial Reports
                     </h3>
                     @include('layouts.dropdown_menus.menu_eoy')
@@ -53,7 +53,7 @@
                     @endphp
                     <tr>
                         <td class="text-center align-middle">
-                            <a href="{{ url("/eoyreports/reviewfinancialreport/{$list->id}") }}"><i class="fas fa-edit"></i></a>
+                            <a href="{{ url("/eoyreports/reviewfinancialreport/{$list->id}") }}"><i class="bi bi-pencil-square"></i></a>
                         </td>
                         <td class="text-center align-middle">
                             @if($list->documentsEOY->financial_report_received == '1' && $list->documentsEOY->$yearColumnName != null)
@@ -106,53 +106,59 @@
                     @endforeach
                 </tbody>
                 </table>
-            </div>
+           </div>
             <!-- /.card-body -->
+
+            <div class="card-body">
                 <div class="col-sm-12">
-                    <div class="custom-control custom-switch">
-                        <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBox1Status ? 'checked' : '' }} onchange="showPrimary()" />
-                        <label class="custom-control-label" for="showPrimary">Only show chapters I am primary for</label>
+                    <div class="form-check form-switch">
+                        <input type="checkbox" name="showPrimary" id="showPrimary" class="form-check-input" {{$checkBox1Status ? 'checked' : '' }} onchange="showPrimary()" />
+                        <label class="form-check-label" for="showPrimary">Only show chapters I am primary for</label>
                     </div>
                 </div>
                 <div class="col-sm-12">
-                    <div class="custom-control custom-switch">
-                        <input type="checkbox" name="showReviewer" id="showReviewer" class="custom-control-input" {{$checkBox2Status ? 'checked' : '' }} onchange="showReviewer()" />
-                        <label class="custom-control-label" for="showReviewer">Only show chapters I am Assigned Reviewer for</label>
+                    <div class="form-check form-switch">
+                        <input type="checkbox" name="showReviewer" id="showReviewer" class="form-check-input" {{$checkBox2Status ? 'checked' : '' }} onchange="showReviewer()" />
+                        <label class="form-check-label" for="showReviewer">Only show chapters I am Assigned Reviewer for</label>
                     </div>
                 </div>
                  @if ($coordinatorCondition && $assistRegionalCoordinatorCondition)
                     <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showConfReg" id="showConfReg" class="custom-control-input" {{$checkBox3Status ? 'checked' : '' }} onchange="showConfReg()" />
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showConfReg" id="showConfReg" class="form-check-input" {{$checkBox3Status ? 'checked' : '' }} onchange="showConfReg()" />
                                 @if ($assistConferenceCoordinatorCondition)
-                                    <label class="custom-control-label" for="showConfReg">Show All Chapters in Conference (Export Available)</label>
+                                    <label class="form-check-label" for="showConfReg">Show All Chapters in Conference (Export Available)</label>
                                 @else
-                                    <label class="custom-control-label" for="showConfReg">Show All Chapters in Region (Export Available)</label>
+                                    <label class="form-check-label" for="showConfReg">Show All Chapters in Region (Export Available)</label>
                                 @endif
                         </div>
                     </div>
                 @endif
                 @if ($ITCondition)
                     <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="custom-control-input" {{$checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
-                            <label class="custom-control-label" for="showIntl">Show All International Chapters</label>
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{$checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <label class="form-check-label" for="showIntl">Show All International Chapters</label>
                         </div>
                     </div>
                 @endif
+                 </div>
+            <!-- /.card-body for checkboxes -->
 
-              <div class="card-body text-center">
+              <div class="card-body text-center mt-3">
                 @if ($regionalCoordinatorCondition)
-                    <a href="{{ route('eoyreports.eoyfinancialreportreminder') }}" onclick="return confirmSendFinancialRptReminder();"><button class="btn bg-gradient-primary"><i class="fas fa-envelope" ></i>&nbsp;&nbsp;&nbsp;Send Financial Report Reminders</button></a>
+                    <a href="{{ route('eoyreports.eoyfinancialreportreminder') }}" onclick="return confirmSendFinancialRptReminder();"><button class="btn btn-primary bg-gradient mb-2"><i class="fas fa-envelope" ></i>&nbsp;&nbsp;&nbsp;Send Financial Report Reminders</button></a>
                 @endif
-            </div>
-        </div>
+             </div>
+            <!-- /.card-body for buttons -->
 
-          <!-- /.box -->
         </div>
+        <!-- /.card -->
       </div>
+      <!-- /.col -->
     </div>
-    </section>
-    <!-- Main content -->
-    <!-- /.content -->
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
 @endsection

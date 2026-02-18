@@ -202,9 +202,9 @@
         var cell2 = row.insertCell(1);
         var cell3 = row.insertCell(2);
 
-        cell1.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="ChildrensRoomDesc${ExpenseCount}" id="ChildrensRoomDesc${ExpenseCount}"></div>`;
-        cell2.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ChildrensRoomSupplies${ExpenseCount}" id="ChildrensRoomSupplies${ExpenseCount}" oninput="ChangeChildrensRoomExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-        cell3.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ChildrensRoomOther${ExpenseCount}" id="ChildrensRoomOther${ExpenseCount}" oninput="ChangeChildrensRoomExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell1.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="ChildrensRoomDesc${ExpenseCount}" id="ChildrensRoomDesc${ExpenseCount}"></div>`;
+        cell2.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ChildrensRoomSupplies${ExpenseCount}" id="ChildrensRoomSupplies${ExpenseCount}" oninput="ChangeChildrensRoomExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell3.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ChildrensRoomOther${ExpenseCount}" id="ChildrensRoomOther${ExpenseCount}" oninput="ChangeChildrensRoomExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
 
         ExpenseCount++;
         document.getElementById('ChildrensExpenseRowCount').value = ExpenseCount;
@@ -288,11 +288,11 @@
         var cell4 = row.insertCell(3);
         var cell5 = row.insertCell(4);
 
-        cell1.innerHTML = `<div class="form-group"><textarea class="form-control" rows="4" name="ServiceProjectDesc${ExpenseCount}" id="ServiceProjectDesc${ExpenseCount}"></textarea></div>`;
-        cell2.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ServiceProjectIncome${ExpenseCount}" id="ServiceProjectIncome${ExpenseCount}" oninput="ChangeServiceProjectExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-        cell3.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ServiceProjectSupplies${ExpenseCount}" id="ServiceProjectSupplies${ExpenseCount}" oninput="ChangeServiceProjectExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-        cell4.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ServiceProjectDonatedCharity${ExpenseCount}" id="ServiceProjectDonatedCharity${ExpenseCount}" oninput="ChangeServiceProjectExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-        cell5.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ServiceProjectDonatedM2M${ExpenseCount}" id="ServiceProjectDonatedM2M${ExpenseCount}" oninput="ChangeServiceProjectExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell1.innerHTML = `<div class="mb-3"><textarea class="form-control" rows="4" name="ServiceProjectDesc${ExpenseCount}" id="ServiceProjectDesc${ExpenseCount}"></textarea></div>`;
+        cell2.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ServiceProjectIncome${ExpenseCount}" id="ServiceProjectIncome${ExpenseCount}" oninput="ChangeServiceProjectExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell3.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ServiceProjectSupplies${ExpenseCount}" id="ServiceProjectSupplies${ExpenseCount}" oninput="ChangeServiceProjectExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell4.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ServiceProjectDonatedCharity${ExpenseCount}" id="ServiceProjectDonatedCharity${ExpenseCount}" oninput="ChangeServiceProjectExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell5.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ServiceProjectDonatedM2M${ExpenseCount}" id="ServiceProjectDonatedM2M${ExpenseCount}" oninput="ChangeServiceProjectExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
 
         ExpenseCount++;
         document.getElementById('ServiceProjectRowCount').value = ExpenseCount;
@@ -357,9 +357,9 @@ function AddPartyExpenseRow() {
         var cell2 = row.insertCell(1);
         var cell3 = row.insertCell(2);
 
-        cell1.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="PartyDesc${ExpenseCount}" id="PartyDesc${ExpenseCount}"></div>`;
-        cell2.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="PartyIncome${ExpenseCount}" id="PartyIncome${ExpenseCount}" oninput="ChangePartyExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-        cell3.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="PartyExpenses${ExpenseCount}" id="PartyExpenses${ExpenseCount}" oninput="ChangePartyExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell1.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="PartyDesc${ExpenseCount}" id="PartyDesc${ExpenseCount}"></div>`;
+        cell2.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="PartyIncome${ExpenseCount}" id="PartyIncome${ExpenseCount}" oninput="ChangePartyExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell3.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="PartyExpenses${ExpenseCount}" id="PartyExpenses${ExpenseCount}" oninput="ChangePartyExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
 
         ExpenseCount++;
         document.getElementById('PartyExpenseRowCount').value = ExpenseCount;
@@ -429,8 +429,8 @@ function AddPartyExpenseRow() {
         var cell1 = row.insertCell(0);
         var cell2 = row.insertCell(1);
 
-        cell1.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="OfficeDesc${ExpenseCount}" id="OfficeDesc${ExpenseCount}"></div>`;
-        cell2.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="OfficeExpenses${ExpenseCount}" id="OfficeExpenses${ExpenseCount}" oninput="ChangeOfficeExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell1.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="OfficeDesc${ExpenseCount}" id="OfficeDesc${ExpenseCount}"></div>`;
+        cell2.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="OfficeExpenses${ExpenseCount}" id="OfficeExpenses${ExpenseCount}" oninput="ChangeOfficeExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
 
         ExpenseCount++;
         document.getElementById('OfficeExpenseRowCount').value = ExpenseCount;
@@ -504,9 +504,9 @@ function AddPartyExpenseRow() {
         var cell2 = row.insertCell(1);
         var cell3 = row.insertCell(2);
 
-        cell1.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="InternationalEventDesc${ExpenseCount}" id="InternationalEventDesc${ExpenseCount}"></div>`;
-        cell2.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="InternationalEventIncome${ExpenseCount}" id="InternationalEventIncome${ExpenseCount}" oninput="ChangeInternationalEventExpense()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-        cell3.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="InternationalEventExpense${ExpenseCount}" id="InternationalEventExpense${ExpenseCount}" oninput="ChangeInternationalEventExpense()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell1.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="InternationalEventDesc${ExpenseCount}" id="InternationalEventDesc${ExpenseCount}"></div>`;
+        cell2.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="InternationalEventIncome${ExpenseCount}" id="InternationalEventIncome${ExpenseCount}" oninput="ChangeInternationalEventExpense()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell3.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="InternationalEventExpense${ExpenseCount}" id="InternationalEventExpense${ExpenseCount}" oninput="ChangeInternationalEventExpense()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
 
         ExpenseCount++;
         document.getElementById('InternationalEventRowCount').value = ExpenseCount;
@@ -557,10 +557,10 @@ function AddPartyExpenseRow() {
         var cell3 = row.insertCell(2);
         var cell4 = row.insertCell(3);
 
-        cell1.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="DonationDesc${ExpenseCount}" id="DonationDesc${ExpenseCount}"></div>`;
-        cell2.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="DonorInfo${ExpenseCount}" id="DonorInfo${ExpenseCount}"></div>`;
-        cell3.innerHTML = `<div class="form-group"><input type="date" class="form-control" name="MonDonationDate${ExpenseCount}" id="MonDonationDate${ExpenseCount}"></div>`;
-        cell4.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="DonationAmount${ExpenseCount}" id="DonationAmount${ExpenseCount}" oninput="ChangeDonationAmount()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell1.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="DonationDesc${ExpenseCount}" id="DonationDesc${ExpenseCount}"></div>`;
+        cell2.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="DonorInfo${ExpenseCount}" id="DonorInfo${ExpenseCount}"></div>`;
+        cell3.innerHTML = `<div class="mb-3"><input type="date" class="form-control" name="MonDonationDate${ExpenseCount}" id="MonDonationDate${ExpenseCount}"></div>`;
+        cell4.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="DonationAmount${ExpenseCount}" id="DonationAmount${ExpenseCount}" oninput="ChangeDonationAmount()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
 
         ExpenseCount++;
         document.getElementById('MonDonationRowCount').value = ExpenseCount;
@@ -592,9 +592,9 @@ function AddPartyExpenseRow() {
         var cell2 = row.insertCell(1);
         var cell3 = row.insertCell(2);
 
-        cell1.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="NonMonDonationDesc${ExpenseCount}" id="NonMonDonationDesc${ExpenseCount}"></div>`;
-        cell2.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="NonMonDonorInfo${ExpenseCount}" id="NonMonDonorInfo${ExpenseCount}"></div>`;
-        cell3.innerHTML = `<div class="form-group"><input type="date" class="form-control" name="NonMonDonationDate${ExpenseCount}" id="NonMonDonationDate${ExpenseCount}"></div>`;
+        cell1.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="NonMonDonationDesc${ExpenseCount}" id="NonMonDonationDesc${ExpenseCount}"></div>`;
+        cell2.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="NonMonDonorInfo${ExpenseCount}" id="NonMonDonorInfo${ExpenseCount}"></div>`;
+        cell3.innerHTML = `<div class="mb-3"><input type="date" class="form-control" name="NonMonDonationDate${ExpenseCount}" id="NonMonDonationDate${ExpenseCount}"></div>`;
 
         ExpenseCount++;
         document.getElementById('NonMonDonationRowCount').value = ExpenseCount;
@@ -654,9 +654,9 @@ function AddPartyExpenseRow() {
         var cell2 = row.insertCell(1);
         var cell3 = row.insertCell(2);
 
-        cell1.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="OtherOfficeDesc${ExpenseCount}" id="OtherOfficeDesc${ExpenseCount}"></div>`;
-        cell2.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="OtherOfficeIncome${ExpenseCount}" id="OtherOfficeIncome${ExpenseCount}" oninput="ChangeOtherOfficeExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-        cell3.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="OtherOfficeExpenses${ExpenseCount}" id="OtherOfficeExpenses${ExpenseCount}" oninput="ChangeOtherOfficeExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell1.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="OtherOfficeDesc${ExpenseCount}" id="OtherOfficeDesc${ExpenseCount}"></div>`;
+        cell2.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="OtherOfficeIncome${ExpenseCount}" id="OtherOfficeIncome${ExpenseCount}" oninput="ChangeOtherOfficeExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell3.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="OtherOfficeExpenses${ExpenseCount}" id="OtherOfficeExpenses${ExpenseCount}" oninput="ChangeOtherOfficeExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
 
         ExpenseCount++;
         document.getElementById('OtherOfficeExpenseRowCount').value = ExpenseCount;
@@ -737,11 +737,11 @@ function AddPartyExpenseRow() {
         var cell4 = row.insertCell(3);
         var cell5 = row.insertCell(4);
 
-        cell1.innerHTML = `<div class="form-group"><input type="date" class="form-control" name="BankRecDate${ExpenseCount}" id="BankRecDate${ExpenseCount}" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $bank_rec_array[$row]['bank_rec_date'] ?? '' }}"></div>`;
-        cell2.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="BankRecCheckNo${ExpenseCount}" id="BankRecCheckNo${ExpenseCount}"  oninput="ChangeBankRec()"></div>`;
-        cell3.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="BankRecDesc${ExpenseCount}" id="BankRecDesc${ExpenseCount}"></div>`;
-        cell4.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="BankRecPaymentAmount${ExpenseCount}" id="BankRecPaymentAmount${ExpenseCount}" oninput="ChangeBankRec()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-        cell5.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="BankRecDepositAmount${ExpenseCount}" id="BankRecDepositAmount${ExpenseCount}" oninput="ChangeBankRec()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell1.innerHTML = `<div class="mb-3"><input type="date" class="form-control" name="BankRecDate${ExpenseCount}" id="BankRecDate${ExpenseCount}" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $bank_rec_array[$row]['bank_rec_date'] ?? '' }}"></div>`;
+        cell2.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="BankRecCheckNo${ExpenseCount}" id="BankRecCheckNo${ExpenseCount}"  oninput="ChangeBankRec()"></div>`;
+        cell3.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="BankRecDesc${ExpenseCount}" id="BankRecDesc${ExpenseCount}"></div>`;
+        cell4.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="BankRecPaymentAmount${ExpenseCount}" id="BankRecPaymentAmount${ExpenseCount}" oninput="ChangeBankRec()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell5.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="BankRecDepositAmount${ExpenseCount}" id="BankRecDepositAmount${ExpenseCount}" oninput="ChangeBankRec()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
 
         ExpenseCount++;
         document.getElementById('BankRecRowCount').value = ExpenseCount;

@@ -1,11 +1,11 @@
 @extends('layouts.board_theme')
 
 <style>
-.custom-switch .custom-control-label {
+.form-switch .form-check-label {
     color: #000 !important;
 }
 /* Or use the theme's default text color */
-.custom-switch .custom-control-label {
+.form-switch .form-check-label {
     color: inherit !important;
 }
 </style>
@@ -38,7 +38,7 @@
             </div>
 
         <div class="container-fluid">
-                   <form id="grant_request" name="grant_request" role="form" data-toggle="validator"
+                   <form id="grant_request" name="grant_request" role="form" data-bs-toggle="validator"
                     enctype="multipart/form-data" method="POST"
                     action='{{ route("board.updategrantrequest", ["id" => $grantDetails->id]) }}'>
                     @csrf
@@ -52,7 +52,7 @@
         <div class="card card-primary {{ $grantDetails->farthest_step_visited == '1' ? 'active' : '' }}">
             <div class="card-header" id="accordion-header-consent">
                 <h4 class="card-title w-100">
-                    <a class="d-block" data-toggle="collapse" href="#collapseConsent" style="width: 100%;">BEFORE YOU BEGIN</a>
+                    <a class="d-block" data-bs-toggle="collapse" href="#collapseConsent" style="width: 100%;">BEFORE YOU BEGIN</a>
                 </h4>
             </div>
             <div id="collapseConsent" class="collapse {{ $grantDetails->farthest_step_visited == '1' ? 'show' : '' }}" data-parent="#accordion">
@@ -65,29 +65,29 @@
                         <p>Only a chapter may apply for a grant for a member. The grant request should be filled out by a member of the Executive Board. That officer will be the liaison between the Mother-to-Mother Fund Committee and the mother-in-need. A mother-in-need may not apply for a grant on her own. The request has to come from the chapter, but the chapter may work with the mother to answer the questions here. If an officer is not available, due to a natural disaster or other problem, then another member may submit the request, but the Board will be contacted to confirm the information.</p>
                         <p>Be as specific as possible in answering the questions. Be sure to fill out all questions before submitting the form!</p>
                         <br>
-                      <div class="form-group">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="understood" id="understood" class="custom-control-input" value="1"
+                      <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="understood" id="understood" class="form-check-input" value="1"
                                 {{ $grantDetails->understood == 1 ? 'checked' : '' }} disabled>
-                            <label class="custom-control-label" for="understood">
+                            <label class="form-check-label" for="understood">
                                 I have read this section and understand the limits of the fund<span class="field-required">*</span>
                             </label>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="member_agree" id="member_agree" class="custom-control-input" value="1"
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="member_agree" id="member_agree" class="form-check-input" value="1"
                                 {{ $grantDetails->member_agree == 1 ? 'checked' : '' }} disabled>
-                            <label class="custom-control-label" for="member_agree">
+                            <label class="form-check-label" for="member_agree">
                                 Some people do not want a grant request to be submitted for them. The mother has been asked if she wants you to submit this grant on her behalf<span class="field-required">*</span>
                             </label>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="member_accept" id="member_accept" class="custom-control-input" value="1"
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="member_accept" id="member_accept" class="form-check-input" value="1"
                                 {{ $grantDetails->member_accept == 1 ? 'checked' : '' }} disabled>
-                            <label class="custom-control-label" for="member_accept">
+                            <label class="form-check-label" for="member_accept">
                                 The mother has agreed to accept a grant request if one is given<span class="field-required">*</span>
                             </label>
                         </div>
@@ -102,51 +102,51 @@
         <div class="card card-primary {{ $grantDetails->farthest_step_visited == '2' ? 'active' : '' }}">
             <div class="card-header" id="accordion-header-submitter">
                 <h4 class="card-title w-100">
-                    <a class="d-block" data-toggle="collapse" href="#collapseSubmitter" style="width: 100%;">CHAPTER/BOARD SUBMITTING REQUEST</a>
+                    <a class="d-block" data-bs-toggle="collapse" href="#collapseSubmitter" style="width: 100%;">CHAPTER/BOARD SUBMITTING REQUEST</a>
                 </h4>
             </div>
             <div id="collapseSubmitter" class="collapse {{ $grantDetails->farthest_step_visited == '2' ? 'show' : '' }}" data-parent="#accordion">
                 <div class="card-body">
                     <section>
-                        <div class="col-12 form-row form-group">
-                            <div class="col-md-6 float-left">
-                                <div class="form-group">
+                        <div class="col-12 form-row mb-3">
+                            <div class="col-md-6 float-start">
+                                <div class="mb-3">
                                     <label>Chapter Name<span class="field-required">*</span></label>
                                     <input type="text" class="form-control" name="chapter_name" id="chapter" value="{{ $grantDetails->chapters->name }}" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-6 float-left">
-                                <div class="form-group">
+                            <div class="col-md-6 float-start">
+                                <div class="mb-3">
                                     <label>Chapter State<span class="field-required">*</span></label>
                                     <input type="text" class="form-control" name="chapter_name" id="chapter" value="{{$grantDetails->chapters->state->state_long_name}}" disabled>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-12 form-row form-group">
-                            <div class="col-md-6 float-left">
-                                <div class="form-group">
+                        <div class="col-12 form-row mb-3">
+                            <div class="col-md-6 float-start">
+                                <div class="mb-3">
                                     <label>Board Member Name<span class="field-required">*</span></label>
                                     <input type="text" class="form-control" name="submitter_name" id="submitter" value="{{ $grantDetails->board_name }}" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-6 float-left">
-                                <div class="form-group">
+                            <div class="col-md-6 float-start">
+                                <div class="mb-3">
                                     <label>Board Member Position<span class="field-required">*</span></label>
                                     <input type="text" class="form-control" name="submitter_position" id="submitter" value="{{ $grantDetails->board_position }}" disabled>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-12 form-row form-group">
-                            <div class="col-md-6 float-left">
-                                <div class="form-group">
+                        <div class="col-12 form-row mb-3">
+                            <div class="col-md-6 float-start">
+                                <div class="mb-3">
                                     <label>Board Member Phone<span class="field-required">*</span></label>
                                     <input type="text" class="form-control" name="submitter_name" id="submitter" value="{{ $grantDetails->board_phone }}" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-6 float-left">
-                                <div class="form-group">
+                            <div class="col-md-6 float-start">
+                                <div class="mb-3">
                                     <label>Board Member Email<span class="field-required">*</span></label>
                                     <input type="text" class="form-control" name="submitter_position" id="submitter" value="{{ $grantDetails->board_email }}" disabled>
                                 </div>
@@ -162,41 +162,41 @@
         <div class="card card-primary {{ $grantDetails->farthest_step_visited == '3' ? 'active' : '' }}">
             <div class="card-header" id="accordion-header-member">
                 <h4 class="card-title w-100">
-                    <a class="d-block" data-toggle="collapse" href="#collapseMember" style="width: 100%;">MEMBER IN NEED</a>
+                    <a class="d-block" data-bs-toggle="collapse" href="#collapseMember" style="width: 100%;">MEMBER IN NEED</a>
                 </h4>
             </div>
             <div id="collapseMember" class="collapse {{ $grantDetails->farthest_step_visited == '3' ? 'show' : '' }}" data-parent="#accordion">
                 <div class="card-body">
                     <section>
-                        <div class="col-12 form-row form-group">
-                            <div class="col-md-6 float-left">
-                                <div class="form-group">
+                        <div class="col-12 form-row mb-3">
+                            <div class="col-md-6 float-start">
+                                <div class="mb-3">
                                     <label>Member First Name<span class="field-required">*</span></label>
                                     <input type="text" class="form-control" name="member_fname" value="{{ $grantDetails->first_name }}" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-6 float-left">
-                                <div class="form-group">
+                            <div class="col-md-6 float-start">
+                                <div class="mb-3">
                                     <label>Members Last Name<span class="field-required">*</span></label>
                                     <input type="text" class="form-control" name="member_lname" value="{{ $grantDetails->last_name }}" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <label>Member Email<span class="field-required">*</span></label>
                                     <input type="email" class="form-control" name="member_email"  value="{{ $grantDetails->email }}" required>
                                 </div>
                             </div>
-                            <div class="col-md-6 float-left">
-                                <div class="form-group">
+                            <div class="col-md-6 float-start">
+                                <div class="mb-3">
                                     <label>Member Phone<span class="field-required">*</span></label>
                                     <input type="tel" class="form-control" name="member_phone"  value="{{ $grantDetails->phone }}" required>
                                 </div>
                             </div>
                         </div>
 
-                     <div class="col-12 form-row form-group">
-                    <div class="col-md-6 float-left">
+                     <div class="col-12 form-row mb-3">
+                    <div class="col-md-6 float-start">
                         <label>Can the member be reached at the number above?<span class="field-required">*</span></label>
                         <div class="col-md-12 row">
                             <div class="form-check" style="margin-right: 20px;">
@@ -214,23 +214,23 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6 float-left" id="divAlternatePhone" style="display: {{ !is_null($grantDetails->reachable) && $grantDetails->reachable == 0 ? 'block' : 'none' }};">
-                        <div class="form-group">
+                    <div class="col-md-6 float-start" id="divAlternatePhone" style="display: {{ !is_null($grantDetails->reachable) && $grantDetails->reachable == 0 ? 'block' : 'none' }};">
+                        <div class="mb-3">
                             <label>Please provide an additional number<span class="field-required">*</span></label>
                             <input type="tel" class="form-control" name="member_alt_phone" value="{{ $grantDetails->alt_phone ?? '' }}">
                         </div>
                     </div>
                 </div>
 
-                        <div class="col-12 form-row form-group">
+                        <div class="col-12 form-row mb-3">
                             <label>Member Address<span class="field-required">*</span></label>
                             <div class="col-md-12 mb-1">
                                 <input type="text" class="form-control" name="member_street" id="member_street" placeholder="Address" value="{{ $grantDetails->address }}" required>
                             </div>
-                            <div class="col-md-4 mb-1 float-left">
+                            <div class="col-md-4 mb-1 float-start">
                                 <input type="text" class="form-control" name="member_city" id="member_city" placeholder="City" value="{{ $grantDetails->city }}" required>
                             </div>
-                            <div class="col-md-3 mb-1 float-left">
+                            <div class="col-md-3 mb-1 float-start">
                                <select name="member_state" id="member_state" class="form-control" style="width: 100%;" required>
                                      <option value="{{$grantDetails->state_id}}" selected>Select State</option>
                                     @foreach($allStates as $state)
@@ -240,10 +240,10 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-2 mb-1 float-left">
+                            <div class="col-md-2 mb-1 float-start">
                                 <input type="text" class="form-control" name="member_zip" id="member_zip" placeholder="ZIP Code" value="{{ $grantDetails->zip }}" required>
                             </div>
-                            <div class="col-md-3 mb-1 float-left" id="member_country-container" style="display: none;">
+                            <div class="col-md-3 mb-1 float-start" id="member_country-container" style="display: none;">
                                <select name="member_country" id="member_country" class="form-control" style="width: 100%;">
                                     <option value="">Select Country</option>
                                     @foreach($allCountries as $country)
@@ -255,9 +255,9 @@
                             </div>
                         </div>
 
-                        <div class="col-12 form-row form-group">
+                        <div class="col-12 form-row mb-3">
                             <div class="col-md-12">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <label>How long has the mother-in-need been a member of your chapter? You may answer with a join date or the number of years/months she has been in your chapter.
                                         Is she a member now or has she "retired" or moved from your chapter?<span class="field-required">*</span></label>
                                     <textarea class="form-control" rows="2" name="member_length" required>{{ $grantDetails->member_length }}</textarea>
@@ -265,25 +265,25 @@
                             </div>
                         </div>
 
-                        <div class="col-12 form-row form-group">
+                        <div class="col-12 form-row mb-3">
                             <div class="col-md-12">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <label>Who is living in the home? Is there a spouse? How many family members and what are the ages of the children?<span class="field-required">*</span></label>
                                     <textarea class="form-control" rows="2" name="household_members" required>{{ $grantDetails->household_members }}</textarea>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-12 form-row form-group">
+                        <div class="col-12 form-row mb-3">
                             <div class="col-md-12">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <label>If the member's home is uninhabitable, where is she living now? Please provide mailing address if different from above.<span class="field-required">*</span></label>
                                     <textarea class="form-control" rows="2" name="alt_address" required>{{ $grantDetails->alt_address }}</textarea>
                                 </div>
                             </div>
                         </div>
 
-                         <div class="col-12 form-row form-group">
+                         <div class="col-12 form-row mb-3">
                         <label>Has the chapter ever asked for a grant for this mother or family in the past?<span class="field-required">*</span></label>
                         <div class="col-md-12 row">
                             <div class="form-check" style="margin-right: 20px;">
@@ -297,8 +297,8 @@
                         </div>
                     </div>
 
-                        <div class="card-body text-center">
-                            <button type="button" id="btn-step-3" class="btn btn-primary"><i class="fas fa-save mr-2"></i>Save</button>
+                        <div class="card-body text-center mt-3">
+                            <button type="button" id="btn-step-3" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
                         </div>
                     </section>
                 </div>
@@ -310,7 +310,7 @@
         <div class="card card-primary {{ $grantDetails->farthest_step_visited == '4' ? 'active' : '' }}">
             <div class="card-header" id="accordion-header-situation">
                 <h4 class="card-title w-100">
-                    <a class="d-block" data-toggle="collapse" href="#collapseSituation" style="width: 100%;">EXPLANATION OF SITUATION</a>
+                    <a class="d-block" data-bs-toggle="collapse" href="#collapseSituation" style="width: 100%;">EXPLANATION OF SITUATION</a>
                 </h4>
             </div>
             <div id="collapseSituation" class="collapse {{ $grantDetails->farthest_step_visited == '4' ? 'show' : '' }}" data-parent="#accordion">
@@ -324,27 +324,27 @@
                                     If they need help traveling to treatment, where is the treatment, how many times will they need to go and how much will each trip cost?</p>
                         <p>The more specific information we have, the faster the Committee can make its decision.</p>
                         <br>
-                       <div class="col-12 form-row form-group">
+                       <div class="col-12 form-row mb-3">
                         <div class="col-md-12">
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <label>Please provide a summary of the situation. What happened, how did it happen and what is the result of it?<span class="field-required">*</span></label>
                                 <textarea class="form-control" rows="4" name="situation_summary" required>{{ $grantDetails->situation_summary }}</textarea>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-12 form-row form-group">
+                    <div class="col-12 form-row mb-3">
                         <div class="col-md-12">
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <label>What has the family done to improve or handle the situation?<span class="field-required">*</span></label>
                                 <textarea class="form-control" rows="4" name="family_actions" required>{{ $grantDetails->family_actions }}</textarea>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-12 form-row form-group">
+                    <div class="col-12 form-row mb-3">
                         <div class="col-md-12">
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <label>What is the financial situation of the family? Do they have insurance that will help with this? How much will it cover?
                                     Do they have savings? If so, how much? Are they getting help from their family or any other grants or loans?<span class="field-required">*</span></label>
                                 <textarea class="form-control" rows="4" name="financial_situation" required>{{ $grantDetails->financial_situation }}</textarea>
@@ -352,26 +352,26 @@
                         </div>
                     </div>
 
-                    <div class="col-12 form-row form-group">
+                    <div class="col-12 form-row mb-3">
                         <div class="col-md-12">
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <label>What are the family’s most pressing needs right now? What are they having to do without because of this situation?<span class="field-required">*</span></label>
                                 <textarea class="form-control" rows="4" name="pressing_needs" required>{{ $grantDetails->pressing_needs }}</textarea>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-12 form-row form-group">
+                    <div class="col-12 form-row mb-3">
                         <div class="col-md-12">
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <label>Is there anything else that the family needs and is having to do without because of the situation?<span class="field-required">*</span></label>
                                 <textarea class="form-control" rows="4" name="other_needs" required>{{ $grantDetails->other_needs }}</textarea>
                             </div>
                         </div>
                     </div>
 
-                        <div class="card-body text-center">
-                            <button type="button" id="btn-step-4" class="btn btn-primary"><i class="fas fa-save mr-2"></i>Save</button>
+                        <div class="card-body text-center mt-3">
+                            <button type="button" id="btn-step-4" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
                         </div>
                     </section>
                 </div>
@@ -383,24 +383,24 @@
         <div class="card card-primary {{ $grantDetails->farthest_step_visited == '5' ? 'active' : '' }}">
             <div class="card-header" id="accordion-header-request">
                 <h4 class="card-title w-100">
-                    <a class="d-block" data-toggle="collapse" href="#collapseRequest" style="width: 100%;">GRANT REQUEST DETAILS</a>
+                    <a class="d-block" data-bs-toggle="collapse" href="#collapseRequest" style="width: 100%;">GRANT REQUEST DETAILS</a>
                 </h4>
             </div>
             <div id="collapseRequest" class="collapse {{ $grantDetails->farthest_step_visited == '5' ? 'show' : '' }}" data-parent="#accordion">
                 <div class="card-body">
                     <section>
-                        <div class="col-12 form-row form-group">
+                        <div class="col-12 form-row mb-3">
                             <div class="col-md-12">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <label>What amount is being requested? What will it be used for?<span class="field-required">*</span></label>
                                     <textarea class="form-control" rows="4" name="amount_requested" required>{{ $grantDetails->amount_requested }}</textarea>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-12 form-row form-group">
+                        <div class="col-12 form-row mb-3">
                             <div class="col-md-12">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <label>A chapter should always be the first ones to help a member-in-need. How has the chapter supported the member up to this point?
                                         Has the chapter done any fundraisers or made any donations to the family? What are the chapter’s future plans to help this family?<span class="field-required">*</span></label>
                                     <textarea class="form-control" rows="4" name="chapter_support" required>{{ $grantDetails->chapter_support }}</textarea>
@@ -408,9 +408,9 @@
                             </div>
                         </div>
 
-                        <div class="col-12 form-row form-group">
+                        <div class="col-12 form-row mb-3">
                             <div class="col-md-12">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <label>Is there anything else we should know about this family or their situation?</label>
                                     <textarea class="form-control" rows="4" name="additional_info">{{ $grantDetails->additional_info }}</textarea>
                                 </div>
@@ -419,25 +419,25 @@
 
                         @if ($grantDetails->photos_path != null)
                             <div class="col-md-12" id="PhotosBlock">
-                                    <label class="mr-2">Photos of Damage Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $grantDetails['photos_path'] }}">View Photos</a><br>
+                                    <label class="me-2">Photos of Damage Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $grantDetails['photos_path'] }}">View Photos</a><br>
                                     <strong style="color:red">Please Note</strong>
                                         This will refresh the screen - be sure to save all other work before clicking button to Replace Photos.<br>
-                                    <button type="button" class="btn btn-sm btn-primary" onclick="showGrantUploadModal('{{ $grantDetails->id }}')"><i class="fas fa-upload mr-2"></i>Replace Photos</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showGrantUploadModal('{{ $grantDetails->id }}')"><i class="fas fa-upload me-2"></i>Replace Photos</button>
                                     <br>
                                 </div>
                         @else
                             <div class="col-md-12" id="PhotosBlock">
-                                    <label class="mr-2">If there was damage to the member’s home or property, please upload any pictures here.</label><br>
+                                    <label class="me-2">If there was damage to the member’s home or property, please upload any pictures here.</label><br>
                                     <strong style="color:red">Please Note</strong>
                                         This will refresh the screen - be sure to save all other work before clicking button to Upload Photos.<br>
-                                    <button type="button" class="btn btn-sm btn-primary" onclick="showGrantUploadModal('{{ $grantDetails->id }}')"><i class="fas fa-upload mr-2"></i>Upload Photos</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showGrantUploadModal('{{ $grantDetails->id }}')"><i class="fas fa-upload me-2"></i>Upload Photos</button>
                                     <br>
                                 </div>
                         @endif
                             <input type="hidden" name="PhotosPath" id="PhotosPath" value="{{ $grantDetails->photos_path }}">
 
-                        <div class="card-body text-center">
-                            <button type="button" id="btn-step-5" class="btn btn-primary"><i class="fas fa-save mr-2"></i>Save</button>
+                        <div class="card-body text-center mt-3">
+                            <button type="button" id="btn-step-5" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
                         </div>
                     </section>
                 </div>
@@ -449,13 +449,13 @@
         <div class="card card-primary {{ $grantDetails->farthest_step_visited == '6' ? 'active' : '' }}">
             <div class="card-header" id="accordion-header-affirmation">
                 <h4 class="card-title w-100">
-                    <a class="d-block" data-toggle="collapse" href="#collapseAffirmation" style="width: 100%;">CHAPTER BACKING & AFFIRMATION</a>
+                    <a class="d-block" data-bs-toggle="collapse" href="#collapseAffirmation" style="width: 100%;">CHAPTER BACKING & AFFIRMATION</a>
                 </h4>
             </div>
             <div id="collapseAffirmation" class="collapse {{ $grantDetails->farthest_step_visited == '6' ? 'show' : '' }}" data-parent="#accordion">
                 <div class="card-body">
                     <section>
-                    <div class="col-12 form-row form-group">
+                    <div class="col-12 form-row mb-3">
                         <label>Does the chapter stand behind this request for a grant? Has the Executive Board discussed the situation and decided to submit this request?
                             And does the Executive Board assure the Mother-to-Mother Fund Committee that the information in this request is true?<span class="field-required">*</span></label>
                         <div class="col-md-12 row">
@@ -470,7 +470,7 @@
                         </div>
                     </div>
 
-                    <div class="col-12 form-row form-group">
+                    <div class="col-12 form-row mb-3">
                         <label>Has the chapter donated to the Mother-to-Mother Fund in the past?<span class="field-required">*</span></label>
                         <div class="col-md-12 row">
                             <div class="form-check" style="margin-right: 20px;">
@@ -483,18 +483,18 @@
                             </div>
                         </div>
                     </div>
-                      <div class="form-group">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="affirmation" id="affirmation" class="custom-control-input" value="1"
+                      <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="affirmation" id="affirmation" class="form-check-input" value="1"
                                 {{ $grantDetails->affirmation == 1 ? 'checked' : '' }} required>
-                            <label class="custom-control-label" for="affirmation">
+                            <label class="form-check-label" for="affirmation">
                                 I affirm that the information in this submission is true and the mother-in-need agrees with the submission and the information herein.<span class="field-required">*</span>
                             </label>
                         </div>
                     </div>
 
-                        <div class="card-body text-center">
-                            <button type="submit" id="btn-submit" class="btn btn-success"><i class="fas fa-share-square"></i>&nbsp; Submit Grant Request</button>
+                        <div class="card-body text-center mt-3">
+                            <button type="submit" id="btn-submit" class="btn btn-success bg-gradient mb-2"><i class="fas fa-share-square"></i>&nbsp; Submit Grant Request</button>
                         </div>
                     </section>
                 </div>
@@ -504,16 +504,16 @@
 
     </div><!-- end of accordion -->
 </form>
-            <div class="card-body text-center">
+            <div class="card-body text-center mt-3">
 
                 @if ($userTypeId != \App\Enums\UserTypeEnum::OUTGOING && $userTypeId != \App\Enums\UserTypeEnum::DISBANDED)
                     @if ($userTypeId == \App\Enums\UserTypeEnum::COORD)
-                        <button type="button" id="btn-back" class="btn btn-primary m-1" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2" ></i>Back to Profile</button>
+                        <button type="button" id="btn-back" class="btn btn-primary bg-gradient m-1" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Profile</button>
                     @else
-                        <a href="{{ route('home') }}" class="btn btn-primary m-1"><i class="fas fa-reply mr-2" ></i>Back to Profile</a>
+                        <a href="{{ route('home') }}" class="btn btn-primary bg-gradient m-1"><i class="bi bi-chevron-double-left me-2"></i>Back to Profile</a>
                     @endif
                 @endif
-                    <button type="button" id="btn-back" class="btn btn-primary m-1" onclick="window.location.href='{{ route('board.viewgrantrequestlist', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2" ></i>Back to Grant List</button>
+                    <button type="button" id="btn-back" class="btn btn-primary bg-gradient m-1" onclick="window.location.href='{{ route('board.viewgrantrequestlist', ['id' => $chDetails->id]) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Grant List</button>
             </div>
 
         <!-- End Modal Popups -->

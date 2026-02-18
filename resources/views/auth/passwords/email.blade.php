@@ -31,11 +31,9 @@
                         <strong>{{ $errors->first('email') }}</strong>
                     </span>
                 @endif
-            <div class="input-group-append">
                 <div class="input-group-text">
                 <span class="fas fa-envelope"></span>
                 </div>
-            </div>
             </div>
             <div class="row">
             <div class="col-12">

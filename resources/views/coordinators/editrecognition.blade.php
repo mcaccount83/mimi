@@ -21,21 +21,22 @@
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                  <h3 class="profile-username text-center">{{ $cdDetails->first_name }}, {{ $cdDetails->last_name }}</h3>
-                  <p class="text-center">{{ $conferenceDescription }} Conference
-                      @if ($regionLongName != "None")
-                          , {{ $regionLongName }} Region
-                      @else
-                      @endif
-                  </p>
-                  <ul class="list-group list-group-unbordered mb-3">
-                      <li class="list-group-item">
-                          <b>Supervising Coordinator:</b> <span class="float-right">{{ $ReportTo }}</span>
+                <div class="card-body">
+                    <div class="card-header text-center bg-transparent">
+                        <h3 class="mb-0">{{ $cdDetails->first_name }}, {{ $cdDetails->last_name }}</h3>
+                        <p class="mb-0">{{ $conferenceDescription }} Conference
+                            @if ($regionLongName != "None")
+                                , {{ $regionLongName }} Region
+                            @endif
+                        </p>
+                    </div>
+                  <ul class="list-group list-group-flush mb-3">
+                      <li class="list-group-item mt-2">
+                          <b>Supervising Coordinator:</b> <span class="float-end">{{ $ReportTo }}</span>
                           <br>
-                          <b>Display Position:</b> <span class="float-right">{{ $displayPosition->long_title }}</span>
+                          <b>Display Position:</b> <span class="float-end">{{ $displayPosition->long_title }}</span>
                         <br>
-                        <b>MIMI Position:</b> <span class="float-right">{{ $mimiPosition?->long_title }}</span>
+                        <b>MIMI Position:</b> <span class="float-end">{{ $mimiPosition?->long_title }}</span>
                           <br>
                           <div style="display: flex; justify-content: space-between;">
                             <b>Secondary Positions:</b>
@@ -48,16 +49,16 @@
                             </span>
                         </div>
                         @if ($ITCondition)
-                        <b>MIMI Admin:</b> <span class="float-right">{{ $cdAdminRole->admin_role }}</span>
+                        <b>MIMI Admin:</b> <span class="float-end">{{ $cdAdminRole->admin_role }}</span>
                         @endif
 
                       </li>
-                      <li class="list-group-item">
-                          <b>Start Date:</b> <span class="float-right date-mask">{{ $cdDetails->coordinator_start_date }}</span>
+                      <li class="list-group-item mt-2">
+                          <b>Start Date:</b> <span class="float-end date-mask">{{ $cdDetails->coordinator_start_date }}</span>
                           <br>
-                          <b>Last Promotion Date:</b> <span class="float-right date-mask">{{ $cdDetails->last_promoted }}</span>
+                          <b>Last Promotion Date:</b> <span class="float-end date-mask">{{ $cdDetails->last_promoted }}</span>
                           <br>
-                          <b>Home Chapter:</b><span class="float-right">{{ $cdDetails->home_chapter }}</span>
+                          <b>Home Chapter:</b><span class="float-end">{{ $cdDetails->home_chapter }}</span>
                           <br>
                       </li>
                   </ul>
@@ -94,17 +95,17 @@
                 <div class="card-body box-profile">
                 <h3 class="profile-username">Appreciation & Recognition Information</h3>
                     <!-- /.card-header -->
-                    <div class="form-group row" style="margin-bottom: 0;">
+                    <div class="row mb-3">
                         <div class="col-md-12 d-flex align-items-center">
                             <label class="col-sm-1 col-form-label"></label>
                             <label class="col-sm-3 col-form-label">Recognition Gift</label>
-                            <label class="col-sm-2 mr-5 col-form-label">Year Given</label>
+                            <label class="col-sm-2 me-5 col-form-label">Year Given</label>
                             <label class="col-sm-3 col-form-label">Recognition Gift</label>
                             <label class="col-sm-2 col-form-label">Year Given</label>
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div class="row mb-3">
                         <div class="col-md-12 d-flex align-items-center">
                             <label class="col-sm-1 col-form-label">&lt; 1 Year:</label>
                             <div class="col-sm-3">
@@ -118,7 +119,7 @@
                                         @endforeach
                                 </select>
                             </div>
-                            <div class="col-sm-1 mr-5">
+                            <div class="col-sm-1 me-5">
                                 <input type="text" name="year0"class="form-control" value="{{ $cdDetails->recognition->year0 }}" >
                             </div>
 
@@ -134,13 +135,13 @@
                                         @endforeach
                                 </select>
                             </div>
-                            <div class="col-sm-1 mr-5">
+                            <div class="col-sm-1 me-5">
                                 <input type="text" name="year1"class="form-control" value="{{ $cdDetails->recognition->year1 }}" >
                             </div>
 
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="row mb-3">
                         <div class="col-md-12 d-flex align-items-center">
                             <label class="col-sm-1 col-form-label">2 Years:</label>
                             <div class="col-sm-3">
@@ -154,7 +155,7 @@
                                         @endforeach
                                 </select>
                             </div>
-                            <div class="col-sm-1 mr-5">
+                            <div class="col-sm-1 me-5">
                                 <input type="text" name="year2"class="form-control" value="{{ $cdDetails->recognition->year2 }}" >
                             </div>
 
@@ -170,13 +171,13 @@
                                         @endforeach
                                 </select>
                             </div>
-                            <div class="col-sm-1 mr-5">
+                            <div class="col-sm-1 me-5">
                                 <input type="text" name="year3"class="form-control" value="{{ $cdDetails->recognition->year3 }}" >
                             </div>
 
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="row mb-3">
                         <div class="col-md-12 d-flex align-items-center">
                             <label class="col-sm-1 col-form-label">4 Years:</label>
                             <div class="col-sm-3">
@@ -190,7 +191,7 @@
                                         @endforeach
                                 </select>
                             </div>
-                            <div class="col-sm-1 mr-5">
+                            <div class="col-sm-1 me-5">
                                 <input type="text" name="year4"class="form-control" value="{{ $cdDetails->recognition->year4 }}" >
                             </div>
 
@@ -206,13 +207,13 @@
                                         @endforeach
                                 </select>
                             </div>
-                            <div class="col-sm-1 mr-5">
+                            <div class="col-sm-1 me-5">
                                 <input type="text" name="year5"class="form-control" value="{{ $cdDetails->recognition->year5 }}" >
                             </div>
 
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="row mb-3">
                         <div class="col-md-12 d-flex align-items-center">
                             <label class="col-sm-1 col-form-label">6 Years:</label>
                             <div class="col-sm-3">
@@ -226,7 +227,7 @@
                                         @endforeach
                                 </select>
                             </div>
-                            <div class="col-sm-1 mr-5">
+                            <div class="col-sm-1 me-5">
                                 <input type="text" name="year6"class="form-control" value="{{ $cdDetails->recognition->year6 }}" >
                             </div>
 
@@ -242,13 +243,13 @@
                                         @endforeach
                                 </select>
                             </div>
-                            <div class="col-sm-1 mr-5">
+                            <div class="col-sm-1 me-5">
                                 <input type="text" name="year7"class="form-control" value="{{ $cdDetails->recognition->year7 }}" >
                             </div>
 
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="row mb-3">
                         <div class="col-md-12 d-flex align-items-center">
                             <label class="col-sm-1 col-form-label">8 Years:</label>
                             <div class="col-sm-3">
@@ -262,7 +263,7 @@
                                         @endforeach
                                 </select>
                             </div>
-                            <div class="col-sm-1 mr-5">
+                            <div class="col-sm-1 me-5">
                                 <input type="text" name="year8"class="form-control" value="{{ $cdDetails->recognition->year8 }}" >
                             </div>
 
@@ -278,14 +279,14 @@
                                         @endforeach
                                 </select>
                             </div>
-                            <div class="col-sm-1 mr-5">
+                            <div class="col-sm-1 me-5">
                                 <input type="text" name="year9"class="form-control" value="{{ $cdDetails->recognition->year9 }}" >
                             </div>
 
                         </div>
                     </div>
 
-                    {{-- <div class="form-group row">
+                    {{-- <div class="row mb-3">
                         <div class="col-md-12 d-flex align-items-center">
                             <label class="col-sm-2 col-form-label">10 Years+ or Top Tier:</label>
                             <div class="col-sm-9">
@@ -294,7 +295,7 @@
                         </div>
                     </div> --}}
 
-                    <div class="form-group row">
+                    <div class="row mb-3">
                         <div class="col-md-12 d-flex align-items-center">
                             <label class="col-sm-2 col-form-label">10 Years+ or Top Tier:</label>
                             <div class="col-sm-9">
@@ -303,25 +304,25 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
+                <div class="row mb-3">
                     <div class="col-md-12 d-flex align-items-center">
-                        <label class="ml-2 col-form-label mr-2">MC Gold Pin:</label>
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" name="recognition_pin" id="recognition_pin" class="custom-control-input"
+                        <label class="ms-2 col-form-label me-2">MC Gold Pin:</label>
+                            <div class="form-check form-switch">
+                                <input type="checkbox" name="recognition_pin" id="recognition_pin" class="form-check-input"
                                 {{$cdDetails->recognition->recognition_pin == 1 ? 'checked' : ''}}>
-                                <label class="custom-control-label" for="recognition_pin"></label>
+                                <label class="form-check-label" for="recognition_pin"></label>
                             </div>
                         </div>
                     </div>
 
 
-                    <div class="form-group row">
+                    <div class="row mb-3">
                         <div class="col-md-12 d-flex align-items-center">
-                            <label class="ml-2 col-form-label mr-2">MC Necklace:</label>
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" name="recognition_necklace" id="recognition_necklace" class="custom-control-input"
+                            <label class="ms-2 col-form-label me-2">MC Necklace:</label>
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" name="recognition_necklace" id="recognition_necklace" class="form-check-input"
                                     {{$cdDetails->recognition->recognition_necklace == 1 ? 'checked' : ''}}>
-                                    <label class="custom-control-label" for="recognition_necklace"></label>
+                                    <label class="form-check-label" for="recognition_necklace"></label>
                                 </div>
                             </div>
                         </div>
@@ -334,10 +335,10 @@
                       </div>
           <!-- /.col -->
           <div class="col-md-12">
-            <div class="card-body text-center">
-                <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2" ></i>Save</button>
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordreports.coordrptappreciation') }}'"><i class="fas fa-reply mr-2"></i>Back to Appreciation Report</button>
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.view', ['id' => $cdDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Coordinator Details</button>
+            <div class="card-body text-center mt-3">
+                <button type="submit" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save</button>
+                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordreports.coordrptappreciation') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Appreciation Report</button>
+                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.view', ['id' => $cdDetails->id]) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Coordinator Details</button>
             </div>
         </div>
         </div>

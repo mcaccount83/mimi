@@ -12,10 +12,10 @@
                 <div class="card card-outline card-primary">
                     <div class="card-header">
                     <div class="dropdown">
-                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Pending Chapter List
                         </h3>
-                        <span class="ml-2">New Chapter Applications Waiting for Review</span>
+                        <span class="ms-2">New Chapter Applications Waiting for Review</span>
                         @include('layouts.dropdown_menus.menu_chapters_new')
                     </div>
                 </div>
@@ -40,7 +40,7 @@
                 <tbody>
                     @foreach($chapterList as $list)
                         <tr id="chapter-{{ $list->id }}">
-                            <td class="text-center align-middle"><a href="{{ url("/application/chapterpendingedit/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                            <td class="text-center align-middle"><a href="{{ url("/application/chapterpendingedit/{$list->id}") }}"><i class="bi bi-eye-fill"></i></a></td>
                             <td class="text-center align-middle">
                                 <a onclick="showChapterSetupEmailModal({{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="far fa-envelope text-primary"></i></a>
                            </td>
@@ -74,39 +74,40 @@
                     @endforeach
                 </tbody>
             </table>
-            </div>
+             </div>
             <!-- /.card-body -->
 
+            <div class="card-body">
                  @if ($ITCondition)
-                    <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="custom-control-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
-                            <label class="custom-control-label" for="showIntl">Show All International Chapters</label>
+                <div class="col-sm-12">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <label class="form-check-label" for="showIntl">Show All International Chapters</label>
                         </div>
                     </div>
                 @endif
-                <div class="col-sm-12">
+               </div>
+            <!-- /.card-body for checkboxes -->
 
-                </div>
-                <div class="card-body text-center">
+                <div class="card-body text-center mt-3">
                 @if ($regionalCoordinatorCondition)
                 If your new chapter is not listed above, you can manually add them.<br>
                     @if ($checkBox51Status)
-                        <a class="btn bg-gradient-primary" href="{{ route('chapters.addnewint') }}"><i class="fas fa-plus mr-2" ></i>Manually Add New Chapter (Any Confernces)</a>
+                        <a class="btn btn-primary bg-gradient mb-2" href="{{ route('chapters.addnewint') }}"><i class="fas fa-plus me-2" ></i>Manually Add New Chapter (Any Confernces)</a>
                     @else
-                        <a class="btn bg-gradient-primary" href="{{ route('chapters.addnew') }}"><i class="fas fa-plus mr-2" ></i>Manually Add New Chapter</a>
+                        <a class="btn btn-primary bg-gradient mb-2" href="{{ route('chapters.addnew') }}"><i class="fas fa-plus me-2" ></i>Manually Add New Chapter</a>
                     @endif
                 @endif
-                    </div>
-                </div>
-          </div>
-          <!-- /.card -->
+                  </div>
+            <!-- /.card-body for buttons -->
+
         </div>
-        <!-- /.col -->
+        <!-- /.card -->
       </div>
-      <!-- /.row -->
+      <!-- /.col -->
     </div>
-    <!-- /.container-fluid -->
-  </section>
-  <!-- /.content -->
-  @endsection
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
+@endsection

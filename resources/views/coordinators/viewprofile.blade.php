@@ -14,24 +14,25 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-        <div class="row">
-          <div class="col-md-4">
+            <div class="row g-4">
 
-            <!-- Profile Image -->
+          <div class="col-md-4">
+            <!-- Profile -->
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                  <h3 class="profile-username text-center">{{ $cdDetails->first_name }}, {{ $cdDetails->last_name }}</h3>
-                  <p class="text-center">{{ $conferenceDescription }} Conference
-                      @if ($regionLongName != "None")
-                      , {{ $regionLongName }} Region
-                      @else
-                      @endif
-                  </p>
-                  <ul class="list-group list-group-unbordered mb-3">
-                      <li class="list-group-item">
-                          <b>Supervising Coordinator:</b> <span class="float-right"><a href="mailto:{{ $cdDetails->reportsTo?->email }}">{{ $ReportTo }} </a></span>
+                <div class="card-body">
+                    <div class="card-header text-center bg-transparent">
+                        <h3 class="mb-0">{{ $cdDetails->first_name }}, {{ $cdDetails->last_name }}</h3>
+                        <p class="mb-0">{{ $conferenceDescription }} Conference
+                            @if ($regionLongName != "None")
+                                , {{ $regionLongName }} Region
+                            @endif
+                        </p>
+                    </div>
+                  <ul class="list-group list-group-flush mb-3">
+                      <li class="list-group-item mt-2">
+                          <b>Supervising Coordinator:</b> <span class="float-end"><a href="mailto:{{ $cdDetails->reportsTo?->email }}">{{ $ReportTo }} </a></span>
                           <br>
-                          <b>Primary Position:</b> <span class="float-right">{{ $displayPosition->long_title }}</span>
+                          <b>Primary Position:</b> <span class="float-end">{{ $displayPosition->long_title }}</span>
                           <br>
                           <div style="display: flex; justify-content: space-between;">
                             <b>Secondary Positions:</b>
@@ -43,32 +44,31 @@
                                 @endforelse
                             </span>
                         </div>
-
                       </li>
-                      <li class="list-group-item">
-                          <b>Start Date:</b> <span class="float-right date-mask">{{ $cdDetails->coordinator_start_date }}</span>
+                      <li class="list-group-item mt-2">
+                          <b>Start Date:</b> <span class="float-end date-mask">{{ $cdDetails->coordinator_start_date }}</span>
                           <br>
-                          <b>Last Promotion Date:</b> <span class="float-right date-mask">{{ $cdDetails->last_promoted }}</span>
+                          <b>Last Promotion Date:</b> <span class="float-end date-mask">{{ $cdDetails->last_promoted }}</span>
                           <br>
-                          <b>Home Chapter:</b><span class="float-right">{{ $cdDetails->home_chapter }}</span>
+                          <b>Home Chapter:</b><span class="float-end">{{ $cdDetails->home_chapter }}</span>
                           <br>
                       </li>
-                      <li class="list-group-item">
-                        <b>Birthday:</b><span class="float-right">{{$cdDetails->birthdayMonth->month_long_name}} {{$cdDetails->birthday_day}}</span>
+                      <li class="list-group-item mt-2">
+                        <b>Birthday:</b><span class="float-end">{{$cdDetails->birthdayMonth->month_long_name}} {{$cdDetails->birthday_day}}</span>
                         <br>
-                        <b>Email:</b><span class="float-right"><a href="mailto:{{ $cdDetails->email }}">{{ $cdDetails->email }}</a></span>
+                        <b>Email:</b><span class="float-end"><a href="mailto:{{ $cdDetails->email }}">{{ $cdDetails->email }}</a></span>
                         @if ($cdDetails->sec_email != null )
                         <br>
-                        <b>Secondary Email:</b><span class="float-right"><a href="mailto:{{ $cdDetails->sec_email }}">{{ $cdDetails->sec_email }}</a></span>
+                        <b>Secondary Email:</b><span class="float-end"><a href="mailto:{{ $cdDetails->sec_email }}">{{ $cdDetails->sec_email }}</a></span>
                         @endif
                         <br>
-                        <b>Phone:</b><span class="phone-mask float-right">{{$cdDetails->phone }}</span>
+                        <b>Phone:</b><span class="phone-mask float-end">{{$cdDetails->phone }}</span>
                         @if ($cdDetails->alt_phone != null )
                         <br>
-                        <b>Atl Phone:</b><span class="phone-mask float-right">{{$cdDetails->alt_phone }}</span>
+                        <b>Atl Phone:</b><span class="phone-mask float-end">{{$cdDetails->alt_phone }}</span>
                         @endif
                         <br>
-                        <b>Address:</b><span class="float-right">{{$cdDetails->address}}
+                        <b>Address:</b><span class="float-end">{{$cdDetails->address}}
                         <br>
                         {{$cdDetails->city}}, {{$cdDetails->state->state_short_name}}&nbsp;{{$cdDetails->zip}}</span>
                       </li>
@@ -87,8 +87,8 @@
                     <!-- /.card-header -->
                         <div class="row">
                             <div class="col-sm-6">
-							<div class="form-group">
-							    <label class="mrg-b-25">Coordinators Directly Reporting to {{ $cdDetails->first_name }}:</label>
+							<div class="mb-3">
+							    <label class="meg-b-25">Coordinators Directly Reporting to {{ $cdDetails->first_name }}:</label>
 
                                 <table id="coordinator-list" width="100%">
                                     <thead>
@@ -127,8 +127,8 @@
 						</div>
 
 						<div class="col-sm-6">
-							<div class="form-group">
-                                <label class="mrg-b-25">{{ $cdDetails->first_name }} is Primary Coordinator For:</label>
+							<div class="mb-3">
+                                <label class="meg-b-25">{{ $cdDetails->first_name }} is Primary Coordinator For:</label>
                                     <table id="coordinator-list" width="100%">
                                         <thead>
                                             @if($chList->isEmpty())
@@ -153,39 +153,39 @@
                                     </table>
                                 </div>
                             </div>
+
                         </div>
-
-              </div>
-              <!-- /.card-body -->
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
             </div>
-            <!-- /.card -->
-          </div>
-          <!-- /.col -->
-          <div class="col-md-12">
-            <div class="card-body text-center">
+            <!-- /.col -->
 
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.profile') }}'"><i class="fas fa-edit mr-2"></i>Update Profile</button>
-
+            <div class="card-body text-center mt-3">
+                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.profile') }}'"><i class="bi bi-pencil-square me-2"></i>Update Profile</button>
                 @if ($coordinatorCondition || $ITCondition)
-                    <button type="button" id="back" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplist') }}'"><i class="fas fa-eye mr-2"></i>View Chapter List</button>
+                    <button type="button" id="back" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.chaplist') }}'"><i class="bi bi-eye-fill me-2"></i>View Chapter List</button>
                 @elseif($inquiriesCondition || ($ITCondition && !$coordinatorCondition))
-                    <button type="button" id="back-inquiries" class="btn bg-gradient-primary mb-3" onclick="window.location.window.location.href='{{ route('chapters.chapinquiries') }}'"><i class="fas fa-eye mr-2"></i>View Inquiries Chapter List</button>
+                    <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient mb-2" onclick="window.location.window.location.href='{{ route('chapters.chapinquiries') }}'"><i class="bi bi-eye-fill me-2"></i>View Inquiries Chapter List</button>
                 @elseif($einCondition || $ITCondition)
-                    <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplist', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>View International Active Chapter List</button>
+                    <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.chaplist', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>View International Active Chapter List</button>
                 @elseif($inquiriesInternationalCondition || ($ITCondition && !$coordinatorCondition))
-                    <button type="button" id="back-inquiries" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquiries', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>View International Active Inquiries List</button>
+                    <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.chapinquiries', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>View International Active Inquiries List</button>
                 @endif
 
                 @if ($supervisingCoordinatorCondition || $ITCondition)
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="fas fa-eye mr-2"></i>View Coordinator List</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="bi bi-eye-fill me-2"></i>View Coordinator List</button>
                 @elseif($ITCondition && !$supervisingCoordinatorCondition)
-                    <button type="button" id="back-list" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordlist', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>View International Active Coordinator List</button>
+                    <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.coordlist', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>View International Active Coordinator List</button>
                 @endif
+            </div>
+            <!-- /.card-body for buttons -->
+        <!-- /.col -->
 
-        </div>
-        </div>
-        <!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
 @endsection

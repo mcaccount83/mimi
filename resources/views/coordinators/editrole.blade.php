@@ -29,16 +29,14 @@
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
-              <div class="card-body box-profile">
-                <h3 class="profile-username text-center">{{ $cdDetails->first_name }}, {{ $cdDetails->last_name }}</h3>
-                <p class="text-center">{{ $conferenceDescription }} Conference
-                    @if ($regionLongName != "None")
-                    , {{ $regionLongName }} Region
-                    @else
-                    @endif
-                </p>
-                <ul class="list-group list-group-unbordered mb-3">
-                    <li class="list-group-item">
+              <div class="card-body">
+                    <div class="card-header text-center bg-transparent">
+                        <h3 class="mb-0">{{ $cdDetails->first_name }}, {{ $cdDetails->last_name }}</h3>
+                        <p class="mb-0">{{ $conferenceDescription }} Conference
+                        </p>
+                    </div>
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item mt-2">
 
                         <div class="row align-items-center">
                             <div class="col-sm-6 mt-1">
@@ -189,8 +187,8 @@
                     <!-- /.card-header -->
                         <div class="row">
                                 <div class="col-sm-6">
-                            <div class="form-group">
-                                <label class="mrg-b-25">Coordinators Directly Reporting to {{ $cdDetails->first_name }}:</label>
+                            <div class="mb-3">
+                                <label class="meg-b-25">Coordinators Directly Reporting to {{ $cdDetails->first_name }}:</label>
                                 <table id="coordinator-list" class="nowraptable" width="100%">
                                     <thead>
                                         <tr>
@@ -224,8 +222,8 @@
                                 </table>
                             <input type="hidden" name="CoordinatorCount" id="CoordinatorCount" value="{{ $drRowCount }}" />
                         </div>
-                        <div class="form-group">
-                            <label class="mrg-b-25">Select Direct Report To</label>
+                        <div class="mb-3">
+                            <label class="meg-b-25">Select Direct Report To</label>
                             <select name="SelectCoordinator" id="SelectCoordinator" class="form-control" onChange="ActivateCoordinatorButton(this)">
                                 <option value=""></option>
                                 @foreach($drDetails as $coordinator)
@@ -235,14 +233,14 @@
                                 @endforeach
                             </select>
                         </div>
-                        <button type="button" class="btn bg-gradient-primary btn-sm" id="AssignCoordinator" disabled onclick="AddCoordinator()">Assign Coordinator</button>
+                        <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" id="AssignCoordinator" disabled onclick="AddCoordinator()">Assign Coordinator</button>
                 </div>
 
 
 
                 <div class="col-sm-6">
-                    <div class="form-group mrg-b-30">
-                        <label class="mrg-b-25">{{ $cdDetails->first_name }} is Primary For:</label>
+                    <div class="mb-3 meg-b-30">
+                        <label class="meg-b-25">{{ $cdDetails->first_name }} is Primary For:</label>
                         <table id="chapter-list" class="nowraptable" width="100%">
                             <thead>
                                 <tr>
@@ -276,8 +274,8 @@
                         </table>
                         <input type="hidden" name="ChapterCount" id="ChapterCount" value="{{ $pcRowCount }}" />
                     </div>
-                    <div class="form-group">
-                        <label class="mrg-b-25">Select Chapter</label>
+                    <div class="mb-3">
+                        <label class="meg-b-25">Select Chapter</label>
                         <select name="SelectChapter" id="SelectChapter" class="form-control" onChange="ActivateChapterButton(this)">
                             <option value=""></option>
                             @foreach($chDetails as $chapter)
@@ -287,7 +285,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <button type="button" class="btn bg-gradient-primary btn-sm" id="AssignChapter" disabled onclick="AddChapter()">Assign Chapter</button>
+                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" id="AssignChapter" disabled onclick="AddChapter()">Assign Chapter</button>
                 </div>
                         </div>
                     </div>
@@ -297,9 +295,9 @@
           </div>
           <!-- /.col -->
           <div class="col-md-12">
-            <div class="card-body text-center">
-                <button type="submit" class="btn bg-gradient-primary mb-3"><i class="fas fa-save mr-2" ></i>Save Changes</button>
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.view', ['id' => $cdDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Coordinator Details</button>
+            <div class="card-body text-center mt-3">
+                <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save Changes</button>
+                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.view', ['id' => $cdDetails->id]) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Coordinator Details</button>
             </div>
         </div>
         </div>

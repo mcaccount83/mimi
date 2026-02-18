@@ -21,19 +21,20 @@
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
-              <div class="card-body box-profile">
-                <h3 class="profile-username text-center">{{ $cdDetails->first_name }}, {{ $cdDetails->last_name }}</h3>
-                    <p class="text-center">{{ $conferenceDescription }} Conference
-                    @if ($regionLongName != "None")
-                    , {{ $regionLongName }} Region
-                        @else
-                    @endif
-                </p>
-                <ul class="list-group list-group-unbordered mb-3">
-                    <li class="list-group-item">
-                        <b>Supervising Coordinator:</b> <span class="float-right"><a href="mailto:{{ $cdDetails->reportsTo?->email }}">{{ $ReportTo }} </a></span>
+              <div class="card-body">
+                    <div class="card-header text-center bg-transparent">
+                        <h3 class="mb-0">{{ $cdDetails->first_name }}, {{ $cdDetails->last_name }}</h3>
+                        <p class="mb-0">{{ $conferenceDescription }} Conference
+                            @if ($regionLongName != "None")
+                                , {{ $regionLongName }} Region
+                            @endif
+                        </p>
+                    </div>
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item mt-2">
+                        <b>Supervising Coordinator:</b> <span class="float-end"><a href="mailto:{{ $cdDetails->reportsTo?->email }}">{{ $ReportTo }} </a></span>
                         <br>
-                        <b>Primary Position:</b> <span class="float-right">{{ $displayPosition->long_title }}</span>
+                        <b>Primary Position:</b> <span class="float-end">{{ $displayPosition->long_title }}</span>
                         <br>
                         <div style="display: flex; justify-content: space-between;">
                             <b>Secondary Positions:</b>
@@ -46,10 +47,10 @@
                             </span>
                         </div>
 
-                          <div class="form-group row mt-2">
+                          <div class="row mb-3">
                             <label class="col-form-label col-sm-6">Active Status:</label>
                             <div class="col-sm-6">
-                                <select id="status" name="status" class="form-control float-right text-right"required>
+                                <select id="status" name="status" class="form-control float-end text-end"required>
                                     @foreach($AllUserStatus as $status)
                                         <option value="{{$status->id}}"
                                             @if($userDetails->is_active == $status->id) selected @endif>
@@ -59,10 +60,10 @@
                                 </select>
                             </div>
                         </div>
-                           <div class="form-group row mt-1">
+                           <div class="row mb-3">
                             <label class="col-form-label col-sm-6">User Type:</label>
                             <div class="col-sm-6">
-                                <select id="type" name="type" class="form-control float-right text-right"required>
+                                <select id="type" name="type" class="form-control float-end text-end"required>
                                     @foreach($AllUserType as $type)
                                         <option value="{{$type->id}}"
                                             @if($userDetails->type_id == $type->id) selected @endif>
@@ -72,10 +73,10 @@
                                 </select>
                             </div>
                         </div>
-                           <div class="form-group row mt-1">
+                           <div class="row mb-3">
                             <label class="col-form-label col-sm-6">Admin Role:</label>
                             <div class="col-sm-6">
-                                <select id="role" name="role" class="form-control float-right text-right"required>
+                                <select id="role" name="role" class="form-control float-end text-end"required>
                                     @foreach($AllAdminRole as $role)
                                         <option value="{{$role->id}}"
                                             @if($userDetails->is_admin == $role->id) selected @endif>
@@ -86,15 +87,7 @@
                             </div>
                         </div>
                     </li>
-                    {{-- <li class="list-group-item">
-                        <b>Start Date:</b> <span class="float-right date-mask">{{ $cdDetails->coordinator_start_date }}</span>
-                        <br>
-                        <b>Last Promotion Date:</b> <span class="float-right date-mask">{{ $cdDetails->last_promoted }}</span>
-                        <br>
-                        <label>Home Chapter:</label><input type="text" name="cord_chapter" id="cord_chapter" class="form-control float-right col-sm-6 text-right" value="{{ $cdDetails->home_chapter }}" required placeholder="Home Chapter">
-                        <br>
-                    </li> --}}
-                </ul>
+                 </ul>
                 <div class="text-center">
                      @if ($cdDetails->active_status == 1 && $cdDetails->on_leave == 1)
                         <b><span style="color: #ff851b;">Coordinator is ON LEAVE</span></b>
@@ -131,7 +124,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <!-- /.form group -->
-                                <div class="form-group row">
+                                <div class="row mb-3">
                                     <label class="col-sm-2 col-form-label">Name:</label>
                                     <div class="col-sm-5">
                                     <input type="text" name="cord_fname" id="cord_fname" class="form-control" value="{{ $cdDetails->first_name }}"  required >
@@ -141,7 +134,7 @@
                                     </div>
                                 </div>
                                 <!-- /.form group -->
-                                <div class="form-group row">
+                                <div class="row mb-3">
                                     <label class="col-sm-2 col-form-label">Email/Secondary:</label>
                                     <div class="col-sm-5">
                                     <input type="text" name="cord_email" id="cord_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)"  value="{{ $cdDetails->email }}"  required >
@@ -152,7 +145,7 @@
                                     </div>
                                 </div>
                                 <!-- /.form group -->
-                                <div class="form-group row">
+                                <div class="row mb-3">
                                     <label class="col-sm-2 col-form-label">Phone/Alternate:</label>
                                     <div class="col-sm-5">
                                     <input type="text" name="cord_phone" id="cord_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{ $cdDetails->phone }}"  required >
@@ -162,13 +155,13 @@
                                     </div>
                                 </div>
                                 <!-- /.form group -->
-                                <div class="form-group row">
+                                <div class="row mb-3">
                                     <label class="col-sm-2 col-form-label">Address:</label>
                                     <div class="col-sm-10">
                                     <input type="text" name="cord_addr" id="cord_addr" class="form-control" value="{{ $cdDetails->address }}"  required >
                                     </div>
                                 </div>
-                                <div class="form-group row">
+                                <div class="row mb-3">
                                     <label class="col-sm-2 col-form-label"><br></label>
                                     <div class="col-sm-3">
                                     <input type="text" name="cord_city" id="cord_city" class="form-control" value="{{ $cdDetails->city }}"  required >
@@ -200,7 +193,7 @@
                             </div>
                                 </div>
                                  <!-- /.form group -->
-                                 <div class="form-group row">
+                                 <div class="row mb-3">
                                     <label class="col-sm-2 col-form-label">Birthday:</label>
                                     <div class="col-sm-3">
                                         <select name="cord_month" class="form-control" style="width: 100%;" required>
@@ -226,9 +219,9 @@
                       </div>
           <!-- /.col -->
           <div class="col-md-12">
-            <div class="card-body text-center">
-                <button type="submit" class="btn bg-gradient-primary" onclick="return PreSaveValidate();"><i class="fas fa-save mr-2" ></i>Save</button>
-                <button type="button" class="btn btn-primary" onclick="showChangePasswordAlert('{{ $cdDetails->user_id }}')"><i class="fas fa-lock mr-2" ></i>Change Password</button>
+            <div class="card-body text-center mt-3">
+                <button type="submit" class="btn btn-primary bg-gradient mb-2" onclick="return PreSaveValidate();"><i class="bi bi-floppy-fill me-2"></i>ave</button>
+                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showChangePasswordAlert('{{ $cdDetails->user_id }}')"><i class="fas fa-lock me-2" ></i>Change Password</button>
             </div>
         </div>
         </div>

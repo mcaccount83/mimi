@@ -29,13 +29,14 @@
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
-              <div class="card-body box-profile">
-                <h3 class="profile-username text-center">{{ $cdDetails->first_name }}, {{ $cdDetails->last_name }}</h3>
-                <p class="text-center">{{ $conferenceDescription }} Conference
-                </p>
-
+              <div class="card-body">
+                    <div class="card-header text-center bg-transparent">
+                        <h3 class="mb-0">{{ $cdDetails->first_name }}, {{ $cdDetails->last_name }}</h3>
+                        <p class="mb-0">{{ $conferenceDescription }} Conference
+                        </p>
+                    </div>
 <div class="d-flex mb-2">
-                        <b class="me-3" style="min-width: 200px;">Region:</b>
+                        <b class="me-2" style="min-width: 200px;">Region:</b>
                   <select name="cord_region" id="cord_region" class="form-control" style="width: 100%;" required>
                                     @foreach($allRegions as $region)
                                         <option value="{{$region->id}}"
@@ -46,47 +47,47 @@
                                 </select>
                                 </div>
 
-                <ul class="list-group list-group-unbordered mb-3">
-                    <li class="list-group-item">
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item mt-2">
                     <div class="d-flex mb-2">
-                        <b class="me-3" style="min-width: 200px;">Email:</b>
+                        <b class="me-2" style="min-width: 200px;">Email:</b>
                         <input type="text" name="cord_email" id="cord_email" class="form-control" value="{{ $cdDetails->email }}" placeholder="Email Address" required>
                     </div>
                     <div class="d-flex mb-2">
-                        <b class="me-3" style="min-width: 200px;">Secondary Email:</b>
+                        <b class="me-2" style="min-width: 200px;">Secondary Email:</b>
                         <input type="text" name="cord_sec_email" id="cord_sec_email" class="form-control" value="{{ $cdDetails->sec_email }}" placeholder="Secondary Email" required>
                     </div>
                     <div class="d-flex mb-2">
-                        <b class="me-3" style="min-width: 200px;">Phone:</b>
+                        <b class="me-2" style="min-width: 200px;">Phone:</b>
                         <input type="text" name="cord_phone" id="cord_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{ $cdDetails->phone}}" required placeholder="Phone Number" >
                     </div>
                     <div class="d-flex mb-2">
-                        <b class="me-3" style="min-width: 200px;">Alt Phone:</b>
+                        <b class="me-2" style="min-width: 200px;">Alt Phone:</b>
                         <input type="text" name="cord_altphone" id="cord_altphone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{ $cdDetails->alt_phone}}" placeholder="Alternative Phone" >
                     </div>
 
 
 
                     <div class="d-flex">
-                        <b class="me-3" style="min-width: 200px;">Address:</b>
+                        <b class="me-2" style="min-width: 200px;">Address:</b>
                         <span>{{ $cdDetails->address }}</span>
                     </div>
                     <div class="d-flex">
-                        <b class="me-3" style="min-width: 200px;">&nbsp;</b>
+                        <b class="me-2" style="min-width: 200px;">&nbsp;</b>
                         <span>{{$cdDetails->city}}, {{$cdDetails->state->state_short_name}}&nbsp;{{$cdDetails->zip}}</span>
                     </div>
                     <div class="d-flex">
-                        <b class="me-3" style="min-width: 200px;">&nbsp;</b>
+                        <b class="me-2" style="min-width: 200px;">&nbsp;</b>
                         <span>{{$cdDetails->country->short_name}}</span>
                     </div>
                 </li>
-                  <li class="list-group-item">
+                  <li class="list-group-item mt-2">
                     <div class="d-flex mb-2">
-                        <b class="me-3 mb-3" style="min-width: 200px;">Application Date:</b>
+                        <b class="me-2 mb-3" style="min-width: 200px;">Application Date:</b>
                         <span class="date-mask">{{ $cdDetails->coordinator_start_date }}</span>
                     </div>
                       <div class="d-flex mb-2">
-                        <b class="me-3" style="min-width: 200px;">Display Position:</b>
+                        <b class="me-2" style="min-width: 200px;">Display Position:</b>
                                 <select name="cord_disp_pos" id="cord_disp_pos" class="form-control" style="width: 100%;" onChange="CheckPromotion(this)" required>
                                     @foreach($allPositions as $pos)
                                             <option value="{{ $pos->id }}" {{ $cdDetails->display_position_id == $pos->id ? 'selected' : '' }}>
@@ -97,7 +98,7 @@
                         </div>
 
                         <div class="d-flex mb-2">
-                        <b class="me-3" style="min-width: 200px;">MIMI Position:<a href="javascript:void(0);" onclick="showPositionInformation()" title="Show Position Information">
+                        <b class="me-2" style="min-width: 200px;">MIMI Position:<a href="javascript:void(0);" onclick="showPositionInformation()" title="Show Position Information">
                                     <i class="fas fa-circle-question text-primary"></i></a></b>
                                 <select name="cord_pos" id="cord_pos" class="form-control" style="width: 100%;" onChange="CheckPromotion(this)" required>
                                     @foreach($allPositions as $pos)
@@ -111,7 +112,7 @@
                         </div>
 
                          <div class="d-flex mb-2">
-                        <b class="me-3" style="min-width: 200px;">Secondary Position:</b>
+                        <b class="me-2" style="min-width: 200px;">Secondary Position:</b>
                                 <select name="cord_sec_pos[]" id="cord_sec_pos" class="form-control" style="width: 100%;" onChange="CheckPromotion(this)" multiple>
                                     <option value="" {{ (!isset($cdDetails->secondaryPosition) || $cdDetails->secondaryPosition->isEmpty()) ? 'selected' : '' }}>None</option>
                                     @foreach($allPositions as $pos)
@@ -126,12 +127,12 @@
                         </div>
 
                     <div class="d-flex mb-2">
-                        <b class="me-3" style="min-width: 200px;">Home Chapter:</b>
+                        <b class="me-2" style="min-width: 200px;">Home Chapter:</b>
                                 <input type="text" name="cord_chapter" id="cord_chapter" class="form-control" value="{{ $cdDetails->home_chapter }}" placeholder="Home Chapter" required>
                         </div>
 
                       <div class="d-flex">
-                        <b class="me-3" style="min-width: 200px;">Supervising Coordinator:</b>
+                        <b class="me-2" style="min-width: 200px;">Supervising Coordinator:</b>
                            <select name="cord_report_pc" id="cord_report_pc" class="form-control" style="width: 100%;" required>
                                     @foreach($rcDetails as $coordinator)
                                         <option value="{{ $coordinator['cid'] }}"
@@ -143,7 +144,7 @@
                                 </select>
 
                 </li>
-            <li class="list-group-item">
+            <li class="list-group-item mt-2">
                 <div class="text-center">
                      @if ($cdDetails->active_status == 1 && $cdDetails->on_leave == 1)
                         <b><span style="color: #ff851b;">Coordinator is ON LEAVE</span></b>
@@ -167,14 +168,14 @@
                 </div>
                  </li>
                 @if ($cdDetails['active_status'] == '2')
-                    <li class="list-group-item">
-                        <div class="card-body text-center">
-                            <button type="submit" class="btn bg-gradient-primary mb-3"><i class="fas fa-save mr-2" ></i>Save Updates</button>
+                    <li class="list-group-item mt-2">
+                        <div class="card-body text-center mt-3">
+                            <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save Updates</button>
                             <br>
                             Save all changes before approval!
                             <br>
-                            <button type="button" class="btn bg-gradient-success" onclick="appApprove({{ $cdDetails->id }}, {{ $cdDetails->user_id }})"><i class="fas fa-check mr-2"></i>Approve Application</button>
-                            <button type="button" class="btn bg-gradient-danger" onclick="appReject({{ $cdDetails->id }}, {{ $cdDetails->user_id }})"><i class="fas fa-times mr-2"></i>Reject Application</button>
+                            <button type="button" class="btn btn-success bg-gradient mb-2" onclick="appApprove({{ $cdDetails->id }}, {{ $cdDetails->user_id }})"><i class="fas fa-check me-2"></i>Approve Application</button>
+                            <button type="button" class="btn btn-danger bg-gradient mb-2" onclick="appReject({{ $cdDetails->id }}, {{ $cdDetails->user_id }})"><i class="fas fa-times me-2"></i>Reject Application</button>
                     </li>
                 @endif
 
@@ -195,47 +196,47 @@
                     <div class="row">
                         <div class="col-md-12">
                             <!-- /.form group -->
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <label class="col-sm-4 col-form-label">How long have you been a MOMS Club Member?</label>
                                     <div class="col-sm-8">{{ $cdApp?->start_date }}</div>
                             </div>
 
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <label class="col-sm-4 col-form-label">What jobs/offices have you held with the chapter? What programs/activities have you started or led?</label>
                                <div class="col-sm-8">{{ $cdApp?->jobs_programs }}</div>
                             </div>
 
-                             <div class="form-group row">
+                             <div class="row mb-3">
                                 <label class="col-sm-4 col-form-label">How has the MOMS Club helped you?</label>
                                 <div class="col-sm-8">{{ $cdApp?->helped_me }}</div>
                             </div>
 
-                             <div class="form-group row">
+                             <div class="row mb-3">
                                 <label class="col-sm-4 col-form-label">Did you experience any problems during your time in the MOMS Club? If so, how were those problems resolved or what did you learn from them?</label>
                                 <div class="col-sm-8">{{ $cdApp?->problems }}</div>
                             </div>
 
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <label class="col-sm-4 col-form-label">Why do you want to be an International MOMS Club Volunteer?</label>
                                 <div class="col-sm-8">{{ $cdApp?->why_volunteer }}</div>
                             </div>
 
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <label class="col-sm-4 col-form-label">Do you volunteer for anyone else? Please list all your volunteer positions and when you did them?</label>
                                 <div class="col-sm-8">{{ $cdApp?->other_volunteer }}</div>
                             </div>
 
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <label class="col-sm-4 col-form-label">Do you have any special skills/talents/Hobbies (ie: other languages, proficient in any computer programs)?</label>
                                 <div class="col-sm-8">{{ $cdApp?->special_skills }}</div>
                             </div>
 
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <label class="col-sm-4 col-form-label">What have you enjoyed most in previous volunteer experiences? Least?</label>
                                <div class="col-sm-8">{{ $cdApp?->enjoy_volunteering }}</div>
                             </div>
 
-                             <div class="form-group row">
+                             <div class="row mb-3">
                                 <label class="col-sm-4 col-form-label">Referred by (if applicable):</label>
                                 <div class="col-sm-8">{{ $cdApp?->referred_by }}</div>
                             </div>
@@ -250,28 +251,28 @@
           </div>
           <!-- /.col -->
           <div class="col-md-12">
-            <div class="card-body text-center">
+            <div class="card-body text-center mt-3">
                 @if ($cdConfId == $confId)
                         @if ($cdActiveId == \App\Enums\CoordinatorStatusEnum::ACTIVE)
-                            <button type="button" id="back-list" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="fas fa-reply mr-2"></i>Back to Active Coordinator List</button>
+                            <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Active Coordinator List</button>
                         @elseif ($cdActiveId == \App\Enums\CoordinatorStatusEnum::PENDING)
-                            <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordpending') }}'"><i class="fas fa-reply mr-2"></i>Back to Pending Coordinator List</button>
+                            <button type="button" id="back-pending" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordpending') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Pending Coordinator List</button>
                         @elseif ($cdActiveId == \App\Enums\CoordinatorStatusEnum::NOTAPPROVED)
-                            <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordrejected') }}'"><i class="fas fa-reply mr-2"></i>Back to Not Approved Coordinator List</button>
+                            <button type="button" id="back-declined" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordrejected') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Not Approved Coordinator List</button>
                         @elseif ($cdActiveId == \App\Enums\CoordinatorStatusEnum::RETIRED)
-                            <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordretired') }}'"><i class="fas fa-reply mr-2"></i>Back to Retired Coordinator List</button>
+                            <button type="button" id="back-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordretired') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Retired Coordinator List</button>
                         @endif
                     @else
                         @if ($cdConfId != $confId)
                             @if ($ITCondition)
                                 @if ($cdActiveId == \App\Enums\CoordinatorStatusEnum::ACTIVE)
-                                    <button type="button" id="back-list" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordlist', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Active Coordinator List</button>
+                                    <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordlist', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Active Coordinator List</button>
                                 @elseif ($cdActiveId == \App\Enums\CoordinatorStatusEnum::PENDING)
-                                    <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordpending', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Pending Coordinator List</button>
+                                    <button type="button" id="back-pending" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordpending', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Pending Coordinator List</button>
                                 @elseif ($cdActiveId == \App\Enums\CoordinatorStatusEnum::NOTAPPROVED)
-                                    <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordrejected', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Not Approved Coordinator List</button>
+                                    <button type="button" id="back-declined" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordrejected', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Not Approved Coordinator List</button>
                                 @elseif ($cdActiveId == \App\Enums\CoordinatorStatusEnum::RETIRED)
-                                    <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordretired', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Retired Coordinator List</button>
+                                    <button type="button" id="back-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordretired', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Retired Coordinator List</button>
                                 @endif
                             @endif
                         @endif

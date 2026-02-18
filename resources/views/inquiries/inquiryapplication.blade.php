@@ -12,7 +12,7 @@
                 <div class="card card-outline card-primary">
                     <div class="card-header">
                     <div class="dropdown">
-                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Inquiries Received List
                         </h3>
                         @include('layouts.dropdown_menus.menu_inquiries')
@@ -37,7 +37,7 @@
                 <tbody>
                     @foreach($inquiryList as $list)
                         <tr id="inquiry-{{ $list->id }}">
-                            <td class="text-center align-middle"><a href="{{ url("/inquiries/inquiryapplicationedit/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                            <td class="text-center align-middle"><a href="{{ url("/inquiries/inquiryapplicationedit/{$list->id}") }}"><i class="bi bi-eye-fill"></i></a></td>
                                 <td>{{ $list->created_at->format('m-d-Y') }}</td>
                                <td>
                                 @if ($list->state->conference_id > 0)
@@ -71,45 +71,50 @@
                     @endforeach
                 </tbody>
             </table>
-            </div>
+                </div>
+            <!-- /.card-body -->
+
+            <div class="card-body">
                 @if (($coordinatorCondition && $conferenceCoordinatorCondition) || $inquiriesCondition)
-                     <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showInquiries" id="showInquiries" class="custom-control-input"
+                <div class="col-sm-12">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showInquiries" id="showInquiries" class="form-check-input"
                                 {{ $checkBox7Status ? 'checked' : '' }} onchange="showInquiries()" />
-                            <label class="custom-control-label" for="showInquiries">Show Only Outstanding Inquiries</label>
+                            <label class="form-check-label" for="showInquiries">Show Only Outstanding Inquiries</label>
                         </div>
                     </div>
                  @endif
 
                 @if ($inquiriesInternationalCondition || $ITCondition)
-                    <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showIntlInquiries" id="showIntlInquiries" class="custom-control-input"
+                <div class="col-sm-12">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showIntlInquiries" id="showIntlInquiries" class="form-check-input"
                                 {{ $checkBox57Status ? 'checked' : '' }} onchange="showIntlInquiries()" />
-                            <label class="custom-control-label" for="showIntlInquiries">Show Only Outstanding International Inquiries</label>
+                            <label class="form-check-label" for="showIntlInquiries">Show Only Outstanding International Inquiries</label>
                         </div>
                     </div>
-                    <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="custom-control-input"
+                <div class="col-sm-12">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input"
                                 {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
-                            <label class="custom-control-label" for="showIntl">Show All International Inquiries</label>
+                            <label class="form-check-label" for="showIntl">Show All International Inquiries</label>
                         </div>
                     </div>
                 @endif
-                <div class="card-body text-center">
+                  </div>
+            <!-- /.card-body for checkboxes -->
 
-                    </div>
+                <div class="card-body text-center mt-3">
                 </div>
-          </div>
-          <!-- /.card -->
+            <!-- /.card-body for buttons -->
+
         </div>
-        <!-- /.col -->
+        <!-- /.card -->
       </div>
-      <!-- /.row -->
+      <!-- /.col -->
     </div>
-    <!-- /.container-fluid -->
-  </section>
-  <!-- /.content -->
-  @endsection
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
+@endsection

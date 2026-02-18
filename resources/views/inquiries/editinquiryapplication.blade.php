@@ -36,20 +36,20 @@
                   <h3 class="profile-username text-center">{{ $inqDetails->state->region->long_name }} Region</h3>
                   <h3 class="profile-username text-center">{{ $inqDetails->state->conference->conference_description }} Conference</h3>
 
-                  <ul class="list-group list-group-unbordered mb-3">
-                    <li class="list-group-item">
+                  <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item mt-2">
                         <div class="d-flex align-items-center justify-content-between w-100">
                                 <label class="col-form-label">Chapter Available:</label>
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" name="available" id="available" class="custom-control-input"
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" name="available" id="available" class="form-check-input"
                                         {{$inqDetails->available == 1 ? 'checked' : ''}}>
-                                    <label class="custom-control-label" for="available"></label>
+                                    <label class="form-check-label" for="available"></label>
                                 </div>
                             </div>
-                            <div class="form-group row mt-3" id="chapter-container" >
+                            <div class="row mb-3" id="chapter-container" >
                                 <label class="col-form-label col-sm-6">Chapter:</label>
                                 <div class="col-sm-6">
-                                    <select id="chapter" name="chapter" class="form-control float-right" required>
+                                    <select id="chapter" name="chapter" class="form-control float-end" required>
                                         <option value="">Select Chapter</option>
                                         @foreach($stateChapters as $chapter)
                                             <option value="{{$chapter->id}}"
@@ -62,51 +62,51 @@
                             </div>
                             <div class="d-flex align-items-center justify-content-between w-100">
                                 <label class="col-form-label">Response Sent:</label>
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" name="response" id="response" class="custom-control-input"
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" name="response" id="response" class="form-check-input"
                                         {{$inqDetails->response == 1 ? 'checked' : ''}} disabled>
-                                    <label class="custom-control-label" for="response"></label>
+                                    <label class="form-check-label" for="response"></label>
                                 </div>
                             </div>
-                            <div class="card-body text-center">
+                            <div class="card-body text-center mt-3">
                                 Save chpater information before sending emails
-                                <button type="submit" class="btn bg-gradient-primary m-1"><i class="fas fa-save mr-2"></i>Save Updates</button>
+                                <button type="submit" class="btn btn-primary bg-gradient m-1"><i class="bi bi-floppy-fill me-2"></i>Save Updates</button>
                             </div>
                     </form>
                         </li>
 
-                        <li class="list-group-item">
-                            <div class="card-body text-center">
+                        <li class="list-group-item mt-2">
+                            <div class="card-body text-center mt-3">
                                 Send email responses to Inquiring Member & Chapter
                                 @if (($inqDetails->response != 1) && ($inqDetails->chapter_id != null))
-                                    <button type="button" class="btn bg-gradient-success btn-sm m-1"
+                                    <button type="button" class="btn btn-success bg-gradient btn-sm m-1"
                                         onclick="showYesChapterInquiryEmailModal({{ $inqDetails->id }}, '{{ $inqDetails->inquiry_first_name }}', '{{ $inqDetails->inquiry_last_name }}', '{{ $chDetails->name }}', {{ $chapterId }})">
-                                        <i class="fas fa-envelope mr-2"></i>YES CHAPTER RESPONSE</button>
+                                        <i class="fas fa-envelope me-2"></i>YES CHAPTER RESPONSE</button>
                                 @elseif ($inqDetails->response != 1)
-                                    <button type="button" class="btn bg-gradient-success btn-sm m-1" disabled>
-                                        <i class="fas fa-envelope mr-2"></i>YES CHAPTER RESPONSE</button>
+                                    <button type="button" class="btn btn-success bg-gradient btn-sm m-1" disabled>
+                                        <i class="fas fa-envelope me-2"></i>YES CHAPTER RESPONSE</button>
                                 @endif
 
                                 @if ($inqDetails->response != 1)
-                                    <button type="button" class="btn bg-gradient-danger btn-sm m-1"
+                                    <button type="button" class="btn btn-danger bg-gradient btn-sm m-1"
                                         onclick="showNoChapterInquiryEmailModal({{ $inqDetails->id }}, '{{ $inqDetails->inquiry_first_name }}', '{{ $inqDetails->inquiry_last_name }}')">
-                                        <i class="fas fa-envelope mr-2"></i>NO CHAPTER RESPONSE</button>
+                                        <i class="fas fa-envelope me-2"></i>NO CHAPTER RESPONSE</button>
                                 {{-- @else
-                                    <button type="button" class="btn bg-gradient-danger btn-sm m-1" disabled>
-                                        <i class="fas fa-envelope mr-2"></i>NO CHAPTER RESPONSE</button> --}}
+                                    <button type="button" class="btn btn-danger bg-gradient btn-sm m-1" disabled>
+                                        <i class="fas fa-envelope me-2"></i>NO CHAPTER RESPONSE</button> --}}
                                 @endif
                                 <br>
-                                <button type="button" class="btn bg-gradient-primary btn-sm m-1"
+                                <button type="button" class="btn btn-primary bg-gradient btn-sm m-1"
                                     onclick="showMemberInquiryEmailModal('{{ $inqDetails->id }}', '{{ $inqDetails->inquiry_first_name }}', '{{ $inqDetails->inquiry_last_name }}', '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">
-                                    <i class="fas fa-envelope mr-2"></i>SEND CUSTOM EMAIL TO MEMBER</button>
+                                    <i class="fas fa-envelope me-2"></i>SEND CUSTOM EMAIL TO MEMBER</button>
                                 <br>
                                 @if ($inqDetails->chapter_id != null)
-                                    <button type="button" class="btn bg-gradient-primary btn-sm m-1"
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm m-1"
                                         onclick="showChapterInquiryEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $inqDetails->id }}', '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">
-                                        <i class="fas fa-envelope mr-2"></i>SEND CUSTOM EMAIL TO CHAPTER</button>
+                                        <i class="fas fa-envelope me-2"></i>SEND CUSTOM EMAIL TO CHAPTER</button>
                                 @else
-                                    <button type="button" class="btn bg-gradient-primary btn-sm m-1" disabled>
-                                        <i class="fas fa-envelope mr-2"></i>SEND CUSTOM EMAIL TO CHAPTER</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm m-1" disabled>
+                                        <i class="fas fa-envelope me-2"></i>SEND CUSTOM EMAIL TO CHAPTER</button>
                                 @endif
 
                                  @if ($inqDetails->response != 1)
@@ -119,9 +119,9 @@
                                     <form id="mark-response-form" action="{{ route('inquiries.updateinquiryresponse', ['id' => $inqDetails->id]) }}" method="POST" style="display: none;">
                                         @csrf
                                     </form>
-                                    <button type="button" class="btn bg-gradient-success btn-sm m-1"
+                                    <button type="button" class="btn btn-success bg-gradient btn-sm m-1"
                                             onclick="document.getElementById('mark-response-form').submit()">
-                                        <i class="fas fa-check mr-2"></i>MARK RESPONSE AS SENT
+                                        <i class="fas fa-check me-2"></i>MARK RESPONSE AS SENT
                                     </button>
                                 @elseif ($inqDetails->response == 1)
                                      <br>
@@ -132,9 +132,9 @@
                                     <form id="mark-response-form" action="{{ route('inquiries.clearinquiryresponse', ['id' => $inqDetails->id]) }}" method="POST" style="display: none;">
                                         @csrf
                                     </form>
-                                    <button type="button" class="btn bg-gradient-danger btn-sm m-1"
+                                    <button type="button" class="btn btn-danger bg-gradient btn-sm m-1"
                                             onclick="document.getElementById('mark-response-form').submit()">
-                                        <i class="fas fa-ban mr-2"></i>CLEAR SENT RESPONSE
+                                        <i class="fas fa-ban me-2"></i>CLEAR SENT RESPONSE
                                     </button>
                                 @endif
                             </div>
@@ -157,8 +157,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <!-- /.form group -->
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Date:</label>
+                            <div class="row mb-3                              <label class="col-sm-2 col-form-label">Date:</label>
                                 <div class="col-sm-10">
                                     <p class="form-control-plaintext">{{ $inqDetails->created_at->format('m-d-Y') }}</p>
                                 </div>
@@ -210,11 +209,11 @@
                       </div>
           <!-- /.col -->
           <div class="col-md-12">
-            <div class="card-body text-center">
+            <div class="card-body text-center mt-3">
                 @if ($confId == $inqConfId)
-                    <button type="button" id="back-inquiries" class="btn bg-gradient-primary m-1 keep-enabled" onclick="window.location.href='{{ route('inquiries.inquiryapplication') }}'"><i class="fas fa-reply mr-2"></i>Back to Inquiries Application List</button>
+                    <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient m-1 keep-enabled" onclick="window.location.href='{{ route('inquiries.inquiryapplication') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Inquiries Application List</button>
                 @elseif ($confId != $inqConfId && ($inquiriesInternationalCondition || $ITCondition))
-                    <button type="button" id="back-inquiries" class="btn bg-gradient-primary m-1 keep-enabled" onclick="window.location.href='{{ route('inquiries.inquiryapplication', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Inquiries Application List</button>
+                    <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient m-1 keep-enabled" onclick="window.location.href='{{ route('inquiries.inquiryapplication', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Inquiries Application List</button>
                 @endif
             </div>
         </div>

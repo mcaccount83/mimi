@@ -39,7 +39,7 @@
 
                   <h3 class="profile-username ">Chapter Information</h3>
                     <!-- Toggle Switch - Default to NO (unchecked) -->
-                    <div class="form-group row">
+                    <div class="row mb-3">
                         <label class="col-sm-4 col-form-label">Are you being sistered by another chapter?</label>
                         <div class="col-sm-8">
                             <input type="checkbox" name="SisteredBy" id="sisteredToggle"
@@ -52,7 +52,7 @@
                     </div>
 
                     <!-- Sistered By Field - Visible when YES sistered is checked -->
-                    <div class="form-group row" id="sisteredByField" style="display: none;">
+                    <div class="row mb-3" id="sisteredByField" style="display: none;">
                         <label class="col-sm-4 col-form-label">If so, which chapter?</label>
                         <div class="col-sm-8">
                             <input type="text" name="ch_sisteredby" id="ch_sisteredby" class="form-control" placeholder="Chapter Name" required>
@@ -61,14 +61,14 @@
                     </div>
 
                     <!-- Hear About By Field - Visible when NO sistered is checked -->
-                    <div class="form-group row" id="hearAboutByField" style="display: none;">
+                    <div class="row mb-3" id="hearAboutByField" style="display: none;">
                         <label class="col-sm-4 col-form-label">If not, how did you hear about us?</label>
                         <div class="col-sm-8">
                             <input type="text" name="ch_hearabout" id="ch_hearabout" class="form-control" placeholder="Online Search, Friend, Word of Mouth, etc" required>
                         </div>
                     </div>
 
-                  <div class="form-group row mt-1">
+                  <div class="row mb-3 mt-1">
                     <label class="col-sm-4 col-form-label">State:</label>
                     <div class="col-sm-8">
                         <select id="ch_state" name="ch_state" class="form-control" required>
@@ -82,7 +82,7 @@
                     </div>
                 </div>
 
-                <div class="form-group row mt-1" id="country-container" style="display: none;">
+                <div class="row mb-3 mt-1" id="country-container" style="display: none;">
                     <label class="col-sm-4 col-form-label">Country:</label>
                     <div class="col-sm-8">
                         <select id="ch_country" name="ch_country" class="form-control" required>
@@ -96,7 +96,7 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
+                <div class="row mb-3">
                     <label class="col-sm-4 col-form-label">Requested Name:</label>
                     <div class="col-sm-8">
                         <div class="input-group">
@@ -111,7 +111,7 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
+                <div class="row mb-3">
                     <label class="col-sm-4 col-form-label">Requested Boundaries:</label>
                     <div class="col-sm-8">
                         <input type="text" name="ch_boundariesterry" id="ch_boundariesterry" class="form-control" placeholder="Boundaries" required>
@@ -123,7 +123,7 @@
                         </div>
                 </div>
 
-                <div class="form-group row">
+                <div class="row mb-3">
                     <label class="col-sm-4 col-form-label">Email for Members to Contact:</label>
                     <div class="col-sm-8">
                         <input type="text" name="ch_inqemailcontact" id="ch_inqemailcontact" class="form-control" placeholder="Inquiries Email" required>
@@ -144,7 +144,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <!-- /.form group -->
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <label class="col-sm-2 mb-1 col-form-label">Name:</label>
                                 <div class="col-sm-5 mb-1">
                                 <input type="text" name="ch_pre_fname" id="ch_pre_fname" class="form-control"  required placeholder="First Name" >
@@ -192,7 +192,7 @@
                             </div>
                         </div>
 
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">Password:</label>
                                 <div class="col-sm-5">
                                     <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
@@ -228,7 +228,7 @@
                     </div>
                     @endif
 
-                        <div class="form-group row">
+                        <div class="row mb-3">
                             <div class="col-md-4">
                                 <label>New Chapter Fee</label>
                                 <input type="text" name="newchap" id="newchap" class="form-control" value="$30.00" readonly>
@@ -243,7 +243,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        <div class="row mb-3">
                             <div class="col-md-6">
                             <label for="card_number" >{{ __('Card Number') }}</label> <span class="field-required">*</span>
                                 <input id="card_number" type="text" class="form-control @error('card_number') is-invalid @enderror" name="card_number" required autocomplete="off" maxlength="16">
@@ -275,7 +275,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        <div class="row mb-3">
                             <div class="col-md-4">
                                 <label>Cardholder First Name</label> <span class="field-required">*</span>
                                 <input type="text" name="first_name" id="first_name" class="form-control"  required >
@@ -290,13 +290,13 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        <div class="row mb-3">
                             <div class="col-md-12">
                                 <label>Cardholder Address</label> <span class="field-required">*</span>
                                 <input type="text" name="address" id="address" class="form-control"  required >
                             </div>
                         </div>
-                        <div class="form-group row">
+                        <div class="row mb-3">
                             <div class="col-md-4">
                                 <label>City</label> <span class="field-required">*</span>
                                 <input type="text" name="city" id="city" class="form-control"  required >
@@ -311,7 +311,7 @@
                             </div>
                         </div>
 
-                        <div class="card-body text-center">
+                        <div class="card-body text-center mt-3">
                              <div class="col-md-12" ><center>
                                 Please note: your payment will not be processed until your chapter is approved.<br>
                                 After it is approved, your payment will be processed and we will send you your MOMS Club Chapter Manual.<br>
@@ -322,7 +322,7 @@
                                 DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center></div>
                             <br>
 
-                                <button type="submit" class="btn btn-primary"><i class="fas fa-share" ></i>&nbsp;{{ __('Submit Application') }}</button>
+                                <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="fas fa-share" ></i>&nbsp;{{ __('Submit Application') }}</button>
                         </div>
                     </form>
                 </div>

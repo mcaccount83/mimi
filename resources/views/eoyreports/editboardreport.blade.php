@@ -91,7 +91,7 @@
                                 <div class="col-md-12">
                                     <h5>Board Members</h5>
                             <!-- /.form group -->
-                                <div class="form-group row">
+                                <div class="row mb-3">
                                     <label class="col-sm-2 mb-1 col-form-label">President:</label>
                                     <div class="col-sm-5 mb-1">
                                     <input type="text" name="ch_pre_fname" id="ch_pre_fname" class="form-control" value="{{ $PresDetails->first_name }}" required placeholder="First Name" >
@@ -142,13 +142,13 @@
                                 </div>
 
                                 <!-- /.form group -->
-                                <div class="form-group row">
+                                <div class="row mb-3">
                                     <label class="col-sm-2 mb-1 col-form-label">AVP:</label>
-                                    <div class="col-sm-10 mt-1 custom-control custom-switch">
-                                        <input type="checkbox" name="AVPVacant" id="AVPVacant" class="custom-control-input" {{$AVPDetails->id == '' ? 'checked' : ''}} >
-                                        <label class="custom-control-label" for="AVPVacant">Vacant</label>
+                                    <div class="col-sm-10 mt-1 form-check form-switch">
+                                        <input type="checkbox" name="AVPVacant" id="AVPVacant" class="form-check-input" {{$AVPDetails->id == '' ? 'checked' : ''}} >
+                                        <label class="form-check-label" for="AVPVacant">Vacant</label>
                                     </div>
-                                    <div class="avp-field form-group row">
+                                    <div class="avp-field row mb-3">
                                     <label class="col-sm-2 mb-1 col-form-label"></label>
                                     <div class="col-sm-5 mb-1">
                                         <input type="text" name="ch_avp_fname" id="ch_avp_fname" class="form-control" value="{{$AVPDetails->first_name != ''  ? $AVPDetails->first_name : ''}}" required placeholder="First Name" >
@@ -200,13 +200,13 @@
                                 </div>
 
                                  <!-- /.form group -->
-                                 <div class="form-group row">
+                                 <div class="row mb-3">
                                     <label class="col-sm-2 mb-1 col-form-label">MVP:</label>
-                                    <div class="col-sm-10 mt-1 custom-control custom-switch">
-                                            <input type="checkbox" name="MVPVacant" id="MVPVacant" class="custom-control-input" {{$MVPDetails->id == '' ? 'checked' : ''}} >
-                                            <label class="custom-control-label" for="MVPVacant">Vacant</label>
+                                    <div class="col-sm-10 mt-1 form-check form-switch">
+                                            <input type="checkbox" name="MVPVacant" id="MVPVacant" class="form-check-input" {{$MVPDetails->id == '' ? 'checked' : ''}} >
+                                            <label class="form-check-label" for="MVPVacant">Vacant</label>
                                     </div>
-                                    <div class="mvp-field form-group row">
+                                    <div class="mvp-field row mb-3">
                                     <label class="col-sm-2 mb-1 col-form-label"></label>
                                     <div class="col-sm-5 mb-1">
                                     <input type="text" name="ch_mvp_fname" id="ch_mvp_fname" class="form-control" value="{{$MVPDetails->first_name != ''  ? $MVPDetails->first_name : ''}}" required placeholder="First Name" >
@@ -258,13 +258,13 @@
                                 </div>
 
                                 <!-- /.form group -->
-                                <div class="form-group row">
+                                <div class="row mb-3">
                                     <label class="col-sm-2 mb-1 col-form-label">Treasurer:</label>
-                                    <div class="col-sm-10 mt-1 custom-control custom-switch">
-                                            <input type="checkbox" name="TreasVacant" id="TreasVacant" class="custom-control-input" {{$TRSDetails->id == '' ? 'checked' : ''}} >
-                                            <label class="custom-control-label" for="TreasVacant">Vacant</label>
+                                    <div class="col-sm-10 mt-1 form-check form-switch">
+                                            <input type="checkbox" name="TreasVacant" id="TreasVacant" class="form-check-input" {{$TRSDetails->id == '' ? 'checked' : ''}} >
+                                            <label class="form-check-label" for="TreasVacant">Vacant</label>
                                     </div>
-                                <div class="trs-field form-group row">
+                                <div class="trs-field row mb-3">
                                     <label class="col-sm-2 mb-1 col-form-label"></label>
                                     <div class="col-sm-5 mb-1">
                                     <input type="text" name="ch_trs_fname" id="ch_trs_fname" class="form-control"  value="{{$TRSDetails->first_name != ''  ? $TRSDetails->first_name : ''}}" required placeholder="First Name" >
@@ -316,13 +316,13 @@
                                 </div>
 
                                 <!-- /.form group -->
-                                <div class="form-group row">
+                                <div class="row mb-3">
                                     <label class="col-sm-2 mb-1 col-form-label">Secretary:</label>
-                                    <div class="col-sm-10 mt-1 custom-control custom-switch">
-                                            <input type="checkbox" name="SecVacant" id="SecVacant" class="custom-control-input" {{$SECDetails->id == '' ? 'checked' : ''}}>
-                                            <label class="custom-control-label" for="SecVacant">Vacant</label>
+                                    <div class="col-sm-10 mt-1 form-check form-switch">
+                                            <input type="checkbox" name="SecVacant" id="SecVacant" class="form-check-input" {{$SECDetails->id == '' ? 'checked' : ''}}>
+                                            <label class="form-check-label" for="SecVacant">Vacant</label>
                                     </div>
-                                    <div class="sec-field form-group row">
+                                    <div class="sec-field row mb-3">
                                     <label class="col-sm-2 mb-1 col-form-label"></label>
                                     <div class="col-sm-5 mb-1">
                                     <input type="text" name="ch_sec_fname" id="ch_sec_fname" class="form-control" value="{{$SECDetails->first_name != ''  ? $SECDetails->first_name : ''}}" required placeholder="First Name" >
@@ -390,15 +390,15 @@
 
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="form-group">
+                                        <div class="mb-3">
                                             <label>Boundaries listed in MIMI (used for Inquiries)</label>
                                             <div>{{ $chDetails->territory }}</div>
                                         </div>
                                     </div>
                                 </div>
-                                    <div class="form-group row">
+                                    <div class="row mb-3">
                                         <label class="col-sm-12 col-form-label">Are your listed boundaries correct?<span class="field-required">*</span></label>
-                                        <div class="col-sm-12 row ml-2 mb-2">
+                                        <div class="col-sm-12 row ms-2 mb-2">
                                             <div class="form-check" style="margin-right: 20px;">
                                                 <input class="form-check-input" type="radio" id="BoundaryStatusYes" name="BoundaryStatus" value="0" {{ !is_null($chDetails->boundary_issues) && $chDetails->boundary_issues == 0 ? 'checked' : '' }} onChange="ShowBoundaryError()">
                                                 <label class="form-check-label" for="BoundaryStatusYes">Yes</label>
@@ -414,21 +414,21 @@
                                         </div>
                                     </div>
 
-                                     <div class="form-group row">
+                                     <div class="row mb-3">
                                     <label class="col-sm-12 col-form-label">Inquiries Email:</label>
-                                    <div class="col-sm-12 mb-2">
+                                    <div class="col-sm-12">
                                     <input type="text" name="ch_inqemailcontact" id="ch_inqemailcontact" class="form-control" value="{{ $chDetails->inquiries_contact }}" placeholder="Inquiries Email Address" required >
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
+                                <div class="row mb-3">
                                     <label class="col-sm-12 col-form-label">Chapter Email:</label>
-                                    <div class="col-sm-12 mb-2">
+                                    <div class="col-sm-12">
                                     <input type="text" name="ch_email" id="ch_email" class="form-control" value="{{ $chDetails->email }}" placeholder="Chapter Email Address"  >
                                     </div>
                                 </div>
 
-                                 <div class="form-group row">
+                                 <div class="row mb-3">
                                 <label class="col-sm-12 col-form-label">Website:</label>
                                 <div class="col-sm-12">
                                     <input type="text" name="ch_website" id="ch_website" class="form-control"
@@ -438,7 +438,7 @@
                             </div>
 
                             <!-- Website Status Container - Hidden by default -->
-                            <div class="form-group row" id="ch_webstatus-container" style="display: none; margin-top: -8px;">
+                            <div class="row mb-3" id="ch_webstatus-container" style="display: none; margin-top: -8px;">
                                 <div class="col-sm-8">
                                     <select name="ch_webstatus" id="ch_webstatus" class="form-control" style="width: 100%;">
                                         <option value="">Select Status</option>
@@ -452,9 +452,9 @@
                                 </div>
                             </div>
 
-                                {{-- <div class="form-group row">
+                                {{-- <div class="row mb-3">
                                     <label class="col-sm-12 col-form-label">Website:</label>
-                                    <div class="col-sm-12 mb-2">
+                                    <div class="col-sm-12">
                                         <input type="text" name="ch_website" id="ch_website" class="form-control"
                                                value="{{$chDetails->website_url}}"
                                                placeholder="Chapter Website">
@@ -473,19 +473,19 @@
                         </div> --}}
 
                         <!-- /.form group -->
-                        <div class="form-group row">
+                        <div class="row mb-3">
                             <label class="col-sm-12 col-form-label">Social Media:</label>
-                            <div class="col-sm-12 mb-2">
+                            <div class="col-sm-12">
                             <input type="text" name="ch_onlinediss" id="ch_onlinediss" class="form-control" value="{{ $chDetails->egroup }}"  placeholder="Forum/Group/App" >
                             </div>
-                            <div class="col-sm-12 mb-2">
+                            <div class="col-sm-12">
                             <input type="text" name="ch_social1" id="ch_social1" class="form-control" value="{{ $chDetails->social1 }}" placeholder="Facebook"  >
                             </div>
 
-                            <div class="col-sm-12 mb-2">
+                            <div class="col-sm-12">
                                 <input type="text" name="ch_social2" id="ch_social2" class="form-control" value="{{ $chDetails->social2 }}"  placeholder="Twitter" >
                             </div>
-                            <div class="col-sm-12 mb-2">
+                            <div class="col-sm-12">
                                 <input type="text" name="ch_social3" id="ch_social3" class="form-control" value="{{ $chDetails->social3 }}"  placeholder="Instagram" >
                             </div>
                         </div>
@@ -503,15 +503,15 @@
 
         </div>
 
-            <div class="card-body text-center">
+            <div class="card-body text-center mt-3">
                   @if ($chDetails->documentsEOY->new_board_active != '1')
                     <div class="d-flex justify-content-center align-items-start flex-wrap">
                             <form method="POST" action="#" onsubmit="return validateBeforeSubmit(true)">
                                 @csrf
                                 @if ($chDetails->documentsEOY->new_board_submitted != 1)
-                                    <button type="submit" class="btn bg-gradient-primary mr-1"><i class="fas fa-mail-forward mr-2"></i>Submit</button>
+                                    <button type="submit" class="btn btn-primary bg-gradient me-1"><i class="fas fa-mail-forward me-2"></i>Submit</button>
                                 @else
-                                    <button type="submit" class="btn bg-gradient-primary mr-1"><i class="fas fa-save mr-2"></i>Save</button>
+                                    <button type="submit" class="btn btn-primary bg-gradient me-1"><i class="bi bi-floppy-fill me-2"></i>Save</button>
                                 @endif
                             </form>
 
@@ -519,8 +519,8 @@
                            <form id="activateSingleBoardForm" action="{{ route('eoyreports.activateboardreport', ['id' => $chDetails->id]) }}" method="POST">
     @csrf
     <input type="hidden" name="board" value="active">
-    <button type="button" class="btn bg-gradient-primary" onclick="confirmActivateSingleBoard()">
-        <i class="fas fa-play mr-2"></i>Activate Board
+    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="confirmActivateSingleBoard()">
+        <i class="fas fa-play me-2"></i>Activate Board
     </button>
 </form>
                             @endif
@@ -528,11 +528,11 @@
                     @endif
 
                     @if ($confId == $chConfId)
-                        <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyboardreport') }}'"><i class="fas fa-reply mr-2"></i>Back to Board Election Report</button>
+                        <button type="button" id="back-eoy" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.eoyboardreport') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Board Election Report</button>
                     @elseif ($confId != $chConfId && $ITCondition)
-                        <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoyboardreport', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Board Election Report</button>
+                        <button type="button" id="back-eoy" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.eoyboardreport', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Board Election Report</button>
                     @endif
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Details</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to EOY Details</button>
             </div>
     </div>
     <!-- /.container- -->

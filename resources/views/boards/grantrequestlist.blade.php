@@ -54,7 +54,7 @@
                                     Review not Complete<br>
                                 @endif
                             @endif
-                            <button type="button" class="btn bg-gradient-primary btn-xs mb-1 mt-1 keep-enabled" onclick="window.location.href='{{ route('board.viewgrantdetails', ['id' => $grant->id]) }}'"></i>View Grant Details</button>
+                            <button type="button" class="btn btn-primary bg-gradient btn-xs mb-1 mt-1 keep-enabled" onclick="window.location.href='{{ route('board.viewgrantdetails', ['id' => $grant->id]) }}'"></i>View Grant Details</button>
                             @if ($grant->submitted == '1')
                                 <button type="button" id="btn-download-pdf" class="btn bg-primary btn-xs mb-1 mt-1 keep-enabled" onclick="openPdfViewer('{{ $grant->grant_pdf_path  }}')">View/Download PDF</button>
                             @endif
@@ -68,13 +68,13 @@
                     </div>
 </div>
 
-            <div class="card-body text-center">
-                <button type="button" id="btn-back" class="btn btn-primary m-1" onclick="window.location='{{ route('board.newgrantrequest', ['id' => $chDetails->id]) }}'"><i class="fas fa-hand-holding-heart mr-2" ></i>Start a New Grant</button>
+            <div class="card-body text-center mt-3">
+                <button type="button" id="btn-back" class="btn btn-primary m-1" onclick="window.location='{{ route('board.newgrantrequest', ['id' => $chDetails->id]) }}'"><i class="fas fa-hand-holding-heart me-2" ></i>Start a New Grant</button>
                 @if ($userTypeId != \App\Enums\UserTypeEnum::OUTGOING && $userTypeId != \App\Enums\UserTypeEnum::DISBANDED)
                     @if ($userTypeId == \App\Enums\UserTypeEnum::COORD)
-                        <button type="button" id="btn-back" class="btn btn-primary m-1" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2" ></i>Back to Profile</button>
+                        <button type="button" id="btn-back" class="btn btn-primary m-1" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="bi bi-chevron-double-left me-2"></i>>Back to Profile</button>
                     @else
-                        <a href="{{ route('home') }}" class="btn btn-primary m-1"><i class="fas fa-reply mr-2" ></i>Back to Profile</a>
+                        <a href="{{ route('home') }}" class="btn btn-primary m-1"><i class="bi bi-chevron-double-left me-2"></i>Back to Profile</a>
                     @endif
                 @endif
 

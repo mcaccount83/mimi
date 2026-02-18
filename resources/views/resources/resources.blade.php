@@ -31,7 +31,7 @@
             <div class="card card-outline card-primary">
                 <div class="card-header">
                   <div class="dropdown">
-                      <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           Chapter Resources
                       </h3>
                       @include('layouts.dropdown_menus.menu_resources')
@@ -44,7 +44,7 @@
         </div>
         @if($canEditFiles)
             <div class="row">
-                &nbsp;&nbsp;<button type="button" class="btn bg-gradient-success" data-toggle="modal" data-target="#modal-task"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;Add Resource</button>
+                &nbsp;&nbsp;<button type="button" class="btn btn-success bg-gradient mb-2" data-bs-toggle="modal" data-bs-target="#modal-task"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;Add Resource</button>
             </div>
             <div class="row">&nbsp;</div>
         @endif
@@ -81,7 +81,7 @@
                         {{ $resourceItem->name }}
                     @endif
                     @if($canEditFiles)
-                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-bs-toggle="modal" data-bs-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
                     @endif
                 </div>
                 @endforeach
@@ -174,8 +174,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>&nbsp; Close</button>
-                <button type="button" class="btn btn-success" onclick="updateResourceFile({{ $resourceItem->id }})"><i class="fas fa-save"></i>&nbsp; Save changes</button>
+                <button type="button" class="btn btn-danger bg-gradient mb-2" data-bs-dismiss="modal"><i class="fas fa-times"></i>&nbsp; Close</button>
+                <button type="button" class="btn btn-success bg-gradient mb-2" onclick="updateResourceFile({{ $resourceItem->id }})"><i class="bi bi-floppy-fill me-2"></i>Save changes</button>
             </div>
         </div>
     </div>
@@ -246,8 +246,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>&nbsp; Close</button>
-                <button type="button" class="btn btn-success" onclick="return addResourceFile()"><i class="fas fa-save"></i>&nbsp; Add Resource</button>
+                <button type="button" class="btn btn-danger bg-gradient mb-2" data-bs-dismiss="modal"><i class="fas fa-times"></i>&nbsp; Close</button>
+                <button type="button" class="btn btn-success bg-gradient mb-2" onclick="return addResourceFile()"><i class="bi bi-floppy-fill me-2"></i>Add Resource</button>
             </div>
         </div>
     </div>

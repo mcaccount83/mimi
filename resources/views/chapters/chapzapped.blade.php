@@ -12,7 +12,7 @@
                 <div class="card card-outline card-primary">
                     <div class="card-header">
                     <div class="dropdown">
-                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Zapped Chapter List
                         </h3>
                         @include('layouts.dropdown_menus.menu_chapters')
@@ -38,7 +38,7 @@
                 <tbody>
                 @foreach($chapterList as $list)
                   <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                    <td class="text-center align-middle"><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="bi bi-eye-fill"></i></a></td>
                     <td>
                         @if ($list->state->conference_id > 0)
                             {{ $list->state->conference->short_name }} / {{ $list->state->region->short_name }}
@@ -69,30 +69,37 @@
                 </table>
             </div>
 
+            <div class="card-body">
              <!-- /.card-body -->
                 @if ($ITCondition || $einCondition)
-                    <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="custom-control-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
-                            <label class="custom-control-label" for="showIntl">Show All International Chapters (Export Available)</label>
+                <div class="col-sm-12">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <label class="form-check-label" for="showIntl">Show All International Chapters (Export Available)</label>
                         </div>
                     </div>
                 @endif
+                  </div>
+            <!-- /.card-body for checkboxes -->
 
-            <div class="card-body text-center">
+            <div class="card-body text-center mt-3">
                 @if ($assistConferenceCoordinatorCondition)
                     @if ($checkBox51Status)
-                        <button class="btn bg-gradient-primary mb-3" onclick="startExport('intzapchapter', 'International Zapped Chapter List')"><i class="fas fa-download"></i>&nbsp; Export International Zapped Chapter List</button>
+                        <button class="btn btn-primary bg-gradient mb-2" onclick="startExport('intzapchapter', 'International Zapped Chapter List')"><i class="bi bi-download me-2"></i>Export International Zapped Chapter List</button>
                     {{-- @else
-                        <button class="btn bg-gradient-primary mb-3" onclick="startExport('zapchapter', 'Zapped Chapter List')"><i class="fas fa-download mr-2" ></i>Export Zapped Chapter List</button> --}}
+                        <button class="btn btn-primary bg-gradient mb-2" onclick="startExport('zapchapter', 'Zapped Chapter List')"><i class="bi bi-download me-2"></i>Export Zapped Chapter List</button> --}}
                     @endif
                 @endif
              </div>
-          </div>
-          <!-- /.box -->
+            <!-- /.card-body for buttons -->
+
         </div>
+        <!-- /.card -->
       </div>
+      <!-- /.col -->
     </div>
-    </section>
-    <!-- /.content -->
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
 @endsection

@@ -12,13 +12,13 @@
                 <div class="card card-outline card-primary">
                     <div class="card-header">
                         <div class="dropdown">
-                            <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Conference List
                             </h3>
                             @include('layouts.dropdown_menus.menu_reports_tech')
                         </div>
                         <div class="card-tools">
-                            <button class="btn btn-success btn-sm" onclick="addNewRow()">
+                            <button class="btn btn-success bg-gradient btn-sm mb-2" onclick="addNewRow()">
                                 <i class="fas fa-plus"></i> Add Conference
                             </button>
                         </div>
@@ -47,10 +47,10 @@
                                         <td class="conference-description">{{ $conference->conference_description }}</td>
                                         <td class="short-description">{{ $conference->short_description }}</td>
                                         <td class="table-actions">
-                                            <button class="btn btn-primary btn-sm edit-btn" onclick="editRow(this)">
-                                                <i class="fas fa-edit"></i> Edit
+                                            <button class="btn btn-primary bg-gradient btn-sm edit-btn" onclick="editRow(this)">
+                                                <i class="bi bi-pencil-square me-2"></i>Edit
                                             </button>
-                                            <button class="btn btn-danger btn-sm delete-btn" onclick="deleteRow(this)">
+                                            <button class="btn btn-danger bg-gradient btn-sm delete-btn" onclick="deleteRow(this)">
                                                 <i class="fas fa-trash"></i> Delete
                                             </button>
                                         </td>
@@ -58,14 +58,26 @@
                                 @endforeach
                             </tbody>
                         </table>
-                    </div>
-                    <!-- /.card-body -->
-                </div>
+                     </div>
+              <!-- /.card-body -->
+
+              <div class="card-body">
             </div>
-        </div>
+            <!-- /.card-body for checkboxes -->
+
+                <div class="card-body text-center mt-3">
+            </div>
+            <!-- /.card-body for buttons -->
+
+         </div>
+        <!-- /.card -->
+      </div>
+      <!-- /.col -->
     </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
 </section>
-<!-- /.content -->
 
 <style>
     .editing {
@@ -127,10 +139,10 @@ function editRow(button) {
 
     // Change buttons
     row.querySelector('.table-actions').innerHTML = `
-        <button class="btn btn-success btn-sm" onclick="saveRow(this)">
-            <i class="fas fa-save"></i> Save
+        <button class="btn btn-success bg-gradient btn-sm mb-2" onclick="saveRow(this)">
+            <i class="bi bi-floppy-fill me-2"></i>Save
         </button>
-        <button class="btn btn-secondary btn-sm" onclick="cancelEdit(this.closest('tr'))">
+        <button class="btn btn-secondary bg-gradient btn-sm mb-2" onclick="cancelEdit(this.closest('tr'))">
             <i class="fas fa-times"></i> Cancel
         </button>
     `;
@@ -154,7 +166,7 @@ function saveRow(button) {
 
     // Show loading state
     button.disabled = true;
-    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    button.innerHTML = '<i class="bi bi-arrow-repeat spin"></i>Saving...';
 
     // Make AJAX call to save
     $.ajax({
@@ -177,10 +189,10 @@ function saveRow(button) {
 
                 // Reset buttons
                 row.querySelector('.table-actions').innerHTML = `
-                    <button class="btn btn-primary btn-sm edit-btn" onclick="editRow(this)">
-                        <i class="fas fa-edit"></i> Edit
+                    <button class="btn btn-primary bg-gradient btn-sm edit-btn" onclick="editRow(this)">
+                        <i class="bi bi-pencil-square me-2"></i>Edit
                     </button>
-                    <button class="btn btn-danger btn-sm delete-btn" onclick="deleteRow(this)">
+                    <button class="btn btn-danger bg-gradient btn-sm delete-btn" onclick="deleteRow(this)">
                         <i class="fas fa-trash"></i> Delete
                     </button>
                 `;
@@ -217,7 +229,7 @@ function deleteRow(button) {
     if (confirm(`Are you sure you want to delete "${confName}"?`)) {
         // Show loading
         button.disabled = true;
-        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        button.innerHTML = '<i class="bi bi-arrow-repeat spin"></i>';
 
         $.ajax({
             url: `/techreports/deleteconf/${id}`,
@@ -259,10 +271,10 @@ function addNewRow() {
             <input type="text" class="form-control form-control-sm" placeholder="Abbreviation">
         </td>
         <td class="table-actions">
-            <button class="btn btn-success btn-sm" onclick="saveNewRow(this)">
-                <i class="fas fa-save"></i> Save
+            <button class="btn btn-success bg-gradient btn-sm mb-2" onclick="saveNewRow(this)">
+                <i class="bi bi-floppy-fill me-2"></i>Save
             </button>
-            <button class="btn btn-secondary btn-sm" onclick="cancelEdit(this.closest('tr'))">
+            <button class="btn btn-secondary bg-gradient btn-sm mb-2" onclick="cancelEdit(this.closest('tr'))">
                 <i class="fas fa-times"></i> Cancel
             </button>
         </td>
@@ -290,7 +302,7 @@ function saveNewRow(button) {
 
     // Show loading
     button.disabled = true;
-    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    button.innerHTML = '<i class="bi bi-arrow-repeat spin"></i>Saving...';
 
     // Make AJAX call to create
     $.ajax({
@@ -316,10 +328,10 @@ function saveNewRow(button) {
 
                 // Reset buttons
                 row.querySelector('.table-actions').innerHTML = `
-                    <button class="btn btn-primary btn-sm edit-btn" onclick="editRow(this)">
-                        <i class="fas fa-edit"></i> Edit
+                    <button class="btn btn-primary bg-gradient btn-sm edit-btn" onclick="editRow(this)">
+                        <i class="bi bi-pencil-square me-2"></i>Edit
                     </button>
-                    <button class="btn btn-danger btn-sm delete-btn" onclick="deleteRow(this)">
+                    <button class="btn btn-danger bg-gradient btn-sm delete-btn" onclick="deleteRow(this)">
                         <i class="fas fa-trash"></i> Delete
                     </button>
                 `;
@@ -344,7 +356,7 @@ function showMessage(message, type = 'success') {
     const alertHtml = `
         <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
             ${message}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>

@@ -15,7 +15,7 @@
                 <div class="card card-outline card-primary">
                     <div class="card-header">
                         <div class="dropdown">
-                            <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Sent Mail Log
                             </h3>
                             @include('layouts.dropdown_menus.menu_reports_admin')
@@ -110,9 +110,9 @@
 
              @if ($ITCondition)
                     <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showAdminAll" id="showAdminAll" class="custom-control-input" {{ $checkBox81Status ? 'checked' : '' }} onchange="showAdminAll()" />
-                            <label class="custom-control-label" for="showAdminAll">Show All Emails</label>
+                        <div class="cform-check form-switch">
+                            <input type="checkbox" name="showAdminAll" id="showAdminAll" class="form-check-input" {{ $checkBox81Status ? 'checked' : '' }} onchange="showAdminAll()" />
+                            <label class="form-check-label" for="showAdminAll">Show All Emails</label>
                         </div>
                     </div>
                 @endif

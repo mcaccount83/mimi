@@ -31,19 +31,21 @@
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                  <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
-                  <p class="text-center">{{ $conferenceDescription }} Conference, {{ $regionLongName}} Region
-                  <br>
+                <div class="card-body">
+                    <div class="card-header text-center bg-transparent">
+                    <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
+                    <p class="mb-0">{{ $chDetails->confname }} Conference, {{ $chDetails->regname }} Region
+                  </p>
+                    </div>
                   EIN: {{$chDetails->ein}}
                   </p>
-                        <ul class="list-group list-group-unbordered mb-3">
-                            <li class="list-group-item">
+                        <ul class="list-group list-group-flush mb-3">
+                            <li class="list-group-item mt-2">
 
-                            <b>Founded:</b> <span class="float-right">{{ $startMonthName }} {{ $chDetails->start_year }}</span>
+                            <b>Founded:</b> <span class="float-end">{{ $startMonthName }} {{ $chDetails->start_year }}</span>
 
                             </li>                            <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
-                            <li class="list-group-item" id="display_corlist" class="list-group-item"></li>
+                            <li class="list-group-item mt-2" id="display_corlist"></li>
                   </ul>
                  <div class="text-center">
                       @if ($chDetails->active_status == 1 )
@@ -75,11 +77,11 @@
                     <div class="row">
                         <div class="col-md-12">
 <!-- /.form group -->
-<div class="form-group row align-items-center mb-3">
+<div class="row mb-3 row align-items-center">
     <label class="col-sm-2 col-form-label">EIN Letter Received:</label>
-    <div class="col-sm-10 custom-control custom-switch">
-        <input type="checkbox" name="ch_ein_letter_display" id="ch_ein_letter" class="custom-control-input" {{$chEOYDocuments->ein_letter == 1 ? 'checked' : ''}} disabled>
-        <label class="custom-control-label" for="ch_ein_letter"></label>
+    <div class="col-sm-10 form-check form-switch">
+        <input type="checkbox" name="ch_ein_letter_display" id="ch_ein_letter" class="form-check-input" {{$chEOYDocuments->ein_letter == 1 ? 'checked' : ''}} disabled>
+        <label class="form-check-label" for="ch_ein_letter"></label>
         <!-- Hidden input to submit the value -->
         <input type="hidden" name="ch_ein_letter" value="{{ $chEOYDocuments->ein_letter }}">
     </div>
@@ -87,26 +89,26 @@
 
                         <!-- /.form group -->
                         @if($chDetails->ein == null && ($conferenceCoordinatorCondition || $einCondition))
-                           <div class="form-group row">
+                           <div class="row mb-3 row">
                                                     <label class="col-sm-2 col-form-label mb-1">EIN Fax Coversheet:</label>
                                 <div class="col-sm-10">
-                                    <button id="GoodStanding" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.open('{{ route('pdf.newchapfaxcover', ['id' => $chDetails->id]) }}', '_blank')">EIN Fax Coversheet</button><br>
+                                    <button id="GoodStanding" type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="window.open('{{ route('pdf.newchapfaxcover', ['id' => $chDetails->id]) }}', '_blank')">EIN Fax Coversheet</button><br>
                                 </div>
                             </div>
                         @endif
 
-                       <div class="form-group row">
+                       <div class="row mb-3 row">
                                                     <label class="col-sm-2 col-form-label mb-1">EIN Letter:</label>
                             <div class="col-sm-10">
                                 @if($chEOYDocuments->ein_letter_path != null)
-                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chEOYDocuments->ein_letter_path }}')">EIN Letter from IRS</button>
+                                    <button class="btn btn-primary bg-gradient btn-sm mb-2" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chEOYDocuments->ein_letter_path }}')">EIN Letter from IRS</button>
                                 @else
-                                    <button class="btn bg-gradient-primary btn-sm disabled" disabled>No EIN Letter on File</button>
+                                    <button class="btn btn-primary bg-gradient btn-sm mb-2 disabled" disabled>No EIN Letter on File</button>
                                 @endif
                             </div>
                         </div>
                         <!-- /.form group -->
-                                                <div class="form-group row">
+                                                <div class="row mb-3 row">
                                                     <label class="col-sm-2 col-form-label mb-1">EIN Notes:</label>
                                                     <div class="col-sm-10">
                                                         <input type="text" name="ein_notes" id="ein_notes" class="form-control" value="{{ $chEOYDocuments->ein_notes }}" placeholder="EIN Notes">
@@ -115,19 +117,19 @@
 
                                                  <!-- /.form group -->
  @if($ITCondition == 1 )
-    <div class="form-group row align-items-center  mb-3">
+    <div class="row mb-3 row align-items-center  mb-3">
         <label class="col-sm-2 col-form-label">Added as Subordinate:</label>
-        <div class="col-sm-10 custom-control custom-switch">
-            <input type="checkbox" name="ein_sent" id="ein_sent" class="custom-control-input" {{$chEOYDocuments->ein_sent == 1 ? 'checked' : ''}}>
-            <label class="custom-control-label" for="ein_sent"></label>
+        <div class="col-sm-10 form-check form-switch">
+            <input type="checkbox" name="ein_sent" id="ein_sent" class="form-check-input" {{$chEOYDocuments->ein_sent == 1 ? 'checked' : ''}}>
+            <label class="form-check-label" for="ein_sent"></label>
         </div>
     </div>
 @else
-    <div class="form-group row align-items-center  mb-3">
+    <div class="row mb-3 row align-items-center  mb-3">
         <label class="col-sm-2 col-form-label">Added as Subordinate:</label>
-        <div class="col-sm-10 custom-control custom-switch">
-            <input type="checkbox" name="ein_sent" id="ein_sent" class="custom-control-input" {{$chEOYDocuments->ein_sent == 1 ? 'checked' : ''}} disabled>
-            <label class="custom-control-label" for="ein_sent"></label>
+        <div class="col-sm-10 form-check form-switch">
+            <input type="checkbox" name="ein_sent" id="ein_sent" class="form-check-input" {{$chEOYDocuments->ein_sent == 1 ? 'checked' : ''}} disabled>
+            <label class="form-check-label" for="ein_sent"></label>
             <!-- Hidden input to submit the value -->
             <input type="hidden" name="ein_sent" value="{{ $chEOYDocuments->ein_sent }}">
         </div>
@@ -137,11 +139,11 @@
 
  <!-- /.form group -->
 
- <div class="form-group row align-items-center  mb-3">
+ <div class="row mb-3 row align-items-center  mb-3">
     <label class="col-sm-2 col-form-label">990N Verifed with IRS:</label>
-    <div class="col-sm-10 custom-control custom-switch">
-        <input type="checkbox" name="irs_verified" id="irs_verified" class="custom-control-input" {{$chEOYDocuments->irs_verified == 1 ? 'checked' : ''}}>
-        <label class="custom-control-label" for="irs_verified"></label>
+    <div class="col-sm-10 form-check form-switch">
+        <input type="checkbox" name="irs_verified" id="irs_verified" class="form-check-input" {{$chEOYDocuments->irs_verified == 1 ? 'checked' : ''}}>
+        <label class="form-check-label" for="irs_verified"></label>
     </div>
 </div>
 
@@ -152,15 +154,15 @@
                             </div>
                             <div class="col-sm-10">
                                 @if($chEOYDocuments->irs_path != null)
-                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chEOYDocuments->irs_path }}')">View/Download 990N Submission</button>
+                                    <button class="btn btn-primary bg-gradient btn-sm mb-2" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chEOYDocuments->irs_path }}')">View/Download 990N Submission</button>
                                 @else
-                                    <button class="btn bg-gradient-primary btn-sm disabled" disabled>No 990N Submission on File</button>
+                                    <button class="btn btn-primary bg-gradient btn-sm mb-2 disabled" disabled>No 990N Submission on File</button>
                                 @endif
                             </div>
                         </div>
 
                             <!-- /.form group -->
-                    <div class="form-group row">
+                    <div class="row mb-3 row">
                         <label class="col-sm-2 col-form-label mb-1">990N Submission Notes:</label>
                         <div class="col-sm-10">
                             <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chEOYDocuments->irs_notes }}" placeholder="990N Submission Notes">
@@ -179,19 +181,19 @@
                       </div>
           <!-- /.col -->
           <div class="col-md-12">
-            <div class="card-body text-center">
+            <div class="card-body text-center mt-3">
                 @if ($coordinatorCondition)
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="updateEIN('{{ $chDetails->id }}')"><i class="fas fa-university mr-2"></i>Update EIN Number</button>
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="showFileUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload mr-2"></i>Update EIN Letter</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="updateEIN('{{ $chDetails->id }}')"><i class="fas fa-university me-2"></i>Update EIN Number</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showFileUploadModal('{{ $chDetails->id }}')"><i class="fas fa-upload me-2"></i>Update EIN Letter</button>
                     <br>
-                    <button type="submit" class="btn bg-gradient-primary mb-3" onclick="return PreSaveValidate();"><i class="fas fa-save mr-2"></i>Save IRS Information</button>
+                    <button type="submit" class="btn btn-primary bg-gradient mb-2" onclick="return PreSaveValidate();"><i class="bi bi-floppy-fill me-2"></i>Save IRS Information</button>
                 @endif
                 @if ($confId == $chConfId)
-                    <button type="button" id="back-irs" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapreports.chaprpteinstatus') }}'"><i class="fas fa-reply mr-2"></i>Back to IRS Status Report</button>
+                    <button type="button" id="back-irs" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapreports.chaprpteinstatus') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to IRS Status Report</button>
                 @elseif ($confId != $chConfId)
-                    <button type="button" id="back-irs" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapreports.chaprpteinstatus', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International IRS Status Report</button>
+                    <button type="button" id="back-irs" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapreports.chaprpteinstatus', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International IRS Status Report</button>
                 @endif
-                <button type="button" id="back-details" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
+                <button type="button" id="back-details" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Chapter Details</button>
         </div>
         </div>
         <!-- /.row -->

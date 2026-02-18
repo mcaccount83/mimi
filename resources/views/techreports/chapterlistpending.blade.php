@@ -12,10 +12,10 @@
                     <div class="card card-outline card-primary">
                         <div class="card-header">
                             <div class="dropdown">
-                                <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Pending Board Pages
                                 </h3>
-                                <span class="ml-2">View Board Pages as President</span>
+                                <span class="ms-2">View Board Pages as President</span>
                                 @include('layouts.dropdown_menus.menu_reports_tech')
                             </div>
                         </div>
@@ -51,7 +51,7 @@
                                         <td>{{ $chapter->name }}</td>
                                         <td>
                                             <div class="btn-group">
-                                                <a href="{{ route('board.newchapterstatus', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-sm btn-primary mr-2">New Chapter Status</a>
+                                                <a href="{{ route('board.newchapterstatus', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-primary bg-gradient btn-sm me-2">New Chapter Status</a>
                                             </div>
                                         </td>
                                         {{-- <td><span class="date-mask">{{ $chapter->zap_date }}</span></td> --}}
@@ -60,14 +60,23 @@
                             </tbody>
                         </table>
                     </div>
-                    <!-- /.card-body -->
-                </div>
+              <!-- /.card-body -->
+
+              <div class="card-body">
             </div>
-            <!-- /.card -->
-          </div>
-          <!-- /.col -->
-        </div>
-        <!-- /.row -->
-    </section>
-    <!-- /.content -->
+            <!-- /.card-body for checkboxes -->
+
+                <div class="card-body text-center mt-3">
+            </div>
+            <!-- /.card-body for buttons -->
+
+         </div>
+        <!-- /.card -->
+      </div>
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
 @endsection
