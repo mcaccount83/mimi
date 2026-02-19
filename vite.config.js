@@ -23,5 +23,15 @@ export default defineConfig(({ mode }) => {
                 'jQuery': 'jquery',
             },
         },
+        build: {
+            rollupOptions: {
+                external: ['jquery'],
+                output: {
+                    globals: {
+                        jquery: '$'
+                    }
+                }
+            }
+        }
     };
 });

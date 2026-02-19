@@ -113,9 +113,9 @@
             <div class="card-body text-center mt-3">
                 @if ($coordinatorCondition && $regionalCoordinatorCondition)
                      @if ($checkBox51Status)
-                            <a class="btn btn-primary bg-gradient mb-2" href="{{ route('chapters.chaplistpending', ['check5' => 'yes']) }}"><i class="bi bi-chevron-double-right me-2"></i>New International Chapters Pending</a>
+                            <a class="btn btn-primary bg-gradient mb-2" href="{{ route('chapters.chaplistpending', ['check5' => 'yes']) }}"><i class="bi bi-house-add-fill me-2"></i>New International Chapters Pending</a>
                         @else
-                            <a class="btn btn-primary bg-gradient mb-2" href="{{ route('chapters.chaplistpending') }}"><i class="bi bi-chevron-double-right me-2"></i>New Chapters Pending</a>
+                            <a class="btn btn-primary bg-gradient mb-2" href="{{ route('chapters.chaplistpending') }}"><i class="bi bi-house-add-fill me-2"></i>New Chapters Pending</a>
                         @endif
                         @if ($checkBox3Status)
                             <button class="btn btn-primary bg-gradient mb-2" onclick="startExport('chapter', 'Chapter List')"><i class="bi bi-download me-2"></i>Export Chapter List</button>

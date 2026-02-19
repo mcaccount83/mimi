@@ -45,7 +45,7 @@
                         <tr>
                             <td class="text-center align-middle">
                                 @if ($conferenceCoordinatorCondition)
-                                    <a href="{{ url("/payment/chapterpaymentedit/{$list->id}") }}"><i class="far fa-credit-card"></i></a>
+                                    <a href="{{ url("/payment/chapterpaymentedit/{$list->id}") }}"><i class="bi bi-credit-card"></i></a>
                                 @endif
                             </td>
                             <td class="text-center align-middle">
@@ -89,7 +89,7 @@
                             </td>
                             <td>{{ $list->payments->rereg_members }}</td>
                              <th>
-                                <a href="{{ url("/payment/chapterpaymenthistory/{$list->id}") }}"><i class="fas fa-file-invoice-dollar "></i></a>
+                                <a href="{{ url("/payment/chapterpaymenthistory/{$list->id}") }}"><i class="bi bi-file-earmark-text"></i></a>
                             </th>
                         </tr>
                         @endforeach

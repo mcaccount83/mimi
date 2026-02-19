@@ -122,7 +122,7 @@
                     Member Dues
                 </label>
                 <div class="mb-3">
-                    <div class="input-group-prepend">
+                    <div class="input-group">
                         <span class="input-group-text">$</span>
                 <input type="text" class="form-control" name="MemberDues" oninput="ChangeMemberCount()" id="MemberDues" value="{{ $chFinancialReport->dues_per_member }}"
                     data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
@@ -136,7 +136,7 @@
                     Member Dues (New Amount)
                 </label>
                 <div class="mb-3">
-                    <div class="input-group-prepend">
+                    <div class="input-group">
                         <span class="input-group-text">$</span>
                 <input type="text" class="form-control" name="NewMemberDues" oninput="ChangeMemberCount()" id="NewMemberDues" value="{{ $chFinancialReport->dues_per_member_new_changed}}"
                     data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
@@ -149,7 +149,7 @@
                 <div class="mb-3">
                     <label for="MemberDuesRenewal">Renewal Dues</label>
                     <div class="mb-3">
-                        <div class="input-group-prepend">
+                        <div class="input-group">
                             <span class="input-group-text">$</span>
                     <input type="text" class="form-control " name="MemberDuesRenewal" oninput="ChangeMemberCount()" id="MemberDuesRenewal" value="{{ $chFinancialReport->dues_per_member_renewal }}"
                         data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
@@ -161,7 +161,7 @@
                 <div class="mb-3">
                 <label for="NewMemberDuesRenewal">Renewal Dues (NEW Amount)</label>
                 <div class="mb-3">
-                    <div class="input-group-prepend">
+                    <div class="input-group">
                         <span class="input-group-text">$</span>
                 <input type="text" class="form-control" name="NewMemberDuesRenewal" oninput="ChangeMemberCount()" id="NewMemberDuesRenewal" value="{{ $chFinancialReport->dues_per_member_renewal_changed }}"
                     data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
@@ -192,7 +192,7 @@
                 <div class="mb-3">
                 <label for="PartialDuesMemberDues">Total Partial Dues Amount Collected</label>
                 <div class="mb-3">
-                    <div class="input-group-prepend">
+                    <div class="input-group">
                         <span class="input-group-text">$</span>
                 <input type="text" class="form-control " name="PartialDuesMemberDues" id="PartialDuesMemberDues" oninput="ChangeMemberCount()" value="{{ $chFinancialReport->total_partial_fees_collected }}"
                     data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
@@ -210,7 +210,7 @@
                 <div class="mb-3">
                 <label for="AssociateMemberDues">Associate Member Dues</label>
                 <div class="mb-3">
-                    <div class="input-group-prepend">
+                    <div class="input-group">
                         <span class="input-group-text">$</span>
                 <input type="text" class="form-control" name="AssociateMemberDues" id="AssociateMemberDues" oninput="ChangeMemberCount()" value="{{ $chFinancialReport->associate_member_fee }}"
                     data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
@@ -232,7 +232,7 @@
             <div class="mb-3">
                 <label for="TotalDues">Total Dues Collected</label>
                 <div class="mb-3">
-                    <div class="input-group-prepend">
+                    <div class="input-group">
                         <span class="input-group-text">$</span>
                 <input type="text" class="form-control " name="TotalDues" id="TotalDues"
                     data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -267,7 +267,7 @@
                 <div class="mb-3">
                     <label for="ManditoryMeetingFeesPaid">Mandatory Meeting Room Fees Paid</label>
                     <div class="mb-3">
-                        <div class="input-group-prepend">
+                        <div class="input-group">
                             <span class="input-group-text">$</span>
                             <input type="text"  class="form-control" name="ManditoryMeetingFeesPaid" id="ManditoryMeetingFeesPaid" oninput="ChangeMeetingFees()" value="{{ $chFinancialReport->manditory_meeting_fees_paid }}"
                                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
@@ -279,7 +279,7 @@
                 <div class="mb-3">
                     <label for="VoluntaryDonationsPaid">Voluntary Donations Paid</label>
                     <div class="mb-3">
-                        <div class="input-group-prepend">
+                        <div class="input-group">
                             <span class="input-group-text">$</span>
                             <input type="text"  class="form-control" name="VoluntaryDonationsPaid" id="VoluntaryDonationsPaid" oninput="ChangeMeetingFees()" value="{{ $chFinancialReport->voluntary_donations_paid }}"
                                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
@@ -291,7 +291,7 @@
                 <div class="mb-3">
                     <label for="TotalMeetingRoomExpenses">Total Meeting Room Expenses</label>
                     <div class="mb-3">
-                        <div class="input-group-prepend">
+                        <div class="input-group">
                             <span class="input-group-text">$</span>
                             <input type="text" class="form-control" name="TotalMeetingRoomExpenses" id="TotalMeetingRoomExpenses"
                                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -407,7 +407,7 @@
                 <div class="mb-3">
                     <label for="PaidBabySitters">Paid Babysitter Expenses (if any)</label>
                     <div class="mb-3">
-                        <div class="input-group-prepend">
+                        <div class="input-group">
                             <span class="input-group-text">$</span>
                             <input type="text" class="form-control" name="PaidBabySitters" id="PaidBabySitters" oninput="ChangeChildrensRoomExpenses()" value="{{ $chFinancialReport->paid_baby_sitters }}"
                                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
@@ -456,9 +456,7 @@
                                 <td>
                                     <div class="mb-3">
                                         <div class="input-group">
-                                            <div class="input-group-prepend">
                                                 <span class="input-group-text">$</span>
-                                            </div>
                                             <input type="text" class="form-control" name="ChildrensRoomSupplies{{ $row }}" id="ChildrensRoomSupplies{{ $row }}" oninput="ChangeChildrensRoomExpenses()"
                                                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" value="{{ $childrens_room[$row]['childrens_room_supplies'] ?? '' }}">
                                         </div>
@@ -467,9 +465,7 @@
                                 <td>
                                     <div class="mb-3">
                                         <div class="input-group">
-                                            <div class="input-group-prepend">
                                                 <span class="input-group-text">$</span>
-                                            </div>
                                             <input type="text" class="form-control" name="ChildrensRoomOther{{ $row }}" id="ChildrensRoomOther{{ $row }}" oninput="ChangeChildrensRoomExpenses()" value="{{ $childrens_room[$row]['childrens_room_other'] ?? '' }}"
                                                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                                         </div>
@@ -484,9 +480,7 @@
                             <td>
                                 <div class="mb-3">
                                     <div class="input-group">
-                                        <div class="input-group-prepend">
                                             <span class="input-group-text">$</span>
-                                        </div>
                                         <input type="text" class="form-control" value="{{ number_format($total_supplies, 2) }}" readonly>
                                     </div>
                                 </div>
@@ -494,9 +488,7 @@
                             <td>
                                 <div class="mb-3">
                                     <div class="input-group">
-                                        <div class="input-group-prepend">
                                             <span class="input-group-text">$</span>
-                                        </div>
                                         <input type="text" class="form-control" value="{{ number_format($total_other_expenses, 2) }}" readonly>
                                     </div>
                                 </div>
@@ -514,7 +506,7 @@
                 <div>
                     <label for="ChildrensRoomTotal">Total Children's Room Expenses</label>
                     <div class="mb-3">
-                        <div class="input-group-prepend">
+                        <div class="input-group">
                             <span class="input-group-text">$</span>
                             <input type="text"  class="form-control" value="0.00" name="ChildrensRoomTotal"  id="ChildrensRoomTotal"  readonly>
                         </div>
@@ -642,9 +634,7 @@
                         <td>
                             <div class="mb-3">
                                 <div class="input-group">
-                                    <div class="input-group-prepend">
                                         <span class="input-group-text">$</span>
-                                    </div>
                                     <input type="text" class="form-control" name="ServiceProjectIncome{{ $row }}" id="ServiceProjectIncome{{ $row }}" oninput="ChangeServiceProjectExpenses()"
                                         data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" value="{{ $service_projects[$row]['service_project_income'] ?? '' }}">
                                 </div>
@@ -653,9 +643,7 @@
                         <td>
                             <div class="mb-3">
                                 <div class="input-group">
-                                    <div class="input-group-prepend">
                                         <span class="input-group-text">$</span>
-                                    </div>
                                     <input type="text" class="form-control" name="ServiceProjectSupplies{{ $row }}" id="ServiceProjectSupplies{{ $row }}" oninput="ChangeServiceProjectExpenses()"
                                         data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" value="{{ $service_projects[$row]['service_project_supplies'] ?? '' }}">
                                 </div>
@@ -664,9 +652,7 @@
                         <td>
                             <div class="mb-3">
                                 <div class="input-group">
-                                    <div class="input-group-prepend">
                                         <span class="input-group-text">$</span>
-                                    </div>
                                     <input type="text" class="form-control" name="ServiceProjectDonatedCharity{{ $row }}" id="ServiceProjectDonatedCharity{{ $row }}" oninput="ChangeServiceProjectExpenses()"
                                         data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" value="{{ $service_projects[$row]['service_project_charity'] ?? '' }}">
                                 </div>
@@ -675,9 +661,7 @@
                         <td>
                             <div class="mb-3">
                                 <div class="input-group">
-                                    <div class="input-group-prepend">
                                         <span class="input-group-text">$</span>
-                                    </div>
                                     <input type="text" class="form-control" name="ServiceProjectDonatedM2M{{ $row }}" id="ServiceProjectDonatedM2M{{ $row }}" oninput="ChangeServiceProjectExpenses()"
                                         data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" value="{{ $service_projects[$row]['service_project_m2m'] ?? '' }}">
                                 </div>
@@ -692,9 +676,7 @@
                     <td>
                         <div class="mb-3">
                             <div class="input-group">
-                                <div class="input-group-prepend">
                                     <span class="input-group-text">$</span>
-                                </div>
                                 <input type="text" class="form-control" value="{{ number_format($total_income, 2) }}" readonly>
                             </div>
                         </div>
@@ -702,9 +684,7 @@
                     <td>
                         <div class="mb-3">
                             <div class="input-group">
-                                <div class="input-group-prepend">
                                     <span class="input-group-text">$</span>
-                                </div>
                                 <input type="text" class="form-control" value="{{ number_format($total_expenses, 2) }}" readonly>
                             </div>
                         </div>
@@ -712,9 +692,7 @@
                     <td>
                         <div class="mb-3">
                             <div class="input-group">
-                                <div class="input-group-prepend">
                                     <span class="input-group-text">$</span>
-                                </div>
                                 <input type="text" class="form-control" value="{{ number_format($total_charity, 2) }}" readonly>
                             </div>
                         </div>
@@ -722,9 +700,7 @@
                     <td>
                         <div class="mb-3">
                             <div class="input-group">
-                                <div class="input-group-prepend">
                                     <span class="input-group-text">$</span>
-                                </div>
                                 <input type="text" class="form-control" value="{{ number_format($total_m2m, 2) }}" readonly>
                             </div>
                         </div>
@@ -744,7 +720,7 @@
                 Total Service Project Income
             </label>
             <div class="mb-3">
-                <div class="input-group-prepend">
+                <div class="input-group">
                     <span class="input-group-text">$</span>
             <input type="number" class="form-control" min="0"  step="0.01" name="ServiceProjectIncomeTotal"  id="ServiceProjectIncomeTotal" readonly>
             </div>
@@ -758,7 +734,7 @@
                 Total Service Project Expenses
             </label>
             <div class="mb-3">
-                <div class="input-group-prepend">
+                <div class="input-group">
                     <span class="input-group-text">$</span>
             <input type="number" class="form-control" min="0"  step="0.01" name="ServiceProjectExpenseTotal"  id="ServiceProjectExpenseTotal" readonly>
             </div>
@@ -837,10 +813,7 @@
              <td>
                     <div class="mb-3">
                         <div class="input-group">
-                            <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
-                            </div>
-                            <!-- FIXED: Income field should be named PartyIncome, not PartyExpenses -->
                             <input type="text" class="form-control" name="PartyIncome{{ $row }}" id="PartyIncome{{ $row }}" oninput="ChangePartyExpenses()" value="{{ $party_expenses[$row]['party_expense_income'] ?? '' }}"
                                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
                         </div>
@@ -849,10 +822,7 @@
                 <td>
                     <div class="mb-3">
                         <div class="input-group">
-                            <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
-                            </div>
-                            <!-- FIXED: Expenses field should be named PartyExpenses, not PartyIncome -->
                             <input type="text" class="form-control" name="PartyExpenses{{ $row }}" id="PartyExpenses{{ $row }}" oninput="ChangePartyExpenses()" value="{{ $party_expenses[$row]['party_expense_expenses'] ?? '' }}"
                                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
                         </div>
@@ -867,9 +837,7 @@
             <td>
                 <div class="mb-3">
                     <div class="input-group">
-                        <div class="input-group-prepend">
                             <span class="input-group-text">$</span>
-                        </div>
                         <input type="text" class="form-control" value="{{ number_format($total_income, 2) }}" readonly>
                     </div>
                 </div>
@@ -877,9 +845,7 @@
             <td>
                 <div class="mb-3">
                     <div class="input-group">
-                        <div class="input-group-prepend">
                             <span class="input-group-text">$</span>
-                        </div>
                         <input type="text" class="form-control" value="{{ number_format($total_expenses, 2) }}" readonly>
                     </div>
                 </div>
@@ -899,7 +865,7 @@
                 Total Benefit Income
             </label>
             <div class="mb-3">
-                <div class="input-group-prepend">
+                <div class="input-group">
                     <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="PartyIncomeTotal" id="PartyIncomeTotal"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -914,7 +880,7 @@
                 Total Benefit Expenses
             </label>
             <div class="mb-3">
-                <div class="input-group-prepend">
+                <div class="input-group">
                     <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="PartyExpenseTotal" id="PartyExpenseTotal"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -954,7 +920,7 @@
             Printing Costs
         </label>
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
         <input type="text" class="form-control" name="PrintingCosts" id="PrintingCosts" oninput="ChangeOfficeExpenses()" value="{{ $chFinancialReport->office_printing_costs }}"
             data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
@@ -968,7 +934,7 @@
             Postage Costs
         </label>
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
         <input type="text" class="form-control" name="PostageCosts" id="PostageCosts" oninput="ChangeOfficeExpenses()" value="{{ $chFinancialReport->office_postage_costs }}"
             data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
@@ -982,7 +948,7 @@
             Membership Pins
         </label>
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
         <input type="text" class="form-control" name="MembershipPins" id="MembershipPins" oninput="ChangeOfficeExpenses()" value="{{ $chFinancialReport->office_membership_pins_cost }}"
             data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
@@ -1029,9 +995,7 @@
                 <td>
                     <div class="mb-3">
                         <div class="input-group">
-                            <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
-                            </div>
                             <input type="text" class="form-control" name="OfficeExpenses{{ $row }}" id="OfficeExpenses{{ $row }}" oninput="ChangeOfficeExpenses()" value="{{ $other_office_expenses[$row]['office_other_expense'] ?? '' }}"
                                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                         </div>
@@ -1046,9 +1010,7 @@
             <td>
                 <div class="mb-3">
                     <div class="input-group">
-                        <div class="input-group-prepend">
                             <span class="input-group-text">$</span>
-                        </div>
                         <input type="text" class="form-control" value="{{ number_format($total_expenses, 2) }}" readonly>
                     </div>
                 </div>
@@ -1067,7 +1029,7 @@
             Total Office & Operating Expenses
         </label>
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
         <input type="text" class="form-control" name="TotalOperatingExpense" id="TotalOperatingExpense"
             data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1108,7 +1070,7 @@
                     Chapter Registration Fee<span class="field-required">*</span>
                 </label>
                     <div class="mb-3">
-                        <div class="input-group-prepend">
+                        <div class="input-group">
                             <span class="input-group-text">$</span>
                 <input type="text" class="form-control" name="AnnualRegistrationFee" id="AnnualRegistrationFee" oninput="ChangeReRegistrationExpense()" value="{{ $chFinancialReport->annual_registration_fee }}"
                     data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
@@ -1194,9 +1156,7 @@
                 <td>
                     <div class="mb-3">
                         <div class="input-group">
-                            <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
-                            </div>
                             <input type="text" class="form-control" name="InternationalEventIncome{{ $row }}" id="InternationalEventIncome{{ $row }}" oninput="ChangeInternationalEventExpense()" value="{{ $international_event_array[$row]['intl_event_income'] ?? '' }}"
                                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
                         </div>
@@ -1205,9 +1165,7 @@
                 <td>
                     <div class="mb-3">
                         <div class="input-group">
-                            <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
-                            </div>
                             <input type="text" class="form-control" name="InternationalEventExpense{{ $row }}" id="InternationalEventExpense{{ $row }}" oninput="ChangeInternationalEventExpense()" value="{{ $international_event_array[$row]['intl_event_expenses'] ?? '' }}"
                                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
                         </div>
@@ -1222,9 +1180,7 @@
             <td>
                 <div class="mb-3">
                     <div class="input-group">
-                        <div class="input-group-prepend">
                             <span class="input-group-text">$</span>
-                        </div>
                         <input type="text" class="form-control" value="{{ number_format($total_income, 2) }}" readonly>
                     </div>
                 </div>
@@ -1232,9 +1188,7 @@
             <td>
                 <div class="mb-3">
                     <div class="input-group">
-                        <div class="input-group-prepend">
                             <span class="input-group-text">$</span>
-                        </div>
                         <input type="text" class="form-control" value="{{ number_format($total_expenses, 2) }}" readonly>
                     </div>
                 </div>
@@ -1256,7 +1210,7 @@
         Total Event Registration Income
     </label>
     <div class="mb-3">
-        <div class="input-group-prepend">
+        <div class="input-group">
             <span class="input-group-text">$</span>
     <input type="text" class="form-control" name="InternationalEventIncomeTotal" id="InternationalEventIncomeTotal"
         data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1271,7 +1225,7 @@
         Total Event Registration Expenses
     </label>
     <div class="mb-3">
-        <div class="input-group-prepend">
+        <div class="input-group">
             <span class="input-group-text">$</span>
     <input type="text" class="form-control" name="InternationalEventExpenseTotal" id="InternationalEventExpenseTotal"
         data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1353,9 +1307,7 @@
             <td>
                 <div class="mb-3">
                     <div class="input-group">
-                        <div class="input-group-prepend">
                             <span class="input-group-text">$</span>
-                        </div>
                         <input type="text" class="form-control" name="DonationAmount{{ $row }}" id="DonationAmount{{ $row }}" oninput="ChangeDonationAmount()" value="{{ $monetary_dontations_to_chapter[$row]['mon_donation_amount'] ?? '' }}"
                             data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
                     </div>
@@ -1370,9 +1322,7 @@
             <td>
                 <div class="mb-3">
                     <div class="input-group">
-                        <div class="input-group-prepend">
                             <span class="input-group-text">$</span>
-                        </div>
                         <input type="text" class="form-control" value="{{ number_format($total_income, 2) }}" readonly>
                     </div>
                 </div>
@@ -1390,7 +1340,7 @@
 <div class="mb-3">
     <label for="DonationTotal">Monetary Donation Total</label>
     <div class="mb-3">
-        <div class="input-group-prepend">
+        <div class="input-group">
             <span class="input-group-text">$</span>
     <input type="text" class="form-control"  name="DonationTotal" id="DonationTotal"
         data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1522,9 +1472,7 @@
                 <td>
                     <div class="mb-3">
                         <div class="input-group">
-                            <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
-                            </div>
                             <input type="text" class="form-control" name="OtherOfficeIncome{{ $row }}" id="OtherOfficeIncome{{ $row }}"
                                 oninput="ChangeOtherOfficeExpenses()" value="{{ $other_income_and_expenses_array[$row]['other_income'] ?? '' }}"
                                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
@@ -1534,9 +1482,7 @@
                 <td>
                     <div class="mb-3">
                         <div class="input-group">
-                            <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
-                            </div>
                             <input type="text" class="form-control" name="OtherOfficeExpenses{{ $row }}" id="OtherOfficeExpenses{{ $row }}"
                                 oninput="ChangeOtherOfficeExpenses()" value="{{ $other_income_and_expenses_array[$row]['other_expenses'] ?? '' }}"
                                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
@@ -1552,9 +1498,7 @@
                 <td>
                     <div class="mb-3">
                         <div class="input-group">
-                            <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
-                            </div>
                             <input type="text" class="form-control" value="{{ number_format($total_income, 2) }}" readonly>
                         </div>
                     </div>
@@ -1562,9 +1506,7 @@
                 <td>
                     <div class="mb-3">
                         <div class="input-group">
-                            <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
-                            </div>
                             <input type="text" class="form-control" value="{{ number_format($total_expenses, 2) }}" readonly>
                         </div>
                     </div>
@@ -1587,7 +1529,7 @@
                 Total Other Income
             </label>
             <div class="mb-3">
-                <div class="input-group-prepend">
+                <div class="input-group">
                     <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="OtherOfficeIncomeTotal" id="OtherOfficeIncomeTotal"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1602,7 +1544,7 @@
                 Total Other Expenses
             </label>
             <div class="mb-3">
-                <div class="input-group-prepend">
+                <div class="input-group">
                     <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="OtherOfficeExpenseTotal" id="OtherOfficeExpenseTotal"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1646,7 +1588,7 @@
     </div>
     <div class="col-sm-6 float-start">
             <div class="mb-3">
-                <div class="input-group-prepend">
+                <div class="input-group">
                     <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumMembershipDuesIncome" id="SumMembershipDuesIncome"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1658,7 +1600,7 @@
     </div>
     <div class="col-sm-6 float-start">
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumServiceProjectIncome" id="SumServiceProjectIncome"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1670,7 +1612,7 @@
     </div>
     <div class="col-sm-6 float-start">
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumPartyIncome" id="SumPartyIncome"
             data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1682,7 +1624,7 @@
     </div>
     <div class="col-sm-6 float-start">
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumMonetaryDonationIncome" id="SumMonetaryDonationIncome"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1694,7 +1636,7 @@
     </div>
     <div class="col-sm-6 float-start">
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumInternationalEventIncome" id="SumInternationalEventIncome"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1706,7 +1648,7 @@
     </div>
     <div class="col-sm-6 float-start">
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumOtherIncome" id="SumOtherIncome"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1719,7 +1661,7 @@
     </div>
     <div class="col-sm-6 float-start">
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumTotalIncome" id="SumTotalIncome"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1738,7 +1680,7 @@
     </div>
     <div class="col-sm-6 float-start">
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumMeetingRoomExpense" id="SumMeetingRoomExpense"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1755,7 +1697,7 @@
     </div>
     <div class="col-sm-6 float-start">
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
         <input type="text" class="form-control" name="SumChildrensSuppliesExpense" id="SumChildrensSuppliesExpense"
             data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1767,7 +1709,7 @@
     </div>
     <div class="col-sm-6 float-start">
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumPaidSittersExpense" id="SumPaidSittersExpense"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1779,7 +1721,7 @@
     </div>
     <div class="col-sm-6 float-start">
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumChildrensOtherExpense" id="SumChildrensOtherExpense"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1791,7 +1733,7 @@
     </div>
     <div class="col-sm-6 float-start">
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumTotalChildrensRoomExpense" id="SumTotalChildrensRoomExpense"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1810,7 +1752,7 @@
     </div>
     <div class="col-sm-6 float-start">
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumServiceProjectExpense" id="SumServiceProjectExpense"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1822,7 +1764,7 @@
     </div>
     <div class="col-sm-6 float-start">
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumDonationExpense" id="SumDonationExpense"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1834,7 +1776,7 @@
     </div>
     <div class="col-sm-6 float-start">
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumM2MExpense" id="SumM2MExpense"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1846,7 +1788,7 @@
     </div>
     <div class="col-sm-6 float-start">
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumTotalServiceProjectExpense" id="SumTotalServiceProjectExpense"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1859,7 +1801,7 @@
     </div>
     <div class="col-sm-6 float-start">
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumPartyExpense" id="SumPartyExpense"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1875,7 +1817,7 @@
     </div>
     <div class="col-sm-6 float-start">
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumPrintingExpense" id="SumPrintingExpense"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1887,7 +1829,7 @@
     </div>
     <div class="col-sm-6 float-start">
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumPostageExpense" id="SumPostageExpense"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1899,7 +1841,7 @@
     </div>
     <div class="col-sm-6 float-start">
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumPinsExpense" id="SumPinsExpense"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1911,7 +1853,7 @@
     </div>
     <div class="col-sm-6 float-start">
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumOtherOperatingExpense" id="SumOtherOperatingExpense"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1923,7 +1865,7 @@
     </div>
     <div class="col-sm-6 float-start">
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumOperatingExpense" id="SumOperatingExpense"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1935,7 +1877,7 @@
     </div>
     <div class="col-sm-6 float-start">
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumChapterReRegistrationExpense" id="SumChapterReRegistrationExpense"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1947,7 +1889,7 @@
     </div>
     <div class="col-sm-6 float-start">
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumInternationalEventExpense" id="SumInternationalEventExpense"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1959,7 +1901,7 @@
     </div>
     <div class="col-sm-6 float-start">
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumOtherExpense" id="SumOtherExpense"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1972,7 +1914,7 @@
     </div>
     <div class="col-sm-6 float-start">
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="SumTotalExpense" id="SumTotalExpense"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -1991,7 +1933,7 @@
         </div>
         <div class="col-sm-6 float-start">
             <div class="mb-3">
-                <div class="input-group-prepend">
+                <div class="input-group">
                     <span class="input-group-text">$</span>
                 <input type="text" class="form-control" name="SumTotalNetIncome" id="SumTotalNetIncome"
                     data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -2092,7 +2034,7 @@
                 @endif
             </label>
             <div class="mb-3">
-                <div class="input-group-prepend">
+                <div class="input-group">
                     <span class="input-group-text">$</span>
                     <input type="text" class="form-control" name="AmountReservedFromLastYear" id="AmountReservedFromLastYear" onchange="TreasuryBalanceChange()"
                            value="{{ $chFinancialReport->amount_reserved_from_previous_year }}"
@@ -2111,7 +2053,7 @@
                 @endif
             </label>
             <div class="mb-3">
-                <div class="input-group-prepend">
+                <div class="input-group">
                     <span class="input-group-text">$</span>
                     <input type="text" class="form-control" name="LastYearReportEnding" id="LastYearReportEnding"
                         value="{{$chFinancialReport['pre_balance'] }}"
@@ -2126,7 +2068,7 @@
                 Profit/Loss:
             </label>
             <div class="mb-3">
-                <div class="input-group-prepend">
+                <div class="input-group">
                     <span class="input-group-text">$</span>
             <input type="text"class="form-control" name="TotalNetIncome" id="TotalNetIncome"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -2143,7 +2085,7 @@
                 Ending Balance (Treasury Balance Now):
             </label>
             <div class="mb-3">
-                <div class="input-group-prepend">
+                <div class="input-group">
                     <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="TreasuryBalanceNow" id="TreasuryBalanceNow"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -2161,7 +2103,7 @@
                 @endif
             </label>
             <div class="mb-3">
-                <div class="input-group-prepend">
+                <div class="input-group">
                     <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="BankBalanceNow" id="BankBalanceNow" oninput="ChangeBankRec()" value="{{ $chFinancialReport->bank_balance_now }}"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
@@ -2222,9 +2164,7 @@
                 <td>
                     <div class="mb-3">
                         <div class="input-group">
-                            <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
-                            </div>
                             <input type="text" class="form-control" name="BankRecPaymentAmount{{ $row }}" id="BankRecPaymentAmount{{ $row }}"
                                 oninput="ChangeBankRec()" value="{{ $bank_rec_array[$row]['bank_rec_payment_amount'] ?? '' }}"
                                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
@@ -2234,9 +2174,7 @@
                 <td>
                     <div class="mb-3">
                         <div class="input-group">
-                            <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
-                            </div>
                             <input type="text" class="form-control" name="BankRecDepositAmount{{ $row }}" id="BankRecDepositAmount{{ $row }}"
                                 oninput="ChangeBankRec()" value="{{ $bank_rec_array[$row]['bank_rec_desposit_amount'] ?? '' }}"
                                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
@@ -2263,7 +2201,7 @@
                 Ending Balance (Treasury Balance Now):
             </label>
             <div class="mb-3">
-                <div class="input-group-prepend">
+                <div class="input-group">
                     <span class="input-group-text">$</span>
             <input type="text" class="form-control" name="TreasuryBalanceNowR" id="TreasuryBalanceNowR"
                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -2277,7 +2215,7 @@
             Reconciled Bank Balance:
         </label>
         <div class="mb-3">
-            <div class="input-group-prepend">
+            <div class="input-group">
                 <span class="input-group-text">$</span>
         <input type="text" class="form-control" name="ReconciledBankBalance" id="ReconciledBankBalance"
             data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
@@ -3161,11 +3099,9 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
 @push('scripts')
 
     @include('layouts.scripts.financialaccordion')
-        @include('layouts.scripts.financialsave')
-
+    @include('layouts.scripts.financialsave')
 
 <script>
-
 
 /* Disable fields and buttons  */
 $(document).ready(function () {
@@ -3224,1657 +3160,12 @@ document.querySelectorAll('.input-field-selector').forEach(function(element) {
 
 </script>
 
-{{-- <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        ChapterDuesQuestionsChange();
-    });
-
-    // Initial function calculation functions
-        ChangeChildrensRoomExpenses();
-        ChangeMemberCount();
-        ChapterDuesQuestionsChange();
-        ChangeMeetingFees();
-        ChangeServiceProjectExpenses();
-        ChangePartyExpenses();
-        ChangeOfficeExpenses();
-        ChangeInternationalEventExpense();
-        ChangeReRegistrationExpense();
-        ChangeDonationAmount();
-        ChangeOtherOfficeExpenses();
-        ChangeBankRec();
-        TreasuryBalanceChange();
-
-    function ChapterDuesQuestionsChange(){
-        var ChangedMeetingFees=false;
-        var ChargedMembersDifferently=false;
-        var MembersReducedDues=false;
-
-        var optChangeDuesValue = document.querySelector('input[name="optChangeDues"]:checked')?.value;
-        ChangedMeetingFees = optChangeDuesValue == "1";
-
-        var optNewOldDifferentValue = document.querySelector('input[name="optNewOldDifferent"]:checked')?.value;
-        ChargedMembersDifferently = optNewOldDifferentValue == "1";
-
-        var optNoFullDuesValue = document.querySelector('input[name="optNoFullDues"]:checked')?.value;
-        MembersReducedDues = optNoFullDuesValue == "1";
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-        if(ChangedMeetingFees){
-            document.getElementById("ifChangeDues").style.display = 'block';
-            document.getElementById("ifChangedDues1").style.visibility = 'visible';
-
-            document.getElementById("lblTotalNewMembers").innerHTML = "Total New Members (who paid OLD dues amount)"
-            document.getElementById("lblTotalRenewedMembers").innerHTML = "Total Renewed Members (who paid OLD dues amount)"
-        }
-        else{
-            document.getElementById("ifChangeDues").style.display = 'none';
-            document.getElementById("ifChangedDues1").style.visibility = 'hidden';
-
-            document.getElementById("TotalNewMembersNewFee").value = 0;
-            document.getElementById("TotalRenewedMembersNewFee").value = 0;
-
-            document.getElementById("lblTotalNewMembers").innerHTML = "Total New Members (who paid dues)"
-            document.getElementById("lblTotalRenewedMembers").innerHTML = "Total Renewed Members (who paid dues)"
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-        if(ChargedMembersDifferently){
-            document.getElementById("ifChangedDuesDifferentPerMemberType").style.display = 'block';
-
-            document.getElementById("lblMemberDues").innerHTML  = "Dues collected per New Member"
-            document.getElementById("lblNewMemberDues").innerHTML = "Dues collected per New Member (NEW Amount)"
-
-            if(ChangedMeetingFees){
-                document.getElementById("ifChangedDuesDifferentPerMemberType1").style.visibility = 'visible';
-            }
-            else{
-                document.getElementById("ifChangedDuesDifferentPerMemberType1").style.visibility = 'hidden';
-            }
-        }
-        else{
-            document.getElementById("ifChangedDuesDifferentPerMemberType").style.display = 'none';
-            document.getElementById("lblMemberDues").innerHTML = "Dues collected per Member"
-            document.getElementById("lblNewMemberDues").innerHTML = "Dues collected per Member (NEW Amount)"
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-        if(MembersReducedDues){
-            document.getElementById("ifMembersNoDues").style.display = 'block';
-        }
-        else{
-            document.getElementById("ifMembersNoDues").style.display = 'none';
-            document.getElementById("MembersNoDues").value = 0;
-            document.getElementById("TotalPartialDuesMembers").value = 0;
-            document.getElementById("TotalAssociateMembers").value = 0;
-            document.getElementById("PartialDuesMemberDues").value = 0;
-            document.getElementById("AssociateMemberDues").value = 0;
-        }
-
-        ChangeMemberCount();
-    }
-
-    function ChangeMeetingFees(){
-        var ManditoryFees;
-        var VoluntaryFees;
-        var TotalFees;
-
-        ManditoryFees = parseFloat(document.getElementById("ManditoryMeetingFeesPaid").value.replace(/,/g, '')) || 0;
-        VoluntaryFees = parseFloat(document.getElementById("VoluntaryDonationsPaid").value.replace(/,/g, '')) || 0;
-
-        TotalFees = (ManditoryFees + VoluntaryFees).toFixed(2);
-
-        document.getElementById("TotalMeetingRoomExpenses").value = TotalFees;
-        document.getElementById("SumMeetingRoomExpense").value = TotalFees;
-
-        ReCalculateSummaryTotal();
-    }
-
-    function ChangeMemberCount(){
-        var ChangedMeetingFees = document.querySelector('input[name="optChangeDues"]:checked') && document.querySelector('input[name="optChangeDues"]:checked').value == "1";
-        var ChargedMembersDifferently = document.querySelector('input[name="optNewOldDifferent"]:checked') && document.querySelector('input[name="optNewOldDifferent"]:checked').value == "1";
-        var MembersReducedDues = document.querySelector('input[name="optNoFullDues"]:checked') && document.querySelector('input[name="optNoFullDues"]:checked').value == "1";
-
-        var NewMembers = Number(document.getElementById("TotalNewMembers") ? document.getElementById("TotalNewMembers").value : 0);
-        var RenewedMembers = Number(document.getElementById("TotalRenewedMembers") ? document.getElementById("TotalRenewedMembers").value : 0);
-        var NewMembers2 = Number(document.getElementById("TotalNewMembersNewFee") ? document.getElementById("TotalNewMembersNewFee").value : 0);
-        var RenewedMembers2 = Number(document.getElementById("TotalRenewedMembersNewFee") ? document.getElementById("TotalRenewedMembersNewFee").value : 0);
-
-        var MemberDues = Number(document.getElementById("MemberDues") ? document.getElementById("MemberDues").value.replace(/[^0-9.-]+/g,"") : 0);
-        var NewMemberDues = Number(document.getElementById("NewMemberDues") ? document.getElementById("NewMemberDues").value.replace(/[^0-9.-]+/g,"") : 0);
-        var MemberDuesRenewal = Number(document.getElementById("MemberDuesRenewal") ? document.getElementById("MemberDuesRenewal").value.replace(/[^0-9.-]+/g,"") : 0);
-        var NewMemberDuesRenewal = Number(document.getElementById("NewMemberDuesRenewal") ? document.getElementById("NewMemberDuesRenewal").value.replace(/[^0-9.-]+/g,"") : 0);
-
-        var MembersNoDues = Number(document.getElementById("MembersNoDues") ? document.getElementById("MembersNoDues").value : 0);
-        var PartialDuesMembers = Number(document.getElementById("TotalPartialDuesMembers") ? document.getElementById("TotalPartialDuesMembers").value : 0);
-        var AssociateMembers = Number(document.getElementById("TotalAssociateMembers") ? document.getElementById("TotalAssociateMembers").value : 0);
-
-        var TotalMembers = NewMembers + RenewedMembers + MembersNoDues + AssociateMembers + PartialDuesMembers + NewMembers2 + RenewedMembers2;
-
-        document.getElementById("TotalMembers").value = TotalMembers;
-
-        var newMembersDues = NewMembers * MemberDues;
-        var renewalMembersDues = RenewedMembers * MemberDues;
-        var renewalMembersDuesDiff = RenewedMembers * MemberDuesRenewal;
-        var newMembersDuesNew = NewMembers2 * NewMemberDues;
-        var renewMembersDuesNew = RenewedMembers2 * NewMemberDues;
-        var renewMembersNewDuesDiff = RenewedMembers2 * NewMemberDuesRenewal;
-        var partialMembersDues = PartialDuesMembers * Number(document.getElementById("PartialDuesMemberDues").value.replace(/[^0-9.-]+/g,""));
-        var associateMembersDues = AssociateMembers * Number(document.getElementById("AssociateMemberDues").value.replace(/[^0-9.-]+/g,""));
-
-        if (ChangedMeetingFees && ChargedMembersDifferently) {
-            TotalFees = newMembersDues + renewalMembersDuesDiff + newMembersDuesNew + renewMembersNewDuesDiff + associateMembersDues + partialMembersDues;
-        } else if (ChargedMembersDifferently) {
-            TotalFees = newMembersDues + renewalMembersDuesDiff + associateMembersDues + partialMembersDues;
-        } else if (ChangedMeetingFees) {
-            TotalFees = newMembersDues + renewalMembersDues + newMembersDuesNew + renewMembersDuesNew + associateMembersDues + partialMembersDues;
-        } else {
-            TotalFees = newMembersDues + renewalMembersDues + associateMembersDues + partialMembersDues;
-        }
-
-        TotalFees = TotalFees.toFixed(2);
-
-        document.getElementById("TotalDues").value = TotalFees;
-        document.getElementById("SumMembershipDuesIncome").value = TotalFees;
-
-        ReCalculateSummaryTotal();
-    }
-
-    function ChangeChildrensRoomExpenses(){
-        var SupplyTotal = 0;
-        var OtherTotal = 0;
-
-        var table = document.getElementById("childrens-room");
-        var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-
-        for (var i = 0; i < rows.length; i++) {
-            var supplyValue = Number(rows[i].cells[1].querySelector('input').value.replace(/,/g, '')) || 0;
-            SupplyTotal += supplyValue;
-
-            var otherValue = Number(rows[i].cells[2].querySelector('input').value.replace(/,/g, '')) || 0;
-            OtherTotal += otherValue;
-        }
-
-        var TotalMisc = (SupplyTotal + OtherTotal).toFixed(2);
-        SupplyTotal = SupplyTotal.toFixed(2);
-        OtherTotal = OtherTotal.toFixed(2);
-
-        // Update totals in the footer
-        var footer = table.getElementsByTagName('tfoot')[0];
-        footer.getElementsByTagName('input')[0].value = SupplyTotal;
-        footer.getElementsByTagName('input')[1].value = OtherTotal;
-
-        // Update other totals
-        document.getElementById("SumChildrensOtherExpense").value = OtherTotal;
-        document.getElementById("SumChildrensSuppliesExpense").value = SupplyTotal;
-
-        var SumPaidSittersExpense = Number(document.getElementById("PaidBabySitters").value.replace(/,/g, '')).toFixed(2);
-        document.getElementById("SumPaidSittersExpense").value = SumPaidSittersExpense;
-
-        var TotalChildrensFees = (Number(TotalMisc) + Number(SumPaidSittersExpense)).toFixed(2);
-        document.getElementById("SumTotalChildrensRoomExpense").value = TotalChildrensFees;
-        document.getElementById("ChildrensRoomTotal").value = TotalChildrensFees;
-
-        ReCalculateSummaryTotal();
-    }
-
-    function AddChildrenExpenseRow() {
-        var ExpenseCount = parseInt(document.getElementById("ChildrensExpenseRowCount").value, 10);
-
-        var table = document.getElementById("childrens-room");
-        var tbody = table.getElementsByTagName('tbody')[0];
-        var row = tbody.insertRow(-1);
-
-        var cell1 = row.insertCell(0);
-        var cell2 = row.insertCell(1);
-        var cell3 = row.insertCell(2);
-
-        cell1.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="ChildrensRoomDesc${ExpenseCount}" id="ChildrensRoomDesc${ExpenseCount}"></div>`;
-        cell2.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ChildrensRoomSupplies${ExpenseCount}" id="ChildrensRoomSupplies${ExpenseCount}" oninput="ChangeChildrensRoomExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-        cell3.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ChildrensRoomOther${ExpenseCount}" id="ChildrensRoomOther${ExpenseCount}" oninput="ChangeChildrensRoomExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-
-        ExpenseCount++;
-        document.getElementById('ChildrensExpenseRowCount').value = ExpenseCount;
-
-        Inputmask().mask(document.querySelectorAll('#childrens-room .form-control'));
-    }
-
-    function DeleteChildrenExpenseRow() {
-        var ExpenseCount = parseInt(document.getElementById("ChildrensExpenseRowCount").value, 10);
-
-        if (ExpenseCount > 1) {
-            var table = document.getElementById("childrens-room");
-            var tbody = table.getElementsByTagName('tbody')[0];
-            tbody.deleteRow(-1);
-
-            ExpenseCount--;
-            document.getElementById('ChildrensExpenseRowCount').value = ExpenseCount;
-
-            ChangeChildrensRoomExpenses();
-        }
-    }
-
-    function ChangeServiceProjectExpenses() {
-        var ExpenseTotal = 0;
-        var IncomeTotal = 0;
-        var CharityTotal = 0;
-        var M2MTotal = 0;
-
-        var table = document.getElementById("service-projects");
-        var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-
-        for (var i = 0; i < rows.length; i++) {
-            var incomeValue = Number(rows[i].cells[1].querySelector('input').value.replace(/,/g, '')) || 0;
-            IncomeTotal += incomeValue;
-
-            var expenseValue = Number(rows[i].cells[2].querySelector('input').value.replace(/,/g, '')) || 0;
-            ExpenseTotal += expenseValue;
-
-            var charityValue = Number(rows[i].cells[3].querySelector('input').value.replace(/,/g, '')) || 0;
-            CharityTotal += charityValue;
-
-            var m2mValue = Number(rows[i].cells[4].querySelector('input').value.replace(/,/g, '')) || 0;
-            M2MTotal += m2mValue;
-        }
-
-        IncomeTotal = IncomeTotal.toFixed(2);
-        ExpenseTotal = ExpenseTotal.toFixed(2);
-        CharityTotal = CharityTotal.toFixed(2);
-        M2MTotal = M2MTotal.toFixed(2);
-
-        var footer = table.getElementsByTagName('tfoot')[0];
-        footer.getElementsByTagName('input')[0].value = IncomeTotal;
-        footer.getElementsByTagName('input')[1].value = ExpenseTotal;
-        footer.getElementsByTagName('input')[2].value = CharityTotal;
-        footer.getElementsByTagName('input')[3].value = M2MTotal;
-
-        document.getElementById("ServiceProjectIncomeTotal").value = IncomeTotal;
-        document.getElementById("SumServiceProjectIncome").value = IncomeTotal;
-
-        document.getElementById("SumServiceProjectExpense").value = ExpenseTotal;
-        document.getElementById("SumDonationExpense").value = CharityTotal;
-        document.getElementById("SumM2MExpense").value = M2MTotal;
-
-        var TotalServiceProjectFees = parseFloat(ExpenseTotal) + parseFloat(CharityTotal) + parseFloat(M2MTotal);
-        TotalServiceProjectFees = TotalServiceProjectFees.toFixed(2);
-        document.getElementById("ServiceProjectExpenseTotal").value = TotalServiceProjectFees;
-        document.getElementById("SumTotalServiceProjectExpense").value = TotalServiceProjectFees;
-
-        ReCalculateSummaryTotal();
-    }
-
-    function AddServiceProjectRow() {
-        var ExpenseCount = parseInt(document.getElementById("ServiceProjectRowCount").value);
-        var table = document.getElementById("service-projects");
-        var tbody = table.getElementsByTagName('tbody')[0];
-        var row = tbody.insertRow(-1);
-
-        var cell1 = row.insertCell(0);
-        var cell2 = row.insertCell(1);
-        var cell3 = row.insertCell(2);
-        var cell4 = row.insertCell(3);
-        var cell5 = row.insertCell(4);
-
-        cell1.innerHTML = `<div class="mb-3"><textarea class="form-control" rows="4" name="ServiceProjectDesc${ExpenseCount}" id="ServiceProjectDesc${ExpenseCount}"></textarea></div>`;
-        cell2.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ServiceProjectIncome${ExpenseCount}" id="ServiceProjectIncome${ExpenseCount}" oninput="ChangeServiceProjectExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-        cell3.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ServiceProjectSupplies${ExpenseCount}" id="ServiceProjectSupplies${ExpenseCount}" oninput="ChangeServiceProjectExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-        cell4.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ServiceProjectDonatedCharity${ExpenseCount}" id="ServiceProjectDonatedCharity${ExpenseCount}" oninput="ChangeServiceProjectExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-        cell5.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ServiceProjectDonatedM2M${ExpenseCount}" id="ServiceProjectDonatedM2M${ExpenseCount}" oninput="ChangeServiceProjectExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-
-        ExpenseCount++;
-        document.getElementById('ServiceProjectRowCount').value = ExpenseCount;
-
-        Inputmask().mask(document.querySelectorAll('#service-projects .form-control'));
-    }
-
-    function DeleteServiceProjectRow() {
-        var ExpenseCount = parseInt(document.getElementById("ServiceProjectRowCount").value, 10);
-
-        if (ExpenseCount > 1) {
-            var table = document.getElementById("service-projects");
-            var tbody = table.getElementsByTagName('tbody')[0];
-            tbody.deleteRow(-1);
-
-            ExpenseCount--;
-            document.getElementById('ServiceProjectRowCount').value = ExpenseCount;
-
-            ChangeServiceProjectExpenses();
-        }
-    }
-
-    function ChangePartyExpenses() {
-        var IncomeTotal = 0;
-        var ExpenseTotal = 0;
-
-        var table = document.getElementById("party-expenses");
-        var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-
-        for (var i = 0; i < rows.length; i++) {
-            var incomeValue = Number(rows[i].cells[1].querySelector('input').value.replace(/,/g, '')) || 0;
-            IncomeTotal += incomeValue;
-
-            var expenseValue = Number(rows[i].cells[2].querySelector('input').value.replace(/,/g, '')) || 0;
-            ExpenseTotal += expenseValue;
-        }
-
-        IncomeTotal = IncomeTotal.toFixed(2);
-        ExpenseTotal = ExpenseTotal.toFixed(2);
-
-        // Update totals in the footer
-        var footer = table.getElementsByTagName('tfoot')[0];
-        footer.getElementsByTagName('input')[0].value = IncomeTotal;
-        footer.getElementsByTagName('input')[1].value = ExpenseTotal;
-
-        // Update other totals
-        document.getElementById("PartyIncomeTotal").value = IncomeTotal;
-        document.getElementById("PartyExpenseTotal").value = ExpenseTotal;
-        document.getElementById("SumPartyIncome").value = IncomeTotal;
-        document.getElementById("SumPartyExpense").value = ExpenseTotal;
-
-        ReCalculateSummaryTotal();
-    }
-
-function AddPartyExpenseRow() {
-        var ExpenseCount = parseInt(document.getElementById("PartyExpenseRowCount").value);
-        var table = document.getElementById("party-expenses");
-        var tbody = table.getElementsByTagName('tbody')[0];
-        var row = tbody.insertRow(-1);
-
-        var cell1 = row.insertCell(0);
-        var cell2 = row.insertCell(1);
-        var cell3 = row.insertCell(2);
-
-        cell1.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="PartyDesc${ExpenseCount}" id="PartyDesc${ExpenseCount}"></div>`;
-        cell2.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="PartyIncome${ExpenseCount}" id="PartyIncome${ExpenseCount}" oninput="ChangePartyExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-        cell3.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="PartyExpenses${ExpenseCount}" id="PartyExpenses${ExpenseCount}" oninput="ChangePartyExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-
-        ExpenseCount++;
-        document.getElementById('PartyExpenseRowCount').value = ExpenseCount;
-
-        Inputmask().mask(document.querySelectorAll('#party-expenses .form-control'));
-    }
-
-    function DeletePartyExpenseRow() {
-        var ExpenseCount = parseInt(document.getElementById("PartyExpenseRowCount").value);
-
-        if (ExpenseCount > 1) {
-            var table = document.getElementById("party-expenses");
-            var tbody = table.getElementsByTagName('tbody')[0];
-            tbody.deleteRow(-1);
-
-            ExpenseCount--;
-            document.getElementById('PartyExpenseRowCount').value = ExpenseCount;
-
-            ChangePartyExpenses();
-        }
-    }
-
-    function ChangeOfficeExpenses(){
-    var totalExpenses = 0;
-    var table = document.getElementById("office-expenses");
-    var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-
-    // Sum up all the expenses
-    for (var i = 0; i < rows.length; i++) {
-        var expenseValue = Number(rows[i].cells[1].querySelector('input').value.replace(/,/g, '')) || 0;
-        totalExpenses += expenseValue;
-    }
-
-    // Update totals in the footer
-    var footer = table.getElementsByTagName('tfoot')[0];
-    footer.getElementsByTagName('input')[0].value = totalExpenses.toFixed(2);
-
-    // Get other expenses and format them correctly
-    var SumPrintingExpense = Number(document.getElementById("PrintingCosts").value.replace(/,/g, '')) || 0;
-    var SumPostageExpense = Number(document.getElementById("PostageCosts").value.replace(/,/g, '')) || 0;
-    var SumPinsExpense = Number(document.getElementById("MembershipPins").value.replace(/,/g, '')) || 0;
-
-    // Calculate OperatingTotal (before formatting)
-    var OperatingTotal = totalExpenses + SumPrintingExpense + SumPostageExpense + SumPinsExpense;
-
-    // Update the fields with formatted values
-    document.getElementById("SumOtherOperatingExpense").value = totalExpenses.toFixed(2);
-    document.getElementById("SumPrintingExpense").value = SumPrintingExpense.toFixed(2);
-    document.getElementById("SumPostageExpense").value = SumPostageExpense.toFixed(2);
-    document.getElementById("SumPinsExpense").value = SumPinsExpense.toFixed(2);
-
-    // Set the OperatingTotal
-    // Also remove this line as SumTotalChildrensRoomExpense is not defined in this function:
-    document.getElementById("SumOperatingExpense").value = OperatingTotal.toFixed(2);
-    document.getElementById("TotalOperatingExpense").value = OperatingTotal.toFixed(2);
-
-    // Call summary recalculation
-    ReCalculateSummaryTotal();
-}
-
-    function AddOfficeExpenseRow() {
-        var ExpenseCount = document.getElementById("OfficeExpenseRowCount").value;
-        var table = document.getElementById("office-expenses");
-        var tbody = table.getElementsByTagName('tbody')[0];
-        var row = tbody.insertRow(-1);
-
-        var cell1 = row.insertCell(0);
-        var cell2 = row.insertCell(1);
-
-        cell1.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="OfficeDesc${ExpenseCount}" id="OfficeDesc${ExpenseCount}"></div>`;
-        cell2.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="OfficeExpenses${ExpenseCount}" id="OfficeExpenses${ExpenseCount}" oninput="ChangeOfficeExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-
-        ExpenseCount++;
-        document.getElementById('OfficeExpenseRowCount').value = ExpenseCount;
-
-        Inputmask().mask(document.querySelectorAll('#office-expenses .form-control'));
-    }
-
-    function DeleteOfficeExpenseRow() {
-        var ExpenseCount = document.getElementById("OfficeExpenseRowCount").value;
-
-        if (ExpenseCount > 1) {
-            var table = document.getElementById("office-expenses");
-            var tbody = table.getElementsByTagName('tbody')[0];
-            tbody.deleteRow(-1);
-
-            ExpenseCount--;
-            document.getElementById('OfficeExpenseRowCount').value = ExpenseCount;
-
-            ChangeOfficeExpenses();
-        }
-    }
-
-    function ChangeReRegistrationExpense(){
-        var ReRegistrationFee=0;
-
-        ReRegistrationFee = Number(document.getElementById("AnnualRegistrationFee").value);
-
-        document.getElementById("SumChapterReRegistrationExpense").value = ReRegistrationFee.toFixed(2);
-
-        ReCalculateSummaryTotal();
-    }
-
-    function ChangeInternationalEventExpense(){
-        var ExpenseTotal=0;
-        var IncomeTotal=0;
-
-        var table=document.getElementById("international_events");
-        var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-
-        for (var i = 0; i < rows.length; i++) {
-            var incomeValue = Number(rows[i].cells[1].querySelector('input').value.replace(/,/g, '')) || 0;
-            IncomeTotal += incomeValue;
-
-            var expenseValue = Number(rows[i].cells[2].querySelector('input').value.replace(/,/g, '')) || 0;
-            ExpenseTotal += expenseValue;
-        }
-
-        IncomeTotal = IncomeTotal.toFixed(2);
-        ExpenseTotal = ExpenseTotal.toFixed(2);
-
-        var footer = table.getElementsByTagName('tfoot')[0];
-        footer.getElementsByTagName('input')[0].value = IncomeTotal;
-        footer.getElementsByTagName('input')[1].value = ExpenseTotal;
-
-        document.getElementById("InternationalEventIncomeTotal").value = IncomeTotal;
-        document.getElementById("InternationalEventExpenseTotal").value = ExpenseTotal;
-
-        document.getElementById("SumInternationalEventIncome").value = IncomeTotal;
-        document.getElementById("SumInternationalEventExpense").value = ExpenseTotal;
-
-        ReCalculateSummaryTotal();
-    }
-
-    function AddInternationalEventRow() {
-        var ExpenseCount = document.getElementById("InternationalEventRowCount").value;
-        var table = document.getElementById("international_events");
-        var tbody = table.getElementsByTagName('tbody')[0];
-        var row = tbody.insertRow(-1);
-
-        var cell1 = row.insertCell(0);
-        var cell2 = row.insertCell(1);
-        var cell3 = row.insertCell(2);
-
-        cell1.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="InternationalEventDesc${ExpenseCount}" id="InternationalEventDesc${ExpenseCount}"></div>`;
-        cell2.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="InternationalEventIncome${ExpenseCount}" id="InternationalEventIncome${ExpenseCount}" oninput="ChangeInternationalEventExpense()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-        cell3.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="InternationalEventExpense${ExpenseCount}" id="InternationalEventExpense${ExpenseCount}" oninput="ChangeInternationalEventExpense()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-
-        ExpenseCount++;
-        document.getElementById('InternationalEventRowCount').value = ExpenseCount;
-
-        Inputmask().mask(document.querySelectorAll('#international_events .form-control'));
-    }
-
-    function DeleteInternationalEventRow() {
-        var ExpenseCount = document.getElementById("InternationalEventRowCount").value;
-
-        if (ExpenseCount > 1) {
-            var table = document.getElementById("international_events");
-            var tbody = table.getElementsByTagName('tbody')[0];
-            tbody.deleteRow(-1);
-
-            ExpenseCount--;
-            document.getElementById('InternationalEventRowCount').value = ExpenseCount;
-
-            ChangeInternationalEventExpense();
-        }
-    }
-
-    function ChangeDonationAmount() {
-    var IncomeTotal = 0;
-    var table = document.getElementById("donation-income");
-    var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-
-    for (var i = 0; i < rows.length; i++) {
-        var incomeValue = Number(rows[i].cells[3].querySelector('input').value.replace(/,/g, '')) || 0;
-        IncomeTotal += incomeValue;
-    }
-
-    var footer = table.getElementsByTagName('tfoot')[0];
-    footer.getElementsByTagName('input')[0].value = IncomeTotal.toFixed(2);
-
-    document.getElementById("DonationTotal").value = IncomeTotal;
-    document.getElementById("SumMonetaryDonationIncome").value = IncomeTotal;
-}
-
-    function AddMonDonationRow() {
-        var ExpenseCount = document.getElementById("MonDonationRowCount").value;
-        var table = document.getElementById("donation-income");
-        var tbody = table.getElementsByTagName('tbody')[0];
-        var row = tbody.insertRow(-1);
-
-        var cell1 = row.insertCell(0);
-        var cell2 = row.insertCell(1);
-        var cell3 = row.insertCell(2);
-        var cell4 = row.insertCell(3);
-
-        cell1.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="DonationDesc${ExpenseCount}" id="DonationDesc${ExpenseCount}"></div>`;
-        cell2.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="DonorInfo${ExpenseCount}" id="DonorInfo${ExpenseCount}"></div>`;
-        cell3.innerHTML = `<div class="mb-3"><input type="date" class="form-control" name="MonDonationDate${ExpenseCount}" id="MonDonationDate${ExpenseCount}"></div>`;
-        cell4.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="DonationAmount${ExpenseCount}" id="DonationAmount${ExpenseCount}" oninput="ChangeDonationAmount()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-
-        ExpenseCount++;
-        document.getElementById('MonDonationRowCount').value = ExpenseCount;
-
-        Inputmask().mask(document.querySelectorAll('#donation-income .form-control'));
-    }
-
-    function DeleteMonDonationRow() {
-        var ExpenseCount = document.getElementById("MonDonationRowCount").value;
-
-        if (ExpenseCount > 1) {
-            var table = document.getElementById("donation-income");
-            var tbody = table.getElementsByTagName('tbody')[0];
-            tbody.deleteRow(-1);
-
-            ExpenseCount--;
-            document.getElementById('MonDonationRowCount').value = ExpenseCount;
-
-            ChangeDonationAmount();
-        }
-    }
-
-    function AddNonMonDonationRow() {
-        var ExpenseCount = document.getElementById("NonMonDonationRowCount").value;
-        var table = document.getElementById("donation-goods");
-        var row = table.insertRow(-1);
-
-        var cell1 = row.insertCell(0);
-        var cell2 = row.insertCell(1);
-        var cell3 = row.insertCell(2);
-
-        cell1.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="NonMonDonationDesc${ExpenseCount}" id="NonMonDonationDesc${ExpenseCount}"></div>`;
-        cell2.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="NonMonDonorInfo${ExpenseCount}" id="NonMonDonorInfo${ExpenseCount}"></div>`;
-        cell3.innerHTML = `<div class="mb-3"><input type="date" class="form-control" name="NonMonDonationDate${ExpenseCount}" id="NonMonDonationDate${ExpenseCount}"></div>`;
-
-        ExpenseCount++;
-        document.getElementById('NonMonDonationRowCount').value = ExpenseCount;
-    }
-
-    function DeleteNonMonDonationRow() {
-        var ExpenseCount = document.getElementById("NonMonDonationRowCount").value;
-
-        if (ExpenseCount > 1) {
-            document.getElementById("donation-goods").deleteRow(ExpenseCount - 1);
-            ExpenseCount--;        // Update the expense count
-            document.getElementById('NonMonDonationRowCount').value = ExpenseCount;
-
-            if (ExpenseCount == 1) {
-                document.querySelector('.btn-danger').setAttribute('disabled', 'disabled');
-            }
-        }
-    }
-
-    function ChangeOtherOfficeExpenses() {
-        var ExpenseTotal = 0;
-        var IncomeTotal = 0;
-
-        var table = document.getElementById("other-office-expenses");
-        var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-
-        for (var i = 0; i < rows.length; i++) {
-            var incomeValue = Number(rows[i].cells[1].querySelector('input').value.replace(/,/g, '')) || 0;
-            IncomeTotal += incomeValue;
-
-            var expenseValue = Number(rows[i].cells[2].querySelector('input').value.replace(/,/g, '')) || 0;
-            ExpenseTotal += expenseValue;
-        }
-
-        IncomeTotal = IncomeTotal.toFixed(2);
-        ExpenseTotal = ExpenseTotal.toFixed(2);
-
-        var footer = table.getElementsByTagName('tfoot')[0];
-        footer.getElementsByTagName('input')[0].value = IncomeTotal;
-        footer.getElementsByTagName('input')[1].value = ExpenseTotal;
-
-        document.getElementById("OtherOfficeExpenseTotal").value = ExpenseTotal;
-        document.getElementById("OtherOfficeIncomeTotal").value = IncomeTotal;
-        document.getElementById("SumOtherIncome").value = IncomeTotal;
-        document.getElementById("SumOtherExpense").value = ExpenseTotal;
-
-        ReCalculateSummaryTotal();
-    }
-
-    function AddOtherOfficeExpenseRow() {
-        var ExpenseCount = document.getElementById("OtherOfficeExpenseRowCount").value;
-        var table = document.getElementById("other-office-expenses");
-        var tbody = table.getElementsByTagName('tbody')[0];
-        var row = tbody.insertRow(-1);
-
-        var cell1 = row.insertCell(0);
-        var cell2 = row.insertCell(1);
-        var cell3 = row.insertCell(2);
-
-        cell1.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="OtherOfficeDesc${ExpenseCount}" id="OtherOfficeDesc${ExpenseCount}"></div>`;
-        cell2.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="OtherOfficeIncome${ExpenseCount}" id="OtherOfficeIncome${ExpenseCount}" oninput="ChangeOtherOfficeExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-        cell3.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="OtherOfficeExpenses${ExpenseCount}" id="OtherOfficeExpenses${ExpenseCount}" oninput="ChangeOtherOfficeExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-
-        ExpenseCount++;
-        document.getElementById('OtherOfficeExpenseRowCount').value = ExpenseCount;
-
-        Inputmask().mask(document.querySelectorAll('#other-office-expenses .form-control'));
-    }
-
-    function DeleteOtherOfficeExpenseRow() {
-        var ExpenseCount = document.getElementById("OtherOfficeExpenseRowCount").value;
-
-        if (ExpenseCount > 1) {
-            var table = document.getElementById("other-office-expenses");
-            var tbody = table.getElementsByTagName('tbody')[0];
-            tbody.deleteRow(-1);
-
-            ExpenseCount--;
-            document.getElementById('OtherOfficeExpenseRowCount').value = ExpenseCount;
-
-            ChangeOtherOfficeExpenses();
-
-        }
-    }
-
-    function TreasuryBalanceChange() {
-        var TreasuryBalance = parseFloat(document.getElementById("AmountReservedFromLastYear").value.replace(/,/g, '')) || 0;
-
-        document.getElementById("AmountReservedFromLastYear").value = TreasuryBalance.toFixed(2);
-
-        ReCalculateSummaryTotal();
-    }
-
-    function ChangeBankRec() {
-        var PaymentTotal = 0;
-        var DepositTotal = 0;
-
-        var table = document.getElementById("bank-rec");
-
-        for (var i = 1, row; row = table.rows[i]; i++) {
-            // Payment Amount
-            var paymentInput = row.querySelector('input[name^="BankRecPaymentAmount"]');
-            var paymentValue = paymentInput ? parseFloat(paymentInput.value.replace(/,/g, '')) || 0 : 0;
-            PaymentTotal += paymentValue;
-
-            // Deposit Amount
-            var depositInput = row.querySelector('input[name^="BankRecDepositAmount"]');
-            var depositValue = depositInput ? parseFloat(depositInput.value.replace(/,/g, '')) || 0 : 0;
-            DepositTotal += depositValue;
-        }
-
-        var BankBalanceNow = parseFloat(document.getElementById("BankBalanceNow").value.replace(/,/g, '')) || 0;
-
-        var TotalFees = (BankBalanceNow - PaymentTotal + DepositTotal).toFixed(2);
-        document.getElementById("ReconciledBankBalance").value = TotalFees;
-
-        var TreasuryBalanceNow = parseFloat(document.getElementById("TreasuryBalanceNow").value.replace(/,/g, '')) || 0;
-
-        var alertDiv = document.getElementById("ReconciliationAlert");
-        var warningDiv = document.getElementById("ReconciledBankBalanceWarning");
-
-        if (TotalFees != TreasuryBalanceNow) {
-            alertDiv.style.display = "block";
-            warningDiv.innerText = "Reconciled Bank Balance does not match treasury balance now. These numbers must match for your report to be in balance";
-            warningDiv.style.borderStyle = "none";
-        } else {
-            alertDiv.style.display = "none";
-        }
-    }
-
-    function AddBankRecRow(){
-        var ExpenseCount = document.getElementById("BankRecRowCount").value;
-
-        var table = document.getElementById("bank-rec");
-        var row = table.insertRow(-1);
-
-        var cell1 = row.insertCell(0);
-        var cell2 = row.insertCell(1);
-        var cell3 = row.insertCell(2);
-        var cell4 = row.insertCell(3);
-        var cell5 = row.insertCell(4);
-
-        cell1.innerHTML = `<div class="mb-3"><input type="date" class="form-control" name="BankRecDate${ExpenseCount}" id="BankRecDate${ExpenseCount}" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $bank_rec_array[$row]['bank_rec_date'] ?? '' }}"></div>`;
-        cell2.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="BankRecCheckNo${ExpenseCount}" id="BankRecCheckNo${ExpenseCount}"  oninput="ChangeBankRec()"></div>`;
-        cell3.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="BankRecDesc${ExpenseCount}" id="BankRecDesc${ExpenseCount}"></div>`;
-        cell4.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="BankRecPaymentAmount${ExpenseCount}" id="BankRecPaymentAmount${ExpenseCount}" oninput="ChangeBankRec()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-        cell5.innerHTML = `<div class="mb-3"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="BankRecDepositAmount${ExpenseCount}" id="BankRecDepositAmount${ExpenseCount}" oninput="ChangeBankRec()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-
-        ExpenseCount++;
-        document.getElementById('BankRecRowCount').value = ExpenseCount;
-
-        Inputmask().mask(document.querySelectorAll('[data-inputmask]'));
-    }
-
-    function DeleteBankRecRow() {
-        var ExpenseCount = document.getElementById("BankRecRowCount").value;
-
-        if (ExpenseCount > 1) {
-            var table = document.getElementById("bank-rec");
-            table.deleteRow(ExpenseCount - 1);
-            ExpenseCount--;
-            document.getElementById('BankRecRowCount').value = ExpenseCount;
-            ChangeBankRec();
-
-            if (ExpenseCount == 1) {
-                document.querySelector('.btn-danger').setAttribute('disabled', 'disabled');
-            }
-        }
-    }
-
-    function ReCalculateSummaryTotal() {
-        // Helper function to remove commas and convert to number
-        function parseNumber(value) {
-            return Number(value.replace(/,/g, ''));
-        }
-
-        // Initialize summary items
-        var SumOtherIncome = 0;
-        var SumMeetingRoomExpense = 0;
-        var SumTotalChildrensRoomExpense = 0;
-        var ServiceIncomeTotal = 0;
-        var ServiceExpenseTotal = 0;
-        var SumOtherExpense = 0;
-        var SumOtherOperatingExpense = 0;
-        var SumOperatingExpense = 0;
-        var SumTotalExpense = 0;
-        var SumTotalIncome = 0;
-        var SumTotalNetIncome = 0;
-        var SumPartyExpense = 0;
-        var SumPartyIncome = 0;
-        var SumInternationalEventExpense = 0;
-        var SumInternationalEventIncome = 0;
-        var SumMonetaryDonationIncome = 0;
-        var SumChapterReRegistrationExpense = 0;
-        var TreasuryBalance = 0;
-        var TreasuryBalanceNow = 0;
-
-        // Retrieve and sanitize input values
-        SumMeetingRoomExpense = parseNumber(document.getElementById("SumMeetingRoomExpense").value);
-        SumMembershipDuesIncome = parseNumber(document.getElementById("SumMembershipDuesIncome").value);
-        SumTotalChildrensRoomExpense = parseNumber(document.getElementById("SumTotalChildrensRoomExpense").value);
-        ServiceIncomeTotal = parseNumber(document.getElementById("SumServiceProjectIncome").value);
-        ServiceExpenseTotal = parseNumber(document.getElementById("SumTotalServiceProjectExpense").value);
-        SumPartyIncome = parseNumber(document.getElementById("SumPartyIncome").value);
-        SumPartyExpense = parseNumber(document.getElementById("SumPartyExpense").value);
-        SumOtherIncome = parseNumber(document.getElementById("SumOtherIncome").value);
-        SumOtherExpense = parseNumber(document.getElementById("SumOtherExpense").value);
-        SumOtherOperatingExpense = parseNumber(document.getElementById("SumOtherOperatingExpense").value);
-        SumOperatingExpense = parseNumber(document.getElementById("SumOperatingExpense").value);
-        SumInternationalEventExpense = parseNumber(document.getElementById("SumInternationalEventExpense").value);
-        SumInternationalEventIncome = parseNumber(document.getElementById("SumInternationalEventIncome").value);
-        SumMonetaryDonationIncome = parseNumber(document.getElementById("SumMonetaryDonationIncome").value);
-        SumChapterReRegistrationExpense = parseNumber(document.getElementById("SumChapterReRegistrationExpense").value);
-        // TreasuryBalance = parseNumber(document.getElementById("SumAmountReservedFromPreviousYear").value);
-        TreasuryBalance = parseNumber(document.getElementById("AmountReservedFromLastYear").value);
-
-
-        // Perform calculations
-        SumTotalExpense = SumTotalChildrensRoomExpense + SumMeetingRoomExpense + ServiceExpenseTotal + SumOtherExpense + SumPartyExpense + SumOperatingExpense + SumInternationalEventExpense + SumChapterReRegistrationExpense;
-        SumTotalIncome = ServiceIncomeTotal + SumOtherIncome + SumPartyIncome + SumMembershipDuesIncome + SumInternationalEventIncome + SumMonetaryDonationIncome;
-
-        TreasuryBalanceNow = TreasuryBalance - SumTotalExpense + SumTotalIncome;
-        SumTotalNetIncome = SumTotalIncome - SumTotalExpense;
-
-        // Update values in the DOM
-        document.getElementById("SumTotalExpense").value = SumTotalExpense.toFixed(2);
-        document.getElementById("SumTotalIncome").value = SumTotalIncome.toFixed(2);
-        document.getElementById("TotalNetIncome").value = SumTotalNetIncome.toFixed(2);
-        document.getElementById("SumTotalNetIncome").value = SumTotalNetIncome.toFixed(2);
-        document.getElementById("TreasuryBalanceNow").value = TreasuryBalanceNow.toFixed(2);
-        document.getElementById("TreasuryBalanceNowR").value = TreasuryBalanceNow.toFixed(2);
-        // document.getElementById("SumTreasuryBalanceNow").value = TreasuryBalanceNow.toFixed(2);
-
-        // Call other functions if necessary
-        ChangeBankRec();
-    }
-
-</script>
 <script>
-
-window.addEventListener('load', function() {
-    ToggleReceiveCompensationExplanation();
-    ToggleFinancialBenefitExplanation();
-    ToggleInfluencePoliticalExplanation();
-    ToggleVoteAllActivitiesExplanation();
-    ToggleBoughtPinsExplanation();
-    ToggleBoughtMerchExplanation();
-    ToggleOfferedMerchExplanation();
-    ToggleByLawsAvailableExplanation();
-    ToggleChildOutingsExplanation();
-    ToggleMotherOutingsExplanation();
-    ToggleMeetingSpeakersExplanation();
-    ToggleActivityOtherExplanation();
-    ToggleContributionsNotRegNPExplanation();
-    TogglePerformServiceProjectExplanation();
-    ToggleFileIRSExplanation();
-    ToggleBankStatementIncludedExplanation();
-    TogglePlaygroupsExplanation();
-    ToggleParkDaysExplanation();
-    ToggleSisterChapterExplanation();
-    // toggleAwardBlocks();
-
-});
-
-    function ToggleReceiveCompensationExplanation() {
-        var selectedRadio = document.querySelector('input[name="ReceiveCompensation"]:checked');
-        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 1 */
-
-        if (selectedValue == "1") {
-            $('#ReceiveCompensationExplanation').addClass('tx-cls');
-            document.getElementById("divReceiveCompensationExplanation").style.display = 'block'; // If "Yes" is selected
-        } else {
-            $('#ReceiveCompensationExplanation').removeClass('tx-cls');
-            document.getElementById("divReceiveCompensationExplanation").style.display = 'none'; // If "No" is selected
-        }
-    }
-
-    function ToggleFinancialBenefitExplanation() {
-        var selectedRadio = document.querySelector('input[name="FinancialBenefit"]:checked');
-        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 2 */
-
-        if (selectedValue == "1") {
-            $('#FinancialBenefitExplanation').addClass('tx-cls');
-            document.getElementById("divFinancialBenefitExplanation").style.display = 'block'; // If "Yes" is selected
-        } else {
-            $('#FinancialBenefitExplanation').removeClass('tx-cls');
-            document.getElementById("divFinancialBenefitExplanation").style.display = 'none'; // If "No" is selected
-        }
-    }
-
-    function ToggleInfluencePoliticalExplanation() {
-        var selectedRadio = document.querySelector('input[name="InfluencePolitical"]:checked');
-        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 3 */
-
-        if (selectedValue == "1") {
-            $('#InfluencePoliticalExplanation').addClass('tx-cls');
-            document.getElementById("divInfluencePoliticalExplanation").style.display = 'block'; // If "Yes" is selected
-        } else {
-            $('#InfluencePoliticalExplanation').removeClass('tx-cls');
-            document.getElementById("divInfluencePoliticalExplanation").style.display = 'none'; // If "No" is selected
-        }
-    }
-
-    function ToggleVoteAllActivitiesExplanation() {
-        var selectedRadio = document.querySelector('input[name="VoteAllActivities"]:checked');
-        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 4 */
-
-        if (selectedValue == "0") {
-            $('#VoteAllActivitiesExplanation').addClass('tx-cls');
-            document.getElementById("divVoteAllActivitiesExplanation").style.display = 'block'; // If "No" is selected
-        } else {
-            $('#VoteAllActivitiesExplanation').removeClass('tx-cls');
-            document.getElementById("divVoteAllActivitiesExplanation").style.display = 'none'; // If "Yes" is selected
-        }
-    }
-
-    function ToggleBoughtPinsExplanation() {
-        var selectedRadio = document.querySelector('input[name="BoughtPins"]:checked');
-        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 5 */
-
-        if (selectedValue == "0") {
-            $('#BoughtPinsExplanation').addClass('tx-cls');
-            document.getElementById("divBoughtPinsExplanation").style.display = 'block'; // If "No" is selected
-        } else {
-            $('#BoughtPinsExplanation').removeClass('tx-cls');
-            document.getElementById("divBoughtPinsExplanation").style.display = 'none'; // If "Yes" is selected
-        }
-    }
-
-    function ToggleBoughtMerchExplanation() {
-        var selectedRadio = document.querySelector('input[name="BoughtMerch"]:checked');
-        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 6 */
-
-        if (selectedValue == "0") {
-            $('#BoughtMerchExplanation').addClass('tx-cls');
-            document.getElementById("divBoughtMerchExplanation").style.display = 'block'; // If "No" is selected
-        } else {
-            $('#BoughtMerchExplanation').removeClass('tx-cls');
-            document.getElementById("divBoughtMerchExplanation").style.display = 'none'; // If "Yes" is selected
-        }
-    }
-
-    function ToggleOfferedMerchExplanation() {
-        var selectedRadio = document.querySelector('input[name="OfferedMerch"]:checked');
-        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 7 */
-
-        if (selectedValue == "0") {
-            $('#OfferedMerchExplanation').addClass('tx-cls');
-            document.getElementById("divOfferedMerchExplanation").style.display = 'block'; // If "No" is selected
-        } else {
-            $('#OfferedMerchExplanation').removeClass('tx-cls');
-            document.getElementById("divOfferedMerchExplanation").style.display = 'none'; // If "Yes" is selected
-        }
-    }
-
-    function ToggleByLawsAvailableExplanation() {
-        var selectedRadio = document.querySelector('input[name="ByLawsAvailable"]:checked');
-        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 8 */
-
-        if (selectedValue == "0") {
-            $('#ByLawsAvailableExplanation').addClass('tx-cls');
-            document.getElementById("divByLawsAvailableExplanation").style.display = 'block'; // If "No" is selected
-        } else {
-            $('#ByLawsAvailableExplanation').removeClass('tx-cls');
-            document.getElementById("divByLawsAvailableExplanation").style.display = 'none'; // If "Yes" is selected
-        }
-    }
-
-    function ToggleChildOutingsExplanation() {
-        var selectedRadio = document.querySelector('input[name="ChildOutings"]:checked');
-        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 11 */
-
-        if (selectedValue == "0") {
-            $('#ChildOutingsExplanation').addClass('tx-cls');
-            document.getElementById("divChildOutingsExplanation").style.display = 'block'; // If "No" is selected
-        } else {
-            $('#ChildOutingsExplanation').removeClass('tx-cls');
-            document.getElementById("divChildOutingsExplanation").style.display = 'none'; // If "Yes" is selected
-        }
-    }
-
-    function ToggleMotherOutingsExplanation() {
-        var selectedRadio = document.querySelector('input[name="MotherOutings"]:checked');
-        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 12 */
-
-        if (selectedValue == "0") {
-            $('#MotherOutingsExplanation').addClass('tx-cls');
-            document.getElementById("divMotherOutingsExplanation").style.display = 'block'; // If "No" is selected
-        } else {
-            $('#MotherOutingsExplanation').removeClass('tx-cls');
-            document.getElementById("divMotherOutingsExplanation").style.display = 'none'; // If "Yes" is selected
-        }
-    }
-
-    function ToggleMeetingSpeakersExplanation() {
-        var selectedRadio = document.querySelector('input[name="MeetingSpeakers"]:checked');
-        var selectedValue = selectedRadio ? selectedRadio.value : null;
-
-        if (selectedValue == null) {
-            document.getElementById("divMeetingSpeakersTopics").style.display = 'none';
-            return;
-        }
-
-        if (selectedValue == "0") {
-            $('#MeetingSpeakersExplanation').addClass('tx-cls');
-            document.getElementById("divMeetingSpeakersTopics").style.display = 'none';
-        } else {
-            $('#MeetingSpeakersExplanation').removeClass('tx-cls');
-            document.getElementById("divMeetingSpeakersTopics").style.display = 'block';
-        }
-    }
-
-    function ToggleSisterChapterExplanation() {
-        var selectedRadio = document.querySelector('input[name="SisterChapter"]:checked');
-        var selectedValue = selectedRadio ? selectedRadio.value : null;
-
-        if (selectedValue == "1") {
-            $('#SisterChapterExplanation').addClass('tx-cls');
-            document.getElementById("divSisterChapterExplanation").style.display = 'block';
-        } else {
-            $('#SisterChapterExplanation').removeClass('tx-cls');
-            document.getElementById("divSisterChapterExplanation").style.display = 'none';
-        }
-    }
-
-    function TogglePlaygroupsExplanation() {
-        var selectedRadio = document.querySelector('input[name="Playgroups"]:checked');
-        var selectedValue = selectedRadio ? selectedRadio.value : null;
-
-        if (selectedValue == "0") {
-            $('#PlaygroupsExplanation').addClass('tx-cls');
-            document.getElementById("divPlaygroupsExplanation").style.display = 'block';
-        } else {
-            $('#PlaygroupsExplanation').removeClass('tx-cls');
-            document.getElementById("divPlaygroupsExplanation").style.display = 'none';
-        }
-    }
-
-    function ToggleParkDaysExplanation() {
-        var selectedRadio = document.querySelector('input[name="ParkDays"]:checked');
-        var selectedValue = selectedRadio ? selectedRadio.value : null;
-
-        if (selectedValue == "0") {
-            $('#ParkDaysExplanation').addClass('tx-cls');
-            document.getElementById("divParkDaysExplanation").style.display = 'block';
-        } else {
-            $('#ParkDaysExplanation').removeClass('tx-cls');
-            document.getElementById("divParkDaysExplanation").style.display = 'none';
-        }
-    }
-
-    function ToggleActivityOtherExplanation() {
-        var otherCheckbox = document.querySelector('input[name="Activity[]"][value="5"]'); /* Questions 16 */
-
-        if (otherCheckbox?.checked) {
-            document.getElementById("divActivityOtherExplanation").style.display = 'block'; // If "Other" is selected
-        } else {
-            document.getElementById("divActivityOtherExplanation").style.display = 'none';
-        }
-    }
-
-    function ToggleContributionsNotRegNPExplanation() {
-        var selectedRadio = document.querySelector('input[name="ContributionsNotRegNP"]:checked');
-        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 17 */
-
-        if (selectedValue == "1") {
-            $('#ContributionsNotRegNPExplanation').addClass('tx-cls');
-            document.getElementById("divContributionsNotRegNPExplanation").style.display = 'block'; // If "Yes" is selected
-        } else {
-            $('#ContributionsNotRegNPExplanation').removeClass('tx-cls');
-            document.getElementById("divContributionsNotRegNPExplanation").style.display = 'none'; // If "No" is selected
-        }
-    }
-
-    function TogglePerformServiceProjectExplanation() {
-        var selectedRadio = document.querySelector('input[name="PerformServiceProject"]:checked');
-        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 18 */
-
-        if (selectedValue == "0") {
-            $('#PerformServiceProjectExplanation').addClass('tx-cls');
-            document.getElementById("divPerformServiceProjectExplanation").style.display = 'block'; // If "No" is selected
-        } else {
-            $('#PerformServiceProjectExplanation').removeClass('tx-cls');
-            document.getElementById("divPerformServiceProjectExplanation").style.display = 'none'; // If "Yes" is selected
-        }
-    }
-
-    function ToggleFileIRSExplanation() {
-        var selectedRadio = document.querySelector('input[name="FileIRS"]:checked');
-        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 21 */
-
-        if (selectedValue == "0") {
-            $('#FileIRSExplanation').addClass('tx-cls');
-            document.getElementById("divFileIRSExplanation").style.display = 'block'; // If "No" is selected
-        } else {
-            $('#FileIRSExplanation').removeClass('tx-cls');
-            document.getElementById("divFileIRSExplanation").style.display = 'none'; // If "Yes" is selected
-        }
-    }
-
-    function ToggleBankStatementIncludedExplanation() {
-        var selectedRadio = document.querySelector('input[name="BankStatementIncluded"]:checked');
-        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 21 */
-
-        if (selectedValue == "0") {
-            $('#BankStatementIncludedExplanation').addClass('tx-cls');
-            document.getElementById("divBankStatementIncludedExplanation").style.display = 'block'; // If "No" is selected
-            document.getElementById("WheresTheMoney").style.display = 'block'; // If "No" is selected
-        } else {
-            $('#BankStatementIncludedExplanation').removeClass('tx-cls');
-            document.getElementById("divBankStatementIncludedExplanation").style.display = 'none'; // If "Yes" is selected
-            document.getElementById("WheresTheMoney").style.display = 'none'; // If "Yes" is selected
-        }
-    }
-
-</script> --}}
-
-<script>
-
-    // /* Save & Submit Verification */
-    // $(document).ready(function() {
-    //     function submitFormWithStep(step) {
-    //         $("#FurthestStep").val(step);
-    //         $("#financial_report").submit();
-    //     }
-
-    //     $("#btn-step-1").click(function() {
-    //         if (!EnsureRoster()) return false;
-    //         if (!EnsureMembers()) return false;
-    //         submitFormWithStep(1);
-    //     });
-    //     $("#btn-step-2").click(function() {
-    //         if (!EnsureMeetingQuestions()) return false;
-    //         submitFormWithStep(2);
-    //     });
-    //     $("#btn-step-3").click(function() {
-    //         if (!EnsureServiceProjectQuestions()) return false;
-    //         if (!EnsureServiceProject()) return false;
-    //         submitFormWithStep(3);
-    //     });
-    //     $("#btn-step-4").click(function() {
-    //         submitFormWithStep(4);
-    //     });
-    //     $("#btn-step-5").click(function() {
-    //         submitFormWithStep(5);
-    //     });
-    //     $("#btn-step-6").click(function() {
-    //         if (!EnsureReRegistration()) return false;
-    //         if (!EnsureInternationalQuestions()) return false;
-    //         submitFormWithStep(6);
-    //     });
-    //     $("#btn-step-7").click(function() {
-    //         submitFormWithStep(7);
-    //     });
-    //     $("#btn-step-8").click(function() {
-    //         submitFormWithStep(8);
-    //     });
-    //     $("#btn-step-9").click(function() {
-    //         submitFormWithStep(9);
-    //     });
-    //     $("#btn-step-10").click(function() {
-    //         if (!EnsureReconciliationQuestions()) return false;
-    //         if (!EnsureStatement()) return false;
-    //         if (!EnsureReconciliation()) return false;
-    //         submitFormWithStep(10);
-    //     });
-    //     $("#btn-step-11").click(function() {
-    //         if (!EnsureIRSQuestions()) return false;
-    //         submitFormWithStep(11);
-    //     });
-    //     $("#btn-step-12").click(function() {
-    //         if (!EnsureChapterQuestions()) return false;
-    //         submitFormWithStep(12);
-    //     });
-    //     $("#btn-step-13").click(function() {
-    //         submitFormWithStep(13);
-    //     });
-    //     $("#btn-step-14").click(function() {
-    //         submitFormWithStep(14);
-    //     });
-    //     $("#btn-save").click(function() {
-    //         submitFormWithStep(15);
-    //     });
-    // });
-
-    // $("#final-submit").click(async function() {
-    //     if (!EnsureRoster()) return false;
-    //     if (!EnsureMembers()) return false;
-    //     if (!EnsureMeetingQuestions()) return false;
-    //     if (!EnsureServiceProjectQuestions()) return false;
-    //     if (!EnsureServiceProject()) return false;
-    //     if (!EnsureReRegistration()) return false;
-    //     if (!EnsureInternationalQuestions()) return false;
-    //     if (!EnsureReconciliationQuestions()) return false;
-    //     if (!EnsureReconciliation()) return false;
-    //     if (!EnsureIRSQuestions()) return false;
-    //     if (!EnsureChapterQuestions()) return false;
-
-    //     // Await EnsureBalance if it is an async function
-    //     if (!await EnsureBalance()) return false;
-
-    //     // Use SweetAlert2 for the final confirmation
-    //     Swal.fire({
-    //         title: 'Final Confirmation',
-    //         text: "This will finalize and submit your report. You will no longer be able to edit this report. Do you wish to continue?",
-    //         icon: 'warning',
-    //         showCancelButton: true,
-    //         confirmButtonText: 'Submit Report',
-    //         cancelButtonText: 'Cancel',
-    //         customClass: {
-    //             confirmButton: 'btn-sm btn-success',
-    //             cancelButton: 'btn-sm btn-danger'
-    //         }
-    //     }).then((result) => {
-    //         if (result.isConfirmed) {
-    //             // Show processing spinner
-    //             Swal.fire({
-    //                 title: 'Processing...',
-    //                 text: 'Please wait while we process your request.',
-    //                 allowOutsideClick: false,
-    //                 didOpen: () => Swal.showLoading(),
-    //                 customClass: {
-    //                     confirmButton: 'btn-sm btn-success'
-    //                 }
-    //             });
-
-    //             // Proceed with form submission
-    //             $("#submitted").val('1');
-    //             $("#FurthestStep").val('16');
-    //             $("#financial_report").submit();
-    //         } else {
-    //             // Optionally handle the case where the user cancels
-    //             $(this).prop('disabled', false);
-    //         }
-    //     });
-    // });
-
         function isValidEmail(email) {
             // Regular expression for email validation
             var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return emailRegex.test(email);
         }
-
-        // function EnsureRoster() {
-        //     var rosterPath = document.getElementById('RosterPath');
-        //     var message = `<p>Your chapter's roster was not uploaded in CHAPTER DUES section.</p>
-        //            <p>Please upload Roster to Continue.</p>`;
-        //     if (!rosterPath || rosterPath.value == "") {
-        //         customWarningAlert(message);
-        //         // accordion.openAccordionItem('accordion-header-members');
-        //         return false;
-        //     }
-        //     return true;
-        // }
-
-        // function EnsureMembers() {
-        //     var missingQuestions = [];
-
-        //     // Check each required question
-        //     if (!document.querySelector('input[name="optChangeDues"]:checked')) {
-        //         missingQuestions.push("Did you change dues this year?");
-        //     }
-        //     if (!document.querySelector('input[name="optNewOldDifferent"]:checked')) {
-        //         missingQuestions.push("Did you charge different dues for new and returning?");
-        //     }
-        //     if (!document.querySelector('input[name="optNoFullDues"]:checked')) {
-        //         missingQuestions.push("Did you have members who didn't pay full dues?");
-        //     }
-
-        //     // Display the missing questions if any
-        //     if (missingQuestions.length > 0) {
-        //         var missingQuestionsText = missingQuestions.map(question => `<li>${question}</li>`).join('');
-        //         var message = `<p>The following questions in the CHAPTER DUES section are required, please answer the required questions to continue.</p>
-        //                 <ul style="list-style-position: inside; padding-left: 0; margin-left: 0;">
-        //                     ${missingQuestionsText}
-        //                 </ul>
-        //                 `;
-        //                 customWarningAlert(message);
-        //         // accordion.openAccordionItem('accordion-header-members');
-        //         return false;
-        //     }
-
-        //     return true;
-        // }
-
-
-        // function EnsureServiceProject() {
-        //     var serviceProjectDesc0 = document.getElementById('ServiceProjectDesc0');
-        //     var message = `<p>At least one Service Project is required in the SERVICE PROJECT section, please enter the required information to continue.</p>`;
-        //     if (!serviceProjectDesc0 || serviceProjectDesc0.value == "") {
-        //         customWarningAlert(message);
-        //         // accordion.openAccordionItem('accordion-header-service');
-        //         // $("#ServiceProjectDesc0").focus();
-        //         return false;
-        //     }
-        //     return true;
-        // }
-
-        // function EnsureReRegistration() {
-        //     var annualRegistrationFee = document.getElementById('AnnualRegistrationFee');
-        //     var message = `<p>Chapter Re-registration is required in the INTERNATIONAL EVENTS & RE-REGISTRATION section, please enter the required information to continue.</p>`;
-        //     if (!annualRegistrationFee || annualRegistrationFee.value == "") {
-        //         customWarningAlert(message);
-        //         // accordion.openAccordionItem('accordion-header-rereg');
-        //         // $("#AnnualRegistrationFee").focus();
-        //         return false;
-        //     }
-        //     return true;
-        // }
-
-        // function EnsureStatement() {
-        //     var bankStatementIncluded = document.getElementById('BankStatementIncluded');
-        //     var statementPath = document.getElementById('StatementPath');
-        //     var message = `<p>Your chapter's Bank Statement was not uploaded in the BANK RECONCILIATION section, but you indicated the file was attached.</p>
-        //         <p>Please upload Bank Statement to Continue.</p>`;
-        //     if (bankStatementIncluded && bankStatementIncluded.value == "1" && (!statementPath || statementPath.value == "")) {
-        //         // accordion.openAccordionItem('accordion-header-reconciliation');
-        //         customWarningAlert(message);
-        //         return false;
-        //     }
-        //     return true;
-        // }
-
-        // function EnsureReconciliation() {
-        //     var amountReservedFromLastYear = document.getElementById('AmountReservedFromLastYear').value.trim();
-        //     var bankBalanceNow = document.getElementById('BankBalanceNow').value.trim();
-        //     var missingFields = [];
-
-        //     // Check for missing fields and add to the list
-        //     if (amountReservedFromLastYear == '' || amountReservedFromLastYear == null) {
-        //         missingFields.push("This Year's Beginning Balance");
-        //     }
-        //     if (bankBalanceNow == '' || bankBalanceNow == null) {
-        //         missingFields.push("Last Bank Statement Balance");
-        //     }
-
-        //     // Display the missing fields if any
-        //     if (missingFields.length > 0) {
-        //         var missingFieldsText = missingFields.map(field => `<li>${field}</li>`).join('');
-        //         var message = `<p>The following fields are required in the BANK RECONCILIATION Section, please answer the required questions to continue.</p>
-        //            <ul style="list-style-position: inside; padding-left: 0; margin-left: 0;">
-        //              ${missingFieldsText}
-        //            </ul>
-        //            `;
-        //            customWarningAlert(message);
-        //         return false;
-        //     }
-
-        //     return true;
-        // }
-
-        // async function EnsureBalance() {
-        //     var PaymentTotal = 0;
-        //     var DepositTotal = 0;
-
-        //     var table = document.getElementById("bank-rec");
-
-        //     for (var i = 1, row; row = table.rows[i]; i++) {
-        //         // Payment Amount
-        //         var paymentInput = row.querySelector('input[name^="BankRecPaymentAmount"]');
-        //         var paymentValue = paymentInput ? parseFloat(paymentInput.value.replace(/,/g, '')) || 0 : 0;
-        //         PaymentTotal += paymentValue;
-
-        //         // Deposit Amount
-        //         var depositInput = row.querySelector('input[name^="BankRecDepositAmount"]');
-        //         var depositValue = depositInput ? parseFloat(depositInput.value.replace(/,/g, '')) || 0 : 0;
-        //         DepositTotal += depositValue;
-        //     }
-
-        //     var BankBalanceNow = parseFloat(document.getElementById("BankBalanceNow").value.replace(/,/g, '')) || 0;
-        //     var TotalFees = (BankBalanceNow - PaymentTotal + DepositTotal).toFixed(2);
-        //     var TreasuryBalanceNow = parseFloat(document.getElementById("TreasuryBalanceNow").value.replace(/,/g, '')) || 0;
-
-        //     if (TotalFees != TreasuryBalanceNow) {
-        //         // Use await to wait for the SweetAlert result
-        //         const result = await Swal.fire({
-        //             title: 'Report Does Not Balance',
-        //             text: "Your report does not balance. Your Treasury Balance Now and Reconciled Bank Balance should match before submitting your report.",
-        //             icon: 'warning',
-        //             showCancelButton: true,
-        //             confirmButtonText: 'Submit Anyway',
-        //             cancelButtonText: 'Return to Report',
-        //             customClass: {
-        //                 confirmButton: 'btn-sm btn-success',
-        //                 cancelButton: 'btn-sm btn-danger'
-        //             }
-        //         });
-
-        //         if (result.isConfirmed) {
-        //             return true; // User wants to submit anyway
-        //         } else {
-        //             // Optionally open the accordion or perform other actions
-        //             // accordion.openAccordionItem('accordion-header-reconciliation');
-        //             return false; // User does not want to submit
-        //         }
-        //     }
-
-        //     // If balanced, allow form submission
-        //     return true;
-        // }
-
-        // function EnsureMeetingQuestions() {
-        //     var requiredQuestions = [
-        //         'MeetingSpeakers', 'SpeakerFrequency', 'ChildrensRoom',
-        //     ];
-
-        //     // Mapping of internal names to user-friendly labels
-        //     var questionLabels = {
-        //         'MeetingSpeakers': 'Did the chapter have meeting speakers?',
-        //         'SpeakerFrequency': 'Did the chapter have discussion topics at meetings?',
-        //         'ChildrensRoom': 'Did the chapter have a children\'s room?',
-        //     };
-
-        //     var missingQuestions = [];
-
-        //     // Check for unanswered questions
-        //     for (var i = 0; i < requiredQuestions.length; i++) {
-        //         var questionName = requiredQuestions[i];
-        //         var isAnswered = document.querySelector('input[name="' + questionName + '"]:checked');
-        //         if (!isAnswered) {
-        //             missingQuestions.push(questionLabels[questionName] || questionName);
-        //         }
-        //     }
-
-        //     // Display the missing questions if any
-        //     if (missingQuestions.length > 0) {
-        //         var missingQuestionsText = missingQuestions.map(question => `<li>${question}</li>`).join('');
-        //         var message = `<p>The following questions in the MONTHLY MEETING EXPENSES section are required, please answer the required questions to continue.</p>
-        //                         <ul style="list-style-position: inside; padding-left: 0; margin-left: 0;">
-        //                             ${missingQuestionsText}
-        //                         </ul>
-        //                         `;
-        //                         customWarningAlert(message);
-        //         accordion.openAccordionItem('accordion-header-questions');
-        //         return false;
-        //     }
-
-        //     return true;
-        // }
-
-        // function EnsureServiceProjectQuestions() {
-        //     var requiredQuestions = [
-        //         'PerformServiceProject', 'ContributionsNotRegNP'
-        //     ];
-
-        //     // Mapping of internal names to user-friendly labels
-        //     var questionLabels = {
-        //             'PerformServiceProject': 'Did the chapter perform at least one service project?',
-        //             'ContributionsNotRegNP': 'Did the chapter make contributions to non-charities?',
-        //     };
-
-        //     var missingQuestions = [];
-
-        //     // Check for unanswered questions
-        //     for (var i = 0; i < requiredQuestions.length; i++) {
-        //         var questionName = requiredQuestions[i];
-        //         var isAnswered = document.querySelector('input[name="' + questionName + '"]:checked');
-        //         if (!isAnswered) {
-        //             missingQuestions.push(questionLabels[questionName] || questionName);
-        //         }
-        //     }
-
-        //     // Display the missing questions if any
-        //     if (missingQuestions.length > 0) {
-        //         var missingQuestionsText = missingQuestions.map(question => `<li>${question}</li>`).join('');
-        //         var message = `<p>The following questions in the SERVICE PROJECTS section are required, please answer the required questions to continue.</p>
-        //                         <ul style="list-style-position: inside; padding-left: 0; margin-left: 0;">
-        //                             ${missingQuestionsText}
-        //                         </ul>
-        //                         `;
-        //                         customWarningAlert(message);
-        //         accordion.openAccordionItem('accordion-header-questions');
-        //         return false;
-        //     }
-
-        //     return true;
-        // }
-
-        // function EnsureInternationalQuestions() {
-        //     var requiredQuestions = [
-        //         'InternationalEvent'
-        //     ];
-
-        //     // Mapping of internal names to user-friendly labels
-        //     var questionLabels = {
-        //         'InternationalEvent': 'Did the chapter atend an International event?',
-        //     };
-
-        //     var missingQuestions = [];
-
-        //     // Check for unanswered questions
-        //     for (var i = 0; i < requiredQuestions.length; i++) {
-        //         var questionName = requiredQuestions[i];
-        //         var isAnswered = document.querySelector('input[name="' + questionName + '"]:checked');
-        //         if (!isAnswered) {
-        //             missingQuestions.push(questionLabels[questionName] || questionName);
-        //         }
-        //     }
-
-        //     // Display the missing questions if any
-        //     if (missingQuestions.length > 0) {
-        //         var missingQuestionsText = missingQuestions.map(question => `<li>${question}</li>`).join('');
-        //         var message = `<p>The following questions in the INTERNATIONAL EVENTS & RE-REGISTRATION section are required, please answer the required questions to continue.</p>
-        //                         <ul style="list-style-position: inside; padding-left: 0; margin-left: 0;">
-        //                             ${missingQuestionsText}
-        //                         </ul>
-        //                         `;
-        //                         customWarningAlert(message);
-        //         accordion.openAccordionItem('accordion-header-questions');
-        //         return false;
-        //     }
-
-        //     return true;
-        // }
-
-        // function EnsureReconciliationQuestions() {
-        //     var requiredQuestions = [
-        //         'BankStatementIncluded'
-        //     ];
-
-        //     // Mapping of internal names to user-friendly labels
-        //     var questionLabels = {
-        //         'BankStatementIncluded': 'Is the most recent Bank Statment Attached?'
-        //     };
-
-        //     var missingQuestions = [];
-
-        //     // Check for unanswered questions
-        //     for (var i = 0; i < requiredQuestions.length; i++) {
-        //         var questionName = requiredQuestions[i];
-        //         var isAnswered = document.querySelector('input[name="' + questionName + '"]:checked');
-        //         if (!isAnswered) {
-        //             missingQuestions.push(questionLabels[questionName] || questionName);
-        //         }
-        //     }
-
-        //     // Display the missing questions if any
-        //     if (missingQuestions.length > 0) {
-        //         var missingQuestionsText = missingQuestions.map(question => `<li>${question}</li>`).join('');
-        //         var message = `<p>The following questions in the BANK RECONCILIATION section are required, please answer the required questions to continue.</p>
-        //                         <ul style="list-style-position: inside; padding-left: 0; margin-left: 0;">
-        //                             ${missingQuestionsText}
-        //                         </ul>
-        //                         `;
-        //                         customWarningAlert(message);
-        //         accordion.openAccordionItem('accordion-header-questions');
-        //         return false;
-        //     }
-
-        //     return true;
-        // }
-
-        // function EnsureIRSQuestions() {
-        //     var requiredQuestions = [
-        //         'FileIRS'
-        //     ];
-
-        //     // Mapping of internal names to user-friendly labels
-        //     var questionLabels = {
-        //         'FileIRS': 'Is the 990N filed with the IRS?',
-        //     };
-
-        //     var missingQuestions = [];
-
-        //     // Check for unanswered questions
-        //     for (var i = 0; i < requiredQuestions.length; i++) {
-        //         var questionName = requiredQuestions[i];
-        //         var isAnswered = document.querySelector('input[name="' + questionName + '"]:checked');
-        //         if (!isAnswered) {
-        //             missingQuestions.push(questionLabels[questionName] || questionName);
-        //         }
-        //     }
-
-        //     // Display the missing questions if any
-        //     if (missingQuestions.length > 0) {
-        //         var missingQuestionsText = missingQuestions.map(question => `<li>${question}</li>`).join('');
-        //         var message = `<p>The following questions in the 990N IRS FILING section are required, please answer the required questions to continue.</p>
-        //                         <ul style="list-style-position: inside; padding-left: 0; margin-left: 0;">
-        //                             ${missingQuestionsText}
-        //                         </ul>
-        //                         `;
-        //                         customWarningAlert(message);
-        //         accordion.openAccordionItem('accordion-header-questions');
-        //         return false;
-        //     }
-
-        //     return true;
-        // }
-
-        // function EnsureChapterQuestions() {
-        //     var requiredQuestions = [
-        //         'ByLawsAvailable', 'VoteAllActivities', 'ChildOutings', 'Playgroups',
-        //         'ParkDays', 'MotherOutings', 'Activity[]', 'OfferedMerch', 'BoughtMerch',
-        //         'BoughtPins', 'ReceiveCompensation', 'FinancialBenefit', 'InfluencePolitical',
-        //         'SisterChapter'
-        //     ];
-
-        //     // Mapping of internal names to user-friendly labels
-        //     var questionLabels = {
-        //         'ByLawsAvailable': 'Were By-Laws made available to members?',
-        //         'VoteAllActivities': 'Did the chapter vote on all activites?',
-        //         'ChildOutings': 'Did the chapter have child focused outings?',
-        //         'Playgroups': 'Did the chapter have playgroups?',
-        //         'ParkDays': 'Did the chapter have scheuled park days?',
-        //         'MotherOutings': 'Did the chapter have mother focused outings?',
-        //         'Activity[]': 'Did the chapter have any actifity groups?',
-        //         'OfferedMerch': 'Was MOMS Club merchandise offered to members?',
-        //         'BoughtMerch': 'Did the chapter purchase MOMS Club merchandise?',
-        //         'BoughtPins': 'Did the chapter purchase MOMS Club pins?',
-        //         'ReceiveCompensation': 'Member compensation received for work with chapter?',
-        //         'FinancialBenefit': 'Member benefit financially from position in chapter?',
-        //         'InfluencePolitical': 'Infuence or support political legislation or org?',
-        //         'SisterChapter': 'Did the chapter Sister a New Chapter?',
-        //     };
-
-        //     var missingQuestions = [];
-
-        //     // Check for unanswered questions
-        //     for (var i = 0; i < requiredQuestions.length; i++) {
-        //         var questionName = requiredQuestions[i];
-        //         var isAnswered = document.querySelector('input[name="' + questionName + '"]:checked');
-        //         if (!isAnswered) {
-        //             missingQuestions.push(questionLabels[questionName] || questionName);
-        //         }
-        //     }
-
-        //     // Display the missing questions if any
-        //     if (missingQuestions.length > 0) {
-        //         var missingQuestionsText = missingQuestions.map(question => `<li>${question}</li>`).join('');
-        //         var message = `<p>The following questions in the CHAPTER QUESTIONS section are required, please answer the required questions to continue.</p>
-        //                         <ul style="list-style-position: inside; padding-left: 0; margin-left: 0;">
-        //                             ${missingQuestionsText}
-        //                         </ul>
-        //                         `;
-        //                         customWarningAlert(message);
-        //         accordion.openAccordionItem('accordion-header-questions');
-        //         return false;
-        //     }
-
-        //     return true;
-        // }
-
-        // function Ensure990() {
-        //     var fileIRS = document.getElementById('FileIRS');
-        //     var path990N = document.getElementById('990NPath');
-        //     var message = `<p>Your chapter's 990N filing confirmation was not uploaded in the 990N IRS Filing section, but you indicated the file was attached.</p>
-        //         <p>Please upload 990 Confirmation to Continue.</p>`;
-        //     if (fileIRS && fileIRS.value == "1" && path990N && path990N.value == "") {
-        //         customWarningAlert(message);
-        //         // accordion.openAccordionItem('accordion-header-questions');
-        //         return false;
-        //     }
-        //     return true;
-        // }
 
     </script>
 @endpush

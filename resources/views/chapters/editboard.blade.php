@@ -33,11 +33,11 @@
                     <div class="card-header text-center bg-transparent">
                     <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
                     <p class="mb-0">{{ $chDetails->confname }} Conference, {{ $chDetails->regname }} Region
-  </p>
+                    </p>
                     </div>
 
-                  <ul class="list-group list-group-flush mb-3">
-                      <li cclass="list-group-item mt-2">
+                  <ul class="list-group list-group-flush mb-2">
+                      <li class="list-group-item">
                           <div class="d-flex align-items-center justify-content-between w-100">
                             <div class="d-flex align-items-center">
                                 <label class="col-form-label mb-0 me-2">President:</label>
@@ -102,11 +102,15 @@
                                 <span>{{ $SECDetails->first_name }} {{ $SECDetails->last_name }}</span>
                             </div>
                           </div>
-
+                        <li class="list-group-item">
                           <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
-                          <li class="list-group-item mt-2" id="display_corlist" ></li>
-                  </ul>
-                 <div class="text-center">
+                            <div class="row mb-2">
+                          <span id="display_corlist" style="display: block; margin-top: 10px;"></span>
+                            </div>
+                        </li>
+
+                  <li class="list-group-item">
+                 <div class="row text-center">
                       @if ($chDetails->active_status == 1 )
                           <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
                       @elseif ($chDetails->active_status == 2)
@@ -120,8 +124,10 @@
                           Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
                           {{ $chDetails->disband_reason }}
                       @endif
+                      </div>
+                </li>
+                  </ul>
                   </div>
-                </div>
               <!-- /.card-body -->
             </div>
             <!-- /.card -->
@@ -130,12 +136,12 @@
 
           <div class="col-md-8">
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                <h3 class="profile-username">Board Member Information</h3>
+                <div class="card-body">
+                        <div class="card-header bg-transparent border-0">
+                            <h3>Board Member Information</h3>
+                        </div>
                     <!-- /.card-header -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <!-- /.form group -->
+                    <div class="card-body">
                             <div class="row mb-3">
                                 <label class="col-sm-2 mb-1 col-form-label">President:</label>
                                 <div class="col-sm-5 mb-1">
@@ -392,8 +398,7 @@
                             </div>
                         </div>
 
-                        </div>
-                    </div>
+
                 </div>
               <!-- /.card-body -->
                         </div>
@@ -405,7 +410,7 @@
                 @if ($coordinatorCondition)
                     <button type="submit" class="btn btn-primary bg-gradient mb-2" onclick="return validateEmailsBeforeSubmit();"><i class="bi bi-floppy-fill me-2"></i>Save Board Information</button>
                 @endif
-                <button type="button" id="back-details" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Chapter Details</button>
+                <button type="button" id="back-details" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Chapter Details</button>
         </div>
         </div>
         <!-- /.row -->

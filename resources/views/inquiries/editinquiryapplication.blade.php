@@ -208,9 +208,9 @@
           <div class="col-md-12">
             <div class="card-body text-center mt-3">
                 @if ($confId == $inqConfId)
-                    <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient m-1 keep-enabled" onclick="window.location.href='{{ route('inquiries.inquiryapplication') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Inquiries Application List</button>
+                    <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient m-1 keep-enabled" onclick="window.location.href='{{ route('inquiries.inquiryapplication') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-pin-map-fill me-2"></i>Back to Inquiries Application List</button>
                 @elseif ($confId != $inqConfId && ($inquiriesInternationalCondition || $ITCondition))
-                    <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient m-1 keep-enabled" onclick="window.location.href='{{ route('inquiries.inquiryapplication', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Inquiries Application List</button>
+                    <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient m-1 keep-enabled" onclick="window.location.href='{{ route('inquiries.inquiryapplication', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-pin-map-fill me-2"></i>Back to International Inquiries Application List</button>
                 @endif
             </div>
         </div>

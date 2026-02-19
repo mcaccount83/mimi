@@ -115,9 +115,9 @@
             <div class="card-body text-center mt-3">
                 <button type="submit" class="btn btn-primary bg-gradient mb-2" onclick="return validateEmailsBeforeSubmit();"><i class="bi bi-floppy-fill me-2"></i>Save User Information</button>
                 @if($userDetails->type_id == \App\Enums\UserTypeEnum::COORD)
-                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('userreports.usernoactivecoord') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to List</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('userreports.usernoactivecoord') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-person-fill-gear me-2"></i>Back to Coordinator User List</button>
                 @elseif($userDetails->type_id == \App\Enums\UserTypeEnum::BOARD)
-                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('userreports.usernoactiveboard') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to List</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('userreports.usernoactiveboard') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-person-fill-gear me-2"></i>Back to Board User List</button>
                 @endif
             </div>
         </div>

@@ -1,4 +1,6 @@
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
     document.querySelectorAll('.reset-password-btn').forEach(button => {
         button.addEventListener('click', function (e) {
             e.preventDefault();
@@ -158,4 +160,5 @@
             }
         });
     }
+    });
 </script>

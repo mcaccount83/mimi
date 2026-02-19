@@ -107,7 +107,7 @@
             <!-- /.card-body for checkboxes -->
 
             <div class="card-body text-center mt-3">
-                <button type="button" class="btn btn-primary bg-gradient mb-2 onclick="window.open('https://momsclub.org/chapters/chapter-links/')"><i class="bi bi-eye-fill me-2" ></i>View Chapter Links Page</button>
+                <button type="button" class="btn btn-primary bg-gradient mb-2 onclick="window.open('https://momsclub.org/chapters/chapter-links/')"><i class="bi bi-share-fill me-2" ></i>View Chapter Links Page</button>
             </div>
             <!-- /.card-body for buttons -->
 

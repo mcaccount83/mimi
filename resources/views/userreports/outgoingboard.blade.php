@@ -73,9 +73,9 @@
             <div class="card-body text-center mt-3">
 				@if ($regionalCoordinatorCondition)
                     @if ($countList > '0')
-                        <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showUserInactiveModel()"><i class="fas fa-users-slash me-2"></i>Make all Users Inactive</button>
+                        <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showUserInactiveModel()"><i class="bi bi-person-fill-slash me-2"></i>Make all Users Inactive</button>
                     @else
-                        <button type="button" class="btn btn-primary bg-gradient mb-2" disabled><i class="fas fa-users-slash me-2"></i>Make all Users Inactive</button>
+                        <button type="button" class="btn btn-primary bg-gradient mb-2" disabled><i class="bi bi-person-fill-slash me-2"></i>Make all Users Inactive</button>
                     @endif
 				@endif
               </div>

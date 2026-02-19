@@ -1,5 +1,6 @@
 <script>
-$(function () {
+document.addEventListener('DOMContentLoaded', function() {
+
     //Datemask dd/mm/yyyy
     if ($('#datemask').length) {
         $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' });

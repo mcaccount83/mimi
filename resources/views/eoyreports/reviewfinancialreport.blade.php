@@ -2,22 +2,6 @@
 
 @section('page_title', 'Financial Report')
 @section('breadcrumb', 'Financial Report Review')
-<style>
-    .flex-container2 {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0px;
-        width: 100%;
-        overflow-x: auto;
-        margin-top: 20px;
-
-    }
-
-    .flex-item2 {
-        flex: 0 0 calc(48% - 10px);
-        box-sizing: border-box;
-    }
-</style>
 
 @section('content')
   <!-- Main content -->
@@ -366,10 +350,12 @@
 
   <div class="col-md-8">
     <div class="card card-primary card-outline">
-        <div class="card-body box-profile">
-        <h3 class="profile-username">{{ $financialReportName}} Review</h3>
+        <div class="card-body">
+            <div class="card-header bg-transparent border-0">
+                <h3>{{ $financialReportName}} Review</h3>
+            </div>
             <!-- /.card-header -->
-            <div class="row">
+            <div class="card-body">
                 <div class="col-md-12">
                     @if($chEOYDocuments->financial_report_received)
                         @if ($chFinancialReport->reviewer_id != null)
@@ -380,34 +366,37 @@
                     @else
                         <span style="color:red">REPORT NOT YET SUBMITTED FOR REVIEW</span>
                     @endif
-
                 <p>Have some questions about reviewing?<br>
                     <a href="https://momsclub.org/reviewing-reports-faq/"   target="_blank">Check out our FAQ!</a></p>
-
                 </div>
-            </div>
 
-                <div class="col-12"  id="accordion">
+                    <div class="card-body">
+                    <div class="accordion" id="accordion">
                     	<!------Start Step 1 ------>
-                    <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '1' ? 'active' : '' }}">
-                        <div class="card-header" id="accordion-header-members">
-                            <h4 class="card-title w-100">
-                                <a class="d-block" data-bs-toggle="collapse" href="#collapseOne" style="width: 100%;">CHAPTER DUES</a>
-                            </h4>
-                        </div>
-                        <div id="collapseOne" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '1' ? 'show' : '' }}" data-parent="#accordion">
-
-                            <div class="card-body">
+                        <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '1' ? 'active' : '' }}">
+                        <h2 class="accordion-header" id="accordion-header-members">
+                          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            CHAPTER DUES
+                          </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '1' ? 'show' : '' }}" data-bs-parent="#accordion">
+                          <div class="accordion-body">
 						<section>
-                            Did your chapter change dues this year?&nbsp;&nbsp;&nbsp;
-                            <strong>{{ is_null($chFinancialReport->changed_dues) ? 'Not Answered' : ($chFinancialReport->changed_dues == 0 ? 'NO'
-                                : ($chFinancialReport->changed_dues == 1 ? 'YES' : 'Not Answered' )) }}</strong><br>
-                            Did your chapter charge different amounts for new and returning members?&nbsp;&nbsp;&nbsp;
-                            <strong>{{ is_null($chFinancialReport->different_dues) ? 'Not Answered' : ($chFinancialReport->different_dues == 0 ? 'NO'
-                                :( $chFinancialReport->different_dues == 1 ? 'YES' : 'Not Answered' )) }}</strong><br>
-                            Did your chapter have any members who didn't pay full dues?&nbsp;&nbsp;&nbsp;
-                            <strong>{{ is_null($chFinancialReport->not_all_full_dues) ? 'Not Answered' : ($chFinancialReport->not_all_full_dues == 0 ? 'NO'
-                                : ( $chFinancialReport->not_all_full_dues == 1 ? 'YES' : 'Not Answered' )) }}</strong><br>
+                                <div class="col-md-12">
+                                    <span class="me-2">Did your chapter change dues this year?</span>
+                                    <b>{{ is_null($chFinancialReport->changed_dues) ? 'Not Answered' : ($chFinancialReport->changed_dues == 0 ? 'NO'
+                                : ($chFinancialReport->changed_dues == 1 ? 'YES' : 'Not Answered' )) }}</b>
+                                </div>
+                                <div class="col-md-12">
+                                    <span class="me-2">Did your chapter charge different amounts for new and returning members?</span>
+                                    <b>{{ is_null($chFinancialReport->different_dues) ? 'Not Answered' : ($chFinancialReport->different_dues == 0 ? 'NO'
+                                        :( $chFinancialReport->different_dues == 1 ? 'YES' : 'Not Answered' )) }}</b>
+                                </div>
+                                <div class="col-md-12">
+                                    <span class="me-2">Did your chapter have any members who didn't pay full dues?</span>
+                                    <b>{{ is_null($chFinancialReport->not_all_full_dues) ? 'Not Answered' : ($chFinancialReport->not_all_full_dues == 0 ? 'NO'
+                                        : ( $chFinancialReport->not_all_full_dues == 1 ? 'YES' : 'Not Answered' )) }}</b>
+                                </div>
                             <br>
                             <style>
                                 .flex-container {
@@ -545,86 +534,95 @@
                                     }
                                 @endphp
 
-                        <br><strong>Total Members:&nbsp;&nbsp;&nbsp;{{ $totalMembers }}</strong></td><br>
-                            <strong>Total Dues Collected:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($totalDues, 2) }}</strong></td><br>
-						<hr style="border-bottom: 2px solid #007bff">
-						<!-- start:report_review -->
-						<div class="form-row report_review" >
-                            <div class="card-header col-md-12">
-                                <h3 class="card-title" style="color:#007bff"><strong>ANNUAL REPORT REVIEW</strong></h3>
-                            </div>
-							<div class="card-body form-row">
-                                <div class="col-12">
+                                <br>
+                                <div class="col-md-12">
+                                    <label class="me-2">Total Members:</label><b>{{ $totalMembers }}</b>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="me-2">Total Dues Collected:</label><b>{{ '$'.number_format($totalDues, 2) }}</b>
+                                </div>
+                                <br>
+
+                                <!-- start:report_review -->
+                                <div class="col-md-12">
+                                <div class="card card-secondary card-outline collapsed-card mb-4">
+                                <div class="card-header" data-lte-toggle="card-collapse" style="cursor: pointer;">
+                                    <div class="card-title">ANNUAL REPORT REVIEW  <small>(click to open/close)</small></div>
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body">
                                 @if (!is_null($chEOYDocuments->roster_path))
-                                        <div class="col-12">
-                                            <label>Chapter Roster Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->roster_path }}">&nbsp; View Chapter Roster</a><br>
-                                        </div>
-                                        <div class="col-12" id="RosterBlock">
-                                            <strong style="color:red">Please Note</strong><br>
-                                                This will refresh the screen - be sure to save all work before clicking button to Replace Roster File.<br>
-                                            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace Roster File</button>
+                                    <div class="col-12">
+                                        <label>Chapter Roster Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->roster_path }}">&nbsp; View Chapter Roster</a><br>
+                                    </div>
+                                    <div class="col-12" id="RosterBlock">
+                                        <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Replace Roster File.<br>
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace Roster File</button>
                                     </div>
                                 @else
                                     <div class="col-12" id="RosterBlock">
-                                            <strong style="color:red">Please Note</strong><br>
-                                                This will refresh the screen - be sure to save all work before clicking button to Upload Roster File.<br>
-                                            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload Roster File</button>
+                                        <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Upload Roster File.<br>
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload Roster File</button>
                                     </div>
                                 @endif
                                 <input type="hidden" name="RosterPath" id="RosterPath" value="{{ $chEOYDocuments->roster_path }}">
-                                <div class="clearfix"></div>
-                                <div class="col-12"><br></div>
-                                <div class="col-12">
-                                    <div class="col-12">
-                                        <div class="row mb-3">
-                                            <label>Excel roster attached and complete:<span class="field-required">*&nbsp;</span></label>
-                                            <div class="col-12 row">
-                                                <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkRosterAttached" value="1" {{ $chFinancialReport->check_roster_attached == 1 ? 'checked' : '' }} required>
-                                                    <label class="form-check-label">Yes</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkRosterAttached" value="0" {{ !is_null($chFinancialReport->check_roster_attached) && $chFinancialReport->check_roster_attached == 0 ? 'checked' : '' }}>
-                                                    <label class="form-check-label">No</label>
-                                                </div>
-                                            </div>
+                                <br>
+
+                                <div class="row mb-3">
+                                    <label>Excel roster attached and complete:<span class="field-required">*&nbsp;</span></label>
+                                    <div class="col-12 d-flex gap-4">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="checkRosterAttached" value="1" {{ $chFinancialReport->check_roster_attached == 1 ? 'checked' : '' }} required>
+                                            <label class="form-check-label">Yes</label>
                                         </div>
-                                        <div class="row mb-3">
-                                            <label>Number of members listed, dues received, and renewal paid "seem right":<span class="field-required">*&nbsp;</span></label>
-                                            <div class="col-12 row">
-                                                <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkRenewalSeemsRight" value="1" {{ $chFinancialReport->check_renewal_seems_right == 1 ? 'checked' : '' }} required>
-                                                    <label class="form-check-label">Yes</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkRenewalSeemsRight" value="0" {{ !is_null($chFinancialReport->check_renewal_seems_right) && $chFinancialReport->check_renewal_seems_right == 0 ? 'checked' : '' }}>
-                                                    <label class="form-check-label">No</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <label for="Step1_Note">Add New Note:</label>
-                                            <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(1)" name="Step1_Note" id="Step1_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
-                                            <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
-                                                <button type="button" id="AddNote1" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(1)" disabled><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log</button>
-                                            </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="checkRosterAttached" value="0" {{ !is_null($chFinancialReport->check_roster_attached) && $chFinancialReport->check_roster_attached == 0 ? 'checked' : '' }}>
+                                            <label class="form-check-label">No</label>
                                         </div>
                                     </div>
                                 </div>
-                                    <div class="col-12">
-										<label for="Step1_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
-									</div>
-									<div class="col-12">
-                                        <textarea class="form-control" style="width:100%" rows="8" name="Step1_Log" id="Step1_Log" readonly>{{ $chFinancialReport->step_1_notes_log }}</textarea>
-									</div>
-                                    <div class="col-12"><br></div>
+                                <div class="row mb-3">
+                                    <label>Number of members listed, dues received, and renewal paid "seem right":<span class="field-required">*&nbsp;</span></label>
+                                    <div class="col-12 d-flex gap-4">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="checkRenewalSeemsRight" value="1" {{ $chFinancialReport->check_renewal_seems_right == 1 ? 'checked' : '' }} required>
+                                            <label class="form-check-label">Yes</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="checkRenewalSeemsRight" value="0" {{ !is_null($chFinancialReport->check_renewal_seems_right) && $chFinancialReport->check_renewal_seems_right == 0 ? 'checked' : '' }}>
+                                            <label class="form-check-label">No</label>
+                                        </div>
+                                    </div>
+                                </div>
 
-                            <!-- end:report_review -->
-                            <div class="col-12 text-center">
-								  <button type="submit" id="btn-step-1" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
-							</div>
+                                <div class="row mb-3">
+                                    <label for="Step1_Note">Add New Note:</label>
+                                    <div class="col-12">
+                                        <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(1)" name="Step1_Note" id="Step1_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                    </div>
+                                    <div class="col-12 mt-1">
+                                        <button type="button" id="AddNote1" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(1)" disabled>
+                                            <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="Step1_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+                                    <div class="col-12">
+                                        <textarea class="form-control" style="width:100%" rows="8" name="Step1_Log" id="Step1_Log" readonly>{{ $chFinancialReport->step_1_notes_log }}</textarea>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 text-center">
+                                    <button type="submit" id="btn-step-1" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
                         </div>
                     </div>
+                    <!-- /.card -->
 						</section>
 					</div>
 				</div>
@@ -632,53 +630,71 @@
 				<!------End Step 1 ------>
 
 				<!------Start Step 2 ------>
-                <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '2' ? 'active' : '' }}">
-                    <div class="card-header" id="accordion-header-members">
-                        <h4 class="card-title w-100">
-                            <a class="d-block" data-bs-toggle="collapse" href="#collapseTwo" style="width: 100%;">MONTHLY MEETING EXPENSES</a>
-                        </h4>
-                    </div>
-                    <div id="collapseTwo" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '2' ? 'show' : '' }}" data-parent="#accordion">
-                        <div class="card-body">
+                <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '2' ? 'active' : '' }}">
+                <h2 class="accordion-header" id="accordion-header-members">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                    MONTHLY MEETING EXPENSES
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '2' ? 'show' : '' }}" data-bs-parent="#accordion">
+                    <div class="accordion-body">
 						<section>
-                            Meeting Room Fees:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport->manditory_meeting_fees_paid, 2) }}</strong><br>
-                            Voluntary Donations Paid:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport->voluntary_donations_paid, 2) }}</strong><br>
-                            <strong>Total Meeting Room Expenses:&nbsp;&nbsp;&nbsp;
-                                {{ '$'.number_format($chFinancialReport->manditory_meeting_fees_paid + $chFinancialReport->voluntary_donations_paid) }}</strong><br>
+                            <div class="col-md-12">
+                                <span class="me-2">Meeting Room Fees:</span>
+                                <b>{{ '$'.number_format($chFinancialReport->manditory_meeting_fees_paid, 2) }}</b>
+                            </div>
+                            <div class="col-md-12">
+                                <span class="me-2">Voluntary Donations Paid:</span>
+                                <b>{{ '$'.number_format($chFinancialReport->voluntary_donations_paid, 2) }}</b>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="me-2">Total Meeting Room Expenses:</label>
+                                <b>{{ '$'.number_format($chFinancialReport->manditory_meeting_fees_paid + $chFinancialReport->voluntary_donations_paid) }}</b>
+                            </div>
                             <br>
-                            Did you have speakers at any meetings?&nbsp;&nbsp;&nbsp;
-                            <strong>{{ is_null($chFinancialReport->meeting_speakers) ? 'Not Answered' : ($chFinancialReport->meeting_speakers == 0 ? 'NO'
-                                : ($chFinancialReport->meeting_speakers == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport->meeting_speakers_explanation}}</strong><br>
-                                @php
-                                    $meetingSpeakersArray = json_decode($chFinancialReport->meeting_speakers_array);
-                                    $meetingSpeakersMapping = [
-                                        '0' => 'N/A',
-                                        '1' => 'Child Rearing',
-                                        '2' => 'Schools/Education',
-                                        '3' => 'Home Management',
-                                        '4' => 'Politics',
-                                        '5' => 'Other Non-Profit',
-                                        '6' => 'Other',
-                                    ];
-                                @endphp
+                            <div class="col-md-12">
+                                <span class="me-2">Did you have speakers at any meetings?</span>
+                                <b>{{ is_null($chFinancialReport->meeting_speakers) ? 'Not Answered' : ($chFinancialReport->meeting_speakers == 0 ? 'NO'
+                                    : ($chFinancialReport->meeting_speakers == 1 ? 'YES' : 'Not Answered' )) }}
+                                    <span class="ms-2">{{ $chFinancialReport->meeting_speakers_explanation }}</span></b>
 
-                                @if (!empty($meetingSpeakersArray))
-                                    {{ implode(', ', array_map(function($value) use ($meetingSpeakersMapping) {
-                                        // Check if the key exists in the mapping array before accessing it
-                                        return isset($meetingSpeakersMapping[$value]) ? $meetingSpeakersMapping[$value] : 'Not Answered';
-                                    }, $meetingSpeakersArray)) }}
-                                @else
-                                    N/A
+                                @if ($chFinancialReport->meeting_speakers == 1)
+                                    @php
+                                        $meetingSpeakersArray = json_decode($chFinancialReport->meeting_speakers_array);
+                                        $meetingSpeakersMapping = [
+                                            '0' => 'N/A',
+                                            '1' => 'Child Rearing',
+                                            '2' => 'Schools/Education',
+                                            '3' => 'Home Management',
+                                            '4' => 'Politics',
+                                            '5' => 'Other Non-Profit',
+                                            '6' => 'Other',
+                                        ];
+                                    @endphp
+
+                                    @if (!empty($meetingSpeakersArray))
+                                        {{ implode(', ', array_map(function($value) use ($meetingSpeakersMapping) {
+                                            return isset($meetingSpeakersMapping[$value]) ? $meetingSpeakersMapping[$value] : 'Not Answered';
+                                        }, $meetingSpeakersArray)) }}
+                                    @endif
                                 @endif
-                            Did you have any discussion topics at your meetings?&nbsp;&nbsp;&nbsp;
-                            <strong>{{ is_null($chFinancialReport->discussion_topic_frequency) ? 'Not Answered' : ($chFinancialReport->discussion_topic_frequency == 0 ? 'NO'
-                                : ( $chFinancialReport->discussion_topic_frequency == 1 ? '1-3 Times' : ($chFinancialReport->discussion_topic_frequency == 2 ? '4-6 Times' :
-                                ($chFinancialReport->discussion_topic_frequency == 3 ? '7-9 Times' : ($chFinancialReport->discussion_topic_frequency == 4 ? '10+ Times' : 'Not Answered'))))) }}</strong><br>
-                            Did you have a children's room with babysitters?&nbsp;&nbsp;&nbsp;
-                            <strong>{{ is_null($chFinancialReport->childrens_room_sitters) ? 'Not Answered' : ($chFinancialReport->childrens_room_sitters == 0 ? 'NO'
-                                : ( $chFinancialReport->childrens_room_sitters == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport->childrens_room_sitters_explanation}}</strong><br>
+                            </div>
+                            <div class="col-md-12">
+                                <span class="me-2">Did you have any discussion topics at your meetings?</span>
+                                <b>{{ is_null($chFinancialReport->discussion_topic_frequency) ? 'Not Answered' : ($chFinancialReport->discussion_topic_frequency == 0 ? 'NO'
+                                    : ( $chFinancialReport->discussion_topic_frequency == 1 ? '1-3 Times' : ($chFinancialReport->discussion_topic_frequency == 2 ? '4-6 Times' :
+                                    ($chFinancialReport->discussion_topic_frequency == 3 ? '7-9 Times' : ($chFinancialReport->discussion_topic_frequency == 4 ? '10+ Times' : 'Not Answered'))))) }}</b>
+                            </div>
+                            <div class="col-md-12">
+                                <span class="me-2">Did you have a children's room with babysitters?</span>
+                                <b>{{ is_null($chFinancialReport->childrens_room_sitters) ? 'Not Answered' : ($chFinancialReport->childrens_room_sitters == 0 ? 'NO'
+                                    : ( $chFinancialReport->childrens_room_sitters == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport->childrens_room_sitters_explanation}}</b>
+                            </div>
                             <br>
-                            Paid Babysitter Expense:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport->paid_baby_sitters, 2) }}</strong><br>
+                            <div class="col-md-12">
+                                <span class="me-2">Paid Babysitter Expense:</span>
+                                <b>{{ '$'.number_format($chFinancialReport->paid_baby_sitters, 2) }}</b>
+                            </div>
                             <br>
                             Children's Room Miscellaneous:
                             <table width="75%" style="border-collapse: collapse;">
@@ -740,43 +756,45 @@
                                 </tbody>
                             </table>
                             <br>
-                            <strong>Total Children's Room Expenses:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($chFinancialReport->paid_baby_sitters + $totalChildrensRoomExpenses, 2) }}</strong><br>
-                            <hr style="border-bottom: 2px solid #007bff">
-							<!-- start:report_review -->
-								<div class="form-row report_review" >
-									<div class="card-header col-md-12">
-                                        <h3 class="card-title" style="color:#007bff"><strong>ANNUAL REPORT REVIEW</strong></h3>
+                             <div class="col-md-12">
+                                    <label class="me-2">Total Children's Room Expenses:</label><b>{{ '$'.number_format($chFinancialReport->paid_baby_sitters + $totalChildrensRoomExpenses, 2) }}</b>
+                            </div>
+                                <br>
+
+                                <!-- start:report_review -->
+                                <div class="col-md-12">
+                                <div class="card card-secondary card-outline collapsed-card mb-4">
+                                <div class="card-header" data-lte-toggle="card-collapse" style="cursor: pointer;">
+                                    <div class="card-title">ANNUAL REPORT REVIEW  <small>(click to open/close)</small></div>
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body">
+                                <div class="row mb-3">
+                                    <label for="Step2_Note">Add New Note:</label>
+                                    <div class="col-12">
+                                        <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(2)" name="Step2_Note" id="Step2_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
                                     </div>
-									<div class="card-body form-row">
-                                        <div class="col-12">
-
-                                            <div class="col-12">
-                                            <div class="col-12">
-                                                <div class="row mb-3">
-                                                    <label for="Step2_Note">Add New Note:</label>
-                                                    <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(2)" name="Step2_Note" id="Step2_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
-                                                    <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
-                                                        <button type="button" id="AddNote2" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(2)" disabled><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log</button>
-                                                </div>
-                                                </div>
-                                            </div>
-                                            </div>
-
-											<div class="col-12">
-												<label for="Step2_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
-											</div>
-											<div class="col-12">
-                                                <textarea class="form-control" style="width:100%" rows="8" name="Step2_Log" id="Step2_Log" readonly>{{ $chFinancialReport->step_2_notes_log }}</textarea>
-                                            </div>
-                                            <div class="col-12"><br></div>
-
-								<!-- end:report_review -->
+                                    <div class="col-12 mt-1">
+                                        <button type="button" id="AddNote2" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(2)" disabled>
+                                            <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="Step2_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+                                    <div class="col-12">
+                                        <textarea class="form-control" style="width:100%" rows="8" name="Step2_Log" id="Step2_Log" readonly>{{ $chFinancialReport->step_2_notes_log }}</textarea>
+                                    </div>
+                                </div>
 
                                 <div class="col-12 text-center">
 									<button type="submit" id="btn-step-2" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
                                 </div>
                             </div>
+                            <!-- /.card-body -->
                         </div>
+                    </div>
+                    <!-- /.card -->
 						</section>
 					</div>
 				</div>
@@ -784,21 +802,27 @@
 				<!------End Step 2 ------>
 
 				<!------Start Step 3 ------>
-                <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '3' ? 'active' : '' }}">
-                    <div class="card-header" id="accordion-header-members">
-                        <h4 class="card-title w-100">
-                            <a class="d-block" data-bs-toggle="collapse" href="#collapseThree" style="width: 100%;">SERVICE PROJECTS</a>
-                        </h4>
-                    </div>
-                    <div id="collapseThree" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '3' ? 'show' : '' }}" data-parent="#accordion">
-                        <div class="card-body">
+                <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '3' ? 'active' : '' }}">
+                <h2 class="accordion-header" id="accordion-header-members">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                    SERVICE PROJECTS
+                    </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '3' ? 'show' : '' }}" data-bs-parent="#accordion">
+                    <div class="accordion-body">
 					<section>
-                        Did your chapter perform at least one service project to benefit mothers or children?&nbsp;&nbsp;&nbsp;
-                            <strong>{{ is_null($chFinancialReport->at_least_one_service_project) ? 'Not Answered' : ($chFinancialReport->at_least_one_service_project == 0 ? 'NO'
-                                : ( $chFinancialReport->at_least_one_service_project == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport->at_least_one_service_project_explanation}}</strong><br>
-                        Did your chapter make any contributions to any organization or individual that is not registered with the government as a charity?&nbsp;&nbsp;&nbsp;
-                        <strong>{{ is_null($chFinancialReport->contributions_not_registered_charity) ? 'Not Answered' : ($chFinancialReport->contributions_not_registered_charity == 0 ? 'NO'
-                            : ( $chFinancialReport->contributions_not_registered_charity == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport->contributions_not_registered_charity_explanation}}</strong><br>
+                        <div class="col-md-12">
+                            <span class="me-2">Did your chapter perform at least one service project to benefit mothers or children?</span>
+                                <b>{{ is_null($chFinancialReport->at_least_one_service_project) ? 'Not Answered' : ($chFinancialReport->at_least_one_service_project == 0 ? 'NO'
+                                    : ( $chFinancialReport->at_least_one_service_project == 1 ? 'YES' : 'Not Answered' )) }}
+                                <span class="ms-2">{{ $chFinancialReport->at_least_one_service_project_explanation}}</span></b>
+                        </div>
+                        <div class="col-md-12">
+                            <span class="me-2">Did your chapter make any contributions to any organization or individual that is not registered with the government as a charity?</span>
+                            <b>{{ is_null($chFinancialReport->contributions_not_registered_charity) ? 'Not Answered' : ($chFinancialReport->contributions_not_registered_charity == 0 ? 'NO'
+                                : ( $chFinancialReport->contributions_not_registered_charity == 1 ? 'YES' : 'Not Answered' )) }}
+                                <span class="ms-2">{{ $chFinancialReport->contributions_not_registered_charity_explanation}}</span></b>
+                        </div>
                         <br>
                             <table width="100%" style="border-collapse: collapse;">
                             <thead>
@@ -871,26 +895,30 @@
                             </tbody>
                         </table>
                         <br>
-                        <strong>Total Service Project Income:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($totalServiceIncome, 2) }}</strong><br>
-                        <strong>Total Service Project Expenses:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($totalServiceProjectExpenses, 2) }}</strong><br>
-						<hr style="border-bottom: 2px solid #007bff">
-					<!-- start:report_review -->
-						<div class="form-row report_review" >
-							<div class="card-header col-md-12">
-                                <h3 class="card-title" style="color:#007bff"><strong>ANNUAL REPORT REVIEW</strong></h3>
-                            </div>
-							<div class="card-body form-row">
-                                <div class="col-md-12">
+                         <div class="col-md-12">
+                            <label class="me-2">Total Service Project Income:</label><b>{{ '$'.number_format($totalServiceIncome, 2) }}</b>
+                         </div>
+                         <div class="col-md-12">
+                            <label class="me-2">Total Service Project Expenses:</label><b>{{ '$'.number_format($totalServiceProjectExpenses, 2) }}</b>
+                         </div>
+                         <br>
 
-                                    <div class="col-12">
+						<!-- start:report_review -->
+                            <div class="col-md-12">
+                            <div class="card card-secondary card-outline collapsed-card mb-4">
+                            <div class="card-header" data-lte-toggle="card-collapse" style="cursor: pointer;">
+                                <div class="card-title">ANNUAL REPORT REVIEW  <small>(click to open/close)</small></div>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
                                         <div class="row mb-3">
                                             <label>Minimum of one service project completed:<span class="field-required">*&nbsp;</span></label>
-                                            <div class="col-md-12 row">
-                                                <div class="form-check" style="margin-right: 20px;">
+                                    <div class="col-12 d-flex gap-4">
+                                        <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio" name="checkServiceProject" value="1" {{ $chFinancialReport->check_minimum_service_project == 1 ? 'checked' : '' }} required>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
-                                                <div class="form-check">
+                                        <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio" name="checkServiceProject" value="0" {{ !is_null($chFinancialReport->check_minimum_service_project) && $chFinancialReport->check_minimum_service_project == 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
@@ -898,57 +926,59 @@
                                         </div>
                                         <div class="row mb-3">
                                             <label>Made a donation to the M2M Fund:<span class="field-required">*&nbsp;</span></label>
-                                            <div class="col-12 row">
-                                                <div class="form-check" style="margin-right: 20px;">
+                                    <div class="col-12 d-flex gap-4">
+                                        <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio" name="checkM2MDonation" value="1" {{ $chFinancialReport->check_m2m_donation == 1 ? 'checked' : '' }} required>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
-                                                <div class="form-check">
+                                        <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio" name="checkM2MDonation" value="0" {{ !is_null($chFinancialReport->check_m2m_donation) && $chFinancialReport->check_m2m_donation == 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
                                         </div>
 
+                                    <div class="row mb-3">
+                                    <label for="Step3_Note">Add New Note:</label>
                                     <div class="col-12">
-                                        <div class="row mb-3">
-										<label for="Step3_Note">Add New Note:</label>
-                                        <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(3)" name="Step3_Note" id="Step3_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
-                                        <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
-                                            <button type="button" id="AddNote3" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(3)" disabled><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log</button>
-								        </div>
-                                        </div>
+                                        <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(3)" name="Step3_Note" id="Step3_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                    </div>
+                                    <div class="col-12 mt-1">
+                                        <button type="button" id="AddNote3" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(3)" disabled>
+                                            <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
+                                        </button>
                                     </div>
                                 </div>
-									<div class="col-12">
-										<label for="Step3_Log"><strong>Reviewer Notes Logged for this Section (not visible to chapter):</strong></label>
-									</div>
-									<div class="col-12">
+                                <div class="row mb-3">
+                                    <label for="Step3_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+                                    <div class="col-12">
                                         <textarea class="form-control" style="width:100%" rows="8" name="Step3_Log" id="Step3_Log" readonly>{{ $chFinancialReport->step_3_notes_log }}</textarea>
-									</div>
-                               <div class="col-12"><br></div>
+                                    </div>
+                                </div>
 
-						<!-- end:report_review -->
-                        <div class="col-12 text-center">
-						  <button type="submit" id="btn-step-3" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
-					    </div>
+                            <div class="col-12 text-center">
+                                <button type="submit" id="btn-step-3" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
+					      </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
                     </div>
-                </div>
-				    </section>
-				</div>
+                    <!-- /.card -->
+						</section>
+					</div>
 				</div>
             </div>
 				<!------End Step 3 ------>
 
 				<!------Start Step 4 ------>
-                <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '4' ? 'active' : '' }}">
-                    <div class="card-header" id="accordion-header-members">
-                        <h4 class="card-title w-100">
-                            <a class="d-block" data-bs-toggle="collapse" href="#collapseFour" style="width: 100%;">PARTIES & MEMBER BENEFITS</a>
-                        </h4>
-                    </div>
-                    <div id="collapseFour" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '4' ? 'show' : '' }}" data-parent="#accordion">
-                        <div class="card-body">
+                <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '4' ? 'active' : '' }}">
+                <h2 class="accordion-header" id="accordion-header-members">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+                    PARTIES & MEMBER BENEFITS
+                    </button>
+                </h2>
+                <div id="collapseFour" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '4' ? 'show' : '' }}" data-bs-parent="#accordion">
+                    <div class="accordion-body">
 				    <section>
                        <table width="75%" style="border-collapse: collapse;">
                         <thead>
@@ -1016,84 +1046,96 @@
                         </tbody>
                     </table>
                     <br>
-                    <strong>Total Member Benefit Income:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($totalPartyIncome, 2) }}</strong><br>
-                    <strong>Total Member Benefit Expenses:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($totalPartyExpense, 2) }}</strong><br>
-                    <strong>Member Benefit/Dues Income Percentage:&nbsp;&nbsp;&nbsp;{{ number_format($partyPercentage * 100, 2) }}%</strong><br>
-                    <hr style="border-bottom: 2px solid #007bff">
-					<!-- start:report_review -->
-					<div class="form-row report_review" >
-						<div class="card-header col-md-12">
-                            <h3 class="card-title" style="color:#007bff"><strong>ANNUAL REPORT REVIEW</strong></h3>
-                        </div>
-						<div class="card-body form-row">
-                            <div class="col-12">
+                    <div class="col-md-12">
+                        <label class="me-2">Total Member Benefit Income:</label><b>{{ '$'.number_format($totalPartyIncome, 2) }}</b>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="me-2">Total Member Benefit Expenses:</label><b>{{ '$'.number_format($totalPartyExpense, 2) }}</b>
+                    </div>
+                        <div class="col-md-12">
+                        <label class="me-2">Member Benefit/Dues Income Percentage:</label><b>{{ number_format($partyPercentage * 100, 2) }}%</b>
+                    </div>
+                    <br>
 
-                                <div class="col-12">
-                                    <div class="row mb-3">
-                                        <label>Is the Chapter's Party Expense under 15%?<span class="field-required">*&nbsp;</span></label>
-                                        <div class="col-12 row">
-                                            <div class="form-check" style="margin-right: 20px;">
-                                                <input class="form-check-input" type="radio" name="check_party_percentage" value="2" {{ $chFinancialReport->check_party_percentage == 2 ? 'checked' : '' }} required>
-                                                <label class="form-check-label">They are under 15%</label>
-                                            </div>
-                                            <div class="form-check" style="margin-right: 20px;">
-                                                <input class="form-check-input" type="radio" name="check_party_percentage" value="1" {{ $chFinancialReport->check_party_percentage == 1 ? 'checked' : '' }}>
-                                                <label class="form-check-label">They are between 15-20%</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="check_party_percentage" value="0" {{ !is_null($chFinancialReport->check_party_percentage) && $chFinancialReport->check_party_percentage == 0 ? 'checked' : '' }}>
-                                                <label class="form-check-label">They are over 20%</label>
-                                            </div>
+                    <!-- start:report_review -->
+                        <div class="col-md-12">
+                        <div class="card card-secondary card-outline collapsed-card mb-4">
+                        <div class="card-header" data-lte-toggle="card-collapse" style="cursor: pointer;">
+                            <div class="card-title">ANNUAL REPORT REVIEW  <small>(click to open/close)</small></div>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                                <div class="row mb-3">
+                                    <label>Is the Chapter's Party Expense under 15%?<span class="field-required">*&nbsp;</span></label>
+                                    <div class="col-12 d-flex gap-4">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="check_party_percentage" value="2" {{ $chFinancialReport->check_party_percentage == 2 ? 'checked' : '' }} required>
+                                            <label class="form-check-label">They are under 15%</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="check_party_percentage" value="1" {{ $chFinancialReport->check_party_percentage == 1 ? 'checked' : '' }}>
+                                            <label class="form-check-label">They are between 15-20%</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="check_party_percentage" value="0" {{ !is_null($chFinancialReport->check_party_percentage) && $chFinancialReport->check_party_percentage == 0 ? 'checked' : '' }}>
+                                            <label class="form-check-label">They are over 20%</label>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="col-12">
-                                    <div class="row mb-3">
-                                        <label for="Step4_Note">Add New Note:</label>
-                                        <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(4)" name="Step4_Note" id="Step4_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
-                                    <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
-                                        <button type="button" id="AddNote4" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(4)" disabled><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log</button>
+                                 <div class="row mb-3">
+                                    <label for="Step4_Note">Add New Note:</label>
+                                    <div class="col-12">
+                                        <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(4)" name="Step4_Note" id="Step4_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                    </div>
+                                    <div class="col-12 mt-1">
+                                        <button type="button" id="AddNote4" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(4)" disabled>
+                                            <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
+                                        </button>
                                     </div>
                                 </div>
+                                <div class="row mb-3">
+                                    <label for="Step4_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+                                    <div class="col-12">
+                                        <textarea class="form-control" style="width:100%" rows="8" name="Step4_Log" id="Step4_Log" readonly>{{ $chFinancialReport->step_4_notes_log }}</textarea>
+                                    </div>
+                                </div>
+
+                            <div class="col-12 text-center">
+                                <button type="submit" id="btn-step-4" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
                             </div>
                             </div>
-
-								<div class="col-12">
-									<label for="Step4_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
-								</div>
-								<div class="col-12">
-                                    <textarea class="form-control" style="width:100%" rows="8" name="Step4_Log" id="Step4_Log" readonly>{{ $chFinancialReport->step_4_notes_log }}</textarea>
-								</div>
-                                <div class="col-12"><br></div>
-
-					<!-- end:report_review -->
-                    <div class="col-12 text-center">
-                        <button type="submit" id="btn-step-4" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
+                            <!-- /.card-body -->
+                        </div>
                     </div>
-                </div>
-            </div>
-				</section>
-				</div>
+                    <!-- /.card -->
+						</section>
+					</div>
 				</div>
             </div>
 				<!------End Step 4 ------>
 
 				<!------Start Step 5 ------>
-                <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '5' ? 'active' : '' }}">
-                    <div class="card-header" id="accordion-header-members">
-                        <h4 class="card-title w-100">
-                            <a class="d-block" data-bs-toggle="collapse" href="#collapseFive" style="width: 100%;">OFFICE & OPERATING EXPENSES</a>
-                        </h4>
-                    </div>
-                    <div id="collapseFive" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '5' ? 'show' : '' }}" data-parent="#accordion">
-                        <div class="card-body">
+                <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '5' ? 'active' : '' }}">
+                <h2 class="accordion-header" id="accordion-header-members">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
+                    OFFICE & OPERATING EXPENSES
+                    </button>
+                </h2>
+                <div id="collapseFive" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '5' ? 'show' : '' }}" data-bs-parent="#accordion">
+                    <div class="accordion-body">
                 <section>
-                    Printing Costs:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport->office_printing_costs, 2) }}</strong><br>
-                    Postage Costs:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport->office_postage_costs, 2) }}</strong><br>
-                    Membership Pins:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport->office_membership_pins_cost, 2) }}</strong><br>
-                <br>
-                Other Office/Operating Expenses:
+                    <div class="col-md-12">
+                        <span class="me-2">Printing Costs:</span>{{ '$'.number_format($chFinancialReport->office_printing_costs, 2) }}</b>
+                    </div>
+                    <div class="col-md-12">
+                        <span class="me-2">Postage Costs:</span>{{ '$'.number_format($chFinancialReport->office_postage_costs, 2) }}</b>
+                    </div>
+                    <div class="col-md-12">
+                        <span class="me-2">Membership Pins:</span>{{ '$'.number_format($chFinancialReport->office_membership_pins_cost, 2) }}</b>
+                    </div>
+                    <br>
+                    Other Office/Operating Expenses:
                     <table width="50%" >
                        <tbody>
                             @php
@@ -1137,64 +1179,71 @@
                         </tbody>
                     </table>
                     <br>
-                    <strong>Total Office/Operating Expenses:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($chFinancialReport->office_printing_costs + $chFinancialReport->office_postage_costs +
-                            $chFinancialReport->office_membership_pins_cost + $totalOfficeExpense, 2) }}</strong><br>
-						<hr style="border-bottom: 2px solid #007bff">
-                        <!-- start:report_review -->
-				<div  class="form-row report_review">
-					<div class="card-header col-md-12">
-                        <h3 class="card-title" style="color:#007bff"><strong>ANNUAL REPORT REVIEW</strong></h3>
-                    </div>
-					<div class="card-body form-row">
-                        <div class="col-12">
+                    <div class="col-md-12">
+                                    <label class="me-2">Total Office/Operating Expenses:</label><b>{{ '$'.number_format($chFinancialReport->office_printing_costs + $chFinancialReport->office_postage_costs +
+                            $chFinancialReport->office_membership_pins_cost + $totalOfficeExpense, 2) }}</b>
+						 </div>
+                                <br>
 
-                            <div class="col-12">
-                                <div class="col-12">
+                                <!-- start:report_review -->
+                                <div class="col-md-12">
+                                <div class="card card-secondary card-outline collapsed-card mb-4">
+                                <div class="card-header" data-lte-toggle="card-collapse" style="cursor: pointer;">
+                                    <div class="card-title">ANNUAL REPORT REVIEW  <small>(click to open/close)</small></div>
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body">
                                     <div class="row mb-3">
-								<label for="Step5_Note">Add New Note:</label>
-                                        <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(5)" name="Step5_Note" id="Step5_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
-                                <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
-								<button type="button" id="AddNote5" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(5)" disabled><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log</button>
-						    </div>
+                                        <label for="Step5_Note">Add New Note:</label>
+                                        <div class="col-12">
+                                            <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(5)" name="Step5_Note" id="Step5_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                        </div>
+                                        <div class="col-12 mt-1">
+                                            <button type="button" id="AddNote5" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(5)" disabled>
+                                                <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="Step5_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+                                        <div class="col-12">
+                                            <textarea class="form-control" style="width:100%" rows="8" name="Step5_Log" id="Step5_Log" readonly>{{ $chFinancialReport->step_5_notes_log }}</textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 text-center">
+                                        <button type="submit" id="btn-step-5" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
                         </div>
                     </div>
-                    </div>
-
-							<div class="col-12">
-								<label for="Step5_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
-							</div>
-							<div class="col-12">
-                                <textarea class="form-control" style="width:100%" rows="8" name="Step5_Log" id="Step5_Log" readonly>{{ $chFinancialReport->step_5_notes_log }}</textarea>
-							</div>
-                            <div class="col-12"><br></div>
-
-                    <!-- end:report_review -->
-                    <div class="col-12 text-center">
-                        <button type="submit" id="btn-step-5" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
-                    </div>
-                </div>
+                    <!-- /.card -->
+						</section>
+					</div>
+				</div>
             </div>
-                </section>
-			</div>
-			</div>
-        </div>
 			<!------End Step 5 ------>
 
             <!------Start Step 6 ------>
-            <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '6' ? 'active' : '' }}">
-                <div class="card-header" id="accordion-header-members">
-                    <h4 class="card-title w-100">
-                        <a class="d-block" data-bs-toggle="collapse" href="#collapseSix" style="width: 100%;">INTERNATIONAL EVENTS & RE-REGISTRATION</a>
-                    </h4>
-                </div>
-                <div id="collapseSix" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '6' ? 'show' : '' }}" data-parent="#accordion">
-                    <div class="card-body">
+            <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '6' ? 'active' : '' }}">
+                <h2 class="accordion-header" id="accordion-header-members">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="true" aria-controls="collapseSix">
+                    INTERNATIONAL EVENTS & RE-REGISTRATION
+                    </button>
+                </h2>
+                <div id="collapseSix" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '6' ? 'show' : '' }}" data-bs-parent="#accordion">
+                    <div class="accordion-body">
                     <section>
-                        <strong>Chapter Re-Registration:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($chFinancialReport->annual_registration_fee, 2) }}</strong><br>
-                        <br>
-                        Did your chapter attend an International Event?&nbsp;&nbsp;&nbsp;
-                        <strong>{{ is_null($chFinancialReport->international_event) ? 'Not Answered' : ($chFinancialReport->international_event == 0 ? 'NO'
-                            : ( $chFinancialReport->international_event == 1 ? 'YES' : 'Not Answered' )) }}</strong><br>
+                        <div class="col-md-12">
+                            <label class="me-2">Chapter Re-Registration:</label><b>{{ '$'.number_format($chFinancialReport->annual_registration_fee, 2) }}</b>
+                        </div>
+                         <br>
+                        <div class="col-md-12">
+                            <span class="me-2">Did your chapter attend an International Event?</span>
+                            <b>{{ is_null($chFinancialReport->international_event) ? 'Not Answered' : ($chFinancialReport->international_event == 0 ? 'NO'
+                            : ( $chFinancialReport->international_event == 1 ? 'YES' : 'Not Answered' )) }}</b>
+                        </div>
                         <br>
                         <table width="75%" style="border-collapse: collapse;">
                             <thead>
@@ -1251,71 +1300,77 @@
                             </tbody>
                         </table>
                         <br>
-                        <strong>Total Events Income:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($totalEventIncome, 2) }}</strong><br>
-                        <strong>Total Events Expenses:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($totalEventExpense, 2) }}</strong><br>
-						<hr style="border-bottom: 2px solid #007bff">
-                <!-- start:report_review -->
-                    <div  class="form-row report_review">
-                        <div class="card-header col-md-12">
-                            <h3 class="card-title" style="color:#007bff"><strong>ANNUAL REPORT REVIEW</strong></h3>
+                        <div class="col-md-12">
+                            <label class="me-2">Total Events Income:</label><b>{{ '$'.number_format($totalEventIncome, 2) }}</b>
                         </div>
-                        <div class="card-body form-row">
-                            <div class="col-12">
+                        <div class="col-md-12">
+                            <label class="me-2">Total Events Expenses:</label><b>{{ '$'.number_format($totalEventExpense, 2) }}</b>
+                        </div>
+                        <br>
 
-                                <div class="col-12">
-                                <div class="col-12">
+                                <!-- start:report_review -->
+                                <div class="col-md-12">
+                                <div class="card card-secondary card-outline collapsed-card mb-4">
+                                <div class="card-header" data-lte-toggle="card-collapse" style="cursor: pointer;">
+                                    <div class="card-title">ANNUAL REPORT REVIEW  <small>(click to open/close)</small></div>
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body">
                                     <div class="row mb-3">
                                         <label>Did they attended an in person or virtual International Event?<span class="field-required">*&nbsp;</span></label>
-                                        <div class="col-12 row">
-                                            <div class="form-check" style="margin-right: 20px;">
+                                    <div class="col-12 d-flex gap-4">
+                                        <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="checkAttendedTraining" value="1" {{ $chFinancialReport->check_attended_training == 1 ? 'checked' : '' }}>
                                                 <label class="form-check-label">Yes</label>
                                             </div>
-                                            <div class="form-check">
+                                        <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="checkAttendedTraining" value="0" {{ !is_null($chFinancialReport->check_attended_training) && $chFinancialReport->check_attended_training == 0 ? 'checked' : '' }}>
                                                 <label class="form-check-label">No</label>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row mb-3">
+
+                                <div class="row mb-3">
                                     <label for="Step6_Note">Add New Note:</label>
-                                            <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(6)" name="Step6_Note" id="Step6_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
-                                    <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
-                                        <button type="button" id="AddNote6" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(6)" disabled><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log</button>
+                                    <div class="col-12">
+                                        <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(6)" name="Step6_Note" id="Step6_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                    </div>
+                                    <div class="col-12 mt-1">
+                                        <button type="button" id="AddNote6" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(6)" disabled>
+                                            <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        </div>
+                                <div class="row mb-3">
+                                    <label for="Step6_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+                                    <div class="col-12">
+                                        <textarea class="form-control" style="width:100%" rows="8" name="Step6_Log" id="Step6_Log" readonly>{{ $chFinancialReport->step_6_notes_log }}</textarea>
+                                    </div>
+                                </div>
 
-					<div class="col-12">
-						<label for="Step6_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
-					</div>
-					<div class="col-12">
-                        <textarea class="form-control" style="width:100%" rows="8" name="Step6_Log" id="Step6_Log" readonly>{{ $chFinancialReport->step_6_notes_log }}</textarea>
-					</div>
-                    <div class="col-12"><br></div>
-
-                    <!-- end:report_review -->
                     <div class="col-12 text-center">
                           <button type="submit" id="btn-step-6" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
+                     </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
                     </div>
-                </div>
-            </div>
-                    </section>
-                </div>
-                </div>
+                    <!-- /.card -->
+						</section>
+					</div>
+				</div>
             </div>
                 <!------End Step 6 ------>
 
 			<!------Start Step 7 ------>
-            <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '7' ? 'active' : '' }}">
-                <div class="card-header" id="accordion-header-members">
-                    <h4 class="card-title w-100">
-                        <a class="d-block" data-bs-toggle="collapse" href="#collapseSeven" style="width: 100%;">DONATIONS TO YOUR CHAPTER</a>
-                    </h4>
-                </div>
-                <div id="collapseSeven" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '7' ? 'show' : '' }}" data-parent="#accordion">
-                    <div class="card-body">
+            <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '7' ? 'active' : '' }}">
+                <h2 class="accordion-header" id="accordion-header-members">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="true" aria-controls="collapseSeven">
+                    DONATIONS TO YOUR CHAPTER
+                    </button>
+                </h2>
+                <div id="collapseSeven" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '7' ? 'show' : '' }}" data-bs-parent="#accordion">
+                    <div class="accordion-body">
 				<section>
                     Monetary Donations:
                     <table width="100%" style="border-collapse: collapse;">
@@ -1374,8 +1429,10 @@
                         </tbody>
                     </table>
                     <br>
-                    <strong>Total Monetary Donations:&nbsp;&nbsp;&nbsp;{{ '$'.number_format( $totalDonationAmount, 2) }}</strong><br>
-                    <br>
+                    <div class="col-md-12">
+                            <label class="me-2">Total Monetary Donations:</label><b>{{ '$'.number_format( $totalDonationAmount, 2) }}</b>
+                    </div>
+                         <br>
 					Non-Monetary Donations:
                     <table width="75%" style="border-collapse: collapse;">
                         <thead>
@@ -1415,56 +1472,56 @@
                     </tbody>
                     </table>
                     <br>
-                    <hr style="border-bottom: 2px solid #007bff">
-					<!-- start:report_review -->
-						<div  class="form-row report_review">
-							<div class="card-header col-md-12">
-                                <h3 class="card-title" style="color:#007bff"><strong>ANNUAL REPORT REVIEW</strong></h3>
+
+                    <!-- start:report_review -->
+                            <div class="col-md-12">
+                            <div class="card card-secondary card-outline collapsed-card mb-4">
+                            <div class="card-header" data-lte-toggle="card-collapse" style="cursor: pointer;">
+                                <div class="card-title">ANNUAL REPORT REVIEW  <small>(click to open/close)</small></div>
                             </div>
-							<div class="card-body form-row">
-                                <div class="col-12">
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                 <div class="row mb-3">
+                                    <label for="Step7_Note">Add New Note:</label>
+                                    <div class="col-12">
+                                        <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(7)" name="Step7_Note" id="Step7_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                    </div>
+                                    <div class="col-12 mt-1">
+                                        <button type="button" id="AddNote7" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(7)" disabled>
+                                            <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="Step7_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+                                    <div class="col-12">
+                                        <textarea class="form-control" style="width:100%" rows="8" name="Step7_Log" id="Step7_Log" readonly>{{ $chFinancialReport->step_3_notes_log }}</textarea>
+                                    </div>
+                                </div>
 
-                                    <div class="col-12">
-                                    <div class="col-12">
-                                        <div class="row mb-3">
-										<label for="Step7_Note">Add New Note:</label>
-                                            <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(7)" name="Step7_Note" id="Step7_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
-                                        <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
-										<button type="button" id="AddNote7" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(7)" disabled><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log</button>
-								</div>
+                            <div class="col-12 text-center">
+                                <button type="submit" id="btn-step-7" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
                             </div>
-                        </div>
-                        </div>
-
-                    <div class="col-12">
-                            <label for="Step7_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
-                        </div>
-                        <div class="col-12">
-                            <textarea class="form-control" style="width:100%" rows="8" name="Step7_Log" id="Step7_Log" readonly>{{ $chFinancialReport->step_7_notes_log }}</textarea>
-                        </div>
-                        <div class="col-12"><br></div>
-
-						<!-- end:report_review -->
-                        <div class="col-12 text-center">
-							  <button type="submit" id="btn-step-7" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
-                        <div>
+                            </div>
+                            <!-- /.card-body -->
                         </div>
                     </div>
-                    </section>
-				</div>
+                    <!-- /.card -->
+						</section>
+					</div>
 				</div>
             </div>
 				<!------End Step 7 ------>
 
 				<!------Start Step 8 ------>
-                <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '8' ? 'active' : '' }}">
-                    <div class="card-header" id="accordion-header-members">
-                        <h4 class="card-title w-100">
-                            <a class="d-block" data-bs-toggle="collapse" href="#collapseEight" style="width: 100%;">OTHER INCOME & EXPENSES</a>
-                        </h4>
-                    </div>
-                    <div id="collapseEight" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '8' ? 'show' : '' }}" data-parent="#accordion">
-                        <div class="card-body">
+                 <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '8' ? 'active' : '' }}">
+                <h2 class="accordion-header" id="accordion-header-members">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="true" aria-controls="collapseEight">
+                    OTHER INCOME & EXPENSES
+                    </button>
+                </h2>
+                <div id="collapseEight" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '8' ? 'show' : '' }}" data-bs-parent="#accordion">
+                    <div class="accordion-body">
 					<section>
                         <table width="75%" style="border-collapse: collapse;">
                             <thead>
@@ -1521,56 +1578,63 @@
                                 </tbody>
                         </table>
                         <br>
-                        <strong>Total Other Income:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($totalOtherIncome, 2) }}</strong><br>
-                        <strong>Total Other Expenses:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($totalOtherExpenses, 2) }}</strong><br>
-						<hr style="border-bottom: 2px solid #007bff">
-					<!-- start:report_review -->
-					<div  class="form-row report_review">
-						<div class="card-header col-md-12">
-                            <h3 class="card-title" style="color:#007bff"><strong>ANNUAL REPORT REVIEW</strong></h3>
+                         <div class="col-md-12">
+                            <label class="me-2">Total Other Income:</label><b>{{ '$'.number_format($totalOtherIncome, 2) }}</b>
                         </div>
-						<div class="card-body form-row">
-                            <div class="col-12">
+                         <div class="col-md-12">
+                            <label class="me-2">Total Other Expenses:</label><b>{{ '$'.number_format($totalOtherExpenses, 2) }}</b>
+						</div>
+                         <br>
 
-                                <div class="col-12">
-                                <div class="col-12">
-                                    <div class="row mb-3">
-									<label for="Step8_Note">Add New Note:</label>
-                                        <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(8)" name="Step8_Note" id="Step8_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
-                                    <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
-									<button type="button" id="AddNote8" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(8)" disabled><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log</button>
-							</div>
+						<!-- start:report_review -->
+                            <div class="col-md-12">
+                            <div class="card card-secondary card-outline collapsed-card mb-4">
+                            <div class="card-header" data-lte-toggle="card-collapse" style="cursor: pointer;">
+                                <div class="card-title">ANNUAL REPORT REVIEW  <small>(click to open/close)</small></div>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <div class="row mb-3">
+                                    <label for="Step8_Note">Add New Note:</label>
+                                    <div class="col-12">
+                                        <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(8)" name="Step8_Note" id="Step8_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                    </div>
+                                    <div class="col-12 mt-1">
+                                        <button type="button" id="AddNote8" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(8)" disabled>
+                                            <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="Step8_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+                                    <div class="col-12">
+                                        <textarea class="form-control" style="width:100%" rows="8" name="Step8_Log" id="Step8_Log" readonly>{{ $chFinancialReport->step_8_notes_log }}</textarea>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 text-center">
+                                        <button type="submit" id="btn-step-8" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
                         </div>
                     </div>
-                    </div>
-                    <div class="col-12">
-                            <label for="Step8_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
-                        </div>
-                        <div class="col-12">
-                            <textarea class="form-control" style="width:100%" rows="8" name="Step8_Log" id="Step8_Log" readonly>{{ $chFinancialReport->step_8_notes_log }}</textarea>
-                        </div>
-                    <div class="col-12"><br></div>
-					<!-- end:report_review -->
-                    <div class="col-12 text-center">
-							  <button type="submit" id="btn-step-8" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
+                    <!-- /.card -->
+						</section>
 					</div>
-                </div>
-            </div>
-				</section>
-			  </div>
-			  </div>
+				</div>
             </div>
 				<!------End Step 8 ------>
 
                 <!------Start Step 9 ------>
-                <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '9' ? 'active' : '' }}">
-                    <div class="card-header" id="accordion-header-members">
-                        <h4 class="card-title w-100">
-                            <a class="d-block" data-bs-toggle="collapse" href="#collapseNine" style="width: 100%;">FINANCIAL SUMMARY</a>
-                        </h4>
-                    </div>
-                    <div id="collapseNine" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '9' ? 'show' : '' }}" data-parent="#accordion">
-                        <div class="card-body">
+                <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '9' ? 'active' : '' }}">
+                <h2 class="accordion-header" id="accordion-header-members">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNine" aria-expanded="true" aria-controls="collapseNine">
+                    FINANCIAL SUMMARY
+                    </button>
+                </h2>
+                <div id="collapseNine" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '9' ? 'show' : '' }}" data-bs-parent="#accordion">
+                    <div class="accordion-body">
 				<section>
                     @php
                         $totalIncome = $totalDues + $totalServiceIncome + $totalPartyIncome + $totalDonationAmount + $totalEventIncome + $totalOtherIncome;
@@ -1651,103 +1715,102 @@
                         </tbody>
                     </table>
                     <br>
-                    <hr style="border-bottom: 2px solid #007bff">
-         <!-- start:report_review -->
-		<div  class="form-row report_review">
-			<div class="card-header col-md-12">
-                <h3 class="card-title" style="color:#007bff"><strong>ANNUAL REPORT REVIEW</strong></h3>
-            </div>
-			<div class="card-body form-row">
-                <div class="col-12">
 
-                    <div class="col-12">
-                        <div class="row mb-3">
-                            <label>Total Income/Revenue:</label>
-                        <div class="col-12">
-                            <strong>{{ '$'.number_format($totalIncome, 2) }}</strong>
-                        </div>
+                <!-- start:report_review -->
+                    <div class="col-md-12">
+                    <div class="card card-secondary card-outline collapsed-card mb-4">
+                    <div class="card-header" data-lte-toggle="card-collapse" style="cursor: pointer;">
+                        <div class="card-title">ANNUAL REPORT REVIEW  <small>(click to open/close)</small></div>
                     </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="col-md-12">
+                            <label class="me-2">Total Income/Revenue:</label><b>{{ '$'.number_format($totalIncome, 2) }}</b>
+                        </div>
+                        <br>
                         <div class="row mb-3">
                             <label>Is the Total Income/Revenue less than $50,000?<span class="field-required">*&nbsp;</span></label>
-                            <div class="col-12 row">
-                                <div class="form-check" style="margin-right: 20px;">
+                                    <div class="col-12 d-flex gap-4">
+                                        <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="checkTotalIncome" value="1" {{ $chFinancialReport->check_total_income_less == 1 ? 'checked' : '' }}>
                                     <label class="form-check-label">Yes</label>
                                 </div>
-                                <div class="form-check">
+                                        <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="checkTotalIncome" value="0" {{ !is_null($chFinancialReport->check_total_income_less) && $chFinancialReport->check_total_income_less == 0 ? 'checked' : '' }}>
                                     <label class="form-check-label">No</label>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="col-12">
-                        <div class="row mb-3">
-                            <label for="Step9_Note">Add New Note:</label>
-                            <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(9)" name="Step9_Note" id="Step9_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
-                            <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
-                            <button type="button" id="AddNote9" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(9)" disabled><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log</button>
-                    </div>
-                </div>
-            </div>
-            </div>
-					<div class="col-12">
-						<label for="Step9_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
-					</div>
-					<div class="col-12">
-                        <textarea class="form-control" style="width:100%" rows="8" name="Step9_Log" id="Step9_Log" readonly>{{ $chFinancialReport->step_9_notes_log }}</textarea>
-					</div>
-                <div class="col-12"><br></div>
-		    <!-- end:report_review -->
-                    <div class="col-12 text-center">
-                        <button type="submit" id="btn-step-9" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
+                          <div class="row mb-3">
+                                    <label for="Step9_Note">Add New Note:</label>
+                                    <div class="col-12">
+                                        <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(9)" name="Step9_Note" id="Step9_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                    </div>
+                                    <div class="col-12 mt-1">
+                                        <button type="button" id="AddNote9" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(9)" disabled>
+                                            <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="Step9_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+                                    <div class="col-12">
+                                        <textarea class="form-control" style="width:100%" rows="8" name="Step9_Log" id="Step9_Log" readonly>{{ $chFinancialReport->step_9_notes_log }}</textarea>
+                                    </div>
+                                </div>
+
+                        <div class="col-12 text-center">
+                            <button type="submit" id="btn-step-9" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
+                        </div>
+                            </div>
+                            <!-- /.card-body -->
                         </div>
                     </div>
-                </div>
-				</section>
-			</div>
-			</div>
-        </div>
+                    <!-- /.card -->
+						</section>
+					</div>
+				</div>
+            </div>
 			<!------End Step 9 ------>
 
                 <!------Start Step 10 ------>
-                <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '10' ? 'active' : '' }}">
-                    <div class="card-header" id="accordion-header-members">
-                        <h4 class="card-title w-100">
-                            <a class="d-block" data-bs-toggle="collapse" href="#collapseTen" style="width: 100%;">BANK RECONCILIATION</a>
-                        </h4>
-                    </div>
-                    <div id="collapseTen" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '10' ? 'show' : '' }}" data-parent="#accordion">
-                        <div class="card-body">
+                 <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '10' ? 'active' : '' }}">
+                <h2 class="accordion-header" id="accordion-header-members">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTen" aria-expanded="true" aria-controls="collapseTen">
+                    BANK RECONCILIATION
+                    </button>
+                </h2>
+                <div id="collapseTen" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '10' ? 'show' : '' }}" data-bs-parent="#accordion">
+                    <div class="accordion-body">
 					<section>
-                        <div class="flex-container">
-                            Is a copy of your chapter’s most recent bank statement included?&nbsp;&nbsp;&nbsp;
-                            <strong>{{ is_null($chFinancialReport->bank_statement_included) ? 'Not Answered' : ($chFinancialReport->bank_statement_included == 0 ? 'NO'
-                                : ( $chFinancialReport->bank_statement_included == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport->bank_statement_included_explanation}}{{ $chFinancialReport->wheres_the_money }}</strong><br>
-                            <br>
-                            <div class="flex-item">
-                                Beginning Balance&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport->amount_reserved_from_previous_year, 2)}}</strong><br>
+                        <div class="col-md-12">
+                            <span class="me-2">Is a copy of your chapter’s most recent bank statement included?</span>
+                            <b>{{ is_null($chFinancialReport->bank_statement_included) ? 'Not Answered' : ($chFinancialReport->bank_statement_included == 0 ? 'NO'
+                                : ( $chFinancialReport->bank_statement_included == 1 ? 'YES' : 'Not Answered' )) }}
+                                <span class="ms-2">{{ $chFinancialReport->bank_statement_included_explanation}}{{ $chFinancialReport->wheres_the_money }}</span></b>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <span class="me-2">Beginning Balance</span><b>{{ '$'.number_format($chFinancialReport->amount_reserved_from_previous_year, 2)}}</b>
                             </div>
-                            <div class="flex-item">
-                                Ending Bank Statement Balance&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport->bank_balance_now, 2)}}</strong><br>
+                            <div class="col-md-8">
+                                <span class="me-2">Ending Bank Statement Balance</span><b>{{ '$'.number_format($chFinancialReport->bank_balance_now, 2)}}</b>
                             </div>
-                            <div class="flex-item">
-                                Profit (Loss)&nbsp;&nbsp;&nbsp;<strong>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <span class="me-2">Profit (Loss)</span><b>
                                     @php
                                         $netAmount = $totalIncome - $totalExpenses;
                                         $formattedAmount = ($netAmount < 0) ? '($' . number_format(abs($netAmount), 2) . ')' : '$' . number_format($netAmount, 2);
                                     @endphp
-                                    {{ $formattedAmount }}</strong><br>
+                                    {{ $formattedAmount }}
+                                </b>
                             </div>
-                            <div class="flex-item">
-                                &nbsp;&nbsp;&nbsp;
-                            </div>
-                            <div class="flex-item">
-                                Ending Balance (Treasury Balance Now)&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($treasuryBalance, 2)}}</strong><br>
-                            </div>
-                            <div class="flex-item">
-                                &nbsp;&nbsp;&nbsp;
+                            <div class="col-md-8">
+                                <span class="me-2">Ending Balance (Treasury Balance Now)</span><b>{{ '$'.number_format($treasuryBalance, 2)}}</b>
                             </div>
                         </div>
                         <br>
@@ -1819,81 +1882,74 @@
                             </tbody>
                             </table>
                         <br>
-                        Reconciled Bank Statement:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport->bank_balance_now + $totalReconciliation, 2) }}</strong><br>
+                         <div class="col-md-12">
+                            <label class="me-2">Reconciled Bank Statement:</label><b>{{ '$'.number_format($chFinancialReport->bank_balance_now + $totalReconciliation, 2) }}</b>
+                        </div>
+                         <br>
 
-						<hr style="border-bottom: 2px solid #007bff">
-				<!-- start:report_review -->
-				<div  class="form-row report_review">
-                    <div class="card-header col-md-12">
-                        <h3 class="card-title" style="color:#007bff"><strong>ANNUAL REPORT REVIEW</strong></h3>
-                    </div>
-                            <div class="card-body form-row">
+						<!-- start:report_review -->
+                            <div class="col-md-12">
+                            <div class="card card-secondary card-outline collapsed-card mb-4">
+                            <div class="card-header" data-lte-toggle="card-collapse" style="cursor: pointer;">
+                                <div class="card-title">ANNUAL REPORT REVIEW  <small>(click to open/close)</small></div>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                            @if (!is_null($chEOYDocuments->statement_1_path))
                                 <div class="col-12">
-
-                                    @if (!is_null($chEOYDocuments->statement_1_path))
-                                        <div class="col-12">
-                                            <label>Bank Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->statement_1_path }}">&nbsp; View Bank Statement</a><br>
-                                        </div>
-                                    @endif
-                                    @if (!is_null($chEOYDocuments->statement_2_path))
-                                        <div class="col-12">
-                                            <label>Additional Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->statement_2_path }}">&nbsp; View Additional Bank Statement</a><br>
-                                        </div>
-                                    @endif
-                                    <div class="col-12" id="StatementBlock">
-                                        <strong style="color:red">Please Note</strong><br>
-                                            This will refresh the screen - be sure to save all work before clicking button to Upload or Replace Bank Statement(s).<br>
-                                        @if (!is_null($chEOYDocuments->statement_1_path))
-                                            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace Bank Statement</button>
-                                        @else
-                                            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload Bank Statement</button>
-                                        @endif
-                                    </div>
-                                        <input type="hidden" name="StatementFile" id="StatementPath" value="{{ $chEOYDocuments->statement_1_path }}">
-                                    <div class="clearfix"></div>
-                                    <div class="col-12"><br></div>
-                                    <div class="col-12" id="Statement2Block">
-                                        @if (!is_null($chEOYDocuments->statement_2_path))
-                                            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace Additional Bank Statement</button>
-                                        @else
-                                            <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload Additional Bank Statement</button>
-                                        @endif
-                                    </div>
-                                        <input type="hidden" name="Statement2File" id="Statement2Path" value="{{ $chEOYDocuments->statement_2_path }}">
-                                    <div class="clearfix"></div>
-                                    <div class="col-12"><br></div>
-
+                                    <label>Bank Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->statement_1_path }}">&nbsp; View Bank Statement</a><br>
+                                </div>
+                            @endif
+                            @if (!is_null($chEOYDocuments->statement_2_path))
                                 <div class="col-12">
+                                    <label>Additional Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->statement_2_path }}">&nbsp; View Additional Bank Statement</a><br>
+                                </div>
+                            @endif
+                            <div class="col-12" id="StatementBlock">
+                                <strong style="color:red">Please Note</strong><br>
+                                    This will refresh the screen - be sure to save all work before clicking button to Upload or Replace Bank Statement(s).<br>
+                                @if (!is_null($chEOYDocuments->statement_1_path))
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace Bank Statement</button>
+                                @else
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload Bank Statement</button>
+                                @endif
+                            </div>
+                            <input type="hidden" name="StatementFile" id="StatementPath" value="{{ $chEOYDocuments->statement_1_path }}">
 
-                                <div class="col-12">
-                                    <div class="row mb-3">
-                                        <label>Ending Balance on Last Year's Report:</label>
-                                        <div class="col-md-12 row">
-                                            <strong>{{ '$'.number_format($chFinancialReport->pre_balance, 2) }}</strong>
+                            <div class="col-12" id="Statement2Block">
+                                @if (!is_null($chEOYDocuments->statement_2_path))
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace Additional Bank Statement</button>
+                                @else
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload Additional Bank Statement</button>
+                                @endif
+                            </div>
+                            <input type="hidden" name="Statement2File" id="Statement2Path" value="{{ $chEOYDocuments->statement_2_path }}">
+                            <br>
+                                <div class="col-md-12">
+                                    <label class="me-2">Ending Balance on Last Year's Report:</label><b>{{ '$'.number_format($chFinancialReport->pre_balance, 2) }}</b>
+                                </div>
+                                <br>
+                                <div class="row mb-3">
+                                    <label>Does this year's Beginning Balance match last year's Ending Balance?<span class="field-required">*&nbsp;</span></label>
+                                    <div class="col-12 d-flex gap-4">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="check_beginning_balance" value="1" {{ $chFinancialReport->check_beginning_balance == 1 ? 'checked' : '' }}>
+                                            <label class="form-check-label">Yes</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="check_beginning_balance" value="0" {{ !is_null($chFinancialReport->check_beginning_balance) && $chFinancialReport->check_beginning_balance == 0 ? 'checked' : '' }}>
+                                            <label class="form-check-label">No</label>
                                         </div>
                                     </div>
-
-                                    <div class="row mb-3">
-                                        <label>Does this year's Beginning Balance match last year's Ending Balance?<span class="field-required">*&nbsp;</span></label>
-                                        <div class="col-12 row">
-                                            <div class="form-check" style="margin-right: 20px;">
-                                                <input class="form-check-input" type="radio" name="check_beginning_balance" value="1" {{ $chFinancialReport->check_beginning_balance == 1 ? 'checked' : '' }}>
-                                                <label class="form-check-label">Yes</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="check_beginning_balance" value="0" {{ !is_null($chFinancialReport->check_beginning_balance) && $chFinancialReport->check_beginning_balance == 0 ? 'checked' : '' }}>
-                                                <label class="form-check-label">No</label>
-                                            </div>
-                                        </div>
-                                    </div>
+                                </div>
                                     <div class="row mb-3">
                                         <label>Current bank statement included and balance matches chapter entry:<span class="field-required">*&nbsp;</span></label>
-                                        <div class="col-12 row">
-                                            <div class="form-check" style="margin-right: 20px;">
+                                    <div class="col-12 d-flex gap-4">
+                                        <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="checkBankStatementIncluded" value="1" {{ $chFinancialReport->check_bank_statement_included == 1 ? 'checked' : '' }}>
                                                 <label class="form-check-label">Yes</label>
                                             </div>
-                                            <div class="form-check">
+                                        <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="checkBankStatementIncluded" value="0" {{ !is_null($chFinancialReport->check_bank_statement_included) && $chFinancialReport->check_bank_statement_included == 0 ? 'checked' : '' }}>
                                                 <label class="form-check-label">No</label>
                                             </div>
@@ -1901,201 +1957,208 @@
                                     </div>
                                     <div class="row mb-3">
                                         <label>Treasury Balance Now matches Reconciled Bank Balance:<span class="field-required">*&nbsp;</span></label>
-                                        <div class="col-md-12 row">
-                                            <div class="form-check" style="margin-right: 20px;">
+                                    <div class="col-12 d-flex gap-4">
+                                        <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="checkBankStatementMatches" value="1" {{ $chFinancialReport->check_bank_statement_matches == 1 ? 'checked' : '' }}>
                                                 <label class="form-check-label">Yes</label>
                                             </div>
-                                            <div class="form-check">
+                                        <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="checkBankStatementMatches" value="0" {{ !is_null($chFinancialReport->check_bank_statement_matches) && $chFinancialReport->check_bank_statement_matches == 0 ? 'checked' : '' }}>
                                                 <label class="form-check-label">No</label>
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="row mb-3">
-                                        <div class="col-12">
-                                        <div class="input-group row">
-                                            <label for="post_balance">Enter Ending Balance (to be used as beginning balance on next year's report):</label>
-                                           <div class="col-md-12 row">
-                                             <div class="input-group-prepend">
-                                              <span class="input-group-text">$</span>
+                                        <div class="col-md-12">
+                                            <label for="post_balance" class="me-2">Enter Ending Balance (to be used as beginning balance on next year's report):</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="input-group">
+                                                <span class="input-group-text">$</span>
+                                                <input type="text" class="form-control" min="0" step="0.01" name="post_balance" id="post_balance" value="{{ !empty($chFinancialReport) ? $chFinancialReport->post_balance : '' }}">
                                             </div>
-                                                <input type="text" class="form-control" min="0" step="0.01" name="post_balance" id="post_balance" style="width: 120px;" value="{{ !empty($chFinancialReport) ? $chFinancialReport->post_balance : '' }}">
-                                        </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
 
-                    <div class="col-12">
                                 <div class="row mb-3">
-                                        <label for="Step10_Note">Add New Note:</label>
-                                            <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(10)" name="Step10_Note" id="Step10_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>                                        <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
-                                        <button type="button" id="AddNote10" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(10)" disabled><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log</button>
+                                    <label for="AddNote10">Add New Note:</label>
+                                    <div class="col-12">
+                                        <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(10)" name="AddNote10" id="AddNote10" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                    </div>
+                                    <div class="col-12 mt-1">
+                                        <button type="button" id="AddNote10" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(10)" disabled>
+                                            <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
+                                        </button>
                                     </div>
                                 </div>
+                                <div class="row mb-3">
+                                    <label for="Step10_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+                                    <div class="col-12">
+                                        <textarea class="form-control" style="width:100%" rows="8" name="Step10_Log" id="Step10_Log" readonly>{{ $chFinancialReport->step_10_notes_log }}</textarea>
+                                    </div>
+                                </div>
+
+                            <div class="col-12 text-center">
+                                <button type="submit" id="btn-step-10" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
                             </div>
                             </div>
-
-							<div class="col-12">
-								<label for="Step10_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
-							</div>
-							<div class="col-12">
-                                <textarea class="form-control" style="width:100%" rows="8" name="Step10_Log" id="Step10_Log" readonly>{{ $chFinancialReport->step_10_notes_log }}</textarea>
-							</div>
-                            <div class="col-12"><br></div>
-
-                    <!-- end:report_review -->
-                    <div class="col-12 text-center">
-                        <button type="submit" id="btn-step-10" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
+                            <!-- /.card-body -->
+                        </div>
                     </div>
-                </div>
+                    <!-- /.card -->
+						</section>
+					</div>
+				</div>
             </div>
-                </section>
-			</div>
-			</div>
-        </div>
 			<!------End Step 10 ------>
 
             <!------Start Step 11 ------>
-            <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '11' ? 'active' : '' }}">
-                <div class="card-header" id="accordion-header-members">
-                    <h4 class="card-title w-100">
-                        <a class="d-block" data-bs-toggle="collapse" href="#collapseEleven" style="width: 100%;">990N IRS FILING</a>
-                    </h4>
-                </div>
-                <div id="collapseEleven" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '11' ? 'show' : '' }}" data-parent="#accordion">
-                    <div class="card-body">
+            <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '11' ? 'active' : '' }}">
+                <h2 class="accordion-header" id="accordion-header-members">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEleven" aria-expanded="true" aria-controls="collapseEleven">
+                    990N IRS FILING
+                    </button>
+                </h2>
+                <div id="collapseEleven" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '11' ? 'show' : '' }}" data-bs-parent="#accordion">
+                    <div class="accordion-body">
                 <section>
-                    <div class="flex-container">
-                        <div class="col-12">
-                            <p>The 990N filing is an IRS requirement that all chapters must complete, but it cannot be filed before July 1st.  After filing, upload a copy of your chapter's filing confirmation here.  You can upload a copy of your confirmation email or screenshot after filing.  All chapters should file their 990N directly with the IRS and not through a third party. <span style="color:red"><i>The IRS does not charge a fee for 990N filings.</i></span></p>
-                            Did your chapter file their IRS 990N?&nbsp;&nbsp;&nbsp;
-                            <strong>{{ is_null($chFinancialReport->file_irs) ? 'Not Answered' : ($chFinancialReport->file_irs == 0 ? 'NO'
-                                : ( $chFinancialReport->file_irs == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport->file_irs_explanation}}</strong><br>
-                        </div>
-                </div>
-            <hr style="border-bottom: 2px solid #007bff">
-            <!-- start:report_review -->
-            <div  class="form-row report_review">
-                <div class="card-header col-md-12">
-                    <h3 class="card-title" style="color:#007bff"><strong>ANNUAL REPORT REVIEW</strong></h3>
-                </div>
-                        <div class="card-body form-row">
-                              <div class="col-12">
-                            @if (!is_null($chEOYDocuments->irs_path))
-                                    <div class="col-12">
-                                        <label>990N Filing Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->irs_path }}">&nbsp; View 990N Confirmation</a><br>
-                                    </div>
-                                    <div class="col-12" id="990NBlock">
-                                        <strong style="color:red">Please Note</strong><br>
-                                            This will refresh the screen - be sure to save all work before clicking button to Replace 990N File.<br>
-                                        <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace 990N Confirmation</button>
+                    <div class="col-md-12">
+                        <p>The 990N filing is an IRS requirement that all chapters must complete, but it cannot be filed before July 1st.  After filing, upload a copy of your chapter's filing confirmation here.
+                            You can upload a copy of your confirmation email or screenshot after filing.  All chapters should file their 990N directly with the IRS and not through a third party.
+                            <span style="color:red"><i>The IRS does not charge a fee for 990N filings.</i></span></p>
+                    </div>
+                    <div class="col-md-12">
+                        <span class="me-2">Did your chapter file their IRS 990N?</span>
+                        <b>{{ is_null($chFinancialReport->file_irs) ? 'Not Answered' : ($chFinancialReport->file_irs == 0 ? 'NO'
+                            : ( $chFinancialReport->file_irs == 1 ? 'YES' : 'Not Answered' )) }}
+                            <span class="ms-2">{{ $chFinancialReport->file_irs_explanation}}</span></b>
+                    </div>
+                    <br>
+
+                    <!-- start:report_review -->
+                    <div class="col-md-12">
+                    <div class="card card-secondary card-outline collapsed-card mb-4">
+                    <div class="card-header" data-lte-toggle="card-collapse" style="cursor: pointer;">
+                        <div class="card-title">ANNUAL REPORT REVIEW  <small>(click to open/close)</small></div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        @if (!is_null($chEOYDocuments->irs_path))
+                                <div class="col-12">
+                                    <label>990N Filing Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->irs_path }}">&nbsp; View 990N Confirmation</a><br>
                                 </div>
-                            @else
                                 <div class="col-12" id="990NBlock">
-                                        <strong style="color:red">Please Note</strong><br>
-                                            This will refresh the screen - be sure to save all work before clicking button to Upload 990N File.<br>
-                                        <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload 990N Confirmation</button>
-                                </div>
-                            @endif
-<input type="hidden" name="990NFiling" id="990NFiling" value="{{ $chEOYDocuments->irs_path }}">
-                            <div class="clearfix"></div>
-                            <div class="col-12"><br></div>
-                            <div class="col-12">
+                                    <strong style="color:red">Please Note</strong><br>
+                                        This will refresh the screen - be sure to save all work before clicking button to Replace 990N File.<br>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace 990N Confirmation</button>
+                            </div>
+                        @else
+                            <div class="col-12" id="990NBlock">
+                                    <strong style="color:red">Please Note</strong><br>
+                                        This will refresh the screen - be sure to save all work before clicking button to Upload 990N File.<br>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload 990N Confirmation</button>
+                            </div>
+                        @endif
+                        <input type="hidden" name="990NFiling" id="990NFiling" value="{{ $chEOYDocuments->irs_path }}">
+                        <br>
 
-                                <div class="row mb-3">
-                                    <label>Did the chapter file their {{ $irsFilingName }} with the date range of <strong>7/1/{{ $lastYear }} - 6/30/{{ $currentYear }}</strong>?<span class="field-required">*&nbsp;</span></label>
-                                    <div class="col-12 row">
-                                        <div class="form-check" style="margin-right: 20px;">
-                                            <input class="form-check-input" type="radio" name="checkCurrent990NAttached" value="1" {{ $chFinancialReport->check_current_990N_included == 1 ? 'checked' : '' }}>
-                                            <label class="form-check-label">Yes</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="checkCurrent990NAttached" value="0" {{ !is_null($chFinancialReport->check_current_990N_included) && $chFinancialReport->check_current_990N_included == 0 ? 'checked' : '' }}>
-                                            <label class="form-check-label">No</label>
-                                        </div>
-                                    </div>
+                        <div class="row mb-3">
+                            <label>Did the chapter file their {{ $irsFilingName }} with the date range of <strong>7/1/{{ $lastYear }} - 6/30/{{ $currentYear }}</strong>?<span class="field-required">*&nbsp;</span></label>
+                                    <div class="col-12 d-flex gap-4">
+                                        <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="checkCurrent990NAttached" value="1" {{ $chFinancialReport->check_current_990N_included == 1 ? 'checked' : '' }}>
+                                    <label class="form-check-label">Yes</label>
                                 </div>
-
-                        <div class="col-12">
-                            <div class="row mb-3">
-                                    <label for="Step11_Note">Add New Note:</label>
-                                        <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(11)" name="Step11_Note" id="Step11_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>                                    <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
-                                    <button type="button" id="AddNote11" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(11)" disabled><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log</button>
+                                        <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="checkCurrent990NAttached" value="0" {{ !is_null($chFinancialReport->check_current_990N_included) && $chFinancialReport->check_current_990N_included == 0 ? 'checked' : '' }}>
+                                    <label class="form-check-label">No</label>
                                 </div>
                             </div>
                         </div>
-                        </div>
 
-                        <div class="col-12">
+                        <div class="row mb-3">
+                            <label for="Step11_Note">Add New Note:</label>
+                            <div class="col-12">
+                                <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(11)" name="Step11_Note" id="Step11_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
+                            </div>
+                            <div class="col-12 mt-1">
+                                <button type="button" id="AddNote11" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(11)" disabled>
+                                    <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
                             <label for="Step11_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+                            <div class="col-12">
+                                <textarea class="form-control" style="width:100%" rows="8" name="Step11_Log" id="Step11_Log" readonly>{{ $chFinancialReport->step_11_notes_log }}</textarea>
+                            </div>
                         </div>
-                        <div class="col-12">
-                            <textarea class="form-control" style="width:100%" rows="8" name="Step11_Log" id="Step11_Log" readonly>{{ $chFinancialReport->step_11_notes_log }}</textarea>
-                        </div>
-                        <div class="col-12"><br></div>
 
-                <!-- end:report_review -->
-                <div class="col-12 text-center">
-                    <button type="submit" id="btn-step-11" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
-                </div>
+                    <div class="col-12 text-center">
+                        <button type="submit" id="btn-step-11" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
+                    </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                    </div>
+                    <!-- /.card -->
+						</section>
+					</div>
+				</div>
             </div>
-        </div>
-            </section>
-        </div>
-        </div>
-    </div>
         <!------End Step 11 ------>
 
 			<!------Start Step 12 ------>
-            <div class="card card-primary {{ $chFinancialReport->farthest_step_visited_coord == '12' ? 'active' : '' }}">
-                <div class="card-header" id="accordion-header-members">
-                    <h4 class="card-title w-100">
-                        <a class="d-block" data-bs-toggle="collapse" href="#collapseTwelve" style="width: 100%;">CHAPTER QUESTIONS</a>
-                    </h4>
-                </div>
-                <div id="collapseTwelve" class="collapse {{ $chFinancialReport->farthest_step_visited_coord == '12' ? 'show' : '' }}" data-parent="#accordion">
-                    <div class="card-body">
+             <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '12' ? 'active' : '' }}">
+                <h2 class="accordion-header" id="accordion-header-members">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwelve" aria-expanded="true" aria-controls="collapseTwelve">
+                    CHAPTER QUESTIONS
+                    </button>
+                </h2>
+                <div id="collapseTwelve" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '12' ? 'show' : '' }}" data-bs-parent="#accordion">
+                    <div class="accordion-body">
 				<section>
                     <table>
                         <tbody>
                             <tr><td>1.</td>
                                 <td>Did you make the Bylaws and/or manual available for any chapter members that requested them?</td></tr>
                             <tr><td></td>
-                             <td><strong>{{ is_null($chFinancialReport->bylaws_available) ? 'Not Answered' : ($chFinancialReport->bylaws_available == 0 ? 'NO'
-                                 : ( $chFinancialReport->bylaws_available == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport->bylaws_available_explanation}}</strong></td></tr>
+                             <td><b>{{ is_null($chFinancialReport->bylaws_available) ? 'Not Answered' : ($chFinancialReport->bylaws_available == 0 ? 'NO'
+                                 : ( $chFinancialReport->bylaws_available == 1 ? 'YES' : 'Not Answered' )) }}
+                                 <span class="ms-2">{{ $chFinancialReport->bylaws_available_explanation}}</span></b></td></tr>
                             <tr><td>2.</td>
                                 <td>Did your chapter vote on all activities and expenditures during the fiscal year?</td></tr>
                             <tr><td></td>
-                            <td><strong>{{ is_null($chFinancialReport->vote_all_activities) ? 'Not Answered' : ($chFinancialReport->vote_all_activities == 0 ? 'NO'
-                                : ( $chFinancialReport->vote_all_activities == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport->vote_all_activities_explanation}}</strong></td></tr>
+                            <td><b>{{ is_null($chFinancialReport->vote_all_activities) ? 'Not Answered' : ($chFinancialReport->vote_all_activities == 0 ? 'NO'
+                                : ( $chFinancialReport->vote_all_activities == 1 ? 'YES' : 'Not Answered' )) }}
+                                <span class="ms-2">{{ $chFinancialReport->vote_all_activities_explanation}}</span></b></td></tr>
                             <tr><td>3.</td>
                                 <td>Did you have any child focused outings or activities?</td></tr>
                             <tr><td></td>
-                            <td><strong>{{ is_null($chFinancialReport->child_outings) ? 'Not Answered' : ($chFinancialReport->child_outings == 0 ? 'NO'
-                                : ( $chFinancialReport->child_outings == 1 ? 'YES' : 'Not Answered')) }}&nbsp;&nbsp;  {{ $chFinancialReport->child_outings_explanation}}</strong></td></tr>
+                            <td><b>{{ is_null($chFinancialReport->child_outings) ? 'Not Answered' : ($chFinancialReport->child_outings == 0 ? 'NO'
+                                : ( $chFinancialReport->child_outings == 1 ? 'YES' : 'Not Answered')) }}
+                                <span class="ms-2">{{ $chFinancialReport->child_outings_explanation}}</span></b></td></tr>
                             <tr><td>4.</td>
                                 <td>Did you have playgroups? If so, how were they arranged.</td></tr>
                             <tr><td></td>
-                            <td><strong>{{ is_null($chFinancialReport->playgroups) ? 'Not Answered' : ($chFinancialReport->playgroups == 0 ? 'NO'
-                                : ( $chFinancialReport->playgroups == 1 ? 'YES   Arranged by Age' : (['playgroups'] == 2 ? 'YES   Multi-aged Groups' : 'Not Answered'))) }}</strong></td></tr>
+                            <td><b>{{ is_null($chFinancialReport->playgroups) ? 'Not Answered' : ($chFinancialReport->playgroups == 0 ? 'NO'
+                                : ( $chFinancialReport->playgroups == 1 ? 'YES   Arranged by Age' : (['playgroups'] == 2 ? 'YES   Multi-aged Groups' : 'Not Answered'))) }}</b></td></tr>
                             <tr><td>5.</td>
                                 <td>Did your chapter have scheduled park days? If yes, how often?</td></tr>
                             <tr><td></td>
-                            <td><strong>{{ is_null($chFinancialReport->park_day_frequency) ? 'Not Answered' : ($chFinancialReport->park_day_frequency == 0 ? 'NO'
+                            <td><b>{{ is_null($chFinancialReport->park_day_frequency) ? 'Not Answered' : ($chFinancialReport->park_day_frequency == 0 ? 'NO'
                                 : ( $chFinancialReport->park_day_frequency == 1 ? '1-3 Times' : ($chFinancialReport->park_day_frequency == 2 ? '4-6 Times' :
-                                    ($chFinancialReport->park_day_frequency == 3 ? '7-9 Times' : ($chFinancialReport->park_day_frequency == 4 ? '10+ Times' : 'Not Answered'))))) }}</strong></td></tr>
+                                    ($chFinancialReport->park_day_frequency == 3 ? '7-9 Times' : ($chFinancialReport->park_day_frequency == 4 ? '10+ Times' : 'Not Answered'))))) }}</b></td></tr>
                             <tr><td>6.</td>
                                 <td>Did you have any mother focused outings or activities?</td></tr>
                             <tr><td></td>
-                            <td><strong>{{ is_null($chFinancialReport->mother_outings) ? 'Not Answered' : ($chFinancialReport->mother_outings == 0 ? 'NO'
-                                : ( $chFinancialReport->mother_outings == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport->mother_outings_explanation}}</strong></td></tr>
+                            <td><b>{{ is_null($chFinancialReport->mother_outings) ? 'Not Answered' : ($chFinancialReport->mother_outings == 0 ? 'NO'
+                                : ( $chFinancialReport->mother_outings == 1 ? 'YES' : 'Not Answered' )) }}
+                                <span class="ms-2">{{ $chFinancialReport->mother_outings_explanation}}</span></b></td></tr>
                             <tr><td>7.</td>
                                 <td>Did your chapter have any of the following activity groups?</td></tr>
                                 <tr><td></td>
-                                <td><strong>
+                                <td><b>
                                     @php
                                         $activityArray = json_decode($chFinancialReport['activity_array']);
                                         $activityMapping = [
@@ -2117,185 +2180,192 @@
                                     @else
                                         N/A
                                     @endif
-                                </strong></td></tr>
+                                    </b></td></tr>
                                 <tr><td>8.</td>
                                     <td>Did you offer or inform your members about MOMS Club merchandise?</td></tr>
                                 <tr><td></td>
-                                 <td><strong>{{ is_null($chFinancialReport->offered_merch) ? 'Not Answered' : ($chFinancialReport->offered_merch == 0 ? 'NO'
-                                     : ( $chFinancialReport->offered_merch == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport->offered_merch_explanation}}</strong></td></tr>
+                                 <td><b>{{ is_null($chFinancialReport->offered_merch) ? 'Not Answered' : ($chFinancialReport->offered_merch == 0 ? 'NO'
+                                     : ( $chFinancialReport->offered_merch == 1 ? 'YES' : 'Not Answered' )) }}
+                                     <span class="ms-2">{{ $chFinancialReport->offered_merch_explanation}}</span></b></tr>
                                 <tr><td>9.</td>
                                     <td>Did you purchase any merchandise from International other than pins?</td></tr>
                                 <tr><td></td>
-                                <td><strong>{{ is_null($chFinancialReport->bought_merch) ? 'Not Answered' : ($chFinancialReport->bought_merch == 0 ? 'NO'
-                                    : ( $chFinancialReport->bought_merch == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{$chFinancialReport->bought_merch_explanation}}</strong></td></tr>
+                                <td><b>{{ is_null($chFinancialReport->bought_merch) ? 'Not Answered' : ($chFinancialReport->bought_merch == 0 ? 'NO'
+                                    : ( $chFinancialReport->bought_merch == 1 ? 'YES' : 'Not Answered' )) }}
+                                    <span class="ms-2">{{$chFinancialReport->bought_merch_explanation}}</span></b></tr>
                                 <tr><td>10.</td>
                                     <td>Did you purchase pins from International?</td></tr>
                                 <tr><td></td>
-                                <td><strong>{{ is_null($chFinancialReport->purchase_pins) ? 'Not Answered' : ($chFinancialReport->purchase_pins == 0 ? 'NO'
-                                    : ( $chFinancialReport->purchase_pins == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport->purchase_pins_explanation}}</strong></td></tr>
+                                <td><b>{{ is_null($chFinancialReport->purchase_pins) ? 'Not Answered' : ($chFinancialReport->purchase_pins == 0 ? 'NO'
+                                    : ( $chFinancialReport->purchase_pins == 1 ? 'YES' : 'Not Answered' )) }}
+                                    <span class="ms-2">{{ $chFinancialReport->purchase_pins_explanation}}</span></b></tr>
                                 <tr><td>11.</td>
                                     <td>Did anyone in your chapter receive any compensation or pay for their work with your chapter?</td></tr>
                                 <tr><td></td>
-                                    <td><strong>{{ is_null($chFinancialReport->receive_compensation) ? 'Not Answered' : ($chFinancialReport->receive_compensation == 0 ? 'NO'
-                                    : ( $chFinancialReport->receive_compensation == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport->receive_compensation_explanation}}</strong></td></tr>
+                                    <td><b>{{ is_null($chFinancialReport->receive_compensation) ? 'Not Answered' : ($chFinancialReport->receive_compensation == 0 ? 'NO'
+                                    : ( $chFinancialReport->receive_compensation == 1 ? 'YES' : 'Not Answered' )) }}
+                                    <span class="ms-2">{{ $chFinancialReport->receive_compensation_explanation}}</span></b></tr>
                                <tr><td>12.</td>
                                <td>Did any officer, member or family of a member benefit financially in any way from the member's position with your chapter?</td></tr>
                            <tr><td></td>
-                            <td><strong>{{ is_null($chFinancialReport->financial_benefit) ? 'Not Answered' : ($chFinancialReport->financial_benefit == 0 ? 'NO'
-                                : ( $chFinancialReport->financial_benefit == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport->financial_benefit_explanation}}</strong></td></tr>
+                            <td><b>{{ is_null($chFinancialReport->financial_benefit) ? 'Not Answered' : ($chFinancialReport->financial_benefit == 0 ? 'NO'
+                                : ( $chFinancialReport->financial_benefit == 1 ? 'YES' : 'Not Answered' )) }}
+                                <span class="ms-2">{{ $chFinancialReport->financial_benefit_explanation}}</span></b></tr>
                           <tr><td>13.</td>
                                <td>Did your chapter attempt to influence any national, state/provincial, or local legislation, or support any other organization that did?</td></tr>
                            <tr><td></td>
-                            <td><strong>{{ is_null($chFinancialReport->influence_political) ? 'Not Answered' : ($chFinancialReport->influence_political == 0 ? 'NO'
-                                : ( $chFinancialReport->influence_political == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport->influence_political_explanation}}</strong></td></tr>
+                            <td><b>{{ is_null($chFinancialReport->influence_political) ? 'Not Answered' : ($chFinancialReport->influence_political == 0 ? 'NO'
+                                : ( $chFinancialReport->influence_political == 1 ? 'YES' : 'Not Answered' )) }}
+                                <span class="ms-2">{{ $chFinancialReport->influence_political_explanation}}</span></b></tr>
                             <tr><td>14.</td>
                             <td>Did your chapter sister another chapter?</td></tr>
                         <tr><td></td>
-                            <td><strong>{{ is_null($chFinancialReport->sister_chapter) ? 'Not Answered' : ($chFinancialReport->sister_chapter == 0 ? 'NO'
-                                : ( $chFinancialReport->sister_chapter == 1 ? 'YES' : 'Not Answered' )) }}</strong></td></tr>
+                            <td><b>{{ is_null($chFinancialReport->sister_chapter) ? 'Not Answered' : ($chFinancialReport->sister_chapter == 0 ? 'NO'
+                                : ( $chFinancialReport->sister_chapter == 1 ? 'YES' : 'Not Answered' )) }}</span></b></tr>
                           </tbody>
                    </table>
-                   <hr style="border-bottom: 2px solid #007bff">
-                   <!-- start:report_review -->
-				<div  class="form-row report_review">
-					<div class="card-header col-md-12">
-                        <h3 class="card-title" style="color:#007bff"><strong>ANNUAL REPORT REVIEW</strong></h3>
-                    </div>
-                    <div class="card-body form-row">
-                        <div class="col-12">
+                    <br>
 
-                            <div class="col-12">
-                                    <div class="col-12">
-                                        <div class="row mb-3">
-                                            <label>Did they purchase or have leftover pins?:<span class="field-required">*&nbsp;</span></label>
-                                            <div class="col-12 row">
-                                                <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkPurchasedPins" value="1" {{ $chFinancialReport->check_purchased_pin == 1 ? 'checked' : '' }}>
-                                                    <label class="form-check-label">Yes</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkPurchasedPins" value="0" {{ !is_null($chFinancialReport->check_purchased_pins) && $chFinancialReport->check_purchased_pin == 0 ? 'checked' : '' }}>
-                                                    <label class="form-check-label">No</label>
-                                                </div>
+						<!-- start:report_review -->
+                            <div class="col-md-12">
+                            <div class="card card-secondary card-outline collapsed-card mb-4">
+                            <div class="card-header" data-lte-toggle="card-collapse" style="cursor: pointer;">
+                                <div class="card-title">ANNUAL REPORT REVIEW  <small>(click to open/close)</small></div>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                    <div class="row mb-3">
+                                        <label>Did they purchase or have leftover pins?:<span class="field-required">*&nbsp;</span></label>
+                                    <div class="col-12 d-flex gap-4">
+                                        <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="checkPurchasedPins" value="1" {{ $chFinancialReport->check_purchased_pin == 1 ? 'checked' : '' }}>
+                                                <label class="form-check-label">Yes</label>
                                             </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <label>Did they purchase MOMS Club merchandise?:<span class="field-required">*&nbsp;</span></label>
-                                            <div class="col-12 row">
-                                                <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkPurchasedMCMerch" value="1" {{ $chFinancialReport->check_purchased_mc_merch == 1 ? 'checked' : '' }}>
-                                                    <label class="form-check-label">Yes</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkPurchasedMCMerch" value="0" {{ !is_null($chFinancialReport->check_purchased_mc_merch) && $chFinancialReport->check_purchased_mc_merch == 0 ? 'checked' : '' }}>
-                                                    <label class="form-check-label">No</label>
-                                                </div>
+                                        <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="checkPurchasedPins" value="0" {{ !is_null($chFinancialReport->check_purchased_pins) && $chFinancialReport->check_purchased_pin == 0 ? 'checked' : '' }}>
+                                                <label class="form-check-label">No</label>
                                             </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <label>Did they offer MOMS Club merchandise or info on how to buy to members?:<span class="field-required">*&nbsp;</span></label>
-                                            <div class="col-12 row">
-                                                <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkOfferedMerch" value="1" {{ $chFinancialReport->check_offered_merch == 1 ? 'checked' : '' }}>
-                                                    <label class="form-check-label">Yes</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkOfferedMerch" value="0" {{ !is_null($chFinancialReport->check_offered_merch) && $chFinancialReport->check_offered_merch == 0 ? 'checked' : '' }}>
-                                                    <label class="form-check-label">No</label>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row mb-3">
-                                            <label>Did they make the Manual/By-Laws available to members?:<span class="field-required">*&nbsp;</span></label>
-                                            <div class="col-12 row">
-                                                <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkBylawsMadeAvailable" value="1" {{ $chFinancialReport->check_bylaws_available == 1 ? 'checked' : '' }}>
-                                                    <label class="form-check-label">Yes</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkBylawsMadeAvailable" value="0" {{ !is_null($chFinancialReport->check_bylaws_available) && $chFinancialReport->check_bylaws_available == 0 ? 'checked' : '' }}>
-                                                    <label class="form-check-label">No</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <label>Did they Sistered another chapter?:<span class="field-required">*&nbsp;</span></label>
-                                            <div class="col-12 row">
-                                                <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkSisteredAnotherChapter" value="1" {{ $chFinancialReport->check_sistered_another_chapter == 1 ? 'checked' : '' }}>
-                                                    <label class="form-check-label">Yes</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkSisteredAnotherChapter" value="0" {{ !is_null($chFinancialReport->check_sistered_another_chapter) && $chFinancialReport->check_sistered_another_chapter == 0 ? 'checked' : '' }}>
-                                                    <label class="form-check-label">No</label>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="row mb-3">
-                                            <label for="Step12_Note">Add New Note:</label>
-                                                <textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(12)" name="Step12_Note" id="Step12_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>                                            <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
-                                            <button type="button" id="AddNote12" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(12)" disabled><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log</button>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                                    <div class="row mb-3">
+                                        <label>Did they purchase MOMS Club merchandise?:<span class="field-required">*&nbsp;</span></label>
+                                    <div class="col-12 d-flex gap-4">
+                                        <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="checkPurchasedMCMerch" value="1" {{ $chFinancialReport->check_purchased_mc_merch == 1 ? 'checked' : '' }}>
+                                                <label class="form-check-label">Yes</label>
+                                            </div>
+                                        <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="checkPurchasedMCMerch" value="0" {{ !is_null($chFinancialReport->check_purchased_mc_merch) && $chFinancialReport->check_purchased_mc_merch == 0 ? 'checked' : '' }}>
+                                                <label class="form-check-label">No</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label>Did they offer MOMS Club merchandise or info on how to buy to members?:<span class="field-required">*&nbsp;</span></label>
+                                    <div class="col-12 d-flex gap-4">
+                                        <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="checkOfferedMerch" value="1" {{ $chFinancialReport->check_offered_merch == 1 ? 'checked' : '' }}>
+                                                <label class="form-check-label">Yes</label>
+                                            </div>
+                                        <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="checkOfferedMerch" value="0" {{ !is_null($chFinancialReport->check_offered_merch) && $chFinancialReport->check_offered_merch == 0 ? 'checked' : '' }}>
+                                                <label class="form-check-label">No</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label>Did they make the Manual/By-Laws available to members?:<span class="field-required">*&nbsp;</span></label>
+                                    <div class="col-12 d-flex gap-4">
+                                        <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="checkBylawsMadeAvailable" value="1" {{ $chFinancialReport->check_bylaws_available == 1 ? 'checked' : '' }}>
+                                                <label class="form-check-label">Yes</label>
+                                            </div>
+                                        <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="checkBylawsMadeAvailable" value="0" {{ !is_null($chFinancialReport->check_bylaws_available) && $chFinancialReport->check_bylaws_available == 0 ? 'checked' : '' }}>
+                                                <label class="form-check-label">No</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label>Did they Sistered another chapter?:<span class="field-required">*&nbsp;</span></label>
+                                    <div class="col-12 d-flex gap-4">
+                                        <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="checkSisteredAnotherChapter" value="1" {{ $chFinancialReport->check_sistered_another_chapter == 1 ? 'checked' : '' }}>
+                                                <label class="form-check-label">Yes</label>
+                                            </div>
+                                        <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="checkSisteredAnotherChapter" value="0" {{ !is_null($chFinancialReport->check_sistered_another_chapter) && $chFinancialReport->check_sistered_another_chapter == 0 ? 'checked' : '' }}>
+                                                <label class="form-check-label">No</label>
+                                            </div>
+                                        </div>
+                                    </div>
 
-							<div class="col-12">
-								<label for="Step12_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
-							</div>
-							<div class="col-12">
-                                <textarea class="form-control" style="width:100%" rows="8" name="Step12_Log" id="Step12_Log" readonly>{{ $chFinancialReport->step_12_notes_log }}</textarea>
-                            </div>
-                            <div class="col-12"><br></div>
+                                    <div class="row mb-3">
+                                        <label for="Step12_Note">Add New Note:</label>
+                                        <div class="col-12">
+                                            <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(12)" name="Step12_Note" id="Step12_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                        </div>
+                                        <div class="col-12 mt-1">
+                                            <button type="button" id="AddNote12" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(12)" disabled>
+                                                <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="Step12_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+                                        <div class="col-12">
+                                            <textarea class="form-control" style="width:100%" rows="8" name="Step12_Log" id="Step12_Log" readonly>{{ $chFinancialReport->step_12_notes_log }}</textarea>
+                                        </div>
+                                    </div>
 
-				<!-- end:report_review -->
-                <div class="col-12 text-center">
-						<button type="submit" id="btn-step-12" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
+                        <div class="col-12 text-center">
+                                <button type="submit" id="btn-step-12" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
+                            </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                    </div>
+                    <!-- /.card -->
+						</section>
 					</div>
+				</div>
+            </div>
+			<!------End Step 12 ------>
+            </div>
+        </div>
+    <!-- end of accordion -->
+     </div>
+        </div>
+        <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+              <div class="col-md-12">
+                <div class="card-body text-center mt-3">
+                    @if ($confId == $chConfId)
+                        <button type="button" id="back-eoy" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.eoyfinancialreport') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-calculator-fill me-2"></i>Back to Financial Report</button>
+                    @elseif ($confId != $chConfId && $ITCondition)
+                        <button type="button" id="back-eoy" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.eoyfinancialreport', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-calculator-fill me-2"></i>Back to International Financial Report</button>
+                    @endif
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-file-earmark-bar-graph-fill me-2"></i>Back to EOY Details</button>
                 </div>
             </div>
-			  </section>
-		  </div>
-		  </div>
         </div>
-			<!------End Step 12 ------>
-    </div>
-                 <!-- end of accordion -->
-    </div>
-                <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-            </div>
-
-            <div class="card-body text-center mt-3">
-                @if ($confId == $chConfId)
-                    <button type="button" id="back-eoy" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.eoyfinancialreport') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Financial Report</button>
-                @elseif ($confId != $chConfId && $ITCondition)
-                    <button type="button" id="back-eoy" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.eoyfinancialreport', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Financial Report</button>
-                @endif
-                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to EOY Details</button>
-
-            </div>
-        </form>
-    </div>
-</div>
-
-</section>
-
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </form>
+    </section>
+    <!-- /.content -->
 @endsection
 @section('customscript')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const unsubmitButton = document.getElementById('unsubmit');
+   document.addEventListener('DOMContentLoaded', function() {
+    const unsubmitButton = document.getElementById('unsubmit');
+    if (!unsubmitButton) return;
 
-    if (!unsubmitButton) {
-        return;
-    }
-
-    document.getElementById('unsubmit').addEventListener('click', function() {
+    unsubmitButton.addEventListener('click', function() {
         Swal.fire({
             title: 'Are you sure?',
             text: "Unsubmitting this report will make it editable by the chapter again and will disable coordinator editing until the chapter has resubmitted - any unsaved changes will be lost.",
@@ -2305,10 +2375,7 @@
             cancelButtonColor: '#3085d6',
             confirmButtonText: 'Yes, Unsubmit',
             cancelButtonText: 'Cancel',
-            customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
-            },
+            customClass: { confirmButton: 'btn-sm btn-success', cancelButton: 'btn-sm btn-danger' },
             buttonsStyling: false
         }).then((result) => {
             if (result.isConfirmed) {
@@ -2317,7 +2384,7 @@
         });
     });
 
-    document.getElementById('review-clear').addEventListener('click', function() {
+    document.getElementById('review-clear')?.addEventListener('click', function() {
         Swal.fire({
             title: 'Are you sure?',
             text: "This will clear the 'review complete' flag and coordinators will be able to edit the report again. Do you wish to continue?",
@@ -2327,10 +2394,7 @@
             cancelButtonColor: '#3085d6',
             confirmButtonText: 'Yes, Clear Review',
             cancelButtonText: 'Cancel',
-            customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
-            },
+            customClass: { confirmButton: 'btn-sm btn-success', cancelButton: 'btn-sm btn-danger' },
             buttonsStyling: false
         }).then((result) => {
             if (result.isConfirmed) {
@@ -2338,45 +2402,29 @@
             }
         });
     });
-});
 
-    $("#review-complete").click(function() {
-        if (!CheckMembers()) {
-        return false;
-        }
-        if (!CheckService()) {
+    document.getElementById('review-complete')?.addEventListener('click', function() {
+        if (!CheckMembers()) return false;
+        if (!CheckService()) return false;
+        if (!CheckParties()) return false;
+        if (!CheckFinancial()) return false;
+        if (!CheckReconciliation()) return false;
+        if (!CheckQuestions()) return false;
+        var post_balance = document.getElementById('post_balance').value;
+        if (post_balance == null || post_balance == '') {
+            customWarningAlert('Please enter Ending Balance in the Bank Reconciliation Section');
+            document.getElementById('post_balance').focus();
             return false;
         }
-        if (!CheckParties()) {
-            return false;
+        var result = confirm("This will finalize this report and flag it as 'review complete'. Do you wish to continue?");
+        if (result) {
+            document.getElementById('submit_type').value = 'review_complete';
+            document.getElementById('FurthestStep').value = '14';
+            document.getElementById('financial_report').submit();
         }
-        if (!CheckFinancial()) {
-            return false;
-        }
-        if (!CheckReconciliation()) {
-            return false;
-        }
-        if (!CheckQuestions()) {
-            return false;
-        }
-        var post_balance = $('#post_balance').val();
-		if(post_balance == null || post_balance == ''){
-			customWarningAlert('Please enter Ending Balance in the Bank Reconciliation Section');
-            accordion.openAccordionItem('accordion-header-reconciliation');
-			$('#post_balance').focus();
-			return false;
-		}
-		var result=confirm("This will finalize this report and flag it as 'review complete'.  Do you wish to continue?");
-		if(result){
-            $("#submit_type").val('review_complete');
-            $("#FurthestStep").val('14');
-            $("#financial_report").submit();
-		 } else {
-            $(this).prop('disabled', false);
-        }
-	});
+    });
 
-    document.getElementById('AssignedReviewer').addEventListener('change', function() {
+    document.getElementById('AssignedReviewer')?.addEventListener('change', function() {
         var emailMessageGroup = document.getElementById('emailMessageGroup');
         if (this.value != '') {
             emailMessageGroup.style.display = 'block';
@@ -2385,106 +2433,87 @@
         }
     });
 
-    $(document).ready(function() {
     function submitFormWithStep(step) {
-        $("#FurthestStep").val(step);
-        $("#financial_report").submit();
+        document.getElementById('FurthestStep').value = step;
+        document.getElementById('financial_report').submit();
     }
 
-    $("#btn-step-1").click(function() {
-        if (!CheckMembers()) return false;
-        submitFormWithStep(1);
-    });
-    $("#btn-step-2").click(function() {
-        submitFormWithStep(2);
-    });
-    $("#btn-step-3").click(function() {
-        if (!CheckService()) return false;
-        submitFormWithStep(3);
-    });
-    $("#btn-step-4").click(function() {
-        if (!CheckParties()) return false;
-        submitFormWithStep(4);
-    });
-    $("#btn-step-5").click(function() {
-        submitFormWithStep(5);
-    });
-    $("#btn-step-6").click(function() {
-        submitFormWithStep(6);
-    });
-    $("#btn-step-7").click(function() {
-        submitFormWithStep(7);
-    });
-    $("#btn-step-8").click(function() {
-        submitFormWithStep(8);
-    });
-    $("#btn-step-9").click(function() {
-        if (!CheckFinancial()) return false;
-        submitFormWithStep(9);
-    });
-    $("#btn-step-10").click(function() {
-        var post_balance = $('#post_balance').val();
+    document.getElementById('btn-step-1')?.addEventListener('click', function() { if (!CheckMembers()) return false; submitFormWithStep(1); });
+    document.getElementById('btn-step-2')?.addEventListener('click', function() { submitFormWithStep(2); });
+    document.getElementById('btn-step-3')?.addEventListener('click', function() { if (!CheckService()) return false; submitFormWithStep(3); });
+    document.getElementById('btn-step-4')?.addEventListener('click', function() { if (!CheckParties()) return false; submitFormWithStep(4); });
+    document.getElementById('btn-step-5')?.addEventListener('click', function() { submitFormWithStep(5); });
+    document.getElementById('btn-step-6')?.addEventListener('click', function() { submitFormWithStep(6); });
+    document.getElementById('btn-step-7')?.addEventListener('click', function() { submitFormWithStep(7); });
+    document.getElementById('btn-step-8')?.addEventListener('click', function() { submitFormWithStep(8); });
+    document.getElementById('btn-step-9')?.addEventListener('click', function() { if (!CheckFinancial()) return false; submitFormWithStep(9); });
+    document.getElementById('btn-step-10')?.addEventListener('click', function() {
+        var post_balance = document.getElementById('post_balance').value;
         if (post_balance == null || post_balance == '') {
             customWarningAlert('Please enter Ending Balance');
-            $('#post_balance').focus();
-            return false;
-        } if (!CheckReconciliation()) {
+            document.getElementById('post_balance').focus();
             return false;
         }
+        if (!CheckReconciliation()) return false;
         submitFormWithStep(10);
     });
-    $("#btn-step-11").click(function() {
-        submitFormWithStep(11);
-    });
-    $("#btn-step-12").click(function() {
-        if (!CheckQuestions()) return false;
-        submitFormWithStep(12);
-    });
-    $("#btn-step-13").click(function() {
-        submitFormWithStep(13);
-    });
-    $("#btn-step-14").click(function() {
-        var assignedReviewer = $('#AssignedReviewer').val();
+    document.getElementById('btn-step-11')?.addEventListener('click', function() { submitFormWithStep(11); });
+    document.getElementById('btn-step-12')?.addEventListener('click', function() { if (!CheckQuestions()) return false; submitFormWithStep(12); });
+    document.getElementById('btn-step-13')?.addEventListener('click', function() { submitFormWithStep(13); });
+    document.getElementById('btn-step-14')?.addEventListener('click', function() {
+        var assignedReviewer = document.getElementById('AssignedReviewer').value;
         if (assignedReviewer == null || assignedReviewer == '') {
             customWarningAlert('Please select a Reviewer');
-            $('#AssignedReviewer').focus();
+            document.getElementById('AssignedReviewer').focus();
             return false;
         }
         submitFormWithStep(14);
     });
 });
-
 </script>
 <script>
-
     /* Disable fields and buttons  */
-    $(document).ready(function () {
-        var submitted = @json($chEOYDocuments->financial_review_complete);
-        var received =  @json($chEOYDocuments->financial_report_received);
+   document.addEventListener('DOMContentLoaded', function () {
+    var submitted = @json($chEOYDocuments->financial_review_complete);
+    var received = @json($chEOYDocuments->financial_report_received);
 
-        if (received != '1') {
-            $('button').not('#btn-back').prop('disabled', true);
-            $('input, select, textarea').not('#logout-form input, #logout-form select, #logout-form textarea').prop('disabled', true);
-        } else if (submitted == '1') {
-            $('button').not('#btn-back, #review-clear, #financial-pdf, #generate-pdf').prop('disabled', true);
-            $('input, select, textarea').not('#logout-form input, #logout-form select, #logout-form textarea').prop('disabled', true);
-        } else {
-            $('button, input, select, textarea').prop('disabled', false);
-        }
-        var allDisabled = true;
-        $('input, select, textarea').not('#logout-form input, #logout-form select, #logout-form textarea').each(function() {
-            if (!$(this).prop('disabled')) {
-                allDisabled = false;
-                return false;
+    function disableFields() {
+        document.querySelectorAll('input, select, textarea').forEach(function(el) {
+            if (!el.closest('#logout-form')) {
+                el.disabled = true;
             }
         });
+    }
 
-        if (allDisabled) {
-            $('.description').show();
-        } else {
-            $('.description').hide();
+    function disableButtons(exceptions = []) {
+        document.querySelectorAll('button').forEach(function(el) {
+            if (!el.closest('#logout-form') &&
+                !exceptions.includes(el.id) &&
+                !el.classList.contains('accordion-button') &&
+                !el.hasAttribute('data-bs-toggle') &&
+                !el.hasAttribute('data-lte-toggle')) {
+                el.disabled = true;
+            }
+        });
+    }
+
+    if (received != '1') {
+        disableButtons(['btn-back']);
+        disableFields();
+    } else if (submitted == '1') {
+        disableButtons(['btn-back', 'review-clear', 'financial-pdf', 'generate-pdf']);
+        disableFields();
+    }
+
+    var allDisabled = true;
+    document.querySelectorAll('input, select, textarea').forEach(function(el) {
+        if (!el.closest('#logout-form') && !el.disabled) {
+            allDisabled = false;
         }
     });
+
+    document.querySelectorAll('.description').forEach(el => el.style.display = allDisabled ? 'block' : 'none');
+});
 
     function EnableNoteLogButton(NoteNumber){
         var noteValue = document.getElementById("Step" + NoteNumber + "_Note").value.trim();

@@ -173,7 +173,7 @@
             <div class="card-body text-center mt-3">
                 <button type="submit" class="btn btn-primary bg-gradient mb-2" onclick="return validateEmailsBeforeSubmit();"><i class="bi bi-floppy-fill me-2"></i>Save User Information</button>
                 <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ request('return') }}'">
-                        <i class="bi bi-chevron-double-left me-2"></i>Back to List
+                        <i class="bi bi-arrow-left-short"></i><i class="bi bi-person-fill-gear me-2"></i>Back to User List
 </button>
             </div>
         </div>

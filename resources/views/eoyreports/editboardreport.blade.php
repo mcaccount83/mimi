@@ -500,7 +500,7 @@
                                 @csrf
                                 <input type="hidden" name="board" value="active">
                                 <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="confirmActivateSingleBoard()">
-                                    <i class="fas fa-play me-2"></i>Activate Board
+                                    <i class="bi bi-play-fill me-2"></i>Activate Board
                                 </button>
                             </form>
                             @endif
@@ -508,11 +508,11 @@
                     @endif
 
                     @if ($confId == $chConfId)
-                        <button type="button" id="back-eoy" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.eoyboardreport') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Board Election Report</button>
+                        <button type="button" id="back-eoy" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.eoyboardreport') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-person-bounding-box me-2"></i>Back to Board Election Report</button>
                     @elseif ($confId != $chConfId && $ITCondition)
-                        <button type="button" id="back-eoy" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.eoyboardreport', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Board Election Report</button>
+                        <button type="button" id="back-eoy" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.eoyboardreport', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-person-bounding-box me-2"></i>Back to International Board Election Report</button>
                     @endif
-                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to EOY Details</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-file-earmark-bar-graph-fill me-2"></i>Back to EOY Details</button>
             </div>
     </div>
     <!-- /.container- -->

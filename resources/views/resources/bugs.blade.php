@@ -57,7 +57,7 @@
                                                 {{ $adminItem->details }}
                                                 <br><br>
                                                 <button type="button" class="btn btn-primary bg-gradient mb-2" data-bs-toggle="modal" data-bs-target="#editTaskModal{{ $adminItem->id }}">
-                                                    <i class="fas fa-info-circle"></i>&nbsp;View/Edit Details</button>
+                                                    <i class="bi bi-info-circle"></i>&nbsp;View/Edit Details</button>
                                               </p>
                                             </div>
                                           </div>
@@ -152,7 +152,7 @@
                                                     {{ $adminItem->details }}
                                                     <br><br>
                                                     <button type="button" class="btn btn-primary bg-gradient mb-2" data-bs-toggle="modal" data-bs-target="#editTaskModal{{ $adminItem->id }}">
-                                                        <i class="fas fa-info-circle"></i>&nbsp;View/Edit Details</button>
+                                                        <i class="bi bi-info-circle"></i>&nbsp;View/Edit Details</button>
                                                 </p>
                                                 </div>
                                             </div>
@@ -253,7 +253,7 @@
                                                     {{ $adminItem->details }}
                                                     <br><br>
                                                     <button type="button" class="btn btn-primary bg-gradient mb-2" data-bs-toggle="modal" data-bs-target="#editTaskModal{{ $adminItem->id }}">
-                                                        <i class="fas fa-info-circle"></i>&nbsp;View/Edit Details</button>
+                                                        <i class="bi bi-info-circle"></i>&nbsp;View/Edit Details</button>
                                                 </p>
                                                 </div>
                                             </div>

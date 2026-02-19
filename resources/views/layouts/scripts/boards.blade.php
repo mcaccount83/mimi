@@ -35,32 +35,32 @@
             stateDropdown.addEventListener('change', toggleCountryField);
         }
     });
-});
 
-// Function to handle show/hide logic for vacant checkboxes
-function handleVacantCheckbox(checkboxId, fieldClass) {
-    var fields = $("." + fieldClass);
+    // Function to handle show/hide logic for vacant checkboxes
+    function handleVacantCheckbox(checkboxId, fieldClass) {
+        var fields = $("." + fieldClass);
 
-    $("#" + checkboxId).change(function () {
-        if ($(this).prop("checked")) {
+        $("#" + checkboxId).change(function () {
+            if ($(this).prop("checked")) {
+                fields.hide().find('input, select, textarea').prop('required', false).val(null);
+            } else {
+                fields.show().find('input, select, textarea').prop('required', true);
+            }
+        });
+
+        // Initial show/hide logic on page load
+        if ($("#" + checkboxId).prop("checked")) {
             fields.hide().find('input, select, textarea').prop('required', false).val(null);
         } else {
             fields.show().find('input, select, textarea').prop('required', true);
         }
-    });
-
-    // Initial show/hide logic on page load
-    if ($("#" + checkboxId).prop("checked")) {
-        fields.hide().find('input, select, textarea').prop('required', false).val(null);
-    } else {
-        fields.show().find('input, select, textarea').prop('required', true);
     }
-}
 
-// Apply the logic for each checkbox with a specific class
-handleVacantCheckbox("MVPVacant", "mvp-field");
-handleVacantCheckbox("AVPVacant", "avp-field");
-handleVacantCheckbox("SecVacant", "sec-field");
-handleVacantCheckbox("TreasVacant", "trs-field");
+    // Apply the logic for each checkbox with a specific class
+    handleVacantCheckbox("MVPVacant", "mvp-field");
+    handleVacantCheckbox("AVPVacant", "avp-field");
+    handleVacantCheckbox("SecVacant", "sec-field");
+    handleVacantCheckbox("TreasVacant", "trs-field");
 
+});
 </script>

@@ -158,9 +158,9 @@
             <div class="card-body text-center mt-3">
                 <button type="submit" class="btn btn-primary bg-gradient mb-2" onclick="return validateEmailsBeforeSubmit();"><i class="bi bi-floppy-fill me-2"></i>Save Board Member</button>
                 @if($chDetails->active_status == 1)
-                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('userreports.nopresident') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to No President List</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('userreports.nopresident') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-person-fill-gear me-2"></i>Back to Active No President List</button>
                 @else
-                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('userreports.nopresidentinactive') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to No President List</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('userreports.nopresidentinactive') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-person-fill-gear me-2"></i>Back to Non-Active No President List</button>
                 @endif
             </div>
         </div>

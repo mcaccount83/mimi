@@ -85,7 +85,7 @@
             <!-- /.card-body for checkboxes -->
 
             <div class="card-body text-center mt-3">
-              <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="CopyNoChapter()" id="btnNoChapter" name="nochapter"><i class="fas fa-copy me-2" ></i>Copy NO Chapter Response</button>
+              <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="CopyNoChapter()" id="btnNoChapter" name="nochapter"><i class="bi bi-copy me-2" ></i>Copy NO Chapter Response</button>
           </div>
            <!-- /.card-body for buttons -->
 		   <textarea display class="js-copytextarea" style="border: none; background-color: transparent; resize: none; outline: none; overflow:hidden; color:transparent" name="nochapter" id="nochapter"/>

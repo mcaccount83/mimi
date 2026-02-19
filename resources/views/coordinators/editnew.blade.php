@@ -179,7 +179,7 @@
           <div class="col-md-12">
             <div class="card-body text-center mt-3">
                 <button type="submit" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save New Coordinator</button>
-                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Coordinator List</button>
+                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-people-fill me-2">Back to Coordinator List</button>
             </div>
         </div>
         </div>

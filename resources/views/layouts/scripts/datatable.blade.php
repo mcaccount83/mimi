@@ -1,58 +1,38 @@
 <script>
-    $(function () {
-        $('#chapterlist').DataTable({
-            "paging": true,
-            "lengthChange": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-            "order": []
-        });
-
-        $('#coordinatorlist').DataTable({
-            "paging": true,
-            "lengthChange": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-            "order": [] // Use your Laravel query order
-        });
+document.addEventListener('DOMContentLoaded', function() {
+    var chapterTable = $('#chapterlist').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+        "order": []
+    });
+    var coordinatorTable = $('#coordinatorlist').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+        "order": []
     });
 
-    $(document).ready(function() {
-        var table = $('#coordinatorlist').DataTable();
+    applyDateMask();
+    applyPhoneMask();
+    applyHttpMask();
 
+    chapterTable.on('draw', function() {
         applyDateMask();
-
-        table.on('draw', function() {
-            applyDateMask();
-        });
-    });
-
-    $(document).ready(function() {
-        var table = $('#chapterlist').DataTable();
-
         applyPhoneMask();
-
-        table.on('draw', function() {
-            applyPhoneMask();
-        });
-
-        applyDateMask();
-
-        table.on('draw', function() {
-            applyDateMask();
-        });
-
         applyHttpMask();
-
-        table.on('draw', function() {
-            applyHttpMask();
-        });
-
     });
+
+    coordinatorTable.on('draw', function() {
+        applyDateMask();
+    });
+});
 </script>

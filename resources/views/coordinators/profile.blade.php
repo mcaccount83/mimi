@@ -171,7 +171,7 @@
           <div class="col-md-12">
             <div class="card-body text-center mt-3">
                 <button type="submit" class="btn btn-primary bg-gradient mb-2" onclick="return PreSaveValidate();"><i class="bi bi-floppy-fill me-2"></i>Save</button>
-                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showChangePasswordAlert('{{ $cdDetails->user_id }}')"><i class="fas fa-lock me-2" ></i>Change Password</button>
+                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showChangePasswordAlert('{{ $cdDetails->user_id }}')"><i class="bi bi-lock-fill me-2" ></i>Change Password</button>
             </div>
         </div>
         </div>

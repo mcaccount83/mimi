@@ -140,13 +140,13 @@
                 <br>
                 @endif
                  @if ($confId == $chConfId)
-                        <button type="button" id="back-web" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapwebsite') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Website Report</button>
-                        <button type="button" id="back-social" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapsocialmedia') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Social Media Report</button>
+                        <button type="button" id="back-web" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapwebsite') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-laptop-fill me-2"></i>Back to Website Report</button>
+                        <button type="button" id="back-social" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapsocialmedia') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-laptop-fill me-2"></i>Back to Social Media Report</button>
                 @elseif ($confId != $chConfId)
-                    <button type="button" id="back-web" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapwebsite', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Website Report</button>
-                    <button type="button" id="back-social" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapsocialmedia', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Social Media Report</button>
+                    <button type="button" id="back-web" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapwebsite', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-laptop-fill me-2"></i>Back to International Website Report</button>
+                    <button type="button" id="back-social" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapsocialmedia', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-laptop-fill me-2"></i>Back to International Social Media Report</button>
                 @endif
-                <button type="button" id="back-details" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Chapter Details</button>
+                <button type="button" id="back-details" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Chapter Details</button>
         </div>
         </div>
         <!-- /.row -->

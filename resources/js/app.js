@@ -1,4 +1,3 @@
-// jQuery MUST be first - everything depends on it
 import $ from 'jquery';
 window.$ = $;
 window.jQuery = $;

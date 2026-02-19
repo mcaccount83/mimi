@@ -27,11 +27,11 @@
             <br>
             <div class="card-body text-center mt-3">
                         @if ($userTypeId == \App\Enums\UserTypeEnum::COORD)
-                        <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Profile</button>
+                        <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Profile</button>
                     @else
-                        <a href="{{ route('home') }}" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-left me-2"></i>Back to Profile</a>
+                        <a href="{{ route('home') }}" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Profile</a>
                     @endif
-                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('board.viewelearning', ['id' => $chDetails->id]) }}'"><i class="fas fa-graduation-cap me-2" ></i>eLearning Library</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('board.viewelearning', ['id' => $chDetails->id]) }}'"><i class="bi bi-mortarboard-fill me-2" ></i>eLearning Library</button>
                 </div>
             </div>
         </div>

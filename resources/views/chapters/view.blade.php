@@ -38,44 +38,74 @@
                  </p>
                  </div>
                 <ul class="list-group list-group-flush mb-3">
-                    <li class="list-group-item mt-2">
-
-                <b>EIN Notes:</b> {{$chDocuments->ein_notes}}
+                    <li class="list-group-item">
+                 <div class="row">
+                            <div class="col-auto fw-bold">EIN Notes:</div>
+                            <div class="col text-end">
+                                {{$chDocuments->ein_notes}}
+                                </div>
+                        </div>
                     </li>
-                    <li class="list-group-item mt-2">
-                        <b>Re-Registration Dues:</b><span class="float-end">
-                            @if ($chPayments->rereg_members)
-                                <b>{{ $chPayments->rereg_members }} Members</b> on <b><span class="date-mask">{{ $chPayments->rereg_date }}</span></b>
-                            @else
-                                No Payment Recorded
-                            @endif
-                        </span><br>
-                        <b>M2M Donation:</b><span class="float-end">
+                    <li class="list-group-item">
+                       <div class="row">
+                            <div class="col-auto fw-bold">Re-Registration Dues:</div>
+                            <div class="col text-end">
+                                @if ($chPayments->rereg_members)
+                                    <b>{{ $chPayments->rereg_members }} Members</b> on <b><span class="date-mask">{{ $chPayments->rereg_date }}</span></b>
+                                @else
+                                    No Payment Recorded
+                                @endif
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-auto fw-bold">M2M Donation:</div>
+                            <div class="col text-end">
                             @if ($chPayments->m2m_donation)
                                 <b>${{ $chPayments->m2m_donation }}</b> on <b><span class="date-mask">{{ $chPayments->m2m_date }}</span></b>
                             @else
                                 No Donation Recorded
                             @endif
-                        </span><br>
-                        <b>Sustaining Chapter Donation: </b><span class="float-end">
+                         </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-auto fw-bold">Sustaining Chapter Donation:</div>
+                            <div class="col text-end">
                             @if ($chPayments->sustaining_donation)
                                 <b>${{ $chPayments->sustaining_donation }}</b> on <b><span class="date-mask">{{ $chPayments->sustaining_date }}</span></b>
                             @else
                                 No Donation Recorded
                             @endif
-                        </span><br>
+                       </div>
+                        </div>
                     </li>
-                    <li class="list-group-item mt-2">
-                        <b>Founded:</b> <span class="float-end">{{ $startMonthName }} {{ $chDetails->start_year }}</span>
-                        <br>
-                        <b>Formerly Known As:</b> <span class="float-end">{{ $chDetails->former_name }}</span>
-                        <br>
-                        <b>Sistered By:</b> <span class="float-end">{{ $chDetails->sistered_by }}</span>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-auto fw-bold">Founded:</div>
+                            <div class="col text-end">
+                                {{ $startMonthName }} {{ $chDetails->start_year }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-auto fw-bold">Formerly Known As:</div>
+                            <div class="col text-end">
+                                {{ $chDetails->former_name }}
+                                </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-auto fw-bold">Sistered By:</div>
+                            <div class="col text-end">
+                                {{ $chDetails->sistered_by }}
+                                </div>
+                        </div>
                     </li>
-                    <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
-                    <li class="list-group-item mt-2" id="display_corlist"></li>
-                </ul>
-              <div class="text-center">
+                   <li class="list-group-item">
+                          <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
+                            <div class="row mb-2">
+                          <span id="display_corlist" style="display: block; margin-top: 10px;"></span>
+                            </div>
+                        </li>
+                  <li class="list-group-item">
+                 <div class="text-center">
                       @if ($chDetails->active_status == 1 )
                           <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
                       @elseif ($chDetails->active_status == 2)
@@ -89,7 +119,9 @@
                           Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
                           {{ $chDetails->disband_reason }}
                       @endif
-                  </div>
+                      </div>
+                </li>
+                  </ul>
               </div>
               <!-- /.card-body -->
             </div>
@@ -425,7 +457,7 @@
                                 <!-- /.card-header -->
                             <div class="card-body">
                         @if($ITCondition || $eoyTestCondition && $displayTESTING || $displayLIVE)
-                            <div class="row">
+                            <div class="row mb-2">
                                 <div class="col-sm-3">
                                     <label>Boundary Issues:</label>
                                 </div>
@@ -443,7 +475,7 @@
                                 @endif
                             </div>
 
-                            <div class="row">
+                            <div class="row mb-2">
                                 <div class="col-sm-3">
                                     <label>Board Report:</label>
                                 </div>
@@ -461,7 +493,7 @@
                                 @endif
                             </div>
 
-                            <div class="row">
+                            <div class="row mb-2">
                                 <div class="col-sm-3">
                                     <label>Financial Report:</label>
                                 </div>
@@ -479,7 +511,7 @@
                                 @endif
                             </div>
 
-                            <div class="row">
+                            <div class="row mb-2">
                                 <div class="col-sm-3">
                                     <label>Attachments:</label>
                                 </div>
@@ -523,7 +555,7 @@
                             </div>
 
 
-                            <div class="row">
+                            <div class="row mb-2">
                                 <div class="col-sm-3">
                                     <label>Extension:</label>
                                 </div>
@@ -538,7 +570,7 @@
                                 @endif
                             </div>
 
-                            <div class="row">
+                            <div class="row mb-2">
                                 <div class="col-sm-3">
                                     <label>990N Filing:</label>
                                 </div>
@@ -553,7 +585,7 @@
                                 @endif
                             </div>
 
-                            <div class="row ">
+                            <div class="row mb-2">
                                 <div class="col-sm-3">
                                     <label>Chapter Awards:</label>
                                 </div>
@@ -587,7 +619,7 @@
                     </div>
                     <!-- /.card-header -->
                             <div class="card-body">
-                            <div class="row">
+                            <div class="row mb-2">
                                 <div class="col-sm-6 mb-2">
                                     <label>Final Re-Reg Payment:</label>
                                 </div>
@@ -596,7 +628,7 @@
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <div class="row mb-2">
                                 <div class="col-sm-6 mb-2">
                                     <label>Funds Donated:</label>
                                 </div>
@@ -605,7 +637,7 @@
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <div class="row mb-2">
                                 <div class="col-sm-6 mb-2">
                                     <label>Manual Returned/Destroyed:</label>
                                 </div>
@@ -614,7 +646,7 @@
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <div class="row mb-2">
                                 <div class="col-sm-6 mb-2">
                                     <label>Online Accounts Removed:</label>
                                 </div>
@@ -623,7 +655,7 @@
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <div class="row mb-2">
                                 <div class="col-sm-6 mb-2">
                                     <label>Final 990N Filed:</label>
                                 </div>
@@ -632,7 +664,7 @@
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <div class="row mb-2">
                                 <div class="col-sm-6 mb-2">
                                     <label>Final Financial Report Submitted:</label>
                                 </div>
@@ -654,9 +686,9 @@
 
                   <div class="tab-pane" id="pre">
                         <div class="pre-field">
-                             <div class="card-header bg-transparent border-0">
+                             {{-- <div class="card-header bg-transparent border-0">
                                     <h3>President Information</h3>
-                            </div>
+                            </div> --}}
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <div class="row">
@@ -711,9 +743,9 @@
                             </div>
                         @else
                             <div class="avp-field">
-                                <div class="card-header bg-transparent border-0">
+                                {{-- <div class="card-header bg-transparent border-0">
                                     <h3>Administrative Vice President Information</h3>
-                                </div>
+                                </div> --}}
                                 <!-- /.card-header -->
                             <div class="card-body">
                                 <div class="row">
@@ -768,9 +800,9 @@
                             </div>
                         @else
                             <div class="mvp-field">
-                                 <div class="card-header bg-transparent border-0">
+                                 {{-- <div class="card-header bg-transparent border-0">
                                         <h3>Membership Vice President Information</h3>
-                                </div>
+                                </div> --}}
                                 <!-- /.card-header -->
                             <div class="card-body">
                                 <div class="row">
@@ -825,9 +857,9 @@
                           </div>
                         @else
                           <div class="trs-field">
-                            <div class="card-header bg-transparent border-0">
+                            {{-- <div class="card-header bg-transparent border-0">
                                         <h3>Treasurer Information</h3>
-                                </div>
+                                </div> --}}
                                 <!-- /.card-header -->
                             <div class="card-body">
                               <div class="row">
@@ -882,9 +914,9 @@
                     </div>
                   @else
                     <div class="sec-field">
-                         <div class="card-header bg-transparent border-0">
+                         {{-- <div class="card-header bg-transparent border-0">
                                         <h3>Secretary Information</h3>
-                                </div>
+                                </div> --}}
                                 <!-- /.card-header -->
                             <div class="card-body">
                         <div class="row">
@@ -949,18 +981,18 @@
                 @endphp
                     <button class="btn btn-primary bg-gradient mb-2" type="button" id="email-chapter" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">
                         <i class="bi bi-envelope-fill me-2"></i>Email Board</button>
-                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.edit', ['id' => $chDetails->id]) }}'"><i class="bi bi-pencil-square me-2"></i>Update Chapter Information</button>
-                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chDetails->id]) }}'"><i class="bi bi-pencil-square me-2"></i>Update Board Information</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.edit', ['id' => $chDetails->id]) }}'"><i class="bi bi-house-fill me-2"></i>Update Chapter Information</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chDetails->id]) }}'"><i class="bi bi-person-bounding-box me-2"></i>Update Board Information</button>
                     @endif
                 @if ( $ITCondition || $eoyTestCondition && $displayTESTING || $regionalCoordinatorCondition && $displayLIVE )
-                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-pencil-square me-2"></i>Update EOY Information
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-file-earmark-bar-graph-fill me-2"></i>Update EOY Information
                         @if ($ITCondition && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
                         @if ($eoyTestCondition && $displayTESTING) *TESTING*@endif
                     </button>
                 @endif
                 @if($coordinatorCondition && $conferenceCoordinatorCondition)
                     <br>
-                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('payment.editpayment', ['id' => $chDetails->id]) }}'"><i class="fas fa-dollar-sign me-2"></i>Enter Payment/Donation</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('payment.editpayment', ['id' => $chDetails->id]) }}'"><i class="bi bi-currency-dollar me-2"></i>Enter Payment/Donation</button>
                     <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="updateEIN('{{ $chDetails->id }}')"><i class="bi bi-bank me-2"></i>Update EIN Number</button>
                 @endif
                 @if($coordinatorCondition && $regionalCoordinatorCondition)
@@ -975,30 +1007,30 @@
                 @if($coordinatorCondition)
                     @if ($confId == $chConfId)
                             @if ($chActiveId == \App\Enums\ChapterStatusEnum::ACTIVE)
-                                <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplist') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Active Chapter List</button>
+                                <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplist') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Active Chapter List</button>
                             @elseif ($chActiveId == \App\Enums\ChapterStatusEnum::ZAPPED)
-                                <button type="button" id="back-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapzapped') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Zapped Chapter List</button>
+                                <button type="button" id="back-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapzapped') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-x-fill me-2"></i>Back to Zapped Chapter List</button>
                             @endif
                             @if ($inquiriesCondition || $assistConferenceCoordinatorCondition)
                                 @if ($chActiveId == \App\Enums\ChapterStatusEnum::ACTIVE)
-                                    <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquiries', ['check3' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Active Inquiries List</button>
+                                    <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquiries', ['check3' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-pin-map-fill me-2"></i>Back to Active Inquiries List</button>
                                 @elseif ($chActiveId == \App\Enums\ChapterStatusEnum::ZAPPED)
-                                    <button type="button" id="back-inquiries-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquirieszapped', ['check3' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Zapped Inquiries List</button>
+                                    <button type="button" id="back-inquiries-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquirieszapped', ['check3' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-pin-map-fill me-2"></i>Back to Zapped Inquiries List</button>
                                 @endif
                             @endif
                      @elseif ($confId != $chConfId)
                         @if ($einCondition || $inquiriesInternationalCondition || $ITCondition)
                             @if ($chActiveId == \App\Enums\ChapterStatusEnum::ACTIVE)
-                                <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplist', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Active Chapter List</button>
+                                <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplist', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to International Active Chapter List</button>
                             @elseif ($chActiveId == \App\Enums\ChapterStatusEnum::ZAPPED)
-                                <button type="button" id="back-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapzapped', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Zapped Chapter List</button>
+                                <button type="button" id="back-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapzapped', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-x-fill me-2"></i>Back to International Zapped Chapter List</button>
                             @endif
                         @endif
                          @if ($inquiriesInternationalCondition || $ITCondition)
                             @if ($chActiveId == \App\Enums\ChapterStatusEnum::ACTIVE)
-                                <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquiries', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Active Inquiries List</button>
+                                <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquiries', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-pin-map-fill me-2"></i>Back to International Active Inquiries List</button>
                             @elseif ($chActiveId == \App\Enums\ChapterStatusEnum::ZAPPED)
-                                <button type="button" id="back-inquiries-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquirieszapped', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Zapped Inquiries List</button>
+                                <button type="button" id="back-inquiries-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquirieszapped', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-pin-map-fill me-2"></i>Back to International Zapped Inquiries List</button>
                             @endif
                         @endif
                     @endif

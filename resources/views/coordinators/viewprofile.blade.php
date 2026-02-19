@@ -163,21 +163,21 @@
             <!-- /.col -->
 
             <div class="card-body text-center mt-3">
-                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.profile') }}'"><i class="bi bi-pencil-square me-2"></i>Update Profile</button>
+                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.profile') }}'"><i class="bi bi-person-circle me-2"></i>Update Profile</button>
                 @if ($coordinatorCondition || $ITCondition)
-                    <button type="button" id="back" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.chaplist') }}'"><i class="bi bi-eye-fill me-2"></i>View Chapter List</button>
+                    <button type="button" id="back" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.chaplist') }}'"><i class="bi bi-house-fill me-2"></i>View Chapter List</button>
                 @elseif($inquiriesCondition || ($ITCondition && !$coordinatorCondition))
                     <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient mb-2" onclick="window.location.window.location.href='{{ route('chapters.chapinquiries') }}'"><i class="bi bi-eye-fill me-2"></i>View Inquiries Chapter List</button>
                 @elseif($einCondition || $ITCondition)
-                    <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.chaplist', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>View International Active Chapter List</button>
+                    <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.chaplist', ['check5' => 'yes']) }}'"><i class="bi bi-house-fill me-2"></i>View International Active Chapter List</button>
                 @elseif($inquiriesInternationalCondition || ($ITCondition && !$coordinatorCondition))
-                    <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.chapinquiries', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>View International Active Inquiries List</button>
+                    <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.chapinquiries', ['check5' => 'yes']) }}'"><i class="bi bi-pin-map-fill me-2"></i>View International Active Inquiries List</button>
                 @endif
 
                 @if ($supervisingCoordinatorCondition || $ITCondition)
-                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="bi bi-eye-fill me-2"></i>View Coordinator List</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="bi bi-people-fill me-2"></i>View Coordinator List</button>
                 @elseif($ITCondition && !$supervisingCoordinatorCondition)
-                    <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.coordlist', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>View International Active Coordinator List</button>
+                    <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.coordlist', ['check5' => 'yes']) }}'"><i class="bi bi-people-fill me-2"></i>View International Active Coordinator List</button>
                 @endif
             </div>
             <!-- /.card-body for buttons -->

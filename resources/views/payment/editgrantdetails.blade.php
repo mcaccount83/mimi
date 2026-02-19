@@ -64,10 +64,8 @@
                 <div class="row mb-3">
                     <label class="col-md-8 col-form-label">Amount Awarded:</label>
                     <div class="col-sm-4">
-                        <div class="input-group row">
-                            <div class="input-group-prepend">
+                        <div class="input-group">
                                 <span class="input-group-text">$</span>
-                            </div>
                             <input type="text" name="amount_awarded" id="amount_awarded" class="form-control" value="{{ $grantDetails['amount_awarded'] }}">
                         </div>
                     </div>
@@ -166,11 +164,9 @@
                     <button class="btn btn-primary bg-gradient mb-2 disabled" type="button" id="financial-pdf" disabled><i class="bi bi-file-earmark-pdf-fill me-2"></i>No PDF Report Available</button><br>
                 @endif
                 @if($chDetails != null)
-                    <button type="button" id="btn-back" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('payment.paymenthistory', $grantDetails->chapter_id) }}'"><i class="fas fa-hand-holding-dollar me-2" ></i>Chapter Donation History</button>
+                    <button type="button" id="btn-back" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('payment.paymenthistory', $grantDetails->chapter_id) }}'"><i class="bi bi-currency-dollar me-2" ></i>Chapter Donation History</button>
                 @endif
-                                                {{-- <a href="{{ url("/payment/chapterpaymenthistory/{$list->id}") }}"><i class="fas fa-file-invoice-dollar "></i></a> --}}
-
-                    <button type="button" id="btn-back" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('payment.grantlist') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Grant List</button>
+                    <button type="button" id="btn-back" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('payment.grantlist') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-currency-dollar me-2"></i>Back to Grant List</button>
                 </li>
 
             </ul>

@@ -112,9 +112,9 @@
                 <div class="card-body text-center mt-3">
                 @if($conferenceCoordinatorCondition)
                     @if ($checkBox51Status)
-                        <a class="btn btn-primary bg-gradient mb-2" href="{{ route('coordinators.coordpending', ['check5' => 'yes']) }}"><i class="bi bi-chevron-double-right me-2"></i>New International Coordinators Pending</a>
+                        <a class="btn btn-primary bg-gradient mb-2" href="{{ route('coordinators.coordpending', ['check5' => 'yes']) }}"><i class="bi bi-person-fill-add me-2"></i>New International Coordinators Pending</a>
                     @else
-                        <a class="btn btn-primary bg-gradient mb-2" href="{{ route('coordinators.coordpending') }}"><i class="bi bi-chevron-double-right me-2"></i>New Coordinators Pending</a>
+                        <a class="btn btn-primary bg-gradient mb-2" href="{{ route('coordinators.coordpending') }}"><i class="bi bi-person-fill-add me-2"></i>New Coordinators Pending</a>
                     @endif
                 @endif
                 @if ($regionalCoordinatorCondition)

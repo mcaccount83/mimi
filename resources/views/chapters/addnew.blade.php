@@ -199,7 +199,7 @@
           <div class="col-md-12">
             <div class="card-body text-center mt-3">
                 <button type="submit" class="btn btn-primary bg-gradient mb-2" onclick="return validateEmailsBeforeSubmit();"><i class="bi bi-floppy-fill me-2"></i>Save New Chapter</button>
-                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.chaplistpending') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Pending Chapter List</button>
+                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.chaplistpending') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-add-fill me-2"></i>Back to Pending Chapter List</button>
         </div>
         </div>
         <!-- /.row -->

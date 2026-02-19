@@ -254,25 +254,25 @@
             <div class="card-body text-center mt-3">
                 @if ($cdConfId == $confId)
                         @if ($cdActiveId == \App\Enums\CoordinatorStatusEnum::ACTIVE)
-                            <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Active Coordinator List</button>
+                            <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-people-fill me-2"></i>Back to Active Coordinator List</button>
                         @elseif ($cdActiveId == \App\Enums\CoordinatorStatusEnum::PENDING)
-                            <button type="button" id="back-pending" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordpending') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Pending Coordinator List</button>
+                            <button type="button" id="back-pending" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordpending') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-person-fill-add me-2"></i>Back to Pending Coordinator List</button>
                         @elseif ($cdActiveId == \App\Enums\CoordinatorStatusEnum::NOTAPPROVED)
-                            <button type="button" id="back-declined" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordrejected') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Not Approved Coordinator List</button>
+                            <button type="button" id="back-declined" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordrejected') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-person-fill-x me-2"></i>Back to Not Approved Coordinator List</button>
                         @elseif ($cdActiveId == \App\Enums\CoordinatorStatusEnum::RETIRED)
-                            <button type="button" id="back-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordretired') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Retired Coordinator List</button>
+                            <button type="button" id="back-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordretired') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-person-fill-slash me-2"></i>Back to Retired Coordinator List</button>
                         @endif
                     @else
                         @if ($cdConfId != $confId)
                             @if ($ITCondition)
                                 @if ($cdActiveId == \App\Enums\CoordinatorStatusEnum::ACTIVE)
-                                    <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordlist', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Active Coordinator List</button>
+                                    <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordlist', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-people-fill me-2"></i>Back to International Active Coordinator List</button>
                                 @elseif ($cdActiveId == \App\Enums\CoordinatorStatusEnum::PENDING)
-                                    <button type="button" id="back-pending" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordpending', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Pending Coordinator List</button>
+                                    <button type="button" id="back-pending" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordpending', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-person-fill-add me-2"></i>Back to International Pending Coordinator List</button>
                                 @elseif ($cdActiveId == \App\Enums\CoordinatorStatusEnum::NOTAPPROVED)
-                                    <button type="button" id="back-declined" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordrejected', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Not Approved Coordinator List</button>
+                                    <button type="button" id="back-declined" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordrejected', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-person-fill-x me-2"></i>Back to International Not Approved Coordinator List</button>
                                 @elseif ($cdActiveId == \App\Enums\CoordinatorStatusEnum::RETIRED)
-                                    <button type="button" id="back-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordretired', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Retired Coordinator List</button>
+                                    <button type="button" id="back-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('coordinators.coordretired', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-person-fill-slash me-2"></i>Back to International Retired Coordinator List</button>
                                 @endif
                             @endif
                         @endif

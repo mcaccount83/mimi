@@ -31,48 +31,69 @@
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
                 <div class="card-body">
-                    <div class="card-header text-center bg-transparent">
+                     <div class="card-header text-center bg-transparent">
                     <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
                     <p class="mb-0">{{ $chDetails->confname }} Conference, {{ $chDetails->regname }} Region
-  </p>
-                    </div>
+                    <br>
                   EIN: {{$chDetails->ein}}
                   </p>
+                </div>
 
                   <ul class="list-group list-group-flush mb-3">
-                      <li class="list-group-item mt-2">
-                          <b>Re-Registration Dues:</b><span class="float-end">
-                              @if ($chPayments->rereg_members	)
-                                  <b>{{ $chPayments->rereg_members }} Members</b> on <b><span class="date-mask">{{ $chPayments->rereg_date }}</span></b>
-                              @else
-                                  No Payment Recorded
-                              @endif
-                          </span><br>
-                          <b>M2M Donation:</b><span class="float-end">
-                              @if ($chPayments->m2m_donation)
-                                  <b>${{ $chPayments->m2m_donation }}</b> on <b><span class="date-mask">{{ $chPayments->m2m_date }}</span></b>
-                              @else
-                                  No Donation Recorded
-                              @endif
-                          </span><br>
-                          <b>Sustaining Chapter Donation: </b><span class="float-end">
-                              @if ($chPayments->sustaining_donation)
-                                  <b>${{ $chPayments->sustaining_donation }}</b> on <b><span class="date-mask">{{ $chPayments->sustaining_date }}</span></b>
-                              @else
-                                  No Donation Recorded
-                              @endif
-                          </span>
-                          <br>
+                      <li class="list-group-item">
+                       <div class="row">
+                            <div class="col-auto fw-bold">Re-Registration Dues:</div>
+                            <div class="col text-end">
+                                @if ($chPayments->rereg_members)
+                                    <b>{{ $chPayments->rereg_members }} Members</b> on <b><span class="date-mask">{{ $chPayments->rereg_date }}</span></b>
+                                @else
+                                    No Payment Recorded
+                                @endif
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-auto fw-bold">M2M Donation:</div>
+                            <div class="col text-end">
+                            @if ($chPayments->m2m_donation)
+                                <b>${{ $chPayments->m2m_donation }}</b> on <b><span class="date-mask">{{ $chPayments->m2m_date }}</span></b>
+                            @else
+                                No Donation Recorded
+                            @endif
+                         </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-auto fw-bold">Sustaining Chapter Donation:</div>
+                            <div class="col text-end">
+                            @if ($chPayments->sustaining_donation)
+                                <b>${{ $chPayments->sustaining_donation }}</b> on <b><span class="date-mask">{{ $chPayments->sustaining_date }}</span></b>
+                            @else
+                                No Donation Recorded
+                            @endif
+                       </div>
+                        </div>
+                    </li>
+                      <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-auto fw-bold">Founded:</div>
+                            <div class="col text-end">
+                                {{ $startMonthName }} {{ $chDetails->start_year }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-auto fw-bold">Status:</div>
+                            <div class="col text-end">
+                                {{ $chapterStatus }}
+                            </div>
+                        </div>
                       </li>
-                      <li class="list-group-item mt-2">
-                        <b>Founded:</b><span class="float-end">{{ $startMonthName }} {{ $chDetails->start_year }}</span>
-                           <br>
-                          <b>Status:</b><span class="float-end ">{{ $chapterStatus }}</span>
-                      </li>
-                      <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
-                      <li class="list-group-item mt-2" id="display_corlist"></li>
-                  </ul>
-                  <div class="text-center">
+                     <li class="list-group-item">
+                          <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
+                            <div class="row mb-2">
+                          <span id="display_corlist" style="display: block; margin-top: 10px;"></span>
+                            </div>
+                        </li>
+                  <li class="list-group-item">
+                 <div class="text-center">
                       @if ($chDetails->active_status == 1 )
                           <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
                       @elseif ($chDetails->active_status == 2)
@@ -86,7 +107,9 @@
                           Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
                           {{ $chDetails->disband_reason }}
                       @endif
-                  </div>
+                      </div>
+                </li>
+                  </ul>
                 </div>
               <!-- /.card-body -->
             </div>
@@ -96,12 +119,12 @@
 
           <div class="col-md-8">
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                <h3 class="profile-username">Payment & Donation Information</h3>
+                <div class="card-body">
+                    <div class="card-header bg-transparent border-0">
+                <h3>Payment & Donation Information</h3>
+                                    </div>
                     <!-- /.card-header -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <!-- /.form group -->
+                    <div class="card-body">
                             <div class="row mb-3">
                                 <div class="col-sm-12">
                                     <h5>Re-Registration Payment
@@ -114,10 +137,8 @@
                                 </div>
                                 <label class="col-sm-2 col-form-label">Payment Amount:</label>
                                 <div class="col-sm-2">
-                                    <div class="input-group row">
-                                        <div class="input-group-prepend">
+                                    <div class="input-group">
                                             <span class="input-group-text">$</span>
-                                        </div>
                                         <input type="text" name="rereg" id="rereg" class="form-control"/>
                                     </div>
                                 </div>
@@ -160,10 +181,8 @@
                                 </div>
                                 <label class="col-sm-2 ms-1 col-form-label">Donation Amount:</label>
                                 <div class="col-sm-3">
-                                    <div class="input-group row">
-                                        <div class="input-group-prepend">
+                                    <div class="input-group">
                                             <span class="input-group-text">$</span>
-                                        </div>
                                         <input type="text" name="m2m" id="m2m" class="form-control"/>
                                     </div>
                                 </div>
@@ -189,10 +208,8 @@
                                 </div>
                                 <label class="col-sm-2 ms-1 col-form-label">Donation Amount:</label>
                                 <div class="col-sm-3">
-                                    <div class="input-group row">
-                                        <div class="input-group-prepend">
+                                    <div class="input-group">
                                             <span class="input-group-text">$</span>
-                                        </div>
                                         <input type="text" name="sustaining" id="sustaining" class="form-control" />
                                     </div>
                                 </div>
@@ -208,9 +225,7 @@
                                 </div>
 
                         </div>
-                    </div>
                 </div>
-
               <!-- /.card-body -->
                         </div>
             <!-- /.card -->
@@ -221,17 +236,17 @@
                 @if ($coordinatorCondition)
                     <button type="submit" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Payment Information</button>
                 @endif
-                <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('payment.paymenthistory', ['id' => $chDetails->id]) }}'"><i class="fas fa-file-invoice-dollar me-2"></i>View Payment History</button>
+                <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('payment.paymenthistory', ['id' => $chDetails->id]) }}'"><i class="bi bi-file-earmark-text me-2"></i>View Payment History</button>
                 <br>
                 @if ($confId == $chConfId)
-                        <button type="button" id="back-rereg" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('payment.chapreregistration') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Re-Registration Report</button>
-                        <button type="button" id="back-donation" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('payment.chapdonations') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Donations Report</button>
+                        <button type="button" id="back-rereg" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('payment.chapreregistration') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-credit-card-fill me-2"></i>Back to Re-Registration Report</button>
+                        <button type="button" id="back-donation" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('payment.chapdonations') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-currency-dollar me-2"></i>Back to Donations Report</button>
                 @elseif ($confId != $chConfId)
-                    <button type="button" id="back-rereg" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('payment.chapreregistration', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Re-Registration Report</button>
-                    <button type="button" id="back-donation" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('payment.chapdonations', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Donations Report</button>
+                    <button type="button" id="back-rereg" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('payment.chapreregistration', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-credit-card-fill me-2"></i>Back to International Re-Registration Report</button>
+                    <button type="button" id="back-donation" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('payment.chapdonations', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-currency-dollar me-2"></i>Back to International Donations Report</button>
                 @endif
-                <button type="button" id="back-details" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Chapter Details</button>
-                <button type="button" id="back-details" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('payment.paymenthistory', ['id' => $chDetails->id]) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Payment History</button>
+                <button type="button" id="back-details" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Chapter Details</button>
+                {{-- <button type="button" id="back-details" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('payment.paymenthistory', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-file-earmark-text me-2"></i>Back to Payment History</button> --}}
         </div>
         </div>
         <!-- /.row -->
@@ -244,70 +259,29 @@
     @include('layouts.scripts.disablefields')
 
 <script>
-
 document.addEventListener('DOMContentLoaded', function () {
-    const paymentDate = document.getElementById('PaymentDate');
-    const membersPaidFor = document.getElementById('MembersPaidFor');
+    function setupPairValidation(dateId, amountId, extraId = null) {
+        const dateField = document.getElementById(dateId);
+        const amountField = document.getElementById(amountId);
+        const extraField = extraId ? document.getElementById(extraId) : null;
+        if (!dateField || !amountField) return;
 
-    function validateFields() {
-        if (paymentDate.value || membersPaidFor.value) {
-            // If either field has a value, make both required
-            paymentDate.setAttribute('required', 'required');
-            membersPaidFor.setAttribute('required', 'required');
-        } else {
-            // If neither field has a value, remove the required attribute
-            paymentDate.removeAttribute('required');
-            membersPaidFor.removeAttribute('required');
+        function validate() {
+            const required = !!(dateField.value || amountField.value || (extraField && extraField.value));
+            dateField.toggleAttribute('required', required);
+            amountField.toggleAttribute('required', required);
+            if (extraField) extraField.toggleAttribute('required', required);
         }
+
+        dateField.addEventListener('input', validate);
+        amountField.addEventListener('input', validate);
+        if (extraField) extraField.addEventListener('input', validate);
     }
 
-    // Add event listeners for input change
-    paymentDate.addEventListener('input', validateFields);
-    membersPaidFor.addEventListener('input', validateFields);
+    setupPairValidation('PaymentDate', 'rereg', 'members');  // all 3 required together
+    setupPairValidation('M2MPaymentDate', 'm2m');
+    setupPairValidation('SustainingPaymentDate', 'sustaining');
 });
-
-document.addEventListener('DOMContentLoaded', function () {
-    const M2MPaymentDate = document.getElementById('M2MPaymentDate');
-    const M2MPayment = document.getElementById('M2MPayment');
-
-    function validateFields() {
-        if (M2MPaymentDate.value || M2MPayment.value) {
-            // If either field has a value, make both required
-            M2MPaymentDate.setAttribute('required', 'required');
-            M2MPayment.setAttribute('required', 'required');
-        } else {
-            // If neither field has a value, remove the required attribute
-            M2MPaymentDate.removeAttribute('required');
-            M2MPayment.removeAttribute('required');
-        }
-    }
-
-    // Add event listeners for input change
-    M2MPaymentDate.addEventListener('input', validateFields);
-    M2MPayment.addEventListener('input', validateFields);
-});
-
-document.addEventListener('DOMContentLoaded', function () {
-    const SustainingPaymentDate = document.getElementById('SustainingPaymentDate');
-    const SustainingPayment = document.getElementById('SustainingPayment');
-
-    function validateFields() {
-        if (SustainingPaymentDate.value || SustainingPayment.value) {
-            // If either field has a value, make both required
-            SustainingPaymentDate.setAttribute('required', 'required');
-            SustainingPayment.setAttribute('required', 'required');
-        } else {
-            // If neither field has a value, remove the required attribute
-            SustainingPaymentDate.removeAttribute('required');
-            SustainingPayment.removeAttribute('required');
-        }
-    }
-
-    // Add event listeners for input change
-    SustainingPaymentDate.addEventListener('input', validateFields);
-    SustainingPayment.addEventListener('input', validateFields);
-});
-
 
 </script>
 @endsection

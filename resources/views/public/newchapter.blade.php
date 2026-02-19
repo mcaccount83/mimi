@@ -100,9 +100,7 @@
                     <label class="col-sm-4 col-form-label">Requested Name:</label>
                     <div class="col-sm-8">
                         <div class="input-group">
-                            <div class="input-group-prepend">
                                 <span class="input-group-text">MOMS Club of</span>
-                            </div>
                             <input type="text" name="ch_name" id="ch_name" class="form-control" placeholder="Chapter Name" required>
                         </div>
                     </div>

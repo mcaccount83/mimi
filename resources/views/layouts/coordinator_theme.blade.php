@@ -12,11 +12,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 
     <!-- jQuery as classic sync script - MUST be before Vite modules -->
-    <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <!-- Vite Compiled Assets -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/flash.js'])
 
     {{-- Flash Messages as meta tags --}}
     @if ($message = Session::get('success'))
@@ -283,7 +279,7 @@ h6 { font-size: 0.75rem !important; }
                         @if (isset($paymentsRoute))
                             <li class="nav-item">
                                 <a href="{{ $paymentsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activePaymentsRoutes) }}">
-                                    <i class="nav-icon bi bi-credit-card-2-back-fill"></i>
+                                    <i class="nav-icon bi bi-credit-card-fill"></i>
                                     <p>Payments/Donations</p>
                                 </a>
                             </li>
@@ -454,7 +450,7 @@ h6 { font-size: 0.75rem !important; }
                                 <li class="nav-item">
                                     <a href="{{ $eoyReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeEOYReportsRoutes) }}">
                                         <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em;">
-                                            <i class=" bi bi-calculator-fill position-absolute"></i>
+                                            <i class=" bi bi-file-earmark-bar-graph-fill position-absolute"></i>
                                             <i class="bi bi-gear-fill position-absolute" style="font-size: 0.5em; bottom: -0.1em; right: -0.1em; background-color: #343a40; border-radius: 90%;"></i>
                                         </span>
                                         <p>EOY Reports
@@ -680,6 +676,9 @@ h6 { font-size: 0.75rem !important; }
       <!--end::Footer-->
     </div>
     <!--end::App Wrapper-->
+
+<!-- Vite Compiled Assets -->
+    @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/flash.js'])
 
 @include('layouts.scripts.alert')
 @include('layouts.scripts.boards')

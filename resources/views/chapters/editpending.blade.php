@@ -234,20 +234,20 @@
               @if($coordinatorCondition)
                     @if ($confId == $chConfId)
                         @if ($chActiveId == '2')
-                            <button type="button" id="back-pending" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplistpending') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Pending Chapter List</button>
+                            <button type="button" id="back-pending" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplistpending') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-add-fill me-2"></i>Back to Pending Chapter List</button>
                         @elseif ($chActiveId == '3')
-                            <button type="button" id="back-declined" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplistdeclined') }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to Not Approved Chapter List</button>
+                            <button type="button" id="back-declined" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplistdeclined') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-x-fill me-2"></i>Back to Not Approved Chapter List</button>
                         @endif
                      @elseif ($confId != $chConfId)
                         @if ($ITCondition )
                             @if ($chActiveId == '2')
-                                <button type="button" id="back-pending" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplistpending', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Pending Chapter List</button>
+                                <button type="button" id="back-pending" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplistpending', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-add-fill me-2"></i>Back to International Pending Chapter List</button>
                             @elseif ($chActiveId == '3')
-                                <button type="button" id="back-declined" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplistdeclined', ['check5' => 'yes']) }}'"><i class="bi bi-chevron-double-left me-2"></i>Back to International Not Approved Chapter List</button>
+                                <button type="button" id="back-declined" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplistdeclined', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-x-fill me-2"></i>Back to International Not Approved Chapter List</button>
                             @endif
                         @endif
                     @endif
-                    <button type="button" class="btn btn-primary bg-gradient mb-2 reset-password-btn" data-user-id="{{ $chDetails->pendingPresident->user_id }}"><i class="fas fa-lock me-2"></i>Reset Founder Password</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2 reset-password-btn" data-user-id="{{ $chDetails->pendingPresident->user_id }}"><i class="bi bi-lock-fill me-2"></i>Reset Founder Password</button>
 
                 @endif
             </div>

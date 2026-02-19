@@ -133,7 +133,7 @@
                     <form id="activateAllBoardsForm" action="{{ route('eoyreports.eoyboardreport') }}" method="GET">
                         <input type="hidden" name="board" value="active">
                         <button type="button" class="btn btn-primary bg-gradient ms-1" onclick="confirmActivateAllBoards()">
-                            <i class="fas fa-play me-2"></i>Make Received Boards Active
+                            <i class="bi bi-play-fill me-2"></i>Make Received Boards Active
                         </button>
                     </form>
                 @endif
