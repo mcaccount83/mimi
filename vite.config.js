@@ -31,6 +31,13 @@ export default defineConfig(({ mode }) => {
                         jquery: '$'
                     }
                 }
+            },
+        },
+        css: {
+            preprocessorOptions: {
+                scss: {
+                    silenceDeprecations: ['import', 'global-builtin', 'color-functions', 'if-function'],
+                }
             }
         }
     };
