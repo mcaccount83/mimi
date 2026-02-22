@@ -2,14 +2,7 @@
 
 @section('page_title', 'Coordinator Profile')
 @section('breadcrumb', 'Coordinator Profile')
-<style>
-.disabled-link {
-    pointer-events: none; /* Prevent click events */
-    cursor: default; /* Change cursor to default */
-    color: #343a40; /* Font color */
-}
 
-</style>
 @section('content')
     <!-- Main content -->
     <section class="content">
@@ -17,7 +10,6 @@
             <div class="row g-4">
 
           <div class="col-md-4">
-            <!-- Profile -->
             <div class="card card-primary card-outline">
                 <div class="card-body">
                     <div class="card-header text-center bg-transparent">
@@ -29,49 +21,92 @@
                         </p>
                     </div>
                   <ul class="list-group list-group-flush mb-3">
-                      <li class="list-group-item mt-2">
-                          <b>Supervising Coordinator:</b> <span class="float-end"><a href="mailto:{{ $cdDetails->reportsTo?->email }}">{{ $ReportTo }} </a></span>
-                          <br>
-                          <b>Primary Position:</b> <span class="float-end">{{ $displayPosition->long_title }}</span>
-                          <br>
-                          <div style="display: flex; justify-content: space-between;">
-                            <b>Secondary Positions:</b>
-                            <span style="text-align: right;">
+                      <li class="list-group-item">
+                          <div class="row">
+                            <div class="col-auto fw-bold">Supervising Coordinator:</div>
+                            <div class="col text-end">
+                                <a href="mailto:{{ $cdDetails->reportsTo?->email }}">{{ $ReportTo }} </a>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-auto fw-bold">Primary Position:</div>
+                            <div class="col text-end">
+                                {{ $displayPosition->long_title }}
+                           </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-auto fw-bold">Secondary Positions:</div>
+                            <div class="col text-end">
                                 @forelse($cdDetails->secondaryPosition as $position)
                                     {{ $position->long_title }}@if(!$loop->last)<br>@endif
                                 @empty
                                     None
                                 @endforelse
-                            </span>
+                            </div>
+                          </div>
+                      </li>
+                      <li class="list-group-item mt-2">
+                          <div class="row">
+                            <div class="col-auto fw-bold">Start Date:</div>
+                            <div class="col text-end">
+                                {{ $cdDetails->coordinator_start_date }}
+                                </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-auto fw-bold">Last Promotion Date:</div>
+                            <div class="col text-end">
+                                {{ $cdDetails->last_promoted }}
+                           </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-auto fw-bold">Home Chapter:
+                                {{ $cdDetails->home_chapter }}
+                                 </div>
+                          </div>
+                      </li>
+                      <li class="list-group-item mt-2">
+                        <div class="row">
+                            <div class="col-auto fw-bold">Birthday:</div>
+                            <div class="col text-end">
+                                {{$cdDetails->birthdayMonth->month_long_name}} {{$cdDetails->birthday_day}}
                         </div>
-                      </li>
-                      <li class="list-group-item mt-2">
-                          <b>Start Date:</b> <span class="float-end date-mask">{{ $cdDetails->coordinator_start_date }}</span>
-                          <br>
-                          <b>Last Promotion Date:</b> <span class="float-end date-mask">{{ $cdDetails->last_promoted }}</span>
-                          <br>
-                          <b>Home Chapter:</b><span class="float-end">{{ $cdDetails->home_chapter }}</span>
-                          <br>
-                      </li>
-                      <li class="list-group-item mt-2">
-                        <b>Birthday:</b><span class="float-end">{{$cdDetails->birthdayMonth->month_long_name}} {{$cdDetails->birthday_day}}</span>
-                        <br>
-                        <b>Email:</b><span class="float-end"><a href="mailto:{{ $cdDetails->email }}">{{ $cdDetails->email }}</a></span>
+                          </div>
+                          <div class="row">
+                            <div class="col-auto fw-bold">Email:</div>
+                            <div class="col text-end">
+                                <a href="mailto:{{ $cdDetails->email }}">{{ $cdDetails->email }}</a>
                         @if ($cdDetails->sec_email != null )
-                        <br>
-                        <b>Secondary Email:</b><span class="float-end"><a href="mailto:{{ $cdDetails->sec_email }}">{{ $cdDetails->sec_email }}</a></span>
+                        </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-auto fw-bold">Secondary Email:</div>
+                            <div class="col text-end">
+                                <a href="mailto:{{ $cdDetails->sec_email }}">{{ $cdDetails->sec_email }}</a>
                         @endif
-                        <br>
-                        <b>Phone:</b><span class="phone-mask float-end">{{$cdDetails->phone }}</span>
+                        </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-auto fw-bold">Phone:</div>
+                            <div class="col text-end phone-mask">
+                                {{$cdDetails->phone }}
                         @if ($cdDetails->alt_phone != null )
-                        <br>
-                        <b>Atl Phone:</b><span class="phone-mask float-end">{{$cdDetails->alt_phone }}</span>
+                        </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-auto fw-bold">Atl Phone:</div>
+                            <div class="col text-end phone-mask">
+                                {{$cdDetails->alt_phone }}
                         @endif
-                        <br>
-                        <b>Address:</b><span class="float-end">{{$cdDetails->address}}
-                        <br>
-                        {{$cdDetails->city}}, {{$cdDetails->state->state_short_name}}&nbsp;{{$cdDetails->zip}}</span>
-                      </li>
+                        </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-auto fw-bold">Address:</div>
+                            <div class="col text-end">
+                                {{$cdDetails->address}}<br>
+                        {{$cdDetails->city}}, {{$cdDetails->state->state_short_name}}&nbsp;{{$cdDetails->zip}}
+                      </div>
+                          </div>
+                    </li>
                     </ul>
                 </div>
                 <!-- /.card-body -->
@@ -82,9 +117,13 @@
 
           <div class="col-md-8">
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                <h3 class="profile-username">Chapters & Coordinators</h3>
+                <div class="card-body">
+                        <div class="card-header bg-transparent border-0">
+                            <h3>Chapters & Coordinators</h3>
+                    </div>
                     <!-- /.card-header -->
+                    <div class="card-body">
+
                         <div class="row">
                             <div class="col-sm-6">
 							<div class="mb-3">
@@ -153,15 +192,16 @@
                                     </table>
                                 </div>
                             </div>
-
                         </div>
+
+                    </div>
                     </div>
                     <!-- /.card-body -->
                 </div>
                 <!-- /.card -->
             </div>
             <!-- /.col -->
-
+    <div class="col-md-12">
             <div class="card-body text-center mt-3">
                 <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.profile') }}'"><i class="bi bi-person-circle me-2"></i>Update Profile</button>
                 @if ($coordinatorCondition || $ITCondition)
@@ -180,12 +220,11 @@
                     <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.coordlist', ['check5' => 'yes']) }}'"><i class="bi bi-people-fill me-2"></i>View International Active Coordinator List</button>
                 @endif
             </div>
-            <!-- /.card-body for buttons -->
-        <!-- /.col -->
-
-    </div>
-    <!-- /.row -->
-  </div>
-  <!-- /.container-fluid -->
-</section>
+            </div>
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
 @endsection

@@ -377,7 +377,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/eoyreports/editboardreport/{id}', [EOYReportController::class, 'editBoardReport'])->name('eoyreports.activateboardreport');
     Route::post('eoyreports/updateboardreport/{id}', [EOYReportController::class, 'updateEOYBoardReport'])->name('eoyreports.updateboardreport');
     Route::get('/eoyreports/financialreport', [EOYReportController::class, 'showEOYFinancialReport'])->name('eoyreports.eoyfinancialreport');
-    Route::get('/eoyreports/reviewfinancialreport/{id}', [EOYReportController::class, 'reviewFinancialReport'])->name('eoyreports.reviewfinancialreport');
+    Route::get('/eoyreports/editfinancialreview/{id}', [EOYReportController::class, 'editFinancialReview'])->name('eoyreports.editfinancialreview');
     Route::post('/eoyreports/updatefinancialreport/{id}', [EOYReportController::class, 'updateEOYFinancialReport'])->name('eoyreports.updatefinancialreport');
     Route::get('/eoyreports/unsubmit/{id}', [EOYReportController::class, 'updateUnsubmit']);
     Route::get('/eoyreports/unsubmitfinal/{id}', [EOYReportController::class, 'updateUnsubmitFinal']);
@@ -391,6 +391,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/eoyreports/awards', [EOYReportController::class, 'showEOYAwards'])->name('eoyreports.eoyawards');
     Route::get('/eoyreports/editawards/{id}', [EOYReportController::class, 'editEOYAwards'])->name('eoyreports.editawards');
     Route::post('/eoyreports/updateawards/{id}', [EOYReportController::class, 'updateEOYAwards'])->name('eoyreports.updateawards');
+    Route::get('/eoyreports/awardhistory/{id}', [EOYReportController::class, 'viewEOYAwardsHistory'])->name('eoyreports.awardhistory');
     Route::get('/eoyreports/irssubmission', [EOYReportController::class, 'showIRSSubmission'])->name('eoyreports.eoyirssubmission');
     Route::get('/eoyreports/editirssubmission/{id}', [EOYReportController::class, 'editIRSSubmission'])->name('eoyreports.editirssubmission');
     Route::post('/eoyreports/updateirssubmission/{id}', [EOYReportController::class, 'updateIRSSubmission'])->name('eoyreports.updateirssubmission');

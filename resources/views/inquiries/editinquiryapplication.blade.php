@@ -31,22 +31,24 @@
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                  <h3 class="profile-username text-center"><b>{{ $inqDetails->state->state_long_name}}</b></h3>
-                  <h3 class="profile-username text-center">{{ $inqDetails->state->region->long_name }} Region</h3>
-                  <h3 class="profile-username text-center">{{ $inqDetails->state->conference->conference_description }} Conference</h3>
+                <div class="card-body">
+                    <div class="card-header text-center bg-transparent">
+                        <h3><b>{{ $inqDetails->state->state_long_name}}</b></h3>
+                        <h3>{{ $inqDetails->state->region->long_name }} Region</h3>
+                        <h3>{{ $inqDetails->state->conference->conference_description }} Conference</h3>
+                    </div>
 
                   <ul class="list-group list-group-flush mb-3">
-                    <li class="list-group-item mt-2">
-                        <div class="d-flex align-items-center justify-content-between w-100">
-                                <label class="col-form-label">Chapter Available:</label>
-                                <div class="form-check form-switch">
+                    <li class="list-group-item">
+                        <div class="row mb-1">
+                                <label class="col-auto">Chapter Available:</label>
+                                <div class="col text-end form-switch">
                                     <input type="checkbox" name="available" id="available" class="form-check-input"
                                         {{$inqDetails->available == 1 ? 'checked' : ''}}>
                                     <label class="form-check-label" for="available"></label>
                                 </div>
                             </div>
-                            <div class="row mb-3" id="chapter-container" >
+                            <div class="row mb-1" id="chapter-container" >
                                 <label class="col-form-label col-sm-6">Chapter:</label>
                                 <div class="col-sm-6">
                                     <select id="chapter" name="chapter" class="form-control float-end" required>
@@ -60,9 +62,9 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="d-flex align-items-center justify-content-between w-100">
-                                <label class="col-form-label">Response Sent:</label>
-                                <div class="form-check form-switch">
+                            <div class="row mb-1">
+                                    <label class="col-auto">Response Sent:</label>
+                                <div class="fcol text-end form-switch">
                                     <input type="checkbox" name="response" id="response" class="form-check-input"
                                         {{$inqDetails->response == 1 ? 'checked' : ''}} disabled>
                                     <label class="form-check-label" for="response"></label>
@@ -75,7 +77,7 @@
                     </form>
                         </li>
 
-                        <li class="list-group-item mt-2">
+                        <li class="list-group-item">
                             <div class="card-body text-center mt-3">
                                 Send email responses to Inquiring Member & Chapter
                                 @if (($inqDetails->response != 1) && ($inqDetails->chapter_id != null))
@@ -136,7 +138,6 @@
                                 @endif
                             </div>
                         </li>
-
                     </ul>
                 </div>
               <!-- /.card-body -->
@@ -147,64 +148,102 @@
 
           <div class="col-md-8">
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-
-                <h3 class="profile-username">Inquiry Information</h3>
+                <div class="card-body">
+                    <div class="card-header bg-transparent border-0">
+                            <h3>Inquiry Information</h3>
+                     </div>
                     <!-- /.card-header -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <!-- /.form group -->
-                            <div class="row mb-3                              <label class="col-sm-2 col-form-label">Date:</label>
-                                <div class="col-sm-10">
-                                    <p class="form-control-plaintext">{{ $inqDetails->created_at->format('m-d-Y') }}</p>
-                                </div>
-                                <label class="col-sm-2 col-form-label">Name:</label>
-                                <div class="col-sm-10">
-                                    <p class="form-control-plaintext">{{ $inqDetails->inquiry_first_name }} {{ $inqDetails->inquiry_last_name }}</p>
-                                </div>
-                                <label class="col-sm-2 col-form-label">Email:</label>
-                                 <div class="col-sm-10">
-                                    <p class="form-control-plaintext"><a href="mailto:{{ $inqDetails->inquiry_email }}">{{ $inqDetails->inquiry_email }}</a></p>
-                                </div>
-                                <label class="col-sm-2 col-form-label">Phone:</label>
-                                <div class="col-sm-10">
-                                    <p class="form-control-plaintext">{{ $inqDetails->inquiry_phone}}</p>
-                                </div>
-                                <label class="col-sm-2 col-form-label">Address:</label>
-                                <div class="col-sm-10">
-                                    <p class="form-control-plaintext">{{ $inqDetails->inquiry_address}}<br>
-                                        {{ $inqDetails->inquiry_city}}, {{ $inqDetails->inquirystate->state_short_name}} {{ $inqDetails->inquiry_zip}}<br>
-                                        {{ $inqDetails->inquirycountry->short_name}}</p>
-                                </div>
-                                <label class="col-sm-2 col-form-label">County:</label>
-                                <div class="col-sm-10">
-                                    <p class="form-control-plaintext">{{ $inqDetails->inquiry_county}}</p>
-                                </div>
-                                <label class="col-sm-2 col-form-label">Township:</label>
-                                <div class="col-sm-10">
-                                    <p class="form-control-plaintext">{{ $inqDetails->inquiry_township}}</p>
-                                </div>
-                                <label class="col-sm-2 col-form-label">Area:</label>
-                                <div class="col-sm-10">
-                                    <p class="form-control-plaintext">{{ $inqDetails->inquiry_area}}</p>
-                                </div>
-                                <label class="col-sm-2 col-form-label">School District:</label>
-                                <div class="col-sm-10">
-                                    <p class="form-control-plaintext">{{ $inqDetails->inquiry_school}}</p>
-                                </div>
-                                <label class="col-sm-2 col-form-label">Comments (not sent to chapter):</label>
-                                <div class="col-sm-10">
-                                    <p class="form-control-plaintext">{{ $inqDetails->inquiry_comments}}</p>
-                                </div>
+                    <div class="card-body">
+                        <div class="row mb-1">
+                            <div class="col-sm-2 mb-2">
+                                <label>Date:</label>
+                            </div>
+                            <div class="col-sm-8 mb-2">
+                                {{ $inqDetails->created_at->format('m-d-Y') }}
                             </div>
                         </div>
-                    </div>
+                        <div class="row mb-1">
+                            <div class="col-sm-2 mb-2">
+                                <label>Name:</label>
+                            </div>
+                            <div class="col-sm-8 mb-2">
+                                {{ $inqDetails->inquiry_first_name }} {{ $inqDetails->inquiry_last_name }}
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-sm-2 mb-2">
+                                <label>Email:</label>
+                            </div>
+                            <div class="col-sm-8 mb-2">
+                                <a href="mailto:{{ $inqDetails->inquiry_email }}">{{ $inqDetails->inquiry_email }}</a>
+                            </div>
+                        </div>
+                         <div class="row mb-1">
+                            <div class="col-sm-2 mb-2">
+                                <label>Phone:</label>
+                            </div>
+                            <div class="col-sm-8 mb-2">
+                                {{ $inqDetails->inquiry_phone}}
+                            </div>
+                        </div>
+                         <div class="row mb-1">
+                            <div class="col-sm-2 mb-2">
+                                <label>Address:</label>
+                            </div>
+                            <div class="col-sm-8 mb-2">
+                                {{ $inqDetails->inquiry_address}}<br>
+                                        {{ $inqDetails->inquiry_city}}, {{ $inqDetails->inquirystate->state_short_name}} {{ $inqDetails->inquiry_zip}}<br>
+                                        {{ $inqDetails->inquirycountry->short_name}}
+                            </div>
+                        </div>
+                         <div class="row mb-1">
+                            <div class="col-sm-2 mb-2">
+                                <label>County:</label>
+                            </div>
+                            <div class="col-sm-8 mb-2">
+                                {{ $inqDetails->inquiry_county}}
+                            </div>
+                        </div>
+                         <div class="row mb-1">
+                            <div class="col-sm-2 mb-2">
+                                <label>Township:</label>
+                            </div>
+                            <div class="col-sm-8 mb-2">
+                                {{ $inqDetails->inquiry_township}}
+                            </div>
+                        </div>
+                         <div class="row mb-1">
+                            <div class="col-sm-2 mb-2">
+                                <label>Area:</label>
+                            </div>
+                            <div class="col-sm-8 mb-2">
+                                {{ $inqDetails->inquiry_area}}
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-sm-2 mb-2">
+                                <label>School District:</label>
+                            </div>
+                            <div class="col-sm-8 mb-2">
+                                {{ $inqDetails->inquiry_school}}
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-sm-2 mb-2">
+                                <label>Comments (not sent to chapter):</label>
+                            </div>
+                            <div class="col-sm-8 mb-2">
+                                {{ $inqDetails->inquiry_comments}}
+                            </div>
+                        </div>
+              </div>
                 </div>
               <!-- /.card-body -->
                         </div>
             <!-- /.card -->
                       </div>
           <!-- /.col -->
+
           <div class="col-md-12">
             <div class="card-body text-center mt-3">
                 @if ($confId == $inqConfId)
@@ -212,11 +251,13 @@
                 @elseif ($confId != $inqConfId && ($inquiriesInternationalCondition || $ITCondition))
                     <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient m-1 keep-enabled" onclick="window.location.href='{{ route('inquiries.inquiryapplication', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-pin-map-fill me-2"></i>Back to International Inquiries Application List</button>
                 @endif
+               </div>
             </div>
         </div>
         <!-- /.row -->
-      </div><!-- /.container-fluid -->
-
+      </div>
+      <!-- /.container-fluid -->
+    </form>
     </section>
     <!-- /.content -->
 @endsection

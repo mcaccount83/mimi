@@ -804,8 +804,9 @@ class CoordinatorController extends Controller implements HasMiddleware
             ->where('active_status', 1)
             ->get();
 
-        $chDetails = Chapters::with('state')   // Chapter Selection List
-            ->where('conference_id', $cdConfId)
+        $chDetails = Chapters::select('chapters.*')
+            ->join('state', 'chapters.state_id', '=', 'state.id')  // State Selection List
+            ->where('state.conference_id', $cdConfId)
             ->where('active_status', 1)
             ->orderBy('state_id')
             ->orderBy('name')
@@ -826,7 +827,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             'chList' => $chList, 'drList' => $drList, 'cdActiveId' => $cdActiveId, 'cdConfIdUser' => $cdConfIdUser, 'userId' => $userId, 'cdLeave' => $cdLeave,
             'pcOptions' => $pcOptions, 'cdId' => $cdId, 'allPositions' => $allPositions, 'chDetails' => $chDetails, 'drDetails' => $drDetails, 'cdUserAdmin' => $cdUserAdmin,
             'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName, 'pcRowCount' => $pcRowCount, 'drRowCount' => $drRowCount,
-            'allAdminRoles' => $allAdminRoles, 'cdAdminRole' => $cdAdminRole,
+            'allAdminRoles' => $allAdminRoles, 'cdAdminRole' => $cdAdminRole
         ];
 
         return view('coordinators.editrole')->with($data);

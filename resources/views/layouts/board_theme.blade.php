@@ -48,59 +48,11 @@
     };
 </script>
 
-<style>
-    .ms-2 {
-        margin-left: 0.5rem !important; /* Adjust the margin to control spacing for Vacant Buttons */
-    }
-
-    .form-check-input:checked ~ .form-check-label {
-        color: black; /* Label color when toggle is ON for Vacant Buttons */
-    }
-
-    .form-check-input:not(:checked) ~ .form-check-label {
-        color: #b0b0b0; /* Subdued label color when toggle is OFF for Vacant Buttons */
-        opacity: 0.6;   /* Optional: Adds a subdued effectfor Vacant Buttons */
-    }
-
-    .disabled-link {
-    pointer-events: none; /* Prevent click events */
-    cursor: default; /* Change cursor to default */
-    color: #6c757d; /* Muted color */
-    }
-
-    .board-info {
-        display: table;
-        width: 100%;
-        margin-bottom: 15px;
-    }
-    .info-row {
-        display: table-row;
-    }
-    .info-label, .info-label-empty {
-        display: table-cell;
-        width: 150px;
-        padding: 2px 10px 2px 0;
-        vertical-align: top;
-    }
-    .info-label {
-        font-weight: bold;
-    }
-    .info-data {
-        display: table-cell;
-        padding: 2px 0;
-    }
-
-    h1, h2, h3, h4, h5, h6 {
-    font-weight: normal !important;
-}
-
-h1 { font-size: 2rem !important; }
-h2 { font-size: 1.75rem !important; }
-h3 { font-size: 1.5rem !important; }
-h4 { font-size: 1.25rem !important; }
-h5 { font-size: 1rem !important; }
-h6 { font-size: 0.875rem !important; }
-</style>
+    @include('layouts.styles.buttonsicons')
+    @include('layouts.styles.datatable')
+    @include('layouts.styles.fonts')
+    @include('layouts.styles.forms')
+    @include('layouts.styles.sweetalert')
 
 </head>
   <!--end::Head-->
@@ -189,9 +141,7 @@ h6 { font-size: 0.875rem !important; }
 
  <!--begin::App Main-->
       <main class="app-main">
-        <!--begin::App Content Header-->
         <div class="app-content-header">
-      <!--begin::Container-->
           <div class="container-fluid">
         @if($ITCondition == 1 )
             <p class="description text-center"><span style="color: red;">You are Viewing Chapter Pages as an Admin Coordinator -- All Information is Editable just as it is for Chapter Members.</p>

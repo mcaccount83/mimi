@@ -105,7 +105,7 @@
                         <li class="list-group-item">
                           <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
                             <div class="row mb-2">
-                          <span id="display_corlist" style="display: block; margin-top: 10px;"></span>
+                          <span id="display_corlist"></span>
                             </div>
                         </li>
 

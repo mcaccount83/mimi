@@ -21,9 +21,9 @@
                         <input type="hidden" id="ch_sec_email_chk" value="{{ $SECDetails->email }}">
 
                         <div class="col-md-12">
-                            <div class="card card-widget widget-user">
-                                <div class="widget-user-header bg-primary">
-                                    <div class="widget-user-image">
+                            <div class="card">
+                                <div class="card bg-primary">
+                                    <div class="card-body text-center">
                                         <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" style="width: 115px; height: 115px;">
                                     </div>
                                 </div>

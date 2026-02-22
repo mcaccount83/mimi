@@ -1,382 +1,10 @@
-@extends('layouts.coordinator_theme')
-
-@section('page_title', 'Financial Report')
-@section('breadcrumb', 'Financial Report Review')
-
-@section('content')
-  <!-- Main content -->
-  <section class="content">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-4">
-            <form id="financial_report" name="financial_report" role="form" data-bs-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("eoyreports.updatefinancialreport", $chDetails->id) }}' novalidate>
-                @csrf
-                <input type="hidden" name="submitted" id="submitted" value="{{ $chEOYDocuments->financial_report_received ?? '' }}" />
-                <input type="hidden" name="FurthestStep" id="FurthestStep" value="{{ $chFinancialReport->farthest_step_visited_coord > 0 ? $chFinancialReport->farthest_step_visited_coord : '0' }}" />
-                <input type="hidden" name="submit_type" id="submit_type" value="" />
-
-          <!-- Profile Image -->
-          <div class="card card-primary card-outline">
-           <div class="card-body">
-                    <div class="card-header text-center bg-transparent">
-                    <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
-                    <p class="mb-0">{{ $chDetails->confname }} Conference, {{ $chDetails->regname }} Region
-                  </p>
-                    </div>
-          <ul class="list-group list-group-flush mb-3">
-            <li class="list-group-item mt-2">
-               <h5>Review Summary</h5>
-            Answers from questios in previous sections will show up here after they have been saved.<br>
-            <br>
-            @if ($chEOYDocuments->financial_report_received)
-            @if ($chEOYDocuments->$yearColumnName != null)
-                <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                    <b>Financial Report PDF:</b> <span class="float-end"><a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->$yearColumnName }}">Download PDF</a></span>
-                </div>
-            @endif
-            <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Chapter Roster File:</b> <span class="float-end">
-                @if ($chEOYDocuments->roster_path != null)
-                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->roster_path }}">Chapter Roster</a></span>
-                @else
-                    No file attached</span>
-                @endif
-            </div>
-            <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Primary Bank Statement:</b> <span class="float-end">
-                @if ($chEOYDocuments->statement_1_path != null)
-                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->statement_1_path }}">Primary Statement</a></span>
-                @else
-                    No file attached</span>
-                @endif
-            </div>
-            <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Additional Bank Statement:</b> <span class="float-end">
-                @if ($chEOYDocuments->statement_2_path != null)
-                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->statement_2_path }}">Additional Statement</a></span>
-                @else
-                    No file attached</span>
-                @endif
-            </div>
-            <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>990N Filing:</b> <span class="float-end">
-                @if ($chEOYDocuments->irs_path != null)
-                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->irs_path }}">990N Confirmation</a></span>
-                @else
-                    No file attached</span>
-                @endif
-            </div>
-            @endif
-            <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Excel roster attached and complete:</b> <span class="float-end">{{ is_null($chFinancialReport->check_roster_attached) ? 'Please Review'
-                    : ($chFinancialReport->check_roster_attached == 0 ? 'NO' : ($chFinancialReport->check_roster_attached == 1 ? 'YES' : 'Please Review' )) }}</span>
-            </div>
-            <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Number of members/dues/renewal "seem right":</b> <span class="float-end">{{ is_null($chFinancialReport->check_renewal_seems_right) ? 'Please Review'
-                    : ($chFinancialReport->check_renewal_seems_right == 0 ? 'NO' : ($chFinancialReport->check_renewal_seems_right == 1 ? 'YES' : 'Please Review' )) }}</span>
-            </div>
-            <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Minimum of one service project completed:</b> <span class="float-end">{{ is_null($chFinancialReport->check_minimum_service_project) ? 'Please Review'
-                    : ( $chFinancialReport->check_minimum_service_project == 0 ? 'NO' : ($chFinancialReport->check_minimum_service_project == 1 ? 'YES' : 'Please Review' )) }}</span>
-            </div>
-            <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Donation to M2M Fund:</b> <span class="float-end">{{ is_null($chFinancialReport->check_m2m_donation) ? 'Please Review'
-                    : ($chFinancialReport->check_m2m_donation == 0 ? 'NO' : ($chFinancialReport->check_m2m_donation == 1 ? 'YES' : 'Please Review' )) }}</span>
-            </div>
-            <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Party Percentage:</b>
-                <span class="float-end">
-                    @php
-                        $newMembers = $chFinancialReport->total_new_members * $chFinancialReport->dues_per_member;
-                        $renewalMembers = $chFinancialReport->total_renewed_members * $chFinancialReport->dues_per_member;
-                        $renewalMembersDiff = $chFinancialReport->total_renewed_members * $chFinancialReport->dues_per_member_renewal;
-                        $newMembersNew = $chFinancialReport->total_new_members_changed_dues * $chFinancialReport->dues_per_member_new_changed;
-                        $renewMembersNew = $chFinancialReport->total_renewed_members_changed_dues * $chFinancialReport->dues_per_member_new_changed;
-                        $renewMembersNewDiff = $chFinancialReport->total_renewed_members_changed_dues * $chFinancialReport->dues_per_member_renewal_changed;
-                        $partialMembers = $chFinancialReport->members_who_paid_partial_dues * $chFinancialReport->total_partial_fees_collected;
-                        $associateMembers = $chFinancialReport->total_associate_members * $chFinancialReport->associate_member_fee;
-
-                        $totalMembers = $chFinancialReport->total_new_members + $chFinancialReport->total_renewed_members + $chFinancialReport->total_new_members_changed_dues + $chFinancialReport->total_renewed_members_changed_dues
-                                + $chFinancialReport->members_who_paid_partial_dues + $chFinancialReport->total_associate_members + $chFinancialReport->members_who_paid_no_dues;
-
-                        if ($chFinancialReport->different_dues == 1 && $chFinancialReport->changed_dues == 1) {
-                            $totalDues = $newMembers + $renewalMembersDiff + $newMembersNew + $renewMembersNewDiff + $partialMembers + $associateMembers;
-                        } elseif ($chFinancialReport->different_dues == 1) {
-                            $totalDues = $newMembers + $renewalMembersDiff + $partialMembers + $associateMembers;
-                        } elseif ($chFinancialReport->changed_dues == 1) {
-                            $totalDues = $newMembers + $renewalMembers + $newMembersNew + $renewMembersNew + $partialMembers + $associateMembers;
-                        } else {
-                            $totalDues = $newMembers + $renewalMembers + $partialMembers + $associateMembers;
-                        }
-
-                        $party_expenses = null;
-                        $totalPartyIncome = 0;
-                        $totalPartyExpense = 0;
-                        $partyPercentage = 0;
-
-                        if (isset($chFinancialReport['party_expense_array'])) {  // ← Keep bracket notation for isset() on serialized data
-                            $blobData = base64_decode($chFinancialReport['party_expense_array']);  // ← Keep bracket notation here too
-                            $party_expenses = unserialize($blobData);
-
-                            if ($party_expenses != false) {
-                                foreach ($party_expenses as $row) {
-                                    $income = is_numeric(str_replace(',', '', $row['party_expense_income']))
-                                        ? floatval(str_replace(',', '', $row['party_expense_income'])) : 0;
-                                    $expense = is_numeric(str_replace(',', '', $row['party_expense_expenses']))
-                                        ? floatval(str_replace(',', '', $row['party_expense_expenses'])) : 0;
-
-                                    $totalPartyIncome += $income;
-                                    $totalPartyExpense += $expense;
-                                }
-
-                                if (!empty($totalDues) && $totalDues != 0) {
-                                    $partyPercentage = ($totalPartyExpense - $totalPartyIncome) / $totalDues;
-                                }
-                            }
-                        }
-                    @endphp
-                </span>
-
-    <span class="float-end">{{ number_format($partyPercentage * 100, 2) }}%</span>
-            </div>
-            <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b> Party Percentage less than 15%:</b> <span class="float-end" style="
-                    @if(is_null($chFinancialReport->check_party_percentage))
-                        background-color: #FFFFFF; color: #000000;
-                    @elseif($chFinancialReport->check_party_percentage == 2)
-                        background-color: #28a745; color: #FFFFFF;
-                    @elseif($chFinancialReport->check_party_percentage == 1)
-                        background-color: #ffc107; color: #000000;
-                    @elseif($chFinancialReport->check_party_percentage == 0)
-                        background-color: #dc3545; color: #FFFFFF;
-                    @else
-                        background-color: #FFFFFF; color: #000000;
-                    @endif
-                        ">
-                    @if(is_null($chFinancialReport->check_party_percentage))
-                        Please Review
-                    @elseif($chFinancialReport->check_party_percentage == 0)
-                        They are over 20%
-                    @elseif($chFinancialReport->check_party_percentage == 1)
-                        They are between 15-20%
-                    @elseif($chFinancialReport->check_party_percentage == 2)
-                        They are under 15%
-                    @else
-                        Please Review
-                    @endif
-                </span>
-            </div>
-            <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Total income/revenue less than $50,000:</b> <span class="float-end">{{ is_null($chFinancialReport->check_total_income_less) ? 'Please Review'
-                    : ( $chFinancialReport->check_total_income_less == 0 ? 'NO' : ($chFinancialReport->check_total_income_less == 1 ? 'YES' : 'Please Review' )) }}</span>
-            </div>
-            <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Current bank statement included:</b> <span class="float-end">{{ is_null($chFinancialReport->check_bank_statement_included) ? 'Please Review'
-                    : ( $chFinancialReport->check_bank_statement_included == 0 ? 'NO' : ($chFinancialReport->check_bank_statement_included == 1 ? 'YES' : 'Please Review')) }}</span>
-            </div>
-            <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Treasury & Reconciled Balances Match:</b> <span class="float-end" style="
-                    @if(is_null($chFinancialReport->check_bank_statement_matches))
-                        background-color: #FFFFFF; color: #000000;
-                    @elseif($chFinancialReport->check_bank_statement_matches == 1)
-                        background-color: #28a745; color: #FFFFFF;
-                    @elseif($chFinancialReport->check_bank_statement_matches == 0)
-                        background-color: #dc3545; color: #FFFFFF;
-                    @else
-                        background-color: #FFFFFF; color: #000000;
-                    @endif
-                        ">
-                    @if(is_null($chFinancialReport->check_bank_statement_matches))
-                        Please Review
-                    @elseif($chFinancialReport->check_bank_statement_matches == 1)
-                        In Balance
-                    @elseif($chFinancialReport->check_bank_statement_matches == 0)
-                        Out of balance
-                    @else
-                        Please Review
-                    @endif
-                </span>
-            </div>
-            <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Proof of 990N Filing for 7/1/{{ $lastYear}} - 6/30/{{ $currentYear }}:</b> <span class="float-end" style="
-                    @if(is_null($chFinancialReport->check_current_990N_included))
-                        background-color: #FFFFFF; color: #000000;
-                    @elseif($chFinancialReport->check_current_990N_included == 1)
-                        background-color: #28a745; color: #FFFFFF;
-                    @elseif($chFinancialReport->check_current_990N_included == 0)
-                        background-color: #dc3545; color: #FFFFFF;
-                    @else
-                        background-color: #FFFFFF; color: #000000;
-                    @endif
-                        ">
-                    @if(is_null($chFinancialReport->check_current_990N_included))
-                       Please Review
-                    @elseif($chFinancialReport->check_current_990N_included == 1)
-                        990N is filed
-                    @elseif($chFinancialReport->check_current_990N_included == 0)
-                        990N has not been filed
-                    @else
-                        Please Review
-                    @endif
-                </span>
-            </div>
-
-            <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Purchased membership pins or had leftovers:</b> <span class="float-end">{{ is_null($chFinancialReport->check_purchased_pins) ? 'Please Review'
-                    : ( $chFinancialReport->check_purchased_pins == 0 ? 'NO' : ($chFinancialReport->check_purchased_pins == 1 ? 'YES' : 'Please Review' )) }}</span>
-            </div>
-            <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Purchased MOMS Club merchandise:</b> <span class="float-end">{{ is_null($chFinancialReport->check_purchased_mc_merch) ? 'Please Review'
-                    : ($chFinancialReport->check_purchased_mc_merch == 0 ? 'NO' : ($chFinancialReport->check_purchased_mc_merch == 1 ? 'YES' : 'Please Review' )) }}</span>
-            </div>
-            <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Offered MOMS Club merchandise or info to members:</b> <span class="float-end">{{ is_null($chFinancialReport->check_offered_merch) ? 'Please Review'
-                    : ( $chFinancialReport->check_offered_merch == 0 ? 'NO' : ( $chFinancialReport->check_offered_merch == 1 ? 'YES' : 'Pleae Review' )) }}</span>
-            </div>
-            <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Manual/by-laws made available to members:</b> <span class="float-end">{{ is_null($chFinancialReport->check_bylaws_available) ? 'Please Review'
-                    : ( $chFinancialReport->check_bylaws_available == 0 ? 'NO' : ($chFinancialReport->check_bylaws_available == 1 ? 'YES' : 'Please Review' )) }}</span>
-            </div>
-            <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Attended International Event:</b> <span class="float-end">{{ is_null($chFinancialReport->check_attended_training) ? 'Please Review'
-                    : ($chFinancialReport->check_attended_training == 0 ? 'NO' : ($chFinancialReport->check_attended_training == 1 ? 'YES' : 'Please Review' )) }}</span>
-            </div>
-            <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Sistered another chapter:</b> <span class="float-end">{{ is_null($chFinancialReport->check_sistered_another_chapter) ? 'Please Review'
-                    : ($chFinancialReport->check_sistered_another_chapter == 0 ? 'NO' : ($chFinancialReport->check_sistered_another_chapter == 1 ? 'YES' : 'Please Review' )) }}</span>
-            </div>
-            <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Chapter Awards:</b> <span class="float-end">
-                    <button type="button" id="back-eoy" class="btn btn-xs btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.editawards', ['id' => $chDetails->id]) }}'">View/Update Award Information</button>
-                </span>
-            </div>
-
-            @php
-                $yesBackground = '#28a745';  // Green background for "YES"
-                $noBackground = '#dc3545';   // Red background for "NO"
-            @endphp
-
-            </li>
-            <li class="list-group-item mt-2">
-                <strong>Reviewer Notes Logged for this Report (not visible to chapter):</strong><br>
-                @php
-                    $financial_report_notes = [];
-                    for ($i = 1; $i <= 13; $i++) {
-                        $key = 'step_' . $i . '_notes_log';
-                        if (isset($chFinancialReport[$key])) {
-                            $notes = explode("\n", $chFinancialReport[$key]);
-                            $financial_report_notes = array_merge($financial_report_notes, $notes);
-                        }
-                    }
-                @endphp
-                {!! empty($financial_report_notes) ? 'No notes logged for this report.' : implode('<br>', $financial_report_notes) !!}
-            </li>
-            <li class="list-group-item mt-2">
-            <div class="d-flex justify-content-between w-100">
-                <b>Report Completed By:</b> <span class="float-end">{{ !is_null($chFinancialReport) ? $chFinancialReport->completed_name : '' }}</span>
-            </div>
-            <div class="d-flex justify-content-between w-100">
-                <b>Contact Email:</b> <span class="float-end"><a href="mailto:{{ !is_null($chFinancialReport) ? $chFinancialReport->completed_email : '' }}">{{ !is_null($chFinancialReport) ? $chFinancialReport->completed_email : '' }}</a></span>
-            </div>
-
-            <div class="d-flex align-items-center justify-content-between w-100">
-                @if ($chEOYDocuments->financial_report_received == 1 && $chFinancialReport->reviewer_id == null)
-                    <span style="display: inline; color: red;">No Reviewer Assigned - Select Reviewer before continuing to prevent errors.<br></span>
-                @endif
-                <label for="AssignedReviewer"><strong>Assigned Reviewer:</strong></label>
-                <select class="form-control" name="AssignedReviewer" id="AssignedReviewer" style="width: 250px;"  required>
-                    <option value="" style="display:none" disabled selected>Select a reviewer</option>
-                        @foreach($rrList as $coordinator)
-                            <option value="{{ $coordinator['cid'] }}"
-                                {{ isset($chFinancialReport->reviewer_id) && $chFinancialReport->reviewer_id == $coordinator['cid'] ? 'selected' : '' }}>
-                                {{ $coordinator['cname'] }} {{ $coordinator['cpos'] }}
-                            </option>
-                        @endforeach
-                </select>
-            </div>
-                <input type="hidden" id="ch_reportrev" value="{{ $chFinancialReport->reviewer_id }}">
-
-                <div class="mb-3" id="emailMessageGroup" style="display: none;">
-                <label for="AssignedReviewer"><strong>Additional Email Message for Reviewer:</strong></label>
-                <textarea class="form-control" style="width:100%" rows="8" name="reviewer_email_message" id="reviewer_email_message">{{ $chFinancialReport->reviewer_email_message }}</textarea>
-            </div>
-
-            <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
-
-        <li class="list-group-item mt-2" id="display_corlist"></li>
-        <div class="card-body text-center mt-3">
-            <br>
-            <button type="submit" id="btn-step-14" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
-            <button class="btn btn-primary bg-gradient mb-2" type="button" id="email-chapter" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}', 'Financial Report Review')">
-                <i class="bi bi-envelope-fill me-2"></i>Email Board</button>
-            <br>
-            @if ($chEOYDocuments->financial_review_complete != "" && $chEOYDocuments->financial_report_received)
-                @if ($regionalCoordinatorCondition)
-                    <button type="button" class="btn btn-success bg-gradient mb-2" id="review-clear"><i class="bi bi-ban me-2"></i>Clear Review Complete</button>
-                @else
-                    <button type="button" class="btn btn-success bg-gradient mb-2 disabled" disabled><i class="bi bi-ban me-2"></i>Clear Review Complete</button>
-                @endif
-            @else
-                <button type="button" class="btn btn-success bg-gradient mb-2" id="review-complete"><i class="bi bi-check-lg me-2"></i>Mark as Review Complete</button>
-            @endif
-                <button type="button" class="btn btn-danger bg-gradient mb-2" id="unsubmit"><i class="bi bi-arrow-counterclockwise me-2"></i>UnSubmit Report</button>
-            @if ($chEOYDocuments->financial_review_complete != 1)
-                <br>
-                <span style="color:red;"><b>"Mark as Review Complete" is for FINAL REVIEWER USE ONLY!</b></span>
-            @endif
-            <br><br>
-            @if ($chEOYDocuments->$yearColumnName != null)
-                <button class="btn btn-primary bg-gradient mb-2" type="button" id="financial-pdf" onclick="openPdfViewer('{{ $chEOYDocuments->$yearColumnName }}')"><i class="bi bi-file-earmark-pdf-fill me-2"></i>View/Download Financial Report PDF</button>
-            @else
-                <button class="btn btn-primary bg-gradient mb-2 disabled" type="button" id="financial-pdf" disabled><i class="bi bi-file-earmark-pdf-fill me-2"></i>No PDF Report Available</button>
-            @endif
-            @if ($chEOYDocuments->$yearColumnName != null && $chEOYDocuments->financial_report_received)
-                <br>
-                <button type="button" id="generate-pdf" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="generateFinancialReport()"><i class="bi bi-arrow-repeat me-2"></i>Regenerate Financial PDF</button>
-            @elseif ($chEOYDocuments->$yearColumnName == null && $chEOYDocuments->financial_report_received)
-                <br>
-                <button type="button" id="generate-pdf" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="generateFinancialReport()"><i class="bi bi-arrow-repeat me-2"></i>Generate Financial PDF</button>
-            @endif
-        </div>
-        </li>
-    </ul>
-
-    </div>
-      <!-- /.card-body -->
-    </div>
-    <!-- /.card -->
-  </div>
-  <!-- /.col -->
-
-  <div class="col-md-8">
-    <div class="card card-primary card-outline">
-        <div class="card-body">
-            <div class="card-header bg-transparent border-0">
-                <h3>{{ $financialReportName}} Review</h3>
-            </div>
-            <!-- /.card-header -->
-            <div class="card-body">
-                <div class="col-md-12">
-                    @if($chEOYDocuments->financial_report_received)
-                        @if ($chFinancialReport->reviewer_id != null)
-                            <label>Assigned Reviewer:</label>&nbsp;&nbsp;{{ $chDetails->reportReviewer->first_name }} {{ $chDetails->reportReviewer->last_name }}
-                        @else
-                            <span style="color:red">No Reviewer Assigned - Select Reviewer before saving report review to prevent errors</span>
-                        @endif
-                    @else
-                        <span style="color:red">REPORT NOT YET SUBMITTED FOR REVIEW</span>
-                    @endif
-                <p>Have some questions about reviewing?<br>
-                    <a href="https://momsclub.org/reviewing-reports-faq/"   target="_blank">Check out our FAQ!</a></p>
-                </div>
-
-                    <div class="card-body">
                     <div class="accordion" id="accordion">
                     	<!------Start Step 1 ------>
                         <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '1' ? 'active' : '' }}">
                         <h2 class="accordion-header" id="accordion-header-members">
-                          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            CHAPTER DUES
+                        <button class="accordion-button {{ $chFinancialReport->farthest_step_visited_coord == '1' ? '' : 'collapsed' }}"
+                                type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="{{ $chFinancialReport->farthest_step_visited_coord == '1' ? 'true' : 'false' }}">
+                                    CHAPTER DUES
                           </button>
                         </h2>
                         <div id="collapseOne" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '1' ? 'show' : '' }}" data-bs-parent="#accordion">
@@ -558,13 +186,13 @@
                                     <div class="col-12" id="RosterBlock">
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Replace Roster File.<br>
-                                        <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace Roster File</button>
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace Roster File</button>
                                     </div>
                                 @else
                                     <div class="col-12" id="RosterBlock">
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Upload Roster File.<br>
-                                        <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload Roster File</button>
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showRosterUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload Roster File</button>
                                     </div>
                                 @endif
                                 <input type="hidden" name="RosterPath" id="RosterPath" value="{{ $chEOYDocuments->roster_path }}">
@@ -603,7 +231,7 @@
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(1)" name="Step1_Note" id="Step1_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
-                                        <button type="button" id="AddNote1" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(1)" disabled>
+                                        <button type="button" id="AddNote1" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(1)" disabled>
                                             <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
                                         </button>
                                     </div>
@@ -632,8 +260,9 @@
 				<!------Start Step 2 ------>
                 <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '2' ? 'active' : '' }}">
                 <h2 class="accordion-header" id="accordion-header-members">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                    MONTHLY MEETING EXPENSES
+                <button class="accordion-button {{ $chFinancialReport->farthest_step_visited_coord == '2' ? '' : 'collapsed' }}"
+                        type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="{{ $chFinancialReport->farthest_step_visited_coord == '2' ? 'true' : 'false' }}">
+                            MONTHLY MEETING EXPENSES
                     </button>
                 </h2>
                 <div id="collapseTwo" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '2' ? 'show' : '' }}" data-bs-parent="#accordion">
@@ -775,7 +404,7 @@
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(2)" name="Step2_Note" id="Step2_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
-                                        <button type="button" id="AddNote2" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(2)" disabled>
+                                        <button type="button" id="AddNote2" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(2)" disabled>
                                             <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
                                         </button>
                                     </div>
@@ -804,8 +433,9 @@
 				<!------Start Step 3 ------>
                 <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '3' ? 'active' : '' }}">
                 <h2 class="accordion-header" id="accordion-header-members">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
-                    SERVICE PROJECTS
+                <button class="accordion-button {{ $chFinancialReport->farthest_step_visited_coord == '3' ? '' : 'collapsed' }}"
+                        type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="{{ $chFinancialReport->farthest_step_visited_coord == '3' ? 'true' : 'false' }}">
+                            SERVICE PROJECTS
                     </button>
                 </h2>
                 <div id="collapseThree" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '3' ? 'show' : '' }}" data-bs-parent="#accordion">
@@ -944,7 +574,7 @@
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(3)" name="Step3_Note" id="Step3_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
-                                        <button type="button" id="AddNote3" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(3)" disabled>
+                                        <button type="button" id="AddNote3" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(3)" disabled>
                                             <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
                                         </button>
                                     </div>
@@ -973,8 +603,9 @@
 				<!------Start Step 4 ------>
                 <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '4' ? 'active' : '' }}">
                 <h2 class="accordion-header" id="accordion-header-members">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
-                    PARTIES & MEMBER BENEFITS
+                <button class="accordion-button {{ $chFinancialReport->farthest_step_visited_coord == '4' ? '' : 'collapsed' }}"
+                        type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="{{ $chFinancialReport->farthest_step_visited_coord == '4' ? 'true' : 'false' }}">
+                            PARTIES & MEMBER BENEFITS
                     </button>
                 </h2>
                 <div id="collapseFour" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '4' ? 'show' : '' }}" data-bs-parent="#accordion">
@@ -1089,7 +720,7 @@
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(4)" name="Step4_Note" id="Step4_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
-                                        <button type="button" id="AddNote4" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(4)" disabled>
+                                        <button type="button" id="AddNote4" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(4)" disabled>
                                             <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
                                         </button>
                                     </div>
@@ -1118,8 +749,9 @@
 				<!------Start Step 5 ------>
                 <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '5' ? 'active' : '' }}">
                 <h2 class="accordion-header" id="accordion-header-members">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
-                    OFFICE & OPERATING EXPENSES
+                <button class="accordion-button {{ $chFinancialReport->farthest_step_visited_coord == '5' ? '' : 'collapsed' }}"
+                        type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="{{ $chFinancialReport->farthest_step_visited_coord == '5' ? 'true' : 'false' }}">
+                            OFFICE & OPERATING EXPENSES
                     </button>
                 </h2>
                 <div id="collapseFive" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '5' ? 'show' : '' }}" data-bs-parent="#accordion">
@@ -1199,7 +831,7 @@
                                             <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(5)" name="Step5_Note" id="Step5_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
                                         </div>
                                         <div class="col-12 mt-1">
-                                            <button type="button" id="AddNote5" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(5)" disabled>
+                                            <button type="button" id="AddNote5" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(5)" disabled>
                                                 <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
                                             </button>
                                         </div>
@@ -1228,8 +860,9 @@
             <!------Start Step 6 ------>
             <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '6' ? 'active' : '' }}">
                 <h2 class="accordion-header" id="accordion-header-members">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="true" aria-controls="collapseSix">
-                    INTERNATIONAL EVENTS & RE-REGISTRATION
+                <button class="accordion-button {{ $chFinancialReport->farthest_step_visited_coord == '6' ? '' : 'collapsed' }}"
+                        type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="{{ $chFinancialReport->farthest_step_visited_coord == '6' ? 'true' : 'false' }}">
+                            INTERNATIONAL EVENTS & RE-REGISTRATION
                     </button>
                 </h2>
                 <div id="collapseSix" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '6' ? 'show' : '' }}" data-bs-parent="#accordion">
@@ -1336,7 +969,7 @@
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(6)" name="Step6_Note" id="Step6_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
-                                        <button type="button" id="AddNote6" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(6)" disabled>
+                                        <button type="button" id="AddNote6" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(6)" disabled>
                                             <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
                                         </button>
                                     </div>
@@ -1365,8 +998,9 @@
 			<!------Start Step 7 ------>
             <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '7' ? 'active' : '' }}">
                 <h2 class="accordion-header" id="accordion-header-members">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="true" aria-controls="collapseSeven">
-                    DONATIONS TO YOUR CHAPTER
+                <button class="accordion-button {{ $chFinancialReport->farthest_step_visited_coord == '7' ? '' : 'collapsed' }}"
+                        type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="{{ $chFinancialReport->farthest_step_visited_coord == '7' ? 'true' : 'false' }}">
+                            DONATIONS TO YOUR CHAPTER
                     </button>
                 </h2>
                 <div id="collapseSeven" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '7' ? 'show' : '' }}" data-bs-parent="#accordion">
@@ -1487,7 +1121,7 @@
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(7)" name="Step7_Note" id="Step7_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
-                                        <button type="button" id="AddNote7" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(7)" disabled>
+                                        <button type="button" id="AddNote7" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(7)" disabled>
                                             <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
                                         </button>
                                     </div>
@@ -1516,8 +1150,9 @@
 				<!------Start Step 8 ------>
                  <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '8' ? 'active' : '' }}">
                 <h2 class="accordion-header" id="accordion-header-members">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="true" aria-controls="collapseEight">
-                    OTHER INCOME & EXPENSES
+                <button class="accordion-button {{ $chFinancialReport->farthest_step_visited_coord == '8' ? '' : 'collapsed' }}"
+                        type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="{{ $chFinancialReport->farthest_step_visited_coord == '8' ? 'true' : 'false' }}">
+                            OTHER INCOME & EXPENSES
                     </button>
                 </h2>
                 <div id="collapseEight" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '8' ? 'show' : '' }}" data-bs-parent="#accordion">
@@ -1600,7 +1235,7 @@
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(8)" name="Step8_Note" id="Step8_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
-                                        <button type="button" id="AddNote8" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(8)" disabled>
+                                        <button type="button" id="AddNote8" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(8)" disabled>
                                             <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
                                         </button>
                                     </div>
@@ -1629,8 +1264,9 @@
                 <!------Start Step 9 ------>
                 <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '9' ? 'active' : '' }}">
                 <h2 class="accordion-header" id="accordion-header-members">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNine" aria-expanded="true" aria-controls="collapseNine">
-                    FINANCIAL SUMMARY
+                <button class="accordion-button {{ $chFinancialReport->farthest_step_visited_coord == '9' ? '' : 'collapsed' }}"
+                        type="button" data-bs-toggle="collapse" data-bs-target="#collapseNine" aria-expanded="{{ $chFinancialReport->farthest_step_visited_coord == '9' ? 'true' : 'false' }}">
+                            FINANCIAL SUMMARY
                     </button>
                 </h2>
                 <div id="collapseNine" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '9' ? 'show' : '' }}" data-bs-parent="#accordion">
@@ -1748,7 +1384,7 @@
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(9)" name="Step9_Note" id="Step9_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
-                                        <button type="button" id="AddNote9" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(9)" disabled>
+                                        <button type="button" id="AddNote9" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(9)" disabled>
                                             <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
                                         </button>
                                     </div>
@@ -1777,8 +1413,9 @@
                 <!------Start Step 10 ------>
                  <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '10' ? 'active' : '' }}">
                 <h2 class="accordion-header" id="accordion-header-members">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTen" aria-expanded="true" aria-controls="collapseTen">
-                    BANK RECONCILIATION
+                <button class="accordion-button {{ $chFinancialReport->farthest_step_visited_coord == '10' ? '' : 'collapsed' }}"
+                        type="button" data-bs-toggle="collapse" data-bs-target="#collapseTen" aria-expanded="{{ $chFinancialReport->farthest_step_visited_coord == '10' ? 'true' : 'false' }}">
+                            BANK RECONCILIATION
                     </button>
                 </h2>
                 <div id="collapseTen" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '10' ? 'show' : '' }}" data-bs-parent="#accordion">
@@ -1909,18 +1546,18 @@
                                 <strong style="color:red">Please Note</strong><br>
                                     This will refresh the screen - be sure to save all work before clicking button to Upload or Replace Bank Statement(s).<br>
                                 @if (!is_null($chEOYDocuments->statement_1_path))
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace Bank Statement</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace Bank Statement</button>
                                 @else
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload Bank Statement</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showStatement1UploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload Bank Statement</button>
                                 @endif
                             </div>
                             <input type="hidden" name="StatementFile" id="StatementPath" value="{{ $chEOYDocuments->statement_1_path }}">
 
                             <div class="col-12" id="Statement2Block">
                                 @if (!is_null($chEOYDocuments->statement_2_path))
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace Additional Bank Statement</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace Additional Bank Statement</button>
                                 @else
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload Additional Bank Statement</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showStatement2UploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload Additional Bank Statement</button>
                                 @endif
                             </div>
                             <input type="hidden" name="Statement2File" id="Statement2Path" value="{{ $chEOYDocuments->statement_2_path }}">
@@ -1986,7 +1623,7 @@
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(10)" name="AddNote10" id="AddNote10" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
-                                        <button type="button" id="AddNote10" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(10)" disabled>
+                                        <button type="button" id="AddNote10" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(10)" disabled>
                                             <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
                                         </button>
                                     </div>
@@ -2015,8 +1652,9 @@
             <!------Start Step 11 ------>
             <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '11' ? 'active' : '' }}">
                 <h2 class="accordion-header" id="accordion-header-members">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEleven" aria-expanded="true" aria-controls="collapseEleven">
-                    990N IRS FILING
+                <button class="accordion-button {{ $chFinancialReport->farthest_step_visited_coord == '11' ? '' : 'collapsed' }}"
+                        type="button" data-bs-toggle="collapse" data-bs-target="#collapseEleven" aria-expanded="{{ $chFinancialReport->farthest_step_visited_coord == '11' ? 'true' : 'false' }}">
+                            990N IRS FILING
                     </button>
                 </h2>
                 <div id="collapseEleven" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '11' ? 'show' : '' }}" data-bs-parent="#accordion">
@@ -2050,13 +1688,13 @@
                                 <div class="col-12" id="990NBlock">
                                     <strong style="color:red">Please Note</strong><br>
                                         This will refresh the screen - be sure to save all work before clicking button to Replace 990N File.<br>
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace 990N Confirmation</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace 990N Confirmation</button>
                             </div>
                         @else
                             <div class="col-12" id="990NBlock">
                                     <strong style="color:red">Please Note</strong><br>
                                         This will refresh the screen - be sure to save all work before clicking button to Upload 990N File.<br>
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload 990N Confirmation</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload 990N Confirmation</button>
                             </div>
                         @endif
                         <input type="hidden" name="990NFiling" id="990NFiling" value="{{ $chEOYDocuments->irs_path }}">
@@ -2082,7 +1720,7 @@
                                 <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(11)" name="Step11_Note" id="Step11_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
                             </div>
                             <div class="col-12 mt-1">
-                                <button type="button" id="AddNote11" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(11)" disabled>
+                                <button type="button" id="AddNote11" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(11)" disabled>
                                     <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
                                 </button>
                             </div>
@@ -2111,8 +1749,9 @@
 			<!------Start Step 12 ------>
              <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '12' ? 'active' : '' }}">
                 <h2 class="accordion-header" id="accordion-header-members">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwelve" aria-expanded="true" aria-controls="collapseTwelve">
-                    CHAPTER QUESTIONS
+                <button class="accordion-button {{ $chFinancialReport->farthest_step_visited_coord == '12' ? '' : 'collapsed' }}"
+                        type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwelve" aria-expanded="{{ $chFinancialReport->farthest_step_visited_coord == '12' ? 'true' : 'false' }}">
+                            CHAPTER QUESTIONS
                     </button>
                 </h2>
                 <div id="collapseTwelve" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '12' ? 'show' : '' }}" data-bs-parent="#accordion">
@@ -2306,7 +1945,7 @@
                                             <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(12)" name="Step12_Note" id="Step12_Note" {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
                                         </div>
                                         <div class="col-12 mt-1">
-                                            <button type="button" id="AddNote12" class="btn btn-success bg-gradient btn-sm mb-2 disabled" onclick="AddNote(12)" disabled>
+                                            <button type="button" id="AddNote12" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(12)" disabled>
                                                 <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
                                             </button>
                                         </div>
@@ -2332,326 +1971,3 @@
             </div>
 			<!------End Step 12 ------>
             </div>
-        </div>
-    <!-- end of accordion -->
-     </div>
-        </div>
-        <!-- /.card-body -->
-        </div>
-        <!-- /.card -->
-    </div>
-    <!-- /.col -->
-              <div class="col-md-12">
-                <div class="card-body text-center mt-3">
-                    @if ($confId == $chConfId)
-                        <button type="button" id="back-eoy" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.eoyfinancialreport') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-calculator-fill me-2"></i>Back to Financial Report</button>
-                    @elseif ($confId != $chConfId && $ITCondition)
-                        <button type="button" id="back-eoy" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.eoyfinancialreport', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-calculator-fill me-2"></i>Back to International Financial Report</button>
-                    @endif
-                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-file-earmark-bar-graph-fill me-2"></i>Back to EOY Details</button>
-                </div>
-            </div>
-        </div>
-        <!-- /.row -->
-      </div>
-      <!-- /.container-fluid -->
-    </form>
-    </section>
-    <!-- /.content -->
-@endsection
-@section('customscript')
-<script>
-   document.addEventListener('DOMContentLoaded', function() {
-    const unsubmitButton = document.getElementById('unsubmit');
-    if (!unsubmitButton) return;
-
-    unsubmitButton.addEventListener('click', function() {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "Unsubmitting this report will make it editable by the chapter again and will disable coordinator editing until the chapter has resubmitted - any unsaved changes will be lost.",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, Unsubmit',
-            cancelButtonText: 'Cancel',
-            customClass: { confirmButton: 'btn-sm btn-success', cancelButton: 'btn-sm btn-danger' },
-            buttonsStyling: false
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = "{{ url('/eoyreports/unsubmit/' . $chDetails->id) }}";
-            }
-        });
-    });
-
-    document.getElementById('review-clear')?.addEventListener('click', function() {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "This will clear the 'review complete' flag and coordinators will be able to edit the report again. Do you wish to continue?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, Clear Review',
-            cancelButtonText: 'Cancel',
-            customClass: { confirmButton: 'btn-sm btn-success', cancelButton: 'btn-sm btn-danger' },
-            buttonsStyling: false
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = "{{ url('/eoyreports/clearreview/' . $chDetails->id) }}";
-            }
-        });
-    });
-
-    document.getElementById('review-complete')?.addEventListener('click', function() {
-        if (!CheckMembers()) return false;
-        if (!CheckService()) return false;
-        if (!CheckParties()) return false;
-        if (!CheckFinancial()) return false;
-        if (!CheckReconciliation()) return false;
-        if (!CheckQuestions()) return false;
-        var post_balance = document.getElementById('post_balance').value;
-        if (post_balance == null || post_balance == '') {
-            customWarningAlert('Please enter Ending Balance in the Bank Reconciliation Section');
-            document.getElementById('post_balance').focus();
-            return false;
-        }
-        var result = confirm("This will finalize this report and flag it as 'review complete'. Do you wish to continue?");
-        if (result) {
-            document.getElementById('submit_type').value = 'review_complete';
-            document.getElementById('FurthestStep').value = '14';
-            document.getElementById('financial_report').submit();
-        }
-    });
-
-    document.getElementById('AssignedReviewer')?.addEventListener('change', function() {
-        var emailMessageGroup = document.getElementById('emailMessageGroup');
-        if (this.value != '') {
-            emailMessageGroup.style.display = 'block';
-        } else {
-            emailMessageGroup.style.display = 'none';
-        }
-    });
-
-    function submitFormWithStep(step) {
-        document.getElementById('FurthestStep').value = step;
-        document.getElementById('financial_report').submit();
-    }
-
-    document.getElementById('btn-step-1')?.addEventListener('click', function() { if (!CheckMembers()) return false; submitFormWithStep(1); });
-    document.getElementById('btn-step-2')?.addEventListener('click', function() { submitFormWithStep(2); });
-    document.getElementById('btn-step-3')?.addEventListener('click', function() { if (!CheckService()) return false; submitFormWithStep(3); });
-    document.getElementById('btn-step-4')?.addEventListener('click', function() { if (!CheckParties()) return false; submitFormWithStep(4); });
-    document.getElementById('btn-step-5')?.addEventListener('click', function() { submitFormWithStep(5); });
-    document.getElementById('btn-step-6')?.addEventListener('click', function() { submitFormWithStep(6); });
-    document.getElementById('btn-step-7')?.addEventListener('click', function() { submitFormWithStep(7); });
-    document.getElementById('btn-step-8')?.addEventListener('click', function() { submitFormWithStep(8); });
-    document.getElementById('btn-step-9')?.addEventListener('click', function() { if (!CheckFinancial()) return false; submitFormWithStep(9); });
-    document.getElementById('btn-step-10')?.addEventListener('click', function() {
-        var post_balance = document.getElementById('post_balance').value;
-        if (post_balance == null || post_balance == '') {
-            customWarningAlert('Please enter Ending Balance');
-            document.getElementById('post_balance').focus();
-            return false;
-        }
-        if (!CheckReconciliation()) return false;
-        submitFormWithStep(10);
-    });
-    document.getElementById('btn-step-11')?.addEventListener('click', function() { submitFormWithStep(11); });
-    document.getElementById('btn-step-12')?.addEventListener('click', function() { if (!CheckQuestions()) return false; submitFormWithStep(12); });
-    document.getElementById('btn-step-13')?.addEventListener('click', function() { submitFormWithStep(13); });
-    document.getElementById('btn-step-14')?.addEventListener('click', function() {
-        var assignedReviewer = document.getElementById('AssignedReviewer').value;
-        if (assignedReviewer == null || assignedReviewer == '') {
-            customWarningAlert('Please select a Reviewer');
-            document.getElementById('AssignedReviewer').focus();
-            return false;
-        }
-        submitFormWithStep(14);
-    });
-});
-</script>
-<script>
-    /* Disable fields and buttons  */
-   document.addEventListener('DOMContentLoaded', function () {
-    var submitted = @json($chEOYDocuments->financial_review_complete);
-    var received = @json($chEOYDocuments->financial_report_received);
-
-    function disableFields() {
-        document.querySelectorAll('input, select, textarea').forEach(function(el) {
-            if (!el.closest('#logout-form')) {
-                el.disabled = true;
-            }
-        });
-    }
-
-    function disableButtons(exceptions = []) {
-        document.querySelectorAll('button').forEach(function(el) {
-            if (!el.closest('#logout-form') &&
-                !exceptions.includes(el.id) &&
-                !el.classList.contains('accordion-button') &&
-                !el.hasAttribute('data-bs-toggle') &&
-                !el.hasAttribute('data-lte-toggle')) {
-                el.disabled = true;
-            }
-        });
-    }
-
-    if (received != '1') {
-        disableButtons(['btn-back']);
-        disableFields();
-    } else if (submitted == '1') {
-        disableButtons(['btn-back', 'review-clear', 'financial-pdf', 'generate-pdf']);
-        disableFields();
-    }
-
-    var allDisabled = true;
-    document.querySelectorAll('input, select, textarea').forEach(function(el) {
-        if (!el.closest('#logout-form') && !el.disabled) {
-            allDisabled = false;
-        }
-    });
-
-    document.querySelectorAll('.description').forEach(el => el.style.display = allDisabled ? 'block' : 'none');
-});
-
-    function EnableNoteLogButton(NoteNumber){
-        var noteValue = document.getElementById("Step" + NoteNumber + "_Note").value.trim();
-        var button = document.getElementById("AddNote" + NoteNumber);
-
-        if(noteValue !== ""){
-            button.disabled = false;
-            button.classList.remove('disabled');
-        } else {
-            button.disabled = true;
-            button.classList.add('disabled');
-        }
-    }
-
-    function AddNote(NoteNumber){
-        // Validate note is not empty FIRST
-        var noteValue = document.getElementById("Step" + NoteNumber + "_Note").value.trim();
-        if(noteValue === ""){
-            return false; // Exit if empty, don't add the note
-        }
-
-        var Note = "";
-        var Log = "";
-        var d = new Date();
-        var now = "";
-        var SummaryNote="";
-
-        now = d.toString();
-
-        var noteText ={
-            1: 'Dues',
-            2: 'Meetings',
-            3: 'Service Projects',
-            4: 'Parties',
-            5 :'Operating',
-            6: 'International',
-            7: 'Donations',
-            8: 'Other',
-            9: 'Financials',
-            10: 'Reconciliation',
-            11: '990N',
-            12: 'Questions',
-        }
-
-        var noteTextValue = noteText[NoteNumber] || NoteNumber;
-
-        Note=document.getElementById("Step" + NoteNumber + "_Note").value;
-        Log += "\n" + noteTextValue + " Section, {{ date('m/d/Y') }}, {{ $loggedInName }}, " + Note;
-
-        document.getElementById("Step" + NoteNumber + "_Log").value += Log;
-        document.getElementById("Step" + NoteNumber + "_Note").value = "";
-        document.getElementById("AddNote" + NoteNumber).disabled = true;
-        document.getElementById("AddNote" + NoteNumber).classList.add('disabled');
-
-        for(i=1;i<12;i++){
-            Note=document.getElementById("Step" + i + "_Log").value;
-            SummaryNote += Note;
-        }
-        document.getElementById("Summary_Log").value = SummaryNote;
-    }
-
-    function CheckMembers() {
-        var checkRosterAttached = document.querySelector('input[name="checkRosterAttached"]:checked');
-        var checkRenewalSeemsRight = document.querySelector('input[name="checkRenewalSeemsRight"]:checked');
-
-        if (!checkRosterAttached || !checkRenewalSeemsRight) {
-            customWarningAlert("Answer Review Questions in CHAPTER DUES section to Continue.");
-            accordion.openAccordionItem('accordion-header-members');
-            return false;
-        }
-        return true;
-    }
-
-    function CheckService() {
-        var checkServiceProject = document.querySelector('input[name="checkServiceProject"]:checked');
-        var checkM2MDonation = document.querySelector('input[name="checkM2MDonation"]:checked');
-
-        if (!checkServiceProject || !checkM2MDonation) {
-            customWarningAlert("Answer Review Questions in SERVICE PROJECTS section to Continue.");
-            accordion.openAccordionItem('accordion-header-service');
-            return false;
-        }
-        return true;
-    }
-
-    function CheckParties() {
-        var check_party_percentage = document.querySelector('input[name="check_party_percentage"]:checked');
-
-        if (!check_party_percentage) {
-            customWarningAlert("Answer Review Questions in PARTIES & MEMBER BENEFITS section to Continue.");
-            accordion.openAccordionItem('accordion-header-parties');
-            return false;
-        }
-        return true;
-    }
-
-    function CheckFinancial() {
-        var checkTotalIncome = document.querySelector('input[name="checkTotalIncome"]:checked');
-
-        if (!checkTotalIncome) {
-            customWarningAlert("Answer Review Questions in FINANCIAL SUMMARY section to Continue.");
-            accordion.openAccordionItem('accordion-header-financial');
-            return false;
-        }
-        return true;
-    }
-
-    function CheckReconciliation() {
-        var check_beginning_balance = document.querySelector('input[name="check_beginning_balance"]:checked');
-        var checkBankStatementIncluded = document.querySelector('input[name="checkBankStatementIncluded"]:checked');
-        var checkBankStatementMatches = document.querySelector('input[name="checkBankStatementMatches"]:checked');
-        var post_balance = document.getElementById('post_balance');
-
-        if (!check_beginning_balance || !checkBankStatementIncluded || !checkBankStatementMatches || !post_balance) {
-            customWarningAlert("Answer Review Questions in RECONCILIATION section to Continue.");
-            accordion.openAccordionItem('accordion-header-reconciliation');
-            return false;
-        }
-        return true;
-    }
-
-    function CheckQuestions() {
-        var checkPurchasedPins = document.querySelector('input[name="checkPurchasedPins"]:checked');
-        var checkPurchasedMCMerch = document.querySelector('input[name="checkPurchasedMCMerch"]:checked');
-        var checkOfferedMerch = document.querySelector('input[name="checkOfferedMerch"]:checked');
-        var checkBylawsMadeAvailable = document.querySelector('input[name="checkBylawsMadeAvailable"]:checked');
-        var checkSisteredAnotherChapter = document.querySelector('input[name="checkSisteredAnotherChapter"]:checked');
-        var checkAttendedTraining = document.querySelector('input[name="checkAttendedTraining"]:checked');
-        var checkCurrent990NAttached = document.querySelector('input[name="checkCurrent990NAttached"]:checked');
-
-        if (!checkPurchasedPins || !checkPurchasedMCMerch || !checkOfferedMerch || !checkBylawsMadeAvailable
-            || !checkSisteredAnotherChapter || !checkAttendedTraining || !checkCurrent990NAttached) {
-                customWarningAlert("Answer Review Questions in CHAPTER QUESTIONS section to Continue.");
-            accordion.openAccordionItem('accordion-header-questions');
-            return false;
-        }
-        return true;
-    }
-
-</script>
-@endsection

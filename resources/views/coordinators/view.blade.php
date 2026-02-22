@@ -2,14 +2,7 @@
 
 @section('page_title', 'Coordinator Details')
 @section('breadcrumb', 'Coordinator Details')
-<style>
-.disabled-link {
-    pointer-events: none; /* Prevent click events */
-    cursor: default; /* Change cursor to default */
-    color: #343a40; /* Font color */
-}
 
-</style>
 @section('content')
     <!-- Main content -->
     <section class="content">
@@ -17,9 +10,8 @@
         <div class="row">
           <div class="col-md-4">
 
-            <!-- Profile Image -->
             <div class="card card-primary card-outline">
-              <div class="card-body">
+                 <div class="card-body">
                     <div class="card-header text-center bg-transparent">
                         <h3 class="mb-0">{{ $cdDetails->first_name }}, {{ $cdDetails->last_name }}</h3>
                         <p class="mb-0">{{ $conferenceDescription }} Conference
@@ -28,39 +20,67 @@
                             @endif
                         </p>
                     </div>
-                <ul class="list-group list-group-flush mb-3">
-                    <li class="list-group-item mt-2">
-                        <b>Supervising Coordinator:</b> <span class="float-end">{{ $ReportTo }}</span>
-                        <br>
-                        <b>Display Position:</b> <span class="float-end">{{ $displayPosition->long_title }}</span>
-                        <br>
-                        <b>MIMI Position:</b><a href="javascript:void(0);" onclick="showPositionInformation()" title="Show Position Information">
-                            <i class="bi bi-question-circle text-primary"></i></a>
-                        <span class="float-end">{{ $mimiPosition?->long_title }}</span>
-                        <br>
-                        <div style="display: flex; justify-content: space-between;">
-                            <b>Secondary Positions:</b>
-                            <span style="text-align: right;">
+                  <ul class="list-group list-group-flush mb-3">
+                      <li class="list-group-item">
+                          <div class="row">
+                            <div class="col-auto fw-bold">Supervising Coordinator:</div>
+                            <div class="col text-end">
+                                <a href="mailto:{{ $cdDetails->reportsTo?->email }}">{{ $ReportTo }} </a>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-auto fw-bold">Primary Position:</div>
+                            <div class="col text-end">
+                                {{ $displayPosition->long_title }}
+                           </div>
+                          </div>
+                        <div class="row">
+                            <div class="col-auto fw-bold">MIMI Position: <a href="javascript:void(0);" onclick="showPositionInformation()" title="Show Position Information">
+                            <i class="bi bi-question-circle text-primary"></i></a></div>
+                            <div class="col text-end">{{ $mimiPosition?->long_title }}</span>
+                        </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-auto fw-bold">Secondary Positions:</div>
+                            <div class="col text-end">
                                 @forelse($cdDetails->secondaryPosition as $position)
                                     {{ $position->long_title }}@if(!$loop->last)<br>@endif
                                 @empty
                                     None
                                 @endforelse
-                            </span>
-                        </div>
-                        @if ($ITCondition)
-                        <b>MIMI Admin:</b> <span class="float-end">{{ $cdAdminRole->admin_role }}</span>
+                            </div>
+                          </div>
+                           @if ($ITCondition)
+                        <div class="row">
+                            <div class="col-auto fw-bold">MIMI Admin:</div>
+                            <div class="col text-end">
+                                {{ $cdAdminRole->admin_role }}
+                                </div>
+                          </div>
                         @endif
+                      </li>
+                      <li class="list-group-item mt-2">
+                          <div class="row">
+                            <div class="col-auto fw-bold">Start Date:</div>
+                            <div class="col text-end">
+                                {{ $cdDetails->coordinator_start_date }}
+                                </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-auto fw-bold">Last Promotion Date:</div>
+                            <div class="col text-end">
+                                {{ $cdDetails->last_promoted }}
+                           </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-auto fw-bold">Home Chapter:</div>
+                            <div class="col text-end">
+                                {{ $cdDetails->home_chapter }}
+                                 </div>
+                          </div>
+                      </li>
 
-                    </li>
-                    <li class="list-group-item mt-2">
-                        <b>Start Date:</b> <span class="float-end date-mask">{{ $cdDetails->coordinator_start_date }}</span>
-                        <br>
-                        <b>Last Promotion Date:</b> <span class="float-end date-mask">{{ $cdDetails->last_promoted }}</span>
-                        <br>
-                        <b>Home Chapter:</b> <span class="float-end">{{ $cdDetails->home_chapter }}</span>
-                    </li>
-                </ul>
+                <li class="list-group-item">
                <div class="text-center">
                      @if ($cdDetails->active_status == 1 && $cdDetails->on_leave == 1)
                         <b><span style="color: #ff851b;">Coordinator is ON LEAVE</span></b>
@@ -81,7 +101,9 @@
                             {{ $cdDetails->reason_retired }}
                         @endif
                     @endif
-                </div>
+                 </div>
+                </li>
+                  </ul>
               </div>
               <!-- /.card-body -->
             </div>
@@ -103,9 +125,13 @@
                 <div class="tab-content">
                   <div class="active tab-pane" id="general">
                     <div class="general-field">
-                        <h3 class="profile-username">Chapters & Coordinators
+                            <div class="card-header bg-transparent border-0">
+                        <h3>Chapters & Coordinators
                             <button class="btn btn-primary bg-gradient btn-xs ms-2" onclick="window.location.href='{{ route('coordreports.coordrptreportingtree') }}'">View Coordinator Reporting Tree</button>
                         </h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
                         <div class="row">
                         <div class="col-sm-6">
 							<div class="mb-3">
@@ -176,11 +202,17 @@
                             </div>
                         </div>
                     </div>
+                    <!-- /.card-body -->
                 </div>
-                <!-- /.tab-pane -->
+            </div>
+            <!-- /.tab-pane -->
                 <div class="tab-pane" id="contact">
                     <div class="contact-field">
-                        <h3 class="profile-username">Contact Information</h3>
+                        <div class="card-header bg-transparent border-0">
+                        <h3>Contact Information</h3>
+                         </div>
+                                <!-- /.card-header -->
+                            <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
                                 <a href="mailto:{{ $cdDetails->email }}">{{ $cdDetails->email }}</a>
@@ -205,7 +237,7 @@
                                 Birthday: {{$cdDetails->birthdayMonth->month_long_name}} {{$cdDetails->birthday_day}}<br>
                                 Card Sent: <span class="date-mask">{{ $cdDetails->card_sent }}</span><br>
                                 @if ($assistConferenceCoordinatorCondition)
-                                    <button class="btn btn-primary bg-gradient btn-sm mb-2" onclick="updateCardSent()">Update Birthday Card Sent</button>
+                                    <button class="btn btn-primary bg-gradient btn-sm" onclick="updateCardSent()">Update Birthday Card Sent</button>
                                 @endif
                             </div>
                         </div>
@@ -216,11 +248,17 @@
                             <button type="button" class="btn btn-primary bg-gradient btn-xs reset-password-btn" data-user-id="{{ $cdDetails->user_id }}">Reset Coordinator Password</button>
                             </p>
                       </div>
-                    </div>
-                     <!-- /.tab-pane -->
+                    <!-- /.card-body -->
+                </div>
+            </div>
+            <!-- /.tab-pane -->
                 <div class="tab-pane" id="subscriptions">
                     <div class="subscriptions-field">
-                        <h3 class="profile-username">Subscriptions</h3>
+                                <div class="card-header bg-transparent border-0">
+                        <h3>Subscriptions</h3>
+                         </div>
+                                <!-- /.card-header -->
+                            <div class="card-body">
                         <div class="row">
                             @php
                                 $Subscriptions = $cdDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
@@ -230,9 +268,9 @@
                             @if ($assistConferenceCoordinatorCondition)
                                 <dd class="col-sm-6">
                                     @if (in_array(1, $Subscriptions))
-                                        <button class="btn btn-primary bg-gradient btn-sm mb-2" onclick="unsubscribe(1, {{ $cdDetails->user_id }})">Unsubscribe</button>
+                                        <button class="btn btn-primary bg-gradient btn-sm" onclick="unsubscribe(1, {{ $cdDetails->user_id }})">Unsubscribe</button>
                                     @else
-                                        <button class="btn btn-primary bg-gradient btn-sm mb-2" onclick="subscribe(1, {{ $cdDetails->user_id }})">Subscribe</button>
+                                        <button class="btn btn-primary bg-gradient btn-sm" onclick="subscribe(1, {{ $cdDetails->user_id }})">Subscribe</button>
                                     @endif
                                 </dd>
                             @endif
@@ -244,20 +282,26 @@
                             @if ($assistConferenceCoordinatorCondition)
                                 <dd class="col-sm-6">
                                     @if (in_array(2, $Subscriptions))
-                                        <button class="btn btn-primary bg-gradient btn-sm mb-2" onclick="unsubscribe(2, {{ $cdDetails->user_id }})">Unsubscribe</button>
+                                        <button class="btn btn-primary bg-gradient btn-sm" onclick="unsubscribe(2, {{ $cdDetails->user_id }})">Unsubscribe</button>
                                     @else
-                                        <button class="btn btn-primary bg-gradient btn-sm mb-2" onclick="subscribe(2, {{ $cdDetails->user_id }})">Subscribe</button>
+                                        <button class="btn btn-primary bg-gradient btn-sm" onclick="subscribe(2, {{ $cdDetails->user_id }})">Subscribe</button>
                                     @endif
                                 </dd>
                             @endif
 
                         </div>
-                      </div>
-                    </div>
-                <!-- /.tab-pane -->
+                        </div>
+                    <!-- /.card-body -->
+                </div>
+            </div>
+            <!-- /.tab-pane -->
                 <div class="tab-pane" id="recog">
                     <div class="recog-field">
-                        <h3 class="profile-username">Appreciation & Recognitions</h3>
+                        <div class="card-header bg-transparent border-0">
+                        <h3>Appreciation & Recognitions</h3>
+                         </div>
+                                <!-- /.card-header -->
+                            <div class="card-body">
                         <dl class="row">
                             <dt class="col-sm-2">&lt; 1 Year</dt>
                             <dd class="col-sm-4">{{$cdDetails->recognition_year0}}</dd>
@@ -285,9 +329,11 @@
                             <dd class="col-sm-10">{{$cdDetails->recognition_necklace == 1 ? 'YES' : 'NO' }}</dd>
                           </dl>
                     </div>
-                  </div>
-                 <!-- /.tab-pane -->
+                    <!-- /.card-body -->
                 </div>
+            </div>
+            <!-- /.tab-pane -->
+               </div>
                 <!-- /.tab-content -->
               </div>
               <!-- /.card-body -->

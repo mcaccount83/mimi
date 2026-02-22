@@ -48,24 +48,11 @@
     };
 </script>
 
-<style>
-    .disabled-link {
-    pointer-events: none; /* Prevent click events */
-    cursor: default; /* Change cursor to default */
-    color: #6c757d; /* Muted color */
-    }
-
-    h1, h2, h3, h4, h5, h6 {
-    font-weight: normal !important;
-}
-
-h1 { font-size: 2rem !important; }
-h2 { font-size: 1.75rem !important; }
-h3 { font-size: 1.5rem !important; }
-h4 { font-size: 1.25rem !important; }
-h5 { font-size: 1rem !important; }
-h6 { font-size: 0.875rem !important; }
-</style>
+    @include('layouts.styles.buttonsicons')
+    @include('layouts.styles.datatable')
+    @include('layouts.styles.fonts')
+    @include('layouts.styles.forms')
+    @include('layouts.styles.sweetalert')
 
 </head>
   <!--end::Head-->

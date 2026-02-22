@@ -29,18 +29,22 @@
                 <input type="hidden" name="ch_state" value="{{$stateShortName}}">
                 <input type="hidden" name="ch_hid_webstatus" value="{{ $chDetails->website_status }}">
 
-            <!-- Profile Image -->
             <div class="card card-primary card-outline">
-                <div class="card-body">
-                    <div class="card-header text-center bg-transparent">
+                 <div class="card-body">
+                     <div class="card-header text-center bg-transparent">
                     <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
                     <p class="mb-0">{{ $chDetails->confname }} Conference, {{ $chDetails->regname }} Region
                   </p>
-                    </div>
-                                  <ul class="list-group list-group-flush mb-3">
-                      <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
-                      <li class="list-group-item mt-2" id="display_corlist"></li>
-                  </ul>
+                </div>
+
+                <ul class="list-group list-group-flush mb-3">
+                      <li class="list-group-item">
+                          <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
+                            <div class="row mb-2">
+                          <span id="display_corlist"></span>
+                            </div>
+                        </li>
+                  <li class="list-group-item">
                  <div class="text-center">
                       @if ($chDetails->active_status == 1 )
                           <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
@@ -55,7 +59,9 @@
                           Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
                           {{ $chDetails->disband_reason }}
                       @endif
-                  </div>
+                      </div>
+                </li>
+                  </ul>
                 </div>
               <!-- /.card-body -->
             </div>
@@ -65,9 +71,12 @@
 
           <div class="col-md-8">
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                <h3 class="profile-username">Website & Social Media Information</h3>
+                <div class="card-body">
+                        <div class="card-header bg-transparent border-0">
+                    <h3>Website & Social Media Information</h3>
+                        </div>
                     <!-- /.card-header -->
+                    <div class="card-body">
                     <div class="row">
                         <div class="col-md-12">
                             <!-- /.form group -->
@@ -124,8 +133,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
 
+                </div>
+                </div>
               <!-- /.card-body -->
                         </div>
             <!-- /.card -->
@@ -150,7 +160,8 @@
         </div>
         </div>
         <!-- /.row -->
-      </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.container-fluid -->
     </form>
     </section>
     <!-- /.content -->

@@ -2,22 +2,7 @@
 
 @section('page_title', 'Chapter Details')
 @section('breadcrumb', 'Board Information')
-<style>
-.disabled-link {
-    pointer-events: none; /* Prevent click events */
-    cursor: default; /* Change cursor to default */
-    color: #343a40; /* Font color */
-}
 
-.custom-span {
-    border: none !important;
-    background-color: transparent !important;
-    padding: 0.375rem 0 !important; /* Match the vertical padding of form-control */
-    box-shadow: none !important;
-}
-
-
-</style>
 @section('content')
     <!-- Main content -->
     <form class="form-horizontal" method="POST" action='{{ route("chapters.update", $chDetails->id) }}'>
@@ -109,9 +94,9 @@
                         <li class="list-group-item">
                         @if($regionalCoordinatorCondition)
                             <div class="row">
-                            <label class="col-sm-6 col-form-label">Update Primary Coordinator:</label>
-                            <div class="col-sm-6">
-                            <select name="ch_primarycor" id="ch_primarycor" class="form-control float-end col-sm-6 text-end" style="width: 100%;" onchange="loadCoordinatorList(this.value)" required>
+                            <label class="col-auto fw-bold">Primary Coordinator:</label>
+                            <div class="col text-end">
+                            <select name="ch_primarycor" id="ch_primarycor" class="form-control" onchange="loadCoordinatorList(this.value)" required>
                                 <option value="">Select Primary Coordinator</option>
                                 @foreach($pcList as $coordinator)
                                     <option value="{{ $coordinator['cid'] }}"
@@ -123,11 +108,11 @@
                              </div>
                         </div>
                             <div class="row mb-2">
-                          <span id="display_corlist" style="display: block; margin-top: 10px;"></span>
+                          <span id="display_corlist"></span>
                             </div>                          @else
                         <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
                                 <div class="row mb-2">
-                          <span id="display_corlist" style="display: block; margin-top: 10px;"></span>
+                          <span id="display_corlist"></span>
                             </div>
                             @endif
                         </li>
@@ -289,7 +274,8 @@
                                     <input type="text" name="ch_social3" id="ch_social3" class="form-control" value="{{ $chDetails->social3 }}"  placeholder="Instagram" >
                                 </div>
                             </div>
-                        </div>
+
+                    </div>
                 </div>
               <!-- /.card-body -->
                         </div>

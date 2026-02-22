@@ -32,69 +32,74 @@
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
-              <div class="card-body">
+                <div class="card-body">
                     <div class="card-header text-center bg-transparent">
                     <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
                     <p class="mb-0">{{ $chDetails->confname }} Conference, {{ $chDetails->regname }} Region
                   </p>
-                    </div>
+                </div>
+
                 <ul class="list-group list-group-flush mb-3">
-                    <li class="list-group-item mt-2">
+                    <li class="list-group-item">
                         <div class="row">
-                            <div class="col-sm-12">
-                                <label>New Board Submitted:</label>
-                                <span class="float-end">{{ $chDetails->documentsEOY->new_board_submitted == 1 ? 'YES' : 'NO' }}</span>
+                            <div class="col-auto fw-bold">New Board Submitted:</div>
+                            <div class="col text-end">
+                                {{ $chDetails->documentsEOY->new_board_submitted == 1 ? 'YES' : 'NO' }}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-12">
-                                <label>New Board Activated:</label>
-                                <span class="float-end">{{ $chDetails->documentsEOY->new_board_active == 1 ? 'YES' : 'NO' }}</span>
+                            <div class="col-auto fw-bold">New Board Activated:</div>
+                            <div class="col text-end">
+                                {{ $chDetails->documentsEOY->new_board_active == 1 ? 'YES' : 'NO' }}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-12">
-                                <label>Financial Report Received</label>
-                                <span class="float-end">{{ $chDetails->documentsEOY->financial_report_received == 1 ? 'YES' : 'NO' }}</span>
+                            <div class="col-auto fw-bold">Financial Report Received</div>
+                            <div class="col text-end">
+                                {{ $chDetails->documentsEOY->financial_report_received == 1 ? 'YES' : 'NO' }}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-12">
-                                <label>Financial Review Complete:</label>
-                                <span class="float-end">{{ $chDetails->documentsEOY->financial_review_complete == 1 ? 'YES' : 'NO' }}</span>
+                            <div class="col-auto fw-bold">Financial Review Complete:</div>
+                            <div class="col text-end">
+                                {{ $chDetails->documentsEOY->financial_review_complete == 1 ? 'YES' : 'NO' }}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-12">
-                                <label>Report Extension Given:</label>
-                                <span class="float-end">{{ $chDetails->documentsEOY->report_extension == 1 ? 'YES' : 'NO' }}</span>
+                            <div class="col-auto fw-bold">Report Extension Given:</div>
+                            <div class="col text-end">
+                                {{ $chDetails->documentsEOY->report_extension == 1 ? 'YES' : 'NO' }}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-12">
-                                <label>990N Verifed on irs.gov:</label>
-                                <span class="float-end">{{ $chFinancialReport->check_current_990N_verified_IRS == 1 ? 'YES' : 'NO' }}</span>
+                            <div class="col-auto fw-bold">990N Verifed on irs.gov:</div>
+                            <div class="col text-end">
+                                {{ $chDetails->documentsEOY->irs_verified == 1 ? 'YES' : 'NO' }}
                             </div>
                         </div>
                     </li>
 
-                    <li class="list-group-item mt-2">
+                    <li class="list-group-item">
                         <div class="row">
-                            <div class="col-sm-12">
-                                <label>Assigned Reviewer:</label>
+                            <div class="col-auto fw-bold">Assigned Reviewer:</div>
+                            <div class="col text-end">
                                     @if($chFinancialReport->reviewer_id != null)
-                                        <span class="float-end">{{ $chDetails->reportReviewer->first_name }} {{ $chDetails->reportReviewer->last_name }}</span>
+                                    {{ $chDetails->reportReviewer->first_name }} {{ $chDetails->reportReviewer->last_name }}
                                     @else
                                         No Reviewer Assigned
                                     @endif
                             </div>
                         </div>
-                </li>
+                    </li>
 
-                    <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
-                    <li class="list-group-item mt-2" id="display_corlist"></li>
-                </ul>
-                <div class="text-center">
+                     <li class="list-group-item">
+                          <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
+                            <div class="row mb-2">
+                          <span id="display_corlist"></span>
+                            </div>
+                        </li>
+                  <li class="list-group-item">
+                 <div class="text-center">
                       @if ($chDetails->active_status == 1 )
                           <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
                       @elseif ($chDetails->active_status == 2)
@@ -108,7 +113,9 @@
                           Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
                           {{ $chDetails->disband_reason }}
                       @endif
-                  </div>
+                      </div>
+                </li>
+                  </ul>
               </div>
               <!-- /.card-body -->
             </div>
@@ -118,95 +125,103 @@
 
           <div class="col-md-8">
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                <h3 class="profile-username">{{ $fiscalYear }} Report Attachments</h3>
+                <div class="card-body">
+                    <div class="card-header bg-transparent border-0">
+                        <h3>{{ $fiscalYear }} Report Attachments</h3>
+                    </div>
                     <!-- /.card-header -->
+                    <div class="card-body">
                     <div class="row mt-2">
+                       <div class="row mb-2">
                         <div class="col-sm-3">
                             <label>Chapter Roster File:</label>
                         </div>
                         <div class="col-sm-9">
-                                @if (!empty($chDetails->documentsEOY->roster_path))
-                                    <button class="btn btn-primary bg-gradient btn-sm mb-2" type="button" id="eoy-roster" onclick="openPdfViewer('{{ $chDetails->documentsEOY->roster_path }}')">View Chapter Roster</button>
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showRosterUploadModal('{{ $chDetails->id }}')">Replace Roster File</button>
+                                @if (!empty($chEOYDocuments->roster_path))
+                                    <button class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-roster" onclick="openPdfViewer('{{ $chEOYDocuments->roster_path }}')">View Chapter Roster</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showRosterUploadModal('{{ $chDetails->id }}')">Replace Roster File</button>
                                 @else
-                                    <button class="btn btn-primary bg-gradient btn-sm me-2 disabled" disabled>No file attached</button>
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showRosterUploadModal('{{ $chDetails->id }}')">Upload Roster File</button>
+                                    <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showRosterUploadModal('{{ $chDetails->id }}')">Upload Roster File</button>
                                 @endif
                         </div>
                     </div>
 
-                    <div class="row mt-2">
+                    <div class="row mb-2">
                         <div class="col-sm-3">
                             <label>Primary Bank Statement:</label>
                         </div>
                         <div class="col-sm-9">
-                            @if (!empty($chDetails->documentsEOY->statement_1_path))
-                                <button class="btn btn-primary bg-gradient btn-sm mb-2" type="button" id="eoy-statement-1" onclick="openPdfViewer('{{ $chDetails->documentsEOY->statement_1_path }}')">View Bank Statement</button>
-                                <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement1UploadModal('{{ $chDetails->id }}')">Replace Bank Statement</button>
+                            @if (!empty($chEOYDocuments->statement_1_path))
+                                <button class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-statement-1" onclick="openPdfViewer('{{ $chEOYDocuments->statement_1_path }}')">View Bank Statement</button>
+                                <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showStatement1UploadModal('{{ $chDetails->id }}')">Replace Bank Statement</button>
                             @else
-                                <button class="btn btn-primary bg-gradient btn-sm me-2 disabled" disabled>No file attached</button>
-                                <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement1UploadModal('{{ $chDetails->id }}')">Upload Bank Statement</button>
+                                <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
+                                <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showStatement1UploadModal('{{ $chDetails->id }}')">Upload Bank Statement</button>
                             @endif
                         </div>
                     </div>
 
-                    <div class="row mt-2">
+                    <div class="row mb-2">
                         <div class="col-sm-3">
-                            <label>Primary Bank Statement:</label>
+                            <label>Additional Bank Statement:</label>
                         </div>
                         <div class="col-sm-9">
-                                @if (!empty( $chDetails->documentsEOY->statement_2_path))
-                                    <button class="btn btn-primary bg-gradient btn-sm mb-2" type="button" id="eoy-statement-2" onclick="openPdfViewer('{{ $chDetails->docudocumentsEOYments->statement_2_path }}')">View Additional Bank Statement</button>
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement2UploadModal('{{ $chDetails->id }}')">Replace Additional Bank Statement</button>
+                                @if (!empty($chEOYDocuments->statement_2_path))
+                                    <button class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-statement-2" onclick="openPdfViewer('{{ $chEOYDocuments->statement_2_path }}')">View Additional Bank Statement</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showStatement2UploadModal('{{ $chDetails->id }}')">Replace Additional Bank Statement</button>
                                 @else
-                                    <button class="btn btn-primary bg-gradient btn-sm me-2 disabled" disabled>No file attached</button>
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showStatement2UploadModal('{{ $chDetails->id }}')">Upload Additional Bank Statement</button>
+                                    <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showStatement2UploadModal('{{ $chDetails->id }}')">Upload Additional Bank Statement</button>
                                 @endif
                         </div>
                     </div>
 
-                    <div class="row mt-2">
-                        <div class="col-sm-3">
-                            <label>990N Filing:</label>
-                        </div>
-                        <div class="col-sm-9">
-                                @if (!empty($chDetails->documentsEOY->irs_path))
-                                    <button class="btn btn-primary bg-gradient btn-sm mb-2" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chDetails->documentsEOY->irs_path }}')">View 990N Confirmation</button>
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="show990NUploadModal('{{ $chDetails->id }}')">Replace 990N Confirmation</button>
-                                @else
-                                    <button class="btn btn-primary bg-gradient btn-sm me-2 disabled" disabled>No file attached</button>
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="show990NUploadModal('{{ $chDetails->id }}')">Upload 990N Confirmation</button>
-                                @endif
-                        </div>
-                    </div>
-                     <!-- /.form group -->
-
-                     <div class="row mb-3 align-middle">
+                    <div class="row mb-2">
                         <label class="col-sm-3 col-form-label">990 Submission Notes:</label>
                         <div class="col-sm-9">
                         <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chDetails->documentsEOY->irs_notes }}" >
                         </div>
                     </div>
-                    <!-- /.form group -->
 
-                    <div class="row mb-3 align-middle">
+                    <div class="row mb-2">
+                        <div class="col-sm-3">
+                            <label></label>
+                        </div>
+                        <div class="col-sm-9">
+                                @if (!empty($chEOYDocuments->irs_path))
+                                    <button class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chEOYDocuments->irs_path }}')">View 990N Confirmation</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="show990NUploadModal('{{ $chDetails->id }}')">Replace 990N Confirmation</button>
+                                @else
+                                    <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="show990NUploadModal('{{ $chDetails->id }}')">Upload 990N Confirmation</button>
+                                @endif
+                        </div>
+                    </div>
+
+                    <div class="row mb-2 align-middle">
                         <label class="col-sm-3 col-form-label">990N Verified on IRS Website:</label>
                         <div class="col-sm-9">
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="irs_verified" id="irs_verified" class="form-check-input"
-                                {{ $chDetails->financialReport->check_current_990N_verified_IRS == 1 ? 'checked' : ''}}>
+                                {{ $chDetails->documentsEOY->irs_verified == 1 ? 'checked' : ''}}>
                                 <label class="form-check-label" for="irs_verified"></label>
                             </div>
                         </div>
                     </div>
-                    <!-- /.form group -->
+                     <div class="row mb-2">
+                        <label class="col-sm-3 ">990N Submission Issues::</label>
+                        <div class="col-sm-9">
+                            <button type="button" id="irs-issues" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='{{ route('eoyreports.editirssubmission', ['id' => $chDetails->id]) }}'">Report 990N Verification Issues</button>
+                        </div>
+                    </div>
 
-                  </div>
+                   </div>
+              </div>
               <!-- /.card-body -->
-            </div>
+                        </div>
             <!-- /.card -->
-          </div>
+                      </div>
           <!-- /.col -->
           <div class="col-md-12">
             <div class="card-body text-center mt-3">

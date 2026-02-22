@@ -58,6 +58,7 @@
                     <th>Award {{ $i + 1 }}</th>
                 @endfor
             @endif
+            <th>History</th>
         </tr>
     </thead>
     <tbody>
@@ -124,6 +125,9 @@
                             @endif
                         </td>
                     @endfor
+                    <th>
+                        <a href="{{ url("/eoyreports/awardhistory/{$list->id}") }}"><i class="bi bi-file-earmark-text"></i></a>
+                    </th>
                 </tr>
             @endif
         @endforeach

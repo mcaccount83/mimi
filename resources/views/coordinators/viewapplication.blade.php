@@ -35,9 +35,15 @@
                         <p class="mb-0">{{ $conferenceDescription }} Conference
                         </p>
                     </div>
-<div class="d-flex mb-2">
-                        <b class="me-2" style="min-width: 200px;">Region:</b>
-                  <select name="cord_region" id="cord_region" class="form-control" style="width: 100%;" required>
+
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item">
+                      <div class="row align-items-center">
+                            <div class="col-sm-6 mt-1">
+                                <label class="col-form-label">Region:</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <select name="cord_region" id="cord_region" class="form-control" style="width: 100%;" required>
                                     @foreach($allRegions as $region)
                                         <option value="{{$region->id}}"
                                             @if($cdDetails->region_id == $region->id) selected @endif>
@@ -45,49 +51,30 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                </div>
+                            </div>
+                        </div>
+ <div class="row align-items-center">
+                            <div class="col-sm-6 mt-1">
+                                <label class="col-form-label">Reports To:</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <select name="cord_report_pc" id="cord_report_pc" class="form-control" style="width: 100%;" required>
+                                    @foreach($rcDetails as $coordinator)
+                                        <option value="{{ $coordinator['cid'] }}"
+                                            @if($cdDetails->report_id == $coordinator['cid']) selected @endif
+                                            data-region-id="{{ $coordinator['regid'] }}">
+                                            {{ $coordinator['cname'] }} {{ $coordinator['cpos'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
 
-                <ul class="list-group list-group-flush mb-3">
-                    <li class="list-group-item mt-2">
-                    <div class="d-flex mb-2">
-                        <b class="me-2" style="min-width: 200px;">Email:</b>
-                        <input type="text" name="cord_email" id="cord_email" class="form-control" value="{{ $cdDetails->email }}" placeholder="Email Address" required>
-                    </div>
-                    <div class="d-flex mb-2">
-                        <b class="me-2" style="min-width: 200px;">Secondary Email:</b>
-                        <input type="text" name="cord_sec_email" id="cord_sec_email" class="form-control" value="{{ $cdDetails->sec_email }}" placeholder="Secondary Email" required>
-                    </div>
-                    <div class="d-flex mb-2">
-                        <b class="me-2" style="min-width: 200px;">Phone:</b>
-                        <input type="text" name="cord_phone" id="cord_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{ $cdDetails->phone}}" required placeholder="Phone Number" >
-                    </div>
-                    <div class="d-flex mb-2">
-                        <b class="me-2" style="min-width: 200px;">Alt Phone:</b>
-                        <input type="text" name="cord_altphone" id="cord_altphone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{ $cdDetails->alt_phone}}" placeholder="Alternative Phone" >
-                    </div>
-
-
-
-                    <div class="d-flex">
-                        <b class="me-2" style="min-width: 200px;">Address:</b>
-                        <span>{{ $cdDetails->address }}</span>
-                    </div>
-                    <div class="d-flex">
-                        <b class="me-2" style="min-width: 200px;">&nbsp;</b>
-                        <span>{{$cdDetails->city}}, {{$cdDetails->state->state_short_name}}&nbsp;{{$cdDetails->zip}}</span>
-                    </div>
-                    <div class="d-flex">
-                        <b class="me-2" style="min-width: 200px;">&nbsp;</b>
-                        <span>{{$cdDetails->country->short_name}}</span>
-                    </div>
-                </li>
-                  <li class="list-group-item mt-2">
-                    <div class="d-flex mb-2">
-                        <b class="me-2 mb-3" style="min-width: 200px;">Application Date:</b>
-                        <span class="date-mask">{{ $cdDetails->coordinator_start_date }}</span>
-                    </div>
-                      <div class="d-flex mb-2">
-                        <b class="me-2" style="min-width: 200px;">Display Position:</b>
+                        <div class="row align-items-center">
+                            <div class="col-sm-6 mt-1">
+                                <label class="col-form-label">Display Position:</label>
+                            </div>
+                            <div class="col-sm-6">
                                 <select name="cord_disp_pos" id="cord_disp_pos" class="form-control" style="width: 100%;" onChange="CheckPromotion(this)" required>
                                     @foreach($allPositions as $pos)
                                             <option value="{{ $pos->id }}" {{ $cdDetails->display_position_id == $pos->id ? 'selected' : '' }}>
@@ -95,11 +82,15 @@
                                             </option>
                                     @endforeach
                                 </select>
+                            </div>
                         </div>
 
-                        <div class="d-flex mb-2">
-                        <b class="me-2" style="min-width: 200px;">MIMI Position:<a href="javascript:void(0);" onclick="showPositionInformation()" title="Show Position Information">
-                                    <i class="bi bi-question-circle text-primary"></i></a></b>
+                        <div class="row align-items-center">
+                            <div class="col-sm-6 mt-1">
+                                <label class="col-form-label">MIMI Position:<a href="javascript:void(0);" onclick="showPositionInformation()" title="Show Position Information">
+                                    <i class="bi bi-question-circle text-primary"></i></a></label>
+                            </div>
+                            <div class="col-sm-6">
                                 <select name="cord_pos" id="cord_pos" class="form-control" style="width: 100%;" onChange="CheckPromotion(this)" required>
                                     @foreach($allPositions as $pos)
                                         @if($pos->id >= 1 && $pos->id <= 7)
@@ -109,10 +100,14 @@
                                         @endif
                                     @endforeach
                                 </select>
+                            </div>
                         </div>
 
-                         <div class="d-flex mb-2">
-                        <b class="me-2" style="min-width: 200px;">Secondary Position:</b>
+                        <div class="row align-items-center">
+                            <div class="col-sm-6 mt-1">
+                                <label class="col-form-label">Secondary Position:</label>
+                            </div>
+                            <div class="col-sm-6">
                                 <select name="cord_sec_pos[]" id="cord_sec_pos" class="form-control" style="width: 100%;" onChange="CheckPromotion(this)" multiple>
                                     <option value="" {{ (!isset($cdDetails->secondaryPosition) || $cdDetails->secondaryPosition->isEmpty()) ? 'selected' : '' }}>None</option>
                                     @foreach($allPositions as $pos)
@@ -124,28 +119,78 @@
                                         @endif
                                     @endforeach
                                 </select>
+                            </div>
                         </div>
+                        {{-- @if ($ITCondition)
+                            <div class="row align-items-center">
+                                <div class="col-sm-6 mt-1">
+                                    <label class="col-form-label">MIMI Admin:</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <select name="is_admin" id="is_admin" class="form-control" style="width: 100%;" required>
+                                        @foreach($allAdminRoles as $admin)
+                                                <option value="{{$admin->id}}" {{$cdUserAdmin == $admin->id  ? 'selected' : ''}}>
+                                                    {{$admin->admin_role}}
+                                                </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        @endif --}}
+                      </li>
 
-                    <div class="d-flex mb-2">
-                        <b class="me-2" style="min-width: 200px;">Home Chapter:</b>
-                                <input type="text" name="cord_chapter" id="cord_chapter" class="form-control" value="{{ $cdDetails->home_chapter }}" placeholder="Home Chapter" required>
+                    <li class="list-group-item">
+                      <div class="row">
+                            <div class="col-auto fw-bold">Email:</div>
+                            <div class="col text-end">
+                                {{ $cdDetails->email }}
+                                </div>
                         </div>
+                        <div class="row">
+                            <div class="col-auto fw-bold">Secondary Email::</div>
+                            <div class="col text-end">
+                                {{ $cdDetails->sec_email }}
+                                </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-auto fw-bold">Phone:</div>
+                            <div class="col text-end">
+                                {{ $cdDetails->phone}}
+                                </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-auto fw-bold">Alt Phone:</div>
+                            <div class="col text-end">
+                                {{ $cdDetails->alt_phone}}
+                                </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-auto fw-bold">Address:</div>
+                            <div class="col text-end">
+                                {{ $cdDetails->address }}<br>
+                                {{$cdDetails->city}}, {{$cdDetails->state->state_short_name}}&nbsp;{{$cdDetails->zip}}<br>
+                                {{$cdDetails->country->short_name}}
+                                </div>
+                        </div>
+                    </li>
 
-                      <div class="d-flex">
-                        <b class="me-2" style="min-width: 200px;">Supervising Coordinator:</b>
-                           <select name="cord_report_pc" id="cord_report_pc" class="form-control" style="width: 100%;" required>
-                                    @foreach($rcDetails as $coordinator)
-                                        <option value="{{ $coordinator['cid'] }}"
-                                            @if($cdDetails->report_id == $coordinator['cid']) selected @endif
-                                            data-region-id="{{ $coordinator['regid'] }}">
-                                            {{ $coordinator['cname'] }} {{ $coordinator['cpos'] }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                  <li class="list-group-item ">
+                    <div class="row">
+                        <div class="col-auto fw-bold">Application Date:</div>
+                            <div class="col text-end date-mask">
+                            {{ $cdDetails->coordinator_start_date }}
+                        </div>
+                    </div>
 
-                </li>
-            <li class="list-group-item mt-2">
-                <div class="text-center">
+                   <div class="row">
+                        <div class="col-auto fw-bold">Home Chapter:</div>
+                            <div class="col text-end">
+                                {{ $cdDetails->home_chapter }}
+                        </div>
+                        </div>
+                   </li>
+              <li class="list-group-item">
+               <div class="text-center">
                      @if ($cdDetails->active_status == 1 && $cdDetails->on_leave == 1)
                         <b><span style="color: #ff851b;">Coordinator is ON LEAVE</span></b>
                         <br>
@@ -165,22 +210,21 @@
                             {{ $cdDetails->reason_retired }}
                         @endif
                     @endif
-                </div>
-                 </li>
+                 </div>
+                </li>
                 @if ($cdDetails['active_status'] == '2')
-                    <li class="list-group-item mt-2">
+                    <li class="list-group-item">
                         <div class="card-body text-center mt-3">
                             <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save Updates</button>
                             <br>
-                            Save all changes before approval!
+                        Save all changes before approval, so information in emails will be correct!
                             <br>
                             <button type="button" class="btn btn-success bg-gradient mb-2" onclick="appApprove({{ $cdDetails->id }}, {{ $cdDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Approve Application</button>
-                            <button type="button" class="btn btn-danger bg-gradient mb-2" onclick="appReject({{ $cdDetails->id }}, {{ $cdDetails->user_id }})"><i class="bi bi-x-lg me-2"></i>Reject Application</button>
+                            <button type="button" class="btn btn-danger bg-gradient mb-2" onclick="appReject({{ $cdDetails->id }}, {{ $cdDetails->user_id }})"><i class="bi bi-x-circle me-2"></i>Reject Application</button>
                     </li>
                 @endif
 
-                </ul>
-
+                 </ul>
               </div>
               <!-- /.card-body -->
             </div>
@@ -190,9 +234,12 @@
 
            <div class="col-md-8">
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                <h3 class="profile-username">Coordinator Application</h3>
+                <div class="card-body">
+                    <div class="card-header bg-transparent border-0">
+                <h3>Coordinator Application</h3>
+                     </div>
                     <!-- /.card-header -->
+                    <div class="card-body">
                     <div class="row">
                         <div class="col-md-12">
                             <!-- /.form group -->
@@ -245,10 +292,11 @@
                         </div>
 
               </div>
+                </div>
               <!-- /.card-body -->
-            </div>
+                        </div>
             <!-- /.card -->
-          </div>
+                      </div>
           <!-- /.col -->
           <div class="col-md-12">
             <div class="card-body text-center mt-3">
@@ -277,11 +325,12 @@
                             @endif
                         @endif
                     @endif
+             </div>
             </div>
         </div>
-        </div>
         <!-- /.row -->
-      </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.container-fluid -->
     </section>
     <!-- /.content -->
 @endsection

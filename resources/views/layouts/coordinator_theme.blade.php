@@ -31,145 +31,30 @@
         <meta name="flash-errors" content="<ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>">
     @endif
 
-<script>
-window.onload = function () {
-    if (window.history && window.history.pushState) {
-        window.history.pushState('preventBack', null, '');
-        window.onpopstate = function () {
-            location.reload();
-        };
-    }
-};
-</script>
+    <script>
+    window.onload = function () {
+        if (window.history && window.history.pushState) {
+            window.history.pushState('preventBack', null, '');
+            window.onpopstate = function () {
+                location.reload();
+            };
+        }
+    };
+    </script>
 
-<style>
-    /* Sidebar font size */
-    .app-sidebar .sidebar-wrapper {
-        font-size: 0.95rem !important;
-    }
-
-    .app-sidebar .nav-link {
-        font-size: 0.95rem !important;
-        line-height: 1.2 !important;
-    }
-
-    .sidebar-menu .nav-icon {
-    font-size: 1.3rem !important;
-}
-
-    /* Logo size and position in sidebar */
-    .custom-logo {
-        width: 70px; /* Adjust width as needed */
-        height: 70px; /* Adjust height as needed */
-        display: block;
-        margin: 10px auto; /* Centers horizontally and adds top and bottom margin */
-    }
-
-    .brand-link {
-        display: flex;
-        justify-content: center; /* Centers items horizontally */
-        align-items: center; /* Centers items vertically */
-        margin-top: 10px; /* Adds top margin */
-    }
-
-     /* Adjust spacing for SweetAlert2 buttons */
-    .swal2-confirm {
-        margin-right: 5px; /* Adjust the spacing between buttons */
-    }
-
-    .swal2-cancel {
-        margin-left: 5px; /* Optionally adjust left margin if needed */
-    }
-
-    .swal2-checkbox-container {
-        margin-top: 5px;
-    }
-
-    .swal2-checkbox {
-        margin-right: 5px;
-    }
-
-     .email-column a {
-        display: inline-block;
-        text-decoration: none;
-        color: inherit;
-    }
-
-    label, .col-form-label {
-    font-weight: bold;
-}
-
-    .notification-badge {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        min-width: 18px;
-        height: 18px;
-        padding: 0 5px;
-        font-size: 12px;
-        line-height: 18px;
-        /* background-color: #dc3545; */
-        background-color: #28a745;
-        color: #ffffff;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .nav-item.position-relative {
-        position: relative;
-    }
-
-    /* Optional: Add hover effect */
-    .notification-badge:hover {
-        /* background-color: #c82333; */
-        background-color: #28a745;
-    }
-
-h1, h2, h3, h4, h5, h6,
-.card-title {
-    font-weight: normal !important;
-}
-
-h1 { font-size: 2rem !important; }
-h2 { font-size: 1.75rem !important; }
-h3 { font-size: 1.25rem !important; }
-h4 { font-size: 1.rem !important; }
-h5 { font-size: 0.87rem !important; }
-h6 { font-size: 0.75rem !important; }
-
-.btn-xs {
-    --bs-btn-padding-y: 0.25rem;
-    --bs-btn-padding-x: 0.5rem;
-    --bs-btn-font-size: 0.75rem;
-    --bs-btn-border-radius: 0.25rem;
-}
-
-.spin {
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-</style>
+    @include('layouts.styles.buttonsicons')
+    @include('layouts.styles.coordsidebar')
+    @include('layouts.styles.datatable')
+    @include('layouts.styles.fonts')
+    @include('layouts.styles.forms')
+    @include('layouts.styles.sweetalert')
 
   </head>
   <!--end::Head-->
   <!--begin::Body-->
   <body class="layout-fixed sidebar-expand-lg sidebar-mini bg-body-tertiary">
-    <!--begin::App Wrapper-->
     <div class="app-wrapper">
-      <!--begin::Header-->
       <nav class="app-header navbar navbar-expand bg-body">
-        <!--begin::Container-->
         <div class="container-fluid">
           <!--begin::Start Navbar Links-->
           <ul class="navbar-nav">
@@ -191,9 +76,7 @@ h6 { font-size: 0.75rem !important; }
         <!--end::Container-->
       </nav>
       <!--end::Header-->
-      <!--begin::Sidebar-->
       <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-          <!--begin::Brand Link-->
            <a href="{{ route('home') }}" class="brand-link d-flex justify-content-center align-items-center">
                 <img src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" class="custom-logo">
             </a>
@@ -201,19 +84,12 @@ h6 { font-size: 0.75rem !important; }
         <!--begin::Sidebar Wrapper-->
         <div class="sidebar-wrapper">
           <nav class="mt-2">
-            <!--begin::Sidebar Menu-->
-            <ul
-              class="nav sidebar-menu flex-column"
-              data-lte-toggle="treeview"
-              role="navigation"
-              aria-label="Main navigation"
-              data-accordion="false"
-              id="navigation"
-            >
+
+            <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="navigation" aria-label="Main navigation" data-accordion="false" id="navigation">
               <!-- Menu for Logged In Users -->
                     @auth
 
-     <!-- Coordinator Dashboard Menu Item -->
+                        <!-- Coordinator Dashboard Menu Item -->
                         <li class="nav-item">
                             <a href="{{ route('coordinators.viewprofile') }}" class="nav-link {{ Request::is('viewprofile') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-speedometer2"></i>
@@ -464,7 +340,6 @@ h6 { font-size: 0.75rem !important; }
                         <!-- Admin Reports Menu Item -->
                         @php
                             if ($coordinatorCondition && $conferenceCoordinatorCondition) {
-                                // $adminReportsRoute = route('adminreports.paymentlog');
                                 $adminReportsRoute = route('adminreports.maillog');
                             }
                             $activeAdminReportsRoutes = [
@@ -495,9 +370,6 @@ h6 { font-size: 0.75rem !important; }
                         @if (isset($userReportsRoute))
                             <li class="nav-item">
                                 <a href="{{ $userReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeUserReportsRoutes) }}">
-                                {{-- <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em; font-size: 1.25em;">
-                                    <i class="nav-icon fas fa-clipboard-user"></i>
-                                </span> --}}
                                        <i class="nav-icon bi bi-person-fill-gear"></i>
                                     <p>User Reports</p>
                                 </a>
@@ -565,7 +437,7 @@ h6 { font-size: 0.75rem !important; }
                         <li class="nav-item">
                             <a href="{{ route('logout') }}" class="nav-link"
                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <i class="nav-icon bi bi-unlock-fill"></i>
+                                <i class="nav-icon bi bi-box-arrow-right"></i>
                                 <p>Logout</p>
                             </a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -636,13 +508,9 @@ h6 { font-size: 0.75rem !important; }
         <!--end::Sidebar Wrapper-->
       </aside>
       <!--end::Sidebar-->
-      <!--begin::App Main-->
       <main class="app-main">
-        <!--begin::App Content Header-->
         <div class="app-content-header">
-          <!--begin::Container-->
           <div class="container-fluid">
-            <!--begin::Row-->
             <div class="row">
               <div class="col-sm-6"><h2 class="mb-0">@yield('page_title')</h2></div>
               <div class="col-sm-6">
@@ -669,46 +537,40 @@ h6 { font-size: 0.75rem !important; }
       <!--end::App Main-->
       <!--begin::Footer-->
        <footer class="app-footer">
-        <!--begin::Copyright-->
             <strong>Copyright &copy;{{$currentYear}} <a href="https://momsclub.org/" target="_blank">MOMS Club</a>.</strong> All rights reserved.
-        <!--end::Copyright-->
       </footer>
       <!--end::Footer-->
     </div>
     <!--end::App Wrapper-->
 
-<!-- Vite Compiled Assets -->
+    <!-- Vite Compiled Assets -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/flash.js'])
 
-@include('layouts.scripts.alert')
-@include('layouts.scripts.boards')
-@include('layouts.scripts.boardreport')
-@include('layouts.scripts.boardactivate')
-@include('layouts.scripts.checkboxes')
-@include('layouts.scripts.coordinatorlist')
-@include('layouts.scripts.datatable')
-@include('layouts.scripts.datetime')
-@include('layouts.scripts.email')
-@include('layouts.scripts.export')
-@include('layouts.scripts.information')
-@include('layouts.scripts.irs')
-@include('layouts.scripts.masks')
-@include('layouts.scripts.menu')
-@include('layouts.scripts.password')
-@include('layouts.scripts.pdfviewer')
-@include('layouts.scripts.probation')
-@include('layouts.scripts.resources')
-@include('layouts.scripts.sendemail')
-@include('layouts.scripts.uploads')
-@include('layouts.scripts.useractions')
-@include('layouts.scripts.website')
+    @include('layouts.scripts.alert')
+    @include('layouts.scripts.boards')
+    @include('layouts.scripts.boardreport')
+    @include('layouts.scripts.boardactivate')
+    @include('layouts.scripts.checkboxes')
+    @include('layouts.scripts.coordinatorlist')
+    @include('layouts.scripts.datatable')
+    @include('layouts.scripts.datetime')
+    @include('layouts.scripts.email')
+    @include('layouts.scripts.export')
+    @include('layouts.scripts.information')
+    @include('layouts.scripts.irs')
+    @include('layouts.scripts.masks')
+    @include('layouts.scripts.menu')
+    @include('layouts.scripts.password')
+    @include('layouts.scripts.pdfviewer')
+    @include('layouts.scripts.probation')
+    @include('layouts.scripts.resources')
+    @include('layouts.scripts.sendemail')
+    @include('layouts.scripts.uploads')
+    @include('layouts.scripts.useractions')
+    @include('layouts.scripts.website')
 
-@yield('customscript')
-@stack('scripts')
-
-  </body>
-  <!--end::Body-->
-</html>
+    @yield('customscript')
+    @stack('scripts')
 
   </body>
   <!--end::Body-->

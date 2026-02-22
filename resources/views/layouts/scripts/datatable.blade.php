@@ -8,8 +8,15 @@ document.addEventListener('DOMContentLoaded', function() {
         "info": true,
         "autoWidth": false,
         "responsive": true,
-        "order": []
+        "order": [],
+        "layout": {
+            "topStart": "pageLength",
+            "topEnd": "search",
+            "bottomStart": "info",
+            "bottomEnd": "paging"
+        }
     });
+
     var coordinatorTable = $('#coordinatorlist').DataTable({
         "paging": true,
         "lengthChange": true,
@@ -18,7 +25,13 @@ document.addEventListener('DOMContentLoaded', function() {
         "info": true,
         "autoWidth": false,
         "responsive": true,
-        "order": []
+        "order": [],
+        "layout": {
+            "topStart": "pageLength",
+            "topEnd": "search",
+            "bottomStart": "info",
+            "bottomEnd": "paging"
+        }
     });
 
     applyDateMask();

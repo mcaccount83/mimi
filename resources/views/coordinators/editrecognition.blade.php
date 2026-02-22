@@ -2,14 +2,7 @@
 
 @section('page_title', 'Coordinator Details')
 @section('breadcrumb', 'Appreciation & Recognition')
-<style>
-.disabled-link {
-    pointer-events: none; /* Prevent click events */
-    cursor: default; /* Change cursor to default */
-    color: #343a40; /* Font color */
-}
 
-</style>
 @section('content')
     <!-- Main content -->
     <form class="form-horizontal" method="POST" action='{{ route("coordinators.updaterecognition",$cdDetails->id) }}'>
@@ -19,9 +12,8 @@
         <div class="row">
           <div class="col-md-4">
 
-            <!-- Profile Image -->
             <div class="card card-primary card-outline">
-                <div class="card-body">
+                 <div class="card-body">
                     <div class="card-header text-center bg-transparent">
                         <h3 class="mb-0">{{ $cdDetails->first_name }}, {{ $cdDetails->last_name }}</h3>
                         <p class="mb-0">{{ $conferenceDescription }} Conference
@@ -31,38 +23,67 @@
                         </p>
                     </div>
                   <ul class="list-group list-group-flush mb-3">
-                      <li class="list-group-item mt-2">
-                          <b>Supervising Coordinator:</b> <span class="float-end">{{ $ReportTo }}</span>
-                          <br>
-                          <b>Display Position:</b> <span class="float-end">{{ $displayPosition->long_title }}</span>
-                        <br>
-                        <b>MIMI Position:</b> <span class="float-end">{{ $mimiPosition?->long_title }}</span>
-                          <br>
-                          <div style="display: flex; justify-content: space-between;">
-                            <b>Secondary Positions:</b>
-                            <span style="text-align: right;">
+                      <li class="list-group-item">
+                          <div class="row">
+                            <div class="col-auto fw-bold">Supervising Coordinator:</div>
+                            <div class="col text-end">
+                                <a href="mailto:{{ $cdDetails->reportsTo?->email }}">{{ $ReportTo }} </a>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-auto fw-bold">Primary Position:</div>
+                            <div class="col text-end">
+                                {{ $displayPosition->long_title }}
+                           </div>
+                          </div>
+                        <div class="row">
+                            <div class="col-auto fw-bold">MIMI Position: <a href="javascript:void(0);" onclick="showPositionInformation()" title="Show Position Information">
+                            <i class="bi bi-question-circle text-primary"></i></a></div>
+                            <div class="col text-end">{{ $mimiPosition?->long_title }}</span>
+                        </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-auto fw-bold">Secondary Positions:</div>
+                            <div class="col text-end">
                                 @forelse($cdDetails->secondaryPosition as $position)
                                     {{ $position->long_title }}@if(!$loop->last)<br>@endif
                                 @empty
                                     None
                                 @endforelse
-                            </span>
-                        </div>
-                        @if ($ITCondition)
-                        <b>MIMI Admin:</b> <span class="float-end">{{ $cdAdminRole->admin_role }}</span>
+                            </div>
+                          </div>
+                           @if ($ITCondition)
+                        <div class="row">
+                            <div class="col-auto fw-bold">MIMI Admin:</div>
+                            <div class="col text-end">
+                                {{ $cdAdminRole->admin_role }}
+                                </div>
+                          </div>
                         @endif
-
                       </li>
                       <li class="list-group-item mt-2">
-                          <b>Start Date:</b> <span class="float-end date-mask">{{ $cdDetails->coordinator_start_date }}</span>
-                          <br>
-                          <b>Last Promotion Date:</b> <span class="float-end date-mask">{{ $cdDetails->last_promoted }}</span>
-                          <br>
-                          <b>Home Chapter:</b><span class="float-end">{{ $cdDetails->home_chapter }}</span>
-                          <br>
+                          <div class="row">
+                            <div class="col-auto fw-bold">Start Date:</div>
+                            <div class="col text-end">
+                                {{ $cdDetails->coordinator_start_date }}
+                                </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-auto fw-bold">Last Promotion Date:</div>
+                            <div class="col text-end">
+                                {{ $cdDetails->last_promoted }}
+                           </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-auto fw-bold">Home Chapter:</div>
+                            <div class="col text-end">
+                                {{ $cdDetails->home_chapter }}
+                                 </div>
+                          </div>
                       </li>
-                  </ul>
-                 <div class="text-center">
+
+                <li class="list-group-item">
+               <div class="text-center">
                      @if ($cdDetails->active_status == 1 && $cdDetails->on_leave == 1)
                         <b><span style="color: #ff851b;">Coordinator is ON LEAVE</span></b>
                         <br>
@@ -82,8 +103,10 @@
                             {{ $cdDetails->reason_retired }}
                         @endif
                     @endif
-                </div>
-                </div>
+                 </div>
+                </li>
+                  </ul>
+              </div>
               <!-- /.card-body -->
             </div>
             <!-- /.card -->
@@ -93,9 +116,12 @@
           <div class="col-md-8">
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile">
-                <h3 class="profile-username">Appreciation & Recognition Information</h3>
+                <div class="card-header bg-transparent border-0">
+                <h3>Appreciation & Recognition Information</h3>
+                    </div>
                     <!-- /.card-header -->
-                    <div class="row mb-3">
+                    <div class="card-body">
+                    <div class="row mb-1">
                         <div class="col-md-12 d-flex align-items-center">
                             <label class="col-sm-1 col-form-label"></label>
                             <label class="col-sm-3 col-form-label">Recognition Gift</label>
@@ -105,7 +131,7 @@
                         </div>
                     </div>
 
-                    <div class="row mb-3">
+                    <div class="row mb-1">
                         <div class="col-md-12 d-flex align-items-center">
                             <label class="col-sm-1 col-form-label">&lt; 1 Year:</label>
                             <div class="col-sm-3">
@@ -141,7 +167,7 @@
 
                         </div>
                     </div>
-                    <div class="row mb-3">
+                    <div class="row mb-1">
                         <div class="col-md-12 d-flex align-items-center">
                             <label class="col-sm-1 col-form-label">2 Years:</label>
                             <div class="col-sm-3">
@@ -177,7 +203,7 @@
 
                         </div>
                     </div>
-                    <div class="row mb-3">
+                    <div class="row mb-1">
                         <div class="col-md-12 d-flex align-items-center">
                             <label class="col-sm-1 col-form-label">4 Years:</label>
                             <div class="col-sm-3">
@@ -210,10 +236,9 @@
                             <div class="col-sm-1 me-5">
                                 <input type="text" name="year5"class="form-control" value="{{ $cdDetails->recognition->year5 }}" >
                             </div>
-
                         </div>
                     </div>
-                    <div class="row mb-3">
+                    <div class="row mb-1">
                         <div class="col-md-12 d-flex align-items-center">
                             <label class="col-sm-1 col-form-label">6 Years:</label>
                             <div class="col-sm-3">
@@ -249,7 +274,7 @@
 
                         </div>
                     </div>
-                    <div class="row mb-3">
+                    <div class="row mb-1">
                         <div class="col-md-12 d-flex align-items-center">
                             <label class="col-sm-1 col-form-label">8 Years:</label>
                             <div class="col-sm-3">
@@ -286,16 +311,7 @@
                         </div>
                     </div>
 
-                    {{-- <div class="row mb-3">
-                        <div class="col-md-12 d-flex align-items-center">
-                            <label class="col-sm-2 col-form-label">10 Years+ or Top Tier:</label>
-                            <div class="col-sm-9">
-                                <input type="text" name="recognition_toptier"class="form-control" value="{{ $cdDetails->recognition->recognition_toptier }}" >
-                            </div>
-                        </div>
-                    </div> --}}
-
-                    <div class="row mb-3">
+                    <div class="row mb-1">
                         <div class="col-md-12 d-flex align-items-center">
                             <label class="col-sm-2 col-form-label">10 Years+ or Top Tier:</label>
                             <div class="col-sm-9">
@@ -304,7 +320,7 @@
                     </div>
                 </div>
 
-                <div class="row mb-3">
+                <div class="row mb-1">
                     <div class="col-md-12 d-flex align-items-center">
                         <label class="ms-2 col-form-label me-2">MC Gold Pin:</label>
                             <div class="form-check form-switch">
@@ -315,8 +331,7 @@
                         </div>
                     </div>
 
-
-                    <div class="row mb-3">
+                    <div class="row mb-1">
                         <div class="col-md-12 d-flex align-items-center">
                             <label class="ms-2 col-form-label me-2">MC Necklace:</label>
                                 <div class="form-check form-switch">

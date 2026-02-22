@@ -18,7 +18,7 @@
                             @include('layouts.dropdown_menus.menu_reports_tech')
                         </div>
                         <div class="card-tools">
-                            <button class="btn btn-success bg-gradient btn-sm mb-2" onclick="addNewRow()">
+                            <button class="btn btn-success bg-gradient btn-sm" onclick="addNewRow()">
                                 <i class="bi bi-plus me-2"></i> Add Conference
                             </button>
                         </div>
@@ -139,10 +139,10 @@ function editRow(button) {
 
     // Change buttons
     row.querySelector('.table-actions').innerHTML = `
-        <button class="btn btn-success bg-gradient btn-sm mb-2" onclick="saveRow(this)">
+        <button class="btn btn-success bg-gradient btn-sm" onclick="saveRow(this)">
             <i class="bi bi-floppy-fill me-2"></i>Save
         </button>
-        <button class="btn btn-secondary bg-gradient btn-sm mb-2" onclick="cancelEdit(this.closest('tr'))">
+        <button class="btn btn-secondary bg-gradient btn-sm" onclick="cancelEdit(this.closest('tr'))">
             <i class="bi bi-x-lg me-2"></i>Cancel
         </button>
     `;
@@ -271,10 +271,10 @@ function addNewRow() {
             <input type="text" class="form-control form-control-sm" placeholder="Abbreviation">
         </td>
         <td class="table-actions">
-            <button class="btn btn-success bg-gradient btn-sm mb-2" onclick="saveNewRow(this)">
+            <button class="btn btn-success bg-gradient btn-sm" onclick="saveNewRow(this)">
                 <i class="bi bi-floppy-fill me-2"></i>Save
             </button>
-            <button class="btn btn-secondary bg-gradient btn-sm mb-2" onclick="cancelEdit(this.closest('tr'))">
+            <button class="btn btn-secondary bg-gradient btn-sm" onclick="cancelEdit(this.closest('tr'))">
                 <i class="bi bi-x-lg me-2"></i>Cancel
             </button>
         </td>

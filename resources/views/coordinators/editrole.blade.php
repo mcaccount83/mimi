@@ -27,18 +27,16 @@
             <input type="hidden" name="OldAdmin" value="{{$cdUserAdmin}}">
             <input type="hidden" name="CoordinatorPromoteDateNew" id="CoordinatorPromoteDateNew" value="{{$cdDetails->last_promoted}}"/>
 
-            <!-- Profile Image -->
             <div class="card card-primary card-outline">
-              <div class="card-body">
+               <div class="card-body">
                     <div class="card-header text-center bg-transparent">
                         <h3 class="mb-0">{{ $cdDetails->first_name }}, {{ $cdDetails->last_name }}</h3>
                         <p class="mb-0">{{ $conferenceDescription }} Conference
                         </p>
                     </div>
-                <ul class="list-group list-group-flush mb-3">
-                    <li class="list-group-item mt-2">
-
-                        <div class="row align-items-center">
+                  <ul class="list-group list-group-flush mb-3">
+                      <li class="list-group-item">
+                       <div class="row align-items-center">
                             <div class="col-sm-6 mt-1">
                                 <label class="col-form-label">Region:</label>
                             </div>
@@ -148,10 +146,9 @@
                                 </div>
                             </div>
                         @endif
+                      </li>
 
-                    </li>
-
-                </ul>
+                <li class="list-group-item">
                <div class="text-center">
                      @if ($cdDetails->active_status == 1 && $cdDetails->on_leave == 1)
                         <b><span style="color: #ff851b;">Coordinator is ON LEAVE</span></b>
@@ -172,7 +169,9 @@
                             {{ $cdDetails->reason_retired }}
                         @endif
                     @endif
-                </div>
+                 </div>
+                </li>
+                  </ul>
               </div>
               <!-- /.card-body -->
             </div>
@@ -182,9 +181,12 @@
 
           <div class="col-md-8">
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                <h3 class="profile-username">Chapters & Coordinators</h3>
+                <div class="card-body">
+                <div class="card-header bg-transparent border-0">
+                <h3">Chapters & Coordinators</h3>
+                     </div>
                     <!-- /.card-header -->
+                    <div class="card-body">
                         <div class="row">
                                 <div class="col-sm-6">
                             <div class="mb-3">
@@ -233,7 +235,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" id="AssignCoordinator" disabled onclick="AddCoordinator()">Assign Coordinator</button>
+                        <button type="button" class="btn btn-primary bg-gradient btn-sm" id="AssignCoordinator" disabled onclick="AddCoordinator()">Assign Coordinator</button>
                 </div>
 
 
@@ -285,20 +287,22 @@
                             @endforeach
                         </select>
                     </div>
-                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" id="AssignChapter" disabled onclick="AddChapter()">Assign Chapter</button>
+                    <button type="button" class="btn btn-primary bg-gradient btn-sm" id="AssignChapter" disabled onclick="AddChapter()">Assign Chapter</button>
                 </div>
                         </div>
+
+                     </div>
                     </div>
               <!-- /.card-body -->
-           </div>
+                        </div>
             <!-- /.card -->
-          </div>
+                      </div>
           <!-- /.col -->
           <div class="col-md-12">
             <div class="card-body text-center mt-3">
                 <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save Changes</button>
-                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.view', ['id' => $cdDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-people-fill me-2">Back to Coordinator Details</button>
-            </div>
+                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.view', ['id' => $cdDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-people-fill me-2"></i>Back to Coordinator Details</button>
+ </div>
         </div>
         </div>
         <!-- /.row -->

@@ -266,7 +266,7 @@ class BaseChapterController extends Controller
      */
     public function getChapterDetails($chId)
     {
-        $chDetails = Chapters::with(['country', 'state', 'documents', 'financialReport', 'startMonth', 'primaryCoordinator',
+        $chDetails = Chapters::with(['country', 'state', 'documents', 'financialReport', 'financialReportReview','startMonth', 'primaryCoordinator',
             'payments', 'probation', 'financialReportFinal', 'documentsEOY'])->find($chId);
         $chActiveId = $chDetails->active_status;
         $chActiveStatus = $chDetails->activeStatus->active_status;
@@ -295,6 +295,7 @@ class BaseChapterController extends Controller
         $reviewComplete = $chDetails->documentsEOY?->review_complete ?? null;
         $chFinancialReport = $chDetails->financialReport;
         $chFinancialReportFinal = $chDetails->financialReportFinal;
+        $financialReportReview = $chDetails->financialReportReview;
 
         $allActive = ActiveStatus::all();  // Full List for Dropdown Menu
         $allStatuses = Status::all();  // Full List for Dropdown Menu
@@ -336,7 +337,7 @@ class BaseChapterController extends Controller
             'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'pcList' => $pcList, 'rrList' => $rrList, 'emailCCData' => $emailCCData, 'chActiveStatus' => $chActiveStatus,
             'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC, 'emailPC' => $emailPC, 'cc_id' => $cc_id,
             'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink, 'pcName' => $pcName, 'probationReason' => $probationReason,
-            'allMonths' => $allMonths, 'pcDetails' => $pcDetails, 'allProbation' => $allProbation,
+            'allMonths' => $allMonths, 'pcDetails' => $pcDetails, 'allProbation' => $allProbation, 'financialReportReview' => $financialReportReview
         ];
     }
 

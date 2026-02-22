@@ -111,8 +111,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success bg-gradient btn-sm mb-2" id="saveEmailBtn">Save</button>
-                <button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success bg-gradient btn-sm" id="saveEmailBtn">Save</button>
+                <button type="button" class="btn btn-danger bg-gradient btn-sm" data-bs-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>

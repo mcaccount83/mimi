@@ -59,8 +59,9 @@
                   </tbody>
                 </table>
                 </div>
-
                 <!-- /.card-body -->
+
+                <div class="card-body">
                 <div class="col-sm-12">
                     <div class="form-check form-switch">
                         <input type="checkbox" name="showPrimary" id="showPrimary" class="form-check-input" {{ $checkBox1Status ? 'checked' : '' }} onchange="showPrimary()" />

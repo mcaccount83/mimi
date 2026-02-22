@@ -6,11 +6,11 @@
             <div class="col-md-12">
 
                 <div class="col-md-12">
-         <div class="card card-widget widget-user">
-            <div class="widget-user-header bg-primary">
-                <div class="widget-user-image">
-                    <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" style="width: 115px; height: 115px;">
-                  </div>
+            <div class="card">
+                <div class="card bg-primary">
+                    <div class="card-body text-center">
+                        <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" style="width: 115px; height: 115px;">
+                    </div>
                 </div>
                 <div class="card-body">
 
@@ -54,9 +54,9 @@
                                     Review not Complete<br>
                                 @endif
                             @endif
-                            <button type="button" class="btn btn-primary bg-gradient btn-xs mb-1 mt-1 keep-enabled" onclick="window.location.href='{{ route('board.viewgrantdetails', ['id' => $grant->id]) }}'"></i>View Grant Details</button>
+                            <button type="button" class="btn btn-primary bg-gradient btn-xs keep-enabled" onclick="window.location.href='{{ route('board.viewgrantdetails', ['id' => $grant->id]) }}'"></i>View Grant Details</button>
                             @if ($grant->submitted == '1')
-                                <button type="button" id="btn-download-pdf" class="btn bg-primary btn-xs mb-1 mt-1 keep-enabled" onclick="openPdfViewer('{{ $grant->grant_pdf_path  }}')">View/Download PDF</button>
+                                <button type="button" id="btn-download-pdf" class="btn bg-primary btn-xs keep-enabled" onclick="openPdfViewer('{{ $grant->grant_pdf_path  }}')">View/Download PDF</button>
                             @endif
                         </div>
                     </div>

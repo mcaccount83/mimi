@@ -302,11 +302,17 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getFinancialReportData($chEOYDocuments, $chFinancialReport, $reviewer_email_message)
+    public function getFinancialReportData($chFinancialReport)
     {
         return [
             'completedName' => $chFinancialReport->completed_name ?? null,
             'completedEmail' => $chFinancialReport->completed_email ?? null,
+        ];
+    }
+
+    public function getFinancialDocumentsData($chEOYDocuments)
+    {
+        return [
             'boardElectionReportReceived' => $chEOYDocuments->new_board_submitted,
             'financialReportReceived' => $chEOYDocuments->financial_report_received,
             '990NSubmissionReceived' => $chEOYDocuments->irs_verified,
@@ -316,11 +322,18 @@ class BaseMailDataController extends Controller
             'statement1Path' => $chEOYDocuments->statement_1_path,
             'statement2Path' => $chEOYDocuments->statement_2_path,
             'financialPdfPath' => $chEOYDocuments->financial_pdf_path,
-            'reviewerEmailMessage' => $reviewer_email_message,
             'final_report_received' => $chEOYDocuments->final_report_received,
             'financialFinalPdfPath' => $chEOYDocuments->final_financial_pdf_path,
         ];
     }
+
+    public function getFinancialReportReviewData($reviewer_email_message)
+    {
+        return [
+            'reviewerEmailMessage' => $reviewer_email_message,
+        ];
+    }
+
 
     public function getPaymentData($chPayments, $input, $paymentType)
     {

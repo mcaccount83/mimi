@@ -4,14 +4,12 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-         <!-- Widget: user widget style 1 -->
-         <div class="card card-widget widget-user">
-            <!-- Add the bg color to the header using any of the bg-* classes -->
-            <div class="widget-user-header bg-primary">
-                <div class="widget-user-image">
-                    <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" style="width: 115px; height: 115px;">
-                  </div>
+                <div class="card">
+                    <div class="card bg-primary">
+                        <div class="card-body text-center">
+                            <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" style="width: 115px; height: 115px;">
                         </div>
+                    </div>
                         <div class="card-body">
 
                             <div class="col-md-12"><br><br></div>

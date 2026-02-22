@@ -17,14 +17,13 @@
                         <input type="hidden" id="ch_sec_email_chk" value="{{ $SECDetails->email }}">
 
                         <div class="col-md-12">
-                            <div class="card card-widget widget-user">
-                                <div class="widget-user-header bg-primary">
-                                    <div class="widget-user-image">
+                            <div class="card">
+                                <div class="card bg-primary">
+                                    <div class="card-body text-center">
                                         <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" style="width: 115px; height: 115px;">
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    <div class="col-md-12"><br><br></div>
                                     <h2 class="text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h2>
 
                                     @if ($bdPositionId == \App\Enums\BoardPosition::PRES)
@@ -51,21 +50,24 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         <!-- /.card -->
+                        </div>
                     </div>
                 </div>
 
     <div class="row">
             <div class="col-md-8">
                 <div class="card card-primary card-outline">
-                    <div class="card-body box-profile">
-                         <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="card-header bg-transparent border-0">
+                            <h3>Board Members</h3>
+                        </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
                     <div class="row">
                         <div class="col-md-12">
 
-                            <h5>Board Members</h5>
-                    <!-- /.form group -->
+                        <!-- President -->
                         <div class="row mb-3">
                             <label class="col-sm-2 mb-1 col-form-label">President:</label>
                             <div class="col-sm-5 mb-1">
@@ -116,7 +118,7 @@
                             </div>
                         </div>
 
-                        <!-- /.form group -->
+                        <!-- aVP -->
                         <div class="row mb-3">
                             <label class="col-sm-2 mb-1 col-form-label">AVP:</label>
                             <div class="col-sm-10 mt-1 form-check form-switch">
@@ -174,7 +176,7 @@
                         </div>
                     </div>
 
-                         <!-- /.form group -->
+                         <!-- MVP -->
                          <div class="row mb-3">
                             <label class="col-sm-2 mb-1 col-form-label">MVP:</label>
                             <div class="col-sm-10 mt-1 form-check form-switch">
@@ -232,7 +234,7 @@
                         </div>
                     </div>
 
-                        <!-- /.form group -->
+                        <!-- Treaasurer -->
                         <div class="row mb-3">
                             <label class="col-sm-2 mb-1 col-form-label">Treasurer:</label>
                             <div class="col-sm-10 mt-1 form-check form-switch">
@@ -290,7 +292,7 @@
                         </div>
                     </div>
 
-                        <!-- /.form group -->
+                        <!-- Secretary -->
                         <div class="row mb-3">
                             <label class="col-sm-2 mb-1 col-form-label">Secretary:</label>
                             <div class="col-sm-10 mt-1 form-check form-switch">
@@ -349,8 +351,11 @@
                     </div>
                         <hr>
 
-                        <h5>Contact Info</h5>
-                        <!-- /.form group -->
+                        </div><div class="card-header bg-transparent border-0">
+                            <h3>Contact Info</h3>
+                        </div>
+                <!-- /.card-header -->
+                    <div class="card-body">
                         <div class="row mb-3">
                             <label class="col-sm-2 col-form-label">Email:</label>
                             <div class="col-sm-5">
@@ -368,9 +373,14 @@
                             </div>
 
                         </div>
-
+                    </div>
                         <hr>
-                        <h5>Website & Social Media</h5>
+
+                         </div><div class="card-header bg-transparent border-0">
+                            <h3>Website & Social Media</h3>
+                        </div>
+                <!-- /.card-header -->
+                    <div class="card-body">
                          <!-- URL Field -->
                         <div class="row mb-3">
                             <label class="col-sm-2 col-form-label">Website:</label>
@@ -416,7 +426,6 @@
                                 <input type="text" name="ch_social3" id="ch_social3" class="form-control" value="{{ $chDetails->social3 }}"  placeholder="Instagram" >
                             </div>
                         </div>
-
                     </div>
                 </div>
 
@@ -430,187 +439,191 @@
             <div class="col-md-4">
                 <!-- Profile Image -->
                 <div class="card card-primary card-outline">
-                    <div class="card-body box-profile">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">EIN:</label>
-                            <div class="col-sm-8">
-                                <span class="float-end">{{ $chDetails->ein}}</span>
+                    <div class="card-body">
+                          <div class="card-header bg-transparent border-0">
+                            <h3>Chapter Information</h3>
+                        </div>
+                    <!-- /.card-header -->
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-auto fw-bold">EIN:</div>
+                            <div class="col text-end">
+                                {{ $chDetails->ein}}
                             </div>
                         </div>
-
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Founded:</label>
-                            <div class="col-sm-8">
-                                <span class="float-end">{{ $startMonthName }} {{ $chDetails->start_year }}</span>
+                        <div class="row">
+                            <div class="col-auto fw-bold">Founded:</div>
+                            <div class="col text-end">
+                                {{ $startMonthName }} {{ $chDetails->start_year }}
                             </div>
                         </div>
-
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Boundaries:</label>
-                            <div class="col-sm-8">
-                                <span class="float-end">{{ $chDetails->territory}}</span>
+                         <div class="row">
+                            <div class="col-auto fw-bold">Boundaries:</div>
+                            <div class="col text-end">
+                                {{ $chDetails->territory}}
                             </div>
                         </div>
-
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Dues Paid:</label>
-                            <div class="col-sm-8">
-                                <span class="float-end">
+                        <div class="row">
+                            <div class="col-auto fw-bold">Dues Paid:</div>
+                            <div class="col text-end">
                                     @if ($chPayments->rereg_members)
                                         <b>{{ $chPayments->rereg_members }} Members</b> on <b>{{\Illuminate\Support\Carbon::parse($chPayments->rereg_date)->format('m/d/Y')}}</b>
                                     @else
                                         N/A
                                     @endif
-                                </span>
                             </div>
                         </div>
-
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">M2M Donation:</label>
-                            <div class="col-sm-8">
-                                <span class="float-end">
+                       <div class="row">
+                            <div class="col-auto fw-bold">M2M Donation:</div>
+                            <div class="col text-end">
                                     @if ($chPayments->m2m_donation)
                                         <b>${{ $chPayments->m2m_donation }}</b> on <b>{{\Illuminate\Support\Carbon::parse($chPayments->m2m_date)->format('m/d/Y')}}</b>
                                     @else
                                         N/A
                                     @endif
-                                </span>
                             </div>
                         </div>
-
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Sustaining Donation:</label>
-                            <div class="col-sm-8">
-                                <span class="float-end">
+                        <div class="row">
+                            <div class="col-auto fw-bold">Sustaining Donation:</div>
+                            <div class="col text-end">
                                     @if ($chPayments->sustaining_donation)
                                         <b>${{ $chPayments->sustaining_donation }}</b> on <b>{{\Illuminate\Support\Carbon::parse($chPayments->sustaining_date)->format('m/d/Y')}}</b>
                                     @else
                                         N/A
                                     @endif
-                                </span>
                             </div>
                         </div>
-
-                        <span style="color: red;">If anything in this section needs to be updated, please contact your Primary Coordinator.</span><br>
-
-                        <ul class="list-group list-group-flush mb-3">
-                            <li class="list-group-item mt-2">
-
-                        <h5>Payments/Donations</h5>
-
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Anniversary Month</label>
-                            <div class="col-sm-8">
-                                <span class="float-end">{{ $startMonthName }}</span>
-                            </div>
+                        <div class="col-sm-12">
+                            <span style="color: red;">If anything in this section needs to be updated, please contact your Primary Coordinator.</span><br>
                         </div>
 
+                        <li class="list-group-item">
+                        <h3>Payments/Donations</h3>
+                       <div class="row">
+                            <div class="col-auto fw-bold">Anniversary Month</div>
+                            <div class="col text-end">
+                                {{ $startMonthName }}
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
                         @if ($currentDate->gte($due_date))
-                            @if ($due_date->month == $currentDate->month)
-                                <span style="color: green;">Your Re-registration payment is due now.</span><br>
+                                @if ($due_date->month == $currentDate->month)
+                                    <span style="color: green;">Your Re-registration payment is due now.</span><br>
+                                @else
+                                    <span style="color: red;">Your Re-registration payment is now considered overdue.</span><br>
+                                @endif
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('board.editreregpayment', ['id' => $chDetails->id]) }}'">PAY HERE</button>
                             @else
-                                <span style="color: red;">Your Re-registration payment is now considered overdue.</span><br>
+                                Your Re-registration payment is not due at this time.
                             @endif
-                                <button type="button" class="btn btn-primary bg-gradient btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('board.editreregpayment', ['id' => $chDetails->id]) }}'">PAY HERE</button>
-                        @else
-                            Your Re-registration payment is not due at this time.
-                        @endif
-                        <br>
-                        <br>
+                        </div>
+                        <div class="col-sm-12">
                             You can make a Mother-To-Mother Fund or Sustaining Chapter donation at any time.<br>
                             <button type="button" class="btn btn-primary bg-gradient btn-sm mt-1 mb-1" onclick="window.location.href='{{ route('board.editdonate', ['id' => $chDetails->id]) }}'">DONATE HERE</button>
-                        </li>
+                        </div>
+                    </li>
 
-                      <li class="list-group-item mt-2">
-                        <h5>Document Center</h5>
+                      <li class="list-group-item">
+                        <h3>Document Center</h3>
+                        <div class="col-sm-12">
                             @if($chDocuments->ein_letter_path != null)
-                                <button type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-2" onclick="openPdfViewer('{{ $chDocuments->ein_letter_path }}')">EIN Letter</button><br>
+                                <button type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="openPdfViewer('{{ $chDocuments->ein_letter_path }}')">EIN Letter</button><br>
                             @else
-                                <button type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm disabled " disabled>No EIN Letter on File</button><br>
+                                <button type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled " disabled>No EIN Letter on File</button><br>
                             @endif
-                            <button id="GoodStanding" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-2" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}', '_blank')">Chapter in Good Standing</button><br>
+                            <button id="GoodStanding" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}', '_blank')">Chapter in Good Standing</button><br>
                             @if($chDocuments->probation_path != null)
-                                <button type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-2" onclick="openPdfViewer('{{ $chDocuments->probation_path }}')">Probation Letter</button><br>
+                                <button type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="openPdfViewer('{{ $chDocuments->probation_path }}')">Probation Letter</button><br>
                             @endif
                             @if($chDocuments->probation_release_path != null)
-                                <button type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-2" onclick="openPdfViewer('{{ $chDocuments->probation_release_path }}')">Probation Release Letter</button><br>
+                                <button type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="openPdfViewer('{{ $chDocuments->probation_release_path }}')">Probation Release Letter</button><br>
                             @endif
                             @if($chDetails->probation_id == '3')
-                                <button type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-2" onclick="window.location.href='{{ route('board.editprobation', ['id' => $chDetails->id]) }}'">Quarterly Financial Submission</button>
+                                <button type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location.href='{{ route('board.editprobation', ['id' => $chDetails->id]) }}'">Quarterly Financial Submission</button>
                             @endif
+                        </div>
                       </li>
 
-                      <li class="list-group-item mt-2">
-                        <h5>Resources</h5>
-                            <button id="Resources" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-2" onclick="window.location='{{ route('board.viewresources', ['id' => $chDetails->id]) }}'">Chapter Resources</button><br>
-                            <button id="Resources" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-2" onclick="window.location='{{ route('board.viewelearning', ['id' => $chDetails->id]) }}'">eLearning Library</button><br>
-                            {{-- <button id="Resources" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-2" onclick="window.location='{{ route('board.viewgrantrequestlist', ['id' => $chDetails->id]) }}'">Chapter Grants List</button><br> --}}
-                            {{-- <button id="eLearning" type="button"  onclick="window.open('https://momsclub.org/elearning/')" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-2">eLearning Library</button><br> --}}
-
+                      <li class="list-group-item">
+                        <h3>Resources</h3>
+                        <div class="col-sm-12">
+                            <button id="Resources" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location='{{ route('board.viewresources', ['id' => $chDetails->id]) }}'">Chapter Resources</button><br>
+                            <button id="Resources" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location='{{ route('board.viewelearning', ['id' => $chDetails->id]) }}'">eLearning Library</button><br>
+                        </div>
                         </li>
 
-                      <li class="list-group-item mt-2">
-                            <h5>End of Year Filing</h5>
-
+                      <li class="list-group-item">
+                            <h3>End of Year Filing</h3>
+                            <div class="col-sm-12">
                             @if($userTypeId == \App\Enums\UserTypeEnum::COORD && $chEOYDocuments->new_board_active!='1')
                                 @if($displayTESTING)
-                                    <button id="BoardReport" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-2" onclick="window.location.href='{{ route('board.editboardreport', ['id' => $chDetails->id]) }}'">
+                                    <button id="BoardReport" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location.href='{{ route('board.editboardreport', ['id' => $chDetails->id]) }}'">
                                         {{ $boardReportName }} *TESTING*
                                     </button><br>
                                 @elseif ($displayBoardRptLIVE)
-                                    <button id="BoardReport" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-2" onclick="window.location.href='{{ route('board.editboardreport', ['id' => $chDetails->id]) }}'">
+                                    <button id="BoardReport" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location.href='{{ route('board.editboardreport', ['id' => $chDetails->id]) }}'">
                                         {{ $boardReportName }}
                                     </button><br>
                                 @else
-                                    <button id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-2 disabled" disabled>Board Report Not Available</button><br>
+                                    <button id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>Board Report Not Available</button><br>
                                 @endif
                             @elseif($userTypeId == \App\Enums\UserTypeEnum::COORD && $chEOYDocuments->new_board_active =='1')
                                 @if($displayTESTING)
-                                    <button id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-2 disabled" disabled>Board Report Activated *TESTING*</button><br>
+                                    <button id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>Board Report Activated *TESTING*</button><br>
                                 @else
-                                    <button id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-2 disabled" disabled>Board Report Activated</button><br>
+                                    <button id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>Board Report Activated</button><br>
                                 @endif
                                 @elseif ($displayBoardRptLIVE)
                                 @if($chEOYDocuments->new_board_active!='1')
-                                    <button id="BoardReport" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-2" onclick="window.location.href='{{ route('board.editboardreport', ['id' => $chDetails->id]) }}'">
+                                    <button id="BoardReport" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location.href='{{ route('board.editboardreport', ['id' => $chDetails->id]) }}'">
                                         {{ $boardReportName }}
                                     </button><br>
                                 @else
-                                    <button id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-2 disabled" disabled>Board Report Activated</button><br>
+                                    <button id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>Board Report Activated</button><br>
                                 @endif
                             @else
-                                <button id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-2 disabled" disabled>Board Report Not Available</button><br>
+                                <button id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>Board Report Not Available</button><br>
                             @endif
 
                             @if($userTypeId == \App\Enums\UserTypeEnum::COORD)
                                 @if($displayTESTING)
-                                    <button id="FinancialReport" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-2" onclick="window.location.href='{{ route('board.editfinancialreport', ['id' => $chDetails->id]) }}'">
+                                    <button id="FinancialReport" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location.href='{{ route('board.editfinancialreport', ['id' => $chDetails->id]) }}'">
                                         {{ $financialReportName }} *TESTING*
                                     </button><br>
                                 @elseif (($displayFinancialRptLIVE))
-                                    <button id="FinancialReport" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-2" onclick="window.location.href='{{ route('board.editfinancialreport', ['id' => $chDetails->id]) }}'">
+                                    <button id="FinancialReport" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location.href='{{ route('board.editfinancialreport', ['id' => $chDetails->id]) }}'">
                                         {{ $financialReportName }}
                                     </button><br>
                                 @else
-                                    <button id="990NLink" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-2 disabled" disabled>Financial Report Not Available</button>
+                                    <button id="990NLink" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>Financial Report Not Available</button>
                                 @endif
                             @elseif($displayFinancialRptLIVE)
-                                <button id="FinancialReport" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-2" onclick="window.location.href='{{ route('board.editfinancialreport', ['id' => $chDetails->id]) }}'">
+                                <button id="FinancialReport" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location.href='{{ route('board.editfinancialreport', ['id' => $chDetails->id]) }}'">
                                     {{ $financialReportName }}
                                 </button><br>
                             @else
-                                <button id="FinancialReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-2 disabled" disabled>Financial Report Not Available</button><br>
+                                <button id="FinancialReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>Financial Report Not Available</button><br>
                             @endif
 
                              @if($displayEINInstructionsLIVE)
                                 <a href="https://sa.www4.irs.gov/sso/ial1?resumePath=%2Fas%2F5Ad0mGlkzW%2Fresume%2Fas%2Fauthorization.ping&allowInteraction=true&reauth=false&connectionId=SADIPACLIENT&REF=3C53421849B7D5B806E50960DF0AC7530889D9ADE9238D5D3B8B00000069&vnd_pi_requested_resource=https%3A%2F%2Fsa.www4.irs.gov%2Fepostcard%2F&vnd_pi_application_name=EPOSTCARD"
-                                    class="btn btn-primary bg-gradient bg-gradient btn-sm mb-2" target="_blank" >{{ $irsFilingName }}</a>
+                                    class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" target="_blank" >{{ $irsFilingName }}</a>
                             @else
-                                <button id="990NLink" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-2 disabled" disabled>990N Not Available Until July 1st</button>
+                                <button id="990NLink" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>990N Not Available Until July 1st</button>
                             @endif
+                        </div>
                     </li>
+                    <li class="list-group-item">
+                        <h3>Coordinators</h3>
+                            <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
+                            <input  type="hidden" id="pcid" value="{{ $chDetails->primary_coordinator_id}}">
+                            <div class="row mb-2">
+                          <span id="display_corlist"></span>
+                            </div>
+                        </li>
+
                   </ul>
-                  <h5>Coordinators</h5>
                   <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
                   <input  type="hidden" id="pcid" value="{{ $chDetails->primary_coordinator_id}}">
                   <div id="display_corlist" ></div>
@@ -628,7 +641,7 @@
 
     </form>
         <button id="Password" type="button" class="btn btn-primary bg-gradient mb-2" onclick="showChangePasswordAlert('{{ $borDetails->user_id }}')"><i class="bi bi-lock-fill me-2" ></i>Change Password</button>
-        <button id="logout-btn" class="btn btn-primary bg-gradient mb-2" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="bi bi-unlock-fill me-2" ></i>Logout</button>
+        <button id="logout-btn" class="btn btn-primary bg-gradient mb-2" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="bi bi-box-arrow-right me-2" ></i>Logout</button>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                 @csrf
             </form>

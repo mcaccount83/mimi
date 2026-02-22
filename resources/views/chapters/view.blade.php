@@ -28,10 +28,10 @@
                 @if ( $chDetails->ein == null && $conferenceCoordinatorCondition)
                     <br>
                     Apply for an EIN:
-                    <button class="btn btn-primary bg-gradient btn-sm ms-1" type="button" id="irs-ein" onclick="window.open('https://sa.www4.irs.gov/modiein/individual/index.jsp', '_blank')">Link to IRS</button>
+                    <button class="btn btn-primary bg-gradient btn-xs ms-1" type="button" id="irs-ein" onclick="window.open('https://sa.www4.irs.gov/modiein/individual/index.jsp', '_blank')">Link to IRS</button>
                     @foreach($resources as $resourceItem)
                     @if ($resourceItem->name == 'Applying for a Chapter EIN')
-                        <button class="btn btn-primary bg-gradient btn-sm ms-1" type="button" id="apply-ein" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">Instuctions</button>
+                        <button class="btn btn-primary bg-gradient btn-xs ms-1" type="button" id="apply-ein" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">Instuctions</button>
                     @endif
                     @endforeach
                 @endif
@@ -101,7 +101,7 @@
                    <li class="list-group-item">
                           <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
                             <div class="row mb-2">
-                          <span id="display_corlist" style="display: block; margin-top: 10px;"></span>
+                          <span id="display_corlist"></span>
                             </div>
                         </li>
                   <li class="list-group-item">
@@ -574,7 +574,7 @@
                                 <div class="col-sm-3">
                                     <label>990N Filing:</label>
                                 </div>
-                                @if ($chFinancialReport?->check_current_990N_verified_IRS == 1)
+                                @if ($chEOYDocuments->irs_verified == 1)
                                     <div class="col-sm-9">
                                         990N Filing was verified on the IRS website.
                                     </div>
@@ -604,7 +604,16 @@
                         @else
                             <strong>Report Status/Links are not available at this time.</strong>
                         @endif
-                        <br><br>
+
+                         <div class="row mb-2">
+                            <div class="col-sm-3">
+                                <label>Chapter Awards History:</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='{{ route('eoyreports.awardhistory', ['id' => $chDetails->id]) }}'">View Award History</button>
+                            </div>
+                        </div>
+
                       </div>
                     <!-- /.card-body -->
                 </div>

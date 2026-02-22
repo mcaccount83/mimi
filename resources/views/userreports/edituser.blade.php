@@ -20,16 +20,15 @@
         <div class="row">
           <div class="col-md-4">
 
-        <!-- Profile Image -->
             <div class="card card-primary card-outline">
-              <div class="card-body box-profile">
-
+              <div class="card-body">
 
                 <ul class="list-group list-group-flush mb-3">
-                    <li class="list-group-item mt-2">
-
-                          <div class="row mb-3">
-                            <label class="col-form-label col-sm-6">Active Status:</label>
+                    <li class="list-group-item">
+                           <div class="row align-items-center">
+                            <div class="col-sm-6 mt-1">
+                                <label class="col-form-label">Active Status:</label>
+                            </div>
                             <div class="col-sm-6">
                                 <select id="status" name="status" class="form-control float-end text-end"required>
                                     @foreach($AllUserStatus as $status)
@@ -41,8 +40,10 @@
                                 </select>
                             </div>
                         </div>
-                           <div class="row mb-3">
-                            <label class="col-form-label col-sm-6">User Type:</label>
+                           <div class="row align-items-center">
+                            <div class="col-sm-6 mt-1">
+                                <label class="col-form-label">User Type:</label>
+                             </div>
                             <div class="col-sm-6">
                                 <select id="type" name="type" class="form-control float-end text-end"required>
                                     @foreach($AllUserType as $type)
@@ -54,8 +55,10 @@
                                 </select>
                             </div>
                         </div>
-                           <div class="row mb-3">
-                            <label class="col-form-label col-sm-6">Admin Role:</label>
+                          <div class="row align-items-center">
+                            <div class="col-sm-6 mt-1">
+                                <label class="col-form-label">Admin Role:</label>
+                             </div>
                             <div class="col-sm-6">
                                 <select id="role" name="role" class="form-control float-end text-end"required>
                                     @foreach($AllAdminRole as $role)
@@ -67,9 +70,7 @@
                                 </select>
                             </div>
                         </div>
-
                     </li>
-
                </ul>
 
               </div>
@@ -81,9 +82,12 @@
 
           <div class="col-md-8">
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                <h3 class="profile-username">User Information</h3>
-                    <!-- /.card-header -->
+                <div class="card-body">
+                        <div class="card-header bg-transparent border-0">
+                <h3>User Information</h3>
+                      </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
                     <div class="row">
                         <div class="col-md-12">
                          <!-- /.form group -->
@@ -105,7 +109,9 @@
                         </div>
                         </div>
                     </div>
-                </div>
+
+                  </div>
+                    </div>
               <!-- /.card-body -->
                         </div>
             <!-- /.card -->
@@ -120,6 +126,7 @@
                     <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('userreports.usernoactiveboard') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-person-fill-gear me-2"></i>Back to Board User List</button>
                 @endif
             </div>
+        </div>
         </div>
         <!-- /.row -->
       </div><!-- /.container-fluid -->

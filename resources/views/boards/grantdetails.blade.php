@@ -16,12 +16,12 @@
             <div class="col-md-12">
 
                 <div class="col-md-12">
-         <div class="card card-widget widget-user">
-            <div class="widget-user-header bg-primary">
-                <div class="widget-user-image">
-                    <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" style="width: 115px; height: 115px;">
-                  </div>
-                </div>
+                <div class="card">
+                    <div class="card bg-primary">
+                        <div class="card-body text-center">
+                            <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" style="width: 115px; height: 115px;">
+                        </div>
+                    </div>
                 <div class="card-body">
 
                     <div class="col-md-12"><br><br></div>
@@ -422,7 +422,7 @@
                                     <label class="me-2">Photos of Damage Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $grantDetails['photos_path'] }}">View Photos</a><br>
                                     <strong style="color:red">Please Note</strong>
                                         This will refresh the screen - be sure to save all other work before clicking button to Replace Photos.<br>
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showGrantUploadModal('{{ $grantDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace Photos</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showGrantUploadModal('{{ $grantDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace Photos</button>
                                     <br>
                                 </div>
                         @else
@@ -430,7 +430,7 @@
                                     <label class="me-2">If there was damage to the member’s home or property, please upload any pictures here.</label><br>
                                     <strong style="color:red">Please Note</strong>
                                         This will refresh the screen - be sure to save all other work before clicking button to Upload Photos.<br>
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="showGrantUploadModal('{{ $grantDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload Photos</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showGrantUploadModal('{{ $grantDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload Photos</button>
                                     <br>
                                 </div>
                         @endif

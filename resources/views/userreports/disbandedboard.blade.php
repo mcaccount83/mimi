@@ -35,10 +35,10 @@
                     @foreach($disbandedList as $list)
                     <tr>
                         <td>
-                            @if ($list->boardDisbanded?->chapters->region->short_name != "None")
-                                {{ $list->boardDisbanded?->chapters->conference->short_name }} / {{ $list->boardDisbanded?->chapters->region->short_name }}
+                            @if ($list->boardDisbanded?->chapters->state->region->short_name != "None")
+                                {{ $list->boardDisbanded?->chapters->state->conference->short_name }} / {{ $list->boardDisbanded?->chapters->state->region->short_name }}
                             @else
-                                {{ $list->boardDisbanded?->chapters->conference->short_name }}
+                                {{ $list->boardDisbanded?->chapters->state->conference->short_name }}
                             @endif
                         </td>
                         <td>

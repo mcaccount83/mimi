@@ -251,7 +251,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger bg-gradient btn-sm mb-2" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger bg-gradient btn-sm" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
     </div>

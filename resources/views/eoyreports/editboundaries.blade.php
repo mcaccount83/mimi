@@ -73,7 +73,7 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <label>990N Verifed on irs.gov:</label>
-                                <span class="float-end">{{ $chFinancialReport->check_current_990N_verified_IRS == 1 ? 'YES' : 'NO' }}</span>
+                                <span class="float-end">{{ $chDetails->documentsEOY->irs_verified == 1 ? 'YES' : 'NO' }}</span>
                             </div>
                         </div>
                     </li>

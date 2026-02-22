@@ -4,173 +4,179 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-         <!-- Widget: user widget style 1 -->
-         <div class="card card-widget widget-user">
-            <!-- Add the bg color to the header using any of the bg-* classes -->
-            <div class="widget-user-header bg-primary">
-                <div class="widget-user-image">
-                    <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" style="width: 115px; height: 115px;">
-                  </div>
+
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card bg-primary">
+                        <div class="card-body text-center">
+                            <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" style="width: 115px; height: 115px;">
                         </div>
-                        <div class="card-body">
-
-                            <div class="col-md-12"><br><br></div>
+                    </div>
+                    <div class="card-body">
                         <h2 class="text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h2>
-                        <h4 class="text-center">Sustaining Chapter & Mother-to-Mother Fund Donations</h4>
-
+                        <h3 class="text-center">Sustaining Chapter & Mother-to-Mother Fund Donations</h3>
                     </div>
+                </div>
+                <!-- /.card -->
+                </div>
+            </div>
+        </div>
 
-                     </div>
-                    </div>
+                <div class="row">
                     <div class="col-md-12">
                           <div class="card card-primary card-outline">
+                   <div class="card-body">
+                        <!-- /.card-header -->
                     <div class="card-body">
-	                    <div class="row">
+                        <div class="row">
                         <div class="col-md-12">
                         <p class="description">
-                                         Sustaining chapter donations benefits the International MOMS Club, which is a 501 (c)(3) public charity.
-                                         Your donation will help us keep dues low and help new and existing chapters in the U.S. and around the world.
-                                    </p>
+                            Sustaining chapter donations benefits the International MOMS Club, which is a 501 (c)(3) public charity.
+                            Your donation will help us keep dues low and help new and existing chapters in the U.S. and around the world.
+                        </p>
 
-                                    <p class="description">
-                                         The Mother-To-Mother Fund is our ONLY official MOMS Club charity and is supported only by donations from the local chapters.
-                        Because of donations from chapters and volunteers in the past, we have been able to offer grants for emergency expenses to our MOMS Club mothers
-                        suffering from devastating financial and natural disasters.
-                                    </p>
+                        <p class="description">
+                            The Mother-To-Mother Fund is our ONLY official MOMS Club charity and is supported only by donations from the local chapters.
+                            Because of donations from chapters and volunteers in the past, we have been able to offer grants for emergency expenses to our MOMS Club mothers
+                            suffering from devastating financial and natural disasters.
+                        </p>
                     </div>
+                </div>
+                <br>
 
-
-{{-- Start of Payment Form --}}
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header"><strong>Chapter Donation</strong>
+        {{-- Start of Payment Form --}}
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header"><strong>Chapter Donation</strong>
+                                    </div>
+                        <div class="card-body">
+                            @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
                             </div>
-                <div class="card-body">
-                    @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    @endif
-
-                    <form method="POST" action="{{ route('process.donation') }}">
-                        @csrf
-                        <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label>Sustaining Chapter Donation</label>
-                                <input type="text" name="sustaining" id="sustaining" class="form-control" value="$0.00" oninput="formatCurrency(this)">
-                            </div>
-                            <div class="col-md-6">
-                                <label>Mother-to-Mother Fund Donation</label>
-                                <input type="text" name="m2m" id="m2m" class="form-control" value="$0.00" oninput="formatCurrency(this)">
-                            </div>
-                            <div class="col-md-6">
-                                <label>Online Processing Fee</label>
-                                <input type="text" name="fee" id="fee" class="form-control" value="$5.00" readonly>
-                            </div>
-                            <div class="col-md-6">
-                                <label>Total Due</label>
-                                <input type="text" name="total" id="total" class="form-control" readonly>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                            <label for="card_number" >{{ __('Card Number') }}</label> <span class="field-required">*</span>
-                                <input id="card_number" type="text" class="form-control @error('card_number') is-invalid @enderror" name="card_number" required autocomplete="off" >
-                                @error('card_number')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="col-md-3">
-                            <label for="expiration_date" >{{ __('Expiration Date (MMYY)') }}</label> <span class="field-required">*</span>
-                                <input id="expiration_date" type="text" class="form-control @error('expiration_date') is-invalid @enderror" name="expiration_date" required autocomplete="off" >
-                                @error('expiration_date')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="col-md-3">
-                            <label for="cvv" >{{ __('CVV') }}</label> <span class="field-required">*</span>
-                                <input id="cvv" type="text" class="form-control @error('cvv') is-invalid @enderror" name="cvv" required autocomplete="off" >
-                                @error('cvv')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label>Cardholder First Name</label> <span class="field-required">*</span>
-                                <input type="text" name="first_name" id="first_name" class="form-control"  required >
-                            </div>
-                            <div class="col-md-4">
-                                <label>Cardholder Last Name</label> <span class="field-required">*</span>
-                                <input type="text" name="last_name" id="last_name" class="form-control"  required >
-                            </div>
-                            <div class="col-md-4">
-                                <label>Cardholder Email</label> <span class="field-required">*</span>
-                                <input type="text" name="email" id="email" class="form-control"  required >
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                <label>Cardholder Address</label> <span class="field-required">*</span>
-                                <input type="text" name="address" id="address" class="form-control"  required >
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label>City</label> <span class="field-required">*</span>
-                                <input type="text" name="city" id="city" class="form-control"  required >
-                            </div>
-                            <div class="col-md-4">
-                                <label>State</label> <span class="field-required">*</span>
-                                <input type="text" name="state" id="state" class="form-control"  required >
-                            </div>
-                            <div class="col-md-4">
-                                <label>Zip</label> <span class="field-required">*</span>
-                                <input type="text" name="zip" id="zip" class="form-control"  required >
-                            </div>
-                        </div>
-
-                        <div class="card-body text-center mt-3">
-                            <div class="col-md-12" style="color: red;"><center>Page will automatically re-direct after payment submission with success or error message.<br>
-                                DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center></div>
-                            <br>
-                                <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>{{ __('Submit Payment') }}</button>
-
-                            @if($chActiveId != '1')
-                                <a href="{{ route('board.editdisbandchecklist', $chDetails->id) }}" class="btn btn-primary bg-gradient mb-2" id="btn-back"><i class="bi bi-arrow-left-short"></i><i class="bi bi-list-check me-2"></i>Back to Checklist</a>
-                            @else
-                                @if ($userTypeId == \App\Enums\UserTypeEnum::COORD)
-                                    <button type="button" id="btn-back" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Profile</button>
-                                @else
-                                    <a href="{{ route('home') }}" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Profile</a>
-                                @endif
                             @endif
+
+                            <form method="POST" action="{{ route('process.donation') }}">
+                                @csrf
+                                <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label>Sustaining Chapter Donation</label>
+                                        <input type="text" name="sustaining" id="sustaining" class="form-control" value="$0.00" oninput="formatCurrency(this)">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>Mother-to-Mother Fund Donation</label>
+                                        <input type="text" name="m2m" id="m2m" class="form-control" value="$0.00" oninput="formatCurrency(this)">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>Online Processing Fee</label>
+                                        <input type="text" name="fee" id="fee" class="form-control" value="$5.00" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>Total Due</label>
+                                        <input type="text" name="total" id="total" class="form-control" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                    <label for="card_number" >{{ __('Card Number') }}</label> <span class="field-required">*</span>
+                                        <input id="card_number" type="text" class="form-control @error('card_number') is-invalid @enderror" name="card_number" required autocomplete="off" >
+                                        @error('card_number')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="col-md-3">
+                                    <label for="expiration_date" >{{ __('Expiration Date (MMYY)') }}</label> <span class="field-required">*</span>
+                                        <input id="expiration_date" type="text" class="form-control @error('expiration_date') is-invalid @enderror" name="expiration_date" required autocomplete="off" >
+                                        @error('expiration_date')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="col-md-3">
+                                    <label for="cvv" >{{ __('CVV') }}</label> <span class="field-required">*</span>
+                                        <input id="cvv" type="text" class="form-control @error('cvv') is-invalid @enderror" name="cvv" required autocomplete="off" >
+                                        @error('cvv')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label>Cardholder First Name</label> <span class="field-required">*</span>
+                                        <input type="text" name="first_name" id="first_name" class="form-control"  required >
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>Cardholder Last Name</label> <span class="field-required">*</span>
+                                        <input type="text" name="last_name" id="last_name" class="form-control"  required >
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>Cardholder Email</label> <span class="field-required">*</span>
+                                        <input type="text" name="email" id="email" class="form-control"  required >
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label>Cardholder Address</label> <span class="field-required">*</span>
+                                        <input type="text" name="address" id="address" class="form-control"  required >
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label>City</label> <span class="field-required">*</span>
+                                        <input type="text" name="city" id="city" class="form-control"  required >
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>State</label> <span class="field-required">*</span>
+                                        <input type="text" name="state" id="state" class="form-control"  required >
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>Zip</label> <span class="field-required">*</span>
+                                        <input type="text" name="zip" id="zip" class="form-control"  required >
+                                    </div>
+                                </div>
+
+                                <div class="card-body text-center mt-3">
+                                    <div class="col-md-12" style="color: red;"><center>Page will automatically re-direct after payment submission with success or error message.<br>
+                                        DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center></div>
+                                    <br>
+                                        <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>{{ __('Submit Payment') }}</button>
+
+                                    @if($chActiveId != '1')
+                                        <a href="{{ route('board.editdisbandchecklist', $chDetails->id) }}" class="btn btn-primary bg-gradient mb-2" id="btn-back"><i class="bi bi-arrow-left-short"></i><i class="bi bi-list-check me-2"></i>Back to Checklist</a>
+                                    @else
+                                        @if ($userTypeId == \App\Enums\UserTypeEnum::COORD)
+                                            <button type="button" id="btn-back" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Profile</button>
+                                        @else
+                                            <a href="{{ route('home') }}" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Profile</a>
+                                        @endif
+                                    @endif
+                                </div>
+                            </form>
                         </div>
-                    </form>
-               </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                 <!-- /.payment-container- -->
+
                 <div class="col-md-12 mt-3" style="font-size: 0.8em">
                     <img src="{{ config('settings.base_url') }}images/authorize-net-seal.jpg" alt="authorize-net-seal" style="float: left; margin-right: 20px; width: 115px; height: 115px;">
                     <p>You can pay with confidence! We have partnered with <a href="http://www.authorize.net" target="blank">Authorize.Net</a>, a leading payment gateway since 1996,
@@ -181,13 +187,13 @@
                 </div>
 
                 </div>
-            </div>
         </div>
         <!-- /.card-body -->
         </div>
         <!-- /.card -->
     </div>
     <!-- /.col -->
+    </div>
     </div>
 <!-- /.container- -->
 @endsection

@@ -8,12 +8,14 @@ use App\Enums\ChapterStatusEnum;
 use App\Mail\EOYReviewrAssigned;
 use App\Models\BoardsIncoming;
 use App\Models\Chapters;
+use App\Models\ChapterAwardHistory;
 use App\Models\Coordinators;
 use App\Models\DisbandedChecklist;
 use App\Models\DocumentsEOY;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportAwards;
 use App\Models\FinancialReportFinal;
+use App\Models\FinancialReportReview;
 use App\Models\State;
 use App\Models\Website;
 use App\Services\PositionConditionsService;
@@ -574,7 +576,7 @@ class EOYReportController extends Controller implements HasMiddleware
     /**
      * Financial Report for Coordinator side for Reviewing of Chapters
      */
-    public function reviewFinancialReport(Request $request, $id): View
+    public function editFinancialReview(Request $request, $id): View
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -604,7 +606,7 @@ class EOYReportController extends Controller implements HasMiddleware
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc, 'confId' => $confId, 'chConfId' => $chConfId,
         ];
 
-        return view('eoyreports.reviewfinancialreport')->with($data);
+        return view('eoyreports.editfinancialreview')->with($data);
     }
 
     /**
@@ -686,64 +688,57 @@ class EOYReportController extends Controller implements HasMiddleware
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
 
-        $roster_path = $chEOYDocuments->roster_path;
-        $file_irs_path = $chEOYDocuments->irs_path;
-        $statement_1_path = $chEOYDocuments->statement_1_path;
-        $statement_2_path = $chEOYDocuments->statement_2_path;
-        $completed_name = $chFinancialReport->completed_name;
-        $completed_email = $chFinancialReport->completed_email;
-        $reviewerEmail = $chDetails->reportReviewer->email;
-
         $chapter = Chapters::find($id);
         $documentsEOY = DocumentsEOY::find($id);
-        $financialReport = FinancialReport::find($id);
+        $financialReportReview = FinancialReportReview::find($id);
 
         DB::beginTransaction();
         try {
-            $financialReport->reviewer_id = $reviewer_id ?? $coorId;
-            $financialReport->step_1_notes_log = $step_1_notes_log;
-            $financialReport->step_2_notes_log = $step_2_notes_log;
-            $financialReport->step_3_notes_log = $step_3_notes_log;
-            $financialReport->step_4_notes_log = $step_4_notes_log;
-            $financialReport->step_5_notes_log = $step_5_notes_log;
-            $financialReport->step_6_notes_log = $step_6_notes_log;
-            $financialReport->step_7_notes_log = $step_7_notes_log;
-            $financialReport->step_8_notes_log = $step_8_notes_log;
-            $financialReport->step_9_notes_log = $step_9_notes_log;
-            $financialReport->step_10_notes_log = $step_10_notes_log;
-            $financialReport->step_11_notes_log = $step_11_notes_log;
-            $financialReport->step_12_notes_log = $step_12_notes_log;
-            // $financialReport->step_13_notes_log = $step_13_notes_log;
-            $financialReport->roster_attached = $roster_attached;
-            $financialReport->renewal_seems_right = $renewal_seems_right;
-            $financialReport->minimum_service_project = $minimum_service_project;
-            $financialReport->m2m_donation = $m2m_donation;
-            $financialReport->party_percentage = $party_percentage;
-            $financialReport->attended_training = $attended_training;
-            $financialReport->bank_statement_matches = $bank_statement_matches;
-            $financialReport->bank_statement_included = $bank_statement_included;
-            $financialReport->beginning_balance = $beginning_balance;
-            $financialReport->post_balance = $post_balance;
-            $financialReport->purchased_pins = $purchased_pins;
-            $financialReport->purchased_mc_merch = $purchased_mc_merch;
-            $financialReport->offered_merch = $offered_merch;
-            $financialReport->bylaws_available = $bylaws_available;
-            $financialReport->current_990N_included = $current_990N_included;
-            $financialReport->total_income_less = $total_income_less;
-            $financialReport->sistered_another_chapter = $sistered_another_chapter;
-            $financialReport->farthest_step_visited_coord = $farthest_step_visited_coord;
+            $financialReportReview->reviewer_id = $reviewer_id ?? $coorId;
+            $financialReportReview->step_1_notes_log = $step_1_notes_log;
+            $financialReportReview->step_2_notes_log = $step_2_notes_log;
+            $financialReportReview->step_3_notes_log = $step_3_notes_log;
+            $financialReportReview->step_4_notes_log = $step_4_notes_log;
+            $financialReportReview->step_5_notes_log = $step_5_notes_log;
+            $financialReportReview->step_6_notes_log = $step_6_notes_log;
+            $financialReportReview->step_7_notes_log = $step_7_notes_log;
+            $financialReportReview->step_8_notes_log = $step_8_notes_log;
+            $financialReportReview->step_9_notes_log = $step_9_notes_log;
+            $financialReportReview->step_10_notes_log = $step_10_notes_log;
+            $financialReportReview->step_11_notes_log = $step_11_notes_log;
+            $financialReportReview->step_12_notes_log = $step_12_notes_log;
+            $financialReportReview->roster_attached = $roster_attached;
+            $financialReportReview->renewal_seems_right = $renewal_seems_right;
+            $financialReportReview->minimum_service_project = $minimum_service_project;
+            $financialReportReview->m2m_donation = $m2m_donation;
+            $financialReportReview->party_percentage = $party_percentage;
+            $financialReportReview->attended_training = $attended_training;
+            $financialReportReview->bank_statement_matches = $bank_statement_matches;
+            $financialReportReview->bank_statement_included = $bank_statement_included;
+            $financialReportReview->beginning_balance = $beginning_balance;
+            $financialReportReview->post_balance = $post_balance;
+            $financialReportReview->purchased_pins = $purchased_pins;
+            $financialReportReview->purchased_mc_merch = $purchased_mc_merch;
+            $financialReportReview->offered_merch = $offered_merch;
+            $financialReportReview->bylaws_available = $bylaws_available;
+            $financialReportReview->current_990N_included = $current_990N_included;
+            $financialReportReview->total_income_less = $total_income_less;
+            $financialReportReview->sistered_another_chapter = $sistered_another_chapter;
+            $financialReportReview->farthest_step_visited_coord = $farthest_step_visited_coord;
             if ($submitType == 'review_complete') {
-                $financialReport->review_complete = Carbon::now();
+                $financialReportReview->review_complete = Carbon::now();
             }
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getUserData($user),
-                $this->baseMailDataController->getFinancialReportData($chEOYDocuments, $chFinancialReport, $reviewer_email_message),
+                $this->baseMailDataController->getFinancialReportData($chFinancialReport),
+                $this->baseMailDataController->getFinancialDocumentsData($chEOYDocuments),
+                $this->baseMailDataController->getFinancialReportReviewData($reviewer_email_message),
             );
 
-            if ($financialReport->isDirty('reviewer_id')) {
-                $newReviewerId = $financialReport->reviewer_id;
+            if ($financialReportReview->isDirty('reviewer_id')) {
+                $newReviewerId = $financialReportReview->reviewer_id;
                 $newReviewer = Coordinators::find($newReviewerId);
                 $newReviewerEmail = $newReviewer->email;
                 $to_email = $newReviewerEmail;
@@ -751,7 +746,7 @@ class EOYReportController extends Controller implements HasMiddleware
                     ->queue(new EOYReviewrAssigned($mailData));
             }
 
-            $financialReport->save();
+            $financialReportReview->save();
 
             if ($submitType == 'review_complete') {
                 $documentsEOY->financial_review_complete = 1;
@@ -878,7 +873,7 @@ class EOYReportController extends Controller implements HasMiddleware
 
         $chapter = Chapters::find($id);
         $documentsEOY = DocumentsEOY::find($id);
-        $financialReport = FinancialReport::find($id);
+        $financialReportReview = FinancialReportReview::find($id);
 
         DB::beginTransaction();
         try {
@@ -887,8 +882,8 @@ class EOYReportController extends Controller implements HasMiddleware
             $documentsEOY->review_complete = null;
             $documentsEOY->save();
 
-            $financialReport->review_complete = null;
-            $financialReport->save();
+            $financialReportReview->review_complete = null;
+            $financialReportReview->save();
 
             $chapter->updated_by = $updatedBy;
             $chapter->updated_id = $updatedId;
@@ -973,11 +968,13 @@ class EOYReportController extends Controller implements HasMiddleware
         $chActiveId = $baseQuery['chActiveId'];
         $chConfId = $baseQuery['chConfId'];
         $chPcId = $baseQuery['chPcId'];
+        $chEOYDocuments = $baseQuery['chEOYDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
 
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'coorId' => $coorId, 'confId' => $confId,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
+            'chEOYDocuments' => $chEOYDocuments
         ];
 
         return view('eoyreports.editattachments')->with($data);
@@ -1228,13 +1225,14 @@ class EOYReportController extends Controller implements HasMiddleware
         $input = $request->all();
         $ChapterAwards = null;
         $FieldCount = $input['ChapterAwardsRowCount'];
+
         for ($i = 0; $i < $FieldCount; $i++) {
-            $ChapterAwards[$i]['awards_type'] = $input['ChapterAwardsType'.$i] ?? null;
-            $ChapterAwards[$i]['awards_desc'] = $input['ChapterAwardsDesc'.$i] ?? null;
+            $ChapterAwards[$i]['awards_type']     = $input['ChapterAwardsType'.$i] ?? null;
+            $ChapterAwards[$i]['awards_desc']     = $input['ChapterAwardsDesc'.$i] ?? null;
             $ChapterAwards[$i]['awards_approved'] = $input['ChapterAwardsApproved'.$i] ?? null;
         }
-        $chapter_awards = base64_encode(serialize($ChapterAwards));
 
+        $chapter_awards = base64_encode(serialize($ChapterAwards));
         $chapter = Chapters::find($id);
         $financialReport = FinancialReport::find($id);
 
@@ -1249,16 +1247,61 @@ class EOYReportController extends Controller implements HasMiddleware
 
             DB::commit();
 
-            return to_route('eoyreports.editawards', ['id' => $id])->with('success', 'EOY Information successfully updated.');
+            return to_route('eoyreports.editawards', ['id' => $id])
+                ->with('success', 'EOY Information successfully updated.');
         } catch (\Exception $e) {
-            DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            DB::rollback();
+            Log::error($e);
 
-            return to_route('eoyreports.editawards', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+            return to_route('eoyreports.editawards', ['id' => $id])
+                ->with('fail', 'Something went wrong, Please try again.');
         } finally {
-            // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
         }
+    }
+
+    /**
+     * View chapter award history
+     */
+    public function viewEOYAwardsHistory(Request $request, $id): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
+        $chDetails = $baseQuery['chDetails'];
+        $chActiveId = $baseQuery['chActiveId'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $regionLongName = $baseQuery['regionLongName'];
+        $conferenceDescription = $baseQuery['conferenceDescription'];
+        $chConfId = $baseQuery['chConfId'];
+        $chPcId = $baseQuery['chPcId'];
+
+        $awardTypes = FinancialReportAwards::all()->keyBy('id');
+
+        // Current year from the blob
+        $financialReport = FinancialReport::find($id);
+        $currentAwards = $financialReport->chapter_awards
+            ? unserialize(base64_decode($financialReport->chapter_awards))
+            : [];
+
+        // Filter to only approved ones for display
+        $currentApprovedAwards = array_filter($currentAwards, fn($a) => !empty($a['awards_approved']));
+
+        // Historical from the history table (exclude current year)
+        $chAwards = ChapterAwardHistory::with('awardtype')
+            ->where('chapter_id', $id)
+            ->orderBy('award_year', 'desc')
+            ->orderBy('awards_type')
+            ->get()
+            ->groupBy('award_year');
+
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
+                'chAwards' => $chAwards, 'currentApprovedAwards' => $currentApprovedAwards, 'awardTypes' => $awardTypes, 'confId' => $confId, 'chConfId' => $chConfId,
+            ];
+
+        return view('eoyreports.awardhistory')->with($data);
     }
 
     /**

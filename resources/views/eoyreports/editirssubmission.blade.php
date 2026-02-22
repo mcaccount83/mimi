@@ -32,75 +32,74 @@
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
-              <div class="card-body">
+             <div class="card-body">
                     <div class="card-header text-center bg-transparent">
                     <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
                     <p class="mb-0">{{ $chDetails->confname }} Conference, {{ $chDetails->regname }} Region
                   </p>
-                    </div>
+                </div>
+
                 <ul class="list-group list-group-flush mb-3">
-                    <li class="list-group-item mt-2">
+                    <li class="list-group-item">
                         <div class="row">
-                            <div class="col-sm-12">
-                                <label>New Board Submitted:</label>
-                                <span class="float-end">{{ $chDetails->documentsEOY->new_board_submitted == 1 ? 'YES' : 'NO' }}</span>
+                            <div class="col-auto fw-bold">New Board Submitted:</div>
+                            <div class="col text-end">
+                                {{ $chDetails->documentsEOY->new_board_submitted == 1 ? 'YES' : 'NO' }}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-12">
-                                <label>New Board Activated:</label>
-                                <span class="float-end">{{ $chDetails->documentsEOY->new_board_active == 1 ? 'YES' : 'NO' }}</span>
+                            <div class="col-auto fw-bold">New Board Activated:</div>
+                            <div class="col text-end">
+                                {{ $chDetails->documentsEOY->new_board_active == 1 ? 'YES' : 'NO' }}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-12">
-                                <label>Financial Report Received</label>
-                                <span class="float-end">{{ $chDetails->documentsEOY->financial_report_received == 1 ? 'YES' : 'NO' }}</span>
+                            <div class="col-auto fw-bold">Financial Report Received</div>
+                            <div class="col text-end">
+                                {{ $chDetails->documentsEOY->financial_report_received == 1 ? 'YES' : 'NO' }}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-12">
-                                <label>Financial Review Complete:</label>
-                                <span class="float-end">{{ $chDetails->documentsEOY->financial_review_complete == 1 ? 'YES' : 'NO' }}</span>
+                            <div class="col-auto fw-bold">Financial Review Complete:</div>
+                            <div class="col text-end">
+                                {{ $chDetails->documentsEOY->financial_review_complete == 1 ? 'YES' : 'NO' }}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-12">
-                                <label>Report Extension Given:</label>
-                                <span class="float-end">{{ $chDetails->documentsEOY->report_extension == 1 ? 'YES' : 'NO' }}</span>
+                            <div class="col-auto fw-bold">Report Extension Given:</div>
+                            <div class="col text-end">
+                                {{ $chDetails->documentsEOY->report_extension == 1 ? 'YES' : 'NO' }}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-12">
-                                <label>990N Verifed on irs.gov:</label>
-                                <span class="float-end">{{ $chDetails->documentsEOY->irs_verified == 1 ? 'YES' : 'NO' }}</span>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <label>990N Filing issues:</label>
-                                <span class="float-end">{{ $chDetails->documentsEOY->irs_issues == 1 ? 'YES' : 'NO' }}</span>
+                            <div class="col-auto fw-bold">990N Verifed on irs.gov:</div>
+                            <div class="col text-end">
+                                {{ $chDetails->documentsEOY->irs_verified == 1 ? 'YES' : 'NO' }}
                             </div>
                         </div>
                     </li>
 
-                    <li class="list-group-item mt-2">
+                    <li class="list-group-item">
                         <div class="row">
-                            <div class="col-sm-12">
-                                <label>Assigned Reviewer:</label>
+                            <div class="col-auto fw-bold">Assigned Reviewer:</div>
+                            <div class="col text-end">
                                     @if($chFinancialReport->reviewer_id != null)
-                                        <span class="float-end">{{ $chDetails->reportReviewer->first_name }} {{ $chDetails->reportReviewer->last_name }}</span>
+                                    {{ $chDetails->reportReviewer->first_name }} {{ $chDetails->reportReviewer->last_name }}
                                     @else
                                         No Reviewer Assigned
                                     @endif
                             </div>
                         </div>
-                </li>
+                    </li>
 
-                    <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
-                    <li class="list-group-item mt-2" id="display_corlist"></li>
-                </ul>
-                <div class="text-center">
+                     <li class="list-group-item">
+                          <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
+                            <div class="row mb-2">
+                          <span id="display_corlist"></span>
+                            </div>
+                        </li>
+                  <li class="list-group-item">
+                 <div class="text-center">
                       @if ($chDetails->active_status == 1 )
                           <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
                       @elseif ($chDetails->active_status == 2)
@@ -114,7 +113,9 @@
                           Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
                           {{ $chDetails->disband_reason }}
                       @endif
-                  </div>
+                      </div>
+                </li>
+                  </ul>
               </div>
               <!-- /.card-body -->
             </div>
@@ -124,30 +125,31 @@
 
           <div class="col-md-8">
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                <h3 class="profile-username">{{ $fiscalYear }} 990N Filing Details</h3>
+                <div class="card-body">
+                    <div class="card-header bg-transparent border-0">
+                <h3>{{ $fiscalYear }} 990N Filing Details</h3>
+                    </div>
                     <!-- /.card-header -->
+                    <div class="card-body">
 
-                    <div class="row mt-2">
+                        <div class="row mb-2">
                         <div class="col-sm-3">
                             <label>990N Filing:</label>
                         </div>
                         <div class="col-sm-9">
-                                @if (!empty($chDetails->documentsEOY->irs_path))
-                                    <button class="btn btn-primary bg-gradient btn-sm mb-2" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chDetails->documentsEOY->irs_path }}')">View 990N Confirmation</button>
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="show990NUploadModal('{{ $chDetails->id }}')">Replace 990N Confirmation</button>
+                                @if (!empty($chEOYDocuments->irs_path))
+                                    <button class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chEOYDocuments->irs_path }}')">View 990N Confirmation</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="show990NUploadModal('{{ $chDetails->id }}')">Replace 990N Confirmation</button>
                                 @else
-                                    <button class="btn btn-primary bg-gradient btn-sm me-2 disabled" disabled>No file attached</button>
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="show990NUploadModal('{{ $chDetails->id }}')">Upload 990N Confirmation</button>
+                                    <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="show990NUploadModal('{{ $chDetails->id }}')">Upload 990N Confirmation</button>
                                 @endif
                         </div>
                     </div>
 
-                    <!-- /.form group -->
-
-                    <div class="row mb-3 align-middle">
+                    <div class="row mb-2 align-middle">
                         <label class="col-sm-3 col-form-label">990N Verified on IRS Website:</label>
-                        <div class="col-sm-3">
+                        <div class="col-sm-9">
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="irs_verified" id="irs_verified" class="form-check-input"
                                 {{ $chDetails->documentsEOY->irs_verified == 1 ? 'checked' : ''}}>
@@ -218,17 +220,14 @@
                     </div>
                          <!-- /.form group -->
 
-                     <div class="row mb-3 align-middle mt-2">
+                      <div class="row mb-2">
                         <label class="col-sm-3 col-form-label">990 Submission Notes:</label>
                         <div class="col-sm-9">
                         <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chDetails->documentsEOY->irs_notes }}" >
                         </div>
                     </div>
 
-
                     </div>
-
-
                   </div>
               <!-- /.card-body -->
             </div>

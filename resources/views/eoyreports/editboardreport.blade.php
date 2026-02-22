@@ -47,49 +47,55 @@
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
-              <div class="card-body box-profile">
-                <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
-                <br>
-                @if ($chDetails->documentsEOY->new_board_submitted != '1' )
-                    <p><span style="color:#dc3545;">Board Election Report has NOT been submitted.</span><br>
-                        <br>Chapter needs to complete and Submit the Board Election Report before new board members can be activated in MIMI.<br>
-                        <br>Submission can be made by a Coordinator <strong>HERE</strong>.<br>
-                    </p>
-                @endif
-                @if ($chDetails->documentsEOY->new_board_submitted == '1' && $chDetails->documentsEOY->new_board_active !='1')
-                    <p><span style="color:#28a745;">Board Election Report HAS been submitted Submitted.</span><br>
-                        <br>Changes can be made by a Coordinator <strong>HERE</strong> Prior to Activation.<br>
-                        <br><span style="color:#dc3545;">Board Election Report has NOT been activated.</span><br>
-                        <br>New Board Members will need to be activated by a Coordinator after July 1st! Once activated, they will have full MIMI Access.<br>
-                        <br>Outgoing board members will have access to Financial Reports Only.<br>
-                    </p>
-                @endif
-                @if ($chDetails->documentsEOY->new_board_active =='1')
-                    <p><span style="color:#28a745;">Board Election Report HAS been Submitted and Activated!</span><br>
-                        <br>New board members now have full MIMI Access.<br>
-                        <br>Outgoing board members have access to Financial Reports Only.<br>
-                        <br>Future board member changes can be made on the Chapter Details pages.<br>
-                    </p>
-                @endif
+              <div class="card-body">
+                    <div class="card-header bg-transparent border-0">
+                <h3>MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
+                 </div>
+                    <!-- /.card-header -->
+                    <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item">
+                        @if ($chDetails->documentsEOY->new_board_submitted != '1' )
+                            <p><span style="color:#dc3545;">Board Election Report has NOT been submitted.</span><br>
+                                <br>Chapter needs to complete and Submit the Board Election Report before new board members can be activated in MIMI.<br>
+                                <br>Submission can be made by a Coordinator <strong>HERE</strong>.<br>
+                            </p>
+                        @endif
+                        @if ($chDetails->documentsEOY->new_board_submitted == '1' && $chDetails->documentsEOY->new_board_active !='1')
+                            <p><span style="color:#28a745;">Board Election Report HAS been submitted Submitted.</span><br>
+                                <br>Changes can be made by a Coordinator <strong>HERE</strong> Prior to Activation.<br>
+                                <br><span style="color:#dc3545;">Board Election Report has NOT been activated.</span><br>
+                                <br>New Board Members will need to be activated by a Coordinator after July 1st! Once activated, they will have full MIMI Access.<br>
+                                <br>Outgoing board members will have access to Financial Reports Only.<br>
+                            </p>
+                        @endif
+                        @if ($chDetails->documentsEOY->new_board_active =='1')
+                            <p><span style="color:#28a745;">Board Election Report HAS been Submitted and Activated!</span><br>
+                                <br>New board members now have full MIMI Access.<br>
+                                <br>Outgoing board members have access to Financial Reports Only.<br>
+                                <br>Future board member changes can be made on the Chapter Details pages.<br>
+                            </p>
+                        @endif
+                    </li>
+                </ul>
 
+                    </div>
+                <!-- /.card-body -->
             </div>
-            <!-- /.card-body -->
-          </div>
-          <!-- /.card -->
-        </div>
-        <!-- /.col -->
+            <!-- /.card -->
+            </div>
+            <!-- /.col -->
 
                 @if ($chDetails->documentsEOY->new_board_active != '1')
 
                 <div class="col-md-6">
                     <!-- Profile Image -->
                     <div class="card card-primary card-outline">
-
-                            <div class="card-body box-profile">
-                                 <!-- /.card-header -->
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <h5>Board Members</h5>
+                        <div class="card-body">
+                        <div class="card-header bg-transparent border-0">
+                                <h3>Board Members</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
                             <!-- /.form group -->
                                 <div class="row mb-3">
                                     <label class="col-sm-2 mb-1 col-form-label">President:</label>
@@ -373,10 +379,10 @@
                                 </div>
                             </div>
 
-                            </div>
-                        </div>
+
 
                     </div>
+                </div>
                     <!-- /.card-body -->
                     </div>
                     <!-- /.card -->
@@ -386,7 +392,12 @@
                     <div class="col-md-3">
                         <!-- Profile Image -->
                         <div class="card card-primary card-outline">
-                            <div class="card-body box-profile">
+                            <div class="card-body">
+                            <div class="card-header bg-transparent border-0">
+                                <h3>Chapter Information</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
 
                                 <div class="row">
                                     <div class="col-md-12">
@@ -471,6 +482,7 @@
                         </div>
 
                             </div>
+                        </div>
                         <!-- /.card-body -->
                         </div>
                         <!-- /.card -->
@@ -483,15 +495,16 @@
 
         </div>
 
+          <div class="col-md-12">
             <div class="card-body text-center mt-3">
                   @if ($chDetails->documentsEOY->new_board_active != '1')
                     <div class="d-flex justify-content-center align-items-start flex-wrap">
                             <form method="POST" action="#" onsubmit="return validateBeforeSubmit(true)">
                                 @csrf
                                 @if ($chDetails->documentsEOY->new_board_submitted != 1)
-                                    <button type="submit" class="btn btn-primary bg-gradient me-1"><i class="bi bi-chevron-double-right me-2"></i>Submit</button>
+                                    <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>Submit</button>
                                 @else
-                                    <button type="submit" class="btn btn-primary bg-gradient me-1"><i class="bi bi-floppy-fill me-2"></i>Save</button>
+                                    <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
                                 @endif
                             </form>
 
@@ -514,7 +527,12 @@
                     @endif
                     <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-file-earmark-bar-graph-fill me-2"></i>Back to EOY Details</button>
             </div>
-    </div>
-    <!-- /.container- -->
+     </div>
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
 @endsection
 

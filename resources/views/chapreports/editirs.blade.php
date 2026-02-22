@@ -35,18 +35,28 @@
                     <div class="card-header text-center bg-transparent">
                     <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
                     <p class="mb-0">{{ $chDetails->confname }} Conference, {{ $chDetails->regname }} Region
-                  </p>
-                    </div>
+                    <br>
                   EIN: {{$chDetails->ein}}
                   </p>
-                        <ul class="list-group list-group-flush mb-3">
-                            <li class="list-group-item mt-2">
+                </div>
 
-                            <b>Founded:</b> <span class="float-end">{{ $startMonthName }} {{ $chDetails->start_year }}</span>
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-auto fw-bold">Founded:</div>
+                            <div class="col text-end">
+                                {{ $startMonthName }} {{ $chDetails->start_year }}
+                            </div>
+                        </div>
+                    </li>
 
-                            </li>                            <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
-                            <li class="list-group-item mt-2" id="display_corlist"></li>
-                  </ul>
+                   <li class="list-group-item">
+                          <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
+                            <div class="row mb-2">
+                          <span id="display_corlist"></span>
+                            </div>
+                        </li>
+                  <li class="list-group-item">
                  <div class="text-center">
                       @if ($chDetails->active_status == 1 )
                           <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
@@ -61,8 +71,10 @@
                           Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
                           {{ $chDetails->disband_reason }}
                       @endif
-                  </div>
-                </div>
+                      </div>
+                </li>
+                  </ul>
+              </div>
               <!-- /.card-body -->
             </div>
             <!-- /.card -->
@@ -71,110 +83,103 @@
 
           <div class="col-md-8">
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                <h3 class="profile-username">IRS Information</h3>
+                <div class="card-body">
+                    <div class="card-header bg-transparent border-0">
+                        <h3>IRS Information</h3>
+                     </div>
                     <!-- /.card-header -->
+                    <div class="card-body">
                     <div class="row">
                         <div class="col-md-12">
-<!-- /.form group -->
-<div class="row mb-3 row align-items-center">
-    <label class="col-sm-2 col-form-label">EIN Letter Received:</label>
-    <div class="col-sm-10 form-check form-switch">
-        <input type="checkbox" name="ch_ein_letter_display" id="ch_ein_letter" class="form-check-input" {{$chEOYDocuments->ein_letter == 1 ? 'checked' : ''}} disabled>
-        <label class="form-check-label" for="ch_ein_letter"></label>
-        <!-- Hidden input to submit the value -->
-        <input type="hidden" name="ch_ein_letter" value="{{ $chEOYDocuments->ein_letter }}">
-    </div>
-</div>
 
-                        <!-- /.form group -->
+                            <div class="row mb-3 row align-items-center">
+                            <label class="col-sm-2 col-form-label">EIN Letter Received:</label>
+                            <div class="col-sm-10 form-check form-switch">
+                                <input type="checkbox" name="ch_ein_letter_display" id="ch_ein_letter" class="form-check-input" {{$chEOYDocuments->ein_letter == 1 ? 'checked' : ''}} disabled>
+                                <label class="form-check-label" for="ch_ein_letter"></label>
+                                <!-- Hidden input to submit the value -->
+                                <input type="hidden" name="ch_ein_letter" value="{{ $chEOYDocuments->ein_letter }}">
+                            </div>
+                        </div>
+
                         @if($chDetails->ein == null && ($conferenceCoordinatorCondition || $einCondition))
-                           <div class="row mb-3 row">
+                           <div class="row mb-3">
                                                     <label class="col-sm-2 col-form-label mb-1">EIN Fax Coversheet:</label>
                                 <div class="col-sm-10">
-                                    <button id="GoodStanding" type="button" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="window.open('{{ route('pdf.newchapfaxcover', ['id' => $chDetails->id]) }}', '_blank')">EIN Fax Coversheet</button><br>
+                                    <button id="GoodStanding" type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.open('{{ route('pdf.newchapfaxcover', ['id' => $chDetails->id]) }}', '_blank')">EIN Fax Coversheet</button><br>
                                 </div>
                             </div>
                         @endif
 
-                       <div class="row mb-3 row">
+                       <div class="row mb-3">
                                                     <label class="col-sm-2 col-form-label mb-1">EIN Letter:</label>
                             <div class="col-sm-10">
                                 @if($chEOYDocuments->ein_letter_path != null)
-                                    <button class="btn btn-primary bg-gradient btn-sm mb-2" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chEOYDocuments->ein_letter_path }}')">EIN Letter from IRS</button>
+                                    <button class="btn btn-primary bg-gradient btn-sm" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chEOYDocuments->ein_letter_path }}')">EIN Letter from IRS</button>
                                 @else
-                                    <button class="btn btn-primary bg-gradient btn-sm mb-2 disabled" disabled>No EIN Letter on File</button>
+                                    <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No EIN Letter on File</button>
                                 @endif
                             </div>
                         </div>
-                        <!-- /.form group -->
-                                                <div class="row mb-3 row">
-                                                    <label class="col-sm-2 col-form-label mb-1">EIN Notes:</label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" name="ein_notes" id="ein_notes" class="form-control" value="{{ $chEOYDocuments->ein_notes }}" placeholder="EIN Notes">
-                                                    </div>
-                                                </div>
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label mb-1">EIN Notes:</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="ein_notes" id="ein_notes" class="form-control" value="{{ $chEOYDocuments->ein_notes }}" placeholder="EIN Notes">
+                            </div>
+                        </div>
 
-                                                 <!-- /.form group -->
- @if($ITCondition == 1 )
-    <div class="row mb-3 row align-items-center  mb-3">
-        <label class="col-sm-2 col-form-label">Added as Subordinate:</label>
-        <div class="col-sm-10 form-check form-switch">
-            <input type="checkbox" name="ein_sent" id="ein_sent" class="form-check-input" {{$chEOYDocuments->ein_sent == 1 ? 'checked' : ''}}>
-            <label class="form-check-label" for="ein_sent"></label>
-        </div>
-    </div>
-@else
-    <div class="row mb-3 row align-items-center  mb-3">
-        <label class="col-sm-2 col-form-label">Added as Subordinate:</label>
-        <div class="col-sm-10 form-check form-switch">
-            <input type="checkbox" name="ein_sent" id="ein_sent" class="form-check-input" {{$chEOYDocuments->ein_sent == 1 ? 'checked' : ''}} disabled>
-            <label class="form-check-label" for="ein_sent"></label>
-            <!-- Hidden input to submit the value -->
-            <input type="hidden" name="ein_sent" value="{{ $chEOYDocuments->ein_sent }}">
-        </div>
-    </div>
-@endif
+                        @if($ITCondition == 1 )
+                            <div class="row mb-3 row align-items-center  mb-3">
+                                <label class="col-sm-2 col-form-label">Added as Subordinate:</label>
+                                <div class="col-sm-10 form-check form-switch">
+                                    <input type="checkbox" name="ein_sent" id="ein_sent" class="form-check-input" {{$chEOYDocuments->ein_sent == 1 ? 'checked' : ''}}>
+                                    <label class="form-check-label" for="ein_sent"></label>
+                                </div>
+                            </div>
+                        @else
+                            <div class="row mb-3 row align-items-center  mb-3">
+                                <label class="col-sm-2 col-form-label">Added as Subordinate:</label>
+                                <div class="col-sm-10 form-check form-switch">
+                                    <input type="checkbox" name="ein_sent" id="ein_sent" class="form-check-input" {{$chEOYDocuments->ein_sent == 1 ? 'checked' : ''}} disabled>
+                                    <label class="form-check-label" for="ein_sent"></label>
+                                    <!-- Hidden input to submit the value -->
+                                    <input type="hidden" name="ein_sent" value="{{ $chEOYDocuments->ein_sent }}">
+                                </div>
+                            </div>
+                        @endif
 
+                        <div class="row mb-3 row align-items-center  mb-3">
+                            <label class="col-sm-2 col-form-label">990N Verifed with IRS:</label>
+                            <div class="col-sm-10 form-check form-switch">
+                                <input type="checkbox" name="irs_verified" id="irs_verified" class="form-check-input" {{$chEOYDocuments->irs_verified == 1 ? 'checked' : ''}}>
+                                <label class="form-check-label" for="irs_verified"></label>
+                            </div>
+                        </div>
 
- <!-- /.form group -->
-
- <div class="row mb-3 row align-items-center  mb-3">
-    <label class="col-sm-2 col-form-label">990N Verifed with IRS:</label>
-    <div class="col-sm-10 form-check form-switch">
-        <input type="checkbox" name="irs_verified" id="irs_verified" class="form-check-input" {{$chEOYDocuments->irs_verified == 1 ? 'checked' : ''}}>
-        <label class="form-check-label" for="irs_verified"></label>
-    </div>
-</div>
-
-<!-- /.form group -->
-                <div class="row">
+                        <div class="row">
                             <div class="col-sm-2 col-form-label mb-1">
                                 <label>990N Submission:</label>
                             </div>
                             <div class="col-sm-10">
                                 @if($chEOYDocuments->irs_path != null)
-                                    <button class="btn btn-primary bg-gradient btn-sm mb-2" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chEOYDocuments->irs_path }}')">View/Download 990N Submission</button>
+                                    <button class="btn btn-primary bg-gradient btn-sm" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chEOYDocuments->irs_path }}')">View/Download 990N Submission</button>
                                 @else
-                                    <button class="btn btn-primary bg-gradient btn-sm mb-2 disabled" disabled>No 990N Submission on File</button>
+                                    <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No 990N Submission on File</button>
                                 @endif
                             </div>
                         </div>
 
-                            <!-- /.form group -->
                     <div class="row mb-3 row">
                         <label class="col-sm-2 col-form-label mb-1">990N Submission Notes:</label>
                         <div class="col-sm-10">
                             <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chEOYDocuments->irs_notes }}" placeholder="990N Submission Notes">
                         </div>
                     </div>
-
-
-
-                        </div>
-                    </div>
                 </div>
+            </div>
 
+                </div>
+                </div>
               <!-- /.card-body -->
                         </div>
             <!-- /.card -->
@@ -194,10 +199,12 @@
                     <button type="button" id="back-irs" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapreports.chaprpteinstatus', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-bank me-2"></i>Back to International IRS Status Report</button>
                 @endif
                 <button type="button" id="back-details" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Chapter Details</button>
-        </div>
+       </div>
+            </div>
         </div>
         <!-- /.row -->
-      </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.container-fluid -->
     </form>
     </section>
     <!-- /.content -->
