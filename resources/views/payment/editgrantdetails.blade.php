@@ -33,67 +33,61 @@
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                    @if($chDetails != null)
-                 <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
+                <div class="card-body">
+                    <div class="card-header text-center bg-transparent">
+                        @if($chDetails != null)
+                    <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
                     @else
-                    <h3 class="profile-username text-center">{{$stateShortName}}</h3>
+                        <h3 class="mb-0"> {{$stateShortName}}</h3>
                     @endif
-                <p class="text-center">{{ $conferenceDescription }} Conference, {{ $regionLongName }} Region
-                <br>
-                </p>
-
-            <ul class="list-group list-group-unbordered mb-3">
-                <li class="list-group-item">
-                <div class="d-flex align-items-center">
-                    <label class="mr-3 mb-0">Grant Approved:</label>
-                    <div class="custom-control custom-switch mr-4 ml-auto">
-                        <input type="radio" class="custom-control-input" id="approvedYes" name="grant_approved" value="1"
-                            {{ $grantDetails->grant_approved === 1 ? 'checked' : '' }}>
-                        <label class="custom-control-label" for="approvedYes">Yes</label>
+                    <p class="mb-0">{{ $conferenceDescription }} Conference, {{ $conferenceDescription }} Region
+                  </p>
                     </div>
 
-                    <div class="custom-control custom-switch mr-2">
-                        <input type="radio" class="custom-control-input" id="approvedNo" name="grant_approved" value="0"
+            <ul class="list-group list-group-flush mb-3">
+                <li class="list-group-item mt-2">
+                <div class="d-flex align-items-center">
+                    <label class="me-2 mb-0">Grant Approved:</label>
+                    <div class="form-check form-switch me-4 ms-auto">
+                        <input type="radio" class="form-check-input" id="approvedYes" name="grant_approved" value="1"
+                            {{ $grantDetails->grant_approved === 1 ? 'checked' : '' }}>
+                        <label class="form-check-label" for="approvedYes">Yes</label>
+                    </div>
+
+                    <div class="form-check form-switch me-2">
+                        <input type="radio" class="form-check-input" id="approvedNo" name="grant_approved" value="0"
                             {{ $grantDetails->grant_approved === 0 ? 'checked' : '' }}>
-                        <label class="custom-control-label" for="approvedNo">No</label>
+                        <label class="form-check-label" for="approvedNo">No</label>
                     </div>
                 </div>
 
-                <div class="form-group row mt-3">
+                <div class="row mb-3">
                     <label class="col-md-8 col-form-label">Amount Awarded:</label>
                     <div class="col-sm-4">
-                        <div class="input-group row">
-                            <div class="input-group-prepend">
+                        <div class="input-group">
                                 <span class="input-group-text">$</span>
-                            </div>
                             <input type="text" name="amount_awarded" id="amount_awarded" class="form-control" value="{{ $grantDetails['amount_awarded'] }}">
                         </div>
                     </div>
                 </div>
 
-                {{-- <div class="form-group mt-2" id="reviewNotes">
-                    <label for="AssignedReviewer">Reviewer Notes:</label>
-                    <small>Not visible to chapter</small>
-                    <textarea class="form-control" style="width:100%" rows="6" name="review_notes" id="review_notes">{{ $grantDetails['review_notes'] }}</textarea>
-                </div> --}}
+                <div class="row mb-3" >
+                    <label for="Review_Note">Add New Note:</label>
+                <textarea class="form-control" style="width:100%" rows="3" name="Review_Note" id="Review_Note" {{ $grantDetails['review_complete'] != "" ? 'readonly' : '' }}></textarea>
+                <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
+                    <button type="button" id="AddNote" class="btn btn-success bg-gradient btn-sm disabled" disabled>
+                    <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
+                </button>
+                    </div>
+                </div>
 
-                <div class="form-group mt-2" >
-    <label for="Review_Note">Add New Note:</label>
-<textarea class="form-control" style="width:100%" rows="3" name="Review_Note" id="Review_Note" {{ $grantDetails['review_complete'] != "" ? 'readonly' : '' }}></textarea>    <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-      <button type="button" id="AddNote" class="btn btn-sm bg-gradient-success disabled" disabled>
-    <i class="fa fa-plus fa-fw" aria-hidden="true"></i>&nbsp; Add Note to Log
-</button>
-    </div>
-</div>
+                <div class="row mb-3" >
+                    <label for="Review_Log">Review Notes Logged:</label>
+                    <small>Not visible to chapters</small>
+                    <textarea class="form-control" style="width:100%" rows="8" name="Review_Log" id="Review_Log" readonly>{{ $grantDetails['review_notes'] }}</textarea>
+                </div>
 
-<div class="form-group mt-2" >
-    <label for="Review_Log">Review Notes Logged:</label>
-    <small>Not visible to chapters</small>
-    <textarea class="form-control" style="width:100%" rows="8" name="Review_Log" id="Review_Log" readonly>{{ $grantDetails['review_notes'] }}</textarea>
-</div>
-
-                <div class="form-group mt-2" id="reviewNotes">
+                <div class="row mb-3" id="reviewNotes">
                     <label for="AssignedReviewer">Review Description:</label>
                     <small>To be published with public list information</small>
                     <textarea class="form-control" style="width:100%" rows="6" name="review_description" id="review_description">{{ $grantDetails['review_description'] }}</textarea>
@@ -118,7 +112,7 @@
                 <input type="hidden" id="grant_reviewer" value="{{ $grantDetails->reviewer_id }}">
                 </li>
 
-                <li class="list-group-item">
+                <li class="list-group-item mt-2">
                     <div class="d-flex align-items-center justify-content-between w-100">
                         <label>Submitted By:</label>
                         {{ $grantDetails->board_name }} ({{ $grantDetails->board_position }})
@@ -134,47 +128,32 @@
                 </li>
 
                 <li class="list-group-item">
-                <div class="text-center">
-                    @if($chDetails != null)
-                    @if ($chDetails->active_status == 1 )
-                        <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
-                    @elseif ($chDetails->active_status == 2)
-                    <b><span style="color: #ff851b;">Chapter is PENDING</span></b>
-                    @elseif ($chDetails->active_status == 3)
-                    <b><span style="color: #dc3545;">Chapter was NOT APPROVED</span></b><br>
-                        Declined Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                        {{ $chDetails->disband_reason }}
-                    @elseif ($chDetails->active_status == 0)
-                        <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
-                        Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                        {{ $chDetails->disband_reason }}
-                    @endif
-                    @endif
-                </div>
-                </li>
+                            @include('partials.coordinatorlist')
+                        </li>
+                        <li class="list-group-item mt-3">
+                            @include('partials.chapterstatus')
+                        </li>
 
-                <li class="list-group-item">
-                <div class="card-body text-center">
-                <button type="submit" id="save" class="btn bg-gradient-primary mb-2"><i class="fas fa-save mr-2"></i>Save Grant Review</button>
+                <li class="list-group-item mt-2">
+                <div class="card-body text-center mt-3">
+                <button type="submit" id="save" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save Grant Review</button>
                 <br>
                 @if ($grantDetails->review_complete != null && $grantDetails->submitted != null)
-                    <button type="button" class="btn bg-gradient-success" id="review-clear"><i class="fas fa-minus-circle mr-2"></i>Clear Review Complete</button>
+                    <button type="button" class="btn btn-success bg-gradient mb-2" id="review-clear"><i class="bi bi-dash-circle me-2"></i>Clear Review Complete</button>
                 @else
-                    <button type="button" class="btn bg-gradient-success" id="review-complete"><i class="fas fa-check mr-2"></i>Mark as Review Complete</button>
+                    <button type="button" class="btn btn-success bg-gradient mb-2" id="review-complete"><i class="bi bi-check-lg me-2"></i>Mark as Review Complete</button>
                 @endif
-                    <button type="button" class="btn bg-gradient-danger" id="unsubmit"><i class="fas fa-undo mr-2"></i>UnSubmit Request</button>
+                    <button type="button" class="btn btn-danger bg-gradient mb-2" id="unsubmit"><i class="bi bi-arrow-counterclockwise me-2"></i>UnSubmit Request</button>
                 <br><br>
                 @if ($grantDetails->grant_pdf_path != null)
-                    <button class="btn bg-gradient-primary mb-2" type="button" id="financial-pdf" onclick="openPdfViewer('{{ $grantDetails->grant_pdf_path }}')"><i class="fas fa-file-pdf mr-2"></i>View/Download Grant Request PDF</button>
+                    <button class="btn btn-primary bg-gradient mb-2" type="button" id="financial-pdf" onclick="openPdfViewer('{{ $grantDetails->grant_pdf_path }}')"><i class="bi bi-file-earmark-pdf-fill me-2"></i>View/Download Grant Request PDF</button>
                 @else
-                    <button class="btn bg-gradient-primary mb-2 disabled" type="button" id="financial-pdf" disabled><i class="fas fa-file-pdf mr-2"></i>No PDF Report Available</button><br>
+                    <button class="btn btn-primary bg-gradient mb-2 disabled" type="button" id="financial-pdf" disabled><i class="bi bi-file-earmark-pdf-fill me-2"></i>No PDF Report Available</button><br>
                 @endif
                 @if($chDetails != null)
-                    <button type="button" id="btn-back" class="btn btn-primary mb-2" onclick="window.location.href='{{ route('payment.paymenthistory', $grantDetails->chapter_id) }}'"><i class="fas fa-hand-holding-dollar mr-2" ></i>Chapter Donation History</button>
+                    <button type="button" id="btn-back" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('payment.paymenthistory', $grantDetails->chapter_id) }}'"><i class="bi bi-currency-dollar me-2" ></i>Chapter Donation History</button>
                 @endif
-                                                {{-- <a href="{{ url("/payment/chapterpaymenthistory/{$list->id}") }}"><i class="fas fa-file-invoice-dollar "></i></a> --}}
-
-                    <button type="button" id="btn-back" class="btn btn-primary mb-2" onclick="window.location.href='{{ route('payment.grantlist') }}'"><i class="fas fa-reply mr-2" ></i>Back to Grant List</button>
+                    <button type="button" id="btn-back" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('payment.grantlist') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-currency-dollar me-2"></i>Back to Grant List</button>
                 </li>
 
             </ul>
@@ -443,7 +422,7 @@
           <!-- /.col -->
 
           <div class="col-md-12">
-            <div class="card-body text-center">
+            <div class="card-body text-center mt-3">
 
 
             </div>

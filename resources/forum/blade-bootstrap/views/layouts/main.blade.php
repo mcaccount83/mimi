@@ -77,7 +77,7 @@
             </div>
 
             <!-- Right navbar links -->
-            <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+            <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ms-auto">
                 @if (Auth::check())
                     <li class="nav-item">
                         <a class="dropdown-item" href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

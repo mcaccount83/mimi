@@ -13,7 +13,7 @@
                 <div class="card card-outline card-primary">
                     <div class="card-header">
                         <div class="dropdown">
-                            <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Donation Log Report
                             </h3>
                             @include('layouts.dropdown_menus.menu_reports_admin')
@@ -69,27 +69,27 @@
                 </div>
 
                 <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showM2M" id="showM2M" class="custom-control-input" {{ $checkBox8Status ? 'checked' : '' }} onchange="showM2M()" />
-                            <label class="custom-control-label" for="showM2M">Show Only M2M Donations</label>
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showM2M" id="showM2M" class="form-check-input" {{ $checkBox8Status ? 'checked' : '' }} onchange="showM2M()" />
+                            <label class="form-check-label" for="showM2M">Show Only M2M Donations</label>
                         </div>
                     </div>
 
                 @if ($ITCondition)
                     <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showIntlM2M" id="showIntlM2M" class="custom-control-input" {{ $checkBox58Status ? 'checked' : '' }} onchange="showIntlM2M()" />
-                            <label class="custom-control-label" for="showIntlM2M">Show Only M2M International Donations</label>
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showIntlM2M" id="showIntlM2M" class="form-check-input" {{ $checkBox58Status ? 'checked' : '' }} onchange="showIntlM2M()" />
+                            <label class="form-check-label" for="showIntlM2M">Show Only M2M International Donations</label>
                         </div>
                     </div>
                     <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="custom-control-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
-                            <label class="custom-control-label" for="showIntl">Show All International Donations</label>
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <label class="form-check-label" for="showIntl">Show All International Donations</label>
                         </div>
                     </div>
                 @endif
-            <div class="card-body text-center">
+            <div class="card-body text-center mt-3">
             </div>
           </div>
           <!-- /.card -->

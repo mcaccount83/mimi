@@ -372,7 +372,7 @@ class UserController extends Controller implements HasMiddleware
             ->first();
 
         if (! $coordiantors) {
-            return response()->json('<b>Primary Coordinator:</b><span class="float-right">Data Not Available</span><br>');
+            return response()->json('<b>Primary Coordinator:</b><span class="float-end">Data Not Available</span><br>');
         }
 
         $attributes = $coordiantors->getAttributes();
@@ -431,7 +431,7 @@ class UserController extends Controller implements HasMiddleware
                     : $name.'/Retired';
 
                 // Build the final string
-                $str .= "<b>{$title}</b><span class='float-right'>{$nameDisplay} {$position}</span><br>";
+                $str .= "<b>{$title}</b><span class='float-end'>{$nameDisplay} {$position}</span><br>";
                 $i++;
             }
         }

@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\CoordinatorListAccessCMiddleware;
 use App\Http\Middleware\CoordinatorListAccessPMiddleware;
 use App\Http\Middleware\CoordinatorListAccessTMiddleware;
 use App\Http\Middleware\HandlePageExpired;
+use App\Http\Middleware\PreventBackHistory;
 use App\Providers\AppServiceProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -24,12 +26,13 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectGuestsTo(fn () => route('login'));
         $middleware->redirectUsersTo(AppServiceProvider::HOME);
         $middleware->append(HandlePageExpired::class);
+        $middleware->append(PreventBackHistory::class);
         $middleware->throttleApi();
         $middleware->alias([
             'coordinatorlistC.access' => CoordinatorListAccessCMiddleware::class,
             'coordinatorlistT.access' => CoordinatorListAccessTMiddleware::class,
             'coordinatorlistP.access' => CoordinatorListAccessPMiddleware::class,
-            'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'admin' => AdminMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

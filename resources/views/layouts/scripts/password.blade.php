@@ -1,4 +1,6 @@
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
     document.querySelectorAll('.reset-password-btn').forEach(button => {
         button.addEventListener('click', function (e) {
             e.preventDefault();
@@ -46,15 +48,15 @@
             title: 'Change Password',
             html: `
                 <form id="changePasswordForm">
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="current_password">Current Password</label>
                         <input type="password" name="current_password" id="current_password" class="swal2-input" required>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="new_password">New Password</label>
                         <input type="password" name="new_password" id="new_password" class="swal2-input" required>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="new_password_confirmation">Confirm New Password</label>
                         <input type="password" name="new_password_confirmation" id="new_password_confirmation" class="swal2-input" required>
                     </div>
@@ -158,4 +160,5 @@
             }
         });
     }
+    });
 </script>

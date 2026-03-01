@@ -12,7 +12,7 @@
                     <div class="card card-outline card-primary">
                         <div class="card-header">
                             <div class="dropdown">
-                                <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     State List
                                 </h3>
                                 @include('layouts.dropdown_menus.menu_reports_admin')
@@ -71,27 +71,34 @@
                     </span>
                 </td>
                 <td>
-                    <button class="btn btn-sm bg-gradient-primary edit-state-btn">Edit Conf/Reg</button>
-                    <button class="btn btn-sm bg-gradient-success save-state-btn" style="display: none;">Save</button>
-                    <button class="btn btn-sm bg-gradient-danger cancel-state-btn" style="display: none;">Cancel</button>
+                    <button class="btn btn-primary bg-gradient btn-sm edit-state-btn">Edit Conf/Reg</button>
+                    <button class="btn btn-success bg-gradient btn-sm save-state-btn" style="display: none;">Save</button>
+                    <button class="btn btn-danger bg-gradient btn-sm cancel-state-btn" style="display: none;">Cancel</button>
                 </td>
             </tr>
             @endforeach
         </tbody>
     </table>
 </div>
-             <div class="card-body text-center">
+              <!-- /.card-body -->
+
+              <div class="card-body">
             </div>
-          </div>
-          <!-- /.card -->
-        </div>
-        <!-- /.col -->
+            <!-- /.card-body for checkboxes -->
+
+                <div class="card-body text-center mt-3">
+            </div>
+            <!-- /.card-body for buttons -->
+
+         </div>
+        <!-- /.card -->
       </div>
-      <!-- /.row -->
+      <!-- /.col -->
     </div>
-    <!-- /.container-fluid -->
-  </section>
-  <!-- /.content -->
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
 @endsection
 
 @push('scripts')

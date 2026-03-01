@@ -31,7 +31,7 @@
                     <div class="card card-outline card-primary">
                         <div class="card-header">
                           <div class="dropdown">
-                              <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   End of Year Procedures
                               </h3>
                               @include('layouts.dropdown_menus.menu_reports_tech')
@@ -41,216 +41,202 @@
                   <div class="card-body">
                 <div class="row">
                     <div class="col-md-2">
-                        <h4>Fiscal Year: {{ $admin->fiscal_year }}</h4>
+                        <h3>Fiscal Year: {{ $admin->fiscal_year }}</h3>
                     </div>
                     <div class="col-md-6">
                         <p><strong>RESET IN DECEMBER.</strong><br>
                             Reset Data to disable all menus and buttons back to *ADMIN* ONLY and prep for New Year before dates auto change to new year on all Buttons/Links/Emails/Forms.</p>
                             <h5>This CANNOT be undone!</h5>
-                            <button type="button" id="reset-year" class="btn bg-gradient-danger"><i class="fas fa-undo" ></i>&nbsp;&nbsp;&nbsp;Reset for New Year</button>
+                            <button type="button" id="reset-year" class="btn btn-danger bg-gradient mb-2"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset for New Year</button>
                     </div>
                     <div class="col-md-12"><br></div>
                 </div>
 
+     <div class="row">
+    <div class="col-12">
+
+        <!-- Card 1 -->
+        <div class="card card-outline card-primary mb-3">
+            <div class="card-header">
+                    <h3 class="card-title">#1 - Reset Tables BEFORE testing  <small><small><span style="color: #007bff;">Complete in Feb/March to prepare for data for testing.</span></small></small></h3><br>
+                <br>
+                <h5>This CANNOT be undone!</h5>
+                <button type="button" id="update-eoy-database" class="btn btn-primary bg-gradient btn-sm mb-2"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset EOY Tables Data Tables</button>
+            </div>
+            <div class="card-body">
+                <p style="font-weight: bold;">The following functions will be performed:</p>
                 <div class="row">
-                <div class="grid">
-                    <!-- Grid item -->
-                    <div class="grid-item">
-                        <div class="card card-outline card-primary">
-                            <div class="card-header">
-                                <h3 class="card-title">#1 - Reset Tables BEFORE testing</h3><br>
-                                <p style="color: #007bff; font-weight: bold;">Complete in Feb/March to prepare for data for testing.</p>
-                                <h5>This CANNOT be undone!</h5>
-                                <button type="button" id="update-eoy-database" class="btn bg-gradient-primary mb-3"><i class="fas fa-undo mr-2"></i>Reset EOY Tables Data Tables</button>
-                            </div>
-                            <!-- /.card-header -->
-                            <div class="card-body">
-                                <div class="col-sm-12">
-                                    <p style="font-weight: bold;">The following functions will be performed:</p>
-                                </div>
-                                @foreach($resetEOYTableItems as $item)
-                                    <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                                        @if($admin->reset_eoy_tables == 1)
-                                            <i class="fas fa-check mr-2 ml-2"></i>{{ $item }}
-                                        @else
-                                            <i class="far fa-square mr-2 ml-2"></i>{{ $item }}
-                                        @endif
-                                    </li>
-                                @endforeach
-                            </div>
+                    @foreach($resetEOYTableItems as $item)
+                        <div class="col-md-4">
+                            <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                @if($admin->reset_eoy_tables == 1)
+                                    <i class="bi bi-check2-square ms-2"></i>{{ $item }}
+                                @else
+                                    <i class="bi bi-square ms-2"></i>{{ $item }}
+                                @endif
+                            </li>
                         </div>
-                    </div>
-                    <!-- /.grid-item -->
-
-                    <!-- Grid item -->
-                    <div class="grid-item">
-                        <div class="card card-outline card-primary">
-                            <div class="card-header">
-                                <h3 class="card-title">#2 - Activate *TESTING* Menus/Buttons/Links BEFORE Testing</h3><br>
-                                <p style="color: #007bff; font-weight: bold;">Complete in Feb/March when ready for testing.</p>
-                                <button type="button" id="view-eoy-testing" class="btn bg-gradient-primary mb-3"><i class="fas fa-eye mr-2"></i>Display EOY Testing Items</button>
-                            </div>
-                            <!-- /.card-header -->
-                            <div class="card-body">
-                                <div class="col-sm-12">
-                                    <p style="font-weight: bold;">The following functions will be performed:</p>
-                                </div>
-                                @foreach($displayTestingItemsItems as $item)
-                                    <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                                        @if($admin->display_testing == 1)
-                                            <i class="fas fa-check mr-2 ml-2"></i>{{ $item }}
-                                        @else
-                                            <i class="far fa-square mr-2 ml-2"></i>{{ $item }}
-                                        @endif
-                                    </li>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.grid-item -->
-
-                    <!-- Grid item -->
-                    <div class="grid-item">
-                        <div class="card card-outline card-primary">
-                            <div class="card-header">
-                                <h3 class="card-title">#3 - Reset Tables AFTER testing is complete</h3><br>
-                                <p style="color: #007bff; font-weight: bold;">Complete in May, after testing, so all data tables are clean and ready to go.</p>
-                                <button type="button" id="reset-database-after" class="btn bg-gradient-primary mb-3"><i class="fas fa-undo mr-2"></i>Reset Database AFTER Testing</button>
-                            </div>
-                            <!-- /.card-header -->
-                            <div class="card-body">
-                                <div class="col-sm-12">
-                                    <p style="font-weight: bold;">The following functions will be performed:</p>
-                                </div>
-                                @foreach($resetAFTERtestingItems as $item)
-                                    <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                                        @if($admin->reset_AFTER_testing == 1)
-                                            <i class="fas fa-check mr-2 ml-2"></i>{{ $item }}reset_AFTER_testing
-                                        @else
-                                            <i class="far fa-square mr-2 ml-2"></i>{{ $item }}
-                                        @endif
-                                    </li>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.grid-item -->
-
-                    <!-- Grid item -->
-                    <div class="grid-item">
-                        <div class="card card-outline card-primary">
-                            <div class="card-header">
-                                <h3 class="card-title">#4 - Copy User Data to New Tables</h3><br>
-                                <p style="color: #007bff; font-weight: bold;">Complete in May, before going live to save old board/coordinator/user information.</p>
-                                <h5>This CANNOT be undone!</h5>
-                                <button type="button" id="update-data-database" class="btn bg-gradient-primary mb-3"><i class="fas fa-undo mr-2"></i>Update User Data Tables</button>
-
-                            </div>
-                            <!-- /.card-header -->
-                            <div class="card-body">
-                                <div class="col-sm-12">
-                                    <p style="font-weight: bold;">The following functions will be performed:</p>
-                                </div>
-                                @foreach($updateUserTablesItems as $item)
-                                    <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                                        @if($admin->update_user_tables == 1)
-                                            <i class="fas fa-check mr-2 ml-2"></i>{{ $item }}
-                                        @else
-                                            <i class="far fa-square mr-2 ml-2"></i>{{ $item }}
-                                        @endif
-                                    </li>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.grid-item -->
-
-                    <!-- Grid item -->
-                    <div class="grid-item">
-                        <div class="card card-outline card-primary">
-                            <div class="card-header">
-                                <h3 class="card-title">#5 - Unsubscribe from BoardList</h3><br>
-                                <p style="color: #007bff; font-weight: bold;">Complete in May, before new board reports are submitted.</p>
-                                <button type="button" id="update-eoy-unsubscribelists" class="btn bg-gradient-primary mb-3"><i class="fas fa-eye mr-2"></i>Unsubscribe from Lists</button>
-                            </div>
-                            <!-- /.card-header -->
-                            <div class="card-body">
-                                <div class="col-sm-12">
-                                    <p style="font-weight: bold;">The following functions will be performed:</p>
-                                </div>
-                                @foreach($unSubscribeListItems as $item)
-                                    <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                                        @if($admin->unsubscribe_list == 1)
-                                            <i class="fas fa-check mr-2 ml-2"></i>{{ $item }}
-                                        @else
-                                            <i class="far fa-square mr-2 ml-2"></i>{{ $item }}
-                                        @endif
-                                    </li>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.grid-item -->
-
-                     <!-- Grid item -->
-                     <div class="grid-item">
-                        <div class="card card-outline card-primary">
-                            <div class="card-header">
-                                <h3 class="card-title">#6 - Activate Menus/Buttons/Links AFTER testing</h3><br>
-                                <p style="color: #007bff; font-weight: bold;">Complete in May, after testing, for live viewing.</p>
-                                <button type="button" id="view-eoy-live" class="btn bg-gradient-primary mb-3"><i class="fas fa-eye mr-2"></i>Display EOY LIVE Items</button>
-                            </div>
-                            <!-- /.card-header -->
-                            <div class="card-body">
-                                <div class="col-sm-12">
-                                    <p style="font-weight: bold;">The following functions will be performed:</p>
-                                </div>
-                                @foreach($displayLiveItemsItems as $item)
-                                    <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                                        @if($admin->display_live == 1)
-                                            <i class="fas fa-check mr-2 ml-2"></i>{{ $item }}
-                                        @else
-                                            <i class="far fa-square mr-2 ml-2"></i>{{ $item }}
-                                        @endif
-                                    </li>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.grid-item -->
-
-                    <!-- Grid item -->
-                    <div class="grid-item">
-                        <div class="card card-outline card-primary">
-                            <div class="card-header">
-                                <h3 class="card-title">#7 - Subscribe to BoardList</h3><br>
-                                <p style="color: #007bff; font-weight: bold;">Complete in Augsut, after activating boards, so new board members recieve subscription to Lists.</p>
-                                <button type="button" id="update-eoy-subscribelists" class="btn bg-gradient-primary mb-3"><i class="fas fa-eye mr-2"></i>Subscribe to Lists</button>
-                            </div>
-                            <!-- /.card-header -->
-                            <div class="card-body">
-                                <div class="col-sm-12">
-                                    <p style="font-weight: bold;">The following functions will be performed:</p>
-                                </div>
-                                @foreach($subscribeListItems as $item)
-                                    <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                                        @if($admin->subscribe_list == 1)
-                                            <i class="fas fa-check mr-2 ml-2"></i>{{ $item }}
-                                        @else
-                                            <i class="far fa-square mr-2 ml-2"></i>{{ $item }}
-                                        @endif
-                                    </li>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.grid-item -->
-
-                    </div>
+                    @endforeach
                 </div>
             </div>
+        </div>
 
-                <div class="card-body text-center">
+        <!-- Card 2 -->
+        <div class="card card-outline card-primary mb-3">
+            <div class="card-header">
+                <h3 class="card-title">#2 - Activate *TESTING* Menus/Buttons/Links BEFORE Testing  <small><small><span style="color: #007bff;">Complete in Feb/March when ready for data for testing.</span></small></small></h3><br>
+                <br>
+                <button type="button" id="view-eoy-testing" class="btn btn-primary bg-gradient btn-sm mb-2"><i class="bi bi-eye-fill me-2"></i>Display EOY Testing Items</button>
+            </div>
+            <div class="card-body">
+                <p style="font-weight: bold;">The following functions will be performed:</p>
+                <div class="row">
+                    @foreach($displayTestingItemsItems as $item)
+                        <div class="col-md-4">
+                            <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                @if($admin->display_testing == 1)
+                                    <i class="bi bi-check2-square ms-2"></i>{{ $item }}
+                                @else
+                                    <i class="bi bi-square ms-2"></i>{{ $item }}
+                                @endif
+                            </li>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card card-outline card-primary mb-3">
+            <div class="card-header">
+                <h3 class="card-title">#3 - Reset Tables AFTER testing is complete  <small><small><span style="color: #007bff;">Complete in May, after testing, so all data tables are clean and ready to go.</span></small></small></h3><br>
+                <br>
+                <button type="button" id="reset-database-after" class="btn btn-primary bg-gradient btn-sm mb-2"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Database AFTER Testing</button>
+            </div>
+            <div class="card-body">
+                <p style="font-weight: bold;">The following functions will be performed:</p>
+                <div class="row">
+                    @foreach($resetAFTERtestingItems as $item)
+                        <div class="col-md-4">
+                            <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                @if($admin->reset_AFTER_testing == 1)
+                                    <i class="bi bi-check2-square ms-2"></i>{{ $item }}
+                                @else
+                                    <i class="bi bi-square ms-2"></i>{{ $item }}
+                                @endif
+                            </li>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card card-outline card-primary mb-3">
+            <div class="card-header">
+                <h3 class="card-title">#4 - Copy User Data to New Tables  <small><small><span style="color: #007bff;">Complete in May, before going live to save old board/coordinator/user information.</span></small></small></h3><br>
+                <br>
+                <h5>This CANNOT be undone!</h5>
+                <button type="button" id="update-data-database" class="btn btn-primary bg-gradient btn-sm mb-2"><i class="bi bi-arrow-counterclockwise me-2"></i>Update User Data Tables</button>
+            </div>
+            <div class="card-body">
+                <p style="font-weight: bold;">The following functions will be performed:</p>
+                <div class="row">
+                    @foreach($updateUserTablesItems as $item)
+                        <div class="col-md-4">
+                            <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                @if($admin->update_user_tables == 1)
+                                    <i class="bi bi-check2-square ms-2"></i>{{ $item }}
+                                @else
+                                    <i class="bi bi-square ms-2"></i>{{ $item }}
+                                @endif
+                            </li>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card card-outline card-primary mb-3">
+            <div class="card-header">
+                <h3 class="card-title">#5 - Unsubscribe from BoardList  <small><small><span style="color: #007bff;">Complete in May, before new board reports are submitted.</span></small></small></h3><br>
+                <br>
+                <button type="button" id="update-eoy-unsubscribelists" class="btn btn-primary bg-gradient btn-sm mb-2"><i class="bi bi-eye-fill me-2"></i>Unsubscribe from Lists</button>
+            </div>
+            <div class="card-body">
+                <p style="font-weight: bold;">The following functions will be performed:</p>
+                <div class="row">
+                    @foreach($unSubscribeListItems as $item)
+                        <div class="col-md-4">
+                            <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                @if($admin->unsubscribe_list == 1)
+                                    <i class="bi bi-check2-square ms-2"></i>{{ $item }}
+                                @else
+                                    <i class="bi bi-square ms-2"></i>{{ $item }}
+                                @endif
+                            </li>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="card card-outline card-primary mb-3">
+            <div class="card-header">
+                <h3 class="card-title">#6 - Activate Menus/Buttons/Links AFTER testing  <small><small><span style="color: #007bff;">Complete in May, after testing, for live viewing.</span></small></small></h3><br>
+                <br>
+                <button type="button" id="view-eoy-live" class="btn btn-primary bg-gradient btn-sm mb-2"><i class="bi bi-eye-fill me-2"></i>Display EOY LIVE Items</button>
+            </div>
+            <div class="card-body">
+                <p style="font-weight: bold;">The following functions will be performed:</p>
+                <div class="row">
+                    @foreach($displayLiveItemsItems as $item)
+                        <div class="col-md-4">
+                            <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                @if($admin->display_live == 1)
+                                    <i class="bi bi-check2-square ms-2"></i>{{ $item }}
+                                @else
+                                    <i class="bi bi-square ms-2"></i>{{ $item }}
+                                @endif
+                            </li>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 7 -->
+        <div class="card card-outline card-primary mb-3">
+            <div class="card-header">
+                <h3 class="card-title">#7 - Subscribe to BoardList  <small><small><span style="color: #007bff;">Complete in August, after activating boards, so new board members receive subscription to Lists.</span></small></small></h3><br>
+                <br>
+                <button type="button" id="update-eoy-subscribelists" class="btn btn-primary bg-gradient btn-sm mb-2"><i class="bi bi-eye-fill me-2"></i>Subscribe to Lists</button>
+            </div>
+            <div class="card-body">
+                <p style="font-weight: bold;">The following functions will be performed:</p>
+                <div class="row">
+                    @foreach($subscribeListItems as $item)
+                        <div class="col-md-4">
+                            <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                @if($admin->subscribe_list == 1)
+                                    <i class="bi bi-check2-square ms-2"></i>{{ $item }}
+                                @else
+                                    <i class="bi bi-square ms-2"></i>{{ $item }}
+                                @endif
+                            </li>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+            </div>
+
+                <div class="card-body text-center mt-3">
                 </div>
             </div>
 

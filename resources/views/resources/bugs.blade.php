@@ -11,7 +11,7 @@
                 <div class="card card-outline card-primary">
                     <div class="card-header">
                       <div class="dropdown">
-                          <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             MIMI Bugs & Wishes
                           </h3>
                             @include('layouts.dropdown_menus.menu_reports_admin')
@@ -20,7 +20,7 @@
                   <!-- /.card-header -->
               <div class="card-body">
             <div class="row">
-                &nbsp;&nbsp;<button type="button" class="btn bg-gradient-success" data-toggle="modal" data-target="#modal-task"><i class="fas fa-plus" ></i>&nbsp;&nbsp;&nbsp;Add Task</button>
+                &nbsp;&nbsp;<button type="button" class="btn btn-success bg-gradient mb-2" data-bs-toggle="modal" data-bs-target="#modal-task"><i class="bi bi-plus me-2"></i>Add Task</button>
             </div>
             <div class="row">&nbsp;</div>
             <div class="row">
@@ -56,8 +56,8 @@
                                               <p>
                                                 {{ $adminItem->details }}
                                                 <br><br>
-                                                <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#editTaskModal{{ $adminItem->id }}">
-                                                    <i class="fas fa-info-circle"></i>&nbsp;View/Edit Details</button>
+                                                <button type="button" class="btn btn-primary bg-gradient mb-2" data-bs-toggle="modal" data-bs-target="#editTaskModal{{ $adminItem->id }}">
+                                                    <i class="bi bi-info-circle"></i>&nbsp;View/Edit Details</button>
                                               </p>
                                             </div>
                                           </div>
@@ -71,13 +71,13 @@
                                                         <div class="modal-body">
                                                             <form>
                                                                 <div class="col-md-12">
-                                                                <div class="form-group">
+                                                                <div class="mb-3">
                                                                     <label for="taskDetails">Description</label>
                                                                     <textarea class="form-control" id="taskDetails{{ $adminItem->id }}">{{ $adminItem->details }}</textarea>
                                                                 </div>
                                                                 </div>
                                                                 <div class="col-md-12">
-                                                                <div class="form-group">
+                                                                <div class="mb-3">
                                                                     <label for="taskNotes">IT Dept Notes</label>
                                                                     <textarea class="form-control" id="taskNotes{{ $adminItem->id }}" rows="5" {{ $canEditDetails ? '' : 'disabled' }}>{{ $adminItem->notes }}</textarea>
                                                                 </div>
@@ -100,7 +100,7 @@
                                                                 </div>
                                                                 <div class="col-md-6"><br></div>
                                                                 <div class="col-md-12">
-                                                                <div class="form-group">
+                                                                <div class="mb-3">
                                                                     Reported by <strong>{{ $adminItem->updatedBy->first_name }} {{ $adminItem->updatedBy->last_name }}</strong> on <strong>{{ $adminItem->reported_date }}</strong>
                                                                 </div>
                                                                 </div>
@@ -108,8 +108,8 @@
                                                         </div>
                                                         <div class="col-md-6"><br></div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>&nbsp; Close</button>
-                                                            <button type="button" class="btn btn-success" onclick="updateTask({{ $adminItem->id }})"><i class="fas fa-save" ></i>&nbsp; Save changes</button>
+                                                            <button type="button" class="btn btn-danger bg-gradient mb-2" data-bs-dismiss="modal"><i class="bi bi-x-lg me-2"></i>Close</button>
+                                                            <button type="button" class="btn btn-success bg-gradient mb-2" onclick="updateTask({{ $adminItem->id }})"><i class="bi bi-floppy-fill me-2"></i>Save changes</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -151,8 +151,8 @@
                                                 <p>
                                                     {{ $adminItem->details }}
                                                     <br><br>
-                                                    <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#editTaskModal{{ $adminItem->id }}">
-                                                        <i class="fas fa-info-circle"></i>&nbsp;View/Edit Details</button>
+                                                    <button type="button" class="btn btn-primary bg-gradient mb-2" data-bs-toggle="modal" data-bs-target="#editTaskModal{{ $adminItem->id }}">
+                                                        <i class="bi bi-info-circle"></i>&nbsp;View/Edit Details</button>
                                                 </p>
                                                 </div>
                                             </div>
@@ -166,13 +166,13 @@
                                                         <div class="modal-body">
                                                             <form>
                                                                 <div class="col-md-12">
-                                                                <div class="form-group">
+                                                                <div class="mb-3">
                                                                     <label for="taskDetails">Description</label>
                                                                     <textarea class="form-control" id="taskDetails{{ $adminItem->id }}" {{ $canEditDetails ? '' : 'disabled' }}>{{ $adminItem->details }}</textarea>
                                                                 </div>
                                                                 </div>
                                                                 <div class="col-md-12">
-                                                                <div class="form-group">
+                                                                <div class="mb-3">
                                                                     <label for="taskNotes">IT Dept Notes</label>
                                                                     <textarea class="form-control" id="taskNotes{{ $adminItem->id }}" rows="5" {{ $canEditDetails ? '' : 'disabled' }}>{{ $adminItem->notes }}</textarea>
                                                                 </div>
@@ -195,7 +195,7 @@
                                                                 </div>
                                                                 <div class="col-md-6"><br></div>
                                                                 <div class="col-md-12">
-                                                                <div class="form-group">
+                                                                <div class="mb-3">
                                                                     Reported by <strong>{{ $adminItem->updatedBy->first_name }} {{ $adminItem->updatedBy->last_name }}</strong> on <strong>{{ $adminItem->reported_date }}</strong>
                                                                 </div>
                                                                 </div>
@@ -203,8 +203,8 @@
                                                         </div>
                                                         <div class="col-md-6"><br></div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>&nbsp; Close</button>
-                                                            <button type="button" class="btn btn-success" onclick="updateTask({{ $adminItem->id }})"><i class="fas fa-save" ></i>&nbsp; Save changes</button>
+                                                            <button type="button" class="btn btn-danger bg-gradient mb-2" data-bs-dismiss="modal"><i class="bi bi-x-lg me-2"></i>Close</button>
+                                                            <button type="button" class="btn btn-success bg-gradient mb-2" onclick="updateTask({{ $adminItem->id }})"><i class="bi bi-floppy-fill me-2"></i>Save changes</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -252,8 +252,8 @@
                                                 <p>
                                                     {{ $adminItem->details }}
                                                     <br><br>
-                                                    <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#editTaskModal{{ $adminItem->id }}">
-                                                        <i class="fas fa-info-circle"></i>&nbsp;View/Edit Details</button>
+                                                    <button type="button" class="btn btn-primary bg-gradient mb-2" data-bs-toggle="modal" data-bs-target="#editTaskModal{{ $adminItem->id }}">
+                                                        <i class="bi bi-info-circle"></i>&nbsp;View/Edit Details</button>
                                                 </p>
                                                 </div>
                                             </div>
@@ -268,13 +268,13 @@
                                                         <div class="modal-body">
                                                             <form>
                                                                 <div class="col-md-12">
-                                                                <div class="form-group">
+                                                                <div class="mb-3">
                                                                     <label for="taskDetails">Description</label>
                                                                     <textarea class="form-control" id="taskDetails{{ $adminItem->id }}" disabled>{{ $adminItem->details }}</textarea>
                                                                 </div>
                                                                 </div>
                                                                 <div class="col-md-12">
-                                                                <div class="form-group">
+                                                                <div class="mb-3">
                                                                     <label for="taskNotes">IT Dept Notes</label>
                                                                     <textarea class="form-control" id="taskNotes{{ $adminItem->id }}" rows="5" disabled>{{ $adminItem->notes }}</textarea>
                                                                 </div>
@@ -297,12 +297,12 @@
                                                                 </div>
                                                                 <div class="col-md-6"><br></div>
                                                                 <div class="col-md-12">
-                                                                <div class="form-group">
+                                                                <div class="mb-3">
                                                                     Reported by <strong>{{ $adminItem->updatedBy->first_name }} {{ $adminItem->updatedBy->last_name }}</strong> on <strong>{{ $adminItem->reported_date }}</strong>
                                                                 </div>
                                                                 </div>
                                                                 <div class="col-md-12">
-                                                                <div class="form-group">
+                                                                <div class="mb-3">
                                                                     Completed on <strong>{{ $adminItem->completed_date }}</strong>
                                                                 </div>
                                                                 </div>
@@ -310,8 +310,8 @@
                                                         </div>
                                                         <div class="col-md-6"><br></div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>&nbsp; Close</button>
-                                                            <button type="button" class="btn btn-success" onclick="updateBugTask({{ $adminItem->id }})"><i class="fas fa-save" ></i>&nbsp; Save changes</button>
+                                                            <button type="button" class="btn btn-danger bg-gradient mb-2" data-bs-dismiss="modal"><i class="bi bi-x-lg me-2"></i>Close</button>
+                                                            <button type="button" class="btn btn-success bg-gradient mb-2" onclick="updateBugTask({{ $adminItem->id }})"><i class="bi bi-floppy-fill me-2"></i>Save changes</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -338,11 +338,11 @@
                 </div>
                 <div class="modal-body">
                     <form id="addTaskForm">
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="taskNameNew">Task </label>
                             <input type="text" class="form-control" id="taskNameNew" name="taskNameNew">
                         </div>
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="taskDetailsNew">Description</label>
                             <textarea class="form-control" id="taskDetailsNew" name="taskDetailsNew"></textarea>
                         </div>
@@ -355,8 +355,8 @@
                         </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>&nbsp; Close</button>
-                    <button type="button" class="btn btn-success" onclick="return addBugTask()"><i class="fas fa-save" ></i>&nbsp; Add Task</button>
+                    <button type="button" class="btn btn-danger bg-gradient mb-2" data-bs-dismiss="modal"><i class="bi bi-x-lg me-2"></i>Close</button>
+                    <button type="button" class="btn btn-success bg-gradient mb-2" onclick="return addBugTask()"><i class="bi bi-floppy-fill me-2"></i>Add Task</button>
                 </div>
             </div>
         </div>

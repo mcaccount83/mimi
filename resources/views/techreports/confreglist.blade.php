@@ -12,7 +12,7 @@
             <div class="card card-outline card-primary">
                 <div class="card-header">
                     <div class="dropdown">
-                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Conferences & Regions
                         </h3>
                         @include('layouts.dropdown_menus.menu_reports_tech')
@@ -53,23 +53,27 @@
                 </tbody>
             </table>
         </div>
+              <!-- /.card-body -->
 
-                   <!-- /.card-body -->
-                <div class="card-body text-center">
+              <div class="card-body">
+            </div>
+            <!-- /.card-body for checkboxes -->
+
+                <div class="card-body text-center mt-3">
                     @if ($userAdmin)
-                        <a class="btn bg-gradient-primary" href="{{ route('chapters.chaplistpending') }}"><i class="fas fa-edit mr-2" ></i>Add/Update Conference</a>
-                        <a class="btn bg-gradient-primary" href="{{ route('chapters.chaplistpending') }}"><i class="fas fa-edit mr-2" ></i>Add/Update Region</a>
+                        <a class="btn btn-primary bg-gradient mb-2" href="{{ route('chapters.chaplistpending') }}"><i class="bi bi-pencil-square me-2"></i>Add/Update Conference</a>
+                        <a class="btn btn-primary bg-gradient mb-2" href="{{ route('chapters.chaplistpending') }}"><i class="bi bi-pencil-square me-2"></i>Add/Update Region</a>
                     @endif
-                    </div>
+                                </div>
+            <!-- /.card-body for buttons -->
 
-                </div>
-            </div>
-
-            </div>
-        </div>
+         </div>
+        <!-- /.card -->
+      </div>
+      <!-- /.col -->
     </div>
-</div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
 </section>
-<!-- /.content -->
-
 @endsection

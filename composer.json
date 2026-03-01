@@ -1,5 +1,7 @@
 {
     "name": "laravel/laravel",
+    "minimum-stability": "RC",
+    "prefer-stable": true,
     "type": "project",
     "description": "The Laravel Framework.",
     "keywords": [
@@ -9,7 +11,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
-        "almasaeed2010/adminlte": "~3.2",
+        "almasaeed2010/adminlte": "~4.0",
         "authorizenet/authorizenet": "^2.0",
         "barryvdh/laravel-dompdf": "^3.1",
         "dcblogdev/laravel-sent-emails": "^2.0",
@@ -27,7 +29,6 @@
         "romanzipp/laravel-queue-monitor": "^5.4",
         "setasign/fpdf": "^1.8",
         "setasign/fpdi": "^2.6",
-        "spatie/laravel-html": "^3.12",
         "spatie/laravel-sitemap": "^7.3"
     },
     "require-dev": {
@@ -53,8 +54,6 @@
             "Tests\\": "tests/"
         }
     },
-    "minimum-stability": "stable",
-    "prefer-stable": true,
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",

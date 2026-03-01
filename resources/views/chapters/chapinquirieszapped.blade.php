@@ -16,7 +16,7 @@
                 <div class="card card-outline card-primary">
                     <div class="card-header">
                     <div class="dropdown">
-                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Inquiries Zapped Chapter List
                         </h3>
                         @include('layouts.dropdown_menus.menu_inquiries')
@@ -27,7 +27,7 @@
               <table id="chapterlist" class="table table-sm table-hover">
               <thead>
 			    <tr>
-					<th>Details</th>
+					<th>Chapter<br>Details</th>
                     <th>Conf/Reg</th>
                     <th>State</th>
                     <th>Chapter Name</th>
@@ -39,7 +39,7 @@
                 <tbody>
                 @foreach($chapterList as $list)
                   <tr>
-                    <td class="text-center "><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                    <td class="text-center "><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="bi bi-house-slash-fill"></i></a></td>
                     <td>
                         @if ($list->state->conference_id > 0)
                             {{ $list->state->conference->short_name }} / {{ $list->state->region->short_name }}
@@ -61,32 +61,32 @@
                   @endforeach
                   </tbody>
                 </table>
-            </div>
+          </div>
+            <!-- /.card-body -->
 
-              <!-- /.card-body -->
+            <div class="card-body">
               @if ($ITCondition)
-                    <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="custom-control-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
-                            <label class="custom-control-label" for="showIntl">Show All International Chapters</label>
+                <div class="col-sm-12">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <label class="form-check-label" for="showIntl">Show All International Chapters</label>
                         </div>
                     </div>
                 @endif
+                  </div>
+            <!-- /.card-body for checkboxes -->
 
-            <div class="card-body text-center">
-
+            <div class="card-body text-center mt-3">
             </div>
-        </div>
+            <!-- /.card-body for buttons -->
 
-          </div>
-
-          <!-- /.box -->
         </div>
+        <!-- /.card -->
       </div>
-    </section>
-    <!-- Main content -->
-
-    <!-- /.content -->
-
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
 @endsection
-

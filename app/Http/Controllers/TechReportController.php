@@ -13,6 +13,7 @@ use App\Models\BoardsIncoming;
 use App\Models\BoardsOutgoing;
 use App\Models\BoardsPending;
 use App\Models\Chapters;
+use App\Models\ChapterAwardHistory;
 use App\Models\Conference;
 use App\Models\CoordinatorApplication;
 use App\Models\CoordinatorRecognition;
@@ -209,6 +210,7 @@ class TechReportController extends Controller implements HasMiddleware
             'Clear Outgoing Board Member Table',
             'Clear Incoming Board Member Table',
             'Ending Balance Added to Documents from Financial Reports',
+            'Approved Awards Added to Awards History from Financial Reports',
             'Copy/Rename Financial Reports Table',
             'Clear Financial Reports Table',
             'Pre-Balance Added to Financial Report from Documents',
@@ -419,6 +421,7 @@ class TechReportController extends Controller implements HasMiddleware
         try {
             $user = $this->userController->loadUserInformation($request);
             $updatedId = $user['userId'];
+            $updatedBy = $user['userName'];
 
             // Get the current year +/- 1 for table renaming
             $EOYOptions = $this->positionConditionsService->getEOYOptions();
@@ -445,6 +448,31 @@ class TechReportController extends Controller implements HasMiddleware
                     $documentsEOY = $chapter->documents;
                     $documentsEOY->pre_balance = $chapter->financialReport->post_balance;
                     $documentsEOY->save();
+                }
+            }
+
+            // Copy approved awards from blob to history table before clearing financial_report
+            $allChapters = FinancialReport::whereNotNull('chapter_awards')->get();
+            foreach ($allChapters as $report) {
+                $awards = unserialize(base64_decode($report->chapter_awards));
+                if (!is_array($awards)) continue;
+
+                foreach ($awards as $award) {
+                    if (!empty($award['awards_approved'])) {
+                        ChapterAwardHistory::firstOrCreate(
+                            [
+                                'chapter_id'  => $report->chapter_id,
+                                'awards_type' => $award['awards_type'],
+                                'award_year'  => $lastYear.' - '.$thisYear,
+                            ],
+                            [
+                                'awards_desc' => $award['awards_desc'],
+                                'approved_at' => now(),
+                                'approved_by' => $updatedBy,
+                                'approved_id' => $updatedId,
+                            ]
+                        );
+                    }
                 }
             }
 
@@ -481,6 +509,12 @@ class TechReportController extends Controller implements HasMiddleware
 
             // Update documents table: Set specified columns to NULL
             DB::table('documents_eoy')->update([
+                'irs_verified' => null,
+                'irs_issues' => null,
+                'irs_wrongdate' => null,
+                'irs_notfound' => null,
+                'irs_filedwrong' => null,
+                'irs_notified' => null,
                 'new_board_submitted' => null,
                 'new_board_active' => null,
                 'financial_report_received' => null,
@@ -490,18 +524,15 @@ class TechReportController extends Controller implements HasMiddleware
                 'report_notes' => null,
                 'report_extension' => null,
                 'extension_notes' => null,
-                // 'financial_pdf_path' => null,
                 'roster_path' => null,
                 'irs_path' => null,
                 'statement_1_path' => null,
                 'statement_2_path' => null,
                 'award_path' => null,
+
             ]);
 
             // Change Year for Google Drive Financial Report Attachmnets
-            // DB::table('google_drive')->update([
-            //     'eoy_uploads_year' => $nextYear,
-            // ]);
             DB::table('google_drive_new')
                 ->where('name', 'eoy_uploads')
                 ->update([

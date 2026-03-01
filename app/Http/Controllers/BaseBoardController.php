@@ -12,6 +12,8 @@ use App\Models\Probation;
 use App\Models\State;
 use App\Models\Website;
 use App\Services\PositionConditionsService;
+use Illuminate\Support\Carbon;
+
 
 class BaseBoardController extends Controller
 {
@@ -52,9 +54,13 @@ class BaseBoardController extends Controller
             $stateShortName = $chDetails->country->short_name;
         }
 
+        $regionLongName = $chDetails->state->region->long_name;
+        $conferenceDescription = $chDetails->state->conference->conference_description;
         $chConfId = $chDetails->state->conference_id;
         $chPcId = $chDetails->primary_coordinator_id;
+        $chapterStatus = $chDetails->status?->chapter_status;
         $probationReason = $chDetails->probation?->probation_reason;
+        $websiteLink = $chDetails->webLink?->link_status ?? null;
         $startMonthName = $chDetails->startMonth->month_long_name;
 
         // Full lists for dropdown menus
@@ -90,6 +96,13 @@ class BaseBoardController extends Controller
         $cc_id = $ccEmailData['cc_id'];
         $emailCC = $ccEmailData['cc_email'];
 
+        $startMonthId = $chDetails->start_month_id;
+        $startYear = $chDetails->start_year;
+        $startDate = Carbon::createFromDate($startYear, $startMonthId, 1);
+        $renewalYear = $chDetails->next_renewal_year;
+        $dueDate = Carbon::create($renewalYear, $startMonthId, 1);
+        $renewalDate = $dueDate->format('Y-m-d');
+
         // Merge everything together
         return array_merge([
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'cc_id' => $cc_id, 'chFinancialReportFinal' => $chFinancialReportFinal,
@@ -97,7 +110,8 @@ class BaseBoardController extends Controller
             'chActiveId' => $chActiveId, 'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord,
             'emailCC' => $emailCC, 'chActiveStatus' => $chActiveStatus, 'reviewerEmail' => $reviewerEmail, 'awards' => $chFinancialReport, 'allAwards' => $allAwards, 'pcEmail' => $pcEmail,
             'allCountries' => $allCountries, 'pcDetails' => $pcDetails, 'chDisbanded' => $chDisbanded, 'allProbation' => $allProbation, 'chEOYDocuments' => $chEOYDocuments,
-            'probationReason' => $probationReason,
+            'probationReason' => $probationReason, 'dueDate' => $dueDate, 'startMonthId' => $startMonthId, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink,
+            'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'startDate' => $startDate, 'renewalDate' => $renewalDate,
         ], $boardDetails); // Add board member details from appropriate table
     }
 

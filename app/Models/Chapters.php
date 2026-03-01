@@ -112,6 +112,11 @@ class Chapters extends Model
         return $this->hasOne(FinancialReport::class, 'chapter_id', 'id');  // 'chapter_id' in financial_report HasOne 'id' in chapters
     }
 
+    public function financialReportReview(): HasOne
+    {
+        return $this->hasOne(FinancialReportReview::class, 'chapter_id', 'id');  // 'chapter_id' in financial_report_review HasOne 'id' in chapters
+    }
+
     public function financialReportFinal(): HasOne
     {
         return $this->hasOne(FinancialReportFinal::class, 'chapter_id', 'id');  // 'chapter_id' in financial_report_final HasOne 'id' in chapters

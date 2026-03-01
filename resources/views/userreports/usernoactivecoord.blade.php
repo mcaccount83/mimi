@@ -12,10 +12,10 @@
                     <div class="card card-outline card-primary">
                         <div class="card-header">
                             <div class="dropdown">
-                                <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Active User with No Active Coordinator
                                 </h3>
-                                <span class="ml-2">Update User to be Inactive or </span>
+                                <span class="ms-2">Update User to be Inactive or </span>
                                 @include('layouts.dropdown_menus.menu_reports_user')
                             </div>
                         </div>
@@ -24,7 +24,7 @@
             <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>
-                    <th>Edit User</th>
+                    <th>User<br>Details</th>
                     <th>User ID</th>
                     <th>Name</th>
                     <th>Email</th>
@@ -35,7 +35,7 @@
                 @foreach($cdNoChapterList as $list)
                   <tr>
                     <td>
-                            <a href="{{ url("/userreports/edituser/{$list->id}") }}"><i class="fas fa-eye"></i></a>
+                            <a href="{{ url("/userreports/edituser/{$list->id}") }}"><i class="bi bi-person-fill-gear"></i></a>
                     </td>
                         <td>{{ $list->id }}</td>
                         <td>{{ $list->first_name }} {{ $list->last_name }}</td>
@@ -45,12 +45,24 @@
                   @endforeach
                   </tbody>
                 </table>
+             </div>
+              <!-- /.card-body -->
+
+              <div class="card-body">
             </div>
-        </div>
-           </div>
-          <!-- /.box -->
-        </div>
+            <!-- /.card-body for checkboxes -->
+
+                <div class="card-body text-center mt-3">
+            </div>
+            <!-- /.card-body for buttons -->
+
+         </div>
+        <!-- /.card -->
       </div>
-    </section>
-    <!-- /.content -->
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
 @endsection

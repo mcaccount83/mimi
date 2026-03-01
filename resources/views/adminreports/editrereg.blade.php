@@ -14,83 +14,45 @@
 
           <!-- Profile Image -->
           <div class="card card-primary card-outline">
-            <div class="card-body box-profile">
-              <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
-              <p class="text-center">{{ $chDetails->confname }} Conference, {{ $chDetails->regname }} Region
-              <br>
+            <div class="card-body">
+                <div class="card-header text-center bg-transparent">
+                <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
+                <p class="mb-0">{{ $conferenceDescription }} Conference, {{ $conferenceDescription }} Region
+                      </p>
+              </div>
 
-              <ul class="list-group list-group-unbordered mb-3">
-                <li class="list-group-item">
-                    <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                        <b>Founded Month:</b> <span class="float-right">{{$chDetails->startMonth->month_long_name}}</span>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                        <b>Founded Year:</b> <span class="float-right">{{ $chDetails->start_year}}</span>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                        <b>Dues Last Paid:</b> <span class="float-right">
-                            @if($chPayments->rereg_date)
-                                {{$chPayments->rereg_date }}</span>
-                            @else
-                                No Payment Recorded</span>
-                            @endif
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                        <b>Payment Amount:</b> <span class="float-right">
-                            @if ($chPayments->rereg_payment)
-                                {{ $chPayments->rereg_payment }}</span>
-                            @else
-                                N/A</span>
-                            @endif
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                        <b>Number of Members:</b> <span class="float-right">
-                            @if ($chPayments->rereg_members)
-                                {{ $chPayments->rereg_members }}</span>
-                            @else
-                                N/A</span>
-                            @endif
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                        <b>Re-Registration Notes:</b> <span class="float-right">{{ $chPayments->rereg_notes}}</span>
-                    </div>
-                </li>
-                <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
-                <input type="hidden" id="ch_id" value="{{ $chDetails->id }}">
-                <li class="list-group-item" id="display_corlist" class="list-group-item"></li>
-            </ul>
-
-            <div class="text-center">
-                      @if ($chDetails->active_status == 1 )
-                          <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
-                      @elseif ($chDetails->active_status == 2)
-                        <b><span style="color: #ff851b;">Chapter is PENDING</span></b>
-                      @elseif ($chDetails->active_status == 3)
-                        <b><span style="color: #dc3545;">Chapter was NOT APPROVED</span></b><br>
-                          Declined Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                          {{ $chDetails->disband_reason }}
-                      @elseif ($chDetails->active_status == 0)
-                          <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
-                          Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                          {{ $chDetails->disband_reason }}
-                      @endif
-                  </div>
+             <ul class="list-group list-group-flush mb-3">
+                      <li class="list-group-item">
+                            @include('partials.paymentinfo')
+                            @include('partials.donationinfo')
+                            @include('partials.founderhistory')
+                        </li>
+                        <li class="list-group-item">
+                            @include('partials.coordinatorlist')
+                        </li>
+                        <li class="list-group-item mt-3">
+                            @include('partials.chapterstatus')
+                        </li>
+                  </ul>
+                </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
           </div>
-    <!-- /.card-body -->
-</div>
-<!-- /.card -->
-</div>
-<!-- /.col -->
+          <!-- /.col -->
 
 <div class="col-md-8">
     <div class="card card-primary card-outline">
-        <div class="card-body box-profile">
-        <h3 class="profile-username">Re-Registration Information</h3>
-            <!-- /.card-header -->
+        <div class="card-body">
+            <div class="card-header bg-transparent border-0">
+                <h3">Re-Registration Information</h3>
+        </div>
+           <!-- /.card-header -->
+                            <div class="card-body">
             <div class="row">
                 <div class="col-md-12">
                 <!-- /.form group -->
-                <div class="form-group row">
+                <div class="row mb-3">
                     <label class="col-sm-4 mb-1 col-form-label">Founded/Renewal Month:</label>
                     <div class="col-sm-3 mb-1">
                         <select name="ch_founddate" class="form-control" style="width: 100%;">
@@ -105,72 +67,68 @@
                     </div>
                 </div>
                 <!-- /.form group -->
-                <div class="form-group row">
+                <div class="row mb-3">
                     <label class="col-sm-4 mb-1 col-form-label">Next Renwal Year:</label>
                     <div class="col-sm-3 mb-1">
                         <input type="text" name="ch_renewyear" class="form-control" value="{{ $chDetails->next_renewal_year}}">
                     </div>
                 </div>
                 <!-- /.form group -->
-                <div class="form-group row">
+                <div class="row mb-3">
                     <label class="col-sm-4 mb-1 col-form-label">Dues Last Paid:</label>
                     <div class="col-sm-3 mb-1">
                         <input type="date" name="ch_duespaid" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $chPayments->rereg_date }}">
                     </div>
                 </div>
                 <!-- /.form group -->
-                <div class="form-group row">
+                <div class="row mb-3">
                     <label class="col-sm-4 mb-1 col-form-label">Payment Amount:</label>
                     <div class="col-sm-3 mb-1">
                         <div class="input-group">
-                            <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
-                            </div>
                             <input type="text" name="ch_payment" class="form-control" value="{{ $chPayments->rereg_payment }}">
                         </div>
                     </div>
                 </div>
 
                 <!-- /.form group -->
-                <div class="form-group row">
+                <div class="row mb-3">
                     <label class="col-sm-4 mb-1 col-form-label">Number of Members:</label>
                     <div class="col-sm-3 mb-1">
                         <input type="text" name="ch_members" class="form-control" value="{{ $chPayments->rereg_members }}">
                     </div>
                 </div>
 
-
             </div>
         </div>
-            </div>
-            <!-- /.card-body -->
+               </div>
                       </div>
-          <!-- /.card -->
-                    </div>
-        <!-- /.col -->
-
+                <!-- /.card-body -->
             </div>
-            <!-- /.box-body -->
-            <div class="card-body text-center">
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+
+          <div class="col-md-12">
+            <div class="card-body text-center mt-3">
                 @if ($coordinatorCondition)
-                    <button type="submit" class="btn bg-gradient-primary mb-3"><i class="fas fa-save" ></i>&nbsp; Save</button>
+                    <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
                     <br>
                 @endif
                  @if ($confId == $chConfId)
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('adminreports.rereg') }}'"><i class="fas fa-reply mr-2"></i>Back to Re-Reg Admin Report</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('adminreports.rereg') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-credit-card-fill me-2"></i>Back to Re-Reg Admin Report</button>
                 @elseif ($confId != $chConfId)
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('adminreports.rereg', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Re-Reg Admin Report</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('adminreports.rereg', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-credit-card-fill me-2"></i>Back to International Re-Reg Admin Report</button>
                 @endif
-                <button type="button" id="back-details" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('payment.paymenthistory', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Payment History</button>
-            </div>
-
-
-    </div>
-    <!-- /.container-fluid -->
-  </section>
-  <!-- /.content -->
-    </form>
-    @endsection
-
+                <button type="button" id="back-details" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('payment.paymenthistory', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-file-earmark-text me-2"></i>Back to Payment History</button>
+             </div>
+          </div>
+        </div>
+        <!-- /.row -->
+      </div
+      ><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+@endsection
 
 

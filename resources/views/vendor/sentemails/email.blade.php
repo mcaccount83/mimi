@@ -1,7 +1,7 @@
 {{-- <div class="relative shadow-md">
     <div class="flex items-center justify-between px-5 py-3 bg-white">
         <h3 class="text-lg font-semibold text-gray-900 truncate">{{ $email->subject }}</h3>
-        <div class="ml-4 flex-shrink-0">
+        <div class="ms-4 flex-shrink-0">
             <span>#{{ $email->id }}</span>
         </div>
     </div>
@@ -33,7 +33,7 @@
                     @endif
                 </span>
             </p>
-            <div class="flex items-center text-right">
+            <div class="flex items-center text-end">
                 <span  class="text-xs text-gray-600">#{{ $email->id }}<br>
                     {{ date('F jS Y H:i A', strtotime($email->created_at)) }}</span>
             </div>

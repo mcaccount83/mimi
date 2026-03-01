@@ -8,11 +8,11 @@
             <div>
                 @if (Gate::allows('deleteThreads', $thread->category) && Gate::allows('delete', $thread))
                     @if ($thread->trashed())
-                        <a href="#" class="btn btn-danger mr-3 mb-2" data-open-modal="perma-delete-thread">
+                        <a href="#" class="btn btn-danger me-3 mb-2" data-open-modal="perma-delete-thread">
                             <i data-feather="trash"></i> {{ trans('forum::general.perma_delete') }}
                         </a>
                     @else
-                        <a href="#" class="btn btn-danger mr-3 mb-2" data-open-modal="delete-thread">
+                        <a href="#" class="btn btn-danger me-3 mb-2" data-open-modal="delete-thread">
                             <i data-feather="trash"></i> {{ trans('forum::general.delete') }}
                         </a>
                     @endif
@@ -127,7 +127,7 @@
                 <div class="fixed-bottom-right pb-xs-0 pr-xs-0 pb-sm-3 pr-sm-3">
                     <transition name="fade">
                         <div class="card text-white bg-secondary shadow-sm" v-if="state.selectedPosts.length">
-                            <div class="card-header text-center">
+                            <div class="card-header text-center bg-transparent">
                                 {{ trans('forum::general.with_selection') }}
                             </div>
                             <div class="card-body">

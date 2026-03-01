@@ -26,61 +26,27 @@
           <div class="col-md-4">
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                  <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
-                  <p class="text-center">{{ $conferenceDescription }} Conference, {{ $regionLongName }} Region
-                  <br>
+               <div class="card-body">
+                    <div class="card-header text-center bg-transparent">
+                    <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
+                    <p class="mb-0">{{ $conferenceDescription }} Conference, {{ $conferenceDescription }} Region
+                  </p>
+                    </div>
                   EIN: {{$chDetails->ein}}
                   </p>
-
-                  <ul class="list-group list-group-unbordered mb-3">
+                   <ul class="list-group list-group-flush mb-3">
                       <li class="list-group-item">
-                          <b>Re-Registration Dues:</b><span class="float-right">
-                              @if ($chPayments->rereg_members)
-                                  <b>{{ $chPayments->rereg_members }} Members</b> on <b><span class="date-mask">{{ $chPayments->rereg_date }}</span></b>
-                              @else
-                                  No Payment Recorded
-                              @endif
-                          </span><br>
-                          <b>M2M Donation:</b><span class="float-right">
-                              @if ($chPayments->m2m_donation)
-                                  <b>${{ $chPayments->m2m_donation }}</b> on <b><span class="date-mask">{{ $chPayments->m2m_date }}</span></b>
-                              @else
-                                  No Donation Recorded
-                              @endif
-                          </span><br>
-                          <b>Sustaining Chapter Donation: </b><span class="float-right">
-                              @if ($chPayments->sustaining_donation)
-                                  <b>${{ $chPayments->sustaining_donation }}</b> on <b><span class="date-mask">{{ $chPayments->sustaining_date }}</span></b>
-                              @else
-                                  No Donation Recorded
-                              @endif
-                          </span>
-                          <br>
-                      </li>
-                      <li class="list-group-item">
-                        <b>Founded:</b><span class="float-right">{{ $startMonthName }} {{ $chDetails->start_year }}</span>
-                           <br>
-                          <b>Status:</b><span class="float-right ">{{ $chapterStatus }}</span>
-                      </li>
-                      <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
-                      <li class="list-group-item" id="display_corlist" class="list-group-item"></li>
+                            @include('partials.paymentinfo')
+                            @include('partials.donationinfo')
+                            @include('partials.founderhistory')
+                        </li>
+                        <li class="list-group-item">
+                            @include('partials.coordinatorlist')
+                        </li>
+                        <li class="list-group-item mt-3">
+                            @include('partials.chapterstatus')
+                        </li>
                   </ul>
-                  <div class="text-center">
-                      @if ($chDetails->active_status == 1 )
-                          <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
-                      @elseif ($chDetails->active_status == 2)
-                        <b><span style="color: #ff851b;">Chapter is PENDING</span></b>
-                      @elseif ($chDetails->active_status == 3)
-                        <b><span style="color: #dc3545;">Chapter was NOT APPROVED</span></b><br>
-                          Declined Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                          {{ $chDetails->disband_reason }}
-                      @elseif ($chDetails->active_status == 0)
-                          <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
-                          Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                          {{ $chDetails->disband_reason }}
-                      @endif
-                  </div>
                 </div>
               <!-- /.card-body -->
             </div>
@@ -92,10 +58,10 @@
             <div class="card card-primary card-outline">
                 <div class="card-header p-2">
                     <ul class="nav nav-pills">
-                        <li class="nav-item"><a class="nav-link active" href="#rereg" data-toggle="tab">Re-Reg Payments</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#m2m" data-toggle="tab">M2M Fund Donations</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#sustaining" data-toggle="tab">Sustaining Chapter Donations</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#grants" data-toggle="tab">Grant Requests</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="#rereg" data-bs-toggle="tab">Re-Reg Payments</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#m2m" data-bs-toggle="tab">M2M Fund Donations</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#sustaining" data-bs-toggle="tab">Sustaining Chapter Donations</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#grants" data-bs-toggle="tab">Grant Requests</a></li>
                     </ul>
                 </div>
                 <!-- /.card-header -->
@@ -119,7 +85,7 @@
                                                 Amount: ${{ number_format($chPayments->rereg_payment, 2) }}<br>
                                                 Members: {{ $chPayments->rereg_members }}<br>
                                                 @if($coordinatorCondition && $conferenceCoordinatorCondition)
-                                                    <button class="btn bg-gradient-primary btn-xs mt-1 mb-1" onclick="window.location.href='{{ route('adminreports.editrereg', ['id' => $chDetails->id]) }}'">Edit Payment Information</button>
+                                                    <button class="btn btn-primary bg-gradient btn-xs mt-1 mb-1" onclick="window.location.href='{{ route('adminreports.editrereg', ['id' => $chDetails->id]) }}'">Edit Payment Information</button>
                                                 @endif
                                             </div>
                                         </div>
@@ -256,22 +222,23 @@
           <!-- /.col -->
 
           <div class="col-md-12">
-            <div class="card-body text-center">
-                <button type="button" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('payment.editpayment', ['id' => $chDetails->id]) }}'"><i class="fas fa-credit-card mr-2"></i>Manually Add Payments/Donations</button>
+            <div class="card-body text-center mt-3">
+                <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('payment.editpayment', ['id' => $chDetails->id]) }}'"><i class="bi bi-plus-lg me-2"></i>Manually Add Payments/Donations</button>
                 <br>
                 @if ($confId == $chConfId)
-                    <button type="button" id="back-rereg" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('payment.chapreregistration') }}'"><i class="fas fa-reply mr-2"></i>Back to Re-Registration Report</button>
-                    <button type="button" id="back-donation" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('payment.chapdonations') }}'"><i class="fas fa-reply mr-2"></i>Back to Donations Report</button>
+                    <button type="button" id="back-rereg" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('payment.chapreregistration') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-credit-card-fill me-2"></i>Back to Re-Registration Report</button>
+                    <button type="button" id="back-donation" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('payment.chapdonations') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-currency-dollar me-2"></i>Back to Donations Report</button>
                 @elseif ($confId != $chConfId)
-                    <button type="button" id="back-rereg" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('payment.chapreregistration', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Re-Registration Report</button>
-                    <button type="button" id="back-donation" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('payment.chapdonations', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Donations Report</button>
+                    <button type="button" id="back-rereg" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('payment.chapreregistration', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-credit-card-fill me-2"></i>Back to International Re-Registration Report</button>
+                    <button type="button" id="back-donation" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('payment.chapdonations', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-currency-dollar me-2">Back to International Donations Report</button>
                 @endif
-                <button type="button" id="back-details" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
+                <button type="button" id="back-details" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Chapter Details</button>
             </div>
           </div>
         </div>
         <!-- /.row -->
-      </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.container-fluid -->
     </section>
     <!-- /.content -->
 @endsection

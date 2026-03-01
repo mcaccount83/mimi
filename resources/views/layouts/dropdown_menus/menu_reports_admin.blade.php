@@ -1,7 +1,7 @@
 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        {{-- <a class="dropdown-item" href="{{ url(config('sentemails.routepath')) }}">Sent Mail Log</a> --}}
     @if ($coordinatorCondition && $conferenceCoordinatorCondition)
-        <a class="dropdown-item" href="{{ route('adminreports.maillog') }}">Mail Log</a>
+        <a class="dropdown-item" href="{{ url(config('sentemails.routepath')) }}">Sent Mail Log</a>
+        {{-- <a class="dropdown-item" href="{{ route('adminreports.maillog') }}">Mail Log</a> --}}
         <a class="dropdown-item" href="{{ route('adminreports.paymentlog') }}">Payment Log</a>
         <a class="dropdown-item" href="{{ route('adminreports.rereg') }}">Re-Registration Report</a>
         <a class="dropdown-item" href="{{ route('adminreports.inquiriesnotify') }}">Inquiries Notifications</a>

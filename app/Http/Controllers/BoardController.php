@@ -149,6 +149,63 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * View Board Details Board Member Login
      */
+    public function chapterProfile(Request $request, $chId): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userTypeId = $user['userTypeId'];
+        $userAdmin = $user['userAdmin'];
+
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+        $chDetails = $baseQuery['chDetails'];
+        $startMonthId = $baseQuery['startMonthId'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $regionLongName = $baseQuery['regionLongName'];
+        $conferenceDescription = $baseQuery['conferenceDescription'];
+
+        $chPayments = $baseQuery['chPayments'];
+        $chFinancialReport = $baseQuery['chFinancialReport'];
+        $chDocuments = $baseQuery['chDocuments'];
+        $chEOYDocuments = $baseQuery['chEOYDocuments'];
+        $boardActive = $chEOYDocuments->new_board_active;
+
+        $startMonthName = $baseQuery['startMonthName'];
+        $startDate = $baseQuery['startDate'];
+        $dueDate = $baseQuery['dueDate'];
+        $renewalDate = $baseQuery['renewalDate'];
+        $chapterStatus = $baseQuery['chapterStatus'];
+        $probationReason = $baseQuery['probationReason'];
+        $websiteLink = $baseQuery['websiteLink'];
+
+        $allProbation = $baseQuery['allProbation'];
+        $allWebLinks = $baseQuery['allWebLinks'];
+        $allStates = $baseQuery['allStates'];
+        $allCountries = $baseQuery['allCountries'];
+
+        $PresDetails = $baseQuery['PresDetails'];
+        $AVPDetails = $baseQuery['AVPDetails'];
+        $MVPDetails = $baseQuery['MVPDetails'];
+        $TRSDetails = $baseQuery['TRSDetails'];
+        $SECDetails = $baseQuery['SECDetails'];
+
+        if ($userTypeId == UserTypeEnum::COORD) {
+            $bdPositionId = '1';
+            $borDetails = $PresDetails;
+        } else {
+            $bdPositionId = $user['bdPositionId'];
+            $borDetails = $user['bdDetails'];
+        }
+
+        $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
+            'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'allCountries' => $allCountries,
+            'startMonthName' => $startMonthName, 'dueDate' => $dueDate, 'userTypeId' => $userTypeId, 'allProbation' => $allProbation, 'userAdmin' => $userAdmin,
+            'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments, 'chEOYDocuments' => $chEOYDocuments, 'websiteLink' => $websiteLink,
+            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'boardActive' => $boardActive, 'startMonthId' => $startMonthId, 'chapterStatus' => $chapterStatus,
+            'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'startDate' => $startDate, 'renewalDate' => $renewalDate,
+        ];
+
+        return view('boards.view')->with($data);
+    }
+
     public function editProfile(Request $request, $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
@@ -157,8 +214,11 @@ class BoardController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
+        $startMonthId = $baseQuery['startMonthId'];
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
+        // $currentMonth = $baseQuery['currentMonth'];
+        $dueDate = $baseQuery['dueDate'];
         $chPayments = $baseQuery['chPayments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $chDocuments = $baseQuery['chDocuments'];
@@ -185,21 +245,22 @@ class BoardController extends Controller implements HasMiddleware
             $borDetails = $user['bdDetails'];
         }
 
-        $dateOptions = $this->positionConditionsService->getDateOptions();
-        $currentMonth = $dateOptions['currentMonth'];
-        $start_month = $chDetails->start_month_id;
-        $next_renewal_year = $chDetails->next_renewal_year;
-        $due_date = Carbon::create($next_renewal_year, $start_month, 1);
+        // $dateOptions = $this->positionConditionsService->getDateOptions();
+        // $currentMonth = $dateOptions['currentMonth'];
+        // $start_month = $chDetails->start_month_id;
+        // $next_renewal_year = $chDetails->next_renewal_year;
+        // $due_date = Carbon::create($next_renewal_year, $start_month, 1);
 
         $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'allCountries' => $allCountries,
-            'startMonthName' => $startMonthName, 'thisMonth' => $currentMonth, 'due_date' => $due_date, 'userTypeId' => $userTypeId, 'allProbation' => $allProbation, 'userAdmin' => $userAdmin,
+            'startMonthName' => $startMonthName, 'dueDate' => $dueDate, 'userTypeId' => $userTypeId, 'allProbation' => $allProbation, 'userAdmin' => $userAdmin,
             'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments, 'chEOYDocuments' => $chEOYDocuments,
-            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'boardActive' => $boardActive,
+            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'boardActive' => $boardActive, 'startMonthId' => $startMonthId
         ];
 
-        return view('boards.profile')->with($data);
+        return view('boards.editprofile')->with($data);
     }
+
 
     /**
      *Update Chapter Board Information
@@ -1052,7 +1113,7 @@ class BoardController extends Controller implements HasMiddleware
 
         // Add auto-login URLs to each course
         foreach ($boardCourses as &$boardCourse) {
-            $boardCourse['auto_login_url'] = $this->learndashService->getAutoLoginUrl($boardCourse, $user);
+            $boardCourse['auto_login_url'] = $this->learndashService->getAutoLoginUrl($boardCourse, $user, 'board.course.redirect');
         }
 
         // Group by category - store both name and slug

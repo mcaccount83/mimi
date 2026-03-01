@@ -17,6 +17,7 @@ use App\Models\State;
 use App\Models\Status;
 use App\Models\Website;
 use App\Services\PositionConditionsService;
+use Illuminate\Support\Carbon;
 
 class BaseChapterController extends Controller
 {
@@ -266,7 +267,7 @@ class BaseChapterController extends Controller
      */
     public function getChapterDetails($chId)
     {
-        $chDetails = Chapters::with(['country', 'state', 'documents', 'financialReport', 'startMonth', 'primaryCoordinator',
+        $chDetails = Chapters::with(['country', 'state', 'documents', 'financialReport', 'financialReportReview','startMonth', 'primaryCoordinator',
             'payments', 'probation', 'financialReportFinal', 'documentsEOY'])->find($chId);
         $chActiveId = $chDetails->active_status;
         $chActiveStatus = $chDetails->activeStatus->active_status;
@@ -295,6 +296,7 @@ class BaseChapterController extends Controller
         $reviewComplete = $chDetails->documentsEOY?->review_complete ?? null;
         $chFinancialReport = $chDetails->financialReport;
         $chFinancialReportFinal = $chDetails->financialReportFinal;
+        $chFinancialReportReview = $chDetails->financialReportReview;
 
         $allActive = ActiveStatus::all();  // Full List for Dropdown Menu
         $allStatuses = Status::all();  // Full List for Dropdown Menu
@@ -329,6 +331,13 @@ class BaseChapterController extends Controller
         // Load Report Reviewer Coordinator Dropdown List
         $rrList = $this->userController->loadReviewerList($chRegId, $chConfId) ?? null;
 
+        $startMonthId = $chDetails->start_month_id;
+        $startYear = $chDetails->start_year;
+        $startDate = Carbon::createFromDate($startYear, $startMonthId, 1);
+        $renewalYear = $chDetails->next_renewal_year;
+        $dueDate = Carbon::create($renewalYear, $startMonthId, 1);
+        $renewalDate = $dueDate->format('Y-m-d');
+
         return ['chDetails' => $chDetails, 'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'allActive' => $allActive,
             'conferenceDescription' => $conferenceDescription, 'chConfId' => $chConfId, 'chRegId' => $chRegId, 'chPcId' => $chPcId, 'chId' => $chId, 'chFinancialReportFinal' => $chFinancialReportFinal,
             'chDocuments' => $chDocuments, 'reviewComplete' => $reviewComplete, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards, 'chPayments' => $chPayments,
@@ -336,7 +345,8 @@ class BaseChapterController extends Controller
             'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'pcList' => $pcList, 'rrList' => $rrList, 'emailCCData' => $emailCCData, 'chActiveStatus' => $chActiveStatus,
             'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC, 'emailPC' => $emailPC, 'cc_id' => $cc_id,
             'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink, 'pcName' => $pcName, 'probationReason' => $probationReason,
-            'allMonths' => $allMonths, 'pcDetails' => $pcDetails, 'allProbation' => $allProbation,
+            'allMonths' => $allMonths, 'pcDetails' => $pcDetails, 'allProbation' => $allProbation, 'chFinancialReportReview' => $chFinancialReportReview,
+            'dueDate' => $dueDate, 'startDate' => $startDate, 'renewalDate' => $renewalDate,
         ];
     }
 

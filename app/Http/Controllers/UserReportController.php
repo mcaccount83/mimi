@@ -111,13 +111,23 @@ class UserReportController extends Controller implements HasMiddleware
      */
     public function showNoPresident(): View
     {
-        $PresId = DB::table('boards')
+        $PresActiveId = DB::table('boards')
             ->where('board_position_id', '1')
             ->pluck('chapter_id');
 
-        $ChapterPres = DB::table('chapters')
-            ->where('active_status', '1')
-            ->whereNotIn('id', $PresId)
+        $PresDisbandId = DB::table('boards_disbanded')
+            ->where('board_position_id', '1')
+            ->pluck('chapter_id');
+
+        $ChapterPres = Chapters::with('state')
+            ->where(function ($query) use ($PresActiveId, $PresDisbandId) {
+                $query->where('active_status', '1')
+                    ->whereNotIn('id', $PresActiveId);
+            })
+            ->orWhere(function ($query) use ($PresActiveId, $PresDisbandId) {
+                $query->where('active_status', '0')
+                    ->whereNotIn('id', $PresDisbandId);
+            })
             ->get();
 
         $data = ['ChapterPres' => $ChapterPres];
@@ -128,21 +138,21 @@ class UserReportController extends Controller implements HasMiddleware
     /**
      * Inactive chapters with no president
      */
-    public function showNoPresidentInactive(): View
-    {
-        $PresId = DB::table('boards_disbanded')
-            ->where('board_position_id', '1')
-            ->pluck('chapter_id');
+    // public function showNoPresidentInactive(): View
+    // {
+    //     $PresId = DB::table('boards_disbanded')
+    //         ->where('board_position_id', '1')
+    //         ->pluck('chapter_id');
 
-        $ChapterPres = DB::table('chapters')
-            ->where('active_status', '0')
-            ->whereNotIn('id', $PresId)
-            ->get();
+    //     $ChapterPres = Chapters::with('state')
+    //         ->where('active_status', '0')
+    //         ->whereNotIn('id', $PresId)
+    //         ->get();
 
-        $data = ['ChapterPres' => $ChapterPres];
+    //     $data = ['ChapterPres' => $ChapterPres];
 
-        return view('userreports.nopresidentinactive')->with($data);
-    }
+    //     return view('userreports.nopresidentinactive')->with($data);
+    // }
 
     /**
      *Add New Board
@@ -159,6 +169,7 @@ class UserReportController extends Controller implements HasMiddleware
         $chPcId = $baseQuery['chPcId'];
         $chPayments = $baseQuery['chPayments'];
         $chDocuments = $baseQuery['chDocuments'];
+        $chEOYDocuments = $baseQuery['chEOYDocuments'];
 
         $startMonthName = $baseQuery['startMonthName'];
         $chapterStatus = $baseQuery['chapterStatus'];
@@ -169,7 +180,7 @@ class UserReportController extends Controller implements HasMiddleware
         $data = ['id' => $id, 'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'allCountries' => $allCountries, 'allStates' => $allStates,
             'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'chDetails' => $chDetails,
             'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chPayments' => $chPayments, 'chDocuments' => $chDocuments, 'chapterStatus' => $chapterStatus,
-            'startMonthName' => $startMonthName,
+            'startMonthName' => $startMonthName, 'chEOYDocuments' => $chEOYDocuments,
         ];
 
         return view('userreports.addnewboard')->with($data);
@@ -246,72 +257,85 @@ class UserReportController extends Controller implements HasMiddleware
     //     return view('userreports.noactivechapter')->with($data);
     // }
 
-    public function showUserNoActiveBoard(): View
-    {
-        $bdNoChapterList = User::whereDoesntHave('board')
-            ->where('type_id', UserTypeEnum::BOARD)
-            ->where('is_active', UserStatusEnum::ACTIVE)
-            ->with(['boardDisbanded', 'boardOutgoing', 'boardPending']) // Eager load all possible relationships
-            ->get()
-            ->map(function ($user) {
-                // Determine which table they're in and what their type_id should be
-                if ($user->boardDisbanded) {
-                    $user->incorrect_table = 'disbanded';
-                    $user->should_be_type = UserTypeEnum::DISBANDED; // or whatever the correct type is
-                } elseif ($user->boardOutgoing) {
-                    $user->incorrect_table = 'outgoing';
-                    $user->should_be_type = UserTypeEnum::OUTGOING;
-                } elseif ($user->boardPending) {
-                    $user->incorrect_table = 'pending';
-                    $user->should_be_type = UserTypeEnum::PENDING;
-                } else {
-                    $user->incorrect_table = 'none'; // Truly orphaned
-                    $user->should_be_type = null;
-                }
+     // public function showUserNoActiveCoord(): View
+    // {
+    //     $cdNoChapterList = User::whereDoesntHave('coordinator')
+    //         ->where('type_id', UserTypeEnum::COORD)
+    //         ->where('is_active', UserStatusEnum::ACTIVE)
+    //         ->get();
 
-                return $user;
-            });
+    //     $data = [
+    //         'countList' => $cdNoChapterList->count(), // Collection method
+    //         'cdNoChapterList' => $cdNoChapterList,
+    //     ];
 
-        $data = [
-            'countList' => $bdNoChapterList->count(),
-            'bdNoChapterList' => $bdNoChapterList,
-        ];
+    //     return view('userreports.usernoactivecoord')->with($data);
+    // }
 
-        return view('userreports.usernoactiveboard')->with($data);
-    }
 
-    public function showUserNoActiveCoord(): View
-    {
-        $cdNoChapterList = User::whereDoesntHave('coordinator')
-            ->where('type_id', UserTypeEnum::COORD)
-            ->where('is_active', UserStatusEnum::ACTIVE)
-            ->get();
+   public function showUserNoActiveBoard(): View
+{
+    $userList = User::where('is_active', UserStatusEnum::ACTIVE)
+        ->whereIn('type_id', [
+            UserTypeEnum::COORD,
+            UserTypeEnum::BOARD,
+            UserTypeEnum::DISBANDED,
+            UserTypeEnum::OUTGOING,
+            UserTypeEnum::PENDING,
+        ])
+        ->get()
+        ->map(fn($user) => $this->checkUserTableStatus($user))
+        ->filter(fn($user) => $user->missing_from !== null || count($user->wrong_tables) > 0);
 
-        $data = [
-            'countList' => $cdNoChapterList->count(), // Collection method
-            'cdNoChapterList' => $cdNoChapterList,
-        ];
+    $data = [
+        'countList' => $userList->count(),
+        'userList'  => $userList,
+    ];
 
-        return view('userreports.usernoactivecoord')->with($data);
-    }
+    return view('userreports.usernoactiveboard')->with($data);
+}
+
+    private function checkUserTableStatus(User $user): User
+{
+    $user->missing_from = match($user->type_id) {
+        UserTypeEnum::COORD     => !$user->coordinator()->exists()       ? 'Coordinators'     : null,
+        UserTypeEnum::BOARD     => !$user->board()->exists()             ? 'Boards'           : null,
+        UserTypeEnum::DISBANDED => !$user->boardDisbanded()->exists()    ? 'Boards Disbanded' : null,
+        UserTypeEnum::OUTGOING  => !$user->boardOutgoing()->exists()     ? 'Boards Outgoing'  : null,
+        UserTypeEnum::PENDING   => !$user->boardPending()->exists()      ? 'Boards Pending'   : null,
+        default => null,
+    };
+
+    $wrongTables = [];
+    if ($user->type_id !== UserTypeEnum::COORD     && $user->coordinator()->exists())    $wrongTables[] = 'Coordinators';
+    if ($user->type_id !== UserTypeEnum::BOARD     && $user->board()->exists())          $wrongTables[] = 'Boards';
+    if ($user->type_id !== UserTypeEnum::DISBANDED && $user->boardDisbanded()->exists()) $wrongTables[] = 'Boards Disbanded';
+    if ($user->type_id !== UserTypeEnum::OUTGOING  && $user->boardOutgoing()->exists())  $wrongTables[] = 'Boards Outgoing';
+    if ($user->type_id !== UserTypeEnum::PENDING   && $user->boardPending()->exists())   $wrongTables[] = 'Boards Pending';
+
+    $user->wrong_tables = $wrongTables;
+
+    return $user;
+}
+
 
     /**
      *Edit User Information
      */
-    public function editUserInformation(Request $request, $id): View
-    {
-        $userDetails = User::find($id);
+ public function editUserInformation(Request $request, $id): View
+{
+    $userDetails = $this->checkUserTableStatus(User::find($id));
 
-        $AllUserStatus = UserStatus::all();
-        $AllUserType = UserType::all();
-        $AllAdminRole = AdminRole::all();
+    $data = [
+        'id'            => $id,
+        'userDetails'   => $userDetails,
+        'AllUserStatus' => UserStatus::all(),
+        'AllUserType'   => UserType::all(),
+        'AllAdminRole'  => AdminRole::all(),
+    ];
 
-        $data = [
-            'id' => $id, 'userDetails' => $userDetails, 'AllUserStatus' => $AllUserStatus, 'AllUserType' => $AllUserType, 'AllAdminRole' => $AllAdminRole,
-        ];
-
-        return view('userreports.edituser')->with($data);
-    }
+    return view('userreports.edituser')->with($data);
+}
 
     /**
      *Save User Information
@@ -388,6 +412,7 @@ class UserReportController extends Controller implements HasMiddleware
         $conferenceDescription = $baseChapterQuery['conferenceDescription'];
         $chPcId = $baseChapterQuery['chPcId'];
         $chPayments = $baseChapterQuery['chPayments'];
+        $chEOYDocuments = $baseChapterQuery['chEOYDocuments'];
         $startMonthName = $baseChapterQuery['startMonthName'];
 
         $allStates = $baseChapterQuery['allStates'];
@@ -396,7 +421,7 @@ class UserReportController extends Controller implements HasMiddleware
         $data = [
             'id' => $id, 'userDetails' => $userDetails, 'allStates' => $allStates, 'allCountries' => $allCountries, 'chDetails' => $chDetails,
             'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'allCountries' => $allCountries, 'bdDetails' => $bdDetails,
-            'chPcId' => $chPcId, 'allStates' => $allStates, 'chConfId' => $chConfId, 'chPayments' => $chPayments,
+            'chPcId' => $chPcId, 'allStates' => $allStates, 'chConfId' => $chConfId, 'chPayments' => $chPayments, 'chEOYDocuments' =>$chEOYDocuments,
             'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'bdPosition' => $bdPosition,
             'startMonthName' => $startMonthName, 'AllUserStatus' => $AllUserStatus, 'AllUserType' => $AllUserType, 'AllAdminRole' => $AllAdminRole,
         ];

@@ -317,6 +317,9 @@ class ChapterController extends Controller implements HasMiddleware
         $reviewComplete = $baseQuery['reviewComplete'];
 
         $startMonthName = $baseQuery['startMonthName'];
+        $startDate = $baseQuery['startDate'];
+        $dueDate = $baseQuery['dueDate'];
+        $renewalDate = $baseQuery['renewalDate'];
         $chapterStatus = $baseQuery['chapterStatus'];
         $probationReason = $baseQuery['probationReason'];
         $websiteLink = $baseQuery['websiteLink'];
@@ -338,17 +341,11 @@ class ChapterController extends Controller implements HasMiddleware
 
         $resources = Resources::with('resourceCategory')->get();
 
-        $dateOptions = $this->positionConditionsService->getDateOptions();
-        $threeMonthsAgo = $dateOptions['threeMonthsAgo'];
-        $startMonthId = $chDetails->start_month_id;
-        $startYear = $chDetails->start_year;
-        $startDate = Carbon::createFromDate($startYear, $startMonthId, 1);
-
-        $data = ['id' => $id, 'chActiveId' => $chActiveId, 'positionId' => $positionId, 'coorId' => $coorId, 'reviewComplete' => $reviewComplete, 'threeMonthsAgo' => $threeMonthsAgo,
+        $data = ['id' => $id, 'chActiveId' => $chActiveId, 'positionId' => $positionId, 'coorId' => $coorId, 'reviewComplete' => $reviewComplete,
             'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chDetails' => $chDetails, 'websiteLink' => $websiteLink,
             'startMonthName' => $startMonthName, 'confId' => $confId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus, 'startDate' => $startDate, 'probationReason' => $probationReason,
             'chFinancialReport' => $chFinancialReport, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments,
-            'conferenceDescription' => $conferenceDescription, 'chDisbanded' => $chDisbanded, 'chEOYDocuments' => $chEOYDocuments,
+            'conferenceDescription' => $conferenceDescription, 'chDisbanded' => $chDisbanded, 'chEOYDocuments' => $chEOYDocuments, 'dueDate' => $dueDate, 'renewalDate' =>$renewalDate,
             'resources' => $resources, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
@@ -749,10 +746,6 @@ class ChapterController extends Controller implements HasMiddleware
 
         $input = $request->all();
         $sanitizedName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|', '.', ' '], '-', $input['ch_name']);
-        // $stateId = $input['ch_state'];
-        // $stateDetails = State::with('conference', 'region')->find($stateId);
-        // $regId = $stateDetails->region_id;
-        // $confId = $stateDetails->conference_id;
 
         DB::beginTransaction();
         try {
@@ -854,7 +847,6 @@ class ChapterController extends Controller implements HasMiddleware
         $sanitizedName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|', '.', ' '], '-', $input['ch_name']);
         $stateId = $input['ch_state'];
         $stateDetails = State::with('conference', 'region')->find($stateId);
-        // $regId = $stateDetails->region_id;
         $confId = $stateDetails->conference_id;
 
         $statusId = OperatingStatusEnum::OK;
@@ -878,8 +870,6 @@ class ChapterController extends Controller implements HasMiddleware
                 'sanitized_name' => $sanitizedName,
                 'state_id' => $input['ch_state'],
                 'country_id' => $input['ch_country'] ?? '198',
-                // 'conference_id' => $confId,
-                // 'region_id' => $regId,
                 'status_id' => $statusId,
                 'territory' => $input['ch_boundariesterry'],
                 'inquiries_contact' => $input['ch_inqemailcontact'],
@@ -962,6 +952,9 @@ class ChapterController extends Controller implements HasMiddleware
         $reviewComplete = $baseQuery['reviewComplete'];
 
         $startMonthName = $baseQuery['startMonthName'];
+        $startDate = $baseQuery['startDate'];
+        $dueDate = $baseQuery['dueDate'];
+        $renewalDate = $baseQuery['renewalDate'];
         $chapterStatus = $baseQuery['chapterStatus'];
         $probationReason = $baseQuery['probationReason'];
         $websiteLink = $baseQuery['websiteLink'];
@@ -977,7 +970,7 @@ class ChapterController extends Controller implements HasMiddleware
             'startMonthName' => $startMonthName, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus, 'probationReason' => $probationReason,
             'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments,
             'conferenceDescription' => $conferenceDescription, 'allStatuses' => $allStatuses, 'allWebLinks' => $allWebLinks,
-            'pcList' => $pcList, 'confId' => $confId, 'chConfId' => $chConfId,
+            'pcList' => $pcList, 'confId' => $confId, 'chConfId' => $chConfId, 'startDate' => $startDate, 'dueDate' => $dueDate, 'renewalDate' => $renewalDate
         ];
 
         return view('chapters.edit')->with($data);
@@ -1077,10 +1070,6 @@ class ChapterController extends Controller implements HasMiddleware
 
         DB::beginTransaction();
         try {
-            // $chapterName = $request->filled('ch_name') ? $request->input('ch_name') : $request->input('ch_hid_name');
-            // $chapter->name = $chapterName;
-            // $chapter->sanitized_name = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|', '.', ' '], '-', $chapterName);
-            // $chapter->former_name = $request->filled('ch_preknown') ? $request->input('ch_preknown') : $request->input('ch_hid_preknown');
             $chapter->sistered_by = $request->filled('ch_sistered') ? $request->input('ch_sistered') : $request->input('ch_hid_sistered');
             $chapter->territory = $request->filled('ch_boundariesterry') ? $request->input('ch_boundariesterry') : $request->input('ch_hid_boundariesterry');
             $chapter->status_id = $status_id;
@@ -1159,12 +1148,6 @@ class ChapterController extends Controller implements HasMiddleware
                     ->queue(new ChapDetailsUpdatePCNotice($mailData));
             }
 
-            // Name Change Notification//
-            // if ($chDetailsUpd->name != $chDetails->name) {
-            //     $chNamePrev = $chDetails->name;
-            //     $pdfPath = $this->pdfController->saveNameChangeLetter($request, $chapterId, $chNamePrev);
-            // }
-
             // PC Change Notification//
             if ($chDetailsUpd->primary_coordinator_id != $chDetails->primary_coordinator_id) {
                 Mail::to($emailListChap)
@@ -1218,6 +1201,7 @@ class ChapterController extends Controller implements HasMiddleware
         $chDetails = $baseQuery['chDetails'];
         $chConfId = $baseQuery['chConfId'];
         $chActiveId = $baseQuery['chActiveId'];
+        $chapterStatus = $baseQuery['chapterStatus'];
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
@@ -1236,7 +1220,7 @@ class ChapterController extends Controller implements HasMiddleware
         $data = ['id' => $id, 'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'allCountries' => $allCountries,
             'chDetails' => $chDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
             'chPcId' => $chPcId, 'allStates' => $allStates, 'PresDetails' => $PresDetails, 'confId' => $confId, 'chConfId' => $chConfId,
-            'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
+            'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'chapterStatus' => $chapterStatus
         ];
 
         return view('chapters.editboard')->with($data);
@@ -1704,6 +1688,7 @@ class ChapterController extends Controller implements HasMiddleware
         $chDetails = $baseQuery['chDetails'];
         $chConfId = $baseQuery['chConfId'];
         $chActiveId = $baseQuery['chActiveId'];
+        $chapterStatus = $baseQuery['chapterStatus'];
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
@@ -1713,7 +1698,7 @@ class ChapterController extends Controller implements HasMiddleware
 
         $data = ['id' => $id, 'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'conferenceDescription' => $conferenceDescription,
             'chDetails' => $chDetails, 'allWebLinks' => $allWebLinks, 'chPcId' => $chPcId, 'regionLongName' => $regionLongName, 'confId' => $confId, 'chConfId' => $chConfId,
-            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
+            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc, 'chapterStatus' => $chapterStatus
         ];
 
         return view('chapters.editwebsite')->with($data);

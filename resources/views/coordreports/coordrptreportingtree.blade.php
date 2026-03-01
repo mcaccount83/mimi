@@ -16,7 +16,7 @@
             <div class="card card-outline card-primary">
                 <div class="card-header">
                 <div class="dropdown">
-                    <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Coordinator Reporting Tree
                     </h3>
                     @include('layouts.dropdown_menus.menu_reports_coor')
@@ -255,17 +255,21 @@
 
 <div class="card-body">
     <br>
-        <button type="button" class="btn bg-gradient-primary" onclick="showPositionAbbreviations()">Position Abbreviations</button>
+        <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showPositionAbbreviations()">Position Abbreviations</button>
 </div>
 
-@if ($ITCondition)
-    <div class="col-sm-12">
-        <div class="custom-control custom-switch">
-            <input type="checkbox" name="showFullTree" id="showFullTree" class="custom-control-input" {{$checkBox86Status ? 'checked' : '' }} onchange="showFullTree()" />
-            <label class="custom-control-label" for="showFullTree">Show Full International Reporting Tree</label>
+<div class="card-body">
+    @if ($ITCondition)
+        <div class="col-sm-12">
+            <div class="form-check form-switch">
+                <input type="checkbox" name="showFullTree" id="showFullTree" class="form-check-input" {{$checkBox86Status ? 'checked' : '' }} onchange="showFullTree()" />
+                <label class="form-check-label" for="showFullTree">Show Full International Reporting Tree</label>
+            </div>
         </div>
-    </div>
-@endif
+    @endif
+</div>
+    <!-- /.card-body for checkboxes -->
+
 
 </section>
 @endsection

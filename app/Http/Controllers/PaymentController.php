@@ -315,13 +315,16 @@ class PaymentController extends Controller implements HasMiddleware
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $startMonthName = $baseQuery['startMonthName'];
+        $startDate = $baseQuery['startDate'];
+        $dueDate = $baseQuery['dueDate'];
+        $renewalDate = $baseQuery['renewalDate'];
         $chapterStatus = $chDetails->status->chapter_status;
         $chActiveId = $baseQuery['chActiveId'];
         $chPayments = $baseQuery['chPayments'];
 
         $data = ['id' => $id, 'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'startMonthName' => $startMonthName, 'chPayments' => $chPayments,
             'chDetails' => $chDetails, 'chapterStatus' => $chapterStatus, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
-            'coorId' => $coorId, 'confId' => $confId, 'chConfId' => $chConfId,
+            'coorId' => $coorId, 'confId' => $confId, 'chConfId' => $chConfId, 'startDate' => $startDate, 'dueDate' => $dueDate, 'renewalDate' => $renewalDate
         ];
 
         return view('payment.editpayment')->with($data);
@@ -488,6 +491,9 @@ class PaymentController extends Controller implements HasMiddleware
         $chPayments = $baseQuery['chPayments'];
 
         $startMonthName = $baseQuery['startMonthName'];
+        $startDate = $baseQuery['startDate'];
+        $dueDate = $baseQuery['dueDate'];
+        $renewalDate = $baseQuery['renewalDate'];
         $chapterStatus = $baseQuery['chapterStatus'];
 
         $chDisbanded = null;
@@ -522,7 +528,7 @@ class PaymentController extends Controller implements HasMiddleware
         $data = ['id' => $id, 'chActiveId' => $chActiveId, 'chDetails' => $chDetails, 'conferenceDescription' => $conferenceDescription, 'chDisbanded' => $chDisbanded,
             'startMonthName' => $startMonthName, 'confId' => $confId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus,
             'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments, 'grantRequests' => $grantRequests,
-            'reregHistory' => $reregHistory, 'm2mHistory' => $m2mHistory, 'sustainingHistory' => $sustainingHistory,
+            'reregHistory' => $reregHistory, 'm2mHistory' => $m2mHistory, 'sustainingHistory' => $sustainingHistory, 'startDate' => $startDate, 'dueDate' => $dueDate, 'renewalDate' => $renewalDate
         ];
 
         return view('payment.paymenthistory')->with($data);

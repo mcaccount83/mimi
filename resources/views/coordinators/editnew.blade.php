@@ -24,14 +24,14 @@
               <div class="card-body box-profile">
                 <h3 class="profile-username ">Coordinator Information</h3>
 
-                        <div class="form-group row">
+                        <div class="row mb-3">
                             <label class="col-sm-4 col-form-label">Conference:</label>
                             <div class="col-sm-8">
                                 <input type="text" name="cord_conf" id="cord_conf" class="form-control" placeholder="Home Chapter" value="{{ $userConfName }} - {{ $userConfDesc }}" readonly>
                             </div>
                         </div>
 
-                        <div class="form-group row mt-1">
+                        <div class="row mb-3 mt-1">
                             <label class="col-sm-4 col-form-label">Region:</label>
                             <div class="col-sm-8">
                                 @if($assistConferenceCoordinatorCondition)
@@ -49,20 +49,20 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        <div class="row mb-3">
                             <label class="col-sm-4 col-form-label">Position:</label>
                             <div class="col-sm-8">
                                 <input type="text" name="cord_position" id="cord_position" class="form-control" placeholder="Home Chapter" value="Big Sister" readonly>
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        <div class="row mb-3">
                             <label class="col-sm-4 col-form-label">Reports To:</label>
                             <div class="col-sm-8">
                                 <input type="text" name="cord_conf" id="cord_conf" class="form-control" placeholder="Home Chapter" value="{{ $userName }}" readonly>
                             </div>
                         </div>
-                        <div class="form-group row">
+                        <div class="row mb-3">
                             <label class="col-sm-4 col-form-label">Home Chapter:</label>
                             <div class="col-sm-8">
                                 <input type="text" name="cord_chapter" id="cord_chapter" class="form-control" placeholder="Home Chapter" required>
@@ -83,7 +83,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <!-- /.form group -->
-                                <div class="form-group row">
+                                <div class="row mb-3">
                                     <label class="col-sm-2 col-form-label">Name:</label>
                                     <div class="col-sm-5">
                                     <input type="text" name="cord_fname" id="cord_fname" class="form-control" placeholder="First Name" required >
@@ -93,7 +93,7 @@
                                     </div>
                                 </div>
                                 <!-- /.form group -->
-                                <div class="form-group row">
+                                <div class="row mb-3">
                                     <label class="col-sm-2 col-form-label">Email/Secondary:</label>
                                     <div class="col-sm-5">
                                     <input type="text" name="cord_email" id="cord_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" placeholder="Email"  required >
@@ -104,7 +104,7 @@
                                     </div>
                                 </div>
                                 <!-- /.form group -->
-                                <div class="form-group row">
+                                <div class="row mb-3">
                                     <label class="col-sm-2 col-form-label">Phone/Alternate:</label>
                                     <div class="col-sm-5">
                                     <input type="text" name="cord_phone" id="cord_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask placeholder="Phone"  required >
@@ -114,13 +114,13 @@
                                     </div>
                                 </div>
                                 <!-- /.form group -->
-                                <div class="form-group row">
+                                <div class="row mb-3">
                                     <label class="col-sm-2 col-form-label">Address:</label>
                                     <div class="col-sm-10">
                                     <input type="text" name="cord_addr" id="cord_addr" class="form-control" placeholder="Address" required >
                                     </div>
                                 </div>
-                                <div class="form-group row">
+                                <div class="row mb-3">
                                     <label class="col-sm-2 col-form-label"><br></label>
                                     <div class="col-sm-3">
                                     <input type="text" name="cord_city" id="cord_city" class="form-control" placeholder="City" required >
@@ -151,7 +151,7 @@
 
                                 </div>
                                  <!-- /.form group -->
-                                 <div class="form-group row">
+                                 <div class="row mb-3">
                                     <label class="col-sm-2 col-form-label">Birthday:</label>
                                     <div class="col-sm-3">
                                         <select name="cord_month" class="form-control" style="width: 100%;" required>
@@ -177,9 +177,9 @@
                       </div>
           <!-- /.col -->
           <div class="col-md-12">
-            <div class="card-body text-center">
-                <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2"></i>Save New Coordinator</button>
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="fas fa-reply mr-2"></i>Back to Coordinator List</button>
+            <div class="card-body text-center mt-3">
+                <button type="submit" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save New Coordinator</button>
+                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-people-fill me-2">Back to Coordinator List</button>
             </div>
         </div>
         </div>

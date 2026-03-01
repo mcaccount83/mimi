@@ -10,9 +10,9 @@
                         <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
 
                         <div class="col-md-12">
-                            <div class="card card-widget widget-user">
-                                <div class="widget-user-header bg-primary">
-                                    <div class="widget-user-image">
+                            <div class="card">
+                                <div class="card bg-primary">
+                                    <div class="card-body text-center">
                                         <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" style="width: 115px; height: 115px;">
                                     </div>
                                 </div>
@@ -70,7 +70,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <!-- /.form group -->
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <label class="col-sm-2 mb-1 col-form-label">Company:</label>
                                 <div class="col-sm-10 mb-1">
                                 <input type="text" name="ship_company" id="ship_company" class="form-control" placeholder="Company Name (if applicable)">
@@ -119,7 +119,7 @@
 
                 <h3 class="profile-username">Payment Information</h3>
 
-                        <div class="form-group row">
+                        <div class="row mb-3">
                             <div class="col-md-6">
                                 <label>Sustaining Chapter Donation</label>
                                 <input type="text" name="sustaining" id="sustaining" class="form-control" value="$0.00" oninput="formatCurrency(this)">
@@ -138,7 +138,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        <div class="row mb-3">
                             <div class="col-md-6">
                             <label for="card_number" >{{ __('Card Number') }}</label> <span class="field-required">*</span>
                                 <input id="card_number" type="text" class="form-control @error('card_number') is-invalid @enderror" name="card_number" required autocomplete="off" >
@@ -170,7 +170,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        <div class="row mb-3">
                             <div class="col-md-4">
                                 <label>Cardholder First Name</label> <span class="field-required">*</span>
                                 <input type="text" name="first_name" id="first_name" class="form-control"  required >
@@ -185,13 +185,13 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        <div class="row mb-3">
                             <div class="col-md-12">
                                 <label>Cardholder Address</label> <span class="field-required">*</span>
                                 <input type="text" name="address" id="address" class="form-control"  required >
                             </div>
                         </div>
-                        <div class="form-group row">
+                        <div class="row mb-3">
                             <div class="col-md-4">
                                 <label>City</label> <span class="field-required">*</span>
                                 <input type="text" name="city" id="city" class="form-control"  required >
@@ -206,12 +206,12 @@
                             </div>
                         </div>
 
-                    <div class="card-body text-center">
+                    <div class="card-body text-center mt-3">
                             <div class="col-md-12" style="color: red;"><center>Page will automatically re-direct after application submission with success or error message.<br>
                                 DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center></div>
                             <br>
 
-                                <button type="submit" class="btn btn-primary"><i class="fas fa-share" ></i>&nbsp;{{ __('Submit Donation') }}</button>
+                                <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>{{ __('Submit Donation') }}</button>
                         </div>
                     </form>
                 </div>

@@ -34,67 +34,41 @@
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                  <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
-                <p class="text-center">{{ $conferenceDescription }} Conference, {{ $regionLongName }} Region
+                <div class="card-body">
+                    <div class="card-header text-center bg-transparent">
+                    <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
+                    <p class="mb-0">{{ $conferenceDescription }} Conference, {{ $conferenceDescription }} Region
                   </p>
+                </div>
 
-                  <ul class="list-group list-group-unbordered mb-3">
-
-                      @if($regionalCoordinatorCondition)
+                  <ul class="list-group list-group-flush mb-3">
                       <li class="list-group-item">
-                          <label class="ch_primarycor">Update Primary Coordinator:</label>
-                          <select name="ch_primarycor" id="ch_primarycor" class="form-control float-right col-sm-6 text-right" style="width: 100%;" onchange="loadCoordinatorList(this.value)" required>
-                              <option value="">Select Primary Coordinator</option>
-                              @foreach($pcDetails as $coordinator)
-                              <option value="{{ $coordinator['cid'] }}"
-                                {{ isset($chDetails->primary_coordinator_id) && $chDetails->primary_coordinator_id == $coordinator['cid'] ? 'selected' : '' }}
-                                data-region-id="{{ $coordinator['regid'] }}">
-                                {{ $coordinator['cname'] }} {{ $coordinator['cpos'] }}
-                            </option>
-                              @endforeach
-                          </select>
-                          <hr>
-                          <h3 class="profile-username">Coordinator Team</h3>
-                          <span id="display_corlist" style="display: block; margin-top: 10px;"></span>
-                      </li>
-                      @else
-                      <li class="list-group-item" id="display_corlist" ></li>
-                      @endif
-                             <li class="list-group-item">
-
-                  <div class="text-center">
-                      @if ($chDetails->active_status == 1 )
-                          <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
-                      @elseif ($chDetails->active_status == 2)
-                        <b><span style="color: #ff851b;">Chapter is PENDING</span></b>
-                      @elseif ($chDetails->active_status == 3)
-                        <b><span style="color: #dc3545;">Chapter was NOT APPROVED</span></b><br>
-                          Declined Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                          {{ $chDetails->disband_reason }}
-                      @elseif ($chDetails->active_status == 0)
-                          <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
-                          Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                          {{ $chDetails->disband_reason }}
-                      @endif
-                  </div>
+                        @if($regionalCoordinatorCondition)
+                           @include('partials.coordinatorlistupdate')
+                            @else
+                        @include('partials.coordinatorlist')
+                            @endif
+                        </li>
+                   <li class="list-group-item mt-3">
+                            @include('partials.chapterstatus')
+                        </li>
                 </li>
 
-                   @if ($chDetails->active_status == '2')
-                    <li class="list-group-item">
-                        <div class="card-body text-center">
-                                <button type="button" class="btn bg-gradient-primary mb-3"
-                                    onclick="showChapterSetupEmailModal({{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">
-                                    <i class="fas fa-envelope mr-2"></i>Send Startup Email</button>
-                            <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2"></i>Save Updates</button>
-                            <br>
-                            Save all changes before approval!
-                            <br>
-                             <button type="button" class="btn bg-gradient-success" onclick="chapApprove({{ $chDetails->id }}, '{{ $chDetails->region_id }}')"><i class="fas fa-check mr-2"></i>Approve Chapter</button>
-                            <button type="button" class="btn bg-gradient-danger" onclick="chapDecline({{ $chDetails->id }})"><i class="fas fa-times mr-2"></i>Decline Chaper</button>
-                    </li>
+                @if ($chDetails->active_status == '2')
+                <li class="list-group-item">
+                    <div class="card-body text-center mt-3">
+                        <button type="button" class="btn btn-primary bg-gradient mb-2"
+                            onclick="showChapterSetupEmailModal({{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">
+                            <i class="bi bi-envelope-fill me-2"></i>Send Startup Email</button>
+                        <button type="submit" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Updates</button>
+                        <br>
+                        Save all changes before approval, so information in emails will be correct!
+                        <br>
+                            <button type="button" class="btn btn-success bg-gradient mb-2" onclick="chapApprove({{ $chDetails->id }}, '{{ $chDetails->region_id }}')"><i class="bi bi-check-lg me-2"></i>Approve Chapter</button>
+                        <button type="button" class="btn btn-danger bg-gradient mb-2" onclick="chapDecline({{ $chDetails->id }})"><i class="bi bi-x-circle me-2"></i>Decline Chaper</button>
+                </li>
                 @endif
- </ul>
+                </ul>
                 </div>
               <!-- /.card-body -->
             </div>
@@ -104,13 +78,16 @@
 
           <div class="col-md-8">
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                <h3 class="profile-username">General Information</h3>
+                <div class="card-body">
+                        <div class="card-header bg-transparent border-0">
+                        <h3>General Information</h3>
+                     </div>
                     <!-- /.card-header -->
+                    <div class="card-body">
                     <div class="row">
                         <div class="col-md-12">
                             <!-- /.form group -->
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">Chapter Name:</label>
                                 <div class="col-sm-5">
                                 <input type="text" name="ch_name" id="ch_name" class="form-control" value="{{ $chDetails->name }}"  >
@@ -130,7 +107,7 @@
                                 </div>
                             </div>
                             <!-- /.form group -->
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">Boundaries:</label>
                                 <div class="col-sm-10">
                                 <input type="text" name="ch-territory" id="ch-territory" class="form-control" value="{{ $chDetails->territory }}"  required >
@@ -138,7 +115,7 @@
                             </div>
 
                              <!-- /.form group -->
-                             <div class="form-group row">
+                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">Email/Mailing:</label>
                                 <div class="col-sm-3">
                                 <input type="text" name="ch_email" id="ch_email" class="form-control" value="{{ $chDetails->email }}"  placeholder="Chapter Email Address" >
@@ -148,7 +125,7 @@
                                 </div>
                             </div>
                             <!-- /.form group -->
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">Inquiries:</label>
                                 <div class="col-sm-3">
                                 <input type="text" name="ch_inqemailcontact" id="ch_inqemailcontact" class="form-control" value="{{ $chDetails->inquiries_contact }}"  required >
@@ -160,15 +137,21 @@
 
                         </div>
                     </div>
+                     </div>
+                            </div>
 
                     <hr>
 
-                <h3 class="profile-username">Founder Information</h3>
+                    <div class="card-body">
+                        <div class="card-header bg-transparent border-0">
+                <h3>Founder Information</h3>
+                     </div>
                     <!-- /.card-header -->
+                    <div class="card-body">
                     <div class="row">
                         <div class="col-md-12">
                             <!-- /.form group -->
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <label class="col-sm-2 mb-1 col-form-label">Name:</label>
                                 <div class="col-sm-5 mb-1">
                                 <input type="text" name="ch_pre_fname" id="ch_pre_fname" class="form-control" value="{{ $chDetails->pendingPresident->first_name }}" required placeholder="First Name" >
@@ -217,8 +200,9 @@
                                 </select>
                             </div>
                             </div>
-
                         </div>
+                    </div>
+
                     </div>
                 </div>
               <!-- /.card-body -->
@@ -226,32 +210,33 @@
             <!-- /.card -->
                       </div>
           <!-- /.col -->
-
           <div class="col-md-12">
-            <div class="card-body text-center">
+            <div class="card-body text-center mt-3">
               @if($coordinatorCondition)
                     @if ($confId == $chConfId)
                         @if ($chActiveId == '2')
-                            <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplistpending') }}'"><i class="fas fa-reply mr-2"></i>Back to Pending Chapter List</button>
+                            <button type="button" id="back-pending" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplistpending') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-add-fill me-2"></i>Back to Pending Chapter List</button>
                         @elseif ($chActiveId == '3')
-                            <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplistdeclined') }}'"><i class="fas fa-reply mr-2"></i>Back to Not Approved Chapter List</button>
+                            <button type="button" id="back-declined" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplistdeclined') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-x-fill me-2"></i>Back to Not Approved Chapter List</button>
                         @endif
                      @elseif ($confId != $chConfId)
                         @if ($ITCondition )
                             @if ($chActiveId == '2')
-                                <button type="button" id="back-pending" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplistpending', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Pending Chapter List</button>
+                                <button type="button" id="back-pending" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplistpending', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-add-fill me-2"></i>Back to International Pending Chapter List</button>
                             @elseif ($chActiveId == '3')
-                                <button type="button" id="back-declined" class="btn bg-gradient-primary mb-3 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplistdeclined', ['check5' => 'yes']) }}'"><i class="fas fa-reply mr-2"></i>Back to International Not Approved Chapter List</button>
+                                <button type="button" id="back-declined" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplistdeclined', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-x-fill me-2"></i>Back to International Not Approved Chapter List</button>
                             @endif
                         @endif
                     @endif
-                    <button type="button" class="btn bg-gradient-primary mb-3 reset-password-btn" data-user-id="{{ $chDetails->pendingPresident->user_id }}"><i class="fas fa-lock mr-2"></i>Reset Founder Password</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2 reset-password-btn" data-user-id="{{ $chDetails->pendingPresident->user_id }}"><i class="bi bi-lock-fill me-2"></i>Reset Founder Password</button>
 
                 @endif
+           </div>
             </div>
         </div>
         <!-- /.row -->
-      </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.container-fluid -->
     </form>
     </section>
     <!-- /.content -->

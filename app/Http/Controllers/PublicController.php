@@ -259,9 +259,11 @@ class PublicController extends Controller
     public function updateNewChapter(Request $request): RedirectResponse
     {
         // Verify reCAPTCHA Enterprise
-        if (!$this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip())) {
-            return back()->withErrors(['recaptcha' => 'Please complete the reCAPTCHA verification.'])->withInput();
-        }
+        $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
+
+if (!$recaptchaResult['success']) {
+    return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+}
 
         $input = $request->all();
         $description = 'New Chapter Application';
@@ -470,9 +472,11 @@ class PublicController extends Controller
     public function updateDonation(Request $request): RedirectResponse
     {
         // Verify reCAPTCHA Enterprise
-        if (!$this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip())) {
-            return back()->withErrors(['recaptcha' => 'Please complete the reCAPTCHA verification.'])->withInput();
-        }
+        $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
+
+if (!$recaptchaResult['success']) {
+    return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+}
 
         $input = $request->all();
         $description = 'Sustaining Chapter & M2M Fund Donations';
@@ -853,10 +857,11 @@ class PublicController extends Controller
     public function updateNewCoordinator(Request $request): RedirectResponse
     {
         // Verify reCAPTCHA Enterprise
-        if (!$this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip())) {
-            return back()->withErrors(['recaptcha' => 'Please complete the reCAPTCHA verification.'])->withInput();
-        }
+        $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
+if (!$recaptchaResult['success']) {
+    return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+}
         $input = $request->all();
 
         $stateId = $input['cd_state'];
@@ -1005,9 +1010,11 @@ class PublicController extends Controller
     public function updateNewInquiry(Request $request): RedirectResponse
     {
         // Verify reCAPTCHA Enterprise
-        if (!$this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip())) {
-            return back()->withErrors(['recaptcha' => 'Please complete the reCAPTCHA verification.'])->withInput();
-        }
+        $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
+
+if (!$recaptchaResult['success']) {
+    return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+}
 
         $input = $request->all();
         $stateId = $input['ch_state'];

@@ -7,20 +7,20 @@
 
 @if ($message = Session::get('success'))
       <div class="alert alert-success">
-		<button type="button" class="close" data-dismiss="alert">×</button>
+		<button type="button" class="close" data-bs-dismiss="alert">×</button>
          <p>{{ $message }}</p>
       </div>
     @endif
 	 @if ($message = Session::get('fail'))
       <div class="alert alert-danger">
-		<button type="button" class="close" data-dismiss="alert">×</button>
+		<button type="button" class="close" data-bs-dismiss="alert">×</button>
          <p>{{ $message }}</p>
       </div>
     @endif
 
     @if ($message = Session::get('info'))
     <div class="alert alert-warning">
-        <button type="button" class="close" data-dismiss="alert">×</button>
+        <button type="button" class="close" data-bs-dismiss="alert">×</button>
         <p>{{ $message }}</p>
     </div>
 @endif
@@ -33,10 +33,10 @@
                 <div class="card card-outline card-primary">
                     <div class="card-header">
                         <div class="dropdown">
-                            <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Chapter Subscription List
                             </h3>
-                            <span class="ml-2">PA=Public Announcements | BL=BoardList</span>
+                            <span class="ms-2">PA=Public Announcements | BL=BoardList</span>
                             @include('layouts.dropdown_menus.menu_forum')
                         </div>
                     </div>
@@ -65,7 +65,7 @@
                 <tbody>
                     @foreach($chapterList as $list)
                   <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                    <td class="text-center align-middle"><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="bi bi-eye"></i></a></td>
                         <td>
                             @if ($list->state->conference_id > 0)
                                 {{ $list->state->conference->short_name }} / {{ $list->state->region->short_name }}
@@ -139,28 +139,28 @@
             </div>
              <!-- /.card-body -->
              <div class="col-sm-12">
-                    <div class="custom-control custom-switch">
-                        <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBox1Status ? 'checked' : '' }} onchange="showPrimary()" />
-                        <label class="custom-control-label" for="showPrimary">Only show chapters I am primary for</label>
+                    <div class="form-check form-switch">
+                        <input type="checkbox" name="showPrimary" id="showPrimary" class="form-check-input" {{$checkBox1Status ? 'checked' : '' }} onchange="showPrimary()" />
+                        <label class="form-check-label" for="showPrimary">Only show chapters I am primary for</label>
                     </div>
                 </div>
                 @if ($coordinatorCondition && $assistRegionalCoordinatorCondition)
                     <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showConfReg" id="showConfReg" class="custom-control-input" {{$checkBox3Status ? 'checked' : '' }} onchange="showConfReg()" />
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showConfReg" id="showConfReg" class="form-check-input" {{$checkBox3Status ? 'checked' : '' }} onchange="showConfReg()" />
                                 @if ($assistConferenceCoordinatorCondition)
-                                    <label class="custom-control-label" for="showConfReg">Show All Chapters in Conference (Export Available)</label>
+                                    <label class="form-check-label" for="showConfReg">Show All Chapters in Conference (Export Available)</label>
                                 @else
-                                    <label class="custom-control-label" for="showConfReg">Show All Chapters in Region (Export Available)</label>
+                                    <label class="form-check-label" for="showConfReg">Show All Chapters in Region (Export Available)</label>
                                 @endif
                         </div>
                     </div>
                 @endif
                 @if ($ITCondition)
                     <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="custom-control-input" {{$checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
-                            <label class="custom-control-label" for="showIntl">Show All International Chapters</label>
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{$checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <label class="form-check-label" for="showIntl">Show All International Chapters</label>
                         </div>
                     </div>
                 @endif
