@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\BoardController;
+use App\Http\Controllers\BoardControllerNew;
 use App\Http\Controllers\BoardPaymentController;
 use App\Http\Controllers\BoardPendingController;
 use App\Http\Controllers\ChapterController;
@@ -420,10 +421,20 @@ Route::middleware('auth')->group(function () {
     Route::post('/board/boardreportupatea/{id}', [BoardController::class, 'updateBoardReport'])->name('board.updateboardreport');
     Route::get('/board/probation/{id}', [BoardController::class, 'editProbationSubmission'])->name('board.editprobation');
     Route::post('/board/probationupdate/{id}', [BoardController::class, 'updateProbationSubmission'])->name('board.updateprobation');
-
     Route::get('/board/resources/{id}', [BoardController::class, 'viewResources'])->name('board.viewresources');
     Route::get('/board/resources/manual/{id}', [BoardController::class, 'editManualOrderForm'])->name('board.editmanual');
     Route::get('/board/elearning/{id}', [BoardController::class, 'viewELearning'])->name('board.viewelearning');
+
+    Route::get('/board-new/chapterprofile/{id}', [BoardControllerNew::class, 'chapterProfile'])->name('board-new.chapterprofile');
+    Route::get('/board-new/profile/{id}', [BoardControllerNew::class, 'editProfile'])->name('board-new.editprofile');
+    Route::post('/board-new/profileupdate/{id}', [BoardControllerNew::class, 'updateProfile'])->name('board-new.updateprofile');
+    Route::get('/board-new/boardreport/{id}', [BoardControllerNew::class, 'editBoardReport'])->name('board-new.editboardreport');
+    Route::post('/board-new/boardreportupatea/{id}', [BoardControllerNew::class, 'updateBoardReport'])->name('board-new.updateboardreport');
+    Route::get('/board-new/probation/{id}', [BoardControllerNew::class, 'editProbationSubmission'])->name('board-new.editprobation');
+    Route::post('/board-new/probationupdate/{id}', [BoardControllerNew::class, 'updateProbationSubmission'])->name('board-new.updateprobation');
+    Route::get('/board-new/resources/{id}', [BoardControllerNew::class, 'viewResources'])->name('board-new.viewresources');
+    Route::get('/board-new/resources/manual/{id}', [BoardControllerNew::class, 'editManualOrderForm'])->name('board-new.editmanual');
+    Route::get('/board-new/elearning/{id}', [BoardControllerNew::class, 'viewELearning'])->name('board-new.viewelearning');
 });
 
 // Board Payment Controller Routes...Board Login Required
@@ -433,11 +444,21 @@ Route::middleware('auth')->group(function () {
     Route::post('/process-manual', [BoardPaymentController::class, 'manualPayment'])->name('process.manual');
     Route::get('/board/reregpayment/{id}', [BoardPaymentController::class, 'editReregistrationPaymentForm'])->name('board.editreregpayment');
     Route::get('/board/donation/{id}', [BoardPaymentController::class, 'editDonationForm'])->name('board.editdonate');
+
+    Route::get('/board-new/reregpayment/{id}', [BoardPaymentController::class, 'editReregistrationPaymentFormNEW'])->name('board-new.editreregpayment');
+    Route::get('/board-new/donation/{id}', [BoardPaymentController::class, 'editDonationFormNEW'])->name('board-new.editdonate');
+
     Route::get('/board/grantrequestlist/{id}', [BoardController::class, 'viewGrantRequestList'])->name('board.viewgrantrequestlist');
     Route::get('/board/newgrantrequest/{id}', [BoardController::class, 'showNewGrantRequest'])->name('board.newgrantrequest');
     Route::post('/board/newgrantrequestupdate/{id}', [BoardController::class, 'updateNewGrantRequest'])->name('board.updatenewgrantrequest');
     Route::get('/board/grantdetails/{id}', [BoardController::class, 'viewGrantDetails'])->name('board.viewgrantdetails');
     Route::post('/board/updategrantrequest/{id}', [BoardController::class, 'updateGrantRequest'])->name('board.updategrantrequest');
+
+    Route::get('/board-new/grantrequestlist/{id}', [BoardControllerNew::class, 'viewGrantRequestList'])->name('board-new.viewgrantrequestlist');
+    Route::get('/board-new/newgrantrequest/{id}', [BoardControllerNew::class, 'showNewGrantRequest'])->name('board-new.newgrantrequest');
+    Route::post('/board-new/newgrantrequestupdate/{id}', [BoardControllerNew::class, 'updateNewGrantRequest'])->name('board-new.updatenewgrantrequest');
+    Route::get('/board-new/grantdetails/{id}', [BoardControllerNew::class, 'viewGrantDetails'])->name('board-new.viewgrantdetails');
+    Route::post('/board-new/updategrantrequest/{id}', [BoardControllerNew::class, 'updateGrantRequest'])->name('board-new.updategrantrequest');
 });
 
 // Financial Report Controller Routes...Board Login Required
@@ -446,6 +467,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/board/financialreportupdate/{id}', [FinancialReportController::class, 'updateFinancialReport'])->name('board.updatefinancialreport');
     Route::get('/board/disbandchecklist/{id}', [FinancialReportController::class, 'editDisbandChecklist'])->name('board.editdisbandchecklist');
     Route::post('/board/disbandchecklistupdate/{id}', [FinancialReportController::class, 'updateDisbandChecklist'])->name('board.updatedisbandchecklist');
+    Route::get('/board/financialreportfinal/{id}', [FinancialReportController::class, 'editFinancialReportFinal'])->name('board.editfinancialreportfinal');
+    Route::post('/board/financialreportfinalupdate/{id}', [FinancialReportController::class, 'updateFinancialReportFinal'])->name('board.updatefinancialreportfinal');
     Route::post('/board/disbandreportupdate/{id}', [FinancialReportController::class, 'updateDisbandReport'])->name('board.updatedisbandreport');
 });
 
@@ -502,4 +525,5 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/course/{course_id}/redirect', [ResourcesController::class, 'redirectToCourse'])->name('course.redirect');
     Route::get('/board/course/{course_id}/redirect', [BoardController::class, 'redirectToCourse'])->name('board.course.redirect');
+    Route::get('/board-new/course/{course_id}/redirect', [BoardControllerNew::class, 'redirectToCourse'])->name('board-new.course.redirect');
 });

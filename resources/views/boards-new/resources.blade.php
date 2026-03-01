@@ -14,7 +14,7 @@
                     </div>
                         <!-- /.card-header -->
                     <div class="card-body">
-             @include('boards.resources_accordion', ['resources' => $resources, 'resourceCategories' => $resourceCategories])
+             @include('boards-new.resources_accordion', ['resources' => $resources, 'resourceCategories' => $resourceCategories])
 
                 </div>
             </div>

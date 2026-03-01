@@ -4,7 +4,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <form method="POST" action='{{ route("board.updateprofile", $chDetails->id) }}' autocomplete="off">
+                    <form method="POST" action='{{ route("board-new.updateprofile", $chDetails->id) }}' autocomplete="off">
                         @csrf
 
                         <input type="hidden" id="ch_name" value="{{$chDetails->name}}">

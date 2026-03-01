@@ -4,7 +4,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <form id="boardinfo" method="POST" action="{{ route('board.updateboardreport',$chDetails->id) }}">
+                    <form id="boardinfo" method="POST" action="{{ route('board-new.updateboardreport',$chDetails->id) }}">
                         @csrf
 
                         <input type="hidden" name="presID" id="presID" value="{{ $PresDetails->id }}" />

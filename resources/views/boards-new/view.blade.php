@@ -37,9 +37,10 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-12 mb-3">
-                                    <label class="me-2">EIN:</label>{{$chDetails->ein}}<br>
+                                    <label class="me-2">Name:</label>MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}<br>
                                     <label class="me-2">Conference:</label>{{ $conferenceDescription }}<br>
                                     <label class="me-2">Region:</label>{{ $regionLongName }}<br>
+                                    <label class="me-2">EIN:</label>{{$chDetails->ein}}<br>
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label class="me-2">Boundaries:</label>{{ $chDetails->territory}}<br>
@@ -66,44 +67,44 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <div class="row mb-3">
+                            <div class="row-md-12 mb-3">
                                 <div class="col-3">
                                     <label class="me-2"><h3>President</h3></label>
                                 </div>
                                 <div class="col-9 ">
-                                    @include('boards.partials.presinfo')
+                                    @include('boards-new.partials.presinfo')
                                 </div>
                             </div>
-                            <div class="row mb-3">
+                            <div class="row-md-12 mb-3">
                                 <div class="col-3">
                                     <label class="me-2"><h3>AVP</h3></label>
                                 </div>
                                 <div class="col-9 ">
-                                    @include('boards.partials.avpinfo')
+                                    @include('boards-new.partials.avpinfo')
                                 </div>
                             </div>
-                            <div class="row mb-3">
+                            <div class="row-md-12 mb-3">
                                 <div class="col-3">
                                     <label class="me-2"><h3>MVP</h3></label>
                                 </div>
                                 <div class="col-9 ">
-                                    @include('boards.partials.mvpinfo')
+                                    @include('boards-new.partials.mvpinfo')
                                 </div>
                             </div>
-                            <div class="row mb-3">
+                            <div class="row-md-12 mb-3">
                                 <div class="col-3">
                                     <label class="me-2"><h3>Treasurer</h3></label>
                                 </div>
                                 <div class="col-9 ">
-                                    @include('boards.partials.trsinfo')
+                                    @include('boards-new.partials.trsinfo')
                                 </div>
                             </div>
-                            <div class="row mb-3">
+                            <div class="row-md-12 mb-3">
                                 <div class="col-3">
                                     <label class="me-2"><h3>Secretary</h3></label>
                                 </div>
                                 <div class="col-9 ">
-                                    @include('boards.partials.secinfo')
+                                    @include('boards-new.partials.secinfo')
                                 </div>
                             </div>
 

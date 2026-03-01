@@ -4,7 +4,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <form method="POST" action='{{ route("board.updateprobation", $chDetails->id) }}' autocomplete="off">
+                    <form method="POST" action='{{ route("board-new.updateprobation", $chDetails->id) }}' autocomplete="off">
                         @csrf
 
                         <div class="col-md-12">

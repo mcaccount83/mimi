@@ -1,18 +1,18 @@
 
 
     <!-- Board Dashboard Menu Item -->
-    {{-- <li class="nav-item">
-        <a href="{{ route('board.editprofile') }}" class="nav-link {{ Request::is('viewprofile') ? 'active' : '' }}">
+    <li class="nav-item">
+        <a href="{{ route('board-new.chapterprofile', ['id' => $chDetails->id]) }}" class="nav-link {{ Request::is('chapterprofile') ? 'active' : '' }}">
             <i class="nav-icon bi bi-house-fill"></i>
             <p>Chapter Profile</p>
         </a>
-    </li> --}}
+    </li>
 
     @php
-        $boardRoute = route('board.chapterprofile', ['id' => $chDetails->id]);
+        $boardRoute = route('board-new.chapterprofile', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
-            'board/chapterprofile/*',
+            'board-new/chapterprofile/*',
         ];
     @endphp
     @if (isset($boardRoute))
@@ -26,10 +26,10 @@
 
     <!-- Board Menu Item -->
     @php
-        $boardRoute = route('board.editprofile', ['id' => $chDetails->id]);
+        $boardRoute = route('board-new.editprofile', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
-            'board/profile/*',
+            'board-new/profile/*',
         ];
     @endphp
     @if (isset($boardRoute))
@@ -43,10 +43,10 @@
 
     <!-- ReReg Menu Item -->
     @php
-        $boardRoute = route('board.editreregpayment', ['id' => $chDetails->id]);
+        $boardRoute = route('board-new.editreregpayment', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
-            'board/reregpayment/*',
+            'board-new/reregpayment/*',
         ];
     @endphp
     @if (isset($boardRoute))
@@ -60,10 +60,10 @@
 
     <!-- Donations Menu Item -->
     @php
-        $boardRoute = route('board.editdonate', ['id' => $chDetails->id]);
+        $boardRoute = route('board-new.editdonate', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
-            'board/donation/*',
+            'board-new/donation/*',
         ];
     @endphp
     @if (isset($boardRoute))
@@ -77,10 +77,10 @@
 
     <!-- Documents Menu Item -->
     @php
-        $boardRoute = route('board.editprofile', ['id' => $chDetails->id]);
+        $boardRoute = route('board-new.editprofile', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
-            'board/profile/*',
+            'board-new/profile/*',
         ];
     @endphp
     @if (isset($boardRoute))
@@ -94,10 +94,10 @@
 
     <!-- Resources Menu Item -->
     @php
-        $boardRoute = route('board.viewresources', ['id' => $chDetails->id]);
+        $boardRoute = route('board-new.viewresources', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
-            'board/resources/*',
+            'board-new/resources/*',
         ];
     @endphp
     @if (isset($boardRoute))
@@ -111,10 +111,10 @@
 
     <!-- End of Year Menu Item -->
     @php
-        $boardRoute = route('board.editprofile', ['id' => $chDetails->id]);
+        $boardRoute = route('board-new.editprofile', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
-            'board/profile/*',
+            'board-new/profile/*',
         ];
     @endphp
     @if (isset($boardRoute))
@@ -128,10 +128,10 @@
 
     <!-- eLearning Menu Item -->
     @php
-        $boardRoute = route('board.viewelearning', ['id' => $chDetails->id]);
+        $boardRoute = route('board-new.viewelearning', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
-            'board/elearning/*',
+            'board-new/elearning/*',
         ];
     @endphp
     @if (isset($boardRoute))

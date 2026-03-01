@@ -1,10 +1,27 @@
     <!-- Board Dashboard Menu Item -->
-    {{-- <li class="nav-item">
-        <a href="{{ route('board.editprofile') }}" class="nav-link {{ Request::is('viewprofile') ? 'active' : '' }}">
-            <i class="nav-icon bi bi-house-fill"></i>
-            <p>Chapter Profile</p>
+    <li class="nav-item">
+        <a href="{{ route('board.editdisbandchecklist') }}" class="nav-link {{ Request::is('editdisbandchecklist') ? 'active' : '' }}">
+            <i class="nav-icon bi bi-list-check"></i>
+            <p>Disband Checklist</p>
         </a>
-    </li> --}}
+    </li>
+
+    <!-- ReReg Menu Item -->
+    @php
+        $boardRoute = route('board.editfinancialreportfinal', ['id' => $chDetails->id]);
+
+        $activeBoardRoutes = [
+            'board/financialreportfinal/*',
+        ];
+    @endphp
+    @if (isset($boardRoute))
+        <li class="nav-item">
+            <a href="{{ $boardRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardRoutes) }}">
+                <i class="nav-icon bi bi-file-earmark-bar-graph"></i>
+                <p>Financial Report</p>
+            </a>
+        </li>
+    @endif
 
      <!-- ReReg Menu Item -->
     @php

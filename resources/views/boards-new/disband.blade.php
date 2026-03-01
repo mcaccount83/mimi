@@ -28,7 +28,7 @@
                         <div class="card-body">
 
                             {{-- Checklist Form --}}
-                            <form id="checklist" name="checklist" role="form" data-bs-toggle="validator" method="POST" action='{{ route("board.updatedisbandchecklist", $chDetails->id) }}'>
+                            <form id="checklist" name="checklist" role="form" data-bs-toggle="validator" method="POST" action='{{ route("board-new.updatedisbandchecklist", $chDetails->id) }}'>
                                 @csrf
 
                             <div class="row">
