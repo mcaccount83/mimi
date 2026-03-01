@@ -63,7 +63,7 @@ Route::get('/test-429', function () {
 
 // Login and Logout Routes...Public, No login required...Used for Board & Coordinator Layouts
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-Route::get('/', [LoginController::class, 'showLoginForm'])->name('home');
+Route::get('/', [LoginController::class, 'showLoginForm']);
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
