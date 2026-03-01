@@ -25,7 +25,7 @@
               {{-- <table id="chapterlist_reRegDate" class="table table-bordered table-hover"> --}}
               <thead>
       			    <tr>
-          			<th>Details</th>
+          			<th>ReReg<br>Details</th>
                     <th>Conf/Reg</th>
           			<th>State</th>
                     <th>Name</th>
@@ -38,7 +38,7 @@
                 <tbody>
                     @foreach($chapterList as $list)
                   <tr>
-                        <td class="text-center align-middle"><a href="{{ url("/adminreports/reregedit/{$list->id}") }}"><i class="bi bi-pencil-square"></i></a></td>
+                        <td class="text-center align-middle"><a href="{{ url("/adminreports/reregedit/{$list->id}") }}"><i class="bi bi-credit-card-fill"></i></a></td>
                         <td>
                             @if ($list->state->conference_id > 0)
                                 {{ $list->state->conference->short_name }} / {{ $list->state->region->short_name }}

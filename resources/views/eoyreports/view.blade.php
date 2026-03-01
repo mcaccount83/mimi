@@ -27,7 +27,7 @@
               <div class="card-body">
                     <div class="card-header text-center bg-transparent">
                     <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
-                    <p class="mb-0">{{ $chDetails->confname }} Conference, {{ $chDetails->regname }} Region
+                    <p class="mb-0">{{ $conferenceDescription }} Conference, {{ $conferenceDescription }} Region
                   </p>
                 </div>
 
@@ -131,29 +131,12 @@
                         </div>
                         <input type="hidden" id="ch_reportrev" value="{{ $chFinancialReport->reviewer_id }}">
                     </li>
-                    <li class="list-group-item">
-                        <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
-                        <div class="row mb-2">
-                        <span id="display_corlist"></span>
-                        </div>
-                    </li>
-                 <li class="list-group-item">
-                 <div class="row text-center">
-                      @if ($chDetails->active_status == 1 )
-                          <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
-                      @elseif ($chDetails->active_status == 2)
-                        <b><span style="color: #ff851b;">Chapter is PENDING</span></b>
-                      @elseif ($chDetails->active_status == 3)
-                        <b><span style="color: #dc3545;">Chapter was NOT APPROVED</span></b><br>
-                          Declined Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                          {{ $chDetails->disband_reason }}
-                      @elseif ($chDetails->active_status == 0)
-                          <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
-                          Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                          {{ $chDetails->disband_reason }}
-                      @endif
-                      </div>
-                </li>
+                        <li class="list-group-item">
+                            @include('partials.coordinatorlist')
+                        </li>
+                        <li class="list-group-item mt-3">
+                            @include('partials.chapterstatus')
+                        </li>
                   </ul>
               </div>
               <!-- /.card-body -->
@@ -188,7 +171,7 @@
                                 </div>
                             @else
                                 <div class="col-sm-9">
-                                    Chpater has not reported any boundary issues.
+                                    Chapter has not reported any boundary issues.
                                 </div>
                             @endif
                             </div>

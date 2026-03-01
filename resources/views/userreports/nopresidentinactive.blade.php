@@ -24,18 +24,32 @@
               <thead>
 			    <tr>
                     <th>Add President</th>
-                  <th>Chapter ID</th>
+                    <th>Conf/Reg</th>
+                    <th>State</th>
                   <th>Chapter Name</th>
-                <th>Conference</th>
+                    <th>Chapter ID</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($ChapterPres as $list)
                   <tr>
                         <td class="text-center align-middle"><a href="{{ url("/userreports/addnewboard/{$list->id}") }}"><i class="bi bi-eye"></i></a></td>
-                        <td>{{ $list->id }}</td>
+                        <td>
+                            @if ($list->state->conference_id > 0)
+                                {{ $list->state->conference->short_name }} / {{ $list->state->region->short_name }}
+                            @else
+                                {{ $list->state->conference->short_name }}
+                            @endif
+                        </td>
+                        <td>
+                            @if($list->state_id < 52)
+                                {{$list->state->state_short_name}}
+                            @else
+                                {{$list->state->country?->short_name}}
+                            @endif
+                        </td>
                         <td>{{ $list->name }}</td>
-                        <td>{{ $list->conference_id }}</td>
+                        <td>{{ $list->id }}</td>
 			        </tr>
                   @endforeach
                   </tbody>

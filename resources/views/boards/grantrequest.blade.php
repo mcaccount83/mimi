@@ -1,4 +1,3 @@
-
 @extends('layouts.board_theme')
 
 <style>

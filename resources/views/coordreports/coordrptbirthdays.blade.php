@@ -23,7 +23,7 @@
                 <table id="coordinatorlist" class="table table-sm table-hover" >
 				<thead>
 			    <tr>
-			        <th>Details</th>
+			        <th>Coord<br>Details</th>
 			        <th>Conf/Reg</th>
 					<th>Coordinator Name</th>
 					<th>Birthday</th>
@@ -35,7 +35,7 @@
                 @foreach($coordinatorList as $list)
                   <tr>
                       <td class="text-center align-middle">
-                        <a href="{{ url("/coordinator/details/{$list->id}") }}"><i class="bi bi-eye"></i></a>
+                        <a href="{{ url("/coordinator/details/{$list->id}") }}"><i class="bi bi-person-fill"></i></a>
                     </td>
                         <td>
                             @if ($list->region->short_name != "None")

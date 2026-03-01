@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 
     <!-- jQuery as classic sync script - MUST be before Vite modules -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     {{-- Flash Messages as meta tags --}}
@@ -32,14 +33,20 @@
     @endif
 
     <script>
-    window.onload = function () {
-        if (window.history && window.history.pushState) {
-            window.history.pushState('preventBack', null, '');
-            window.onpopstate = function () {
-                location.reload();
-            };
-        }
-    };
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('form').forEach(form => {
+        form.setAttribute('autocomplete', 'off');
+    });
+});
+
+    // window.onload = function () {
+    //     if (window.history && window.history.pushState) {
+    //         window.history.pushState('preventBack', null, '');
+    //         window.onpopstate = function () {
+    //             location.reload();
+    //         };
+    //     }
+    // };
     </script>
 
     @include('layouts.styles.buttonsicons')
@@ -89,350 +96,16 @@
               <!-- Menu for Logged In Users -->
                     @auth
 
-                        <!-- Coordinator Dashboard Menu Item -->
-                        <li class="nav-item">
-                            <a href="{{ route('coordinators.viewprofile') }}" class="nav-link {{ Request::is('viewprofile') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-speedometer2"></i>
-                                <p>Dashboard</p>
-                            </a>
-                        </li>
+                    @if ($userTypeId == \App\Enums\UserTypeEnum::COORD)
+                        @include('layouts.sidebars.coordinator')
+                    @elseif ($userTypeId == \App\Enums\UserTypeEnum::BOARD)
+                        @include('layouts.sidebars.board')
+                    @elseif ($userTypeId == \App\Enums\UserTypeEnum::OUTGOING)
+                        @include('layouts.sidebars.outgoing')
+                    @elseif ($userTypeId == \App\Enums\UserTypeEnum::PENDING)
+                        @include('layouts.sidebars.pending')
+                    @endif
 
-                        <!-- Chapters Menu Item -->
-                        @php
-                            if ($coordinatorCondition) {
-                                $chaptersRoute = route('chapters.chaplist');
-                            } elseif ($einCondition || $ITCondition) {
-                                $chaptersRoute = route('chapters.chaplist', ['check5' => 'yes']);
-                            } elseif ($inquiriesCondition) {
-                                $chaptersRoute = route('chapters.chapinquiries', ['check3' => 'yes']);
-                            } elseif ($inquiriesInternationalCondition) {
-                                $chaptersRoute = route('chapters.chapinquiries', ['check5' => 'yes']);
-                            }
-                            $activeChpaterRoutes = [
-                                'chapter/*',
-                            ];
-                        @endphp
-                        @if (isset($chaptersRoute))
-                            <li class="nav-item">
-                                <a href="{{ $chaptersRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeChpaterRoutes) }}">
-                                    <i class="nav-icon bi bi-house-fill"></i>
-                                    <p>Chapters</p>
-                                </a>
-                            </li>
-                        @endif
-
-                        <!-- Coordinaros Menu Item -->
-                        @php
-                            if ($supervisingCoordinatorCondition) {
-                                $coordinatorsRoute = route('coordinators.coordlist');
-                            } elseif ($ITCondition) {
-                                $coordinatorsRoute = route('coordinators.coordlist', ['check5' => 'yes']);
-                            }
-                            $activeCoordinatorsRoutes = [
-                                'coordinator/*',
-                            ];
-                        @endphp
-                        @if (isset($coordinatorsRoute))
-                            <li class="nav-item">
-                                <a href="{{ $coordinatorsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeCoordinatorsRoutes) }}">
-                                    <i class="nav-icon bi bi-people-fill"></i>
-                                    <p>Coordinators</p>
-                                </a>
-                            </li>
-                        @endif
-
-                        <!-- Payments/Donations Menu Item -->
-                        @php
-                            if ($coordinatorCondition && $regionalCoordinatorCondition) {
-                                $paymentsRoute = route('payment.chapreregistration');
-                            } elseif ($m2mCondition || $ITCondition) {
-                                $paymentsRoute = route('payment.chapreregistration', ['check5' => 'yes']);
-                            }
-                            $activePaymentsRoutes = [
-                                'payment/*'
-                            ];
-                        @endphp
-                        @if (isset($paymentsRoute))
-                            <li class="nav-item">
-                                <a href="{{ $paymentsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activePaymentsRoutes) }}">
-                                    <i class="nav-icon bi bi-credit-card-fill"></i>
-                                    <p>Payments/Donations</p>
-                                </a>
-                            </li>
-                        @endif
-
-                        <!-- Website Review Menu Item -->
-                        @php
-                            if ($coordinatorCondition && !$webReviewCondition) {
-                                $websiteRoute = route('chapters.chapwebsite');
-                            } elseif ($webReviewCondition) {
-                                $websiteRoute = route('chapters.chapwebsite', ['check3' => 'yes']);
-                            } elseif ($ITCondition) {
-                                $websiteRoute = route('chapters.chapwebsite', ['check5' => 'yes']);
-                            }
-                            $activeWebsiteRoutes = [
-                                'online/*'
-                            ];
-                        @endphp
-                        @if (isset($websiteRoute))
-                            <li class="nav-item">
-                                <a href="{{ $websiteRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeWebsiteRoutes) }}">
-                                    <i class="nav-icon bi bi-laptop"></i>
-                                    <p>Website/Social Media</p>
-                                </a>
-                            </li>
-                        @endif
-
-                        <!-- New Menu Item -->
-                        @php
-                        if (($coordinatorCondition && $conferenceCoordinatorCondition) || $inquiriesCondition) {
-                                $inquiriesRoute = route('inquiries.inquiryapplication');
-                            } elseif ($inquiriesInternationalCondition || $ITCondition) {
-                                $inquiriesRoute = route('inquiries.inquiryapplication', ['check5' => 'yes']);
-                            }
-                            $activeInquiriesRoutes = [
-                                'inquiries/*',
-                            ];
-                        @endphp
-                        @if (isset($inquiriesRoute))
-                            <li class="nav-item">
-                                <a href="{{ $inquiriesRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeInquiriesRoutes) }}">
-                                    <i class="nav-icon bi bi-pin-map-fill"></i>
-                                    <p>Inquiries</p>
-                                </a>
-                            </li>
-                        @endif
-
-                          <!-- New Menu Item -->
-                          @php
-                            if ($coordinatorCondition && $conferenceCoordinatorCondition) {
-                                $newChaptersRoute = route('chapters.chaplistpending');
-                            } elseif ($ITCondition) {
-                                $newChaptersRoute = route('chapters.chaplistpending', ['check5' => 'yes']);
-                            }
-                            $activeNewChpaterRoutes = [
-                                'application/*',
-                            ];
-                        @endphp
-                        @if (isset($newChaptersRoute))
-                            <li class="nav-item">
-                                <a href="{{ $newChaptersRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeNewChpaterRoutes) }}">
-                                    <i class="nav-icon bi bi-asterisk"></i>
-                                    <p>New Chapters/Coordinators</p>
-                                </a>
-                            </li>
-                        @endif
-
-                        <!-- List Subscription Menu Item -->
-                        @php
-                            // if ($coordinatorCondition && $conferenceCoordinatorCondition) {
-                            if ($listAdminCondition || $ITCondition) {
-                                $listSubscriptionRoute = route('forum.chaptersubscriptionlist');
-                            } elseif ($listAdminCondition || $ITCondition) {
-                                $listSubscriptionRoute = route('forum.chaptersubscriptionlist', ['check5' => 'yes']);
-                            }
-                            $activeChpaterRoutes = [
-                                'forum/chaptersubscriptionlist', 'forum/coordinatorsubscriptionlist',
-                            ];
-                        @endphp
-                        @if (isset($listSubscriptionRoute))
-                            <li class="nav-item">
-                                <a href="{{ $listSubscriptionRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeChpaterRoutes) }}">
-                                    <i class="nav-icon bi bi-card-list"></i>
-                                    <p>List Subscriptions</p>
-                                </a>
-                            </li>
-                        @endif
-
-                        <!-- BoardList Email Menu Item -->
-                        @php
-                            if ($listAdminCondition || $ITCondition) {
-                                $boardlistRoute = route('chapters.chapboardlist');
-                            }
-                            $activeBoardlistRoutes = [
-                                'forum/boardlist'
-                            ];
-                        @endphp
-                        @if (isset($boardlistRoute))
-                            <li class="nav-item">
-                                <a href="{{ $boardlistRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardlistRoutes) }}">
-                                    <i class="nav-icon bi bi-card-list"></i>
-                                    <p>BoardList Emails - OLD</p>
-                                </a>
-                            </li>
-                        @endif
-
-                        <!-- Chapter Reports Menu Item -->
-                        @php
-                            if ($coordinatorCondition && $regionalCoordinatorCondition) {
-                                $chapterReportsRoute = route('chapreports.chaprptchapterstatus');
-                            } elseif ($ITCondition) {
-                                $coordReportsRoute = route('chapreports.chaprptchapterstatus', ['check5' => 'yes']);
-                            } elseif ($einCondition) {
-                                $coordReportsRoute = route('chapreports.chaprpteinstatus', ['check5' => 'yes']);
-                            }
-                            $activeChapterReportsRoutes = [
-                                'chapterreports/*'
-                            ];
-                        @endphp
-                        @if (isset($chapterReportsRoute))
-                            <li class="nav-item">
-                                <a href="{{ $chapterReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeChapterReportsRoutes) }}">
-                                    <i class="nav-icon bi bi-house-gear-fill"></i>
-                                    <p>Chapter Reports</p>
-                                </a>
-                            </li>
-                        @endif
-
-                        <!-- Coordinator Reports Menu Item -->
-                        @php
-                            if ($supervisingCoordinatorCondition && $assistConferenceCoordinatorCondition) {
-                                $coordReportsRoute = route('coordreports.coordrptvolutilization');
-                            } elseif ($ITCondition) {
-                                $coordReportsRoute = route('coordreports.coordrptvolutilization', ['check5' => 'yes']);
-                            } elseif ($coordinatorCondition) {
-                                $coordReportsRoute = route('coordreports.coordrptreportingtree');
-                            }
-                            $activeCoordReportsRoutes = [
-                                'coordreports/*'
-                            ];
-                        @endphp
-                        @if (isset($coordReportsRoute))
-                            <li class="nav-item">
-                                <a href="{{ $coordReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeCoordReportsRoutes) }}">
-                                        <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em;">
-                                            <i class="bi bi-people-fill position-absolute"></i>
-                                            <i class="bi bi-gear-fill position-absolute" style="font-size: 0.5em; bottom: -0.1em; right: -0.1em; background-color: #343a40; border-radius: 90%;"></i>
-                                        </span>
-                                    <p>Coordinator Reports</p>
-                                </a>
-                            </li>
-                        @endif
-
-                        <!-- End of Year Reports Menu Item-->
-                            @php
-                                if (($coordinatorCondition && $displayLIVE) || ($eoyReportCondition && $displayLIVE) || ($eoyTestCondition && $displayTESTING)) {
-                                    $eoyReportsRoute = route('eoyreports.eoystatus');
-                                } elseif ($ITCondition) {
-                                    $eoyReportsRoute = route('eoyreports.eoystatus', ['check5' => 'yes']);
-                                } elseif ($einCondition && $displayLIVE) {
-                                    $eoyReportsRoute = route('eoyreports.eoyirssubmission', ['check5' => 'yes']);
-                                }
-                                $activeEOYReportsRoutes = [
-                                    'eoyreports/*',
-                                ];
-                            @endphp
-                            @if (isset($eoyReportsRoute))
-                                <li class="nav-item">
-                                    <a href="{{ $eoyReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeEOYReportsRoutes) }}">
-                                        <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em;">
-                                            <i class=" bi bi-file-earmark-bar-graph-fill position-absolute"></i>
-                                            <i class="bi bi-gear-fill position-absolute" style="font-size: 0.5em; bottom: -0.1em; right: -0.1em; background-color: #343a40; border-radius: 90%;"></i>
-                                        </span>
-                                        <p>EOY Reports
-                                            @if ($ITCondition && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
-                                            @if ($eoyTestCondition && $displayTESTING) *TESTING*@endif
-                                        </p>
-                                    </a>
-                                </li>
-                            @endif
-
-                        <!-- Admin Reports Menu Item -->
-                        @php
-                            if ($coordinatorCondition && $conferenceCoordinatorCondition) {
-                                $adminReportsRoute = route('adminreports.maillog');
-                            }
-                            $activeAdminReportsRoutes = [
-                                'adminreports/*'
-                            ];
-                        @endphp
-                        @if (isset($adminReportsRoute))
-                           <li class="nav-item">
-                                <a href="{{ $adminReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeAdminReportsRoutes) }}">
-                             <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em;">
-                                            <i class="bi bi-shield-shaded position-absolute"></i>
-                                            <i class="bi bi-gear-fill position-absolute" style="font-size: 0.5em; bottom: -0.1em; right: -0.1em; background-color: #343a40; border-radius: 90%;"></i>
-                                        </span>
-                                    <p>Admin Reports</p>
-                                </a>
-                            </li>
-                        @endif
-
-                         <!-- User Reports Menu Item -->
-                        @php
-                            if ($ITCondition) {
-                                $userReportsRoute = route('userreports.useradmin');
-                            }
-                            $activeUserReportsRoutes = [
-                                'userreports/*'
-                            ];
-                        @endphp
-                        @if (isset($userReportsRoute))
-                            <li class="nav-item">
-                                <a href="{{ $userReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeUserReportsRoutes) }}">
-                                       <i class="nav-icon bi bi-person-fill-gear"></i>
-                                    <p>User Reports</p>
-                                </a>
-                            </li>
-                        @endif
-
-                         <!-- Tech Reports Menu Item -->
-                        @php
-                            if ($ITCondition) {
-                                $techReportsRoute = route('logs');
-                            }
-                            $activeTechReportsRoutes = [
-                                'techreports/*'
-                            ];
-                        @endphp
-                        @if (isset($techReportsRoute))
-                            <li class="nav-item">
-                                <a href="{{ $techReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeTechReportsRoutes) }}">
-                                        <i class="nav-icon bi bi-database-fill-gear"></i>
-                                    <p>IT Reports</p>
-                                </a>
-                            </li>
-                        @endif
-
-                        <!-- Resources Reports Menu Item -->
-                        @php
-                            if ($coordinator) {
-                                $resourcesRoute = route('resources.toolkit');
-                            }
-                            $activeResourcesRoutes = [
-                                'resources/*'
-                            ];
-                        @endphp
-                        @if (isset($resourcesRoute))
-                            <li class="nav-item">
-                                <a href="{{ $resourcesRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeResourcesRoutes) }}">
-                                    <i class="nav-icon bi bi-briefcase-fill"></i>
-                                    <p>Resources</p>
-                                </a>
-                            </li>
-                        @endif
-
-                         <!-- CoordinatorList Menu Item -->
-                         <li class="nav-item position-relative">
-                            <a href="{{ url(config('forum.frontend.router.prefix') . '/unread') }}" target="_blank" class="nav-link">
-                                <i class="nav-icon bi bi-chat-quote-fill"></i>
-                                <p>
-                                    CoordinatorList Forum
-                                    @if( $unreadForumCount > 0)
-                                        <span class="badge badge-danger badge-pill notification-badge">
-                                            UNREAD
-                                        </span>
-                                    @endif
-                                </p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="{{ route('coordinators.profile') }}" class="nav-link {{ Request::is('coordprofile') ? 'active' : '' }}">
-                            <i class="nav-icon bi bi-person-circle"></i>
-                            <p>Update Profile</p>
-                            </a>
-                        </li>
 
                         <li class="nav-item">
                             <a href="{{ route('logout') }}" class="nav-link"
@@ -543,7 +216,6 @@
     </div>
     <!--end::App Wrapper-->
 
-    <!-- Vite Compiled Assets -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/flash.js'])
 
     @include('layouts.scripts.alert')

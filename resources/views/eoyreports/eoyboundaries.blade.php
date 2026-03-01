@@ -23,7 +23,7 @@
                 <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>
-					<th>Details</th>
+					<th>Boundary<br>Details</th>
                     <th>Conf/Reg>
 				  <th>State</th>
                   <th>Name</th>
@@ -37,7 +37,7 @@
                 @if($list->boundary_issue_notes != '')
                   <tr>
 						<td class="text-center align-middle">
-                            <a href="{{ url("/eoyreports/editboundaries/{$list->id}") }}"><i class="bi bi-eye"></i></a></td>
+                            <a href="{{ url("/eoyreports/editboundaries/{$list->id}") }}"><i class="bi bi-pin-map-fill"></i></a></td>
                             <td>
                                 @if ($list->state->conference_id > 0)
                                     {{ $list->state->conference->short_name }} / {{ $list->state->region->short_name }}

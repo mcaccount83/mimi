@@ -154,10 +154,10 @@ Route::middleware('auth')->group(function () {
 
 // Admin Controller Routes...Coordinator Login Required
 Route::middleware('auth')->group(function () {
-    Route::get('/adminreports/maillog', [AdminReportController::class, 'showMailLog'])->name('adminreports.maillog');
-    Route::get('/adminreports/maildetails/{id}', [AdminReportController::class, 'showMailDetails'])->name('adminreports.maildetails');
-    Route::get(config('sentemails.routepath').'/body/{id}', [\Dcblogdev\LaravelSentEmails\Controllers\SentEmailsController::class, 'body'])
-    ->middleware(config('sentemails.middleware'))->name('sentemails.body');
+    // Route::get('/adminreports/maillog', [AdminReportController::class, 'showMailLog'])->name('adminreports.maillog');
+    // Route::get('/adminreports/maildetails/{id}', [AdminReportController::class, 'showMailDetails'])->name('adminreports.maildetails');
+    // Route::get(config('sentemails.routepath').'/body/{id}', [\Dcblogdev\LaravelSentEmails\Controllers\SentEmailsController::class, 'body'])
+    // ->middleware(config('sentemails.middleware'))->name('sentemails.body');
     Route::get('/adminreports/paymentlog', [AdminReportController::class, 'showPaymentLog'])->name('adminreports.paymentlog');
     Route::get('/adminreports/paymentdetails/{id}', [AdminReportController::class, 'showPaymentDetails'])->name('adminreports.paymentdetails');
     Route::get('/adminreports/donationlog', [AdminReportController::class, 'showDonationLog'])->name('adminreports.donationlog');
@@ -176,7 +176,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/userreports/duplicateuser', [UserReportController::class, 'showDuplicate'])->name('userreports.duplicateuser');
     Route::get('/userreports/duplicateboardid', [UserReportController::class, 'showDuplicateId'])->name('userreports.duplicateboardid');
     Route::get('/userreports/nopresident', [UserReportController::class, 'showNoPresident'])->name('userreports.nopresident');
-    Route::get('/userreports/nopresidentinactive', [UserReportController::class, 'showNoPresidentInactive'])->name('userreports.nopresidentinactive');
+    // Route::get('/userreports/nopresidentinactive', [UserReportController::class, 'showNoPresidentInactive'])->name('userreports.nopresidentinactive');
     Route::get('/userreports/addnewboard/{id}', [UserReportController::class, 'addBoardNew'])->name('userreports.addnewboard');
     Route::post('/userreports/updatenewboard/{id}', [UserReportController::class, 'updateBoardNew'])->name('userreports.updatenewboard');
     // Route::get('/userreports/noactivechapter', [UserReportController::class, 'showNoActiveChapter'])->name('userreports.noactivechapter');
@@ -398,16 +398,31 @@ Route::middleware('auth')->group(function () {
 });
 
 // Board Controller Routes...Board Login Required
+// Route::middleware('auth')->group(function () {
+//     Route::get('/board/newchapterstatus/{id}', [BoardPendingController::class, 'showNewChapterStatus'])->name('board.newchapterstatus');
+//     Route::get('/board/profile/{id}', [BoardController::class, 'editProfile'])->name('board.editprofile');
+//     Route::post('/board/profileupdate/{id}', [BoardController::class, 'updateProfile'])->name('board.updateprofile');
+//     Route::get('/board/boardreport/{id}', [BoardController::class, 'editBoardReport'])->name('board.editboardreport');
+//     Route::post('/board/boardreportupatea/{id}', [BoardController::class, 'updateBoardReport'])->name('board.updateboardreport');
+//     Route::get('/board/manual/{id}', [BoardController::class, 'editManualOrderForm'])->name('board.editmanual');
+//     Route::get('/board/probation/{id}', [BoardController::class, 'editProbationSubmission'])->name('board.editprobation');
+//     Route::post('/board/probationupdate/{id}', [BoardController::class, 'updateProbationSubmission'])->name('board.updateprobation');
+//     Route::get('/board/resources/{id}', [BoardController::class, 'viewResources'])->name('board.viewresources');
+//     Route::get('/board/elearning/{id}', [BoardController::class, 'viewELearning'])->name('board.viewelearning');
+// });
+
 Route::middleware('auth')->group(function () {
     Route::get('/board/newchapterstatus/{id}', [BoardPendingController::class, 'showNewChapterStatus'])->name('board.newchapterstatus');
+    Route::get('/board/chapterprofile/{id}', [BoardController::class, 'chapterProfile'])->name('board.chapterprofile');
     Route::get('/board/profile/{id}', [BoardController::class, 'editProfile'])->name('board.editprofile');
     Route::post('/board/profileupdate/{id}', [BoardController::class, 'updateProfile'])->name('board.updateprofile');
     Route::get('/board/boardreport/{id}', [BoardController::class, 'editBoardReport'])->name('board.editboardreport');
     Route::post('/board/boardreportupatea/{id}', [BoardController::class, 'updateBoardReport'])->name('board.updateboardreport');
-    Route::get('/board/manual/{id}', [BoardController::class, 'editManualOrderForm'])->name('board.editmanual');
     Route::get('/board/probation/{id}', [BoardController::class, 'editProbationSubmission'])->name('board.editprobation');
     Route::post('/board/probationupdate/{id}', [BoardController::class, 'updateProbationSubmission'])->name('board.updateprobation');
+
     Route::get('/board/resources/{id}', [BoardController::class, 'viewResources'])->name('board.viewresources');
+    Route::get('/board/resources/manual/{id}', [BoardController::class, 'editManualOrderForm'])->name('board.editmanual');
     Route::get('/board/elearning/{id}', [BoardController::class, 'viewELearning'])->name('board.viewelearning');
 });
 

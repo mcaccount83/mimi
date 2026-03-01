@@ -168,6 +168,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $chActiveId = $baseQuery['chActiveId'];
+        $chapterStatus = $baseQuery['chapterStatus'];
         $chConfId = $baseQuery['chConfId'];
         $chPcId = $baseQuery['chPcId'];
         $chDocuments = $baseQuery['chDocuments'];
@@ -189,7 +190,7 @@ class EOYReportController extends Controller implements HasMiddleware
             'coorId' => $coorId, 'confId' => $confId, 'allAwards' => $allAwards, 'chDocuments' => $chDocuments,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
-            'reviewComplete' => $reviewComplete,  'rrList' => $rrList, 'chEOYDocuments' => $chEOYDocuments,
+            'reviewComplete' => $reviewComplete,  'rrList' => $rrList, 'chEOYDocuments' => $chEOYDocuments, 'chapterStatus' => $chapterStatus,
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
@@ -595,13 +596,14 @@ class EOYReportController extends Controller implements HasMiddleware
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
+        $chFinancialReportReview = $baseQuery['chFinancialReportReview'];
         $chDocuments = $baseQuery['chDocuments'];
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
         $allAwards = $baseQuery['allAwards'];
         // $submitted = $baseQuery['submitted'];
         $rrList = $baseQuery['rrList'];
 
-        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'chFinancialReportReview' => $chFinancialReportReview,
             'chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'rrList' => $rrList, 'allAwards' => $allAwards, 'chDocuments' => $chDocuments, 'chEOYDocuments' => $chEOYDocuments,
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc, 'confId' => $confId, 'chConfId' => $chConfId,
         ];
@@ -625,66 +627,64 @@ class EOYReportController extends Controller implements HasMiddleware
         $reviewer_id = isset($input['AssignedReviewer']) && ! empty($input['AssignedReviewer']) ? $input['AssignedReviewer'] : $coorId;
         $reportReceived = $input['submitted'];
         $submitType = $input['submit_type'];
-        $step_1_notes_log = $input['Step1_Log'];
-        $step_2_notes_log = $input['Step2_Log'];
-        $step_3_notes_log = $input['Step3_Log'];
-        $step_4_notes_log = $input['Step4_Log'];
-        $step_5_notes_log = $input['Step5_Log'];
-        $step_6_notes_log = $input['Step6_Log'];
-        $step_7_notes_log = $input['Step7_Log'];
-        $step_8_notes_log = $input['Step8_Log'];
-        $step_9_notes_log = $input['Step9_Log'];
-        $step_10_notes_log = $input['Step10_Log'];
-        $step_11_notes_log = $input['Step11_Log'];
-        $step_12_notes_log = $input['Step12_Log'];
-        // $step_13_notes_log = $input['Step13_Log'];
-
         $reviewer_email_message = $input['reviewer_email_message'];
 
         // Step 1 - Dues
         $roster_attached = isset($input['checkRosterAttached']) ? $input['checkRosterAttached'] : null;
         $renewal_seems_right = isset($input['checkRenewalSeemsRight']) ? $input['checkRenewalSeemsRight'] : null;
+        $step_1_notes_log = $input['Step1_Log'];
+
+        // Step 2 - Meetings
+        $step_2_notes_log = $input['Step2_Log'];
 
         // Step 3 - Service
         $minimum_service_project = isset($input['checkServiceProject']) ? $input['checkServiceProject'] : null;
         $m2m_donation = isset($input['checkM2MDonation']) ? $input['checkM2MDonation'] : null;
+        $step_3_notes_log = $input['Step3_Log'];
 
         // Step 4 - Parties
         $party_percentage = isset($input['party_percentage']) ? $input['party_percentage'] : null;
+        $step_4_notes_log = $input['Step4_Log'];
 
-        // Step - Financials
+        // Step 5 - Office & Operating
+        $step_5_notes_log = $input['Step5_Log'];
+
+        // Step 6 - International
+        $attended_training = isset($input['checkAttendedTraining']) ? $input['checkAttendedTraining'] : null;
+        $step_6_notes_log = $input['Step6_Log'];
+
+        // Step 7 - Donations
+        $step_7_notes_log = $input['Step7_Log'];
+
+        // Step 8 - Other
+        $step_8_notes_log = $input['Step8_Log'];
+
+        // Step 9 - Financial Summary
         $total_income_less = isset($input['checkTotalIncome']) ? $input['checkTotalIncome'] : null;
+        $step_9_notes_log = $input['Step9_Log'];
 
-        // Step 8 - Reconciliation
-        $beginning_balance = isset($input['beginning_balance']) ? $input['beginning_balance'] : null;
+        // Step 10 - Reconciliation
+        $beginning_balance = isset($input['checkBeginningBalance']) ? $input['checkBeginningBalance'] : null;
         $bank_statement_included = isset($input['checkBankStatementIncluded']) ? $input['checkBankStatementIncluded'] : null;
         $bank_statement_matches = isset($input['checkBankStatementMatches']) ? $input['checkBankStatementMatches'] : null;
-
         $post_balance = isset($input['post_balance']) ? preg_replace('/[^\d.]/', '', $input['post_balance']) : null;
-        // $post_balance = $input['post_balance'];
-        // $post_balance = str_replace(',', '', $post_balance);
-        // $post_balance = $post_balance == '' ? null : $post_balance;
+        $step_10_notes_log = $input['Step10_Log'];
 
-        // Step 9 - Questions
+        // Step 11 - 990N
+         $current_990N_included = isset($input['checkCurrent990NAttached']) ? $input['checkCurrent990NAttached'] : null;
+         $step_11_notes_log = $input['Step11_Log'];
+
+        // Step 12 - Questions
         $purchased_pins = isset($input['checkPurchasedPins']) ? $input['checkPurchasedPins'] : null;
         $purchased_mc_merch = isset($input['checkPurchasedMCMerch']) ? $input['checkPurchasedMCMerch'] : null;
         $offered_merch = isset($input['checkOfferedMerch']) ? $input['checkOfferedMerch'] : null;
         $bylaws_available = isset($input['checkBylawsMadeAvailable']) ? $input['checkBylawsMadeAvailable'] : null;
         $sistered_another_chapter = isset($input['checkSisteredAnotherChapter']) ? $input['checkSisteredAnotherChapter'] : null;
-        $attended_training = isset($input['checkAttendedTraining']) ? $input['checkAttendedTraining'] : null;
-        $current_990N_included = isset($input['checkCurrent990NAttached']) ? $input['checkCurrent990NAttached'] : null;
-
-        // Step 10 - Awards
-        $award_1_approved = isset($input['checkAward1Approved']) ? $input['checkAward1Approved'] : null;
-        $award_2_approved = isset($input['checkAward2Approved']) ? $input['checkAward2Approved'] : null;
-        $award_3_approved = isset($input['checkAward3Approved']) ? $input['checkAward3Approved'] : null;
-        $award_4_approved = isset($input['checkAward4Approved']) ? $input['checkAward4Approved'] : null;
-        $award_5_approved = isset($input['checkAward5Approved']) ? $input['checkAward5Approved'] : null;
+        $step_12_notes_log = $input['Step12_Log'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
-        $chDocuments = $baseQuery['chDocuments'];
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
 
@@ -713,6 +713,7 @@ class EOYReportController extends Controller implements HasMiddleware
             $financialReportReview->m2m_donation = $m2m_donation;
             $financialReportReview->party_percentage = $party_percentage;
             $financialReportReview->attended_training = $attended_training;
+            $financialReportReview->beginning_balance = $beginning_balance;
             $financialReportReview->bank_statement_matches = $bank_statement_matches;
             $financialReportReview->bank_statement_included = $bank_statement_included;
             $financialReportReview->beginning_balance = $beginning_balance;
@@ -966,6 +967,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $chActiveId = $baseQuery['chActiveId'];
+        $chapterStatus = $baseQuery['chapterStatus'];
         $chConfId = $baseQuery['chConfId'];
         $chPcId = $baseQuery['chPcId'];
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
@@ -974,7 +976,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'coorId' => $coorId, 'confId' => $confId,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
-            'chEOYDocuments' => $chEOYDocuments
+            'chEOYDocuments' => $chEOYDocuments, 'chapterStatus' => $chapterStatus
         ];
 
         return view('eoyreports.editattachments')->with($data);
@@ -1078,13 +1080,14 @@ class EOYReportController extends Controller implements HasMiddleware
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $chActiveId = $baseQuery['chActiveId'];
+        $chapterStatus = $baseQuery['chapterStatus'];
         $chConfId = $baseQuery['chConfId'];
         $chPcId = $baseQuery['chPcId'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
 
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'coorId' => $coorId, 'confId' => $confId,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
-            'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
+            'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport, 'chapterStatus' => $chapterStatus
         ];
 
         return view('eoyreports.editboundaries')->with($data);
@@ -1200,12 +1203,13 @@ class EOYReportController extends Controller implements HasMiddleware
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $chActiveId = $baseQuery['chActiveId'];
+        $chapterStatus = $baseQuery['chapterStatus'];
         $chConfId = $baseQuery['chConfId'];
         $chPcId = $baseQuery['chPcId'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $allAwards = $baseQuery['allAwards'];
 
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'coorId' => $coorId, 'confId' => $confId,
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'coorId' => $coorId, 'confId' => $confId, 'chapterStatus' => $chapterStatus,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
         ];
@@ -1272,6 +1276,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $chActiveId = $baseQuery['chActiveId'];
+        $chapterStatus = $baseQuery['chapterStatus'];
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
@@ -1299,6 +1304,7 @@ class EOYReportController extends Controller implements HasMiddleware
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
                 'chAwards' => $chAwards, 'currentApprovedAwards' => $currentApprovedAwards, 'awardTypes' => $awardTypes, 'confId' => $confId, 'chConfId' => $chConfId,
+                'chapterStatus' => $chapterStatus
             ];
 
         return view('eoyreports.awardhistory')->with($data);
@@ -1368,11 +1374,12 @@ class EOYReportController extends Controller implements HasMiddleware
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $chActiveId = $baseQuery['chActiveId'];
+        $chapterStatus = $baseQuery['chapterStatus'];
         $chConfId = $baseQuery['chConfId'];
         $chPcId = $baseQuery['chPcId'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
 
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'coorId' => $coorId, 'confId' => $confId,
+        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'coorId' => $coorId, 'confId' => $confId, 'chapterStatus' => $chapterStatus,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
         ];

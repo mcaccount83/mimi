@@ -24,7 +24,7 @@
             <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>
-				<th>Details</th>
+				<th>Board<br>Report</th>
                 <th>Email</th>
                 <th>Conf/Reg</th>
 				<th>State</th>
@@ -48,7 +48,7 @@
                         <tr id="chapter-{{ $list->id }}">
                             <td class="text-center align-middle">
                             @if ($assistConferenceCoordinatorCondition)
-                               <a href="{{ url("/eoyreports/editboardreport/{$list->id}") }}"><i class="bi bi-eye"></i></a>
+                               <a href="{{ url("/eoyreports/editboardreport/{$list->id}") }}"><i class="bi bi-person-bounding-box"></i></a>
                            @endif
                         </td>
                             <td class="text-center align-middle">

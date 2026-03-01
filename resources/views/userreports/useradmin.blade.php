@@ -23,7 +23,7 @@
             <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>
-                    <th>Edit User</th>
+                    <th>User<br>Details</th>
                     <th>Admin</th>
                     <th>Name</th>
                     <th>Position</th>
@@ -38,9 +38,9 @@
                   <tr>
                     <td>
                         @if($list->type_id == \App\Enums\UserTypeEnum::COORD)
-                            <a href="{{ url("/userreports/editusercoord/{$list->id}") }}"><i class="bi bi-eye"></i></a>
+                            <a href="{{ url("/userreports/editusercoord/{$list->id}") }}"><i class="bi bi-person-fill-gear"></i></a>
                         @else
-                            <a href="{{ url("/userreports/edituserboard/{$list->id}") }}"><i class="bi bi-eye"></i></a>
+                            <a href="{{ url("/userreports/edituserboard/{$list->id}") }}"><i class="bi bi-person-fill-gear"></i></a>
                         @endif
                     </td>
                     <td>{{$list->adminRole->admin_role}}</td>

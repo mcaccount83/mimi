@@ -337,8 +337,8 @@ class CoordinatorController extends Controller implements HasMiddleware
         $cdUserAdmin = $baseQuery['cdUserAdmin'];
         $cdAdminRole = $baseQuery['cdAdminRole'];
 
-        $dateOptions = $this->positionConditionsService->getDateOptions();
-        $threeMonthsAgo = $dateOptions['threeMonthsAgo'];
+        // $dateOptions = $this->positionConditionsService->getDateOptions();
+        // $threeMonthsAgo = $dateOptions['threeMonthsAgo'];  // Big Sister Email
 
         $startDate = Carbon::parse($cdDetails->coordinator_start_date);
 
@@ -355,7 +355,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $data = ['cdDetails' => $cdDetails, 'cdConfId' => $cdConfId, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
             'cdActiveId' => $cdActiveId, 'confId' => $confId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
             'drList' => $drList, 'chList' => $chList, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'startDate' => $startDate,
-            'secondaryPosition' => $secondaryPosition, 'threeMonthsAgo' => $threeMonthsAgo, 'cdPositionid' => $cdPositionid, 'cdAdminRole' => $cdAdminRole,
+            'secondaryPosition' => $secondaryPosition, 'cdPositionid' => $cdPositionid, 'cdAdminRole' => $cdAdminRole,
         ];
 
         return view('coordinators.view')->with($data);

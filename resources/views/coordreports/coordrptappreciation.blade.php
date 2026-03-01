@@ -23,7 +23,7 @@
                 <table id="coordinatorlist" class="table table-sm table-hover" >
 				<thead>
 			    <tr>
-			        <th>Details</th>
+			        <th>Gift<br>Details</th>
                     <th>Conf/Reg</th>
 					<th>Coordinator Name</th>
 					<th>Start Date</th>
@@ -46,7 +46,7 @@
 
                 @foreach($coordinatorList as $list)
                   <tr>
-                    <td class="text-center"><a href="{{ url("/coordinator/details/editrecognition/{$list->id}") }}"><i class="bi bi-eye"></i></a></td>
+                    <td class="text-center"><a href="{{ url("/coordinator/details/editrecognition/{$list->id}") }}"><i class="bi bi-gift-fill"></i></a></td>
                         <td>
                             @if ($list->region->short_name != "None")
                                 {{ $list->conference->short_name }} / {{ $list->region->short_name }}

@@ -1,12 +1,8 @@
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    $(document).ready(function() {
         ChapterDuesQuestionsChange();
-    });
-
-    // Initial function calculation functions
         ChangeChildrensRoomExpenses();
         ChangeMemberCount();
-        ChapterDuesQuestionsChange();
         ChangeMeetingFees();
         ChangeServiceProjectExpenses();
         ChangePartyExpenses();
@@ -17,6 +13,7 @@
         ChangeOtherOfficeExpenses();
         ChangeBankRec();
         TreasuryBalanceChange();
+    });
 
     function ChapterDuesQuestionsChange(){
         var ChangedMeetingFees=false;
@@ -32,55 +29,98 @@
         var optNoFullDuesValue = document.querySelector('input[name="optNoFullDues"]:checked')?.value;
         MembersReducedDues = optNoFullDuesValue == "1";
 
+        if(ChangedMeetingFees && ChargedMembersDifferently) {
+            document.getElementById("lblTotalNewMembers").innerHTML = "Total New Members (who paid OLD dues amount)";
+            document.getElementById("lblTotalRenewedMembers").innerHTML = "Total Renewed Members (who paid OLD dues amount)";
+            document.getElementById("lblMemberDues").innerHTML = "Dues collected per New Member (OLD Amount)";
+            document.getElementById("lblNewMemberDues").innerHTML = "Dues collected per New Member (NEW Amount)";
+            document.getElementById("lblMemberDuesRenewal").innerHTML = "Dues collected per Renewal Member (OLD Amount)";
+            document.getElementById("lblNewMemberDuesRenewal").innerHTML = "Dues collected per Renewal Member (NEW Amount)";
+        } else if(ChangedMeetingFees) {
+            document.getElementById("lblTotalNewMembers").innerHTML = "Total New Members (who paid OLD dues amount)";
+            document.getElementById("lblTotalRenewedMembers").innerHTML = "Total Renewed Members (who paid OLD dues amount)";
+            document.getElementById("lblMemberDues").innerHTML = "Dues collected per Member (OLD Amount)";
+            document.getElementById("lblNewMemberDues").innerHTML = "Dues collected per Member (NEW Amount)";
+        } else if(ChargedMembersDifferently) {
+            document.getElementById("lblTotalNewMembers").innerHTML = "Total New Members (who paid dues)";
+            document.getElementById("lblTotalRenewedMembers").innerHTML = "Total Renewed Members (who paid dues)";
+            document.getElementById("lblMemberDues").innerHTML = "Dues collected per New Member";
+            document.getElementById("lblMemberDuesRenewal").innerHTML = "Dues collected per Renewal Member";
+        } else {
+            document.getElementById("lblTotalNewMembers").innerHTML = "Total New Members (who paid dues)";
+            document.getElementById("lblTotalRenewedMembers").innerHTML = "Total Renewed Members (who paid dues)";
+            document.getElementById("lblMemberDues").innerHTML = "Dues collected per Member";
+        }
+
         ////////////////////////////////////////////////////////////////////////////////////////////////////
         if(ChangedMeetingFees){
-            document.getElementById("ifChangeDues").style.display = 'block';
-            document.getElementById("ifChangedDues1").style.visibility = 'visible';
-
-            document.getElementById("lblTotalNewMembers").innerHTML = "Total New Members (who paid OLD dues amount)"
-            document.getElementById("lblTotalRenewedMembers").innerHTML = "Total Renewed Members (who paid OLD dues amount)"
+            document.getElementById("newMemberDuesChanged").style.display = '';
+            document.getElementById("membersChangedDues").style.display = '';
         }
         else{
-            document.getElementById("ifChangeDues").style.display = 'none';
-            document.getElementById("ifChangedDues1").style.visibility = 'hidden';
-
+            document.getElementById("newMemberDuesChanged").style.display = 'none';
+            document.getElementById("membersChangedDues").style.display = 'none';
             document.getElementById("TotalNewMembersNewFee").value = 0;
             document.getElementById("TotalRenewedMembersNewFee").value = 0;
-
-            document.getElementById("lblTotalNewMembers").innerHTML = "Total New Members (who paid dues)"
-            document.getElementById("lblTotalRenewedMembers").innerHTML = "Total Renewed Members (who paid dues)"
+            document.getElementById("NewMemberDues").value = 0;
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////
         if(ChargedMembersDifferently){
-            document.getElementById("ifChangedDuesDifferentPerMemberType").style.display = 'block';
-
-            document.getElementById("lblMemberDues").innerHTML  = "Dues collected per New Member"
-            document.getElementById("lblNewMemberDues").innerHTML = "Dues collected per New Member (NEW Amount)"
+            document.getElementById("renewDues").style.display = '';
+            document.getElementById("renewMemberDues").style.display = '';
 
             if(ChangedMeetingFees){
-                document.getElementById("ifChangedDuesDifferentPerMemberType1").style.visibility = 'visible';
+                document.getElementById("renewMemberDuesChanged").style.display = '';
             }
             else{
-                document.getElementById("ifChangedDuesDifferentPerMemberType1").style.visibility = 'hidden';
+                document.getElementById("renewMemberDuesChanged").style.display = 'none';
             }
         }
         else{
-            document.getElementById("ifChangedDuesDifferentPerMemberType").style.display = 'none';
-            document.getElementById("lblMemberDues").innerHTML = "Dues collected per Member"
-            document.getElementById("lblNewMemberDues").innerHTML = "Dues collected per Member (NEW Amount)"
+            document.getElementById("renewDues").style.display = 'none';
+            document.getElementById("renewMemberDues").style.display = 'none';
+            document.getElementById("MemberDuesRenewal").value = 0;
+            document.getElementById("NewMemberDuesRenewal").value = 0;
+            document.getElementById("renewMemberDuesChanged").style.display = 'none';
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////
+        var Dues0 = document.getElementById("Dues0")?.checked ?? false;
+        var Dues1 = document.getElementById("Dues1")?.checked ?? false;
+        var Dues2 = document.getElementById("Dues2")?.checked ?? false;
+
         if(MembersReducedDues){
-            document.getElementById("ifMembersNoDues").style.display = 'block';
-        }
-        else{
-            document.getElementById("ifMembersNoDues").style.display = 'none';
+            if(Dues0){
+                document.getElementById("waived").style.display = '';
+            } else {
+                document.getElementById("waived").style.display = 'none';
+                document.getElementById("MembersNoDues").value = 0;
+            }
+
+            if(Dues1){
+                document.getElementById("partial").style.display = '';
+            } else {
+                document.getElementById("partial").style.display = 'none';
+                document.getElementById("TotalPartialDuesMembers").value = 0;
+                document.getElementById("PartialDuesMemberDues").value = 0;
+            }
+
+            if(Dues2){
+                document.getElementById("associate").style.display = '';
+            } else {
+                document.getElementById("associate").style.display = 'none';
+                document.getElementById("TotalAssociateMembers").value = 0;
+                document.getElementById("AssociateMemberDues").value = 0;
+            }
+        } else {
+            document.getElementById("waived").style.display = 'none';
+            document.getElementById("partial").style.display = 'none';
+            document.getElementById("associate").style.display = 'none';
             document.getElementById("MembersNoDues").value = 0;
             document.getElementById("TotalPartialDuesMembers").value = 0;
-            document.getElementById("TotalAssociateMembers").value = 0;
             document.getElementById("PartialDuesMemberDues").value = 0;
+            document.getElementById("TotalAssociateMembers").value = 0;
             document.getElementById("AssociateMemberDues").value = 0;
         }
 
@@ -182,7 +222,7 @@
         document.getElementById("SumChildrensSuppliesExpense").value = SupplyTotal;
 
         var SumPaidSittersExpense = Number(document.getElementById("PaidBabySitters").value.replace(/,/g, '')).toFixed(2);
-        document.getElementById("SumPaidSittersExpense").value = SumPaidSittersExpense;
+        document.getElementById("SumChildrensPaidSittersExpense").value = SumPaidSittersExpense;
 
         var TotalChildrensFees = (Number(TotalMisc) + Number(SumPaidSittersExpense)).toFixed(2);
         document.getElementById("SumTotalChildrensRoomExpense").value = TotalChildrensFees;
@@ -835,7 +875,8 @@ function AddPartyExpenseRow() {
 </script>
 <script>
 
-window.addEventListener('load', function() {
+  $(document).ready(function() {
+    ToggleNotFullDuesExplanation();
     ToggleReceiveCompensationExplanation();
     ToggleFinancialBenefitExplanation();
     ToggleInfluencePoliticalExplanation();
@@ -855,9 +896,27 @@ window.addEventListener('load', function() {
     TogglePlaygroupsExplanation();
     ToggleParkDaysExplanation();
     ToggleSisterChapterExplanation();
-    // toggleAwardBlocks();
-
 });
+
+function ToggleNotFullDuesExplanation() {
+    var selectedRadio = document.querySelector('input[name="optNoFullDues"]:checked');
+    var selectedValue = selectedRadio ? selectedRadio.value : null;
+
+        if (selectedValue != "1") {
+        // Hide checkbox group
+        document.getElementById("divNoFullDues").style.display = 'none';
+        // Uncheck all three checkboxes
+        document.getElementById("Dues0").checked = false;
+        document.getElementById("Dues1").checked = false;
+        document.getElementById("Dues2").checked = false;
+    } else {
+        document.getElementById("divNoFullDues").style.display = 'block';
+    }
+
+    // Always call this so the waived/partial/associate rows update
+    ChapterDuesQuestionsChange();
+}
+
 
     function ToggleReceiveCompensationExplanation() {
         var selectedRadio = document.querySelector('input[name="ReceiveCompensation"]:checked');

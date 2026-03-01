@@ -260,7 +260,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         $financialReport->file_irs = $input['FileIRS'] ?? null;
         $financialReport->file_irs_explanation = $input['FileIRSExplanation'] ?? null;
 
-        // CHPATER QUESTIONS
+        // CHAPTER QUESTIONS
         // Question 1
         $financialReport->bylaws_available = $input['ByLawsAvailable'] ?? null;
         $financialReport->bylaws_available_explanation = $input['ByLawsAvailableExplanation'] ?? null;

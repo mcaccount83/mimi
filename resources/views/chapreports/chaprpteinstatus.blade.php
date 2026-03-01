@@ -23,7 +23,7 @@
             <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>
-                    <th>Details</th>
+                    <th>IRS<br>Details</th>
                     <th>Letter</th>
                     <th>Conf/Reg</th>
                     <th>State</th>
@@ -39,7 +39,7 @@
                     <tr >
                         <td class="text-center align-middle">
                             @if ($conferenceCoordinatorCondition)
-                                <a href="{{ url("/chapterreports/irsedit/{$list->id}") }}"><i class="bi bi-eye"></i></a>
+                                <a href="{{ url("/chapterreports/irsedit/{$list->id}") }}"><i class="bi bi-bank"></i></a>
                             @else
                                 &nbsp; <!-- Placeholder to ensure the cell isn't completely empty -->
                             @endif

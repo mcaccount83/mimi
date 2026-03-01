@@ -21,6 +21,7 @@ class ViewServiceProvider extends ServiceProvider
             $positionid = null;
             $secpositionid = []; // Array for secondary positions
             $loggedIn = null;
+            $userTypeId = null;
             $userAdmin = false;
             $userModerator = false;
             $coordinator = false;
@@ -31,8 +32,9 @@ class ViewServiceProvider extends ServiceProvider
 
             if (Auth::check()) {
                 $user = Auth::user();
+                $userTypeId = $user->type_id;
 
-                if ($user->type_id == UserTypeEnum::COORD && $user->coordinator) {
+                if ($userTypeId == UserTypeEnum::COORD && $user->coordinator) {
                     $corDetails = $user->coordinator;
                     $corId = $corDetails['id'];
                     $positionid = $corDetails['position_id'];
@@ -42,11 +44,11 @@ class ViewServiceProvider extends ServiceProvider
 
                 $userAdmin = $user->is_admin == AdminStatusEnum::ADMIN;
                 $userModerator = $user->is_admin == AdminStatusEnum::MODERATOR;
-                $coordinator = ($user->type_id == UserTypeEnum::COORD && $user->coordinator);
-                $board = ($user->type_id == UserTypeEnum::BOARD && $user->board);
-                $outgoing = ($user->type_id == UserTypeEnum::OUTGOING && $user->outgoing);
-                $disbanded = ($user->type_id == UserTypeEnum::DISBANDED && $user->disbanded);
-                $pending = ($user->type_id == UserTypeEnum::PENDING && $user->pending);
+                $coordinator = ($userTypeId == UserTypeEnum::COORD && $user->coordinator);
+                $board = ($userTypeId == UserTypeEnum::BOARD && $user->board);
+                $outgoing = ($userTypeId == UserTypeEnum::OUTGOING && $user->outgoing);
+                $disbanded = ($userTypeId == UserTypeEnum::DISBANDED && $user->disbanded);
+                $pending = ($userTypeId == UserTypeEnum::PENDING && $user->pending);
             }
 
             $positionConditionsService = app(PositionConditionsService::class);
@@ -67,6 +69,7 @@ class ViewServiceProvider extends ServiceProvider
                 'userModerator' => $userModerator,
                 'unreadForumCount' => $forumCount,
                 'positionService' => $positionConditionsService,
+                'userTypeId' => $userTypeId,
                 'coordinator' => $coordinator,
                 'board' => $board,
                 'outgoing' => $outgoing,

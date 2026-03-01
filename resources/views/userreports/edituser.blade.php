@@ -25,11 +25,38 @@
 
                 <ul class="list-group list-group-flush mb-3">
                     <li class="list-group-item">
-                           <div class="row align-items-center">
-                            <div class="col-sm-6 mt-1">
-                                <label class="col-form-label">Active Status:</label>
+
+                        <div class="row mb-3">
+                            <div class="col-auto fw-bold">Missing From:</div>
+                            <div class="col text-end">
+                                {{ $userDetails->missing_from ?? 'None' }}
                             </div>
-                            <div class="col-sm-6">
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-auto fw-bold">Found In:</div>
+                            <div class="col text-end">
+                                {{ !empty($userDetails->wrong_tables) ? implode(', ', $userDetails->wrong_tables) : 'None' }}
+                            </div>
+                        </div>
+
+                     <div class="row mb-3">
+                        <div class="col-auto fw-bold">Action:</div>
+                        <div class="col text-end">
+                            @if($userDetails->missing_from !== null && empty($userDetails->wrong_tables))
+                                <span class="badge bg-danger fs-7">Make user inactive</span>
+                            @elseif(!empty($userDetails->wrong_tables))
+                                @foreach($userDetails->wrong_tables as $table)
+                                    <span class="badge bg-warning text-dark fs-7">Change user type to match {{ $table }}</span>
+                                @endforeach
+                            @else
+                                <span class="badge bg-success fs-7">No action needed</span>
+                            @endif
+                        </div>
+                    </div>
+
+                        <div class="row mb-1">
+                            <div class="col-auto fw-bold">Active Status:</div>
+                            <div class="col text-end">
                                 <select id="status" name="status" class="form-control float-end text-end"required>
                                     @foreach($AllUserStatus as $status)
                                         <option value="{{$status->id}}"
@@ -40,11 +67,9 @@
                                 </select>
                             </div>
                         </div>
-                           <div class="row align-items-center">
-                            <div class="col-sm-6 mt-1">
-                                <label class="col-form-label">User Type:</label>
-                             </div>
-                            <div class="col-sm-6">
+                        <div class="row mb-1">
+                            <div class="col-auto fw-bold">User Type:</div>
+                            <div class="col text-end">
                                 <select id="type" name="type" class="form-control float-end text-end"required>
                                     @foreach($AllUserType as $type)
                                         <option value="{{$type->id}}"
@@ -55,11 +80,9 @@
                                 </select>
                             </div>
                         </div>
-                          <div class="row align-items-center">
-                            <div class="col-sm-6 mt-1">
-                                <label class="col-form-label">Admin Role:</label>
-                             </div>
-                            <div class="col-sm-6">
+                        <div class="row mb-1">
+                            <div class="col-auto fw-bold">Admin Role:</div>
+                            <div class="col text-end">
                                 <select id="role" name="role" class="form-control float-end text-end"required>
                                     @foreach($AllAdminRole as $role)
                                         <option value="{{$role->id}}"

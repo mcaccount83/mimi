@@ -49,7 +49,7 @@
                     <table id="chapterlist" class="table table-sm table-hover" >
                         <thead>
                           <tr>
-                            <th></th>
+                            <th>Payment<br>Details</th>
                             <th>Conf</th>
                             <th>Chapter</th>
                             <th>Type</th>
@@ -65,7 +65,7 @@
                             <tr>
                                 <td  class="text-center align-middle">
                                     @if ($ITCondition)
-                                    <a href="{{ route('adminreports.paymentdetails', $log->id) }}"><i class="bi bi-eye"></i></a>
+                                    <a href="{{ route('adminreports.paymentdetails', $log->id) }}"><i class="bi bi-currency-dollar"></i></a>
                                     @else
                                     @endif
                                 </td>

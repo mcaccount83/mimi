@@ -23,7 +23,7 @@
                 <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>
-				<th>Details</th>
+				<th>EOY<br>Details</th>
                 <th>Email</th>
                 <th>Conf/Reg</th>
 				<th>State</th>
@@ -54,7 +54,7 @@
                         <tr>
                             <td class="text-center align-middle">
                                 @if($coordinatorCondition)
-                                    <a href="{{ url("/eoyreports/editstatus/{$list->id}") }}"><i class="bi bi-eye"></i></a>
+                                    <a href="{{ url("/eoyreports/editstatus/{$list->id}") }}"><i class="bi bi-file-earmark-bar-graph"></i></a>
                                 @endif
                             </td>
                             <td class="text-center align-middle">

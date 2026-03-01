@@ -23,7 +23,7 @@
             <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>
-                    <th>Details</th>
+                    <th>Online<br>Details</th>
                     <th>Conf/Reg>
                   <th>State</th>
                   <th>Name</th>
@@ -35,7 +35,7 @@
                 <tbody>
                 @foreach($chapterList as $list)
                   <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/online/websiteedit/{$list->id}") }}"><i class="bi bi-eye"></i></a></td>
+                    <td class="text-center align-middle"><a href="{{ url("/online/websiteedit/{$list->id}") }}"><i class="bi bi-laptop"></i></a></td>
                         <td>
                             @if ($list->state->conference_id > 0)
                                 {{ $list->state->conference->short_name }} / {{ $list->state->region->short_name }}

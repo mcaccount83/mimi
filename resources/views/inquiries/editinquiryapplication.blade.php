@@ -71,7 +71,7 @@
                                 </div>
                             </div>
                             <div class="card-body text-center mt-3">
-                                Save chpater information before sending emails
+                                Save chapter information before sending emails
                                 <button type="submit" class="btn btn-primary bg-gradient m-1"><i class="bi bi-floppy-fill me-2"></i>Save Updates</button>
                             </div>
                     </form>

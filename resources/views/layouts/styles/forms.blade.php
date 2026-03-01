@@ -16,6 +16,9 @@
         font-weight: bold;
     }
 
+    .financial-summary label {
+        font-weight: normal;
+    }
     .ms-2 {
         margin-left: 0.5rem !important; /* Adjust the margin to control spacing for Vacant Buttons */
     }

@@ -17,72 +17,29 @@
             <div class="card-body">
                 <div class="card-header text-center bg-transparent">
                 <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
-                <p class="mb-0">{{ $chDetails->confname }} Conference, {{ $chDetails->regname }} Region
+                <p class="mb-0">{{ $conferenceDescription }} Conference, {{ $conferenceDescription }} Region
                       </p>
               </div>
 
-              <ul class="list-group list-group-flush mb-3">
-                <li class="list-group-item mt-2">
-                    <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                        <b>Founded Month:</b> <span class="float-end">{{$chDetails->startMonth->month_long_name}}</span>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                        <b>Founded Year:</b> <span class="float-end">{{ $chDetails->start_year}}</span>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                        <b>Dues Last Paid:</b> <span class="float-end">
-                            @if($chPayments->rereg_date)
-                                {{$chPayments->rereg_date }}</span>
-                            @else
-                                No Payment Recorded</span>
-                            @endif
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                        <b>Payment Amount:</b> <span class="float-end">
-                            @if ($chPayments->rereg_payment)
-                                {{ $chPayments->rereg_payment }}</span>
-                            @else
-                                N/A</span>
-                            @endif
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                        <b>Number of Members:</b> <span class="float-end">
-                            @if ($chPayments->rereg_members)
-                                {{ $chPayments->rereg_members }}</span>
-                            @else
-                                N/A</span>
-                            @endif
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                        <b>Re-Registration Notes:</b> <span class="float-end">{{ $chPayments->rereg_notes}}</span>
-                    </div>
-                </li>
-                <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
-                <input type="hidden" id="ch_id" value="{{ $chDetails->id }}">
-                <li class="list-group-item mt-2" id="display_corlist"></li>
-            </ul>
-
-            <div class="text-center">
-                      @if ($chDetails->active_status == 1 )
-                          <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
-                      @elseif ($chDetails->active_status == 2)
-                        <b><span style="color: #ff851b;">Chapter is PENDING</span></b>
-                      @elseif ($chDetails->active_status == 3)
-                        <b><span style="color: #dc3545;">Chapter was NOT APPROVED</span></b><br>
-                          Declined Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                          {{ $chDetails->disband_reason }}
-                      @elseif ($chDetails->active_status == 0)
-                          <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
-                          Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                          {{ $chDetails->disband_reason }}
-                      @endif
-                  </div>
+             <ul class="list-group list-group-flush mb-3">
+                      <li class="list-group-item">
+                            @include('partials.paymentinfo')
+                            @include('partials.donationinfo')
+                            @include('partials.founderhistory')
+                        </li>
+                        <li class="list-group-item">
+                            @include('partials.coordinatorlist')
+                        </li>
+                        <li class="list-group-item mt-3">
+                            @include('partials.chapterstatus')
+                        </li>
+                  </ul>
+                </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
           </div>
-    <!-- /.card-body -->
-</div>
-<!-- /.card -->
-</div>
-<!-- /.col -->
+          <!-- /.col -->
 
 <div class="col-md-8">
     <div class="card card-primary card-outline">
@@ -142,17 +99,17 @@
                     </div>
                 </div>
 
-
             </div>
         </div>
-            <!-- /.card-body -->
+               </div>
                       </div>
-          <!-- /.card -->
-                    </div>
-        <!-- /.col -->
-
+                <!-- /.card-body -->
             </div>
-            <!-- /.box-body -->
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+
+          <div class="col-md-12">
             <div class="card-body text-center mt-3">
                 @if ($coordinatorCondition)
                     <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
@@ -164,15 +121,14 @@
                     <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('adminreports.rereg', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-credit-card-fill me-2"></i>Back to International Re-Reg Admin Report</button>
                 @endif
                 <button type="button" id="back-details" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('payment.paymenthistory', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-file-earmark-text me-2"></i>Back to Payment History</button>
-            </div>
-
-
-    </div>
-    <!-- /.container-fluid -->
-  </section>
-  <!-- /.content -->
-    </form>
-    @endsection
-
+             </div>
+          </div>
+        </div>
+        <!-- /.row -->
+      </div
+      ><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+@endsection
 
 

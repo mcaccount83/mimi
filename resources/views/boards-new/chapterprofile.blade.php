@@ -1,4 +1,4 @@
-@extends('layouts.board_theme')
+@extends('layouts.coordinator_theme')
 
 @section('content')
         <div class="container">
@@ -507,8 +507,8 @@
                             </div>
                         </div>
                         <div class="col-sm-12">
-                        @if ($currentDate->gte($due_date))
-                                @if ($due_date->month == $currentDate->month)
+                        @if ($currentDate->gte($dueDate))
+                                @if ($startMonthId == $currentMonth)
                                     <span style="color: green;">Your Re-registration payment is due now.</span><br>
                                 @else
                                     <span style="color: red;">Your Re-registration payment is now considered overdue.</span><br>

@@ -36,86 +36,21 @@
                <div class="card-body">
                     <div class="card-header text-center bg-transparent">
                     <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
-                    <p class="mb-0">{{ $chDetails->confname }} Conference, {{ $chDetails->regname }} Region
+                    <p class="mb-0">{{ $conferenceDescription }} Conference, {{ $conferenceDescription }} Region
                   </p>
                 </div>
 
-                <ul class="list-group list-group-flush mb-3">
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="col-auto fw-bold">New Board Submitted:</div>
-                            <div class="col text-end">
-                                {{ $chDetails->documentsEOY->new_board_submitted == 1 ? 'YES' : 'NO' }}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-auto fw-bold">New Board Activated:</div>
-                            <div class="col text-end">
-                                {{ $chDetails->documentsEOY->new_board_active == 1 ? 'YES' : 'NO' }}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-auto fw-bold">Financial Report Received</div>
-                            <div class="col text-end">
-                                {{ $chDetails->documentsEOY->financial_report_received == 1 ? 'YES' : 'NO' }}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-auto fw-bold">Financial Review Complete:</div>
-                            <div class="col text-end">
-                                {{ $chDetails->documentsEOY->financial_review_complete == 1 ? 'YES' : 'NO' }}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-auto fw-bold">Report Extension Given:</div>
-                            <div class="col text-end">
-                                {{ $chDetails->documentsEOY->report_extension == 1 ? 'YES' : 'NO' }}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-auto fw-bold">990N Verifed on irs.gov:</div>
-                            <div class="col text-end">
-                                {{ $chDetails->documentsEOY->irs_verified == 1 ? 'YES' : 'NO' }}
-                            </div>
-                        </div>
-                    </li>
-
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="col-auto fw-bold">Assigned Reviewer:</div>
-                            <div class="col text-end">
-                                    @if($chFinancialReport->reviewer_id != null)
-                                    {{ $chDetails->reportReviewer->first_name }} {{ $chDetails->reportReviewer->last_name }}
-                                    @else
-                                        No Reviewer Assigned
-                                    @endif
-                            </div>
-                        </div>
-                    </li>
-
-                     <li class="list-group-item">
-                          <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
-                            <div class="row mb-2">
-                          <span id="display_corlist"></span>
-                            </div>
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item">
+                            @include('partials.eoyreportinfo')
                         </li>
-                  <li class="list-group-item">
-                 <div class="text-center">
-                      @if ($chDetails->active_status == 1 )
-                          <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
-                      @elseif ($chDetails->active_status == 2)
-                        <b><span style="color: #ff851b;">Chapter is PENDING</span></b>
-                      @elseif ($chDetails->active_status == 3)
-                        <b><span style="color: #dc3545;">Chapter was NOT APPROVED</span></b><br>
-                          Declined Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                          {{ $chDetails->disband_reason }}
-                      @elseif ($chDetails->active_status == 0)
-                          <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
-                          Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                          {{ $chDetails->disband_reason }}
-                      @endif
-                      </div>
-                </li>
+                        <li class="list-group-item">
+                            @include('partials.reportreviewer')
+                            @include('partials.coordinatorlist')
+                        </li>
+                        <li class="list-group-item mt-3">
+                            @include('partials.chapterstatus')
+                        </li>
                   </ul>
               </div>
               <!-- /.card-body -->

@@ -22,86 +22,13 @@
                     </div>
                   <ul class="list-group list-group-flush mb-3">
                       <li class="list-group-item">
-                          <div class="row">
-                            <div class="col-auto fw-bold">Supervising Coordinator:</div>
-                            <div class="col text-end">
-                                <a href="mailto:{{ $cdDetails->reportsTo?->email }}">{{ $ReportTo }} </a>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-auto fw-bold">Primary Position:</div>
-                            <div class="col text-end">
-                                {{ $displayPosition->long_title }}
-                           </div>
-                          </div>
-                        <div class="row">
-                            <div class="col-auto fw-bold">MIMI Position: <a href="javascript:void(0);" onclick="showPositionInformation()" title="Show Position Information">
-                            <i class="bi bi-question-circle text-primary"></i></a></div>
-                            <div class="col text-end">{{ $mimiPosition?->long_title }}</span>
-                        </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-auto fw-bold">Secondary Positions:</div>
-                            <div class="col text-end">
-                                @forelse($cdDetails->secondaryPosition as $position)
-                                    {{ $position->long_title }}@if(!$loop->last)<br>@endif
-                                @empty
-                                    None
-                                @endforelse
-                            </div>
-                          </div>
-                           @if ($ITCondition)
-                        <div class="row">
-                            <div class="col-auto fw-bold">MIMI Admin:</div>
-                            <div class="col text-end">
-                                {{ $cdAdminRole->admin_role }}
-                                </div>
-                          </div>
-                        @endif
+                        @include('partials.coordinatorpositions')
                       </li>
-                      <li class="list-group-item mt-2">
-                          <div class="row">
-                            <div class="col-auto fw-bold">Start Date:</div>
-                            <div class="col text-end">
-                                {{ $cdDetails->coordinator_start_date }}
-                                </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-auto fw-bold">Last Promotion Date:</div>
-                            <div class="col text-end">
-                                {{ $cdDetails->last_promoted }}
-                           </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-auto fw-bold">Home Chapter:</div>
-                            <div class="col text-end">
-                                {{ $cdDetails->home_chapter }}
-                                 </div>
-                          </div>
+                      <li class="list-group-item">
+                          @include('partials.coordinatordates')
                       </li>
-
-                <li class="list-group-item">
-               <div class="text-center">
-                     @if ($cdDetails->active_status == 1 && $cdDetails->on_leave == 1)
-                        <b><span style="color: #ff851b;">Coordinator is ON LEAVE</span></b>
-                        <br>
-                        Leave Date: <span class="date-mask">{{ $cdDetails->leave_date }}</span><br>
-                    @else
-                        @if ($cdDetails->active_status == 1 && $cdDetails->on_leave != 1)
-                            <b><span style="color: #28a745;">Coordinator is ACTIVE</span></b>
-                        @elseif ($cdDetails->active_status == 2)
-                        <b><span style="color: #ff851b;">Coordinator is PENDING</span></b>
-                        @elseif ($cdDetails->active_status == 3)
-                        <b><span style="color: #dc3545;">Coordinator was NOT APPROVED</span></b><br>
-                            Rejected Date: <span class="date-mask">{{ $cdDetails->zapped_date }}</span><br>
-                            {{ $cdDetails->reason_retired }}
-                        @elseif ($cdDetails->active_status == 0)
-                            <b><span style="color: #dc3545;">Coordinator is RETIRED</span></b><br>
-                            Retired Date: <span class="date-mask">{{ $cdDetails->zapped_date }}</span><br>
-                            {{ $cdDetails->reason_retired }}
-                        @endif
-                    @endif
-                 </div>
+                <li class="list-group-item mt-3">
+                     @include('partials.coordinatorstatus')
                 </li>
                   </ul>
               </div>

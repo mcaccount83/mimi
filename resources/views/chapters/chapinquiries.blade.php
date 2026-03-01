@@ -27,7 +27,7 @@
               <table id="chapterlist" class="table table-sm table-hover">
               <thead>
 			    <tr>
-					<th>Details</th>
+					<th>Chapter<br>Details</th>
 			        <th>COPY Inquiries Email</th>
 					<th>YES Chapter Response</th>
 					<th>Status</th>
@@ -44,7 +44,7 @@
 				@php $row = 0; @endphp
                 @foreach($chapterList as $list)
                   <tr>
-                    <td class="text-center "><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="bi bi-eye"></i></td>
+                    <td class="text-center "><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="bi bi-house-fill"></i></td>
                         <td class="text-center "><button type="button" class="btn btn-xs" onclick="return CopyEmail({{ $row }});" style="background-color: transparent; border: none;">
                             <i class="bi bi-copy"></i></button>
                         </td>

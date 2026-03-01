@@ -49,7 +49,7 @@
 <table id="chapterlist" class="table table-sm table-hover">
     <thead>
         <tr>
-            <th>Details</th>
+            <th>Award<br>Details</th>
             <th>Conf/Reg</th>
             <th>State</th>
             <th>Name</th>
@@ -84,7 +84,7 @@
                 <tr>
                     <td class="text-center">
                         @if ($assistConferenceCoordinatorCondition)
-                            <a href="{{ url("/eoyreports/editawards/{$list->id}") }}"><i class="bi bi-eye"></i></a>
+                            <a href="{{ url("/eoyreports/editawards/{$list->id}") }}"><i class="bi bi-award-fill"></i></a>
                         @endif
                     </td>
                     <td>

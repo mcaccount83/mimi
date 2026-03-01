@@ -45,7 +45,7 @@
                             </div>
                           </div>
                       </li>
-                      <li class="list-group-item mt-2">
+                      <li class="list-group-item">
                           <div class="row">
                             <div class="col-auto fw-bold">Start Date:</div>
                             <div class="col text-end">

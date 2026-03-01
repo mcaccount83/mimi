@@ -24,7 +24,7 @@
               {{-- <table id="chapterlist_review" class="table table-bordered table-hover"> --}}
               <thead>
 			    <tr>
-					<th>Review</th>
+					<th>Financial<br>Report</th>
                     <th>PDF</th>
 					<th>Email</th>
                     <th>Conf/Reg</th>
@@ -53,7 +53,7 @@
                     @endphp
                     <tr>
                         <td class="text-center align-middle">
-                            <a href="{{ url("/eoyreports/editfinancialreview/{$list->id}") }}"><i class="bi bi-pencil-square"></i></a>
+                            <a href="{{ url("/eoyreports/editfinancialreview/{$list->id}") }}"><i class="bi bi-calculator-fill"></i></a>
                         </td>
                         <td class="text-center align-middle">
                             @if($list->documentsEOY->financial_report_received == '1' && $list->documentsEOY->$yearColumnName != null)

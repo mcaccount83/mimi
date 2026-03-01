@@ -23,7 +23,7 @@
                 <table id="chapterlist" class="table table-sm table-hover" >
                 <thead>
                   <tr>
-                    <th>Details</th>
+                    <th>Inquiries<br>Details</th>
                     <th>Date</th>
                     <th>Conf/Reg</th>
                     <th>State</th>
@@ -37,7 +37,7 @@
                 <tbody>
                     @foreach($inquiryList as $list)
                         <tr id="inquiry-{{ $list->id }}">
-                            <td class="text-center align-middle"><a href="{{ url("/inquiries/inquiryapplicationedit/{$list->id}") }}"><i class="bi bi-eye"></i></a></td>
+                            <td class="text-center align-middle"><a href="{{ url("/inquiries/inquiryapplicationedit/{$list->id}") }}"><i class="bi bi-pin-map-fill"></i></a></td>
                                 <td>{{ $list->created_at->format('m-d-Y') }}</td>
                                <td>
                                 @if ($list->state->conference_id > 0)

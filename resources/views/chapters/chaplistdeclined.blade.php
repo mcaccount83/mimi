@@ -24,7 +24,7 @@
                 <table id="chapterlist" class="table table-sm table-hover" >
                 <thead>
                   <tr>
-                    <th>Details</th>
+                    <th>Declined<br>Details</th>
                     <th>Conf</th>
                     <th>State</th>
                     <th>Name</th>
@@ -40,7 +40,7 @@
 
 
                         <tr id="chapter-{{ $list->id }}">
-                            <td class="text-center align-middle"><a href="{{ url("/application/chapterpendingedit/{$list->id}") }}"><i class="bi bi-eye"></i></a></td>
+                            <td class="text-center align-middle"><a href="{{ url("/application/chapterpendingedit/{$list->id}") }}"><i class="bi bi-house-x-fill"></i></a></td>
                             <td>
                                 @if ($list->state->conference_id > 0)
                                     {{ $list->state->conference->short_name }} / {{ $list->state->region->short_name }}

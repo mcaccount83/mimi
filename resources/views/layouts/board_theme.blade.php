@@ -12,10 +12,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 
     <!-- jQuery as classic sync script - MUST be before Vite modules -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <!-- Vite Compiled Assets -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/flash.js'])
 
     <!-- Google Recaptcha -->
     <script src="https://www.google.com/recaptcha/enterprise.js?render={{ config('services.recaptcha.site_key') }}"></script>
@@ -38,14 +36,20 @@
     @endif
 
 <script>
-    window.onload = function () {
-        if (window.history && window.history.pushState) {
-            window.history.pushState('preventBack', null, '');
-            window.onpopstate = function () {
-                location.reload();
-            };
-        }
-    };
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('form').forEach(form => {
+        form.setAttribute('autocomplete', 'off');
+    });
+});
+
+    // window.onload = function () {
+    //     if (window.history && window.history.pushState) {
+    //         window.history.pushState('preventBack', null, '');
+    //         window.onpopstate = function () {
+    //             location.reload();
+    //         };
+    //     }
+    // };
 </script>
 
     @include('layouts.styles.buttonsicons')
@@ -174,23 +178,25 @@
     </div>
     <!--end::App Wrapper-->
 
-<!-- Sript Functions -->
-@include('layouts.scripts.alert')
-@include('layouts.scripts.bdcoordinatorlist')
-@include('layouts.scripts.boards')
-@include('layouts.scripts.boardreport')
-@include('layouts.scripts.datetime')
-@include('layouts.scripts.email')
-@include('layouts.scripts.masks')
-@include('layouts.scripts.password')
-@include('layouts.scripts.pdfviewer')
-@include('layouts.scripts.uploads')
-@include('layouts.scripts.recaptcha')
+    <!-- Vite Compiled Assets -->
+    @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/flash.js'])
 
-@include('layouts.scripts.website')
+    <!-- Sript Functions -->
+    @include('layouts.scripts.alert')
+    @include('layouts.scripts.bdcoordinatorlist')
+    @include('layouts.scripts.boards')
+    @include('layouts.scripts.boardreport')
+    @include('layouts.scripts.datetime')
+    @include('layouts.scripts.email')
+    @include('layouts.scripts.masks')
+    @include('layouts.scripts.password')
+    @include('layouts.scripts.pdfviewer')
+    @include('layouts.scripts.uploads')
+    @include('layouts.scripts.recaptcha')
+    @include('layouts.scripts.website')
 
-@yield('customscript')
-@stack('scripts')
+    @yield('customscript')
+    @stack('scripts')
 
 </body>
 </htms>

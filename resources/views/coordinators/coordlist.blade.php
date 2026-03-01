@@ -23,7 +23,7 @@
               <table id="coordinatorlist"  class="table table-sm table-hover">
                 <thead>
                   <tr>
-                    <th>Details</th>
+                    <th>Coord<br>Details</th>
                     <th>Email</th>
                     <th>Conf/Reg</th>
                     <th>Coordinator Name</th>
@@ -40,7 +40,7 @@
                 <tbody>
                   @foreach($coordinatorList as $list)
                     <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/coordinator/details/{$list->id}") }}"><i class="bi bi-eye"></i></a></td>
+                    <td class="text-center align-middle"><a href="{{ url("/coordinator/details/{$list->id}") }}"><i class="bi bi-person-fill"></i></a></td>
                     <td>
                         <a onclick="showCoordEmailModal('{{ $list->first_name }}', '{{ $list->last_name }}', {{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="bi bi-envelope text-primary"></i></a>
                     </td>

@@ -30,7 +30,7 @@ class GoogleController extends Controller implements HasMiddleware
         ];
     }
 
-    public function verifyRecaptcha($token, $userIpAddress): bool
+   public function verifyRecaptcha($token, $userIpAddress): array
     {
         $projectId = config('services.recaptcha.project_id');
         $siteKey = config('services.recaptcha.site_key');
@@ -48,22 +48,33 @@ class GoogleController extends Controller implements HasMiddleware
             $result = $response->json();
 
             if (!isset($result['tokenProperties']['valid']) || !$result['tokenProperties']['valid']) {
-                Log::warning('reCAPTCHA token invalid', ['reason' => $result['tokenProperties']['invalidReason'] ?? 'unknown']);
-                return false;
+                $reason = $result['tokenProperties']['invalidReason'] ?? 'unknown';
+                Log::warning('reCAPTCHA token invalid', ['reason' => $reason]);
+
+                return [
+                    'success' => false,
+                    'error' => 'Security verification failed. Please refresh the page and try again.'
+                ];
             }
 
             $score = $result['riskAnalysis']['score'] ?? 0;
 
-            if ($score >= 0.5) {
-                return true;
+            if ($score < 0.5) {
+                Log::warning('reCAPTCHA score too low', ['score' => $score]);
+                return [
+                    'success' => false,
+                    'error' => 'Security check detected suspicious activity. Please try again or contact support if the issue persists.'
+                ];
             }
 
-            Log::warning('reCAPTCHA score too low', ['score' => $score]);
-            return false;
+            return ['success' => true];
 
         } catch (\Exception $e) {
             Log::error('reCAPTCHA verification failed: ' . $e->getMessage());
-            return false;
+            return [
+                'success' => false,
+                'error' => 'Security verification error. Please try again later.'
+            ];
         }
     }
 

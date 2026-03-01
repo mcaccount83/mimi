@@ -23,7 +23,7 @@
               <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>
-					<th>Details</th>
+					<th>Online<br>Details</th>
                     <th>Email</th>
                     <th>Conf/Reg</th>
 					<th>State</th>
@@ -37,7 +37,7 @@
                 <tbody>
                 @foreach($websiteList as $list)
                   <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/online/websiteedit/{$list->id}") }}"><i class="bi bi-eye"></i></a></td>
+                    <td class="text-center align-middle"><a href="{{ url("/online/websiteedit/{$list->id}") }}"><i class="bi bi-laptop"></i></a></td>
                     <td class="text-center align-middle">
                         <a onclick="showChapterEmailModal('{{ $list->name }}', {{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}', 'Website Review')"><i class="bi bi-envelope text-primary"></i></a>
                    </td>

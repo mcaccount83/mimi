@@ -2,14 +2,7 @@
 
 @section('page_title', 'Chapter Details')
 @section('breadcrumb', 'Chapter Details')
-<style>
-.disabled-link {
-    pointer-events: none; /* Prevent click events */
-    cursor: default; /* Change cursor to default */
-    color: #343a40; /* Font color */
-}
 
-</style>
 @section('content')
     <!-- Main content -->
     <section class="content">
@@ -22,7 +15,7 @@
               <div class="card-body">
                     <div class="card-header text-center bg-transparent">
                     <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
-                    <p class="mb-0">{{ $chDetails->confname }} Conference, {{ $chDetails->regname }} Region
+                    <p class="mb-0">{{ $conferenceDescription }} Conference, {{ $regionLongName }} Region
                     <br>
                 EIN: {{$chDetails->ein}}
                 @if ( $chDetails->ein == null && $conferenceCoordinatorCondition)
@@ -37,90 +30,29 @@
                 @endif
                  </p>
                  </div>
-                <ul class="list-group list-group-flush mb-3">
-                    <li class="list-group-item">
-                 <div class="row">
-                            <div class="col-auto fw-bold">EIN Notes:</div>
-                            <div class="col text-end">
-                                {{$chDocuments->ein_notes}}
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-auto fw-bold">EIN Notes:</div>
+                                <div class="col text-end">
+                                    {{$chDocuments->ein_notes}}
                                 </div>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                       <div class="row">
-                            <div class="col-auto fw-bold">Re-Registration Dues:</div>
-                            <div class="col text-end">
-                                @if ($chPayments->rereg_members)
-                                    <b>{{ $chPayments->rereg_members }} Members</b> on <b><span class="date-mask">{{ $chPayments->rereg_date }}</span></b>
-                                @else
-                                    No Payment Recorded
-                                @endif
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-auto fw-bold">M2M Donation:</div>
-                            <div class="col text-end">
-                            @if ($chPayments->m2m_donation)
-                                <b>${{ $chPayments->m2m_donation }}</b> on <b><span class="date-mask">{{ $chPayments->m2m_date }}</span></b>
-                            @else
-                                No Donation Recorded
-                            @endif
-                         </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-auto fw-bold">Sustaining Chapter Donation:</div>
-                            <div class="col text-end">
-                            @if ($chPayments->sustaining_donation)
-                                <b>${{ $chPayments->sustaining_donation }}</b> on <b><span class="date-mask">{{ $chPayments->sustaining_date }}</span></b>
-                            @else
-                                No Donation Recorded
-                            @endif
-                       </div>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="col-auto fw-bold">Founded:</div>
-                            <div class="col text-end">
-                                {{ $startMonthName }} {{ $chDetails->start_year }}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-auto fw-bold">Formerly Known As:</div>
-                            <div class="col text-end">
-                                {{ $chDetails->former_name }}
-                                </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-auto fw-bold">Sistered By:</div>
-                            <div class="col text-end">
-                                {{ $chDetails->sistered_by }}
-                                </div>
-                        </div>
-                    </li>
-                   <li class="list-group-item">
-                          <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
-                            <div class="row mb-2">
-                          <span id="display_corlist"></span>
                             </div>
                         </li>
-                  <li class="list-group-item">
-                 <div class="text-center">
-                      @if ($chDetails->active_status == 1 )
-                          <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
-                      @elseif ($chDetails->active_status == 2)
-                        <b><span style="color: #ff851b;">Chapter is PENDING</span></b>
-                      @elseif ($chDetails->active_status == 3)
-                        <b><span style="color: #dc3545;">Chapter was NOT APPROVED</span></b><br>
-                          Declined Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                          {{ $chDetails->disband_reason }}
-                      @elseif ($chDetails->active_status == 0)
-                          <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
-                          Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                          {{ $chDetails->disband_reason }}
-                      @endif
-                      </div>
-                </li>
+                        <li class="list-group-item">
+                            @include('partials.paymentinfo')
+                            @include('partials.donationinfo')
+                        </li>
+                        <li class="list-group-item">
+                            @include('partials.founderhistory')
+                            @include('partials.sisterhistory')
+                        </li>
+                        <li class="list-group-item">
+                            @include('partials.coordinatorlist')
+                        </li>
+                        <li class="list-group-item mt-3">
+                            @include('partials.chapterstatus')
+                        </li>
                   </ul>
               </div>
               <!-- /.card-body -->
@@ -1018,7 +950,7 @@
                             @if ($chActiveId == \App\Enums\ChapterStatusEnum::ACTIVE)
                                 <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplist') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Active Chapter List</button>
                             @elseif ($chActiveId == \App\Enums\ChapterStatusEnum::ZAPPED)
-                                <button type="button" id="back-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapzapped') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-x-fill me-2"></i>Back to Zapped Chapter List</button>
+                                <button type="button" id="back-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapzapped') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-slash-fill me-2"></i>Back to Zapped Chapter List</button>
                             @endif
                             @if ($inquiriesCondition || $assistConferenceCoordinatorCondition)
                                 @if ($chActiveId == \App\Enums\ChapterStatusEnum::ACTIVE)
@@ -1032,7 +964,7 @@
                             @if ($chActiveId == \App\Enums\ChapterStatusEnum::ACTIVE)
                                 <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplist', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to International Active Chapter List</button>
                             @elseif ($chActiveId == \App\Enums\ChapterStatusEnum::ZAPPED)
-                                <button type="button" id="back-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapzapped', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-x-fill me-2"></i>Back to International Zapped Chapter List</button>
+                                <button type="button" id="back-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapzapped', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-slash-fill me-2"></i>Back to International Zapped Chapter List</button>
                             @endif
                         @endif
                          @if ($inquiriesInternationalCondition || $ITCondition)

@@ -23,7 +23,7 @@
                 <table id="chapterlist" class="table table-sm table-hover" >
                 <thead>
                   <tr>
-                    <th>Details</th>
+                    <th>Chapter<br>Details</th>
                     <th>Email</th>
                     <th>Conf/Reg</th>
                     <th>State</th>
@@ -41,7 +41,7 @@
                 <tbody>
                     @foreach($chapterList as $list)
                         <tr id="chapter-{{ $list->id }}">
-                            <td class="text-center align-middle"><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="bi bi-eye"></i></a></td>
+                            <td class="text-center align-middle"><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="bi bi-house-fill"></i></a></td>
                             <td class="text-center align-middle">
                                 <a onclick="showChapterEmailModal('{{ $list->name }}', {{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="bi bi-envelope text-primary"></i></a>
                            </td>

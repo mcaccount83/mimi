@@ -40,7 +40,7 @@
                     @else
                         <h3 class="mb-0"> {{$stateShortName}}</h3>
                     @endif
-                    <p class="mb-0">{{ $chDetails->confname }} Conference, {{ $chDetails->regname }} Region
+                    <p class="mb-0">{{ $conferenceDescription }} Conference, {{ $conferenceDescription }} Region
                   </p>
                     </div>
 
@@ -127,25 +127,12 @@
                     </div>
                 </li>
 
-                <li class="list-group-item mt-2">
-                <div class="text-center">
-                    @if($chDetails != null)
-                    @if ($chDetails->active_status == 1 )
-                        <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
-                    @elseif ($chDetails->active_status == 2)
-                    <b><span style="color: #ff851b;">Chapter is PENDING</span></b>
-                    @elseif ($chDetails->active_status == 3)
-                    <b><span style="color: #dc3545;">Chapter was NOT APPROVED</span></b><br>
-                        Declined Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                        {{ $chDetails->disband_reason }}
-                    @elseif ($chDetails->active_status == 0)
-                        <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
-                        Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                        {{ $chDetails->disband_reason }}
-                    @endif
-                    @endif
-                </div>
-                </li>
+                <li class="list-group-item">
+                            @include('partials.coordinatorlist')
+                        </li>
+                        <li class="list-group-item mt-3">
+                            @include('partials.chapterstatus')
+                        </li>
 
                 <li class="list-group-item mt-2">
                 <div class="card-body text-center mt-3">

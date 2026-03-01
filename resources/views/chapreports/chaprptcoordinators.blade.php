@@ -23,7 +23,7 @@
                 <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>
-				  <th>Details</th>
+				  <th>Chapter<br>Details</th>
                   <th>Conf/Reg</th>
 				  <th>State</th>
                   <th>Name</th>
@@ -44,7 +44,7 @@
                         @endphp
                         <tr>
                             <td class="text-center align-middle">
-                                <a href="{{ url('/chapter/details/' . $chapter->id) }}"><i class="bi bi-eye"></i></a>
+                                <a href="{{ url('/chapter/details/' . $chapter->id) }}"><i class="bi bi-house-fill"></i></a>
                             </td>
                             <td>
                                 @if ($chapter->state->conference_id > 0)

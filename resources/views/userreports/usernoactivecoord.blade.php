@@ -24,7 +24,7 @@
             <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>
-                    <th>Edit User</th>
+                    <th>User<br>Details</th>
                     <th>User ID</th>
                     <th>Name</th>
                     <th>Email</th>
@@ -35,7 +35,7 @@
                 @foreach($cdNoChapterList as $list)
                   <tr>
                     <td>
-                            <a href="{{ url("/userreports/edituser/{$list->id}") }}"><i class="bi bi-eye"></i></a>
+                            <a href="{{ url("/userreports/edituser/{$list->id}") }}"><i class="bi bi-person-fill-gear"></i></a>
                     </td>
                         <td>{{ $list->id }}</td>
                         <td>{{ $list->first_name }} {{ $list->last_name }}</td>

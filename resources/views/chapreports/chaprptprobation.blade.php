@@ -24,7 +24,7 @@
                 <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>
-				  <th>Details</th>
+				  <th>Chapter<br>Details</th>
                   <th>QTR Report</th>
                   <th>Conf/Reg</th>
 				  <th>State</th>
@@ -37,7 +37,7 @@
                 <tbody>
                 @foreach($chapterList as $list)
                   <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="bi bi-eye"></i></a></td>
+                    <td class="text-center align-middle"><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="bi bi-house-fill"></i></a></td>
                     <td class="text-center align-middle">
                         @if ($list->probation_id == '3')
                             <a href="{{ url("/board/probation/{$list->id}") }}"><i class="bi bi-file-earmark-text"></i></a>

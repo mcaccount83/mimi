@@ -21,69 +21,77 @@
           <div class="col-md-4">
 
         <!-- Profile Image -->
-            <div class="card card-primary card-outline">
-             <div class="card-body">
+           <div class="card card-primary card-outline">
+                <div class="card-body">
                     <div class="card-header text-center bg-transparent">
                     <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
-                    <p class="mb-0">{{ $chDetails->confname }} Conference, {{ $chDetails->regname }} Region
+                    <p class="mb-0">{{ $conferenceDescription }} Conference, {{ $conferenceDescription }} Region
+                    <br>
+                  EIN: {{$chDetails->ein}}
                   </p>
-                    </div>
-                EIN: {{$chDetails->ein}}
-                </p>
-                <ul class="list-group list-group-flush mb-3">
-                    <li class="list-group-item mt-2">
+                </div>
 
-                <b>Boundaries:</b> {{$chDetails->territory}}
-                    </li>
-                    <li class="list-group-item mt-2">
-                        <b>Re-Registration Dues:</b><span class="float-end">
-                            @if ($chPayments->rereg_members)
-                                <b>{{ $chPayments->rereg_members }} Members</b> on <b><span class="date-mask">{{ $chPayments->rereg_date }}</span></b>
-                            @else
-                                No Payment Recorded
-                            @endif
-                        </span><br>
-                        <b>M2M Donation:</b><span class="float-end">
+                  <ul class="list-group list-group-flush mb-2">
+                      <li class="list-group-item">
+                       <div class="row">
+                            <div class="col-auto fw-bold">Re-Registration Dues:</div>
+                            <div class="col text-end">
+                                @if ($chPayments->rereg_members)
+                                    <b>{{ $chPayments->rereg_members }} Members</b> on <b><span class="date-mask">{{ $chPayments->rereg_date }}</span></b>
+                                @else
+                                    No Payment Recorded
+                                @endif
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-auto fw-bold">M2M Donation:</div>
+                            <div class="col text-end">
                             @if ($chPayments->m2m_donation)
                                 <b>${{ $chPayments->m2m_donation }}</b> on <b><span class="date-mask">{{ $chPayments->m2m_date }}</span></b>
                             @else
                                 No Donation Recorded
                             @endif
-                        </span><br>
-                        <b>Sustaining Chapter Donation: </b><span class="float-end">
+                         </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-auto fw-bold">Sustaining Chapter Donation:</div>
+                            <div class="col text-end">
                             @if ($chPayments->sustaining_donation)
                                 <b>${{ $chPayments->sustaining_donation }}</b> on <b><span class="date-mask">{{ $chPayments->sustaining_date }}</span></b>
                             @else
                                 No Donation Recorded
                             @endif
-                        </span><br>
+                       </div>
+                        </div>
                     </li>
-                    <li class="list-group-item mt-2">
-                        <b>Founded:</b> <span class="float-end">{{ $startMonthName }} {{ $chDetails->start_year }}</span>
-                        <br>
-                        <b>Formerly Known As:</b> <span class="float-end">{{ $chDetails->former_name }}</span>
-                        <br>
-                        <b>Sistered By:</b> <span class="float-end">{{ $chDetails->sistered_by }}</span>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-auto fw-bold">Founded:</div>
+                            <div class="col text-end">
+                                {{ $startMonthName }} {{ $chDetails->start_year }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-auto fw-bold">Formerly Known As:</div>
+                            <div class="col text-end">
+                                {{ $chDetails->former_name }}
+                                </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-auto fw-bold">Sistered By:</div>
+                            <div class="col text-end">
+                                {{ $chDetails->sistered_by }}
+                                </div>
+                        </div>
                     </li>
-                    <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
-                    <li class="list-group-item mt-2" id="display_corlist" ></li>
-                </ul>
-              <div class="text-center">
-                      @if ($chDetails->active_status == 1 )
-                          <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
-                      @elseif ($chDetails->active_status == 2)
-                        <b><span style="color: #ff851b;">Chapter is PENDING</span></b>
-                      @elseif ($chDetails->active_status == 3)
-                        <b><span style="color: #dc3545;">Chapter was NOT APPROVED</span></b><br>
-                          Declined Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                          {{ $chDetails->disband_reason }}
-                      @elseif ($chDetails->active_status == 0)
-                          <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
-                          Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                          {{ $chDetails->disband_reason }}
-                      @endif
-                  </div>
-                </div>
+                   <li class="list-group-item">
+                            @include('partials.coordinatorlist')
+                        </li>
+                        <li class="list-group-item mt-3">
+                            @include('partials.chapterstatus')
+                        </li>
+                  </ul>
+              </div>
               <!-- /.card-body -->
             </div>
             <!-- /.card -->
@@ -92,9 +100,13 @@
 
           <div class="col-md-8">
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
+                <div class="card-body">
+                                        <div class="card-header bg-transparent border-0">
+
                 <h3 class="profile-username">Board Member Information</h3>
+                    </div>
                     <!-- /.card-header -->
+                    <div class="card-body">
                     <div class="row">
                         <div class="col-md-12">
                          <!-- /.form group -->
@@ -149,6 +161,7 @@
                         </div>
                     </div>
                 </div>
+                </div>
               <!-- /.card-body -->
                         </div>
             <!-- /.card -->
@@ -162,10 +175,12 @@
                 @else
                     <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('userreports.nopresidentinactive') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-person-fill-gear me-2"></i>Back to Non-Active No President List</button>
                 @endif
+   </div>
             </div>
         </div>
         <!-- /.row -->
-      </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.container-fluid -->
     </form>
     </section>
     <!-- /.content -->

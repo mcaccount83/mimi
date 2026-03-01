@@ -24,7 +24,7 @@
               <table id="coordinatorlist"  class="table table-sm table-hover">
                 <thead>
                   <tr>
-                    <th>Details</th>
+                    <th>Rejected<br>Details</th>
                     <th>Conf</th>
                     <th>Coordinator Name</th>
 					<th>Display Position</th>
@@ -39,7 +39,7 @@
                 <tbody>
                   @foreach($coordinatorList as $list)
                     <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/application/coordapplication/{$list->id}") }}"><i class="bi bi-eye"></i></a></td>
+                    <td class="text-center align-middle"><a href="{{ url("/application/coordapplication/{$list->id}") }}"><i class="bi bi-person-fill-x"></i></a></td>
                     <td>
                         @if ($list->region->short_name != "None")
                             {{ $list->conference->short_name }} / {{ $list->region->short_name }}
