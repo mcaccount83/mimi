@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (submitButton) {
                         submitButton.disabled = true;
                         var originalHTML = submitButton.innerHTML;
-                        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
+                        submitButton.innerHTML = '<i class="bi bi-arrow-repeat spin"></i>Processing...';
                     }
 
                     var formToSubmit = this;

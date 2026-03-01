@@ -1,66 +1,39 @@
 <script>
-$(document).ready(function() {
-    // Only run if the element exists on this page
-    if ($('.fileType').length) {
-        $('.fileType').change(function() {
-            var selectedType = $(this).val();
-            var resourceId = $(this).attr('id').replace('fileType', '');
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.querySelector('.fileType')) {
+        document.querySelectorAll('.fileType').forEach(function(el) {
+            el.addEventListener('change', function() {
+                var selectedType = this.value;
 
-            if (selectedType == '1') {
-                // Document to Download
-                $('.versionField').show();
-                $('.filePathField').show();
-                $('.fileUpload').show();
-                $('.filePathBlock').show();
-                $('.linkField').hide();
-                $('.routeField').hide();
-            } else if (selectedType == '2') {
-                // Link to Webpage
-                $('.linkField').show();
-                $('.versionField').hide();
-                $('.filePathField').hide();
-                $('.filePathBlock').hide();
-                $('.fileUpload').hide();
-                $('.routeField').hide();
-            } else if (selectedType == '3') {
-                // Laravel Route
-                $('.routeField').show();
-                $('.linkField').hide();
-                $('.versionField').hide();
-                $('.filePathField').hide();
-                $('.filePathBlock').hide();
-                $('.fileUpload').hide();
-            }
+                if (selectedType == '1') {
+                    document.querySelectorAll('.versionField, .filePathField, .fileUpload, .filePathBlock').forEach(e => e.style.display = 'block');
+                    document.querySelectorAll('.linkField, .routeField').forEach(e => e.style.display = 'none');
+                } else if (selectedType == '2') {
+                    document.querySelectorAll('.linkField').forEach(e => e.style.display = 'block');
+                    document.querySelectorAll('.versionField, .filePathField, .filePathBlock, .fileUpload, .routeField').forEach(e => e.style.display = 'none');
+                } else if (selectedType == '3') {
+                    document.querySelectorAll('.routeField').forEach(e => e.style.display = 'block');
+                    document.querySelectorAll('.linkField, .versionField, .filePathField, .filePathBlock, .fileUpload').forEach(e => e.style.display = 'none');
+                }
+            });
         });
     }
 
-    if ($('#fileTypeNew').length) {
-        $('.linkFieldNew').hide();
-        $('.routeFieldNew').hide();
-        $('.versionFieldNew').hide();
-        $('.fileUploadNew').hide();
+    if (document.getElementById('fileTypeNew')) {
+        document.querySelectorAll('.linkFieldNew, .routeFieldNew, .versionFieldNew, .fileUploadNew').forEach(e => e.style.display = 'none');
 
-        $('#fileTypeNew').change(function() {
-            var selectedType = $(this).val();
+        document.getElementById('fileTypeNew').addEventListener('change', function() {
+            var selectedType = this.value;
 
             if (selectedType == '1') {
-                // Document to Download
-                $('.versionFieldNew').show();
-                $('.fileUploadNew').show();
-                $('.linkFieldNew').hide();
-                $('.routeFieldNew').hide();
+                document.querySelectorAll('.versionFieldNew, .fileUploadNew').forEach(e => e.style.display = 'block');
+                document.querySelectorAll('.linkFieldNew, .routeFieldNew').forEach(e => e.style.display = 'none');
             } else if (selectedType == '2') {
-                // Link to Webpage
-                $('.linkFieldNew').show();
-                $('.versionFieldNew').hide();
-                $('.fileUploadNew').hide();
-                $('.routeFieldNew').hide();
+                document.querySelectorAll('.linkFieldNew').forEach(e => e.style.display = 'block');
+                document.querySelectorAll('.versionFieldNew, .fileUploadNew, .routeFieldNew').forEach(e => e.style.display = 'none');
             } else if (selectedType == '3') {
-                // Laravel Route
-                $('.routeFieldNew').show();
-                $('.linkFieldNew').hide();
-                $('.versionFieldNew').hide();
-                $('.fileUploadNew').hide();
+                document.querySelectorAll('.routeFieldNew').forEach(e => e.style.display = 'block');
+                document.querySelectorAll('.linkFieldNew, .versionFieldNew, .fileUploadNew').forEach(e => e.style.display = 'none');
             }
         });
     }
@@ -212,7 +185,7 @@ function addToolkitFile() {
     });
 
     // Close the modal
-    $('#modal-task').modal('hide');
+    bootstrap.Modal.getInstance(document.getElementById('modal-task'))?.hide();
 
     return false;
 }
@@ -334,8 +307,7 @@ function updateToolkitFile(id) {
     });
 
     // Close the modal
-    $('#editResourceModal' + id).modal('hide');
-
+bootstrap.Modal.getInstance(document.getElementById('editResourceModal' + id))?.hide();
     return false;
 }
 
@@ -485,7 +457,7 @@ function addResourceFile() {
     });
 
     // Close the modal
-    $('#modal-task').modal('hide');
+    bootstrap.Modal.getInstance(document.getElementById('modal-task'))?.hide();
 
     return false;
 }
@@ -607,7 +579,7 @@ function updateResourceFile(id) {
     });
 
     // Close the modal
-    $('#editResourceModal' + id).modal('hide');
+bootstrap.Modal.getInstance(document.getElementById('editTaskModal' + id))?.hide();
 
     return false;
 }
@@ -685,7 +657,7 @@ function updateResourceFile(id) {
                     });
 
     // Close the modal
-    $('#modal-task').modal('hide');
+    bootstrap.Modal.getInstance(document.getElementById('modal-task'))?.hide();
 
     // Prevent form submission
     return false;

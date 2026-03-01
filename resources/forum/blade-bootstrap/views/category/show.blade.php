@@ -81,11 +81,11 @@
                             <div class="fixed-bottom-right pb-xs-0 pr-xs-0 pb-sm-3 pr-sm-3 m-2" style="z-index: 1000;">
                                 <transition name="fade">
                                     <div class="card text-white bg-secondary shadow-sm" v-if="state.selectedThreads.length">
-                                        <div class="card-header text-center">
+                                        <div class="card-header text-center bg-transparent">
                                             {{ trans('forum::general.with_selection') }}
                                         </div>
                                         <div class="card-body">
-                                            <div class="input-group mb-3">
+                                            <div class="input-group mb-2">
                                                 <div class="input-group-prepend">
                                                     <label class="input-group-text" for="bulk-actions">{{ trans_choice('forum::general.actions', 1) }}</label>
                                                 </div>
@@ -110,7 +110,7 @@
                                                 </select>
                                             </div>
 
-                                            <div class="mb-3" v-if="state.selectedAction == 'move'">
+                                            <div class="mb-2" v-if="state.selectedAction == 'move'">
                                                 <label for="category-id">{{ trans_choice('forum::categories.category', 1) }}</label>
                                                 <select name="category_id" id="category-id" class="form-select">
                                                     @include ('forum::category.partials.options', ['categories' => $threadDestinationCategories, 'hide' => $category])

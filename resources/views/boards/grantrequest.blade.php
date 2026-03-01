@@ -1,12 +1,11 @@
-
 @extends('layouts.board_theme')
 
 <style>
-.custom-switch .custom-control-label {
+.form-switch .form-check-label {
     color: #000 !important;
 }
 /* Or use the theme's default text color */
-.custom-switch .custom-control-label {
+.form-switch .form-check-label {
     color: inherit !important;
 }
 </style>
@@ -17,11 +16,11 @@
             <div class="col-md-12">
 
                 <div class="col-md-12">
-         <div class="card card-widget widget-user">
-            <div class="widget-user-header bg-primary">
-                <div class="widget-user-image">
-                    <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" style="width: 115px; height: 115px;">
-                  </div>
+         <div class="card">
+                <div class="card bg-primary">
+                    <div class="card-body text-center">
+                        <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" style="width: 115px; height: 115px;">
+                    </div>
                 </div>
                 <div class="card-body">
 
@@ -60,26 +59,26 @@
                         <p>Only a chapter may apply for a grant for a member. The grant request should be filled out by a member of the Executive Board. That officer will be the liaison between the Mother-to-Mother Fund Committee and the mother-in-need. A mother-in-need may not apply for a grant on her own. The request has to come from the chapter, but the chapter may work with the mother to answer the questions here. If an officer is not available, due to a natural disaster or other problem, then another member may submit the request, but the Board will be contacted to confirm the information.</p>
                         <p>Be as specific as possible in answering the questions. Be sure to fill out all questions before submitting the form!</p>
                         <br>
-                        <div class="form-group">
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" name="understood" id="understood" class="custom-control-input" value="1" required>
-                                <label class="custom-control-label" for="understood">
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input type="checkbox" name="understood" id="understood" class="form-check-input" value="1" required>
+                                <label class="form-check-label" for="understood">
                                     I have read this section and understand the limits of the fund<span class="field-required">*</span>
                                 </label>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" name="member_agree" id="member_agree" class="custom-control-input" value="1" required>
-                                <label class="custom-control-label" for="member_agree">
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input type="checkbox" name="member_agree" id="member_agree" class="form-check-input" value="1" required>
+                                <label class="form-check-label" for="member_agree">
                                     Some people do not want a grant request to be submitted for them. The mother has been asked if she wants you to submit this grant on her behalf<span class="field-required">*</span>
                                 </label>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" name="member_accept" id="member_accept" class="custom-control-input" value="1" required>
-                                <label class="custom-control-label" for="member_accept">
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input type="checkbox" name="member_accept" id="member_accept" class="form-check-input" value="1" required>
+                                <label class="form-check-label" for="member_accept">
                                     The mother has agreed to accept a grant request if one is given<span class="field-required">*</span>
                                 </label>
                             </div>
@@ -92,15 +91,15 @@
                         <div class="col-md-12">
                             <h5>MEMBER IN NEED</h5>
 
-                        <div class="col-12 form-row form-group">
-                            <div class="col-md-6 float-left">
-                                <div class="form-group">
+                        <div class="col-12 form-row mb-3">
+                            <div class="col-md-6 float-start">
+                                <div class="mb-3">
                                     <label>Member First Name<span class="field-required">*</span></label>
                                     <input type="text" class="form-control" name="member_fname" required>
                                 </div>
                             </div>
-                            <div class="col-md-6 float-left">
-                                <div class="form-group">
+                            <div class="col-md-6 float-start">
+                                <div class="mb-3">
                                     <label>Members Last Name<span class="field-required">*</span></label>
                                     <input type="text" class="form-control" name="member_lname" required>
                                 </div>
@@ -113,53 +112,53 @@
                     <div class="row">
                         <div class="col-md-12">
                             <h5>CHAPTER/BOARD SUBMITTING REQUEST</h5>
-                        <div class="col-12 form-row form-group">
-                            <div class="col-md-6 float-left">
-                                <div class="form-group">
+                        <div class="col-12 form-row mb-3">
+                            <div class="col-md-6 float-start">
+                                <div class="mb-3">
                                     <label>Chapter Name<span class="field-required">*</span></label>
                                     <input type="text" class="form-control" name="chapter_name" value="{{ $chDetails->name }}" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-6 float-left">
-                                <div class="form-group">
+                            <div class="col-md-6 float-start">
+                                <div class="mb-3">
                                     <label>Chapter State<span class="field-required">*</span></label>
                                     <input type="text" class="form-control" name="chapter_name" value="{{$stateName}}" disabled>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-12 form-row form-group">
-                            <div class="col-md-6 float-left">
-                                <div class="form-group">
+                        <div class="col-12 form-row mb-3">
+                            <div class="col-md-6 float-start">
+                                <div class="mb-3">
                                     <label>Board Member Name<span class="field-required">*</span></label>
                                     <input type="text" class="form-control" name="board_name" value="{{ $borDetails->first_name }} {{ $borDetails->last_name }}" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-6 float-left">
-                                <div class="form-group">
+                            <div class="col-md-6 float-start">
+                                <div class="mb-3">
                                     <label>Board Member Position<span class="field-required">*</span></label>
                                     <input type="text" class="form-control" name="board_position" value="{{ $borDetails->position->position }}" disabled>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-12 form-row form-group">
-                            <div class="col-md-6 float-left">
-                                <div class="form-group">
+                        <div class="col-12 form-row mb-3">
+                            <div class="col-md-6 float-start">
+                                <div class="mb-3">
                                     <label>Board Member Phone<span class="field-required">*</span></label>
                                     <input type="text" class="form-control" name="board_name" value="{{ $borDetails->phone }}" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-6 float-left">
-                                <div class="form-group">
+                            <div class="col-md-6 float-start">
+                                <div class="mb-3">
                                     <label>Board Member Email<span class="field-required">*</span></label>
                                     <input type="text" class="form-control" name="board_position" value="{{ $borDetails->email }}" disabled>
                                 </div>
                             </div>
                         </div>
 
-                          <div class="card-body text-center">
-                            <button type="submit" id="btn-submit" class="btn btn-primary"><i class="fas fa-share-square"></i>&nbsp; Continue to Grant Request</button>
+                          <div class="card-body text-center mt-3">
+                            <button type="submit" id="btn-submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>Continue to Grant Request</button>
                         </div>
 
                 </div>
@@ -168,23 +167,7 @@
         </div>
 
 </form>
-            <div class="card-body text-center">
-
-                {{-- @if ($userTypeId != \App\Enums\UserTypeEnum::OUTGOING && $userTypeId != \App\Enums\UserTypeEnum::DISBANDED)
-                    @if ($userTypeId == \App\Enums\UserTypeEnum::COORD)
-                        <button type="button" id="btn-back" class="btn btn-primary" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2" ></i>Back to Profile</button>
-                    @else
-                        <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply mr-2" ></i>Back to Profile</a>
-                    @endif
-                @endif
-
-                @if($chEOYDocuments->financial_report_received !='1')
-                    <button type="button" id="btn-save" class="btn btn-primary"><i class="fas fa-save mr-2"></i>Save</button>
-                @endif
-
-                @if($chEOYDocuments->financial_report_received =='1')
-                    <button type="button" id="btn-download-pdf" class="btn btn-primary" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->$yearColumnName  }}'"><i class="fas fa-file-pdf"></i>&nbsp; Download PDF</button>
-                @endif --}}
+            <div class="card-body text-center mt-3">
             </div>
 
         <!-- End Modal Popups -->

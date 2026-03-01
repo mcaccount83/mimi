@@ -2,15 +2,7 @@
 
 @section('page_title', 'Coordinator Details')
 @section('breadcrumb', 'Coordinator Details')
-<style>
 
-.disabled-link {
-    pointer-events: none; /* Prevent click events */
-    cursor: default; /* Change cursor to default */
-    color: #343a40; /* Font color */
-}
-
-</style>
 @section('content')
     <!-- Main content -->
     <form class="form-horizontal" method="POST" action='{{ route("coordinators.updatedetails",$cdDetails->id) }}'>
@@ -20,69 +12,28 @@
         <div class="row">
           <div class="col-md-4">
 
-            <!-- Profile Image -->
             <div class="card card-primary card-outline">
-              <div class="card-body box-profile">
-                <h3 class="profile-username text-center">{{ $cdDetails->first_name }}, {{ $cdDetails->last_name }}</h3>
-                <p class="text-center">{{ $conferenceDescription }} Conference
-                    @if ($regionLongName != "None")
-                        , {{ $regionLongName }} Region
-                    @else
-                    @endif
-                </p>
-                <ul class="list-group list-group-unbordered mb-3">
-                    <li class="list-group-item">
-                        <b>Supervising Coordinator:</b> <span class="float-right">{{ $ReportTo }}</span>
-                        <br>
-                        <b>Display Position:</b> <span class="float-right">{{ $displayPosition->long_title }}</span>
-                        <br>
-                        <b>MIMI Position:</b> <span class="float-right">{{ $mimiPosition?->long_title }}</span>
-                        <br>
-                        <div style="display: flex; justify-content: space-between;">
-                            <b>Secondary Positions:</b>
-                            <span style="text-align: right;">
-                                @forelse($cdDetails->secondaryPosition as $position)
-                                    {{ $position->long_title }}@if(!$loop->last)<br>@endif
-                                @empty
-                                    None
-                                @endforelse
-                            </span>
-                        </div>
-                        @if ($ITCondition)
-                        <b>MIMI Admin:</b> <span class="float-right">{{ $cdAdminRole->admin_role }}</span>
-                        @endif
-
-                    </li>
-                    <li class="list-group-item">
-                        <b>Start Date:</b> <span class="float-right date-mask">{{ $cdDetails->coordinator_start_date }}</span>
-                        <br>
-                        <b>Last Promotion Date:</b> <span class="float-right date-mask">{{ $cdDetails->last_promoted }}</span>
-                        <br>
-                        <label>Home Chapter:</label><input type="text" name="cord_chapter" id="cord_chapter" class="form-control float-right col-sm-6 text-right" value="{{ $cdDetails->home_chapter }}" required placeholder="Home Chapter">
-                        <br>
-                    </li>
-                </ul>
-               <div class="text-center">
-                     @if ($cdDetails->active_status == 1 && $cdDetails->on_leave == 1)
-                        <b><span style="color: #ff851b;">Coordinator is ON LEAVE</span></b>
-                        <br>
-                        Leave Date: <span class="date-mask">{{ $cdDetails->leave_date }}</span><br>
-                    @else
-                        @if ($cdDetails->active_status == 1 && $cdDetails->on_leave != 1)
-                            <b><span style="color: #28a745;">Coordinator is ACTIVE</span></b>
-                        @elseif ($cdDetails->active_status == 2)
-                        <b><span style="color: #ff851b;">Coordinator is PENDING</span></b>
-                        @elseif ($cdDetails->active_status == 3)
-                        <b><span style="color: #dc3545;">Coordinator was NOT APPROVED</span></b><br>
-                            Rejected Date: <span class="date-mask">{{ $cdDetails->zapped_date }}</span><br>
-                            {{ $cdDetails->reason_retired }}
-                        @elseif ($cdDetails->active_status == 0)
-                            <b><span style="color: #dc3545;">Coordinator is RETIRED</span></b><br>
-                            Retired Date: <span class="date-mask">{{ $cdDetails->zapped_date }}</span><br>
-                            {{ $cdDetails->reason_retired }}
-                        @endif
-                    @endif
-                </div>
+               <div class="card-body">
+                    <div class="card-header text-center bg-transparent">
+                        <h3 class="mb-0">{{ $cdDetails->first_name }}, {{ $cdDetails->last_name }}</h3>
+                        <p class="mb-0">{{ $conferenceDescription }} Conference
+                            @if ($regionLongName != "None")
+                                , {{ $regionLongName }} Region
+                            @endif
+                        </p>
+                    </div>
+                  <ul class="list-group list-group-flush mb-3">
+                      <li class="list-group-item">
+                        @include('partials.coordinatorpositions')
+                      </li>
+                      </li>
+                      <li class="list-group-item">
+                          @include('partials.coordinatordates')
+                      </li>
+                <li class="list-group-item mt-3">
+                     @include('partials.coordinatorstatus')
+                </li>
+                  </ul>
               </div>
               <!-- /.card-body -->
             </div>
@@ -92,13 +43,15 @@
 
           <div class="col-md-8">
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                <h3 class="profile-username">Contact Information</h3>
+                <div class="card-body">
+                    <div class="card-header bg-transparent border-0">
+                    <h3>Contact Information</h3>
+                      </div>
                     <!-- /.card-header -->
+                    <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
-                                <!-- /.form group -->
-                                <div class="form-group row">
+                                <div class="row mb-1">
                                     <label class="col-sm-2 col-form-label">Name:</label>
                                     <div class="col-sm-5">
                                     <input type="text" name="cord_fname" id="cord_fname" class="form-control" value="{{ $cdDetails->first_name }}"  required >
@@ -107,8 +60,7 @@
                                     <input type="text" name="cord_lname" id="cord_lname" class="form-control" value="{{ $cdDetails->last_name }}"  required >
                                     </div>
                                 </div>
-                                <!-- /.form group -->
-                                <div class="form-group row">
+                                <div class="row mb-1">
                                     <label class="col-sm-2 col-form-label">Email/Secondary:</label>
                                     <div class="col-sm-5">
                                     <input type="text" name="cord_email" id="cord_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)"  value="{{ $cdDetails->email }}"  required >
@@ -118,8 +70,7 @@
                                     <input type="text" name="cord_sec_email"class="form-control" value="{{ $cdDetails->sec_email }}" placeholder="Secondary Email">
                                     </div>
                                 </div>
-                                <!-- /.form group -->
-                                <div class="form-group row">
+                                <div class="row mb-1">
                                     <label class="col-sm-2 col-form-label">Phone/Alternate:</label>
                                     <div class="col-sm-5">
                                     <input type="text" name="cord_phone" id="cord_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{ $cdDetails->phone }}"  required >
@@ -128,14 +79,13 @@
                                     <input type="text" name="cord_altphone" id="cord_altphone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{ $cdDetails->alt_phone }}"  placeholder="Alternate Phone" >
                                     </div>
                                 </div>
-                                <!-- /.form group -->
-                                <div class="form-group row">
+                                <div class="row mb-1">
                                     <label class="col-sm-2 col-form-label">Address:</label>
                                     <div class="col-sm-10">
                                     <input type="text" name="cord_addr" id="cord_addr" class="form-control" value="{{ $cdDetails->address }}"  required >
                                     </div>
                                 </div>
-                                <div class="form-group row">
+                                <div class="row mb-1">
                                     <label class="col-sm-2 col-form-label"><br></label>
                                     <div class="col-sm-3">
                                     <input type="text" name="cord_city" id="cord_city" class="form-control" value="{{ $cdDetails->city }}"  required >
@@ -166,10 +116,8 @@
                                         @endforeach
                                 </select>
                             </div>
-
                                 </div>
-                                 <!-- /.form group -->
-                                 <div class="form-group row">
+                                 <div class="row mb-1">
                                     <label class="col-sm-2 col-form-label">Birthday:</label>
                                     <div class="col-sm-3">
                                         <select name="cord_month" class="form-control" style="width: 100%;" required>
@@ -188,6 +136,8 @@
                                 </div>
                             </div>
                         </div>
+
+                    </div>
                     </div>
               <!-- /.card-body -->
                         </div>
@@ -195,9 +145,9 @@
                       </div>
           <!-- /.col -->
           <div class="col-md-12">
-            <div class="card-body text-center">
-                <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2" ></i>Save</button>
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.view', ['id' => $cdDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Coordinator Details</button>
+            <div class="card-body text-center mt-3">
+                <button type="submit" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save</button>
+                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.view', ['id' => $cdDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-people-fill me-2"></i>Back to Coordinator Details</button>
             </div>
         </div>
         </div>

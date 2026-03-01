@@ -12,7 +12,7 @@
             <div class="card card-outline card-primary">
                 <div class="card-header">
                 <div class="dropdown">
-                    <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         IRS Status Report
                     </h3>
                     @include('layouts.dropdown_menus.menu_reports_chap')
@@ -23,7 +23,7 @@
             <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>
-                    <th>Details</th>
+                    <th>IRS<br>Details</th>
                     <th>Letter</th>
                     <th>Conf/Reg</th>
                     <th>State</th>
@@ -39,7 +39,7 @@
                     <tr >
                         <td class="text-center align-middle">
                             @if ($conferenceCoordinatorCondition)
-                                <a href="{{ url("/chapterreports/irsedit/{$list->id}") }}"><i class="fas fa-eye"></i></a>
+                                <a href="{{ url("/chapterreports/irsedit/{$list->id}") }}"><i class="bi bi-bank"></i></a>
                             @else
                                 &nbsp; <!-- Placeholder to ensure the cell isn't completely empty -->
                             @endif
@@ -48,7 +48,7 @@
                             @if ($list->documents->ein_letter_path != null)
                                 <a href="{{ $list->documents->ein_letter_path }}"
                                     onclick="event.preventDefault(); openPdfViewer('{{ $list->documents->ein_letter_path }}');">
-                                    <i class="far fa-file-pdf"></i>
+                                    <i class="bi bi-file-earmark-pdf"></i>
                                     </a>
                             @else
                                 &nbsp; <!-- Placeholder to ensure the cell isn't completely empty -->
@@ -88,63 +88,70 @@
                 </table>
             </div>
             <!-- /.card-body -->
+
+            <div class="card-body">
             <div class="col-sm-12">
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{ $checkBox1Status ? 'checked' : '' }} onchange="showPrimary()" />
-                    <label class="custom-control-label" for="showPrimary">Only show chapters I am primary for</label>
+                <div class="form-check form-switch">
+                    <input type="checkbox" name="showPrimary" id="showPrimary" class="form-check-input" {{ $checkBox1Status ? 'checked' : '' }} onchange="showPrimary()" />
+                    <label class="form-check-label" for="showPrimary">Only show chapters I am primary for</label>
                 </div>
             </div>
             @if ($coordinatorCondition && $assistRegionalCoordinatorCondition)
                     <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showConfReg" id="showConfReg" class="custom-control-input" {{ $checkBox3Status ? 'checked' : '' }} onchange="showConfReg()" />
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showConfReg" id="showConfReg" class="form-check-input" {{ $checkBox3Status ? 'checked' : '' }} onchange="showConfReg()" />
                             @if ($assistConferenceCoordinatorCondition)
-                                    <label class="custom-control-label" for="showConfReg">Show All Chapters in Conference (Export Available)</label>
+                                    <label class="form-check-label" for="showConfReg">Show All Chapters in Conference (Export Available)</label>
                                 @else
-                            <label class="custom-control-label" for="showConfReg">Show All Chapters in Region (Export Available)</label>
+                            <label class="form-check-label" for="showConfReg">Show All Chapters in Region (Export Available)</label>
                             @endif
                         </div>
                     </div>
                 @endif
                 @if ($ITCondition || $einCondition)
                     <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="custom-control-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
-                            <label class="custom-control-label" for="showIntl">Show All International Chapters (Export & Fax Info Available)</label>
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <label class="form-check-label" for="showIntl">Show All International Chapters (Export & Fax Info Available)</label>
                         </div>
                     </div>
                 @endif
-                <div class="card-body text-center">
+                </div>
+            <!-- /.card-body for checkboxes -->
+
+                <div class="card-body text-center mt-3">
                     @if ($assistConferenceCoordinatorCondition)
                         @if ($checkBox3Status)
-                            <button class="btn bg-gradient-primary mb-3" onclick="startExport('einstatus', 'EIN Status List')"><i class="fas fa-download mr-2" ></i>Export EIN Status List</button>
+                            <button class="btn btn-primary bg-gradient mb-2" onclick="startExport('einstatus', 'EIN Status List')"><i class="bi bi-download me-2"></i></i>Export EIN Status List</button>
                         @elseif ($checkBox51Status)
-                            <button class="btn bg-gradient-primary mb-3" onclick="startExport('inteinstatus', 'International EIN Status List')"><i class="fas fa-download"></i>&nbsp; Export International EIN Status List</button>
+                            <button class="btn btn-primary bg-gradient mb-2" onclick="startExport('inteinstatus', 'International EIN Status List')"><i class="bi bi-download me-2"></i>Export International EIN Status List</button>
                         {{-- @else
-                            <button class="btn bg-gradient-primary mb-3 disabled" onclick="startExport('einstatus', 'EIN Status List')" disabled><i class="fas fa-download mr-2" ></i>Export EIN Status List</button> --}}
+                            <button class="btn btn-primary bg-gradient mb-2 disabled" onclick="startExport('einstatus', 'EIN Status List')" disabled><i class="bi bi-download me-2"></i>Export EIN Status List</button> --}}
                         @endif
                     @endif
                 <br>
                     @if ($einCondition || $ITCondition)
                         @if ($checkBox51Status)
-                            <button class="btn bg-gradient-primary mb-3" onclick="showEODeptCoverSheetModal()"><i class="fas fa-file-pdf mr-2" ></i>EO Dept Fax Coversheet</button>
-                            <button class="btn bg-gradient-primary mb-3" onclick="showIRSUpdatesModal()"><i class="fas fa-file-pdf mr-2" ></i>IRS Updates to EO Dept</button>
-                            <button class="btn bg-gradient-primary  mb-3" onclick="showSubordinateFilingModal()"><i class="fas fa-file-pdf mr-2" ></i>Subordinate Filing PDF</button>
-                        {{-- @else
-                            <button class="btn bg-gradient-primary mb-3 disabled" onclick="showEODeptCoverSheetModal()"><i class="fas fa-file-pdf mr-2" disabled></i>EO Dept Fax Coversheet</button>
-                            <button class="btn bg-gradient-primary mb-3 disabled" onclick="showIRSUpdatesModal()"><i class="fas fa-file-pdf mr-2" disabled></i>IRS Updates to EO Dept</button>
-                            <button class="btn bg-gradient-primary  mb-3 disabled" onclick="showSubordinateFilingModal()"><i class="fas fa-file-pdf mr-2" disabled></i>Subordinate Filing PDF</button>> --}}
+                            <button class="btn btn-primary bg-gradient mb-2" onclick="showEODeptCoverSheetModal()"><i class="bi bi-file-earmark-pdf-fill me-2"></i>EO Dept Fax Coversheet</button>
+                            <button class="btn btn-primary bg-gradient mb-2" onclick="showIRSUpdatesModal()"><i class="bi bi-file-earmark-pdf-fill me-2"></i>IRS Updates to EO Dept</button>
+                            <button class="btn btn-primary bg-gradient mb-2" onclick="showSubordinateFilingModal()"><i class="bi bi-file-earmark-pdf-fill me-2"></i>Subordinate Filing PDF</button>
                         @endif
                     @endif
-                     </div>
-              </div>
+                    </div>
+            <!-- /.card-body for buttons -->
+
+             <div class="card-body text-center mt-3">
             </div>
+            <!-- /.card-body for buttons -->
 
-           </div>
-          <!-- /.box -->
         </div>
-    </section>
-
-    <!-- /.content -->
-
+        <!-- /.card -->
+      </div>
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
 @endsection
+

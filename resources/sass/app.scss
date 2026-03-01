@@ -1,12 +1,9 @@
 // Bootstrap
 @use 'bootstrap/scss/bootstrap' as *;
-// @use 'admin-lte/build/scss/bootstrap-variables' as *;
 
-// Variables
+// Other imports
 @import 'variables';
+@import 'sweetalert2/src/sweetalert2';
 
-// Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
-
-
-
+// AdminLTE LAST so it overrides everything
+@import 'admin-lte/dist/css/adminlte.min.css';

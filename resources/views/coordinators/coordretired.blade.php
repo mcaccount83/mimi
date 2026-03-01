@@ -12,7 +12,7 @@
             <div class="card card-outline card-primary">
                 <div class="card-header">
                 <div class="dropdown">
-                    <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Retired Coordinator List
                     </h3>
                     @include('layouts.dropdown_menus.menu_coordinators')
@@ -23,7 +23,7 @@
               <table id="coordinatorlist" class="table table-sm table-hover">
               <thead>
 			    <tr>
-				  <th>Details</th>
+				  <th>Coord<br>Details</th>
                   <th>Conf/Reg</th>
 				   <th>Coordinator Name</th>
                   <th>Position</th>
@@ -38,7 +38,7 @@
                 <tbody>
                 @foreach($coordinatorList as $list)
                   <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/coordinator/details/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                    <td class="text-center align-middle"><a href="{{ url("/coordinator/details/{$list->id}") }}"><i class="bi bi-person-fill-slash"></i></a></td>
                     <td>
                             @if ($list->region?->short_name != "None")
                             {{ $list->conference->short_name }} / {{ $list->region?->short_name }}
@@ -57,7 +57,7 @@
                         <td><span class="date-mask">{{ $list->zapped_date }}</span></td>
                         <td>{{ $list->reason_retired }}</td>
                         @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
-                        <td class="text-center align-middle"><i class="fa fa-ban"
+                        <td class="text-center align-middle"><i class="bi bi-ban"
                             onclick="showDeleteCoordModal({{ $list->id }}, '{{ $list->first_name }}', '{{ $list->last_name }}', '{{ $list->activeStatus->active_status }}')"
                             style="cursor: pointer; color: #dc3545;"></i>
                         </td>
@@ -68,32 +68,37 @@
                 </table>
             </div>
               <!-- /.card-body -->
+
+            <div class="card-body">
               @if ($ITCondition)
-                    <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="custom-control-input" {{$checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
-                            <label class="custom-control-label" for="showIntl">Show All International Coordinators (Export Available)</label>
+                <div class="col-sm-12">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{$checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <label class="form-check-label" for="showIntl">Show All International Coordinators (Export Available)</label>
                         </div>
                     </div>
                 @endif
+                    </div>
+            <!-- /.card-body for checkboxes -->
 
-              <div class="card-body text-center">
+              <div class="card-body text-center mt-3">
                 @if ($assistConferenceCoordinatorCondition)
                     @if ($checkBox51Status)
-                        <button class="btn bg-gradient-primary mb-3" onclick="startExport('intretiredcoordinator', 'International Retired Coordinator List')"><i class="fas fa-download"></i>&nbsp; Export International Retired Coordinator List</button>
+                        <button class="btn btn-primary bg-gradient mb-2" onclick="startExport('intretiredcoordinator', 'International Retired Coordinator List')"><i class="bi bi-download me-2"></i>Export International Retired Coordinator List</button>
                     {{-- @else
-                        <button class="btn bg-gradient-primary mb-3" onclick="startExport('retiredcoordinator', 'Retired Coordinator List')"><i class="fas fa-download mr-2" ></i>Export Retired Coordinator List</button> --}}
+                        <button class="btn btn-primary bg-gradient mb-2" onclick="startExport('retiredcoordinator', 'Retired Coordinator List')"><i class="bi bi-download me-2"></i>Export Retired Coordinator List</button> --}}
                     @endif
                 @endif
-            </div>
-            </div>
+             </div>
+            <!-- /.card-body for buttons -->
 
-           </div>
-          <!-- /.box -->
-        </div>
+         </div>
+        <!-- /.card -->
       </div>
-    </section>
-
-    <!-- /.content -->
-
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
 @endsection

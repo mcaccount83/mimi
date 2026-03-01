@@ -12,10 +12,10 @@
                 <div class="card card-outline card-primary">
                     <div class="card-header">
                     <div class="dropdown">
-                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Not Approved Chapter List
                         </h3>
-                        <span class="ml-2">New Chapter Applications Declined</span>
+                        <span class="ms-2">New Chapter Applications Declined</span>
                         @include('layouts.dropdown_menus.menu_chapters_new')
                     </div>
                 </div>
@@ -24,7 +24,7 @@
                 <table id="chapterlist" class="table table-sm table-hover" >
                 <thead>
                   <tr>
-                    <th>Details</th>
+                    <th>Declined<br>Details</th>
                     <th>Conf</th>
                     <th>State</th>
                     <th>Name</th>
@@ -40,7 +40,7 @@
 
 
                         <tr id="chapter-{{ $list->id }}">
-                            <td class="text-center align-middle"><a href="{{ url("/application/chapterpendingedit/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                            <td class="text-center align-middle"><a href="{{ url("/application/chapterpendingedit/{$list->id}") }}"><i class="bi bi-house-x-fill"></i></a></td>
                             <td>
                                 @if ($list->state->conference_id > 0)
                                     {{ $list->state->conference->short_name }} / {{ $list->state->region->short_name }}
@@ -59,7 +59,7 @@
                             <td>{{ $list->pendingPresident->first_name }} {{ $list->pendingPresident->last_name }}</td>
                             <td>{{ $list->disband_reason }}</td>
                              @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
-                        <td class="text-center align-middle"><i class="fa fa-ban"
+                        <td class="text-center align-middle"><i class="bi bi-ban"
                             onclick="showDeleteChapterModal({{ $list->id }}, '{{ $list->name }}', '{{ $list->activeStatus->active_status }}')"
                             style="cursor: pointer; color: #dc3545;"></i>
                         </td>
@@ -68,33 +68,32 @@
                     @endforeach
                 </tbody>
             </table>
-            </div>
+              </div>
             <!-- /.card-body -->
 
+            <div class="card-body">
             @if ($ITCondition || $einCondition)
-                    <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="custom-control-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
-                            <label class="custom-control-label" for="showIntl">Show All International Chapters</label>
+                <div class="col-sm-12">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <label class="form-check-label" for="showIntl">Show All International Chapters</label>
                         </div>
                     </div>
                 @endif
-                <div class="col-sm-12">
-
                 </div>
-                <div class="card-body text-center">
+            <!-- /.card-body for checkboxes -->
 
+                <div class="card-body text-center mt-3">
+   </div>
+            <!-- /.card-body for buttons -->
 
-                    </div>
-                </div>
-          </div>
-          <!-- /.card -->
         </div>
-        <!-- /.col -->
+        <!-- /.card -->
       </div>
-      <!-- /.row -->
+      <!-- /.col -->
     </div>
-    <!-- /.container-fluid -->
-  </section>
-  <!-- /.content -->
-  @endsection
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
+@endsection

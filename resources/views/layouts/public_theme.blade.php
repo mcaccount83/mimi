@@ -1,171 +1,90 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<!--begin::Head-->
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- CSRF Token -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{config('app.name')}}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Font: Source Sans Pro -->
+     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome -->
-    {{-- <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free/css/all.min.css"> --}}
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/solid.css" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/brands.css" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/css/v5-font-face.css" rel="stylesheet" />
-    <!-- icheck bootstrap -->
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
-    <!-- Bootstrap Switch -->
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/bootstrap-switch/css/bootstrap-switch.min.css">
-    <!-- BS Stepper -->
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/bs-stepper/css/bs-stepper.min.css">
-    <!-- SweetAlert2 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <!-- daterange picker -->
-    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/daterangepicker/daterangepicker.css">
 
-<script src="https://www.google.com/recaptcha/enterprise.js?render={{ config('services.recaptcha.site_key') }}"></script>
+    <!-- jQuery as classic sync script - MUST be before Vite modules -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Vite Compiled Assets -->
+    @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/flash.js'])
+
+    <!-- Google Recaptcha -->
+    <script src="https://www.google.com/recaptcha/enterprise.js?render={{ config('services.recaptcha.site_key') }}"></script>
+
+    {{-- Flash Messages as meta tags --}}
+    @if ($message = Session::get('success'))
+        <meta name="flash-success" content="{{ $message }}">
+    @endif
+    @if ($message = Session::get('info'))
+        <meta name="flash-info" content="{{ $message }}">
+    @endif
+    @if ($message = Session::get('warning'))
+        <meta name="flash-warning" content="{{ $message }}">
+    @endif
+    @if ($message = Session::get('fail'))
+        <meta name="flash-fail" content="{{ $message }}">
+    @endif
+    @if(View::shared('errors', false) != false && $errors->any())
+        <meta name="flash-errors" content="<ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>">
+    @endif
 
 <script>
-    window.onload = function () {
-        if (window.history && window.history.pushState) {
-            window.history.pushState('preventBack', null, '');
-            window.onpopstate = function () {
-                location.reload();
-            };
-        }
-    };
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('form').forEach(form => {
+        form.setAttribute('autocomplete', 'off');
+    });
+});
+
+    // window.onload = function () {
+    //     if (window.history && window.history.pushState) {
+    //         window.history.pushState('preventBack', null, '');
+    //         window.onpopstate = function () {
+    //             location.reload();
+    //         };
+    //     }
+    // };
 </script>
 
-<style>
-    .disabled-link {
-    pointer-events: none; /* Prevent click events */
-    cursor: default; /* Change cursor to default */
-    color: #6c757d; /* Muted color */
-    }
-</style>
+    @include('layouts.styles.buttonsicons')
+    @include('layouts.styles.datatable')
+    @include('layouts.styles.fonts')
+    @include('layouts.styles.forms')
+    @include('layouts.styles.sweetalert')
 
 </head>
-
+  <!--end::Head-->
+  <!--begin::Body-->
 <body style="background-color: #f0f0f0 !important;" class="hold-transition layout-top-nav">
-    <div class="wrapper">
+    <!--begin::App Wrapper-->
+    <div class="app-wrapper">
+        <!--begin::App Main-->
+      <main class="app-main">
+        <!--begin::App Content-->
+        <div class="app-content">
+          <!--begin::Container-->
 
-<!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper">
+           @yield('content')
+     </div>
+        <!--end::App Content-->
+      </main>
+      <!--end::App Main-->
 
-    <!-- Main content -->
-    <div class="content">
-        @if ($message = Session::get('success'))
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                Swal.fire({
-                    position: 'top-end',
-                    icon: 'success',
-                    title: @json($message),
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            });
-        </script>
-    @endif
-
-    @if ($message = Session::get('info'))
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                Swal.fire({
-                    position: 'top-end',
-                    icon: 'info',
-                    title: @json($message),
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            });
-        </script>
-    @endif
-
-    @if ($message = Session::get('warning'))
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                Swal.fire({
-                    position: 'top-end',
-                    icon: 'warning',
-                    title: @json($message),
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            });
-        </script>
-    @endif
-
-    @if ($message = Session::get('fail'))
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                Swal.fire({
-                    position: 'top-end',
-                    icon: 'error',
-                    title: @json($message),
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            });
-        </script>
-    @endif
-
-        @if ($errors->any())
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'error',
-                        title: 'There were some errors!',
-                        html: '<ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>',
-                        showConfirmButton: true,
-                    });
-                });
-            </script>
-        @endif
-
-        @yield('content')
-    </div>
-
-  <!-- Main Footer -->
-
-    <!-- Default to the left -->
-
-  <!-- </footer> -->
-</div>
-<!-- ./wrapper -->
-
-<!-- jQuery -->
-<script src="{{ config('settings.base_url') }}theme/plugins/jquery/jquery.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="{{ config('settings.base_url') }}theme/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- FontAwesome -->
-<script defer src="{{ config('settings.base_url') }}theme/plugins/fontawesome-free-6.7.2/js/all.js"></script>
-<!-- AdminLTE App -->
-<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
-<!-- Bootstrap Switch -->
-<script src="{{ config('settings.base_url') }}theme/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
-<!-- BS-Stepper -->
-<script src="{{ config('settings.base_url') }}theme/plugins/bs-stepper/js/bs-stepper.min.js"></script>
-<!-- SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<!-- InputMask -->
-<script src="{{ config('settings.base_url') }}theme/plugins/moment/moment.min.js"></script>
-<script src="{{ config('settings.base_url') }}theme/plugins/inputmask/jquery.inputmask.min.js"></script>
-<!-- date-range-picker -->
-<script src="{{ config('settings.base_url') }}theme/plugins/daterangepicker/daterangepicker.js"></script>
+  <!--begin::Footer-->
+      <!--end::Footer-->
+ </div>
+    <!--end::App Wrapper-->
 
 <!-- Sript Functions -->
 @include('layouts.scripts.alert')
-@include('layouts.scripts.bootstrapswitch')
 @include('layouts.scripts.datetime')
 @include('layouts.scripts.masks')
 @include('layouts.scripts.pdfviewer')

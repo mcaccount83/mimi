@@ -27,20 +27,16 @@
             <input type="hidden" name="OldAdmin" value="{{$cdUserAdmin}}">
             <input type="hidden" name="CoordinatorPromoteDateNew" id="CoordinatorPromoteDateNew" value="{{$cdDetails->last_promoted}}"/>
 
-            <!-- Profile Image -->
             <div class="card card-primary card-outline">
-              <div class="card-body box-profile">
-                <h3 class="profile-username text-center">{{ $cdDetails->first_name }}, {{ $cdDetails->last_name }}</h3>
-                <p class="text-center">{{ $conferenceDescription }} Conference
-                    @if ($regionLongName != "None")
-                    , {{ $regionLongName }} Region
-                    @else
-                    @endif
-                </p>
-                <ul class="list-group list-group-unbordered mb-3">
-                    <li class="list-group-item">
-
-                        <div class="row align-items-center">
+               <div class="card-body">
+                    <div class="card-header text-center bg-transparent">
+                        <h3 class="mb-0">{{ $cdDetails->first_name }}, {{ $cdDetails->last_name }}</h3>
+                        <p class="mb-0">{{ $conferenceDescription }} Conference
+                        </p>
+                    </div>
+                  <ul class="list-group list-group-flush mb-3">
+                      <li class="list-group-item">
+                       <div class="row align-items-center">
                             <div class="col-sm-6 mt-1">
                                 <label class="col-form-label">Region:</label>
                             </div>
@@ -91,7 +87,7 @@
                         <div class="row align-items-center">
                             <div class="col-sm-6 mt-1">
                                 <label class="col-form-label">MIMI Position:<a href="javascript:void(0);" onclick="showPositionInformation()" title="Show Position Information">
-                                    <i class="fas fa-circle-question text-primary"></i></a></label>
+                                    <i class="bi bi-question-circle text-primary"></i></a></label>
                             </div>
                             <div class="col-sm-6">
                                 <select name="cord_pos" id="cord_pos" class="form-control" style="width: 100%;" onChange="CheckPromotion(this)" required>
@@ -150,31 +146,12 @@
                                 </div>
                             </div>
                         @endif
+                      </li>
 
-                    </li>
-
-                </ul>
-               <div class="text-center">
-                     @if ($cdDetails->active_status == 1 && $cdDetails->on_leave == 1)
-                        <b><span style="color: #ff851b;">Coordinator is ON LEAVE</span></b>
-                        <br>
-                        Leave Date: <span class="date-mask">{{ $cdDetails->leave_date }}</span><br>
-                    @else
-                        @if ($cdDetails->active_status == 1 && $cdDetails->on_leave != 1)
-                            <b><span style="color: #28a745;">Coordinator is ACTIVE</span></b>
-                        @elseif ($cdDetails->active_status == 2)
-                        <b><span style="color: #ff851b;">Coordinator is PENDING</span></b>
-                        @elseif ($cdDetails->active_status == 3)
-                        <b><span style="color: #dc3545;">Coordinator was NOT APPROVED</span></b><br>
-                            Rejected Date: <span class="date-mask">{{ $cdDetails->zapped_date }}</span><br>
-                            {{ $cdDetails->reason_retired }}
-                        @elseif ($cdDetails->active_status == 0)
-                            <b><span style="color: #dc3545;">Coordinator is RETIRED</span></b><br>
-                            Retired Date: <span class="date-mask">{{ $cdDetails->zapped_date }}</span><br>
-                            {{ $cdDetails->reason_retired }}
-                        @endif
-                    @endif
-                </div>
+                <li class="list-group-item mt-3">
+                     @include('partials.coordinatorstatus')
+                </li>
+                  </ul>
               </div>
               <!-- /.card-body -->
             </div>
@@ -184,13 +161,16 @@
 
           <div class="col-md-8">
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                <h3 class="profile-username">Chapters & Coordinators</h3>
+                <div class="card-body">
+                <div class="card-header bg-transparent border-0">
+                <h3">Chapters & Coordinators</h3>
+                     </div>
                     <!-- /.card-header -->
+                    <div class="card-body">
                         <div class="row">
                                 <div class="col-sm-6">
-                            <div class="form-group">
-                                <label class="mrg-b-25">Coordinators Directly Reporting to {{ $cdDetails->first_name }}:</label>
+                            <div class="mb-3">
+                                <label class="meg-b-25">Coordinators Directly Reporting to {{ $cdDetails->first_name }}:</label>
                                 <table id="coordinator-list" class="nowraptable" width="100%">
                                     <thead>
                                         <tr>
@@ -224,8 +204,8 @@
                                 </table>
                             <input type="hidden" name="CoordinatorCount" id="CoordinatorCount" value="{{ $drRowCount }}" />
                         </div>
-                        <div class="form-group">
-                            <label class="mrg-b-25">Select Direct Report To</label>
+                        <div class="mb-3">
+                            <label class="meg-b-25">Select Direct Report To</label>
                             <select name="SelectCoordinator" id="SelectCoordinator" class="form-control" onChange="ActivateCoordinatorButton(this)">
                                 <option value=""></option>
                                 @foreach($drDetails as $coordinator)
@@ -235,14 +215,14 @@
                                 @endforeach
                             </select>
                         </div>
-                        <button type="button" class="btn bg-gradient-primary btn-sm" id="AssignCoordinator" disabled onclick="AddCoordinator()">Assign Coordinator</button>
+                        <button type="button" class="btn btn-primary bg-gradient btn-sm" id="AssignCoordinator" disabled onclick="AddCoordinator()">Assign Coordinator</button>
                 </div>
 
 
 
                 <div class="col-sm-6">
-                    <div class="form-group mrg-b-30">
-                        <label class="mrg-b-25">{{ $cdDetails->first_name }} is Primary For:</label>
+                    <div class="mb-3 meg-b-30">
+                        <label class="meg-b-25">{{ $cdDetails->first_name }} is Primary For:</label>
                         <table id="chapter-list" class="nowraptable" width="100%">
                             <thead>
                                 <tr>
@@ -276,8 +256,8 @@
                         </table>
                         <input type="hidden" name="ChapterCount" id="ChapterCount" value="{{ $pcRowCount }}" />
                     </div>
-                    <div class="form-group">
-                        <label class="mrg-b-25">Select Chapter</label>
+                    <div class="mb-3">
+                        <label class="meg-b-25">Select Chapter</label>
                         <select name="SelectChapter" id="SelectChapter" class="form-control" onChange="ActivateChapterButton(this)">
                             <option value=""></option>
                             @foreach($chDetails as $chapter)
@@ -287,20 +267,22 @@
                             @endforeach
                         </select>
                     </div>
-                    <button type="button" class="btn bg-gradient-primary btn-sm" id="AssignChapter" disabled onclick="AddChapter()">Assign Chapter</button>
+                    <button type="button" class="btn btn-primary bg-gradient btn-sm" id="AssignChapter" disabled onclick="AddChapter()">Assign Chapter</button>
                 </div>
                         </div>
+
+                     </div>
                     </div>
               <!-- /.card-body -->
-           </div>
+                        </div>
             <!-- /.card -->
-          </div>
+                      </div>
           <!-- /.col -->
           <div class="col-md-12">
-            <div class="card-body text-center">
-                <button type="submit" class="btn bg-gradient-primary mb-3"><i class="fas fa-save mr-2" ></i>Save Changes</button>
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.view', ['id' => $cdDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Coordinator Details</button>
-            </div>
+            <div class="card-body text-center mt-3">
+                <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save Changes</button>
+                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.view', ['id' => $cdDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-people-fill me-2"></i>Back to Coordinator Details</button>
+ </div>
         </div>
         </div>
         <!-- /.row -->

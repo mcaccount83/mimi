@@ -22,24 +22,28 @@
 
         <!-- Profile Image -->
             <div class="card card-primary card-outline">
-              <div class="card-body box-profile">
-                <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
-                <p class="text-center">{{ $conferenceDescription }} Conference, {{ $regionLongName }} Region
+              <div class="card-body">
+                    <div class="card-header text-center bg-transparent">
+                    <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
+                    <p class="mb-0">{{ $conferenceDescription }} Conference, {{ $conferenceDescription }} Region
+                  </p>
+                </div>
 
-                <ul class="list-group list-group-unbordered mb-3">
+                <ul class="list-group list-group-flush mb-3">
                     <li class="list-group-item">
-                        <div class="d-flex align-items-center justify-content-between w-100">
-                            <label class="col-form-label mb-0 mr-2">Position:</label>
-                            <div >
+                         <div class="row">
+                            <div class="col-auto fw-bold">Position:</div>
+                            <div class="col text-end">
                                         {{$bdPosition}}
-                                <label ></label>
-                            </div>
-                          </div>
+                                 </div>
+                        </div>
 
-                          <div class="form-group row mt-1">
-                            <label class="col-form-label col-sm-6">Active Status:</label>
+                          <div class="row align-items-center">
+                            <div class="col-sm-6 mt-1">
+                                <label class="col-form-label">Active Status:</label>
+                             </div>
                             <div class="col-sm-6">
-                                <select id="status" name="status" class="form-control float-right text-right"required>
+                                <select id="status" name="status" class="form-control float-end text-end"required>
                                     @foreach($AllUserStatus as $status)
                                         <option value="{{$status->id}}"
                                             @if($userDetails->is_active == $status->id) selected @endif>
@@ -49,10 +53,12 @@
                                 </select>
                             </div>
                         </div>
-                           <div class="form-group row mt-1">
-                            <label class="col-form-label col-sm-6">User Type:</label>
+                           <div class="row align-items-center">
+                            <div class="col-sm-6 mt-1">
+                                <label class="col-form-label">User Type:</label>
+                            </div>
                             <div class="col-sm-6">
-                                <select id="type" name="type" class="form-control float-right text-right"required>
+                                <select id="type" name="type" class="form-control float-end text-end"required>
                                     @foreach($AllUserType as $type)
                                         <option value="{{$type->id}}"
                                             @if($userDetails->type_id == $type->id) selected @endif>
@@ -62,10 +68,12 @@
                                 </select>
                             </div>
                         </div>
-                           <div class="form-group row mt-1">
-                            <label class="col-form-label col-sm-6">Admin Role:</label>
+                           <div class="row align-items-center">
+                            <div class="col-sm-6 mt-1">
+                                <label class="col-form-label">Admin Role:</label>
+                            </div>
                             <div class="col-sm-6">
-                                <select id="role" name="role" class="form-control float-right text-right"required>
+                                <select id="role" name="role" class="form-control float-end text-end"required>
                                     @foreach($AllAdminRole as $role)
                                         <option value="{{$role->id}}"
                                             @if($userDetails->is_admin == $role->id) selected @endif>
@@ -77,25 +85,13 @@
                         </div>
 
                     </li>
-                    <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
-                    <li class="list-group-item" id="display_corlist" class="list-group-item"></li>
-               </ul>
-
-               <div class="text-center">
-                      @if ($chDetails->active_status == 1 )
-                          <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
-                      @elseif ($chDetails->active_status == 2)
-                        <b><span style="color: #ff851b;">Chapter is PENDING</span></b>
-                      @elseif ($chDetails->active_status == 3)
-                        <b><span style="color: #dc3545;">Chapter was NOT APPROVED</span></b><br>
-                          Declined Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                          {{ $chDetails->disband_reason }}
-                      @elseif ($chDetails->active_status == 0)
-                          <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
-                          Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                          {{ $chDetails->disband_reason }}
-                      @endif
-                  </div>
+                    <li class="list-group-item">
+                            @include('partials.coordinatorlist')
+                        </li>
+                        <li class="list-group-item mt-3">
+                            @include('partials.chapterstatus')
+                        </li>
+                  </ul>
               </div>
               <!-- /.card-body -->
             </div>
@@ -105,13 +101,16 @@
 
           <div class="col-md-8">
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                <h3 class="profile-username">User Information</h3>
-                    <!-- /.card-header -->
+                <div class="card-body">
+                        <div class="card-header bg-transparent border-0">
+                <h3>User Information</h3>
+                     </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
                     <div class="row">
                         <div class="col-md-12">
                          <!-- /.form group -->
-                        <div class="form-group row">
+                        <div class="row mb-3">
 
                             <label class="col-sm-2 mb-3 col-form-label">Name:</label>
                             <div class="col-sm-5 mb-3">
@@ -161,6 +160,8 @@
                         </div>
                         </div>
                     </div>
+
+                </div>
                 </div>
               <!-- /.card-body -->
                         </div>
@@ -168,17 +169,13 @@
                       </div>
           <!-- /.col -->
           <div class="col-md-12">
-            <div class="card-body text-center">
-                <button type="submit" class="btn bg-gradient-primary mb-3" onclick="return validateEmailsBeforeSubmit();"><i class="fas fa-save mr-2"></i>Save User Information</button>
-                {{-- @if($chDetails->active_status == 1)
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('userreports.nopresident') }}'"><i class="fas fa-reply mr-2"></i>Back to No President List</button>
-                @else
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('userreports.nopresidentinactive') }}'"><i class="fas fa-reply mr-2"></i>Back to No President List</button>
-                @endif --}}
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ request('return') }}'">
-    <i class="fas fa-reply mr-2"></i>Back to List
-</button>
-            </div>
+            <div class="card-body text-center mt-3">
+                <button type="submit" class="btn btn-primary bg-gradient mb-2" onclick="return validateEmailsBeforeSubmit();"><i class="bi bi-floppy-fill me-2"></i>Save User Information</button>
+                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ request('return') }}'">
+                        <i class="bi bi-arrow-left-short"></i><i class="bi bi-person-fill-gear me-2"></i>Back to User List
+                </button>
+              </div>
+        </div>
         </div>
         <!-- /.row -->
       </div><!-- /.container-fluid -->

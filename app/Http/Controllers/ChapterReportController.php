@@ -40,7 +40,7 @@ class ChapterReportController extends Controller implements HasMiddleware
     }
 
     /**
-     * Chpater Status Report
+     * Chapter Status Report
      */
     public function showRptChapterStatus(Request $request): View
     {
@@ -106,6 +106,7 @@ class ChapterReportController extends Controller implements HasMiddleware
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $startMonthName = $baseQuery['startMonthName'];
+        $chapterStatus = $baseQuery['chapterStatus'];
         $chActiveId = $baseQuery['chActiveId'];
         $chPcId = $baseQuery['chPcId'];
         $chDocuments = $baseQuery['chDocuments'];
@@ -113,7 +114,7 @@ class ChapterReportController extends Controller implements HasMiddleware
 
         $data = ['id' => $id, 'chActiveId' => $chActiveId, 'conferenceDescription' => $conferenceDescription, 'chEOYDocuments' => $chEOYDocuments,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'startMonthName' => $startMonthName,
-            'chPcId' => $chPcId, 'chDocuments' => $chDocuments, 'confId' => $confId, 'chConfId' => $chConfId,
+            'chPcId' => $chPcId, 'chDocuments' => $chDocuments, 'confId' => $confId, 'chConfId' => $chConfId, 'chapterStatus' => $chapterStatus
         ];
 
         return view('chapreports.editirs')->with($data);

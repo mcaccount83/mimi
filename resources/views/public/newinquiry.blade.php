@@ -9,9 +9,9 @@
                         <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
 
                         <div class="col-md-12">
-                            <div class="card card-widget widget-user">
-                                <div class="widget-user-header bg-primary">
-                                    <div class="widget-user-image">
+                            <div class="card">
+                                <div class="card bg-primary">
+                                    <div class="card-body text-center">
                                         <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" style="width: 115px; height: 115px;">
                                     </div>
                                 </div>
@@ -41,7 +41,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <!-- /.form group -->
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <label class="col-sm-2 mb-1 col-form-label">Name:</label>
                                 <div class="col-sm-5 mb-1">
                                 <input type="text" name="inquiryFirstName" id="inquiryFirstName" class="form-control"  required placeholder="First Name" >
@@ -51,7 +51,7 @@
                                 </div>
                             </div>
 
-                                <div class="form-group row mt-1">
+                                <div class="row mb-3">
                                     <label class="col-sm-4 col-form-label">Where are you looking for a chapter:</label>
                                     <div class="col-sm-8">
                                         <select id="ch_state" name="ch_state" class="form-control" required>
@@ -65,7 +65,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row mt-1" id="country-container" style="display: none;">
+                                <div class="row mb-3" id="country-container" style="display: none;">
                                     <label class="col-sm-4 col-form-label">Which Country:</label>
                                     <div class="col-sm-8">
                                         <select id="ch_country" name="ch_country" class="form-control" required>
@@ -79,7 +79,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
+                                <div class="row mb-3">
 
                                 <label class="col-sm-2 mb-1 col-form-label">Contact:</label>
                                 <div class="col-sm-5 mb-1">
@@ -121,32 +121,32 @@
                             </div>
                         </div>
 
-                                        <div class="form-group row">
+                                        <div class="row mb-3">
 
                          <label class="col-sm-2 mb-1 col-form-label">County:</label>
                         <div class="col-sm-10 mb-1">
                         <input type="text" name="inquiryCounty" id="inquiryCounty" class="form-control" required placeholder="County" >
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="row mb-3">
                         <label class="col-sm-2 mb-1 col-form-label">Township:</label>
                         <div class="col-sm-10 mb-1">
                         <input type="text" name="inquiryTownship" id="inquiryTownship" class="form-control"  placeholder="Township" >
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="row mb-3">
                         <label class="col-sm-2 mb-1 col-form-label">Area/Neighborhood:</label>
                         <div class="col-sm-10 mb-1">
                         <input type="text" name="inquiryArea" id="inquiryArea" class="form-control"  placeholder="Area/Neighborhood" >
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="row mb-3">
                         <label class="col-sm-2 mb-1 col-form-label">School District:</label>
                         <div class="col-sm-10 mb-1">
                         <input type="text" name="inquirySchool" id="inquirySchool" class="form-control"  placeholder="School District" >
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="row mb-3">
                         <label class="col-sm-2 mb-1 col-form-label">Additional Comments</label>
                         <div class="col-sm-10 mb-1">
                             <textarea name="inquiryComments" id="inquiryComments" class="form-control" rows="4" maxlength="520"></textarea>
@@ -161,13 +161,13 @@
 
                     <hr>
 
-                    <div class="card-body text-center">
+                    <div class="card-body text-center mt-3">
                              <div class="col-md-12" >
                                    The information provided below is only used to try to find you the closest MOMS Club chapter in your area, never for advertising or promotional purposes.
                                 </div>
                             <div class="col-md-12" style="color: red;">Page will automatically re-direct after inquiry submission.</div>
 
-                                <button type="submit" class="btn btn-primary"><i class="fas fa-share" ></i>&nbsp;{{ __('Submit Inquiry') }}</button>
+                                <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>{{ __('Submit Inquiry') }}</button>
                         </div>
   </form>
     <!-- /.card-body -->

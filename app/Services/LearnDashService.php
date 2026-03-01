@@ -19,7 +19,7 @@ class LearnDashService
         $this->password = config('services.learndash.password');
     }
 
-    public function getAutoLoginUrl($course, $laravelUser)
+    public function getAutoLoginUrl($course, $laravelUser, $routeName = 'course.redirect')
     {
         $payload = [
             'user_id' => $laravelUser->id,
@@ -32,9 +32,10 @@ class LearnDashService
 
         $token = base64_encode(json_encode($payload));
 
-        return route('course.redirect', [
-            'course_id' => $course['id'],
-        ]).'?token='.urlencode($token).'&course_url='.urlencode($course['link']);
+    return route($routeName, [
+        'course_id' => $course['id'],
+    ]).'?token='.urlencode($token).'&course_url='.urlencode($course['link']);
+
     }
 
     // Get courses for a specific user type - user_type=group -- board=board, coordinator=coordinator

@@ -245,9 +245,9 @@ function promptForNewEIN(chapterId) {
             </div>
             <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
             <br>
-            <div class="custom-control custom-switch">
-                <input type="checkbox" id="chapter_ein" class="custom-control-input">
-                <label class="custom-control-label" for="chapter_ein">Send EIN Notification to Chapter</label>
+            <div class="form-check form-switch">
+                <input type="checkbox" id="chapter_ein" class="form-check-input">
+                <label class="form-check-label" for="chapter_ein">Send EIN Notification to Chapter</label>
             </div>
             <br>
         `,
@@ -402,9 +402,9 @@ function updateName(chapterId) {
             </div>
             <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
             <br>
-            <div class="custom-control custom-switch">
-                <input type="checkbox" id="irs_notify" class="custom-control-input">
-                <label class="custom-control-label" for="irs_notify">Notify IRS of Name Change</label>
+            <div class="form-check form-switch">
+                <input type="checkbox" id="irs_notify" class="form-check-input">
+                <label class="form-check-label" for="irs_notify">Notify IRS of Name Change</label>
             </div>
             <br>
         `,

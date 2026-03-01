@@ -6,9 +6,9 @@
                 <div class="col-md-12">
 
                         <div class="col-md-12">
-                            <div class="card card-widget widget-user">
-                                <div class="widget-user-header bg-primary">
-                                    <div class="widget-user-image">
+                            <div class="card">
+                                <div class="card bg-primary">
+                                    <div class="card-body text-center">
                                         <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" style="width: 115px; height: 115px;">
                                     </div>
                                 </div>
@@ -50,7 +50,7 @@
                                 <td width="15%">Date</td>
                                 <td width="10%">State</td>
                                 <td width="55%">Description</td>
-                                <td width="20%"><span class="ml-5">Amount</span></td>
+                                <td width="20%"><span class="ms-5">Amount</span></td>
                             </tr>
                         </thead>
                         <tbody>
@@ -60,12 +60,12 @@
                                     <td>{{ \Carbon\Carbon::parse($list->submitted_at)->format('M Y') }}</td>
                                     <td>{{$list->chapterstate->state_short_name}}</td>
                                     <td>{{ $list->review_description}}</td>
-                                    <td><span class="ml-5">${{ number_format($list->amount_awarded, 2) }}</span></td>
+                                    <td><span class="ms-5">${{ number_format($list->amount_awarded, 2) }}</span></td>
                                 </tr>
                             @endforeach
                             <tr style="border-top: 2px solid #333; font-weight: bold;">
                                 <td colspan="3" style="text-align: right; padding-top: 10px;">Total for Fiscal Year {{ $fiscalYear }}:</td>
-                                <td style="padding-top: 10px;"><span class="ml-5">${{ number_format($grants->sum('amount_awarded'), 2) }}</span></td>
+                                <td style="padding-top: 10px;"><span class="ms-5">${{ number_format($grants->sum('amount_awarded'), 2) }}</span></td>
                             </tr>
                         </tbody>
                     </table>

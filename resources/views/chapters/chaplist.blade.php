@@ -12,7 +12,7 @@
                 <div class="card card-outline card-primary">
                     <div class="card-header">
                     <div class="dropdown">
-                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Active Chapter List
                         </h3>
                         @include('layouts.dropdown_menus.menu_chapters')
@@ -23,7 +23,7 @@
                 <table id="chapterlist" class="table table-sm table-hover" >
                 <thead>
                   <tr>
-                    <th>Details</th>
+                    <th>Chapter<br>Details</th>
                     <th>Email</th>
                     <th>Conf/Reg</th>
                     <th>State</th>
@@ -41,9 +41,9 @@
                 <tbody>
                     @foreach($chapterList as $list)
                         <tr id="chapter-{{ $list->id }}">
-                            <td class="text-center align-middle"><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                            <td class="text-center align-middle"><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="bi bi-house-fill"></i></a></td>
                             <td class="text-center align-middle">
-                                <a onclick="showChapterEmailModal('{{ $list->name }}', {{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="far fa-envelope text-primary"></i></a>
+                                <a onclick="showChapterEmailModal('{{ $list->name }}', {{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="bi bi-envelope text-primary"></i></a>
                            </td>
                             <td>
                                 @if ($list->state->conference_id > 0)
@@ -68,7 +68,7 @@
                             <td><span class="phone-mask">{{ $list->president->phone }}</span></td>
                             <td>{{ $list->primaryCoordinator?->first_name }} {{ $list->primaryCoordinator?->last_name }}</td>
                            @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
-                        <td class="text-center align-middle"><i class="fa fa-ban"
+                        <td class="text-center align-middle"><i class="bi bi-ban"
                             onclick="showDeleteChapterModal({{ $list->id }}, '{{ $list->name }}', '{{ $list->activeStatus->active_status }}')"
                             style="cursor: pointer; color: #dc3545;"></i>
                         </td>
@@ -76,67 +76,63 @@
                         </tr>
                     @endforeach
                 </tbody>
-            </table>
+                 </table>
             </div>
             <!-- /.card-body -->
-                {{-- <div class="col-sm-12">
-                    <div class="custom-control custom-switch">
-                        <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{ $checkBoxStatus ? 'checked' : '' }} onchange="showChPrimary()" />
-                        <label class="custom-control-label" for="showPrimary">Only show chapters I am primary for</label>
-                    </div>
-                </div> --}}
 
-                 <div class="col-sm-12">
-                    <div class="custom-control custom-switch">
-                        <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{ $checkBox1Status ? 'checked' : '' }} onchange="showPrimary()" />
-                        <label class="custom-control-label" for="showPrimary">Only show chapters I am primary for</label>
+            <div class="card-body">
+                <div class="col-sm-12">
+                    <div class="form-check form-switch">
+                        <input type="checkbox" name="showPrimary" id="showPrimary" class="form-check-input" {{ $checkBox1Status ? 'checked' : '' }} onchange="showPrimary()" />
+                        <label class="form-check-label" for="showPrimary">Only show chapters I am primary for</label>
                     </div>
                 </div>
                 @if ($coordinatorCondition && $assistRegionalCoordinatorCondition)
                     <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showConfReg" id="showConfReg" class="custom-control-input" {{ $checkBox3Status ? 'checked' : '' }} onchange="showConfReg()" />
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showConfReg" id="showConfReg" class="form-check-input" {{ $checkBox3Status ? 'checked' : '' }} onchange="showConfReg()" />
                             @if ($assistConferenceCoordinatorCondition)
-                                    <label class="custom-control-label" for="showConfReg">Show All Chapters in Conference (Export Available)</label>
+                                    <label class="form-check-label" for="showConfReg">Show All Chapters in Conference (Export Available)</label>
                                 @else
-                            <label class="custom-control-label" for="showConfReg">Show All Chapters in Region (Export Available)</label>
+                            <label class="form-check-label" for="showConfReg">Show All Chapters in Region (Export Available)</label>
                             @endif
                         </div>
                     </div>
                 @endif
                 @if ($ITCondition || $einCondition)
                     <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="custom-control-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
-                            <label class="custom-control-label" for="showIntl">Show All International Chapters (Export Available)</label>
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <label class="form-check-label" for="showIntl">Show All International Chapters (Export Available)</label>
                         </div>
                     </div>
                 @endif
-                <div class="card-body text-center">
-                    @if ($coordinatorCondition && $regionalCoordinatorCondition)
-                        @if ($checkBox51Status)
-                            <a class="btn bg-gradient-primary mb-3" href="{{ route('chapters.chaplistpending', ['check5' => 'yes']) }}"><i class="fas fa-share mr-2" ></i>New International Chapters Pending</a>
+            </div>
+            <!-- /.card-body for checkboxes -->
+
+            <div class="card-body text-center mt-3">
+                @if ($coordinatorCondition && $regionalCoordinatorCondition)
+                     @if ($checkBox51Status)
+                            <a class="btn btn-primary bg-gradient mb-2" href="{{ route('chapters.chaplistpending', ['check5' => 'yes']) }}"><i class="bi bi-house-add-fill me-2"></i>New International Chapters Pending</a>
                         @else
-                            <a class="btn bg-gradient-primary mb-3" href="{{ route('chapters.chaplistpending') }}"><i class="fas fa-share mr-2" ></i>New Chapters Pending</a>
+                            <a class="btn btn-primary bg-gradient mb-2" href="{{ route('chapters.chaplistpending') }}"><i class="bi bi-house-add-fill me-2"></i>New Chapters Pending</a>
                         @endif
                         @if ($checkBox3Status)
-                            <button class="btn bg-gradient-primary mb-3" onclick="startExport('chapter', 'Chapter List')"><i class="fas fa-download mr-2" ></i>Export Chapter List</button>
+                            <button class="btn btn-primary bg-gradient mb-2" onclick="startExport('chapter', 'Chapter List')"><i class="bi bi-download me-2"></i>Export Chapter List</button>
                         @elseif ($checkBox51Status)
-                            <button class="btn bg-gradient-primary mb-3" onclick="startExport('intchapter', 'International Chapter List')"><i class="fas fa-download"></i>&nbsp; Export International Chapter List</button>
-                        {{-- @else
-                            <button class="btn bg-gradient-primary mb-3" onclick="startExport('chapter', 'Chapter List')" disabled><i class="fas fa-download mr-2" ></i>Export Chapter List</button> --}}
+                            <button class="btn btn-primary bg-gradient mb-2" onclick="startExport('intchapter', 'International Chapter List')"><i class="bi bi-download me-2"></i>Export International Chapter List</button>
                         @endif
-                    @endif
-                    </div>
-                </div>
-          </div>
-          <!-- /.card -->
+                @endif
+            </div>
+            <!-- /.card-body for buttons -->
+
         </div>
-        <!-- /.col -->
+        <!-- /.card -->
       </div>
-      <!-- /.row -->
+      <!-- /.col -->
     </div>
-    <!-- /.container-fluid -->
-  </section>
-  <!-- /.content -->
-  @endsection
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
+@endsection

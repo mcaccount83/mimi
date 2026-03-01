@@ -9,4 +9,3 @@
         <a class="dropdown-item" href="{{ route('chapters.chapinquirieszapped', ['check5' => 'yes']) }}">Inquiries Zapped Chapter List</a>
     @endif
 </div>
-

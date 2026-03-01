@@ -118,15 +118,72 @@ class BoardPaymentController extends Controller implements HasMiddleware
         return view('boards.donation')->with($data);
     }
 
+     public function editReregistrationPaymentFormNEW(Request $request, $chId): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userTypeId = $user['userTypeId'];
+        $userAdmin = $user['userAdmin'];
+
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+        $chDetails = $baseQuery['chDetails'];
+        $chActiveId = $baseQuery['chActiveId'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $startMonthName = $baseQuery['startMonthName'];
+
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentMonth = $dateOptions['currentMonth'];
+        $start_month = $chDetails->start_month_id;
+        $next_renewal_year = $chDetails->next_renewal_year;
+        $due_date = Carbon::create($next_renewal_year, $start_month, 1);
+        $rangeEndDate = $due_date->copy()->subMonth()->endOfMonth();
+        $rangeStartDate = $rangeEndDate->copy()->startOfMonth()->subYear()->addMonth();
+
+        $rangeStartDateFormatted = $rangeStartDate->format('m-d-Y');
+        $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
+
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userAdmin' => $userAdmin,
+            'startMonthName' => $startMonthName, 'endRange' => $rangeEndDateFormatted, 'startRange' => $rangeStartDateFormatted,
+            'thisMonth' => $currentMonth, 'due_date' => $due_date, 'userTypeId' => $userTypeId, 'chActiveId' => $chActiveId,
+        ];
+
+        return view('boards-new.payment')->with($data);
+    }
+
+    /**
+     * Show M2M Donation Form All Board Members
+     */
+    public function editDonationFormNEW(Request $request, $chId): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userTypeId = $user['userTypeId'];
+        $userAdmin = $user['userAdmin'];
+
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+        $chDetails = $baseQuery['chDetails'];
+        $chActiveId = $baseQuery['chActiveId'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $allStates = $baseQuery['allStates'];
+        $allCountries = $baseQuery['allCountries'];
+        $PresDetails = $baseQuery['PresDetails'];
+
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin, 'chActiveId' => $chActiveId,
+            'PresDetails' => $PresDetails, 'allStates' => $allStates, 'allCountries' => $allCountries,
+        ];
+
+        return view('boards-new.donation')->with($data);
+    }
+
     /**
      * Re-Registration & Sustaining Donation Payment
      */
     public function reRegistrationPayment(Request $request): RedirectResponse
     {
         // Verify reCAPTCHA Enterprise
-        if (!$this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip())) {
-            return back()->withErrors(['recaptcha' => 'Please complete the reCAPTCHA verification.'])->withInput();
-        }
+        $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
+
+if (!$recaptchaResult['success']) {
+    return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+}
 
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -273,9 +330,11 @@ class BoardPaymentController extends Controller implements HasMiddleware
     public function m2mPayment(Request $request): RedirectResponse
     {
         // Verify reCAPTCHA Enterprise
-        if (!$this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip())) {
-            return back()->withErrors(['recaptcha' => 'Please complete the reCAPTCHA verification.'])->withInput();
-        }
+        $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
+
+if (!$recaptchaResult['success']) {
+    return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+}
 
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -453,10 +512,11 @@ class BoardPaymentController extends Controller implements HasMiddleware
     public function manualPayment(Request $request): RedirectResponse
     {
         // Verify reCAPTCHA Enterprise
-        if (!$this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip())) {
-            return back()->withErrors(['recaptcha' => 'Please complete the reCAPTCHA verification.'])->withInput();
-        }
+        $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
+if (!$recaptchaResult['success']) {
+    return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+}
         $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
         $chDetails = $baseQuery['chDetails'];
         $chId = $chDetails->id;
@@ -494,7 +554,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
             $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
-            return redirect()->to('/board/manual')->with('fail', $paymentResponse['error']);
+            return redirect()->to('/board/resources/manual')->with('fail', $paymentResponse['error']);
         }
 
         $paymentType = $paymentResponse['paymentType'];

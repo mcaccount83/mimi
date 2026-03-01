@@ -29,13 +29,13 @@
 
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
-        <button type="button" class="close" data-dismiss="alert">×</button>
+        <button type="button" class="close" data-bs-dismiss="alert">×</button>
         <p>{{ $message }}</p>
         </div>
     @endif
     @if ($message = Session::get('fail'))
         <div class="alert alert-danger">
-        <button type="button" class="close" data-dismiss="alert">×</button>
+        <button type="button" class="close" data-bs-dismiss="alert">×</button>
         <p>{{ $message }}</p>
         </div>
     @endif
@@ -47,7 +47,7 @@
             <div class="card card-outline card-primary">
                 <div class="card-header">
                   <div class="dropdown">
-                      <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Coordinator Toolkit
                       </h3>
                       @include('layouts.dropdown_menus.menu_resources')
@@ -60,7 +60,7 @@
         </div>
         @if($canEditFiles)
             <div class="row">
-                &nbsp;&nbsp;<button type="button" class="btn bg-gradient-success" data-toggle="modal" data-target="#modal-task"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;Add Toolkit Item</button>
+                &nbsp;&nbsp;<button type="button" class="btn btn-success bg-gradient mb-2" data-bs-toggle="modal" data-bs-target="#modal-task"><i class="bi bi-plus me-2"></i>Add Toolkit Item</button>
             </div>
             <div class="row">&nbsp;</div>
         @endif
@@ -97,7 +97,7 @@
                                                 {{ $resourceItem->name }}
                                             @endif
                                             @if($canEditFiles)
-                                            <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                            <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-bs-toggle="modal" data-bs-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
                                             @endif
 
                                             {{-- @if ($resourceItem->link)
@@ -110,7 +110,7 @@
                                                 {{ $resourceItem->name }}
                                             @endif
                                             @if($canEditFiles)
-                                                <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                                <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-bs-toggle="modal" data-bs-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
                                             @endif --}}
                                         </div>
                                     @endforeach
@@ -137,7 +137,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span></button>
                             <h3 class="modal-title"><strong>MIMI Position Abbreviations</strong></h3>
                         </div>
@@ -206,7 +206,7 @@
                               </table>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times" ></i>&nbsp; Close</button>
+                            <button type="button" class="btn btn-danger bg-gradient mb-2" data-bs-dismiss="modal"><i class="bi bi-x-lg me-2"></i>Close</button>
                         </div>
                     </div>
                 </div>
@@ -224,7 +224,7 @@
                         <div class="modal-body">
                             <form>
                                 <div class="col-md-12">
-                                    <div class="form-group">
+                                    <div class="mb-3">
                                         <label for="fileCategory{{ $resourceItem->id }}">Category</label>
                                         <select name="fileCategory" class="form-control select2-bs4" style="width: 50%;" id="fileCategory{{ $resourceItem->id }}" disabled>
                                             @foreach($toolkitCategories as $category)
@@ -236,42 +236,42 @@
                                     </div>
                                 </div>
                                 <div class="col-md-12">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <label for="fileDescription">Description</label>
                                     <textarea class="form-control" id="fileDescription{{ $resourceItem->id }}">{{ $resourceItem->description }}</textarea>
                                 </div>
                                 </div>
                                 {{-- <<div class="col-md-12">
-                                    <div class="form-group">
+                                    <div class="mb-3">
                                         <label for="fileType{{ $resourceItem->id }}">File Type</label>
                                         <select class="form-control fileType" id="fileType{{ $resourceItem->id }}" name="fileType">
                                             <option value="1" {{ $resourceItem->file_type == 1 ? 'selected' : '' }}>Document to Download</option>
                                             <option value="2" {{ $resourceItem->file_type == 2 ? 'selected' : '' }}>Link to Webpage</option>
                                         </select>
                                     </div>
-                                    <div class="form-group versionField" style="{{ $resourceItem->file_type == 1 ? 'display:block;' : 'display:none;' }}">
+                                    <div class="mb-3 versionField" style="{{ $resourceItem->file_type == 1 ? 'display:block;' : 'display:none;' }}">
                                         <label for="fileVersion{{ $resourceItem->id }}">Version</label>
                                         <input type="text" class="form-control" id="fileVersion{{ $resourceItem->id }}" name="fileVersion" value="{{ $resourceItem->version }}">
                                     </div>
-                                    <div class="form-group filePathField" style="{{ $resourceItem->file_type == 1 ? 'display:block;' : 'display:none;' }}">
+                                    <div class="mb-3 filePathField" style="{{ $resourceItem->file_type == 1 ? 'display:block;' : 'display:none;' }}">
                                          <label for="fileDescription">File Path: </label>
                                         <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
                                             {{ $resourceItem->file_path }}</a>
                                         {{-- <a href="{{ $resourceItem->file_path }}">{{ $resourceItem->file_path }}</a> --}}
                                     {{--</div>
-                                    <div class="form-group linkField" style="{{ $resourceItem->file_type == 2 ? 'display:block;' : 'display:none;' }}">
+                                    <div class="mb-3 linkField" style="{{ $resourceItem->file_type == 2 ? 'display:block;' : 'display:none;' }}">
                                         <label for="link{{ $resourceItem->id }}">Link</label>
                                         <input type="text" class="form-control" id="link{{ $resourceItem->id }}" name="link" value="{{ $resourceItem->link }}">
                                     </div>
                                 </div>
                             <div class="col-md-12">
-                                <div class="form-group fileUpload" style="{{ $resourceItem->file_type == 1 ? 'display:block;' : 'display:none;' }}">
+                                <div class="mb-3 fileUpload" style="{{ $resourceItem->file_type == 1 ? 'display:block;' : 'display:none;' }}">
                                     <input type="file" id="fileUpload{{ $resourceItem->id }}" class="form-control" name='fileUpload' required>
                                 </div>
                             </div> --}}
 
                              <div class="col-md-12">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <label for="fileType{{ $resourceItem->id }}">File Type</label>
                                     <select class="form-control fileType" id="fileType{{ $resourceItem->id }}" name="fileType">
                                         <option value="1" {{ $resourceItem->file_type == 1 ? 'selected' : '' }}>Document to Download</option>
@@ -281,26 +281,26 @@
                                 </div>
 
                                 <!-- Version field - only for file type 1 -->
-                                <div class="form-group versionField" style="{{ $resourceItem->file_type == 1 ? 'display:block;' : 'display:none;' }}">
+                                <div class="mb-3 versionField" style="{{ $resourceItem->file_type == 1 ? 'display:block;' : 'display:none;' }}">
                                     <label for="fileVersion{{ $resourceItem->id }}">Version</label>
                                     <input type="text" class="form-control" id="fileVersion{{ $resourceItem->id }}" name="fileVersion" value="{{ $resourceItem->version }}">
                                 </div>
 
                                 <!-- File path - only for file type 1 -->
-                                <div class="form-group filePathField" style="{{ $resourceItem->file_type == 1 ? 'display:block;' : 'display:none;' }}">
+                                <div class="mb-3 filePathField" style="{{ $resourceItem->file_type == 1 ? 'display:block;' : 'display:none;' }}">
                                 <label for="fileDescription">File Path: </label>
                                 <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
                                         {{ $resourceItem->file_path }}</a>
                                 </div>
 
                                 <!-- Link field - for file type 2 -->
-                                <div class="form-group linkField" style="{{ $resourceItem->file_type == 2 ? 'display:block;' : 'display:none;' }}">
+                                <div class="mb-3 linkField" style="{{ $resourceItem->file_type == 2 ? 'display:block;' : 'display:none;' }}">
                                     <label for="link{{ $resourceItem->id }}">Link</label>
                                     <input type="text" class="form-control" id="link{{ $resourceItem->id }}" name="link" value="{{ $resourceItem->link }}" placeholder="https://example.com">
                                 </div>
 
                                 <!-- Route field - for file type 3 -->
-                                <div class="form-group routeField" style="{{ $resourceItem->file_type == 3 ? 'display:block;' : 'display:none;' }}">
+                                <div class="mb-3 routeField" style="{{ $resourceItem->file_type == 3 ? 'display:block;' : 'display:none;' }}">
                                     <label for="route{{ $resourceItem->id }}">Route Name</label>
                                     <input type="text" class="form-control" id="route{{ $resourceItem->id }}" name="route" value="{{ $resourceItem->file_type == 3 ? $resourceItem->link : '' }}" placeholder="e.g., board.roster">
                                     <small class="form-text text-muted">Enter the route name. The chapter ID will be automatically passed from the URL.</small>
@@ -309,21 +309,21 @@
 
                             <!-- File upload - only for file type 1 -->
                             <div class="col-md-12">
-                                <div class="form-group fileUpload" style="{{ $resourceItem->file_type == 1 ? 'display:block;' : 'display:none;' }}">
+                                <div class="mb-3 fileUpload" style="{{ $resourceItem->file_type == 1 ? 'display:block;' : 'display:none;' }}">
                                     <input type="file" id="fileUpload{{ $resourceItem->id }}" class="form-control" name='fileUpload'>
                                 </div>
                             </div>
                         </form>
                                 <div class="col-md-12"><br></div>
                                 <div class="col-md-12">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     Updated by <strong>{{ $resourceItem->updatedBy->first_name }} {{ $resourceItem->updatedBy->last_name }}</strong> on <strong>{{ $resourceItem->updated_date }}</strong>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times" ></i>&nbsp; Close</button>
-                            <button type="button" class="btn btn-success" onclick="updateToolkitFile({{ $resourceItem->id }})"><i class="fas fa-save" ></i>&nbsp; Save changes</button>
+                            <button type="button" class="btn btn-danger bg-gradient mb-2" data-bs-dismiss="modal"><i class="bi bi-x-lg me-2"></i>Close</button>
+                            <button type="button" class="btn btn-success bg-gradient mb-2" onclick="updateToolkitFile({{ $resourceItem->id }})"><i class="bi bi-floppy-fill me-2"></i>Save changes</button>
                         </div>
                     </div>
                 </div>
@@ -339,7 +339,7 @@
                             </div>
                             <div class="modal-body">
                                 <form id="addResourceForm">
-                                    <div class="form-group">
+                                    <div class="mb-3">
                                         <label>Category</label>
                                         <select name="fileCategoryNew" class="form-control select2-bs4" style="width: 50%;" id="fileCategoryNew">
                                             @foreach($toolkitCategories as $category)
@@ -347,16 +347,16 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="mb-3">
                                         <label for="fileNameNew">Name</label>
                                         <input type="text" class="form-control" id="fileNameNew" name="fileNameNew">
                                     </div>
 
-                                    <div class="form-group">
+                                    <div class="mb-3">
                                         <label for="fileDetailsNew">Description</label>
                                         <textarea class="form-control" id="fileDescriptionNew" name="fileDescriptionNew"></textarea>
                                     </div>
-                                    {{-- <div class="form-group">
+                                    {{-- <div class="mb-3">
                                         <label for="fileTypeNew">File Type</label>
                                         <select class="form-control" id="fileTypeNew" name="fileTypeNew">
                                             <option value="" selected>Select file type</option>
@@ -365,19 +365,19 @@
                                         </select>
 
                                     </div>
-                                    <div class="form-group versionFieldNew" style="{{ $resourceItem->file_type == 1 ? 'display:block;' : 'display:none;' }}">
+                                    <div class="mb-3 versionFieldNew" style="{{ $resourceItem->file_type == 1 ? 'display:block;' : 'display:none;' }}">
                                         <label for="fileVersionNew">Version</label>
                                         <input type="text" class="form-control" id="fileVersionNew" name="fileVersionNew">
                                     </div>
-                                    <div class="form-group linkFieldNew" style="{{ $resourceItem->file_type == 2 ? 'display:block;' : 'display:none;' }}">
+                                    <div class="mb-3 linkFieldNew" style="{{ $resourceItem->file_type == 2 ? 'display:block;' : 'display:none;' }}">
                                         <label for="linkNew">Link</label>
                                         <input type="text" class="form-control" id="linkNew" name="linkNew" >
                                     </div>
-                                    <div class="form-group fileUploadNew" style="{{ $resourceItem->file_type == 1 ? 'display:block;' : 'display:none;' }}">
+                                    <div class="mb-3 fileUploadNew" style="{{ $resourceItem->file_type == 1 ? 'display:block;' : 'display:none;' }}">
                                         <input type="file" id="fileUploadNew" class="form-control" name="fileUploadNew" required>
                                     </div> --}}
 
-                                    <div class="form-group">
+                                    <div class="mb-3">
                                         <label for="fileTypeNew">File Type</label>
                                         <select class="form-control" id="fileTypeNew" name="fileTypeNew">
                                             <option value="" selected>Select file type</option>
@@ -388,33 +388,33 @@
                                     </div>
 
                                     <!-- Version field - for file type 1 -->
-                                    <div class="form-group versionFieldNew" style="display:none;">
+                                    <div class="mb-3 versionFieldNew" style="display:none;">
                                         <label for="fileVersionNew">Version</label>
                                         <input type="text" class="form-control" id="fileVersionNew" name="fileVersionNew">
                                     </div>
 
                                     <!-- Link field - for file type 2 -->
-                                    <div class="form-group linkFieldNew" style="display:none;">
+                                    <div class="mb-3 linkFieldNew" style="display:none;">
                                         <label for="linkNew">Link</label>
                                         <input type="text" class="form-control" id="linkNew" name="linkNew" placeholder="https://example.com">
                                     </div>
 
                                     <!-- Route field - for file type 3 -->
-                                    <div class="form-group routeFieldNew" style="display:none;">
+                                    <div class="mb-3 routeFieldNew" style="display:none;">
                                         <label for="routeNew">Route Name</label>
                                         <input type="text" class="form-control" id="routeNew" name="routeNew" placeholder="e.g., board.roster">
                                         <small class="form-text text-muted">Enter the route name. The chapter ID will be automatically passed from the URL.</small>
                                     </div>
 
                                     <!-- File upload - for file type 1 -->
-                                    <div class="form-group fileUploadNew" style="display:none;">
+                                    <div class="mb-3 fileUploadNew" style="display:none;">
                                         <input type="file" id="fileUploadNew" class="form-control" name="fileUploadNew">
                                     </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times" ></i>&nbsp; Close</button>
-                                <button type="button" class="btn btn-success" onclick="return addToolkitFile()"><i class="fas fa-save" ></i>&nbsp; Add Resource</button>
+                                <button type="button" class="btn btn-danger bg-gradient mb-2" data-bs-dismiss="modal"><i class="bi bi-x-lg me-2"></i>Close</button>
+                                <button type="button" class="btn btn-success bg-gradient mb-2" onclick="return addToolkitFile()"><i class="bi bi-floppy-fill me-2"></i>Add Resource</button>
                             </div>
                         </div>
                     </div>

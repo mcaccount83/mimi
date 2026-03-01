@@ -1,26 +1,66 @@
+import $ from 'jquery';
+window.$ = $;
+window.jQuery = $;
 
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
+// Bootstrap 5
+import 'bootstrap';
 
-import './bootstrap';
-import { createApp } from 'vue'; // Import Vue 3's createApp function
+// FontAwesome
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
+// Bootstrap Icons
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
-// You don't need to use Vue.component here, just use app.component
-const app = createApp({}); // Create a new Vue app instance
+// AdminLTE 4 - MOVE CSS AFTER OTHER STYLES SO IT OVERRIDES
+import 'admin-lte/dist/js/adminlte.js';
 
-// Register components globally if needed
-app.component('example-component', require('./components/ExampleComponent.vue').default);
+// SweetAlert2
+import Swal from 'sweetalert2';
+window.Swal = Swal;
 
-// Mount Vue to a DOM element (e.g., #app)
-app.mount('#app'); // Mount the app to the element with id="app"
+// Moment (required by daterangepicker)
+import moment from 'moment';
+window.moment = moment;
+
+// DataTables
+import DataTable from 'datatables.net-bs5';
+import 'datatables.net-responsive-bs5';
+import 'datatables.net-buttons-bs5';
+import 'datatables.net-buttons/js/buttons.html5.js';
+import 'datatables.net-buttons/js/buttons.print.js';
+import 'datatables.net-buttons/js/buttons.colVis.js';
+window.DataTable = DataTable;
+$.fn.dataTable = DataTable;
+
+// JSZip (for DataTables Excel export)
+import JSZip from 'jszip';
+window.JSZip = JSZip;
+
+// Summernote (BS5 version)
+import 'summernote/dist/summernote-bs5.min.css';
+import 'summernote/dist/summernote-bs5.min.js';
+
+// Daterangepicker
+import 'daterangepicker/daterangepicker.css';
+import 'daterangepicker';
+
+// BS-Stepper
+import 'bs-stepper/dist/css/bs-stepper.min.css';
+import 'bs-stepper/dist/js/bs-stepper.min.js';
+
+// OverlayScrollbars
+import 'overlayscrollbars/overlayscrollbars.css';
+import { OverlayScrollbars } from 'overlayscrollbars';
+window.OverlayScrollbars = OverlayScrollbars;
+
+// Inputmask
+import Inputmask from 'inputmask';
+window.Inputmask = Inputmask;
+
+// Make inputmask available as jQuery plugin
+$.fn.inputmask = function(mask, options) {
+    return this.each(function() {
+        Inputmask(mask, options).mask(this);
+    });
+};
+

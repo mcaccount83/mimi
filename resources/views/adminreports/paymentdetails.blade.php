@@ -13,7 +13,7 @@
                 <div class="card card-outline card-primary">
                     <div class="card-header">
                         <div class="dropdown">
-                            <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Payment Log Details
                             </h3>
                             @include('layouts.dropdown_menus.menu_reports_admin')
@@ -89,7 +89,7 @@
             </div>
         </div>
 
- <div class="card-body text-center">
+ <div class="card-body text-center mt-3">
             </div>
             </div>
           </div>

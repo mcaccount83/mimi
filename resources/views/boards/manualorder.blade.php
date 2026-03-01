@@ -4,14 +4,12 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-         <!-- Widget: user widget style 1 -->
-         <div class="card card-widget widget-user">
-            <!-- Add the bg color to the header using any of the bg-* classes -->
-            <div class="widget-user-header bg-primary">
-                <div class="widget-user-image">
-                    <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" style="width: 115px; height: 115px;">
-                  </div>
+                <div class="card">
+                    <div class="card bg-primary">
+                        <div class="card-body text-center">
+                            <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" style="width: 115px; height: 115px;">
                         </div>
+                    </div>
                         <div class="card-body">
 
                             <div class="col-md-12"><br><br></div>
@@ -59,7 +57,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <!-- /.form group -->
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <label class="col-sm-2 mb-1 col-form-label">Name:</label>
                                 <div class="col-sm-5 mb-1">
                                 <input type="text" name="ship_fname" id="ship_fname" class="form-control"  required placeholder="First Name" >
@@ -96,7 +94,7 @@
                     <hr>
 
                 <h3 class="profile-username">Payment Information</h3>
-                        <div class="form-group row">
+                        <div class="row mb-3">
                             <div class="col-md-4">
                                 <label>Chapter Manual</label>
                                 <input type="text" name="manual" id="manual" class="form-control" value="$35.00" readonly>
@@ -111,7 +109,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        <div class="row mb-3">
                             <div class="col-md-6">
                             <label for="card_number" >{{ __('Card Number') }}</label> <span class="field-required">*</span>
                                 <input id="card_number" type="text" class="form-control @error('card_number') is-invalid @enderror" name="card_number" required autocomplete="off" >
@@ -143,7 +141,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        <div class="row mb-3">
                             <div class="col-md-4">
                                 <label>Cardholder First Name</label> <span class="field-required">*</span>
                                 <input type="text" name="first_name" id="first_name" class="form-control"  required >
@@ -158,13 +156,13 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        <div class="row mb-3">
                             <div class="col-md-12">
                                 <label>Cardholder Address</label> <span class="field-required">*</span>
                                 <input type="text" name="address" id="address" class="form-control"  required >
                             </div>
                         </div>
-                        <div class="form-group row">
+                        <div class="row mb-3">
                             <div class="col-md-4">
                                 <label>City</label> <span class="field-required">*</span>
                                 <input type="text" name="city" id="city" class="form-control"  required >
@@ -179,19 +177,19 @@
                             </div>
                         </div>
 
-                        <div class="card-body text-center">
+                        <div class="card-body text-center mt-3">
                             <div class="col-md-12" style="color: red;"><center>Page will automatically re-direct after payment submission with success or error message.<br>
                                 DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center></div>
                             <br>
-                                <button type="submit" class="btn btn-primary"><i class="fas fa-share" ></i>&nbsp;{{ __('Submit Order') }}</button>
+                                <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>{{ __('Submit Order') }}</button>
 
                             @if($chActiveId != \App\Enums\ChapterStatusEnum::ACTIVE)
-                                <a href="{{ route('board.editdisbandchecklist', $chDetails->id) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back to Checklist</a>
+                                <a href="{{ route('board.editdisbandchecklist', $chDetails->id) }}" class="btn btn-primary bg-gradient mb-2" id="btn-back"><i class="bi bi-arrow-left-short"></i><i class="bi bi-list-check me-2"></i></i>Back to Checklist</a>
                             @else
                                 @if ($userTypeId == \App\Enums\UserTypeEnum::COORD)
-                                    <button type="button" id="btn-back" class="btn btn-primary" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2" ></i>Back to Profile</button>
+                                    <button type="button" id="btn-back" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Profile</button>
                                 @else
-                                    <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back to Profile</a>
+                                    <a href="{{ route('home') }}" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Profile</a>
                                 @endif
                             @endif
                         </div>

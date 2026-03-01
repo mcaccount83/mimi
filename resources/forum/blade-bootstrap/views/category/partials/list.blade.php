@@ -40,7 +40,7 @@
     @if ($category->children->count() > 0)
         <div class="subcategories">
             @foreach ($category->children as $subcategory)
-                <div class="list-group-item">
+                <div class="list-group-item mt-2">
                     <div class="row align-items-center text-center">
                         <div class="col-sm text-md-start">
                             <a href="{{ Forum::route('category.show', $subcategory) }}" style="color: {{ $subcategory->color_light_mode }};">{{ $subcategory->title }}</a>

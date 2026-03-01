@@ -2,22 +2,7 @@
 
 @section('page_title', 'Chapter Details')
 @section('breadcrumb', 'Board Information')
-<style>
-.disabled-link {
-    pointer-events: none; /* Prevent click events */
-    cursor: default; /* Change cursor to default */
-    color: #343a40; /* Font color */
-}
 
-.custom-span {
-    border: none !important;
-    background-color: transparent !important;
-    padding: 0.375rem 0 !important; /* Match the vertical padding of form-control */
-    box-shadow: none !important;
-}
-
-
-</style>
 @section('content')
     <!-- Main content -->
     <form class="form-horizontal" method="POST" action='{{ route("chapters.update", $chDetails->id) }}'>
@@ -38,82 +23,57 @@
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                  <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
-                  <p class="text-center">{{ $conferenceDescription }} Conference, {{ $regionLongName }} Region
-                  <br>
+                <div class="card-body">
+                    <div class="card-header text-center bg-transparent">
+                    <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
+                    <p class="mb-0">{{ $conferenceDescription }} Conference, {{ $conferenceDescription }} Region
+                    <br>
                   EIN: {{$chDetails->ein}}
                   </p>
+                </div>
 
-                  <ul class="list-group list-group-unbordered mb-3">
+                  <ul class="list-group list-group-flush mb-2">
                     <li class="list-group-item">
-                    <label class="col-form-label">EIN Notes:</label><input type="text" name="ein_notes" id="ein_notes" class="form-control float-right col-sm-8 mb-1 text-right" value="{{ $chEOYDocuments->ein_notes }}" placeholder="EIN Notes">
+                    <div class="row">
+                            <label class="col-sm-6 col-form-label">EIN Notes:</label>
+                            <div class="col-sm-6"><input type="text" name="ein_notes" id="ein_notes" class="form-control float-end col-sm-8 mb-1 text-end" value="{{ $chEOYDocuments->ein_notes }}" placeholder="EIN Notes">
+                            </div>
+                    </div>
                     </li>
-                      <li class="list-group-item">
-                          <b>Re-Registration Dues:</b><span class="float-right">
-                              @if ($chPayments->rereg_members)
-                                  <b>{{ $chPayments->rereg_members }} Members</b> on <b><span class="date-mask">{{ $chPayments->rereg_date }}</span></b>
-                              @else
-                                  No Payment Recorded
-                              @endif
-                          </span><br>
-                          <b>M2M Donation:</b><span class="float-right">
-                              @if ($chPayments->m2m_donation)
-                                  <b>${{ $chPayments->m2m_donation }}</b> on <b><span class="date-mask">{{ $chPayments->m2m_date }}</span></b>
-                              @else
-                                  No Donation Recorded
-                              @endif
-                          </span><br>
-                          <b>Sustaining Chapter Donation: </b><span class="float-right">
-                              @if ($chPayments->sustaining_donation)
-                                  <b>${{ $chPayments->sustaining_donation }}</b> on <b><span class="date-mask">{{ $chPayments->sustaining_date }}</span></b>
-                              @else
-                                  No Donation Recorded
-                              @endif
-                          </span>
-                          <br>
-                      </li>
-                      <li class="list-group-item">
-                        <label class="col-form-label mb-1">Founded:</label><span class="form-control-plaintext float-right col-sm-6 mb-1 text-right custom-span">{{ $startMonthName }} {{ $chDetails->start_year }}</span>
-                           <br>
-                          <label class="col-form-label mb-1">Formerly Known As:</label><input type="text" name="ch_preknown" id="ch_preknown" class="form-control float-right col-sm-6 mb-1 text-right" value="{{ $chDetails->former_name }}" placeholder="Former Chapter Name">
-                          <br>
-                          <label class="col-form-label">Sistered By:</label><input type="text" name="ch_sistered" id="ch_sistered" class="form-control float-right col-sm-6 text-right" value="{{ $chDetails->sistered_by }}" placeholder="Chapter Name">
-                      </li>
-                        @if($regionalCoordinatorCondition)
-                        <li class="list-group-item">
-                            <label class="ch_primarycor">Update Primary Coordinator:</label>
-                            <select name="ch_primarycor" id="ch_primarycor" class="form-control float-right col-sm-6 text-right" style="width: 100%;" onchange="loadCoordinatorList(this.value)" required>
-                                <option value="">Select Primary Coordinator</option>
-                                @foreach($pcList as $coordinator)
-                                    <option value="{{ $coordinator['cid'] }}"
-                                        {{ isset($chDetails->primary_coordinator_id) && $chDetails->primary_coordinator_id == $coordinator['cid'] ? 'selected' : '' }}>
-                                        {{ $coordinator['cname'] }} {{ $coordinator['cpos'] }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            <span id="display_corlist" style="display: block; margin-top: 10px;"></span>
+                    <li class="list-group-item">
+                            @include('partials.paymentinfo')
+                            @include('partials.donationinfo')
                         </li>
-                        @else
-                        <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
-                        <li class="list-group-item" id="display_corlist" class="list-group-item"></li>
-                    @endif
+                        <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-auto fw-bold">Founded:</div>
+                            <div class="col text-end">
+                                {{ $startMonthName }} {{ $chDetails->start_year }}
+                            </div>
+                        </div>
+                        <div class="row">
+                                <label class="col-sm-6 col-form-label">Formerly Known As:</label>
+                                <div class="col-sm-6">
+                                    <input type="text" name="ch_preknown" id="ch_preknown" class="form-control float-end col-sm-6 mb-1 text-end" value="{{ $chDetails->former_name }}" placeholder="Former Chapter Name">
+                                </div>
+                            </div>
+                          <div class="row">
+                            <label class="col-sm-6 col-form-label">Sistered By:</label>
+                            <div class="col-sm-6"><input type="text" name="ch_sistered" id="ch_sistered" class="form-control float-end col-sm-6 text-end" value="{{ $chDetails->sistered_by }}" placeholder="Chapter Name">
+                      </div>
+                        </div>
+                        </li>
+                        <li class="list-group-item">
+                            @if($regionalCoordinatorCondition)
+                                @include('partials.coordinatorlistupdate')
+                            @else
+                                @include('partials.coordinatorlist')
+                            @endif
+                        </li>
+                        <li class="list-group-item mt-3">
+                            @include('partials.chapterstatus')
+                        </li>
                   </ul>
-                  <div class="text-center">
-                      @if ($chDetails->active_status == 1 )
-                          <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
-                      @elseif ($chDetails->active_status == 2)
-                        <b><span style="color: #ff851b;">Chapter is PENDING</span></b>
-                      @elseif ($chDetails->active_status == 3)
-                        <b><span style="color: #dc3545;">Chapter was NOT APPROVED</span></b><br>
-                          Declined Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                          {{ $chDetails->disband_reason }}
-                      @elseif ($chDetails->active_status == 0)
-                          <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
-                          Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
-                          {{ $chDetails->disband_reason }}
-                      @endif
-                  </div>
                 </div>
               <!-- /.card-body -->
             </div>
@@ -123,27 +83,27 @@
 
           <div class="col-md-8">
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                <h3 class="profile-username">General Information</h3>
+                <div class="card-body">
+                    <div class="card-header bg-transparent border-0">
+                        <h3>General Information</h3>
+                    </div>
                     <!-- /.card-header -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <!-- /.form group -->
-                            <div class="form-group row">
+                    <div class="card-body">
+                            <div class="row mb-1">
                                 <label class="col-sm-2 col-form-label">Chapter Name:</label>
                                 <div class="col-sm-10">
                                 <input type="text" name="ch_name" id="ch_name" class="form-control" value="{{ $chDetails->name }}"  required disabled onchange="PreviousNameReminder()">
                                 </div>
                             </div>
                             <!-- /.form group -->
-                            <div class="form-group row">
+                            <div class="row mb-1">
                                 <label class="col-sm-2 col-form-label">Boundaries:</label>
                                 <div class="col-sm-10">
                                 <input type="text" name="ch_boundariesterry" id="ch_boundariesterry" class="form-control" value="{{ $chDetails->territory }}"  required >
                                 </div>
                             </div>
                             <!-- /.form group -->
-                            <div class="form-group row">
+                            <div class="row mb-1">
                                 <label class="col-sm-2 col-form-label">Status:</label>
                                 <div class="col-sm-3">
                                     <select name="ch_status" id="ch_status"class="form-control" style="width: 100%;" required>
@@ -156,7 +116,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <label class="col-sm-2 col-form-label ml-5" id="probationLabel" style="{{ $chDetails->status_id != \App\Enums\OperatingStatusEnum::OK ? '' : 'display: none;' }}">Probation Reason:</label>
+                                <label class="col-sm-2 col-form-label ms-5" id="probationLabel" style="{{ $chDetails->status_id != \App\Enums\OperatingStatusEnum::OK ? '' : 'display: none;' }}">Probation Reason:</label>
                                 <div class="col-sm-3" id="probationField" style="{{ $chDetails->status_id != \App\Enums\OperatingStatusEnum::OK ? '' : 'display: none;' }}">
                                     <select name="ch_probation" id="ch_probation" class="form-control" style="width: 100%;" {{ $chDetails->status_id != \App\Enums\OperatingStatusEnum::OK ? 'required' : '' }}>
                                         <option value="">Select Reason</option>
@@ -170,7 +130,7 @@
                                 </div>
                             </div>
                             <!-- /.form group -->
-                            <div class="form-group row">
+                            <div class="row mb-1">
                                 <label class="col-sm-2 col-form-label">Status Notes:</label>
 
                                 <div class="col-sm-8">
@@ -178,7 +138,7 @@
                                     </div>
                             </div>
                              <!-- /.form group -->
-                             <div class="form-group row">
+                             <div class="row mb-1">
                                 <label class="col-sm-2 col-form-label">Email/Mailing:</label>
                                 <div class="col-sm-3">
                                 <input type="text" name="ch_email" id="ch_email" class="form-control" value="{{ $chDetails->email }}"  placeholder="Chapter Email Address" >
@@ -188,7 +148,7 @@
                                 </div>
                             </div>
                             <!-- /.form group -->
-                            <div class="form-group row">
+                            <div class="row mb-1">
                                 <label class="col-sm-2 col-form-label">Inquiries:</label>
                                 <div class="col-sm-3">
                                 <input type="text" name="ch_inqemailcontact" id="ch_inqemailcontact" class="form-control" value="{{ $chDetails->inquiries_contact }}"  required >
@@ -198,14 +158,14 @@
                                 </div>
                             </div>
                             <!-- /.form group -->
-                            <div class="form-group row">
+                            <div class="row mb-1">
                                 <label class="col-sm-2 col-form-label">Additional Information:</label>
                                 <div class="col-sm-10">
                                     <textarea name="ch_addinfo" class="form-control" rows="4" >{{ $chDetails->additional_info }}</textarea>
                                 </div>
                             </div>
                             <!-- /.form group -->
-                            <div class="form-group row">
+                            <div class="row mb-1">
                                 <label class="col-sm-2 col-form-label">Website:</label>
                                 <div class="col-sm-7">
                                     <input type="text" name="ch_website" id="ch_website" class="form-control"
@@ -215,7 +175,7 @@
                             </div>
 
                             <!-- Website Status Container - Hidden by default -->
-                            <div class="form-group row" id="ch_webstatus-container" style="display: none;">
+                            <div class="row mb-1" id="ch_webstatus-container" style="display: none;">
                                 <label class="col-sm-2 col-form-label">Website Status:</label>
                                 <div class="col-sm-3">
                                     <select name="ch_webstatus" id="ch_webstatus" class="form-control" style="width: 100%;">
@@ -231,7 +191,7 @@
                             </div>
 
                             <!-- /.form group -->
-                            <div class="form-group row">
+                            <div class="row mb-1">
                                 <label class="col-sm-2 col-form-label">Website Notes:</label>
                                 <div class="col-sm-10">
                                 <input type="text" name="ch_webnotes" id="ch_webnotes" class="form-control" value="{{ $chDetails->website_notes }}" placeholder="Website Linking Notes"  >
@@ -239,43 +199,44 @@
                             </div>
 
                             <!-- /.form group -->
-                            <div class="form-group row">
+                            <div class="row mb-1">
                                 <label class="col-sm-2 col-form-label">Social Media:</label>
-                                <div class="col-sm-3.3">
+                                <div class="col-sm-2">
                                 <input type="text" name="ch_onlinediss" id="ch_onlinediss" class="form-control" value="{{ $chDetails->egroup }}"  placeholder="Forum/Group/App" >
                                 </div>
-                                <div class="col-sm-3.3">
+                                <div class="col-sm-2">
                                 <input type="text" name="ch_social1" id="ch_social1" class="form-control" value="{{ $chDetails->social1 }}" placeholder="Facebook"  >
                                 </div>
-                                <div class="col-sm-3.3">
+                                <div class="col-sm-2">
                                     <input type="text" name="ch_social2" id="ch_social2" class="form-control" value="{{ $chDetails->social2 }}"  placeholder="Twitter" >
                                 </div>
-                                <div class="col-sm-3.3">
+                                <div class="col-sm-2">
                                     <input type="text" name="ch_social3" id="ch_social3" class="form-control" value="{{ $chDetails->social3 }}"  placeholder="Instagram" >
                                 </div>
                             </div>
-                        </div>
+
                     </div>
                 </div>
-
               <!-- /.card-body -->
                         </div>
             <!-- /.card -->
                       </div>
           <!-- /.col -->
           <div class="col-md-12">
-            <div class="card-body text-center">
+            <div class="card-body text-center mt-3">
                 @if ($coordinatorCondition)
-                    <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2"></i>Save Chapter Information</button>
+                    <button type="submit" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Chapter Information</button>
                     @if($conferenceCoordinatorCondition)
-                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="updateName('{{ $chDetails->id }}')"><i class="fas fa-edit mr-2"></i>Update Chapter Name</button>
+                        <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="updateName('{{ $chDetails->id }}')"><i class="bi bi-house-up-fill me-2"></i>Update Chapter Name</button>
                     @endif
                 @endif
-                <button type="button" id="back-details" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
-        </div>
+                <button type="button" id="back-details" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Chapter Details</button>
+            </div>
+            </div>
         </div>
         <!-- /.row -->
-      </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.container-fluid -->
     </form>
     </section>
     <!-- /.content -->

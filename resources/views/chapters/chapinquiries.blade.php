@@ -16,7 +16,7 @@
                 <div class="card card-outline card-primary">
                     <div class="card-header">
                     <div class="dropdown">
-                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Inquiries Active Chapter List
                         </h3>
                         @include('layouts.dropdown_menus.menu_inquiries')
@@ -27,7 +27,7 @@
               <table id="chapterlist" class="table table-sm table-hover">
               <thead>
 			    <tr>
-					<th>Details</th>
+					<th>Chapter<br>Details</th>
 			        <th>COPY Inquiries Email</th>
 					<th>YES Chapter Response</th>
 					<th>Status</th>
@@ -44,12 +44,12 @@
 				@php $row = 0; @endphp
                 @foreach($chapterList as $list)
                   <tr>
-                    <td class="text-center "><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                    <td class="text-center "><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="bi bi-house-fill"></i></td>
                         <td class="text-center "><button type="button" class="btn btn-xs" onclick="return CopyEmail({{ $row }});" style="background-color: transparent; border: none;">
-                            <i class="far fa-copy fa-lg text-primary" ></i></button>
+                            <i class="bi bi-copy"></i></button>
                         </td>
                         <td class="text-center "><button type="button" class="btn btn-xs" onclick="return CopyInquiryResp({{ $row }});" style="background-color: transparent; border: none;">
-                            <i class="far fa-copy fa-lg text-primary" ></i></button>
+                            <i class="bi bi-copy"></i></button>
                         </td>
                         <td>{{$list->status->inquiries_status}}</td>
                         <td>
@@ -69,20 +69,25 @@
                     @endforeach
                   </tbody>
                 </table>
-            </div>
+           </div>
             <!-- /.card-body -->
+
+            <div class="card-body">
               @if ($ITCondition)
-                    <div class="col-sm-12">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="custom-control-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
-                            <label class="custom-control-label" for="showIntl">Show All International Chapters</label>
+                <div class="col-sm-12">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <label class="form-check-label" for="showIntl">Show All International Chapters</label>
                         </div>
                     </div>
                 @endif
+                  </div>
+            <!-- /.card-body for checkboxes -->
 
-            <div class="card-body text-center">
-              <button type="button" class="btn bg-gradient-primary" onclick="CopyNoChapter()" id="btnNoChapter" name="nochapter"><i class="fas fa-copy mr-2" ></i>Copy NO Chapter Response</button>
+            <div class="card-body text-center mt-3">
+              <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="CopyNoChapter()" id="btnNoChapter" name="nochapter"><i class="bi bi-copy me-2" ></i>Copy NO Chapter Response</button>
           </div>
+           <!-- /.card-body for buttons -->
 		   <textarea display class="js-copytextarea" style="border: none; background-color: transparent; resize: none; outline: none; overflow:hidden; color:transparent" name="nochapter" id="nochapter"/>
            Thanks for your interest in MOMS Club.  I am sorry there is not a chapter in your area, but we would love to help you start one!
 
@@ -91,14 +96,15 @@
             When you register a MOMS Club, you receive a MOMS Club manual, which helps you step by step through starting a new chapter.  But, that’s not all!   You also are assigned a special MOMS Club volunteer to help you whenever you need it.
 
             If you’d like more information – check out our website (https://momsclub.org/chapters/). </textarea>
-          <!-- /.box -->
-        </div>
+         </div>
+        <!-- /.card -->
       </div>
-    </section>
-    <!-- Main content -->
-
-    <!-- /.content -->
-
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
 @endsection
 @section('customscript')
 <script>

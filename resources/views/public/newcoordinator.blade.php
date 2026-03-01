@@ -9,9 +9,9 @@
                         <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
 
                         <div class="col-md-12">
-                            <div class="card card-widget widget-user">
-                                <div class="widget-user-header bg-primary">
-                                    <div class="widget-user-image">
+                            <div class="card">
+                                <div class="card bg-primary">
+                                    <div class="card-body text-center">
                                         <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" style="width: 115px; height: 115px;">
                                     </div>
                                 </div>
@@ -35,7 +35,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <!-- /.form group -->
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <label class="col-sm-2 mb-1 col-form-label">Name:</label>
                                 <div class="col-sm-5 mb-1">
                                 <input type="text" name="cd_fname" id="cd_fname" class="form-control"  required placeholder="First Name" >
@@ -82,7 +82,7 @@
                                 </select>
                             </div>
                         </div>
-                <div class="form-group row">
+                <div class="row mb-3">
                         <label class="col-sm-2 mb-1 col-form-label">Birthday:</label>
                                 <div class="col-sm-3 mb-1">
                                     <select name="cd_bmonth" id="cd_bmonth" class="form-control" style="width: 100%;" required>
@@ -109,19 +109,19 @@
                     <div class="row">
                         <div class="col-md-12">
                             <!-- /.form group -->
-                              <div class="form-group row">
+                              <div class="row mb-3">
                                 <label class="col-sm-4 col-form-label">Home Chapter:</label>
                                 <div class="col-sm-8">
                                     <input type="text" name="home_chapter" id="home_chapter" class="form-control" required>
                                 </div>
                             </div>
-                             <div class="form-group row">
+                             <div class="row mb-3">
                                 <label class="col-sm-4 col-form-label">Chapter State:</label>
                                 <div class="col-sm-8">
                                     <input type="text" name="home_state" id="home_state" class="form-control" required>
                                 </div>
                             </div>
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <label class="col-sm-4 col-form-label">How long have you been a MOMS Club Member?</label>
                                 <div class="col-sm-8">
                                     <input type="text" name="start_date" id="start_date" class="form-control" maxlength="25" required>
@@ -131,7 +131,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group row">
+                                    <div class="row mb-3">
                                         <label class="col-sm-4 col-form-label">What jobs/offices have you held with the chapter? What programs/activities have you started or led?</label>
                                         <div class="col-sm-8">
                                             <textarea name="jobs_programs" class="form-control" rows="4" maxlength="520" required></textarea>
@@ -140,7 +140,7 @@
                                             </small>
                                         </div>
                                     </div>
-                             <div class="form-group row">
+                             <div class="row mb-3">
                                 <label class="col-sm-4 col-form-label">How has the MOMS Club helped you?</label>
                                 <div class="col-sm-8">
                                     <textarea name="helped_me" class="form-control" rows="4" required></textarea>
@@ -150,7 +150,7 @@
                                 </div>
                             </div>
 
-                             <div class="form-group row">
+                             <div class="row mb-3">
                                 <label class="col-sm-4 col-form-label">Did you experience any problems during your time in the MOMS Club? If so, how were those problems resolved or what did you learn from them?</label>
                                 <div class="col-sm-8">
                                     <textarea name="problems" class="form-control" rows="4" required></textarea>
@@ -160,7 +160,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <label class="col-sm-4 col-form-label">Why do you want to be an International MOMS Club Volunteer?</label>
                                 <div class="col-sm-8">
                                     <textarea name="why_volunteer" class="form-control" rows="4" required></textarea>
@@ -170,7 +170,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <label class="col-sm-4 col-form-label">Do you volunteer for anyone else? Please list all your volunteer positions and when you did them?</label>
                                 <div class="col-sm-8">
                                     <textarea name="other_volunteer" class="form-control" rows="4" required></textarea>
@@ -180,7 +180,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <label class="col-sm-4 col-form-label">Do you have any special skills/talents/Hobbies (ie: other languages, proficient in any computer programs)?</label>
                                 <div class="col-sm-8">
                                     <textarea name="special_skills" class="form-control" rows="4" required></textarea>
@@ -190,7 +190,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group row">
+                            <div class="row mb-3">
                                 <label class="col-sm-4 col-form-label">What have you enjoyed most in previous volunteer experiences? Least?</label>
                                 <div class="col-sm-8">
                                     <textarea name="enjoy_volunteering" class="form-control" rows="4" required></textarea>
@@ -200,17 +200,17 @@
                                 </div>
                             </div>
 
-                             <div class="form-group row">
+                             <div class="row mb-3">
                                 <label class="col-sm-4 col-form-label">Referred by (if applicable):</label>
                                 <div class="col-sm-8">
                                     <input type="text" name="referred_by" id="referred_by" class="form-control"  required>
                                 </div>
                             </div>
 
-                        <div class="card-body text-center">
+                        <div class="card-body text-center mt-3">
                             <div class="col-md-12" style="color: red;">Page will automatically re-direct after application submission.</div>
                             <br>
-                                <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-share mr-2"></i>Submit Application</button>
+                                <button type="submit" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-chevron-double-right me-2"></i>Submit Application</button>
                         </div>
 
                     </form>

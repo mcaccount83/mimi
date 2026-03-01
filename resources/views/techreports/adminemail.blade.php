@@ -12,7 +12,7 @@
             <div class="card card-outline card-primary">
                 <div class="card-header">
                     <div class="dropdown">
-                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             System Email Settings
                         </h3>
                         @include('layouts.dropdown_menus.menu_reports_tech')
@@ -38,7 +38,7 @@
                         data-name="{{ $list->name }}"
                         data-description="{{ $list->description }}"
                         data-folder-id="{{ $list->email }}">
-                        <i class="fas fa-edit"></i>
+                        <i class="bi bi-pencil-square"></i>
                     </a>
                 </td>
                 <td>
@@ -48,7 +48,7 @@
                 <td>
                     {{ $list->email }}
                 </td>
-                 <td class="text-center align-middle"><i class="fa fa-ban"
+                 <td class="text-center align-middle"><i class="bi bi-ban"
                         onclick="showDeleteEmailModal({{ $list->id }}, '{{ $list->description }}')"
                         style="cursor: pointer; color: #dc3545;"></i>
                     </td>
@@ -56,22 +56,31 @@
             @endforeach
         </tbody>
     </table>
-</div>
+  </div>
+              <!-- /.card-body -->
 
-   <div class="card-body text-center">
+              <div class="card-body">
+            </div>
+            <!-- /.card-body for checkboxes -->
+
+   <div class="card-body text-center mt-3">
         <div class="card-tools">
-            <button type="button" class="btn bg-gradient-primary mb-3" id="addNewBtn">
-                <i class="fas fa-plus"></i> Add New System Email
+            <button type="button" class="btn btn-primary bg-gradient mb-2" id="addNewBtn">
+                <i class="bi bi-plus me-2"></i> Add New System Email
             </button>
         </div>
-    </div>
+ </div>
+            <!-- /.card-body for buttons -->
 
-            </div>
-        </div>
+         </div>
+        <!-- /.card -->
+      </div>
+      <!-- /.col -->
     </div>
-</div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
 </section>
-<!-- /.content -->
 
 <!-- Add/Edit System Email Modal -->
 <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="emailModalLabel" aria-hidden="true">
@@ -79,7 +88,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="emailModalLabel">Add New System Email</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -87,23 +96,23 @@
                 <form id="emailForm">
                     @csrf
                     <input type="hidden" id="email_id" name="email_id">
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="name">Name <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="name" name="name" required>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="description">Description <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="description" name="description" required>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="email">Email <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="email" name="email" required>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm bg-gradient-success" id="saveEmailBtn">Save</button>
-                <button type="button" class="btn btn-sm bg-gradient-danger" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success bg-gradient btn-sm" id="saveEmailBtn">Save</button>
+                <button type="button" class="btn btn-danger bg-gradient btn-sm" data-bs-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>

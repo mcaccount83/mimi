@@ -24,6 +24,7 @@
 !/storage/logs/.gitignore
 
 # Cache
+/.sass-cache
 /bootstrap/cache/*
 !bootstrap/cache/.gitignore
 
