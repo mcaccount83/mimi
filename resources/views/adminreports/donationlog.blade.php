@@ -1,5 +1,5 @@
 <!-- resources/views/payment-logs/index.blade.php -->
-@extends('layouts.coordinator_theme')
+@extends('layouts.mimi_theme')
 
 @section('page_title', 'Admin Reports')
 @section('breadcrumb', 'Payment List')

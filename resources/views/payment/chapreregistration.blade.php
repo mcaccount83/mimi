@@ -1,4 +1,4 @@
-@extends('layouts.coordinator_theme')
+@extends('layouts.mimi_theme')
 
 @section('page_title', 'Payments/Donations')
 @section('breadcrumb', 'Re-Registration Payments')
