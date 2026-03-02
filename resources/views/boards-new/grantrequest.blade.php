@@ -1,5 +1,5 @@
 
-@extends('layouts.coordinator_theme')
+@extends('layouts.mimi_theme')
 
 <style>
 .form-switch .form-check-label {

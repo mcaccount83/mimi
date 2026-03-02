@@ -1,4 +1,4 @@
-@extends('layouts.coordinator_theme')
+@extends('layouts.mimi_theme')
 
 @section('page_title', 'MOMS Club of ' . $chDetails->name . ', ' . $stateShortName)
 @section('breadcrumb', 'Chapter Profile')
