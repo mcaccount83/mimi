@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\CoordinatorPosition;
+use App\Enums\UserTypeEnum;
 use App\Models\Admin;
 use App\Models\AdminEmail;
 use Illuminate\Support\Facades\Request;
@@ -131,6 +132,7 @@ class PositionConditionsService
         $yearColumnName = $thisYear.'_financial_pdf_path'; // name for Database Column for Financial Report
         $boardReportName = $thisYear.'-'.$nextYear.' Board Report';  // Board Report Name
         $financialReportName = $lastYear.'-'.$thisYear.' Financial Report';  // Financial Report Name
+        $financialPDFName = $lastYear.'-'.$thisYear.' Financial PDF';  // Financial Report Name
         $irsFilingName = $lastYear.' 990N IRS Filing';  // IRS Filing Name
 
         $currentMonth = $this->getDateOptions()['currentMonth'];  // Current Month with leading zero
@@ -148,6 +150,7 @@ class PositionConditionsService
             'yearColumnName' => $yearColumnName,
             'boardReportName' => $boardReportName,
             'financialReportName' => $financialReportName,
+            'financialPDFName' => $financialPDFName,
             'irsFilingName' => $irsFilingName,
         ];
     }
@@ -168,5 +171,26 @@ class PositionConditionsService
             'mimi_admin' => $emails['mimi_admin'] ?? '',
             'grant_admin' => $emails['grant_admin'] ?? '',
         ];
-}
+    }
+
+    public function getViewAs(int $userTypeId, $PresDetails): array
+    {
+        $viewingAs = session('viewing_as', 'board');
+        $presTypeId = $PresDetails->user->type_id;
+
+        if ($userTypeId == UserTypeEnum::COORD && $viewingAs == 'coord') {
+            return [
+                'bdPositionId' => '1',
+                'bdDetails'    => $PresDetails,
+                'bdTypeId'     => $presTypeId,
+            ];
+        }
+
+        return [
+            'bdPositionId' => $PresDetails ? $PresDetails->position_id : null,
+            'bdDetails'    => $PresDetails,
+            'bdTypeId'     => $presTypeId,
+        ];
+    }
+
 }

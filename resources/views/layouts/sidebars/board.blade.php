@@ -1,12 +1,11 @@
 
-
     <!-- Board Dashboard Menu Item -->
-    <li class="nav-item">
+    {{-- <li class="nav-item">
         <a href="{{ route('board-new.chapterprofile', ['id' => $chDetails->id]) }}" class="nav-link {{ Request::is('chapterprofile') ? 'active' : '' }}">
             <i class="nav-icon bi bi-house-fill"></i>
             <p>Chapter Profile</p>
         </a>
-    </li>
+    </li> --}}
 
     @php
         $boardRoute = route('board-new.chapterprofile', ['id' => $chDetails->id]);
@@ -26,10 +25,10 @@
 
     <!-- Board Menu Item -->
     @php
-        $boardRoute = route('board-new.editprofile', ['id' => $chDetails->id]);
+        $boardRoute = route('board-new.editboard', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
-            'board-new/profile/*',
+            'board-new/board/*',
         ];
     @endphp
     @if (isset($boardRoute))
@@ -77,10 +76,10 @@
 
     <!-- Documents Menu Item -->
     @php
-        $boardRoute = route('board-new.editprofile', ['id' => $chDetails->id]);
+        $boardRoute = route('board-new.editboard', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
-            'board-new/profile/*',
+            'board-new/board/*',
         ];
     @endphp
     @if (isset($boardRoute))
@@ -111,16 +110,16 @@
 
     <!-- End of Year Menu Item -->
     @php
-        $boardRoute = route('board-new.editprofile', ['id' => $chDetails->id]);
+        $boardRoute = route('board-new.viewendofyear', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
-            'board-new/profile/*',
+            'board-new/endofyear/*',
         ];
     @endphp
     @if (isset($boardRoute))
         <li class="nav-item">
             <a href="{{ $boardRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardRoutes) }}">
-                <i class="nav-icon bi bi-people-fill"></i>
+                <i class="nav-icon bi bi-file-earmark-bar-graph-fill"></i>
                 <p>End of Year</p>
             </a>
         </li>

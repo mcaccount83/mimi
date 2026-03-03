@@ -1,41 +1,50 @@
 @extends('layouts.mimi_theme')
 
+@section('page_title', 'MOMS Club of ' . $chDetails->name . ', ' . $stateShortName)
+@section('breadcrumb', 'Chapter Profile')
+
 @section('content')
-   <div class="container">
+     <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
         <div class="row">
-                <div class="col-md-12">
-                    <div class="card card-primary card-outline">
-              <div class="card-body">
-                <div class="card-header text-center bg-transparent">
-                    <h2 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h2>
-                    {{-- <p class="mb-0">{{ $conferenceDescription }} Conference, {{ $conferenceDescription }} Region --}}
-                        <br>
-                        <h3>Sustaining Chapter & Mother-to-Mother Fund Donations</h3>
-                    </div>
-                        <!-- /.card-header -->
+        <div class="col-12">
+
+            <form method="POST" action="{{ route('process.payment') }}">
+            @csrf
+
+             <div class="col-md-12">
+            <div class="card card-primary card-outline">
                     <div class="card-body">
-                        <div class="row">
-                        <div class="col-md-12 text-center">
+                        <div class="card-header bg-transparent border-0">
+                            <h3>Re-Registration Payments</h3>
+                        </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
                             Your chapter's anniversary month is <b>{{ $startMonthName }}</b>.<br>
                             Re-registration payments are due each year by the last day of your anniversary month.<br>
-                            Your next due date: <b>{{ $startMonthName }} {{ $chDetails->next_renewal_year }}</b><br>
-                        @if ($currentDate->gte($due_date))
-                            @if ($due_date->month == $currentDate->month)
-                                <span style="color: green;">Your chapter's re-registration payment is due this month!</span>
+                            Your next payment:
+                            @if ($currentDate->gte($dueDate))
+                                @if ($chDetails->start_month_id == $currentMonth)
+                                    <span class="badge bg-success fs-7">Due Now (<span class="date-mask">{{ $renewalDate }})</span></span>
+                                @else
+                                    <span class="badge bg-danger fs-7">Overdue (<span class="date-mask">{{ $renewalDate }})</span></span>
+                                @endif
                             @else
-                                <span style="color: red;">Your chapter's re-registration payment is now considered overdue.</span>
+                                Due on <span class="date-mask">{{ $renewalDate }}</span>
                             @endif
-                        @endif
+                        </div>
                     </div>
-                </div>
-                <br>
+                    <br>
 
-                        <div class="row">
-                            <div class="col-12 mb-3">
-                                    <label class="me-2">RE-REGISTRATION DUES LAST PAID:</label><span class="date-mask">{{$chDetails->payments->rereg_date}}</span>
-                                <br>
-                                    <label class="me-2">LAST NUMBER OF MEMBERS REGISTERED:</label>{{ $chDetails->payments->rereg_members}}
-                            </div>
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                                <label class="me-2">RE-REGISTRATION DUES LAST PAID:</label><span class="date-mask">{{$chDetails->payments->rereg_date}}</span>
+                            <br>
+                                <label class="me-2">LAST NUMBER OF MEMBERS REGISTERED:</label>{{ $chDetails->payments->rereg_members}}
+                        </div>
                     <hr>
                     <div class="col-12 mb-3">
                         <b>Payment Calculation:</b>
@@ -54,8 +63,8 @@
                         Your support to the MOMS Club is a service project for your chapter and should be included in its own line on your chapter’s Annual and Financial Reports.
                         Your donation will help us keep dues low and help new and existing chapters in the U.S. and around the world.<br>
                     </div>
-            </div>
-            <br>
+                </div>
+                <br>
 
                 {{-- Start of Payment Form --}}
                 <div class="container">
@@ -75,8 +84,7 @@
                                     </div>
                                     @endif
 
-                                    <form method="POST" action="{{ route('process.payment') }}">
-                                        @csrf
+
                                         <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
 
                                         <div class="row mb-3">
@@ -86,7 +94,7 @@
                                             </div>
                                             <div class="col-md-4" disabled >
                                                 <label>Late Fee</label>
-                                                <input type="text" name="late" id="late" class="form-control" value="{{ (($currentDate->gte($due_date) && $due_date->month != $currentDate->month) && $chDetails->payments->rereg_waivelate != '1') ? '$10.00' : '$0.00' }}" readonly>
+                                                <input type="text" name="late" id="late" class="form-control" value="{{ (($currentDate->gte($dueDate) && $dueDate->month != $currentDate->month) && $chDetails->payments->rereg_waivelate != '1') ? '$10.00' : '$0.00' }}" readonly>
                                             </div>
                                             <div class="col-md-4">
                                                 <label>Total Re-Registration Fees</label>
@@ -181,18 +189,7 @@
                                                 DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center></div>
                                             <br>
                                                 <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>{{ __('Submit Payment') }}</button>
-
-                                            @if($chActiveId != \App\Enums\ChapterStatusEnum::ACTIVE)
-                                                <a href="{{ route('board.editdisbandchecklist', $chDetails->id) }}" class="btn btn-primary bg-gradient mb-2" id="btn-back"><i class="bi bi-arrow-left-short"></i><i class="bi bi-list-check me-2"></i></i>Back to Checklist</a>
-                                            @else
-                                                @if ($userTypeId == \App\Enums\UserTypeEnum::COORD)
-                                                        <button type="button" id="btn-back" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Profile</button>
-                                                @else
-                                                    <a href="{{ route('home') }}" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Profile</a>
-                                                @endif
-                                            @endif
                                         </div>
-                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -202,23 +199,30 @@
 
                 <div class="col-md-12 mt-3" style="font-size: 0.8em">
                     <img src="{{ config('settings.base_url') }}images/authorize-net-seal.jpg" alt="authorize-net-seal" style="float: left; margin-right: 20px; width: 115px; height: 115px;">
-                    <p>You can pay with confidence! We have partnered with <a href="http://www.authorize.net" target="blank">Authorize.Net</a>, a leading payment gateway since 1996,
+                    <p>
+                    <br>
+                    You can pay with confidence! We have partnered with <a href="http://www.authorize.net" target="blank">Authorize.Net</a>, a leading payment gateway since 1996,
                     to accept credit cards and electronic check payments safely and securely for our chapters.<br>
                     <br>
                     The Authorize.Net Payment Gateway manages the complex routing of sensitive customer information through the electronic check and credit card processing networks.
                     See an <a href="http://www.authorize.net/resources/howitworksdiagram/" target="blank">online payments diagram</a> to see how it works.</p>
                 </div>
 
+           </div>
             </div>
+            <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
         </div>
-        <!-- /.card-body -->
-        </div>
-        <!-- /.card -->
+        <!-- /.col -->
+
+    </form>
+
+            </div>
+            <!-- /.col -->
+       </div>
     </div>
-    <!-- /.col -->
-    </div>
-    </div>
-<!-- /.container- -->
+    <!-- /.container- -->
 @endsection
 @section('customscript')
 

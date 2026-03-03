@@ -33,20 +33,11 @@
     @endif
 
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('form').forEach(form => {
-        form.setAttribute('autocomplete', 'off');
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('form').forEach(form => {
+            form.setAttribute('autocomplete', 'off');
+        });
     });
-});
-
-    // window.onload = function () {
-    //     if (window.history && window.history.pushState) {
-    //         window.history.pushState('preventBack', null, '');
-    //         window.onpopstate = function () {
-    //             location.reload();
-    //         };
-    //     }
-    // };
     </script>
 
     @include('layouts.styles.buttonsicons')
@@ -96,16 +87,25 @@ document.addEventListener('DOMContentLoaded', function() {
               <!-- Menu for Logged In Users -->
                     @auth
 
-                    @if ($userTypeId == \App\Enums\UserTypeEnum::COORD)
-                        @include('layouts.sidebars.coordinator')
-                    @elseif ($userTypeId == \App\Enums\UserTypeEnum::BOARD)
-                        @include('layouts.sidebars.board')
-                    @elseif ($userTypeId == \App\Enums\UserTypeEnum::OUTGOING)
-                        @include('layouts.sidebars.outgoing')
-                    @elseif ($userTypeId == \App\Enums\UserTypeEnum::PENDING)
-                        @include('layouts.sidebars.pending')
-                    @endif
-
+@if ($userTypeId == \App\Enums\UserTypeEnum::COORD && isset($bdTypeId) && $bdTypeId)
+    @if ($bdTypeId == \App\Enums\UserTypeEnum::BOARD)
+        @include('layouts.sidebars.board')
+    @elseif ($bdTypeId == \App\Enums\UserTypeEnum::OUTGOING)
+        @include('layouts.sidebars.outgoing')
+    @elseif ($bdTypeId == \App\Enums\UserTypeEnum::PENDING)
+        @include('layouts.sidebars.pending')
+    @else
+        @include('layouts.sidebars.coordinator')
+    @endif
+@elseif ($userTypeId == \App\Enums\UserTypeEnum::COORD)
+    @include('layouts.sidebars.coordinator')
+@elseif ($userTypeId == \App\Enums\UserTypeEnum::BOARD)
+    @include('layouts.sidebars.board')
+@elseif ($userTypeId == \App\Enums\UserTypeEnum::OUTGOING)
+    @include('layouts.sidebars.outgoing')
+@elseif ($userTypeId == \App\Enums\UserTypeEnum::PENDING)
+    @include('layouts.sidebars.pending')
+@endif
 
                         <li class="nav-item">
                             <a href="{{ route('logout') }}" class="nav-link"

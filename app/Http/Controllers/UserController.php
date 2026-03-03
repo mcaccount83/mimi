@@ -394,30 +394,22 @@ class UserController extends Controller implements HasMiddleware
                 ->get();
 
             // Iterate over coordinators in the reversed order
+            $coordinatorData = [];
             foreach ($coordinators as $cor) {
                 $name = $cor->first_name.' '.$cor->last_name;
                 $email = $cor->email;
                 $displayPosition = $cor->displayPosition ? $cor->displayPosition->short_title : '';
                 $secondaryTitles = '';
 
-                // Handle secondary positions
-                if (! empty($cor->secondaryPosition) && $cor->secondaryPosition->count() > 0) {
+                if (!empty($cor->secondaryPosition) && $cor->secondaryPosition->count() > 0) {
                     $secondaryTitles = $cor->secondaryPosition->pluck('short_title')->implode('/');
                 }
 
-                // Combine primary and secondary positions
-                $position = '';
-                if ($displayPosition) {
-                    $position = "({$displayPosition}";
-
-                    if (! empty($secondaryTitles)) {
-                        $position .= '/'.$secondaryTitles;
-                    }
-
-                    $position .= ')';
+                $combinedTitle = $displayPosition;
+                if (!empty($secondaryTitles)) {
+                    $combinedTitle .= '/'.$secondaryTitles;
                 }
 
-                // Set the title based on the iteration index
                 $title = match ($i) {
                     0 => 'Primary Coordinator:',
                     1 => 'Secondary Coordinator:',
@@ -425,19 +417,65 @@ class UserController extends Controller implements HasMiddleware
                     default => ''
                 };
 
-                // Build name with or without mailto link based on active status
-                $nameDisplay = $cor->active_status == 1
-                    ? "<a href='mailto:{$email}' target='_top'>{$name}</a>"
-                    : $name.'/Retired';
-
-                // Build the final string
-                $str .= "<b>{$title}</b><span class='float-end'>{$nameDisplay} {$position}</span><br>";
+                $coordinatorData[] = [
+                    'title' => $title,
+                    'name' => $name,
+                    'email' => $email,
+                    'position' => $combinedTitle ? "({$combinedTitle})" : '',
+                    'active' => $cor->active_status == 1,
+                ];
                 $i++;
             }
         }
 
-        return response()->json($str);
+        return response()->json($coordinatorData);
     }
+
+        //     foreach ($coordinators as $cor) {
+        //         $name = $cor->first_name.' '.$cor->last_name;
+        //         $email = $cor->email;
+        //         $displayPosition = $cor->displayPosition ? $cor->displayPosition->short_title : '';
+        //         $secondaryTitles = '';
+
+        //         // Handle secondary positions
+        //         if (! empty($cor->secondaryPosition) && $cor->secondaryPosition->count() > 0) {
+        //             $secondaryTitles = $cor->secondaryPosition->pluck('short_title')->implode('/');
+        //         }
+
+        //         // Combine primary and secondary positions
+        //         $position = '';
+        //         if ($displayPosition) {
+        //             $position = "({$displayPosition}";
+
+        //             if (! empty($secondaryTitles)) {
+        //                 $position .= '/'.$secondaryTitles;
+        //             }
+
+        //             $position .= ')';
+        //         }
+
+        //         // Set the title based on the iteration index
+        //         $title = match ($i) {
+        //             0 => 'Primary Coordinator:',
+        //             1 => 'Secondary Coordinator:',
+        //             2 => 'Additional Coordinator:',
+        //             default => ''
+        //         };
+
+        //         // Build name with or without mailto link based on active status
+        //         $nameDisplay = $cor->active_status == 1
+        //             ? "<a href='mailto:{$email}' target='_top'>{$name}</a>"
+        //             : $name.'/Retired';
+
+        //         // Build the final string
+        //         $str .= "<b>{$title}</b><span class='float-end'>{$nameDisplay} {$position}</span><br>";
+        //         $i++;
+
+        //     }
+        // }
+
+        // return response()->json($str);
+
 
     public function loadReportToCoord($cdId)
     {

@@ -1,7 +1,7 @@
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+   document.addEventListener('DOMContentLoaded', function() {
     // Define the sections we need to handle
-    const sections = ['pre', 'avp', 'mvp', 'trs', 'sec'];
+    const sections = ['pres', 'avp', 'mvp', 'trs', 'sec'];
 
     // Special state IDs that should show the country field
     const specialStates = [52, 53, 54, 55];
@@ -35,6 +35,7 @@
             stateDropdown.addEventListener('change', toggleCountryField);
         }
     });
+});
 
     // Function to handle show/hide logic for vacant checkboxes
     function handleVacantCheckbox(checkboxId, fieldClass) {
@@ -62,5 +63,4 @@
     handleVacantCheckbox("SecVacant", "sec-field");
     handleVacantCheckbox("TreasVacant", "trs-field");
 
-});
 </script>

@@ -95,7 +95,7 @@ class InquiriesController extends Controller implements HasMiddleware
             'checkBox7Status' => $checkBox7Status, 'checkBox57Status' => $checkBox57Status,
         ];
 
-        return view('inquiries.inquiryapplication')->with($data);
+        return view('coordinators.inquiries.inquiryapplication')->with($data);
     }
 
     /**
@@ -133,7 +133,7 @@ class InquiriesController extends Controller implements HasMiddleware
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
-        return view('inquiries.editinquiryapplication')->with($data);
+        return view('coordinators.inquiries.editinquiryapplication')->with($data);
     }
 
     /**

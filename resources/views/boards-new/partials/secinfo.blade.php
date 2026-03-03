@@ -1,10 +1,11 @@
 @if ($SECDetails->user_id == '')
     <div class="col-12">
-        <h4>Secretary Position is Vacant</h4>
+        <label>Secretary Position is Vacant</label>
     </div>
 @else
     <div class="col-md-6">
-        <h4 class="mb-0">{{$SECDetails->first_name}} {{$SECDetails->last_name}}</h4>
+        <label>{{$SECDetails->first_name}} {{$SECDetails->last_name}}</label>
+        <br>
         <a href="mailto:{{ $SECDetails->email }}">{{ $SECDetails->email }}</a>
         <br>
         <span class="phone-mask">{{$SECDetails->phone}}</span>

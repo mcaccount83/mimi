@@ -1,88 +1,93 @@
 @extends('layouts.mimi_theme')
 
+@section('page_title', 'MOMS Club of ' . $chDetails->name . ', ' . $stateShortName)
+@section('breadcrumb', 'Chapter Profile')
+
 @section('content')
-<div class="container">
+     <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12">
+        <div class="col-12">
 
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card bg-primary">
-                        <div class="card-body text-center">
-                            <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" style="width: 115px; height: 115px;">
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <h2 class="text-center"> MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h2>
-                        <h3 class="text-center">{{ $financialReportName }}</h3>
-                        <br>
-                        @if ($chEOYDocuments->financial_report_received != '1')
-                            <p class="text-center">
-                                Please complete the report below with finanacial information about your chapter.<br>
-                                Reports are due by July 15th.
-                            </p>
-                        @else
-                            <p class="text-center" style="color: red">
-                                Your chapter's Financial Report has been Submitted!<br>
-                                Please save a copy of the PDF for your records.</span><br>
-                            </p>
-                            <br>
-                            <button type="button" id="btn-download-pdf" class="btn bg-primary" onclick="openPdfViewer('{{ $chEOYDocuments->$yearColumnName  }}')">View/Download PDF</button>
-                        @endif
-                        </div>
-                </div>
-                <!-- /.card -->
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card card-primary card-outline">
-            <div class="card-body">
-                <!-- /.card-header -->
-            <div class="card-body">
-                <div class="row">
-
-                <div class="card-body">
-                    <form id="financial_report" name="financial_report" role="form" data-bs-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("board-new.updatefinancialreport", $chDetails->id) }}'>
+            <form id="financial_report" name="financial_report" role="form" data-bs-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("board-new.updatefinancialreport", $chDetails->id) }}'>
                     @csrf
+
+            <div class="col-md-12">
+            <div class="card card-primary card-outline">
+                    <div class="card-body">
+                        <div class="card-header bg-transparent border-0">
+                             <h3>{{ $financialReportName }}
+                            @if ($ITCondition && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
+                            @if ($eoyTestCondition && $displayTESTING) *TESTING*@endif
+                            </h3>
+                        </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                         <div class="row">
+                            <div class="col-md-12 mb-3">
+
+                            @if ($chEOYDocuments->financial_report_received != '1')
+                                <label class="me-2">Report Status:</label><span class="badge bg-danger fs-7">Due July 15th</span><br><br>
+                                Please complete the report below with finanacial information about your chapter.<br>
+                                Reports are due by July 15th.<br>
+                            @elseif ($chEOYDocuments->financial_report_received == '1' && $chEOYDocuments->financial_review_complete != '1')
+                                <label class="me-2">Report Status:</label><span class="badge bg-warning text-dark fs-7">Submitted</span><br><br>
+                                    Your chapter's Financial Report has been Submitted. A coordinator will review your report and let you know if there are any questions.<br>
+                                    Please save a copy of the PDF for your records.</span><br>
+                                <br>
+                                <button type="button" id="btn-download-pdf" class="btn btn-primary bg-gradient" onclick="openPdfViewer('{{ $chEOYDocuments->$yearColumnName }}')">{{$financialPDFName}}</button>
+                            @elseif ($chEOYDocuments->financial_report_received == '1' && $chEOYDocuments->financial_review_complete == '1')
+                                <label class="me-2">Report Status:</label><span class="badge bg-success fs-7">Reviewed</span><br><br>
+                                    Your chapter's Financial Report Review has been completed.<br>
+                                    Please save a copy of the PDF for your records.</span><br>
+                                <br>
+                                <button type="button" id="btn-download-pdf" class="btn btn-primary bg-gradient" onclick="openPdfViewer('{{ $chEOYDocuments->$yearColumnName }}')">{{$financialPDFName}}</button>
+                            @endif
+                        </div>
+                </div>
+                <br>
+
+                {{-- Start of Financial Report --}}
+            <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header"><strong>Report Details</strong>
+                                </div>
+                                <div class="card-body">
+                    When you have filled in all the answers, submit the report and save a copy in your chapter's permanent files.
+                    The International MOMS Club does not keep copies of your reports long term. You need to be sure your chapter has a copy and keeps it for the life of your chapter,
+                    as this would be the information you would need if the IRS were to do an audit. The Financial Report and all required additional documents are due no later than July 15th.
+                    <br><br>
 
                     @include('boards.financial_accordion', ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId,
                         'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chEOYDocuments' => $chEOYDocuments, 'stateShortName' => $stateShortName, 'chActiveId' => $chActiveId,
                         'lastyear' => $lastYear, 'currentYear' => $currentYear, 'irsFilingName' => $irsFilingName
                     ])
 
-                    </form>
+
+                </div>
+                </div>
+            </div>
+        </div>
+       </div>
+       <!-- /.financial-container- -->
+
+       </div>
+            </div>
+            <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+
+    </form>
 
             </div>
-            </div>
-        </div>
-        </div>
-
-                <div class="card-body text-center mt-3">
-                    @if ($userTypeId != \App\Enums\UserTypeEnum::OUTGOING && $userTypeId != \App\Enums\UserTypeEnum::DISBANDED)
-                        @if ($userTypeId == \App\Enums\UserTypeEnum::COORD)
-                            <button type="button" id="btn-back" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Profile</button>
-                        @else
-                            <a href="{{ route('home') }}" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Profile</a>
-                        @endif
-                    @endif
-
-                    @if($chEOYDocuments->financial_report_received !='1')
-                        <button type="button" id="btn-save" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
-                    @endif
-
-                    @if($chEOYDocuments->financial_report_received =='1')
-                        <button type="button" id="btn-download-pdf" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->$yearColumnName  }}'"><i class="bi bi-file-earmark-pdf-fill me-2"></i>Download PDF</button>
-                    @endif
-                 </div>
-
-        </div>
-        <!-- /.card -->
-         </div>
-        </div>
-        </div>
+            <!-- /.col -->
+       </div>
+    </div>
     <!-- /.container- -->
 @endsection
 @section('customscript')

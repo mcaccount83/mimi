@@ -81,6 +81,15 @@ class BaseBoardController extends Controller
         $chFinancialReportFinal = $chDetails->financialReportFinal;
         $chDisbanded = $chDetails->disbandCheck;
 
+        $financialReportPdfs = [];
+            foreach ($chEOYDocuments->getAttributes() as $column => $value) {
+                if (preg_match('/^(\d{4})_financial_pdf_path$/', $column, $matches) && !empty($value)) {
+                    $year = $matches[1];
+                    $financialReportPdfs[$year] = $value;
+                }
+            }
+        krsort($financialReportPdfs); // newest year first
+
         // Load Board and Coordinators for Sending Email
         $emailData = $this->userController->loadEmailDetails($chId);
         $emailListChap = $emailData['emailListChap'];
@@ -111,7 +120,7 @@ class BaseBoardController extends Controller
             'emailCC' => $emailCC, 'chActiveStatus' => $chActiveStatus, 'reviewerEmail' => $reviewerEmail, 'awards' => $chFinancialReport, 'allAwards' => $allAwards, 'pcEmail' => $pcEmail,
             'allCountries' => $allCountries, 'pcDetails' => $pcDetails, 'chDisbanded' => $chDisbanded, 'allProbation' => $allProbation, 'chEOYDocuments' => $chEOYDocuments,
             'probationReason' => $probationReason, 'dueDate' => $dueDate, 'startMonthId' => $startMonthId, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink,
-            'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'startDate' => $startDate, 'renewalDate' => $renewalDate,
+            'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'startDate' => $startDate, 'renewalDate' => $renewalDate, 'financialReportPdfs' => $financialReportPdfs
         ], $boardDetails); // Add board member details from appropriate table
     }
 
@@ -144,7 +153,7 @@ class BaseBoardController extends Controller
     {
         $chDetails = Chapters::with(['boards'])->find($chId);
 
-        $boards = $chDetails->boards()->with(['state', 'country'])->get();
+        $boards = $chDetails->boards()->with(['state', 'country', 'user'])->get();
         $bdDetails = $boards->groupBy('board_position_id');
         $defaultBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state_id' => '', 'country_id' => '', 'user_id' => ''];
 
@@ -167,7 +176,7 @@ class BaseBoardController extends Controller
         $chDetails = Chapters::with(['disbandCheck', 'boardsDisbanded'])->find($chId);
 
         $chDisbanded = $chDetails->disbandCheck;
-        $bdDisbanded = $chDetails->boardsDisbanded()->with(['state', 'country'])->get();
+        $bdDisbanded = $chDetails->boardsDisbanded()->with(['state', 'country', 'user'])->get();
         $bdDisbandedDetails = $bdDisbanded->groupBy('board_position_id');
         $defaultDisbandedBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state_id' => '', 'country_id' => '', 'user_id' => ''];
 
@@ -189,7 +198,7 @@ class BaseBoardController extends Controller
     {
         $chDetails = Chapters::with(['boardsIncoming'])->find($chId);
 
-        $bdIncoming = $chDetails->boardsIncoming()->with('state', 'country')->get();
+        $bdIncoming = $chDetails->boardsIncoming()->with('state', 'country', 'user')->get();
         $bdIncomingDetails = $bdIncoming->groupBy('board_position_id');
         $defaultIncomingBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state_id' => '', 'country_id' => '', 'user_id' => ''];
 
@@ -212,7 +221,7 @@ class BaseBoardController extends Controller
     {
         $chDetails = Chapters::with(['boardsPending'])->find($chId);
 
-        $bdPending = $chDetails->boardsPending()->with('state', 'country')->get();
+        $bdPending = $chDetails->boardsPending()->with('state', 'country', 'user')->get();
         $bdPendingDetails = $bdPending->groupBy('board_position_id');
         $defaultPendingBoardMember = (object) ['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state_id' => '', 'country_id' => '', 'user_id' => ''];
 

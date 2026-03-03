@@ -1,9 +1,15 @@
 @extends('layouts.mimi_theme')
 
+@section('page_title', 'MOMS Club of ' . $chDetails->name . ', ' . $stateShortName)
+@section('breadcrumb', 'Chapter Profile')
+
 @section('content')
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
+     <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+        <div class="col-12">
+
                     <form id="boardinfo" method="POST" action="{{ route('board-new.updateboardreport',$chDetails->id) }}">
                         @csrf
 
@@ -20,61 +26,74 @@
                         <input type="hidden" id="ch_trs_email_chk" value="{{ $TRSDetails->email }}">
                         <input type="hidden" id="ch_sec_email_chk" value="{{ $SECDetails->email }}">
 
+                      <div class="col-md-12">
+            <div class="card card-primary card-outline">
+                    <div class="card-body">
+                        <div class="card-header bg-transparent border-0">
+                             <h3>{{ $boardReportName }}
+                            @if ($ITCondition && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
+                            @if ($eoyTestCondition && $displayTESTING) *TESTING*@endif
+                            </h3>
+                        </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                         <div class="row">
+                            <div class="col-md-12 mb-3">
+                                @if ($chDetails->documentsEOY->new_board_submitted != '1' )
+                                    <label class="me-2">Report Status:</label><span class="badge bg-danger fs-7">Due June 30th</span><br><br>
+                                    Please complete the report below with information about your newly elected board. This will ensure they have access to all the tools they need to be successful in the upcoming year.<br>
+                                    Once submited, your report will be activated after July 1st and new board members will have full MIMI Access. Outgoing board members will have access to Financial Reports Only.<br>
+                                @endif
+                                @if ($chDetails->documentsEOY->new_board_submitted == '1' && $chDetails->documentsEOY->new_board_active !='1')
+                                    <label class="me-2">Report Status:</label><span class="badge bg-warning text-dark fs-7">Submitted</span><br><br>
+                                    Your submitted report will be activated after July 1st and new board members will have full MIMI Access. Outgoing board members will have access to Financial Reports Only.<br>
+                                    Submitted entries are READ ONLY. If you need to make changes, please contact your Primary Coordinator.<br>
+                                @endif
+                                @if ($chDetails->documentsEOY->new_board_active =='1')
+                                    <label class="me-2">Report Status:</label><span class="badge bg-success fs-7">Activated</span><br><br>
+                                    New board members now have full MIMI Access. Outgoing board members have access to Financial Reports Only.<br>
+                                    Futrue board member changes can be made on your chapter's main profile page.<br>
+                                @endif
+                                </div>
+                                </div>
+                            <br>
+
+{{-- Start of Board Report --}}
+                @if ($chDetails->documentsEOY->new_board_active != '1')
+                <div class="container">
+                    <div class="row justify-content-center">
                         <div class="col-md-12">
                             <div class="card">
-                                <div class="card bg-primary">
-                                    <div class="card-body text-center">
-                                        <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" style="width: 115px; height: 115px;">
-                                    </div>
+                                <div class="card-header"><strong>Report Details</strong>
                                 </div>
                                 <div class="card-body">
 
-                                    <div class="col-md-12"><br><br></div>
-                                    <h2 class="text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h2>
-
-                                    </h2>
-                                    <p class="description text-center">
-                                        Welcome to the MOMS information Management Interface, affectionately called MIMI!
-                                        <br>Here you can view your chapter's information, update your profile, complete End of Year Reports, etc.
-                                    </p>
-                                    <div id="readOnlyText" class="description text-center">
-                                        @if ($chDetails->documentsEOY->new_board_submitted != '1' )
-                                        <p>
-                                            Please complete the report below with information about your newly elected board.<br>
-                                            This will ensure they have access to all the tools they need to be successful in the upcoming year.</p>
-                                        <p>Your submitted report will be activated after July 1st.<br>
-                                            Once activated, new board members will have full MIMI Access. Outgoing board members will have access to Financial Reports Only.</p>
-                                        @endif
-                                        @if ($chDetails->documentsEOY->new_board_submitted == '1' && $chDetails->documentsEOY->new_board_active !='1')
-                                        <p><span style="color:#28a745;">Your chapter's Board Eleciton Report has been Submitted and will be activated after July 1st!</span><br>
-                                            Once activated, new board members will have full MIMI Access. Outgoing board members will have access to Financial Reports Only.<br>
-                                            Submitted entries are <span style="color:#dc3545;">Read Only</span>. If you need to make changes, please contact your Primary Coordinator.</p>
-                                        @endif
-                                        @if ($chDetails->documentsEOY->new_board_active =='1')
-                                        <p><span style="color:#28a745;">Your chapter's Board Eleciton Report has been Activated!</span><br>
-                                            New board members now have full MIMI Access. Outgoing board members have access to Financial Reports Only.</p>
-                                            Futrue board member changes can be made on your chapter's main profile page.</p>
-                                        @endif
+                                     <div class="row">
+                                    <div class="col-md-12">
+                                            <label>Boundaries listed in MIMI (used for Inquiries):</label>
+                                            <div>{{ $chDetails->territory }}</div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <!-- /.card -->
-                    </div>
-                </div>
+                                <div class="row mb-3">
+                                    <label>Are your listed boundaries correct?<span class="field-required">*</span></label>
+                                    <div class="col-12 d-flex gap-4">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" id="BoundaryStatusYes" name="BoundaryStatus" value="0" {{ !is_null($chDetails->boundary_issues) && $chDetails->boundary_issues == 0 ? 'checked' : '' }} onChange="ShowBoundaryError()">
+                                            <label class="form-check-label" for="BoundaryStatusYes">Yes</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" id="BoundaryStatusNo" name="BoundaryStatus" value="1" {{ $chDetails->boundary_issues == 1 ? 'checked' : '' }} onChange="ShowBoundaryError()">
+                                            <label class="form-check-label" for="BoundaryStatusNo">No</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12" id="divBoundaryIssue">
+                                        <div class="col-sm-12">
+                                        <label for="BoundaryIssue">Please indicate which part of the Boundaries not NOT match our records<span class="field-required">*</span></label>
+                                        <input type="text" rows="2"class="form-control" name="BoundaryIssue" id="BoundaryIssue" value="{{ $chDetails->boundary_issue_notes }}" ></input>
+                                     </div>
+                                    </div>
+                                    </div>
 
-                @if ($chDetails->documentsEOY->new_board_active != '1')
-
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="card card-primary card-outline">
-                            <div class="card-body box-profile">
-                                 <!-- /.card-header -->
-                            <div class="row">
-                                <div class="col-md-12">
-
-                                    <h5>Board Members</h5>
-                            <!-- /.form group -->
                                 <div class="row mb-3">
                                     <label class="col-sm-2 mb-1 col-form-label">President:</label>
                                     <div class="col-sm-5 mb-1">
@@ -125,7 +144,6 @@
                             </div>
                                 </div>
 
-                                <!-- /.form group -->
                                 <div class="row mb-3">
                                     <label class="col-sm-2 mb-1 col-form-label">AVP:</label>
                                     <div class="col-sm-10 mt-1 form-check form-switch">
@@ -183,7 +201,6 @@
                         </div>
                                 </div>
 
-                                 <!-- /.form group -->
                                  <div class="row mb-3">
                                     <label class="col-sm-2 mb-1 col-form-label">MVP:</label>
                                     <div class="col-sm-10 mt-1 form-check form-switch">
@@ -241,7 +258,6 @@
                                 </div>
                             </div>
 
-                                <!-- /.form group -->
                                 <div class="row mb-3">
                                     <label class="col-sm-2 mb-1 col-form-label">Treasurer:</label>
                                     <div class="col-sm-10 mt-1 form-check form-switch">
@@ -299,7 +315,6 @@
                                 </div>
                             </div>
 
-                                <!-- /.form group -->
                                 <div class="row mb-3">
                                     <label class="col-sm-2 mb-1 col-form-label">Secretary:</label>
                                     <div class="col-sm-10 mt-1 form-check form-switch">
@@ -357,66 +372,24 @@
                                 </div>
                             </div>
 
+                            <!-- /.form group -->
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">Inquiries Email:</label>
+                                <div class="col-sm-6">
+                                <input type="text" name="ch_inqemailcontact" id="ch_inqemailcontact" class="form-control" value="{{ $chDetails->inquiries_contact }}"  required >
+                                </div>
                             </div>
-                        </div>
-
-                    </div>
-                    <!-- /.card-body -->
-                    </div>
-                    <!-- /.card -->
-                </div>
-                <!-- /.col -->
-
-                    <div class="col-md-4">
-                        <!-- Profile Image -->
-                        <div class="card card-primary card-outline">
-                            <div class="card-body box-profile">
-
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="mb-3">
-                                            <label>Boundaries listed in MIMI (used for Inquiries)</label>
-                                            <div>{{ $chDetails->territory }}</div>
-                                        </div>
-                                    </div>
+                                <!-- /.form group -->
+                             <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">Chapter Email:</label>
+                                <div class="col-sm-6">
+                                <input type="text" name="ch_email" id="ch_email" class="form-control" value="{{ $chDetails->email }}"  placeholder="Chapter Email Address" >
                                 </div>
-                                <div class="row mb-3">
-                                    <label class="col-sm-12 col-form-label">Are your listed boundaries correct?<span class="field-required">*</span></label>
-                                    <div class="col-sm-12 row ms-2 mb-2">
-                                        <div class="form-check" style="margin-right: 20px;">
-                                            <input class="form-check-input" type="radio" id="BoundaryStatusYes" name="BoundaryStatus" value="0" {{ !is_null($chDetails->boundary_issues) && $chDetails->boundary_issues == 0 ? 'checked' : '' }} onChange="ShowBoundaryError()">
-                                            <label class="form-check-label" for="BoundaryStatusYes">Yes</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" id="BoundaryStatusNo" name="BoundaryStatus" value="1" {{ $chDetails->boundary_issues == 1 ? 'checked' : '' }} onChange="ShowBoundaryError()">
-                                            <label class="form-check-label" for="BoundaryStatusNo">No</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12" id="divBoundaryIssue">
-                                        <label for="BoundaryIssue">Please indicate which part of the Boundaries not NOT match our records<span class="field-required">*</span></label>
-                                        <input type="text" rows="2"class="form-control" name="BoundaryIssue" id="BoundaryIssue" value="{{ $chDetails->boundary_issue_notes }}" ></input>
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <label class="col-sm-12 col-form-label">Inquiries Email:</label>
-                                    <div class="col-sm-12">
-                                    <input type="text" name="ch_inqemailcontact" id="ch_inqemailcontact" class="form-control" value="{{ $chDetails->inquiries_contact }}" placeholder="Inquiries Email Address" required >
-                                    </div>
-
-                                </div>
-
-                                <div class="row mb-3">
-                                    <label class="col-sm-12 col-form-label">Chapter Email:</label>
-
-                                    <div class="col-sm-12">
-                                    <input type="text" name="ch_email" id="ch_email" class="form-control" value="{{ $chDetails->email }}" placeholder="Chapter Email Address"  >
-                                    </div>
-                                </div>
-
-                                     <div class="row mb-3">
-                                <label class="col-sm-12 col-form-label">Website:</label>
-                                <div class="col-sm-12">
+                            </div>
+                                <!-- /.form group -->
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">Website:</label>
+                                <div class="col-sm-6">
                                     <input type="text" name="ch_website" id="ch_website" class="form-control"
                                         value="{{$chDetails->website_url}}"
                                         placeholder="Chapter Website">
@@ -424,8 +397,9 @@
                             </div>
 
                             <!-- Website Status Container - Hidden by default -->
-                            <div class="row mb-3" id="ch_webstatus-container" style="display: none; margin-top: -8px;">
-                                <div class="col-sm-8">
+                            <div class="row mb-3" id="ch_webstatus-container" style="display: none;">
+                                <label class="col-sm-2 col-form-label">Link Status:</label>
+                                <div class="col-sm-3">
                                     <select name="ch_webstatus" id="ch_webstatus" class="form-control" style="width: 100%;">
                                         <option value="">Select Status</option>
                                         @foreach($allWebLinks as $status)
@@ -440,45 +414,54 @@
 
                         <!-- /.form group -->
                         <div class="row mb-3">
-                            <label class="col-sm-12 col-form-label">Social Media:</label>
-                            <div class="col-sm-12">
-                            <input type="text" name="ch_onlinediss" id="ch_onlinediss" class="form-control" value="{{ $chDetails->egroup }}"  placeholder="Forum/Group/App" >
-                            </div>
-                            <div class="col-sm-12">
-                            <input type="text" name="ch_social1" id="ch_social1" class="form-control" value="{{ $chDetails->social1 }}" placeholder="Facebook"  >
-                            </div>
-
-                            <div class="col-sm-12">
-                                <input type="text" name="ch_social2" id="ch_social2" class="form-control" value="{{ $chDetails->social2 }}"  placeholder="Twitter" >
-                            </div>
-                            <div class="col-sm-12">
-                                <input type="text" name="ch_social3" id="ch_social3" class="form-control" value="{{ $chDetails->social3 }}"  placeholder="Instagram" >
-                            </div>
+                             <label class="col-sm-2 col-form-label">Social Media:</label>
+                                <div class="col-sm-2">
+                                <input type="text" name="ch_onlinediss" id="ch_onlinediss" class="form-control" value="{{ $chDetails->egroup }}"  placeholder="Forum/Group/App" >
+                                </div>
+                                <div class="col-sm-2">
+                                <input type="text" name="ch_social1" id="ch_social1" class="form-control" value="{{ $chDetails->social1 }}" placeholder="Facebook"  >
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" name="ch_social2" id="ch_social2" class="form-control" value="{{ $chDetails->social2 }}"  placeholder="Twitter" >
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" name="ch_social3" id="ch_social3" class="form-control" value="{{ $chDetails->social3 }}"  placeholder="Instagram" >
+                                </div>
                         </div>
 
-                            </div>
-                        <!-- /.card-body -->
-                        </div>
-                        <!-- /.card -->
-                    </div>
-                    <!-- /.col -->
-                </div>
-            @endif
 
-                <div class="card-body text-center mt-3">
-                    @if ($userTypeId == \App\Enums\UserTypeEnum::COORD)
-                        <button type="button" id="btn-back"  class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Profile</button>
-                    @else
-                        <a href="{{ route('home') }}" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Profile</a>
-                    @endif
                     @if ($chDetails->documentsEOY->new_board_submitted != '1')
-                        <button type="submit" class="btn btn-primary bg-gradient mb-2" onclick="return validateBeforeSubmit()" ><i class="bi bi-chevron-double-right me-2"></i>Submit</button>
-                    @endif
-				</form>
-            </div>
+                    <div class="col-md-12">
+                            <div class="card-body text-center mt-3">
+                        <button type="submit" class="btn btn-primary bg-gradient mb-2" onclick="return validateBeforeSubmit()" ><i class="bi bi-chevron-double-right me-2"></i>Submit Report</button>
+                       </div>
+                        </div>
+                        @endif
 
+                        </div>
+                </div>
+            </div>
+        </div>
+       </div>
+        @endif
+       <!-- /.board-container- -->
+
+       </div>
+            </div>
+            <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+
+    </form>
+
+            </div>
+            <!-- /.col -->
+       </div>
     </div>
     <!-- /.container- -->
+
 @endsection
 @section('customscript')
 
@@ -503,5 +486,21 @@ if (userTypeId == '1' && userAdmin != 1) {
     }
 });
 
+$(document).ready(function() {
+    ShowBoundaryError();
+});
+
+function ShowBoundaryError() {
+        var selectedRadio = document.querySelector('input[name="BoundaryStatus"]:checked');
+        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 4 */
+
+        if (selectedValue == "1") {
+            $('#divBoundaryIssue').addClass('tx-cls');
+            document.getElementById("divBoundaryIssue").style.display = 'block'; // If "Yes" is selected
+        } else {
+            $('#divBoundaryIssue').removeClass('tx-cls');
+            document.getElementById("divBoundaryIssue").style.display = 'none'; // If "No" is selected
+        }
+    }
 </script>
 @endsection

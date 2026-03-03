@@ -94,7 +94,7 @@ class PaymentController extends Controller implements HasMiddleware
             'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'checkBox56Status' => $checkBox56Status,
         ];
 
-        return view('payment.chapreregistration')->with($data);
+        return view('coordinators.payment.chapreregistration')->with($data);
     }
 
     /**
@@ -296,7 +296,7 @@ class PaymentController extends Controller implements HasMiddleware
             'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
         ];
 
-        return view('payment.chapdonations')->with($data);
+        return view('coordinators.payment.chapdonations')->with($data);
     }
 
     /**
@@ -327,7 +327,7 @@ class PaymentController extends Controller implements HasMiddleware
             'coorId' => $coorId, 'confId' => $confId, 'chConfId' => $chConfId, 'startDate' => $startDate, 'dueDate' => $dueDate, 'renewalDate' => $renewalDate
         ];
 
-        return view('payment.editpayment')->with($data);
+        return view('coordinators.payment.editpayment')->with($data);
     }
 
     /**
@@ -531,7 +531,7 @@ class PaymentController extends Controller implements HasMiddleware
             'reregHistory' => $reregHistory, 'm2mHistory' => $m2mHistory, 'sustainingHistory' => $sustainingHistory, 'startDate' => $startDate, 'dueDate' => $dueDate, 'renewalDate' => $renewalDate
         ];
 
-        return view('payment.paymenthistory')->with($data);
+        return view('coordinators.payment.paymenthistory')->with($data);
     }
 
       public function showGrantList(Request $request): View
@@ -559,7 +559,7 @@ class PaymentController extends Controller implements HasMiddleware
 
         $data = ['grantList' => $grantList, 'checkBox51Status' => $checkBox51Status];
 
-        return view('payment.grantlist')->with($data);
+        return view('coordinators.payment.grantlist')->with($data);
     }
 
     public function editGrantDetails(Request $request, $grantId): View
@@ -601,7 +601,7 @@ class PaymentController extends Controller implements HasMiddleware
             'grList' => $grList, 'loggedInName' => $loggedInName,
         ];
 
-        return view('payment.editgrantdetails')->with($data);
+        return view('coordinators.payment.editgrantdetails')->with($data);
     }
 
     public function updateGrantDetails(Request $request, $grantId): RedirectResponse

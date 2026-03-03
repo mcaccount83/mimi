@@ -1,10 +1,11 @@
 @if ($TRSDetails->user_id == '')
     <div class="col-12">
-        <h4>Treasurer Position is Vacant</h4>
+        <label>Treasurer Position is Vacant</label>
     </div>
 @else
     <div class="col-md-6">
-        <h4 class="mb-0">{{$TRSDetails->first_name}} {{$TRSDetails->last_name}}</h4>
+        <label>{{$TRSDetails->first_name}} {{$TRSDetails->last_name}}</label>
+        <br>
         <a href="mailto:{{ $TRSDetails->email }}">{{ $TRSDetails->email }}</a>
         <br>
         <span class="phone-mask">{{$TRSDetails->phone}}</span>
