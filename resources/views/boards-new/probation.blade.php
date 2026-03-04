@@ -1,253 +1,196 @@
 @extends('layouts.mimi_theme')
 
+@section('page_title', 'MOMS Club of ' . $chDetails->name . ', ' . $stateShortName)
+@section('breadcrumb', 'Chapter Profile')
+
 @section('content')
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
+     <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+        <div class="col-12">
+
                     <form method="POST" action='{{ route("board-new.updateprobation", $chDetails->id) }}' autocomplete="off">
                         @csrf
 
+                         <div class="col-md-12">
+            <div class="card card-primary card-outline">
+                    <div class="card-body">
+                        <div class="card-header bg-transparent border-0">
+                             <h3>Quarterly Financial Submission</h3>
+                        </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                    Since your chapter in on probation for Excess Member Benefit Expenses, you will need to complete a quarterly financial report submission.<br>
+                                    This should be completed/submitted each quarter to satisfy the terms of your probationary status.
+                               </div>
+                    </div>
+                    <br>
+
+        {{-- Start of Submission Form --}}
+                <div class="container">
+                    <div class="row justify-content-center">
                         <div class="col-md-12">
                             <div class="card">
-                                <div class="card bg-primary">
-                                    <div class="card-body text-center">
-                                        <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" style="width: 115px; height: 115px;">
-                                    </div>
+                                <div class="card-header"><strong>Financial Details</strong>
                                 </div>
                                 <div class="card-body">
-
-                                    <div class="col-md-12"><br><br></div>
-                                    <h2 class="text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h2>
-                                            <h4 class="text-center">Quarterly Financial Submission</h4>
-
-                                    <p class="description text-center">
-                                        Since your chapter in on probation for Excess Member Benefit Expenses, you will need to complete a quarterly financial report submission.
-                                        <br>This should be completed/submitted each quarter to satisfy the terms of your probationary status.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- /.card -->
-                    </div>
-                </div>
-
-    <div class="row">
-            <div class="col-md-12">
-                <div class="card card-primary card-outline">
-                    <div class="card-body box-profile">
-                         <!-- /.card-header -->
-                         <p >
-                            Enter Dues Income and Member Benefit Expenses for each Quarter Below.
-                        </p>
-
+                            Enter Dues Income and Member Benefit Expenses for each Quarter Below.<br>
+                                    <br>
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="col-md-4 float-start nopadding">
-                                <div class="mb-3">
+                            <div class="col-md-4 float-start me-2 mb-1">
                                     <label for="q1_dues">Q1 Dues Income</label>
                                     <div class="input-group">
                                         <span class="input-group-text">$</span>
                                         <input type="text" class="form-control" name="q1_dues" id="q1_dues" value="{{ $chDetails->probationSubmit?->q1_dues }}"
                                             data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
-                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-4 float-start nopadding">
-                                <div class="mb-3">
+                            <div class="col-md-4 float-start me-2 mb-1">
                                     <label for="q1_benefit">Q1 Member Benefit Expenses</label>
                                     <div class="input-group">
                                         <span class="input-group-text">$</span>
                                         <input type="text" class="form-control" name="q1_benefit" id="q1_benefit" value="{{ $chDetails->probationSubmit?->q1_benefit }}"
                                             data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                                     </div>
-                                </div>
                             </div>
-                            <div class="col-md-4 float-start nopadding">
-                            </div>
+
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="col-md-4 float-start nopadding">
-                                    <div class="mb-3">
+                            <div class="col-md-4 float-start me-2 mb-1">
                                         <label for="Q1Dues">Q2 Dues Income</label>
-                                        <div class="mb-3">
                                             <div class="input-group">
                                                 <span class="input-group-text">$</span>
                                             <input type="text" class="form-control " name="q2_dues" id="q2_dues" value="{{ $chDetails->probationSubmit?->q2_dues }}"
                                                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                                             </div>
-                                        </div>
-                                    </div>
                                 </div>
-                                <div class="col-md-4 float-start nopadding">
-                                    <div class="mb-3">
+                            <div class="col-md-4 float-start me-2 mb-1">
                                         <label for="Q1Benefit">Q2 Member Benefit Expenses</label>
-                                        <div class="mb-3">
                                             <div class="input-group">
                                                 <span class="input-group-text">$</span>
                                             <input type="text" class="form-control " name="q2_benefit" id="q2_benefit" value="{{ $chDetails->probationSubmit?->q2_benefit }}"
                                                 data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                                             </div>
-                                        </div>
-                                    </div>
                                 </div>
-                                <div class="col-md-4 float-start nopadding">
-                                </div>
+
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-12">
-                                    <div class="col-md-4 float-start nopadding">
-                                        <div class="mb-3">
+                            <div class="col-md-4 float-start me-2 mb-1">
                                             <label for="Q1Dues">Q3 Dues Income</label>
-                                            <div class="mb-3">
                                                 <div class="input-group">
                                                     <span class="input-group-text">$</span>
                                                 <input type="text" class="form-control " name="q3_dues" id="q3_dues" value="{{ $chDetails->probationSubmit?->q3_dues }}"
                                                     data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                                                 </div>
-                                            </div>
-                                        </div>
                                     </div>
-                                    <div class="col-md-4 float-start nopadding">
-                                        <div class="mb-3">
+                            <div class="col-md-4 float-start me-2 mb-1">
                                             <label for="Q1Benefit">Q3 Member Benefit Expenses</label>
-                                            <div class="mb-3">
                                                 <div class="input-group">
                                                     <span class="input-group-text">$</span>
                                                 <input type="text" class="form-control " name="q3_benefit" id="q3_benefit" value="{{ $chDetails->probationSubmit?->q3_benefit }}"
                                                     data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                                                 </div>
-                                            </div>
-                                        </div>
                                     </div>
-                                    <div class="col-md-4 float-start nopadding">
+                            <div class="col-md-4 float-start me-2 mb-1">
                                     </div>
                                     </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="col-md-4 float-start nopadding">
-                                            <div class="mb-3">
+                            <div class="col-md-4 float-start me-2 mb-1">
                                                 <label for="Q1Dues">Q4 Dues Income</label>
-                                                <div class="mb-3">
                                                     <div class="input-group">
                                                         <span class="input-group-text">$</span>
                                                     <input type="text" class="form-control " name="q4_dues" id="q4_dues" value="{{ $chDetails->probationSubmit?->q4_dues }}"
                                                         data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                                                     </div>
-                                                </div>
-                                            </div>
                                         </div>
-                                        <div class="col-md-4 float-start nopadding">
-                                            <div class="mb-3">
+                            <div class="col-md-4 float-start me-2 mb-1">
                                                 <label for="Q1Benefit">Q4 Member Benefit Expenses</label>
-                                                <div class="mb-3">
                                                     <div class="input-group">
                                                         <span class="input-group-text">$</span>
                                                     <input type="text" class="form-control " name="q4_benefit" id="q4_benefit" value="{{ $chDetails->probationSubmit?->q4_benefit }}"
                                                         data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
-                                                    </div>
-                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 float-start nopadding">
-                                        </div>
+
                                         </div>
                                     </div>
 
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <div class="col-md-4 float-start nopadding">
-                                                <div class="mb-3">
+                            <div class="col-md-4 float-start me-2 mb-1">
                                                     <label for="Q1Dues">YTD Dues Income</label>
-                                                    <div class="mb-3">
                                                         <div class="input-group">
                                                             <span class="input-group-text">$</span>
                                                         <input type="text" class="form-control " name="TotalDues" id="TotalDues" readonly
                                                             data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                                                         </div>
-                                                    </div>
-                                                </div>
                                             </div>
-                                            <div class="col-md-4 float-start nopadding">
-                                                <div class="mb-3">
+                            <div class="col-md-4 float-start me-2 mb-1">
                                                     <label for="Q1Benefit">YTD Benefit Expenses</label>
-                                                    <div class="mb-3">
                                                         <div class="input-group">
                                                             <span class="input-group-text">$</span>
                                                         <input type="text" class="form-control " name="TotalBenefit" id="TotalBenefit" readonly
                                                             data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4 float-start nopadding">
-                                                <div class="mb-3">
+
+                                             </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                            <div class="col-md-4 float-start me-2 mb-1">
                                                     <label for="Q1Percentage">YTD Benefit %</label>
-                                                    <div class="mb-3">
                                                         <div class="input-group">
                                                            <input type="text" class="form-control" name="TotalPercentage" id="TotalPercentage" value="0%" readonly>
                                                         </div>
-                                                    </div>
-                                                </div>
                                             </div>
-                                            </div>
-                                        </div>
+                                </div>
+                            </div>
                         </div>
-                        <!-- /.card-body -->
-                        </div>
-                        <!-- /.card -->
-                    </div>
-                    <!-- /.col -->
-                </div>
-
-            <div class="card-body text-center mt-3">
+                        <div class="card-body text-center mt-3">
                 <button id="Save" type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>Submit</button>
+                    </div>
 
-            @if ($userTypeId == \App\Enums\UserTypeEnum::COORD)
-                <button type="button" id="btn-back" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Profile</button>
-            @else
-                <a href="{{ route('home') }}" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Profile</a>
-            @endif
-                <button id="logout-btn" class="btn btn-primary bg-gradient mb-2" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="bi bi-box-arrow-right me-2" ></i>Logout</button>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
+                    </div>
                 </div>
+                 <!-- /.form-container- -->
+
+           </div>
+            </div>
+            <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+
+    </form>
 
             </div>
-            <!-- /.container- -->
+            <!-- /.col -->
+       </div>
+    </div>
+    <!-- /.container- -->
         @endsection
 
 @section('customscript')
+@php $disableMode = 'disable-all'; @endphp
+@include('layouts.scripts.disablefields')
 
 <script>
-    /* Disable fields and buttons  */
-$(document).ready(function () {
-        var userTypeId = @json($userTypeId);
-        var userAdmin = @json($userAdmin);
-
-   if (userTypeId == 1 && userAdmin != 1) {
-            $('button, input, select, textarea').not('#btn-back').prop('disabled', true);
-    }
-
-    });
-
-    document.querySelector('form').addEventListener('submit', function(){
-        document.querySelector('button[type="submit"]').setAttribute('disabled', 'disabled');
-    });
-
-    function formatCurrency(input) {
-        let value = input.value.replace(/\D/g, '');
-        value = (value / 100).toFixed(2);
-        input.value = '$' + value;
-    }
-
 
 document.addEventListener("DOMContentLoaded", function() {
     // Set up Inputmask

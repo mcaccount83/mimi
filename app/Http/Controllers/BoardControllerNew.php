@@ -217,7 +217,7 @@ class BoardControllerNew extends Controller implements HasMiddleware
         $resources = Resources::with('resourceCategory')->get();
         $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
 
-        $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
+        $data = ['chDetails' => $chDetails,'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'allCountries' => $allCountries,
             'startMonthName' => $startMonthName, 'dueDate' => $dueDate, 'userTypeId' => $userTypeId, 'allProbation' => $allProbation, 'userAdmin' => $userAdmin, 'financialReportPdfs' => $financialReportPdfs,
             'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments, 'chEOYDocuments' => $chEOYDocuments, 'websiteLink' => $websiteLink,
@@ -227,6 +227,211 @@ class BoardControllerNew extends Controller implements HasMiddleware
         ];
 
         return view('boards-new.view')->with($data);
+    }
+
+    public function viewDocuments(Request $request, $chId): View
+    {
+    $user = $this->userController->loadUserInformation($request);
+        $userTypeId = $user['userTypeId'];
+        $userAdmin = $user['userAdmin'];
+
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+        $chDetails = $baseQuery['chDetails'];
+        $startMonthId = $baseQuery['startMonthId'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $regionLongName = $baseQuery['regionLongName'];
+        $conferenceDescription = $baseQuery['conferenceDescription'];
+
+        $chPayments = $baseQuery['chPayments'];
+        $chFinancialReport = $baseQuery['chFinancialReport'];
+        $chDocuments = $baseQuery['chDocuments'];
+        $chEOYDocuments = $baseQuery['chEOYDocuments'];
+        $financialReportPdfs = $baseQuery['financialReportPdfs'];
+        $boardActive = $chEOYDocuments->new_board_active;
+
+        $startMonthName = $baseQuery['startMonthName'];
+        $startDate = $baseQuery['startDate'];
+        $dueDate = $baseQuery['dueDate'];
+        $renewalDate = $baseQuery['renewalDate'];
+        $chapterStatus = $baseQuery['chapterStatus'];
+        $probationReason = $baseQuery['probationReason'];
+
+        $allProbation = $baseQuery['allProbation'];
+
+        $PresDetails = $baseQuery['PresDetails'];
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId,  $PresDetails);
+        $bdPositionId = $bdData['bdPositionId'];
+        $borDetails = $bdData['bdDetails'];
+        $bdTypeId = $bdData['bdTypeId'];
+
+        $resources = Resources::with('resourceCategory')->get();
+        $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
+
+        $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'PresDetails' => $PresDetails,
+            'startMonthName' => $startMonthName, 'dueDate' => $dueDate, 'userTypeId' => $userTypeId, 'allProbation' => $allProbation, 'userAdmin' => $userAdmin, 'financialReportPdfs' => $financialReportPdfs,
+            'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments, 'chEOYDocuments' => $chEOYDocuments,
+            'boardActive' => $boardActive, 'startMonthId' => $startMonthId, 'chapterStatus' => $chapterStatus, 'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId,
+            'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'startDate' => $startDate, 'renewalDate' => $renewalDate, 'allAwards' => $allAwards,
+            'resources' => $resources,
+        ];
+
+        return view('boards-new.documents')->with($data);
+    }
+
+    public function viewReRegHistory(Request $request, $chId): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userTypeId = $user['userTypeId'];
+        $userAdmin = $user['userAdmin'];
+
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+        $chDetails = $baseQuery['chDetails'];
+        $startMonthId = $baseQuery['startMonthId'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $regionLongName = $baseQuery['regionLongName'];
+        $conferenceDescription = $baseQuery['conferenceDescription'];
+
+        $chPayments = $baseQuery['chPayments'];
+        $chFinancialReport = $baseQuery['chFinancialReport'];
+        $chDocuments = $baseQuery['chDocuments'];
+        $chEOYDocuments = $baseQuery['chEOYDocuments'];
+        $financialReportPdfs = $baseQuery['financialReportPdfs'];
+        $boardActive = $chEOYDocuments->new_board_active;
+
+        $startMonthName = $baseQuery['startMonthName'];
+        $startDate = $baseQuery['startDate'];
+        $dueDate = $baseQuery['dueDate'];
+        $renewalDate = $baseQuery['renewalDate'];
+        $chapterStatus = $baseQuery['chapterStatus'];
+        $probationReason = $baseQuery['probationReason'];
+        $websiteLink = $baseQuery['websiteLink'];
+
+        $allProbation = $baseQuery['allProbation'];
+        $allWebLinks = $baseQuery['allWebLinks'];
+        $allStates = $baseQuery['allStates'];
+        $allCountries = $baseQuery['allCountries'];
+
+        $PresDetails = $baseQuery['PresDetails'];
+        $AVPDetails = $baseQuery['AVPDetails'];
+        $MVPDetails = $baseQuery['MVPDetails'];
+        $TRSDetails = $baseQuery['TRSDetails'];
+        $SECDetails = $baseQuery['SECDetails'];
+
+         $reregHistory = PaymentHistory::where('chapter_id', $chId)
+        ->where('payment_type', 'rereg')
+        ->orderBy('payment_date', 'desc')
+        ->get();
+
+        $m2mHistory = PaymentHistory::where('chapter_id', $chId)
+        ->where('payment_type', 'm2m')
+        ->orderBy('payment_date', 'desc')
+        ->get();
+
+        $sustainingHistory = PaymentHistory::where('chapter_id', $chId)
+        ->where('payment_type', 'sustaining')
+        ->orderBy('payment_date', 'desc')
+        ->get();
+
+        $grantRequests = GrantRequest::where('chapter_id', $chId)
+        ->orderBy('submitted_at', 'desc')
+        ->get();
+
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdPositionId = $bdData['bdPositionId'];
+        $borDetails = $bdData['bdDetails'];
+        $bdTypeId = $bdData['bdTypeId'];
+
+        $resources = Resources::with('resourceCategory')->get();
+        $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
+
+        $data = ['chDetails' => $chDetails,'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
+            'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'allCountries' => $allCountries,
+            'startMonthName' => $startMonthName, 'dueDate' => $dueDate, 'userTypeId' => $userTypeId, 'allProbation' => $allProbation, 'userAdmin' => $userAdmin, 'financialReportPdfs' => $financialReportPdfs,
+            'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments, 'chEOYDocuments' => $chEOYDocuments, 'websiteLink' => $websiteLink,
+            'boardActive' => $boardActive, 'startMonthId' => $startMonthId, 'chapterStatus' => $chapterStatus, 'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId,
+            'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'startDate' => $startDate, 'renewalDate' => $renewalDate, 'allAwards' => $allAwards,
+            'reregHistory' => $reregHistory, 'm2mHistory' => $m2mHistory, 'sustainingHistory' => $sustainingHistory, 'grantRequests' => $grantRequests, 'resources' => $resources,
+        ];
+
+        return view('boards-new.rereghistory')->with($data);
+    }
+
+    public function viewDonationHistory(Request $request, $chId): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userTypeId = $user['userTypeId'];
+        $userAdmin = $user['userAdmin'];
+
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+        $chDetails = $baseQuery['chDetails'];
+        $startMonthId = $baseQuery['startMonthId'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $regionLongName = $baseQuery['regionLongName'];
+        $conferenceDescription = $baseQuery['conferenceDescription'];
+
+        $chPayments = $baseQuery['chPayments'];
+        $chFinancialReport = $baseQuery['chFinancialReport'];
+        $chDocuments = $baseQuery['chDocuments'];
+        $chEOYDocuments = $baseQuery['chEOYDocuments'];
+        $financialReportPdfs = $baseQuery['financialReportPdfs'];
+        $boardActive = $chEOYDocuments->new_board_active;
+
+        $startMonthName = $baseQuery['startMonthName'];
+        $startDate = $baseQuery['startDate'];
+        $dueDate = $baseQuery['dueDate'];
+        $renewalDate = $baseQuery['renewalDate'];
+        $chapterStatus = $baseQuery['chapterStatus'];
+        $probationReason = $baseQuery['probationReason'];
+        $websiteLink = $baseQuery['websiteLink'];
+
+        $allProbation = $baseQuery['allProbation'];
+        $allWebLinks = $baseQuery['allWebLinks'];
+        $allStates = $baseQuery['allStates'];
+        $allCountries = $baseQuery['allCountries'];
+
+        $PresDetails = $baseQuery['PresDetails'];
+        $AVPDetails = $baseQuery['AVPDetails'];
+        $MVPDetails = $baseQuery['MVPDetails'];
+        $TRSDetails = $baseQuery['TRSDetails'];
+        $SECDetails = $baseQuery['SECDetails'];
+
+         $reregHistory = PaymentHistory::where('chapter_id', $chId)
+        ->where('payment_type', 'rereg')
+        ->orderBy('payment_date', 'desc')
+        ->get();
+
+        $m2mHistory = PaymentHistory::where('chapter_id', $chId)
+        ->where('payment_type', 'm2m')
+        ->orderBy('payment_date', 'desc')
+        ->get();
+
+        $sustainingHistory = PaymentHistory::where('chapter_id', $chId)
+        ->where('payment_type', 'sustaining')
+        ->orderBy('payment_date', 'desc')
+        ->get();
+
+        $grantRequests = GrantRequest::where('chapter_id', $chId)
+        ->orderBy('submitted_at', 'desc')
+        ->get();
+
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdPositionId = $bdData['bdPositionId'];
+        $borDetails = $bdData['bdDetails'];
+        $bdTypeId = $bdData['bdTypeId'];
+
+        $resources = Resources::with('resourceCategory')->get();
+        $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
+
+        $data = ['chDetails' => $chDetails,'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
+            'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'allCountries' => $allCountries,
+            'startMonthName' => $startMonthName, 'dueDate' => $dueDate, 'userTypeId' => $userTypeId, 'allProbation' => $allProbation, 'userAdmin' => $userAdmin, 'financialReportPdfs' => $financialReportPdfs,
+            'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments, 'chEOYDocuments' => $chEOYDocuments, 'websiteLink' => $websiteLink,
+            'boardActive' => $boardActive, 'startMonthId' => $startMonthId, 'chapterStatus' => $chapterStatus, 'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId,
+            'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'startDate' => $startDate, 'renewalDate' => $renewalDate, 'allAwards' => $allAwards,
+            'reregHistory' => $reregHistory, 'm2mHistory' => $m2mHistory, 'sustainingHistory' => $sustainingHistory, 'grantRequests' => $grantRequests, 'resources' => $resources,
+        ];
+
+        return view('boards-new.donationhistory')->with($data);
     }
 
     public function editBoard(Request $request, $chId): View
@@ -631,8 +836,14 @@ class BoardControllerNew extends Controller implements HasMiddleware
         $allStates = $baseQuery['allStates'];
         $allCountries = $baseQuery['allCountries'];
 
+        $PresDetails = $baseQuery['PresDetails'];
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdPositionId = $bdData['bdPositionId'];
+        $borDetails = $bdData['bdDetails'];
+        $bdTypeId = $bdData['bdTypeId'];
+
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin, 'chActiveId' => $chActiveId,
-            'allStates' => $allStates, 'allCountries' => $allCountries,
+            'allStates' => $allStates, 'allCountries' => $allCountries, 'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
         ];
 
         return view('boards-new.manualorder')->with($data);
@@ -663,9 +874,16 @@ class BoardControllerNew extends Controller implements HasMiddleware
         $rangeStartDateFormatted = $rangeStartDate->format('m/d/Y');
         $rangeEndDateFormatted = $rangeEndDate->format('m/d/Y');
 
+        $PresDetails = $baseQuery['PresDetails'];
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdPositionId = $bdData['bdPositionId'];
+        $borDetails = $bdData['bdDetails'];
+        $bdTypeId = $bdData['bdTypeId'];
+
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userAdmin' => $userAdmin,
             'startMonthName' => $startMonthName, 'endRange' => $rangeEndDateFormatted, 'startRange' => $rangeStartDateFormatted,
-            'thisMonth' => $currentMonth, 'due_date' => $due_date, 'userTypeId' => $userTypeId,
+            'thisMonth' => $currentMonth, 'due_date' => $due_date, 'userTypeId' => $userTypeId, 'bdPositionId' => $bdPositionId,
+            'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
         ];
 
         return view('boards-new.probation')->with($data);
@@ -751,24 +969,22 @@ class BoardControllerNew extends Controller implements HasMiddleware
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
+        $websiteLink = $baseQuery['websiteLink'];
 
-        $dateOptions = $this->positionConditionsService->getDateOptions();
-        $currentMonth = $dateOptions['currentMonth'];
-        $start_month = $chDetails->start_month_id;
-        $next_renewal_year = $chDetails->next_renewal_year;
-        $due_date = Carbon::create($next_renewal_year, $start_month, 1);
-        $rangeEndDate = $due_date->copy()->subMonth()->endOfMonth();
-        $rangeStartDate = $rangeEndDate->copy()->startOfMonth()->subYear()->addMonth();
+        $allWebLinks = $baseQuery['allWebLinks'];
 
-        $rangeStartDateFormatted = $rangeStartDate->format('m/d/Y');
-        $rangeEndDateFormatted = $rangeEndDate->format('m/d/Y');
+        $PresDetails = $baseQuery['PresDetails'];
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdPositionId = $bdData['bdPositionId'];
+        $borDetails = $bdData['bdDetails'];
+        $bdTypeId = $bdData['bdTypeId'];
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userAdmin' => $userAdmin,
-            'startMonthName' => $startMonthName, 'endRange' => $rangeEndDateFormatted, 'startRange' => $rangeStartDateFormatted,
-            'thisMonth' => $currentMonth, 'due_date' => $due_date, 'userTypeId' => $userTypeId,
+            'websiteLink' => $websiteLink, 'allWebLinks' => $allWebLinks, 'userTypeId' => $userTypeId, 'bdPositionId' => $bdPositionId,
+            'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
         ];
 
-        return view('boards-new.online')->with($data);
+        return view('boards-new.editonline')->with($data);
     }
 
     /**
@@ -854,11 +1070,18 @@ class BoardControllerNew extends Controller implements HasMiddleware
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
 
+        $PresDetails = $baseQuery['PresDetails'];
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdPositionId = $bdData['bdPositionId'];
+        $borDetails = $bdData['bdDetails'];
+        $bdTypeId = $bdData['bdTypeId'];
+
         $resources = Resources::with('resourceCategory')->get();
         $resourceCategories = ResourceCategory::all();
 
         $data = ['stateShortName' => $stateShortName, 'chDetails' => $chDetails, 'resources' => $resources, 'resourceCategories' => $resourceCategories,
-            'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,
+            'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,  'bdPositionId' => $bdPositionId,
+            'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
         ];
 
         return view('boards-new.resources')->with($data);
@@ -936,7 +1159,7 @@ class BoardControllerNew extends Controller implements HasMiddleware
             'allWebLinks' => $allWebLinks, 'allCountries' => $allCountries,  'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId,
         ];
 
-        return view('boards-new.boardinfo')->with($data);
+        return view('boards-new.editboardreport')->with($data);
     }
 
     /**
@@ -1066,41 +1289,41 @@ class BoardControllerNew extends Controller implements HasMiddleware
     /**
      * Show EOY Financial Report All Board Members
      */
-    public function editFinancialReport(Request $request, $chId): View
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $userTypeId = $user['userTypeId'];
-        $userName = $loggedInName = $user['userName'];
-        $userEmail = $user['userEmail'];
-        $userAdmin = $user['userAdmin'];
+    // public function editFinancialReport(Request $request, $chId): View
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $userTypeId = $user['userTypeId'];
+    //     $userName = $loggedInName = $user['userName'];
+    //     $userEmail = $user['userEmail'];
+    //     $userAdmin = $user['userAdmin'];
 
-        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
-        $chDetails = $baseQuery['chDetails'];
-        $chActiveId = $baseQuery['chActiveId'];
-        $stateShortName = $baseQuery['stateShortName'];
-        $chEOYDocuments = $baseQuery['chEOYDocuments'];
-        $chFinancialReport = $baseQuery['chFinancialReport'];
-        $awards = $baseQuery['awards'];
-        $allAwards = $baseQuery['allAwards'];
+    //     $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+    //     $chDetails = $baseQuery['chDetails'];
+    //     $chActiveId = $baseQuery['chActiveId'];
+    //     $stateShortName = $baseQuery['stateShortName'];
+    //     $chEOYDocuments = $baseQuery['chEOYDocuments'];
+    //     $chFinancialReport = $baseQuery['chFinancialReport'];
+    //     $awards = $baseQuery['awards'];
+    //     $allAwards = $baseQuery['allAwards'];
 
-        $PresDetails = $baseQuery['PresDetails'];
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
-        $bdPositionId = $bdData['bdPositionId'];
-        $borDetails = $bdData['bdDetails'];
-        $bdTypeId = $bdData['bdTypeId'];
+    //     $PresDetails = $baseQuery['PresDetails'];
+    //     $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+    //     $bdPositionId = $bdData['bdPositionId'];
+    //     $borDetails = $bdData['bdDetails'];
+    //     $bdTypeId = $bdData['bdTypeId'];
 
-        $resources = Resources::with('resourceCategory')->get();
-        $resourceCategories = ResourceCategory::all();
+    //     $resources = Resources::with('resourceCategory')->get();
+    //     $resourceCategories = ResourceCategory::all();
 
-        $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,
-            'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'stateShortName' => $stateShortName,
-            'awards' => $awards, 'allAwards' => $allAwards, 'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'chEOYDocuments' => $chEOYDocuments,
-            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
-        ];
+    //     $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,
+    //         'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'stateShortName' => $stateShortName,
+    //         'awards' => $awards, 'allAwards' => $allAwards, 'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'chEOYDocuments' => $chEOYDocuments,
+    //         'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
+    //     ];
 
-        return view('boards-new.financial')->with($data);
+    //     return view('boards-new.editfinancialreport')->with($data);
 
-    }
+    // }
 
     /**
      * Save EOY Financial Report All Board Members
@@ -1220,19 +1443,21 @@ class BoardControllerNew extends Controller implements HasMiddleware
      */
     public function viewELearning(Request $request, $chId): View
     {
-        // $user = $this->userController->loadUserInformation($request);
-        $user = User::find($request->user()->id);
+        $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
+
+        $userInfo = User::find($request->user()->id); // Formatted for course re-route
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
+        $PresDetails = $baseQuery['PresDetails'];
 
         $boardCourses = $this->learndashService->getCoursesForUserType('board');
 
         // Add auto-login URLs to each course
         foreach ($boardCourses as &$boardCourse) {
-            $boardCourse['auto_login_url'] = $this->learndashService->getAutoLoginUrl($boardCourse, $user, 'board.course.redirect');
+            $boardCourse['auto_login_url'] = $this->learndashService->getAutoLoginUrl($boardCourse, $userInfo, 'board.course.redirect');
         }
 
         // Group by category - store both name and slug
@@ -1245,11 +1470,17 @@ class BoardControllerNew extends Controller implements HasMiddleware
             ];
         });
 
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdPositionId = $bdData['bdPositionId'];
+        $borDetails = $bdData['bdDetails'];
+        $bdTypeId = $bdData['bdTypeId'];
+
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userTypeId' => $userTypeId, 'boardCourses' => $boardCourses,
-            'boardCoursesByCategory' => $boardCoursesByCategory,
+            'boardCoursesByCategory' => $boardCoursesByCategory, 'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails,
+            'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
         ];
 
-        return view('boards.elearning')->with($data);
+        return view('boards-new.elearning')->with($data);
     }
 
     public function redirectToCourse($courseId, Request $request): RedirectResponse
@@ -1285,8 +1516,15 @@ class BoardControllerNew extends Controller implements HasMiddleware
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $stateShortName = $baseQuery['stateShortName'];
 
+        $PresDetails = $baseQuery['PresDetails'];
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdPositionId = $bdData['bdPositionId'];
+        $borDetails = $bdData['bdDetails'];
+        $bdTypeId = $bdData['bdTypeId'];
+
         $data = ['chDetails' => $chDetails, 'grantList' => $grantList, 'stateShortName' => $stateShortName,
-            'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,
+            'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,  'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails,
+            'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
         ];
 
         return view('boards-new.grantrequestlist')->with($data);
@@ -1438,9 +1676,16 @@ class BoardControllerNew extends Controller implements HasMiddleware
             $borDetails = $user['bdDetails'];
         }
 
+        $PresDetails = $baseQuery['PresDetails'];
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdPositionId = $bdData['bdPositionId'];
+        $borDetails = $bdData['bdDetails'];
+        $bdTypeId = $bdData['bdTypeId'];
+
         $data = ['stateShortName' => $stateShortName, 'chDetails' => $chDetails,
             'PresDetails' => $PresDetails, 'stateName' => $stateName,
-            'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,'borDetails' => $borDetails,
+            'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,
+            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
         ];
 
         return view('boards-new.grantrequest')->with($data);

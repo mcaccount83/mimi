@@ -165,7 +165,7 @@
                              <div class="col-md-12" >
                                    The information provided below is only used to try to find you the closest MOMS Club chapter in your area, never for advertising or promotional purposes.
                                 </div>
-                            <div class="col-md-12" style="color: red;">Page will automatically re-direct after inquiry submission.</div>
+                            <div class="col-md-12" style="color: #dc3545;">Page will automatically re-direct after inquiry submission.</div>
 
                                 <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>{{ __('Submit Inquiry') }}</button>
                         </div>

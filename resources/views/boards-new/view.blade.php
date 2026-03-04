@@ -109,7 +109,7 @@
 
                             <div class="col-md-12">
                                 <div class="card-body text-center mt-3">
-                                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('board-new.editboard', ['id' => $chDetails->id]) }}'"><i class="bi bi-people-fill me-2"></i>Edit Board Information</button>
+                                    <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board-new.editboardreport', ['id' => $chDetails->id]) }}'"><i class="bi bi-people-fill me-2"></i>Edit Board Information</button>
                                 </div>
                             </div>
 
@@ -148,7 +148,7 @@
 
                         <div class="col-md-12">
                             <div class="card-body text-center mt-3">
-                                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('board-new.editonline', ['id' => $chDetails->id]) }}'"><i class="bi bi-laptop me-2"></i>Edit Online Information</button>
+                                <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board-new.editonline', ['id' => $chDetails->id]) }}'"><i class="bi bi-laptop me-2"></i>Edit Online Information</button>
                             </div>
                         </div>
 
@@ -225,7 +225,7 @@
 
                             <div class="col-md-12">
                             <div class="card-body text-center mt-3">
-                                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('board-new.editreregpayment', ['id' => $chDetails->id]) }}'"><i class="bi bi-credit-card-fill me-2"></i>Make a Payment</button>
+                                <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board-new.editreregpayment', ['id' => $chDetails->id]) }}'"><i class="bi bi-credit-card-fill me-2"></i>Make a Payment</button>
                             </div>
                         </div>
 
@@ -322,7 +322,7 @@
 
                             <div class="col-md-12">
                             <div class="card-body text-center mt-3">
-                                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('board-new.editdonate', ['id' => $chDetails->id]) }}'"><i class="bi bi-currency-dollar me-2"></i>Make a Donation</button>
+                                <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board-new.editdonate', ['id' => $chDetails->id]) }}'"><i class="bi bi-currency-dollar me-2"></i>Make a Donation</button>
                             </div>
                         </div>
 
@@ -392,7 +392,7 @@
                                     <label>Chapter in Good Standing Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button id="GoodStanding" type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}', '_blank')">Good Standing Chapter Letter</button><br>
+                                    <button id="GoodStanding" type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}', '_blank')">Good Standing Chapter Letter</button><br>
                                 </div>
                             </div>
 
@@ -403,7 +403,7 @@
                                     </div>
                                     <div class="col-sm-6 mb-2">
                                         @if($chDocuments->probation_path != null)
-                                            <button class="btn btn-primary bg-gradient btn-sm" type="button" id="probation-file" onclick="openPdfViewer('{{ $chDocuments->probation_path }}')">Probation Letter</button>
+                                            <button class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="probation-file" onclick="openPdfViewer('{{ $chDocuments->probation_path }}')">Probation Letter</button>
                                         @else
                                             <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No Probation Letter on File</button>
                                         @endif
@@ -417,7 +417,7 @@
                                     <label>Probation Release Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button class="btn btn-primary bg-gradient btn-sm" type="button" id="probaton-release-file" onclick="openPdfViewer('{{ $chDocuments->probation_release_path }}')">Probation Release Letter</button>
+                                    <button class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="probaton-release-file" onclick="openPdfViewer('{{ $chDocuments->probation_release_path }}')">Probation Release Letter</button>
                                 </div>
                             </div>
                             @endif
@@ -428,7 +428,7 @@
                                         <label>Name Change Letter:</label>
                                     </div>
                                     <div class="col-sm-6">
-                                        <button class="btn btn-primary bg-gradient btn-sm" type="button" id="name-change-file" onclick="openPdfViewer('{{ $chDocuments->name_change_letter_path }}')">Name Change Letter</button>
+                                        <button class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="name-change-file" onclick="openPdfViewer('{{ $chDocuments->name_change_letter_path }}')">Name Change Letter</button>
                                     </div>
                                 </div>
                             @endif
@@ -440,10 +440,7 @@
                                     </div>
                                     <div class="col-sm-6">
                                         @foreach ($financialReportPdfs as $year => $path)
-                                            <button type="button" class="btn btn-primary bg-gradient btn-sm me-1 mb-1"
-                                                onclick="openPdfViewer('{{ $path }}')">
-                                                {{ $year - 1 }}-{{ $year }} Financial Report
-                                            </button>
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm me-1 mb-1 keep-enabled" onclick="openPdfViewer('{{ $path }}')">{{ $year - 1 }}-{{ $year }} Financial Report</button>
                                         @endforeach
                                     </div>
                                 </div>
@@ -471,9 +468,10 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
+                             @if ($displayTESTING == '1' || $displayLIVE == '1' || $ITCondition)
                             <div class="row">
                             <div class="col-md-6 mb-3">
-                                @if ($displayTESTING == '1' || $displayLIVE == '1' || $ITCondition)
+
                                     <div class="row mb-2">
                                         <div class="col-sm-4">
                                             <label>Board Report:</label>
@@ -608,36 +606,27 @@
 
                             @else
                                 <div class="row mb-3">
-                                    <div class="col-sm-3">
-                                        <label>Board Report:</label>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        Report will be available on May 1st.
+                                    <div class="col-12">
+                                        <label cladd="me-2">Board Report:</label>Report will be available on May 1st.
                                     </div>
                                 </div>
 
                                 <div class="row mb-3">
-                                    <div class="col-sm-3">
-                                        <label>Financial Report:</label>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        Report will be available on June 1st.
+                                    <div class="col-12">
+                                        <label cladd="me-2">Financial Report:</label>Report will be available on June 1st.
                                     </div>
                                 </div>
 
                                 <div class="row mb-3">
-                                    <div class="col-sm-3">
-                                        <label>990N Submission:</label>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        Links/Instructions will be available on July 1st.
+                                    <div class="col-12">
+                                        <label cladd="me-2">990N Submission:</label>Links/Instructions will be available on July 1st.
                                     </div>
                                 </div>
                             @endif
 
                               <div class="col-md-12">
                             <div class="card-body text-center mt-3">
-                                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('board-new.viewendofyear', ['id' => $chDetails->id]) }}'"><i class="bi bi-file-earmark-bar-graph-fill me-2"></i>Filing Instructions & Information</button>
+                                <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board-new.viewendofyear', ['id' => $chDetails->id]) }}'"><i class="bi bi-file-earmark-bar-graph-fill me-2"></i>Filing Instructions & Information</button>
                             </div>
                         </div>
 
@@ -666,8 +655,6 @@
     <!-- /.content -->
 @endsection
 @section('customscript')
-<script>
-
-</script>
-
+@php $disableMode = 'disable-all'; @endphp
+@include('layouts.scripts.disablefields')
 @endsection

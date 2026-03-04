@@ -40,11 +40,29 @@
         </li>
     @endif
 
-    <!-- ReReg Menu Item -->
+    <!-- Online Menu Item -->
     @php
-        $boardRoute = route('board-new.editreregpayment', ['id' => $chDetails->id]);
+        $boardRoute = route('board-new.editonline', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
+            'board-new/online/*',
+        ];
+    @endphp
+    @if (isset($boardRoute))
+        <li class="nav-item">
+            <a href="{{ $boardRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardRoutes) }}">
+                <i class="nav-icon bi bi-laptop"></i>
+                <p>Online Accounts</p>
+            </a>
+        </li>
+    @endif
+
+    <!-- ReReg Menu Item -->
+    @php
+        $boardRoute = route('board-new.viewrereghistory', ['id' => $chDetails->id]);
+
+        $activeBoardRoutes = [
+            'board-new/rereghistory/*',
             'board-new/reregpayment/*',
         ];
     @endphp
@@ -59,9 +77,10 @@
 
     <!-- Donations Menu Item -->
     @php
-        $boardRoute = route('board-new.editdonate', ['id' => $chDetails->id]);
+        $boardRoute = route('board-new.viewdonationhistory', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
+            'board-new/donationhistory/*',
             'board-new/donation/*',
         ];
     @endphp
@@ -76,10 +95,10 @@
 
     <!-- Documents Menu Item -->
     @php
-        $boardRoute = route('board-new.editboard', ['id' => $chDetails->id]);
+        $boardRoute = route('board-new.viewdocuments', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
-            'board-new/board/*',
+            'board-new/documents/*',
         ];
     @endphp
     @if (isset($boardRoute))
@@ -90,6 +109,25 @@
             </a>
         </li>
     @endif
+
+    {{-- @if($chDetails->probation_id == '3') --}}
+        <!-- Quarterly Submission Menu Item -->
+        @php
+            $boardRoute = route('board-new.editprobation', ['id' => $chDetails->id]);
+
+            $activeBoardRoutes = [
+                'board-new/probation/*',
+            ];
+        @endphp
+        @if (isset($boardRoute))
+            <li class="nav-item">
+                <a href="{{ $boardRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardRoutes) }}">
+                    <i class="nav-icon bi bi-pie-chart-fill"></i>
+                    <p>Quarterly Submision</p>
+                </a>
+            </li>
+        @endif
+    {{-- @endif --}}
 
     <!-- Resources Menu Item -->
     @php

@@ -58,7 +58,6 @@ class BoardPaymentController extends Controller implements HasMiddleware
     {
         return [
             new Middleware('auth', except: ['logout']),
-            \App\Http\Middleware\EnsureUserIsBoardOrDisbanded::class,
             \App\Http\Middleware\SetViewAsSession::class,
         ];
     }
@@ -129,7 +128,6 @@ class BoardPaymentController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
-        $chActiveId = $baseQuery['chActiveId'];
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
         $startDate = $baseQuery['startDate'];
@@ -151,12 +149,12 @@ class BoardPaymentController extends Controller implements HasMiddleware
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userAdmin' => $userAdmin,
             'startMonthName' => $startMonthName, 'endRange' => $rangeEndDateFormatted, 'startRange' => $rangeStartDateFormatted,
-            'thisMonth' => $currentMonth, 'dueDate' => $dueDate, 'userTypeId' => $userTypeId, 'chActiveId' => $chActiveId,
+            'thisMonth' => $currentMonth, 'dueDate' => $dueDate, 'userTypeId' => $userTypeId,
             'startDate' => $startDate, 'renewalDate' => $renewalDate,
             'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId
         ];
 
-        return view('boards-new.payment')->with($data);
+        return view('boards-new.reregpayment')->with($data);
     }
 
     /**
@@ -170,7 +168,6 @@ class BoardPaymentController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
-        $chActiveId = $baseQuery['chActiveId'];
         $stateShortName = $baseQuery['stateShortName'];
         $allStates = $baseQuery['allStates'];
         $allCountries = $baseQuery['allCountries'];
@@ -181,7 +178,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];
 
-        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin, 'chActiveId' => $chActiveId,
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,
             'PresDetails' => $PresDetails, 'allStates' => $allStates, 'allCountries' => $allCountries,
             'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId
         ];

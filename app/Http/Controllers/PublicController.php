@@ -345,8 +345,8 @@ if (!$recaptchaResult['success']) {
                 'sanitized_name' => $sanitizedName,
                 'state_id' => $input['ch_state'],
                 'country_id' => $input['ch_country'] ?? '198',
-                'conference_id' => $confId,
-                'region_id' => $regId,
+                // 'conference_id' => $confId,
+                // 'region_id' => $regId,
                 'status_id' => $statusId,
                 'territory' => $input['ch_boundariesterry'],
                 'inquiries_contact' => $input['ch_inqemailcontact'],
@@ -1027,8 +1027,8 @@ if (!$recaptchaResult['success']) {
                 $inquiryId = InquiryApplication::create([
                     'state_id' => $input['ch_state'],
                     'country_id' => $input['ch_country'] ?? '198',
-                    'conference_id' => $confId,
-                    'region_id' => $regId,
+                    // 'conference_id' => $confId,
+                    // 'region_id' => $regId,
                     'inquiry_first_name' => $input['inquiryFirstName'],
                     'inquiry_last_name' => $input['inquiryLastName'],
                     'inquiry_email' => $input['inquiryEmail'],
@@ -1045,7 +1045,7 @@ if (!$recaptchaResult['success']) {
                     'inquiry_comments' => $input['inquiryComments'] ?? null,
                 ])->id;
 
-            $inqDetails = InquiryApplication::with('chapter', 'state', 'region', 'conference', 'country')->find($inquiryId);
+            $inqDetails = InquiryApplication::with('chapter', 'state', 'country')->find($inquiryId);
 
             $inquiryEmail = $inqDetails->inquiry_email;
 

@@ -94,7 +94,7 @@
                 </div>
 
                  <div class="d-flex align-items-center justify-content-between w-100">
-                    <span style="display: inline; color: red;">Reviewer will be used as the From/Signature for email correspondence.
+                    <span style="display: inline; color: #dc3545;">Reviewer will be used as the From/Signature for email correspondence.
                         Please udpate as needed (prior to triggering emails).<br></span>
                 </div>
                 <div class="d-flex align-items-center justify-content-between w-100">
@@ -168,7 +168,7 @@
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile">
                      @if($grantDetails->submitted != '1')
-                        <h3><span style="color:red">GRANT DRAFT NOT YET SUBMITTED FOR REVIEW</span></h3>
+                        <h3><span style="color: #dc3545;">GRANT DRAFT NOT YET SUBMITTED FOR REVIEW</span></h3>
                     @endif
 
                 <h3 class="profile-username">GRANT INFORMATION</h3>

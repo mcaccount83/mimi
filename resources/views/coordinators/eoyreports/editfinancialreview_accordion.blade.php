@@ -182,7 +182,7 @@
                                         <a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->roster_path }}">&nbsp; View Chapter Roster</a><br>
                                     </div>
                                     <div class="col-12" id="RosterBlock">
-                                        <strong style="color:red">Please Note</strong><br>
+                                        <strong style="color: #dc3545;">Please Note</strong><br>
                                         This will refresh the screen - be sure to save all work before clicking button to Replace Roster File.<br>
                                         <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showRosterUploadModal('{{ $chDetails->id }}')">
                                             <i class="bi bi-upload me-2"></i>Replace Roster File
@@ -190,7 +190,7 @@
                                     </div>
                                 @else
                                     <div class="col-12" id="RosterBlock">
-                                        <strong style="color:red">Please Note</strong><br>
+                                        <strong style="color: #dc3545;">Please Note</strong><br>
                                         This will refresh the screen - be sure to save all work before clicking button to Upload Roster File.<br>
                                         <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showRosterUploadModal('{{ $chDetails->id }}')">
                                             <i class="bi bi-upload me-2"></i>Upload Roster File
@@ -1499,7 +1499,7 @@
                                     </div>
                                 @endif
                                 <div class="col-12" id="StatementBlock">
-                                    <strong style="color:red">Please Note</strong><br>
+                                    <strong style="color: #dc3545;">Please Note</strong><br>
                                     This will refresh the screen - be sure to save all work before clicking button to Upload or Replace Bank Statement(s).<br>
                                     @if (!is_null($chEOYDocuments->statement_1_path))
                                         <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showStatement1UploadModal('{{ $chDetails->id }}')">
@@ -1636,7 +1636,7 @@
                     <div class="col-md-12">
                         <p>The 990N filing is an IRS requirement that all chapters must complete, but it cannot be filed before July 1st. After filing, upload a copy of your chapter's filing confirmation here.
                             You can upload a copy of your confirmation email or screenshot after filing. All chapters should file their 990N directly with the IRS and not through a third party.
-                            <span style="color:red"><i>The IRS does not charge a fee for 990N filings.</i></span></p>
+                            <span style="color: #dc3545;"><i>The IRS does not charge a fee for 990N filings.</i></span></p>
                     </div>
                     <div class="col-md-12">
                         <span class="me-2">Did your chapter file their IRS 990N?</span>
@@ -1659,7 +1659,7 @@
                                         <a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->irs_path }}">&nbsp; View 990N Confirmation</a><br>
                                     </div>
                                     <div class="col-12" id="990NBlock">
-                                        <strong style="color:red">Please Note</strong><br>
+                                        <strong style="color: #dc3545;">Please Note</strong><br>
                                         This will refresh the screen - be sure to save all work before clicking button to Replace 990N File.<br>
                                         <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="show990NUploadModal('{{ $chDetails->id }}')">
                                             <i class="bi bi-upload me-2"></i>Replace 990N Confirmation
@@ -1667,7 +1667,7 @@
                                     </div>
                                 @else
                                     <div class="col-12" id="990NBlock">
-                                        <strong style="color:red">Please Note</strong><br>
+                                        <strong style="color: #dc3545;">Please Note</strong><br>
                                         This will refresh the screen - be sure to save all work before clicking button to Upload 990N File.<br>
                                         <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="show990NUploadModal('{{ $chDetails->id }}')">
                                             <i class="bi bi-upload me-2"></i>Upload 990N Confirmation

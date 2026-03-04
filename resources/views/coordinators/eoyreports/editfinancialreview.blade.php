@@ -346,7 +346,7 @@
                 <div class="row mb-1">
                     @if ($chEOYDocuments->financial_report_received == 1 && $chFinancialReport->reviewer_id == null)
                         <div class="col-12">
-                            <span style="color: red;">No Reviewer Assigned - Select Reviewer before continuing to prevent errors.</span>
+                            <span style="color: #dc3545;">No Reviewer Assigned - Select Reviewer before continuing to prevent errors.</span>
                         </div>
                     @endif
                     <label class="col-auto fw-bold" for="AssignedReviewer">Assigned Reviewer:</label>
@@ -393,7 +393,7 @@
                 <button type="button" class="btn btn-danger bg-gradient mb-2" id="unsubmit"><i class="bi bi-arrow-counterclockwise me-2"></i>UnSubmit Report</button>
             @if ($chEOYDocuments->financial_review_complete != 1)
                 <br>
-                <span style="color:red;"><b>"Mark as Review Complete" is for FINAL REVIEWER USE ONLY!</b></span>
+                <span style="color: #dc3545;"><b>"Mark as Review Complete" is for FINAL REVIEWER USE ONLY!</b></span>
             @endif
             <br><br>
             @if ($chEOYDocuments->$yearColumnName != null)
@@ -432,10 +432,10 @@
                         @if ($chFinancialReport->reviewer_id != null)
                             <label>Assigned Reviewer:</label>&nbsp;&nbsp;{{ $chDetails->reportReviewer->first_name }} {{ $chDetails->reportReviewer->last_name }}
                         @else
-                            <span style="color:red">No Reviewer Assigned - Select Reviewer before saving report review to prevent errors</span>
+                            <span style="color: #dc3545;">No Reviewer Assigned - Select Reviewer before saving report review to prevent errors</span>
                         @endif
                     @else
-                        <span style="color:red">REPORT NOT YET SUBMITTED FOR REVIEW</span>
+                        <span style="color: #dc3545;">REPORT NOT YET SUBMITTED FOR REVIEW</span>
                     @endif
                 <p>Have some questions about reviewing?<br>
                     <a href="https://momsclub.org/reviewing-reports-faq/"   target="_blank">Check out our FAQ!</a></p>

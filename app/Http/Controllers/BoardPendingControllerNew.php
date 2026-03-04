@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\PositionConditionsService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -13,10 +14,13 @@ class BoardPendingControllerNew extends Controller implements HasMiddleware
 
     protected $baseBoardController;
 
-    public function __construct(UserController $userController, BaseBoardController $baseBoardController)
+    protected $positionConditionsService;
+
+    public function __construct(UserController $userController, BaseBoardController $baseBoardController, PositionConditionsService $positionConditionsService)
     {
         $this->userController = $userController;
         $this->baseBoardController = $baseBoardController;
+        $this->positionConditionsService = $positionConditionsService;
     }
 
     public static function middleware(): array
@@ -42,9 +46,16 @@ class BoardPendingControllerNew extends Controller implements HasMiddleware
         $allStates = $baseQuery['allStates'];
         $allCountries = $baseQuery['allCountries'];
 
-        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin, 'allCountries' => $allCountries,
+        $PresDetails = $baseQuery['PresDetails'];
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId,  $PresDetails);
+        $bdPositionId = $bdData['bdPositionId'];
+        $borDetails = $bdData['bdDetails'];
+        $bdTypeId = $bdData['bdTypeId'];
+
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,
+        'allCountries' => $allCountries,  'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
         ];
 
-        return view('boards-new.newchapterstatus')->with($data);
+        return view('boards-new.pending.newchapterstatus')->with($data);
     }
 }

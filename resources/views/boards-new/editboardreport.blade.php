@@ -464,7 +464,8 @@
 
 @endsection
 @section('customscript')
-
+@php $disableMode = 'disable-all'; @endphp
+@include('layouts.scripts.disablefields')
 <script>
     $(document).ready(function() {
     var userTypeId = @json($userTypeId);

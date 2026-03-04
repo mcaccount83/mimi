@@ -69,7 +69,10 @@
                                     </div>
                                 </div>
                             @endif
-                            @include('boards-new.resources_accordion_eoy', ['resources' => $resources])
+
+                            <div class="row">
+                            @include('boards-new.partials.resources_accordion_eoy', ['resources' => $resources])
+                            </div>
 
                           </div>
             </div>
@@ -83,4 +86,8 @@
        </div>
     </div>
     <!-- /.container- -->
+@endsection
+@section('customscript')
+@php $disableMode = 'disable-all'; @endphp
+@include('layouts.scripts.disablefields')
 @endsection

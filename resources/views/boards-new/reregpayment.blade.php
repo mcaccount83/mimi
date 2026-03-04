@@ -17,7 +17,7 @@
             <div class="card card-primary card-outline">
                     <div class="card-body">
                         <div class="card-header bg-transparent border-0">
-                            <h3>Re-Registration Payments</h3>
+                            <h3>Re-Registration Payment</h3>
                         </div>
                     <!-- /.card-header -->
                     <div class="card-body">
@@ -185,7 +185,7 @@
                                         </div>
 
                                         <div class="card-body text-center mt-3">
-                                            <div class="col-md-12" style="color: red;"><center>Page will automatically re-direct after payment submission with success or error message.<br>
+                                            <div class="col-md-12" style="color: #dc3545;"><center>Page will automatically re-direct after payment submission with success or error message.<br>
                                                 DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center></div>
                                             <br>
                                                 <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>{{ __('Submit Payment') }}</button>

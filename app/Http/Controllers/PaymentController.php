@@ -117,12 +117,14 @@ class PaymentController extends Controller implements HasMiddleware
         $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
 
         try {
-            $chapters = Chapters::with(['state', 'conference', 'region'])
-                ->where('conference_id', $confId)
-                ->where('start_month_id', $currentMonth)
-                ->where('next_renewal_year', $currentYear)
-                ->where('active_status', 1)
-                ->get();
+               $chapters = Chapters::with(['state.conference'])
+                    ->whereHas('state.conference', function($q) use ($confId) {
+                        $q->where('conference.id', $confId);
+                    })
+                    ->where('start_month_id', $currentMonth)
+                    ->where('next_renewal_year', $currentYear)
+                    ->where('active_status', 1)
+                    ->get();
 
             if ($chapters->isEmpty()) {
                 return redirect()->back()->with('info', 'There are no Chapters with Registrations Due.');
@@ -207,11 +209,13 @@ class PaymentController extends Controller implements HasMiddleware
         $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
 
         try {
-            $chapters = Chapters::with(['state', 'conference', 'region'])
-                ->where('chapters.conference_id', $confId)
-                ->where('chapters.start_month_id', $lastMonth)
-                ->where('chapters.next_renewal_year', $currentYear)
-                ->where('chapters.active_status', 1)
+            $chapters = Chapters::with(['state.conference'])
+                ->whereHas('state.conference', function($q) use ($confId) {
+                    $q->where('conference.id', $confId);
+                })
+                ->where('start_month_id', $lastMonth)
+                ->where('next_renewal_year', $currentYear)
+                ->where('active_status', 1)
                 ->get();
 
             if ($chapters->isEmpty()) {

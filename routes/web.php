@@ -400,20 +400,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/eoyreports/updateirssubmission/{id}', [EOYReportController::class, 'updateIRSSubmission'])->name('eoyreports.updateirssubmission');
 });
 
-// Board Controller Routes...Board Login Required
-// Route::middleware('auth')->group(function () {
-//     Route::get('/board/newchapterstatus/{id}', [BoardPendingController::class, 'showNewChapterStatus'])->name('board.newchapterstatus');
-//     Route::get('/board/profile/{id}', [BoardController::class, 'editProfile'])->name('board.editprofile');
-//     Route::post('/board/profileupdate/{id}', [BoardController::class, 'updateProfile'])->name('board.updateprofile');
-//     Route::get('/board/boardreport/{id}', [BoardController::class, 'editBoardReport'])->name('board.editboardreport');
-//     Route::post('/board/boardreportupatea/{id}', [BoardController::class, 'updateBoardReport'])->name('board.updateboardreport');
-//     Route::get('/board/manual/{id}', [BoardController::class, 'editManualOrderForm'])->name('board.editmanual');
-//     Route::get('/board/probation/{id}', [BoardController::class, 'editProbationSubmission'])->name('board.editprobation');
-//     Route::post('/board/probationupdate/{id}', [BoardController::class, 'updateProbationSubmission'])->name('board.updateprobation');
-//     Route::get('/board/resources/{id}', [BoardController::class, 'viewResources'])->name('board.viewresources');
-//     Route::get('/board/elearning/{id}', [BoardController::class, 'viewELearning'])->name('board.viewelearning');
-// });
-
 Route::middleware('auth')->group(function () {
     Route::get('/board/newchapterstatus/{id}', [BoardPendingController::class, 'showNewChapterStatus'])->name('board.newchapterstatus');
     Route::get('/board/chapterprofile/{id}', [BoardController::class, 'chapterProfile'])->name('board.chapterprofile');
@@ -426,11 +412,42 @@ Route::middleware('auth')->group(function () {
     Route::get('/board/resources/{id}', [BoardController::class, 'viewResources'])->name('board.viewresources');
     Route::get('/board/resources/manual/{id}', [BoardController::class, 'editManualOrderForm'])->name('board.editmanual');
     Route::get('/board/elearning/{id}', [BoardController::class, 'viewELearning'])->name('board.viewelearning');
+});
 
+// Board Payment Controller Routes...Board Login Required
+Route::middleware('auth')->group(function () {
+    Route::post('/process-payment', [BoardPaymentController::class, 'reRegistrationPayment'])->name('process.payment');
+    Route::post('/process-donation', [BoardPaymentController::class, 'm2mPayment'])->name('process.donation');
+    Route::post('/process-manual', [BoardPaymentController::class, 'manualPayment'])->name('process.manual');
+    Route::get('/board/reregpayment/{id}', [BoardPaymentController::class, 'editReregistrationPaymentForm'])->name('board.editreregpayment');
+    Route::get('/board/donation/{id}', [BoardPaymentController::class, 'editDonationForm'])->name('board.editdonate');
+    Route::get('/board/grantrequestlist/{id}', [BoardController::class, 'viewGrantRequestList'])->name('board.viewgrantrequestlist');
+    Route::get('/board/newgrantrequest/{id}', [BoardController::class, 'showNewGrantRequest'])->name('board.newgrantrequest');
+    Route::post('/board/newgrantrequestupdate/{id}', [BoardController::class, 'updateNewGrantRequest'])->name('board.updatenewgrantrequest');
+    Route::get('/board/grantdetails/{id}', [BoardController::class, 'viewGrantDetails'])->name('board.viewgrantdetails');
+    Route::post('/board/updategrantrequest/{id}', [BoardController::class, 'updateGrantRequest'])->name('board.updategrantrequest');
+});
+
+// Financial Report Controller Routes...Board Login Required
+Route::middleware('auth')->group(function () {
+    Route::get('/board/financialreport/{id}', [FinancialReportController::class, 'editFinancialReport'])->name('board.editfinancialreport');
+    Route::post('/board/financialreportupdate/{id}', [FinancialReportController::class, 'updateFinancialReport'])->name('board.updatefinancialreport');
+    Route::get('/board/disbandchecklist/{id}', [FinancialReportController::class, 'editDisbandChecklist'])->name('board.editdisbandchecklist');
+    Route::post('/board/disbandchecklistupdate/{id}', [FinancialReportController::class, 'updateDisbandChecklist'])->name('board.updatedisbandchecklist');
+    Route::get('/board/financialreportfinal/{id}', [FinancialReportController::class, 'editFinancialReportFinal'])->name('board.editfinancialreportfinal');
+    Route::post('/board/financialreportfinalupdate/{id}', [FinancialReportController::class, 'updateFinancialReportFinal'])->name('board.updatefinancialreportfinal');
+    Route::post('/board/disbandreportupdate/{id}', [FinancialReportController::class, 'updateDisbandReport'])->name('board.updatedisbandreport');
+});
+
+
+Route::middleware('auth')->group(function () {
     Route::get('/board-new/newchapterstatus/{id}', [BoardPendingControllerNew::class, 'showNewChapterStatus'])->name('board-new.newchapterstatus');
     Route::get('/board-new/chapterprofile/{id}', [BoardControllerNew::class, 'chapterProfile'])->name('board-new.chapterprofile');
     Route::get('/board-new/board/{id}', [BoardControllerNew::class, 'editBoard'])->name('board-new.editboard');
     Route::post('/board-new/boardupdate/{id}', [BoardControllerNew::class, 'updateBoard'])->name('board-new.updateboard');
+    Route::get('/board-new/documents/{id}', [BoardControllerNew::class, 'viewDocuments'])->name('board-new.viewdocuments');
+     Route::get('/board-new/rereghistory/{id}', [BoardControllerNew::class, 'viewReRegHistory'])->name('board-new.viewrereghistory');
+    Route::get('/board-new/donationhistory/{id}', [BoardControllerNew::class, 'viewDonationHistory'])->name('board-new.viewdonationhistory');
     Route::get('/board-new/endofyear/{id}', [BoardControllerNew::class, 'viewEndOfYear'])->name('board-new.viewendofyear');
     Route::get('/board-new/endofyear/boardreport/{id}', [BoardControllerNew::class, 'editBoardReport'])->name('board-new.editboardreport');
     Route::post('/board-new/endofyear/boardreportupatea/{id}', [BoardControllerNew::class, 'updateBoardReport'])->name('board-new.updateboardreport');
@@ -445,21 +462,8 @@ Route::middleware('auth')->group(function () {
 
 // Board Payment Controller Routes...Board Login Required
 Route::middleware('auth')->group(function () {
-    Route::post('/process-payment', [BoardPaymentController::class, 'reRegistrationPayment'])->name('process.payment');
-    Route::post('/process-donation', [BoardPaymentController::class, 'm2mPayment'])->name('process.donation');
-    Route::post('/process-manual', [BoardPaymentController::class, 'manualPayment'])->name('process.manual');
-    Route::get('/board/reregpayment/{id}', [BoardPaymentController::class, 'editReregistrationPaymentForm'])->name('board.editreregpayment');
-    Route::get('/board/donation/{id}', [BoardPaymentController::class, 'editDonationForm'])->name('board.editdonate');
-
     Route::get('/board-new/reregpayment/{id}', [BoardPaymentController::class, 'editReregistrationPaymentFormNEW'])->name('board-new.editreregpayment');
     Route::get('/board-new/donation/{id}', [BoardPaymentController::class, 'editDonationFormNEW'])->name('board-new.editdonate');
-
-    Route::get('/board/grantrequestlist/{id}', [BoardController::class, 'viewGrantRequestList'])->name('board.viewgrantrequestlist');
-    Route::get('/board/newgrantrequest/{id}', [BoardController::class, 'showNewGrantRequest'])->name('board.newgrantrequest');
-    Route::post('/board/newgrantrequestupdate/{id}', [BoardController::class, 'updateNewGrantRequest'])->name('board.updatenewgrantrequest');
-    Route::get('/board/grantdetails/{id}', [BoardController::class, 'viewGrantDetails'])->name('board.viewgrantdetails');
-    Route::post('/board/updategrantrequest/{id}', [BoardController::class, 'updateGrantRequest'])->name('board.updategrantrequest');
-
     Route::get('/board-new/grantrequestlist/{id}', [BoardControllerNew::class, 'viewGrantRequestList'])->name('board-new.viewgrantrequestlist');
     Route::get('/board-new/newgrantrequest/{id}', [BoardControllerNew::class, 'showNewGrantRequest'])->name('board-new.newgrantrequest');
     Route::post('/board-new/newgrantrequestupdate/{id}', [BoardControllerNew::class, 'updateNewGrantRequest'])->name('board-new.updatenewgrantrequest');
@@ -469,14 +473,6 @@ Route::middleware('auth')->group(function () {
 
 // Financial Report Controller Routes...Board Login Required
 Route::middleware('auth')->group(function () {
-    Route::get('/board/financialreport/{id}', [FinancialReportController::class, 'editFinancialReport'])->name('board.editfinancialreport');
-    Route::post('/board/financialreportupdate/{id}', [FinancialReportController::class, 'updateFinancialReport'])->name('board.updatefinancialreport');
-    Route::get('/board/disbandchecklist/{id}', [FinancialReportController::class, 'editDisbandChecklist'])->name('board.editdisbandchecklist');
-    Route::post('/board/disbandchecklistupdate/{id}', [FinancialReportController::class, 'updateDisbandChecklist'])->name('board.updatedisbandchecklist');
-    Route::get('/board/financialreportfinal/{id}', [FinancialReportController::class, 'editFinancialReportFinal'])->name('board.editfinancialreportfinal');
-    Route::post('/board/financialreportfinalupdate/{id}', [FinancialReportController::class, 'updateFinancialReportFinal'])->name('board.updatefinancialreportfinal');
-    Route::post('/board/disbandreportupdate/{id}', [FinancialReportController::class, 'updateDisbandReport'])->name('board.updatedisbandreport');
-
     Route::get('/board-new/endofyear/financialreport/{id}', [FinancialReportControllerNew::class, 'editFinancialReport'])->name('board-new.editfinancialreport');
     Route::post('/board-new/endofyear/financialreportupdate/{id}', [FinancialReportControllerNew::class, 'updateFinancialReport'])->name('board-new.updatefinancialreport');
     Route::get('/board-new/disbandchecklist/{id}', [FinancialReportControllerNew::class, 'editDisbandChecklist'])->name('board-new.editdisbandchecklist');

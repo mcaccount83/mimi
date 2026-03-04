@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\CoordinatorPosition;
+use App\Enums\ChapterStatusEnum;
 use App\Enums\UserTypeEnum;
 use App\Models\Admin;
 use App\Models\AdminEmail;

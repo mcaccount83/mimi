@@ -341,34 +341,6 @@
     <!-- /.container- -->
 @endsection
 @section('customscript')
-<script>
-
-    $('#Save').on('click', function() {
-    console.log('button clicked');
-    console.log($('form').attr('action'));
-});
-    /* Disable fields and buttons  */
-    $(document).ready(function () {
-        var displayBoardRptLIVE = @json($displayBoardRptLIVE);
-        var userTypeId = @json($userTypeId);
-        var userAdmin = @json($userAdmin);
-        var boardActive = @json($boardActive);
-
-        if (userAdmin == 1) {
-            // Admin - ALWAYS allow edits for testing purposes
-            $('#logout-btn').prop('disabled', true);
-        } else if (userTypeId == 1 && userAdmin != 1) {
-            // Coordinators - ALWAYS disable (never enabled)
-            $('input, select, textarea').prop('disabled', true);
-            $('#Save, #Password, #logout-btn').prop('disabled', true);
-            $('#display_corlist').addClass('disabled-link').attr('href', '#');
-         } else if (displayBoardRptLIVE == true && boardActive != 1) {
-            // Board members in month 5-9 (only editable IF board report is activated)
-            $('input, select, textarea').prop('disabled', true);
-            $('#Save, #Password').prop('disabled', true);
-         }
-        // Board members in months 1-4 & 10-12 will be editable for everyone
-    });
-
-</script>
+@php $disableMode = 'disable-all'; @endphp
+@include('layouts.scripts.disablefields')
 @endsection

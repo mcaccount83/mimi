@@ -18,7 +18,7 @@
                             <section>
                                 @if($category->category_name == "END OF YEAR")
                                     <div class="col-md-12" style="margin-bottom: 5px;">
-                                        @include('boards-new.resources_accordion_eoy', ['resources' => $resources])
+                                        @include('boards-new.partials.resources_accordion_eoy', ['resources' => $resources])
                                     </div>
                                 @else
                                     @foreach($resources->where('resourceCategory.category_name', $category->category_name) as $resourceItem)

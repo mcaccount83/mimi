@@ -65,6 +65,8 @@ class FinancialReportControllerNew extends Controller implements HasMiddleware
     {
         return [
             new Middleware('auth', except: ['logout']),
+            \App\Http\Middleware\EnsureUserIsBoardOrDisbanded::class,
+            \App\Http\Middleware\SetViewAsSession::class,
         ];
     }
 
@@ -83,21 +85,64 @@ class FinancialReportControllerNew extends Controller implements HasMiddleware
         $chDetails = $baseQuery['chDetails'];
         $chActiveId = $baseQuery['chActiveId'];
         $stateShortName = $baseQuery['stateShortName'];
-        $chDocuments = $baseQuery['chDocuments'];
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $awards = $baseQuery['awards'];
         $allAwards = $baseQuery['allAwards'];
 
+        $PresDetails = $baseQuery['PresDetails'];
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdPositionId = $bdData['bdPositionId'];
+        $borDetails = $bdData['bdDetails'];
+        $bdTypeId = $bdData['bdTypeId'];
+
         $resources = Resources::with('resourceCategory')->get();
         $resourceCategories = ResourceCategory::all();
 
-        $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId, 'chEOYDocuments' => $chEOYDocuments,
-            'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
-            'awards' => $awards, 'allAwards' => $allAwards, 'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin,
+        $data = ['chActiveId' => $chActiveId, 'chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,
+            'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'stateShortName' => $stateShortName,
+            'awards' => $awards, 'allAwards' => $allAwards, 'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'chEOYDocuments' => $chEOYDocuments,
+            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
         ];
 
-        return view('boards-new.financial')->with($data);
+        return view('boards-new.editfinancialreport')->with($data);
+
+    }
+
+     public function editFinancialReportFinal(Request $request, $chId): View
+    {
+       $user = $this->userController->loadUserInformation($request);
+        $userTypeId = $user['userTypeId'];
+        $userName = $loggedInName = $user['userName'];
+        $userEmail = $user['userEmail'];
+        $userAdmin = $user['userAdmin'];
+
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+        $chDetails = $baseQuery['chDetails'];
+        $chActiveId = $baseQuery['chActiveId'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $chDocuments = $baseQuery['chDocuments'];
+        $chEOYDocuments = $baseQuery['chEOYDocuments'];
+        $chFinancialReport = $baseQuery['chFinancialReportFinal'];
+
+        $resources = Resources::with('resourceCategory')->get();
+        $resourceCategories = ResourceCategory::all();
+
+        $chDisbanded = $baseQuery['chDisbanded'];
+
+        $PresDetails = $baseQuery['PresDetails'];
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdPositionId = $bdData['bdPositionId'];
+        $borDetails = $bdData['bdDetails'];
+        $bdTypeId = $bdData['bdTypeId'];
+
+        $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId,
+            'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
+            'chDisbanded' => $chDisbanded, 'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin, 'chEOYDocuments' => $chEOYDocuments,
+            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
+        ];
+
+        return view('boards-new.disband.editfinancialreportfinal')->with($data);
 
     }
 
@@ -460,12 +505,19 @@ class FinancialReportControllerNew extends Controller implements HasMiddleware
 
         $chDisbanded = $baseQuery['chDisbanded'];
 
+        $PresDetails = $baseQuery['PresDetails'];
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdPositionId = $bdData['bdPositionId'];
+        $borDetails = $bdData['bdDetails'];
+        $bdTypeId = $bdData['bdTypeId'];
+
         $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId,
             'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
             'chDisbanded' => $chDisbanded, 'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin, 'chEOYDocuments' => $chEOYDocuments,
+            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
         ];
 
-        return view('boards-new.disband')->with($data);
+        return view('boards-new.disband.editdisbandchecklist')->with($data);
 
     }
 

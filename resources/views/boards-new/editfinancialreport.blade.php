@@ -61,11 +61,10 @@
                     as this would be the information you would need if the IRS were to do an audit. The Financial Report and all required additional documents are due no later than July 15th.
                     <br><br>
 
-                    @include('boards.financial_accordion', ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId,
+                    @include('boards-new.partials.financial_accordion', ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId,
                         'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chEOYDocuments' => $chEOYDocuments, 'stateShortName' => $stateShortName, 'chActiveId' => $chActiveId,
                         'lastyear' => $lastYear, 'currentYear' => $currentYear, 'irsFilingName' => $irsFilingName
                     ])
-
 
                 </div>
                 </div>
@@ -91,19 +90,8 @@
     <!-- /.container- -->
 @endsection
 @section('customscript')
-<script>
-  /* Disable fields and buttons  */
-    $(document).ready(function () {
-            var userTypeId = @json($userTypeId);
-            var userAdmin = @json($userAdmin);
-
-       if (userTypeId == 1 && userAdmin != 1) {
-            $('button, input, select, textarea').not('#btn-back').prop('disabled', true);
-        }
-
-        });
-
-</script>
+@php $disableMode = 'disable-all'; @endphp
+@include('layouts.scripts.disablefields')
 @endsection
 
 

@@ -87,8 +87,10 @@
               <!-- Menu for Logged In Users -->
                     @auth
 
-@if ($userTypeId == \App\Enums\UserTypeEnum::COORD && isset($bdTypeId) && $bdTypeId)
-    @if ($bdTypeId == \App\Enums\UserTypeEnum::BOARD)
+@if ($userTypeId == \App\Enums\UserTypeEnum::COORD && isset($bdTypeId) && $bdTypeId !== null)
+    @if ($bdTypeId == \App\Enums\UserTypeEnum::DISBANDED)
+        @include('layouts.sidebars.disbanded')
+    @elseif ($bdTypeId == \App\Enums\UserTypeEnum::BOARD)
         @include('layouts.sidebars.board')
     @elseif ($bdTypeId == \App\Enums\UserTypeEnum::OUTGOING)
         @include('layouts.sidebars.outgoing')
@@ -105,6 +107,8 @@
     @include('layouts.sidebars.outgoing')
 @elseif ($userTypeId == \App\Enums\UserTypeEnum::PENDING)
     @include('layouts.sidebars.pending')
+@elseif ($userTypeId == \App\Enums\UserTypeEnum::DISBANDED)
+    @include('layouts.sidebars.disbanded')
 @endif
 
                         <li class="nav-item">
@@ -194,6 +198,27 @@
                 </ol>
               </div>
             </div>
+                @if($ITCondition == 1 && isset($bdTypeId) && $bdTypeId !== null)
+                    @if ($bdTypeId == \App\Enums\UserTypeEnum::DISBANDED)
+                        <strong style="color: #dc3545;">You are Viewing DISBANDED Chapter Pages as an ADMIN Coordinator -- All Information is Editable just as it is for Chapter Members.</strong>
+                    @elseif ($bdTypeId == \App\Enums\UserTypeEnum::BOARD)
+                        <strong style="color: #dc3545;">You are Viewing ACTIVE Chapter Pages as an ADMIN Coordinator -- All Information is Editable just as it is for Chapter Members.</strong>
+                    @elseif ($bdTypeId == \App\Enums\UserTypeEnum::OUTGOING)
+                        <strong style="color: #dc3545;">You are Viewing OUTGOING Chapter Pages as an ADMIN Coordinator -- All Information is Editable just as it is for Chapter Members.</strong>
+                    @elseif ($bdTypeId == \App\Enums\UserTypeEnum::PENDING)
+                        <strong style="color: #dc3545;">You are Viewing PENDING Chapter Pages as an ADMIN Coordinator -- All Information is Editable just as it is for Chapter Members.</strong>
+                    @endif
+                @elseif (($userTypeId == \App\Enums\UserTypeEnum::COORD && $ITCondition != 1) && isset($bdTypeId) && $bdTypeId !== null)
+                    @if ($bdTypeId == \App\Enums\UserTypeEnum::DISBANDED)
+                        <strong style="color: #dc3545;">You are Viewing DISBANDED Chapter Pages as a Coordinator -- All Information is READ ONLY.</strong>
+                    @elseif ($bdTypeId == \App\Enums\UserTypeEnum::BOARD)
+                        <strong style="color: #dc3545;">You are Viewing ACTIVE Chapter Pages as a Coordinator -- All Information is READ ONLY.</strong>
+                    @elseif ($bdTypeId == \App\Enums\UserTypeEnum::OUTGOING)
+                        <strong style="color: #dc3545;">You are Viewing OUTGOING Chapter Pages as a Coordinator -- All Information is READ ONLY.</strong>
+                    @elseif ($bdTypeId == \App\Enums\UserTypeEnum::PENDING)
+                        <strong style="color: #dc3545;">You are Viewing PENDING Chapter Pages as a Coordinator -- All Information is READ ONLY.</strong>
+                    @endif
+                @endif
             <!--end::Row-->
           </div>
           <!--end::Container-->

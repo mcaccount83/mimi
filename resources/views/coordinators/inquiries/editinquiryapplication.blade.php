@@ -111,7 +111,7 @@
                                  @if ($inqDetails->response != 1)
                                     <br>
                                     <br>
-                                    <span style="color: red;">NOTE: Sending a Yes or No response email will automatically mark as sent.
+                                    <span style="color: #dc3545;">NOTE: Sending a Yes or No response email will automatically mark as sent.
                                     If you send a custom email and need to manually mark as sent, you can do that here.
                                     </span>
                                     <br>
@@ -125,7 +125,7 @@
                                 @elseif ($inqDetails->response == 1)
                                      <br>
                                     <br>
-                                    <span style="color: red;">NOTE: In order to resend the Yes or No response emails to the potenial member and chapter, you will need to clear the response.
+                                    <span style="color: #dc3545;">NOTE: In order to resend the Yes or No response emails to the potenial member and chapter, you will need to clear the response.
                                     </span>
                                     <br>
                                     <form id="mark-response-form" action="{{ route('inquiries.clearinquiryresponse', ['id' => $inqDetails->id]) }}" method="POST" style="display: none;">

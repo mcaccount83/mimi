@@ -1,30 +1,40 @@
 @extends('layouts.mimi_theme')
 
-@section('content')
-     <div class="container">
-        <div class="row">
-                <div class="col-md-12">
-                    <div class="card card-primary card-outline">
-              <div class="card-body">
-                <div class="card-header text-center bg-transparent">
-                    <h2 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h2>
-                    {{-- <p class="mb-0">{{ $conferenceDescription }} Conference, {{ $conferenceDescription }} Region --}}
-                        <br>
-                        <h3>General Chapter Resources</h3>
-                    </div>
-                        <!-- /.card-header -->
-                    <div class="card-body">
-             @include('boards-new.resources_accordion', ['resources' => $resources, 'resourceCategories' => $resourceCategories])
+@section('page_title', 'MOMS Club of ' . $chDetails->name . ', ' . $stateShortName)
+@section('breadcrumb', 'Chapter Profile')
 
-                </div>
+@section('content')
+     <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+        <div class="col-12">
+
+             <div class="col-md-12">
+            <div class="card card-primary card-outline">
+                    <div class="card-body">
+                        <div class="card-header bg-transparent border-0">
+                             <h3>General Chapter Resources</h3>
+                        </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+
+             @include('boards-new.partials.resources_accordion', ['resources' => $resources, 'resourceCategories' => $resourceCategories])
+
+               </div>
             </div>
             <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
         </div>
-        <!-- /.card -->
+        <!-- /.col -->
+            </div>
+            <!-- /.col -->
+       </div>
     </div>
-    <!-- /.col -->
-    </div>
-    </div>
-<!-- /.container- -->
+    <!-- /.container- -->
 @endsection
-
+@section('customscript')
+@php $disableMode = 'disable-all'; @endphp
+@include('layouts.scripts.disablefields')
+@endsection
