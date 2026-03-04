@@ -316,7 +316,7 @@
                                 There are no refunds after the payment has been processed.
                             </center></div>
                             <br>
-                            <div class="col-md-12" style="color: red;"><center>Page will automatically re-direct after application submission with success or error message.<br>
+                            <div class="col-md-12" style="color: #dc3545;"><center>Page will automatically re-direct after application submission with success or error message.<br>
                                 DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center></div>
                             <br>
 

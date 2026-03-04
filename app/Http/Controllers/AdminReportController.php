@@ -90,7 +90,7 @@ class AdminReportController extends Controller implements HasMiddleware
             'checkBox51Status' => $checkBox51Status,
         ];
 
-        return view('adminreports.paymentlog')->with($data);
+        return view('coordinators.adminreports.paymentlog')->with($data);
     }
 
     /**
@@ -102,7 +102,7 @@ class AdminReportController extends Controller implements HasMiddleware
 
         $data = ['log' => $log];
 
-        return view('adminreports.paymentdetails')->with($data);
+        return view('coordinators.adminreports.paymentdetails')->with($data);
     }
 
   public function showDonationLog(Request $request): View
@@ -150,7 +150,7 @@ class AdminReportController extends Controller implements HasMiddleware
         'checkBox58Status' => $checkBox58Status ? 'checked' : '',
     ];
 
-    return view('adminreports.donationlog')->with($data);
+    return view('coordinators.adminreports.donationlog')->with($data);
 }
 
     /**
@@ -171,7 +171,7 @@ class AdminReportController extends Controller implements HasMiddleware
 
         $data = ['chapterList' => $chapterList, 'checkBox51Status' => $checkBox51Status];
 
-        return view('adminreports.rereg')->with($data);
+        return view('coordinators.adminreports.rereg')->with($data);
     }
 
     public function editReReg(Request $request, $id): View
@@ -204,7 +204,7 @@ class AdminReportController extends Controller implements HasMiddleware
             'startDate' => $startDate, 'dueDate' => $dueDate, 'renewalDate' => $renewalDate,  'chapterStatus' => $chapterStatus, 'startMonthName' => $startMonthName
         ];
 
-        return view('adminreports.editrereg')->with($data);
+        return view('coordinators.adminreports.editrereg')->with($data);
     }
 
     public function updateReReg(Request $request, $id): RedirectResponse
@@ -277,7 +277,7 @@ class AdminReportController extends Controller implements HasMiddleware
 
         $data = ['regList' => $regList, 'checkBox51Status' => $checkBox51Status];
 
-        return view('adminreports.inquiriesnotify')->with($data);
+        return view('coordinators.adminreports.inquiriesnotify')->with($data);
     }
 
    public function updateInquiriesEmail(Request $request, $id)
@@ -342,7 +342,7 @@ class AdminReportController extends Controller implements HasMiddleware
 
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb];
 
-        return view('adminreports.downloads')->with($data);
+        return view('coordinators.adminreports.downloads')->with($data);
     }
 
 }

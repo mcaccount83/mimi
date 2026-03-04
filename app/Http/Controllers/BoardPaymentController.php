@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserTypeEnum;
 use App\Mail\PaymentsDonationOnline;
 use App\Mail\PaymentsM2MChapterThankYou;
 use App\Mail\PaymentsManualOnline;
@@ -57,6 +58,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
     {
         return [
             new Middleware('auth', except: ['logout']),
+            \App\Http\Middleware\SetViewAsSession::class,
         ];
     }
 
@@ -126,27 +128,33 @@ class BoardPaymentController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
-        $chActiveId = $baseQuery['chActiveId'];
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
+        $startDate = $baseQuery['startDate'];
+        $dueDate = $baseQuery['dueDate'];
+        $renewalDate = $baseQuery['renewalDate'];
+
+        $PresDetails = $baseQuery['PresDetails'];
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdPositionId = $bdData['bdPositionId'];
+        $borDetails = $bdData['bdDetails'];
+        $bdTypeId = $bdData['bdTypeId'];
 
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentMonth = $dateOptions['currentMonth'];
-        $start_month = $chDetails->start_month_id;
-        $next_renewal_year = $chDetails->next_renewal_year;
-        $due_date = Carbon::create($next_renewal_year, $start_month, 1);
-        $rangeEndDate = $due_date->copy()->subMonth()->endOfMonth();
+        $rangeEndDate = $dueDate->copy()->subMonth()->endOfMonth();
         $rangeStartDate = $rangeEndDate->copy()->startOfMonth()->subYear()->addMonth();
-
         $rangeStartDateFormatted = $rangeStartDate->format('m-d-Y');
         $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userAdmin' => $userAdmin,
             'startMonthName' => $startMonthName, 'endRange' => $rangeEndDateFormatted, 'startRange' => $rangeStartDateFormatted,
-            'thisMonth' => $currentMonth, 'due_date' => $due_date, 'userTypeId' => $userTypeId, 'chActiveId' => $chActiveId,
+            'thisMonth' => $currentMonth, 'dueDate' => $dueDate, 'userTypeId' => $userTypeId,
+            'startDate' => $startDate, 'renewalDate' => $renewalDate,
+            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId
         ];
 
-        return view('boards-new.payment')->with($data);
+        return view('boards-new.reregpayment')->with($data);
     }
 
     /**
@@ -160,14 +168,19 @@ class BoardPaymentController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
-        $chActiveId = $baseQuery['chActiveId'];
         $stateShortName = $baseQuery['stateShortName'];
         $allStates = $baseQuery['allStates'];
         $allCountries = $baseQuery['allCountries'];
-        $PresDetails = $baseQuery['PresDetails'];
 
-        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin, 'chActiveId' => $chActiveId,
+        $PresDetails = $baseQuery['PresDetails'];
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdPositionId = $bdData['bdPositionId'];
+        $borDetails = $bdData['bdDetails'];
+        $bdTypeId = $bdData['bdTypeId'];
+
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,
             'PresDetails' => $PresDetails, 'allStates' => $allStates, 'allCountries' => $allCountries,
+            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId
         ];
 
         return view('boards-new.donation')->with($data);

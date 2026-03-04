@@ -67,7 +67,7 @@ class CoordinatorReportController extends Controller implements HasMiddleware
             'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
         ];
 
-        return view('coordreports.coordrptvolutilization')->with($data);
+        return view('coordinators.coordreports.coordrptvolutilization')->with($data);
     }
 
     /**
@@ -92,7 +92,7 @@ class CoordinatorReportController extends Controller implements HasMiddleware
             'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
         ];
 
-        return view('coordreports.coordrptappreciation')->with($data);
+        return view('coordinators.coordreports.coordrptappreciation')->with($data);
     }
 
     public function showRptAppreciationOLD(Request $request): View
@@ -114,7 +114,7 @@ class CoordinatorReportController extends Controller implements HasMiddleware
             'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
         ];
 
-        return view('coordreports.old_coordrptappreciation')->with($data);
+        return view('coordinators.coordreports.old_coordrptappreciation')->with($data);
     }
 
     /**
@@ -139,7 +139,7 @@ class CoordinatorReportController extends Controller implements HasMiddleware
             'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
         ];
 
-        return view('coordreports.coordrptbirthdays')->with($data);
+        return view('coordinators.coordreports.coordrptbirthdays')->with($data);
     }
 
     /**
@@ -177,6 +177,6 @@ class CoordinatorReportController extends Controller implements HasMiddleware
 
         $data = ['coordinatorList' => $coordinatorList, 'checkBox86Status' => $checkBox86Status];
 
-        return view('coordreports.coordrptreportingtree')->with($data);
+        return view('coordinators.coordreports.coordrptreportingtree')->with($data);
     }
 }

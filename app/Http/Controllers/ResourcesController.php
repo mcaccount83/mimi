@@ -90,7 +90,7 @@ class ResourcesController extends Controller implements HasMiddleware
 
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'admin' => $admin, 'canEditDetails' => $canEditDetails];
 
-        return view('resources.bugs')->with($data);
+        return view('coordinators.resources.bugs')->with($data);
     }
 
     /**
@@ -193,7 +193,7 @@ class ResourcesController extends Controller implements HasMiddleware
 
         $data = ['resources' => $resources, 'resourceCategories' => $resourceCategories, 'canEditFiles' => $canEditFiles, 'id' => $id];
 
-        return view('resources.resources')->with($data);
+        return view('coordinators.resources.resources')->with($data);
     }
 
     public function addResources(Request $request): JsonResponse
@@ -315,7 +315,7 @@ class ResourcesController extends Controller implements HasMiddleware
 
         $data = ['resources' => $resources, 'canEditFiles' => $canEditFiles, 'toolkitCategories' => $toolkitCategories, 'id' => $id];
 
-        return view('resources.toolkit')->with($data);
+        return view('coordinators.resources.toolkit')->with($data);
     }
 
     /**
@@ -468,7 +468,7 @@ class ResourcesController extends Controller implements HasMiddleware
             'boardCoursesByCategory' => $boardCoursesByCategory,
         ];
 
-        return view('resources.elearning')->with($data);
+        return view('coordinators.resources.elearning')->with($data);
     }
 
     public function redirectToCourse($courseId, Request $request): RedirectResponse

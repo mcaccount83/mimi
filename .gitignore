@@ -8,6 +8,7 @@
 .env.production
 
 # Build artifacts
+/public/hot
 /public/sitemap.xml
 
 # Storage
@@ -37,6 +38,7 @@
 /.idea
 /.nova
 /.vscode
+/.vite
 .phpstorm.meta.php
 _ide_helper.php
 _ide_helper_models.php

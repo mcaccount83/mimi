@@ -1,0 +1,82 @@
+@extends('layouts.mimi_theme')
+
+@section('page_title', 'IT Reports')
+@section('breadcrumb', 'Admin Zapped Board Pages')
+
+@section('content')
+     <!-- Main content -->
+     <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-outline card-primary">
+                        <div class="card-header">
+                            <div class="dropdown">
+                                <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Zapped Board Pages
+                                </h3>
+                                <span class="ms-2">View Board Pages as President</span>
+                                @include('layouts.dropdown_menus.menu_reports_tech')
+                            </div>
+                        </div>
+                     <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="chapterlist" class="table table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Conf/Reg</th>
+                                    <th>State</th>
+                                    <th>Chapter Name</th>
+                                    <th>View Board Pages</th>
+                                    <th>Disband Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($chapters as $chapter)
+                                    <tr id="chapter-{{ $chapter->id }}">
+                                       <td>
+                                            @if ($chapter->state->conference_id > 0)
+                                                {{ $chapter->state->conference->short_name }} / {{ $chapter->state->region->short_name }}
+                                            @else
+                                                {{ $chapter->state->conference->short_name }}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($chapter->state_id < 52)
+                                                {{$chapter->state->state_short_name}}
+                                            @else
+                                                {{$chapter->state->country?->short_name}}
+                                            @endif
+                                        </td>
+                                        <td>{{ $chapter->name }}</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="{{ route('board.editdisbandchecklist', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-primary bg-gradient btn-sm me-2">Disband Checklist & Financial Report</a>
+                                            </div>
+                                        </td>
+                                        <td><span class="date-mask">{{ $chapter->zap_date }}</span></td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                     </div>
+              <!-- /.card-body -->
+
+              <div class="card-body">
+            </div>
+            <!-- /.card-body for checkboxes -->
+
+                <div class="card-body text-center mt-3">
+            </div>
+            <!-- /.card-body for buttons -->
+
+         </div>
+        <!-- /.card -->
+      </div>
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
+@endsection

@@ -638,6 +638,6 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
         $countList = count($activeChapterList);
         $data = ['countList' => $countList, 'activeChapterList' => $activeChapterList];
 
-        return view('chapters.chapboardlist')->with($data);
+        return view('coordinators.chap.chapboardlist')->with($data);
     }
 }

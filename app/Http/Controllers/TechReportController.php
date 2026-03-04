@@ -92,7 +92,7 @@ class TechReportController extends Controller implements HasMiddleware
         $countList = count($chapters);
         $data = ['countList' => $countList, 'chapters' => $chapters];
 
-        return view('techreports.chapterlist')->with($data);
+        return view('coordinators.techreports.chapterlist')->with($data);
     }
 
     /**
@@ -120,7 +120,7 @@ class TechReportController extends Controller implements HasMiddleware
         $countList = count($chapters);
         $data = ['countList' => $countList, 'chapters' => $chapters];
 
-        return view('techreports.chapterlistzapped')->with($data);
+        return view('coordinators.techreports.chapterlistzapped')->with($data);
     }
 
     /**
@@ -147,7 +147,7 @@ class TechReportController extends Controller implements HasMiddleware
         $countList = count($chapters);
         $data = ['countList' => $countList, 'chapters' => $chapters];
 
-        return view('techreports.chapterlistpending')->with($data);
+        return view('coordinators.techreports.chapterlistpending')->with($data);
     }
 
     /**
@@ -285,7 +285,7 @@ class TechReportController extends Controller implements HasMiddleware
             'resetAFTERtestingItems' => $resetAFTERtestingItems, 'updateUserTablesItems' => $updateUserTablesItems, 'subscribeListItems' => $subscribeListItems,
         ];
 
-        return view('techreports.eoy')->with($data);
+        return view('coordinators.techreports.eoy')->with($data);
     }
 
     /**
@@ -917,7 +917,7 @@ class TechReportController extends Controller implements HasMiddleware
 
         $data = ['driveList' => $driveList];
 
-        return view('techreports.googledrive')->with($data);
+        return view('coordinators.techreports.googledrive')->with($data);
 
     }
 
@@ -1013,7 +1013,7 @@ class TechReportController extends Controller implements HasMiddleware
 
         $data = ['emailList' => $emailList];
 
-        return view('techreports.adminemail')->with($data);
+        return view('coordinators.techreports.adminemail')->with($data);
 
     }
 
@@ -1210,7 +1210,7 @@ public function conferenceList(Request $request): View
 
         $data = ['confList' => $confList];
 
-        return view('techreports.conferencelist')->with($data);
+        return view('coordinators.techreports.conferencelist')->with($data);
     }
 
     public function regionList(Request $request): View
@@ -1235,7 +1235,7 @@ public function conferenceList(Request $request): View
             'conferenceList' => $conferenceList
         ];
 
-        return view('techreports.regionlist')->with($data);
+        return view('coordinators.techreports.regionlist')->with($data);
     }
 
     public function updateRegion(Request $request, $id)
@@ -1278,7 +1278,7 @@ public function conferenceList(Request $request): View
             'regionList' => $regionList
         ];
 
-        return view('techreports.statelist')->with($data);
+        return view('coordinators.techreports.statelist')->with($data);
     }
 
     public function updateState(Request $request, $id)

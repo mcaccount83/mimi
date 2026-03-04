@@ -134,7 +134,7 @@ class ChapterController extends Controller implements HasMiddleware
             'userConfDesc' => $userConfDesc,
         ];
 
-        return view('chapters.chaplistpending')->with($data);
+        return view('coordinators.chap.chaplistpending')->with($data);
     }
 
     /**
@@ -162,7 +162,7 @@ class ChapterController extends Controller implements HasMiddleware
             'checkBox51Status' => $checkBox51Status,
         ];
 
-        return view('chapters.chaplistdeclined')->with($data);
+        return view('coordinators.chap.chaplistdeclined')->with($data);
     }
 
     /**
@@ -201,7 +201,7 @@ class ChapterController extends Controller implements HasMiddleware
             'userConfDesc' => $userConfDesc,
         ];
 
-        return view('chapters.chaplist')->with($data);
+        return view('coordinators.chap.chaplist')->with($data);
     }
 
     /**
@@ -229,7 +229,7 @@ class ChapterController extends Controller implements HasMiddleware
             'checkBox51Status' => $checkBox51Status,
         ];
 
-        return view('chapters.chapzapped')->with($data);
+        return view('coordinators.chap.chapzapped')->with($data);
     }
 
     /**
@@ -257,7 +257,7 @@ class ChapterController extends Controller implements HasMiddleware
             'checkBox51Status' => $checkBox51Status,
         ];
 
-        return view('chapters.chapinquiries')->with($data);
+        return view('coordinators.chap.chapinquiries')->with($data);
     }
 
     /**
@@ -285,7 +285,7 @@ class ChapterController extends Controller implements HasMiddleware
             'checkBox51Status' => $checkBox51Status,
         ];
 
-        return view('chapters.chapinquirieszapped')->with($data);
+        return view('coordinators.chap.chapinquirieszapped')->with($data);
     }
 
     /**
@@ -349,7 +349,7 @@ class ChapterController extends Controller implements HasMiddleware
             'resources' => $resources, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
-        return view('chapters.view')->with($data);
+        return view('coordinators.chap.view')->with($data);
     }
 
     /**
@@ -728,7 +728,7 @@ class ChapterController extends Controller implements HasMiddleware
             'allStates' => $allStates, 'allCountries' => $allCountries,
         ];
 
-        return view('chapters.addnew')->with($data);
+        return view('coordinators.chap.addnew')->with($data);
     }
 
     /**
@@ -826,7 +826,7 @@ class ChapterController extends Controller implements HasMiddleware
         $data = ['allStates' => $allStates, 'allCountries' => $allCountries,
         ];
 
-        return view('chapters.addnewint')->with($data);
+        return view('coordinators.chap.addnewint')->with($data);
     }
 
     /**
@@ -973,7 +973,7 @@ class ChapterController extends Controller implements HasMiddleware
             'pcList' => $pcList, 'confId' => $confId, 'chConfId' => $chConfId, 'startDate' => $startDate, 'dueDate' => $dueDate, 'renewalDate' => $renewalDate
         ];
 
-        return view('chapters.edit')->with($data);
+        return view('coordinators.chap.edit')->with($data);
     }
 
      /**
@@ -1223,7 +1223,7 @@ class ChapterController extends Controller implements HasMiddleware
             'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'chapterStatus' => $chapterStatus
         ];
 
-        return view('chapters.editboard')->with($data);
+        return view('coordinators.chap.editboard')->with($data);
     }
 
     /**
@@ -1642,7 +1642,7 @@ class ChapterController extends Controller implements HasMiddleware
             'checkBox51Status' => $checkBox51Status, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
-        return view('chapters.chapwebsite')->with($data);
+        return view('coordinators.chap.chapwebsite')->with($data);
     }
 
     /**
@@ -1668,7 +1668,7 @@ class ChapterController extends Controller implements HasMiddleware
             'checkBox51Status' => $checkBox51Status,
         ];
 
-        return view('chapters.chapsocialmedia')->with($data);
+        return view('coordinators.chap.chapsocialmedia')->with($data);
     }
 
     /**
@@ -1701,7 +1701,7 @@ class ChapterController extends Controller implements HasMiddleware
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc, 'chapterStatus' => $chapterStatus
         ];
 
-        return view('chapters.editwebsite')->with($data);
+        return view('coordinators.chap.editwebsite')->with($data);
     }
 
     /**
@@ -1892,7 +1892,7 @@ class ChapterController extends Controller implements HasMiddleware
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
-        return view('chapters.editpending')->with($data);
+        return view('coordinators.chap.editpending')->with($data);
     }
 
     /**

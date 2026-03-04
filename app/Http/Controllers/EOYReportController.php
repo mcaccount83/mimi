@@ -142,7 +142,7 @@ class EOYReportController extends Controller implements HasMiddleware
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
-        return view('eoyreports.eoystatus')->with($data);
+        return view('coordinators.eoyreports.eoystatus')->with($data);
     }
 
     /**
@@ -194,7 +194,7 @@ class EOYReportController extends Controller implements HasMiddleware
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
-        return view('eoyreports.view')->with($data);
+        return view('coordinators.eoyreports.view')->with($data);
     }
 
     /**
@@ -368,7 +368,7 @@ class EOYReportController extends Controller implements HasMiddleware
             'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
-        return view('eoyreports.eoyboardreport')->with($data);
+        return view('coordinators.eoyreports.eoyboardreport')->with($data);
 
     }
 
@@ -432,7 +432,7 @@ class EOYReportController extends Controller implements HasMiddleware
             'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'allCountries' => $allCountries, 'confId' => $confId, 'chConfId' => $chConfId,
         ];
 
-        return view('eoyreports.editboardreport')->with($data);
+        return view('coordinators.eoyreports.editboardreport')->with($data);
     }
 
     public function updateEOYBoardReport(Request $request, $chapter_id): RedirectResponse
@@ -571,7 +571,7 @@ class EOYReportController extends Controller implements HasMiddleware
             'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
-        return view('eoyreports.eoyfinancialreport')->with($data);
+        return view('coordinators.eoyreports.eoyfinancialreport')->with($data);
     }
 
     /**
@@ -608,7 +608,7 @@ class EOYReportController extends Controller implements HasMiddleware
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc, 'confId' => $confId, 'chConfId' => $chConfId,
         ];
 
-        return view('eoyreports.editfinancialreview')->with($data);
+        return view('coordinators.eoyreports.editfinancialreview')->with($data);
     }
 
     /**
@@ -945,7 +945,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status,
             'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'checkBox2Status' => $checkBox2Status];
 
-        return view('eoyreports.eoyattachments')->with($data);
+        return view('coordinators.eoyreports.eoyattachments')->with($data);
     }
 
     /**
@@ -979,7 +979,7 @@ class EOYReportController extends Controller implements HasMiddleware
             'chEOYDocuments' => $chEOYDocuments, 'chapterStatus' => $chapterStatus
         ];
 
-        return view('eoyreports.editattachments')->with($data);
+        return view('coordinators.eoyreports.editattachments')->with($data);
     }
 
     /**
@@ -1058,7 +1058,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status,
             'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'checkBox2Status' => $checkBox2Status];
 
-        return view('eoyreports.eoyboundaries')->with($data);
+        return view('coordinators.eoyreports.eoyboundaries')->with($data);
     }
 
     /**
@@ -1090,7 +1090,7 @@ class EOYReportController extends Controller implements HasMiddleware
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport, 'chapterStatus' => $chapterStatus
         ];
 
-        return view('eoyreports.editboundaries')->with($data);
+        return view('coordinators.eoyreports.editboundaries')->with($data);
     }
 
     /**
@@ -1181,7 +1181,7 @@ class EOYReportController extends Controller implements HasMiddleware
             'allAwards' => $allAwards, 'maxAwards' => $maxAwards, 'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
         ];
 
-        return view('eoyreports.eoyawards', $data);
+        return view('coordinators.eoyreports.eoyawards', $data);
     }
 
     /**
@@ -1214,7 +1214,7 @@ class EOYReportController extends Controller implements HasMiddleware
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
         ];
 
-        return view('eoyreports.editawards')->with($data);
+        return view('coordinators.eoyreports.editawards')->with($data);
     }
 
     /**
@@ -1307,7 +1307,7 @@ class EOYReportController extends Controller implements HasMiddleware
                 'chapterStatus' => $chapterStatus
             ];
 
-        return view('eoyreports.awardhistory')->with($data);
+        return view('coordinators.eoyreports.awardhistory')->with($data);
     }
 
     /**
@@ -1352,7 +1352,7 @@ class EOYReportController extends Controller implements HasMiddleware
             'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'checkBox2Status' => $checkBox2Status,
         ];
 
-        return view('eoyreports.eoyirssubmission')->with($data);
+        return view('coordinators.eoyreports.eoyirssubmission')->with($data);
     }
 
     /**
@@ -1384,7 +1384,7 @@ class EOYReportController extends Controller implements HasMiddleware
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
         ];
 
-        return view('eoyreports.editirssubmission')->with($data);
+        return view('coordinators.eoyreports.editirssubmission')->with($data);
     }
 
     /**

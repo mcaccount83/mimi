@@ -61,7 +61,7 @@ class ChapterReportController extends Controller implements HasMiddleware
             'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
         ];
 
-        return view('chapreports.chaprptchapterstatus')->with($data);
+        return view('coordinators.chapreports.chaprptchapterstatus')->with($data);
     }
 
     /**
@@ -87,7 +87,7 @@ class ChapterReportController extends Controller implements HasMiddleware
             'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
         ];
 
-        return view('chapreports.chaprpteinstatus')->with($data);
+        return view('coordinators.chapreports.chaprpteinstatus')->with($data);
     }
 
     /**
@@ -117,7 +117,7 @@ class ChapterReportController extends Controller implements HasMiddleware
             'chPcId' => $chPcId, 'chDocuments' => $chDocuments, 'confId' => $confId, 'chConfId' => $chConfId, 'chapterStatus' => $chapterStatus
         ];
 
-        return view('chapreports.editirs')->with($data);
+        return view('coordinators.chapreports.editirs')->with($data);
     }
 
     /**
@@ -194,7 +194,7 @@ class ChapterReportController extends Controller implements HasMiddleware
             'checkBox51Status' => $checkBox51Status,
         ];
 
-        return view('chapreports.chaprptnewchapters')->with($data);
+        return view('coordinators.chapreports.chaprptnewchapters')->with($data);
     }
 
     /**
@@ -223,7 +223,7 @@ class ChapterReportController extends Controller implements HasMiddleware
             'checkBox51Status' => $checkBox51Status,
         ];
 
-        return view('chapreports.chaprptlargechapters')->with($data);
+        return view('coordinators.chapreports.chaprptlargechapters')->with($data);
     }
 
     /**
@@ -250,7 +250,7 @@ class ChapterReportController extends Controller implements HasMiddleware
             'checkBox51Status' => $checkBox51Status,
         ];
 
-        return view('chapreports.chaprptprobation')->with($data);
+        return view('coordinators.chapreports.chaprptprobation')->with($data);
     }
 
     /**
@@ -302,6 +302,6 @@ class ChapterReportController extends Controller implements HasMiddleware
             'positionCodes' => ['BS', 'AC', 'SC', 'ARC', 'RC', 'ACC', 'CC'],
         ];
 
-        return view('chapreports.chaprptcoordinators')->with($data);
+        return view('coordinators.chapreports.chaprptcoordinators')->with($data);
     }
 }

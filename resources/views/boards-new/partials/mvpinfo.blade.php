@@ -1,10 +1,11 @@
 @if ($MVPDetails->user_id == '')
     <div class="col-12">
-        <h4>Membership Vice President Position is Vacant</h4>
+        <label>Membership Vice President Position is Vacant</label>
     </div>
 @else
     <div class="col-md-6">
-        <h4 class="mb-0">{{$MVPDetails->first_name}} {{$MVPDetails->last_name}}</h4>
+        <label>{{$MVPDetails->first_name}} {{$MVPDetails->last_name}}</label>
+        <br>
         <a href="mailto:{{ $MVPDetails->email }}">{{ $MVPDetails->email }}</a>
         <br>
         <span class="phone-mask">{{$MVPDetails->phone}}</span>

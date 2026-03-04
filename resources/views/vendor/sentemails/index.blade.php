@@ -1,4 +1,4 @@
-@extends('layouts.coordinator_theme')
+@extends('layouts.mimi_theme')
 
 @section('page_title', 'IT Reports')
 @section('breadcrumb', 'Sent Mail Log')

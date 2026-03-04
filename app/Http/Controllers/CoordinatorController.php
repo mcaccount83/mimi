@@ -110,7 +110,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
         ];
 
-        return view('coordinators.coordlist')->with($data);
+        return view('coordinators.coord.coordlist')->with($data);
     }
 
     /**
@@ -131,7 +131,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $data = ['coordinatorList' => $coordinatorList, 'checkBox51Status' => $checkBox51Status];
 
-        return view('coordinators.coordlistpending')->with($data);
+        return view('coordinators.coord.coordlistpending')->with($data);
     }
 
     /**
@@ -152,7 +152,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $data = ['coordinatorList' => $coordinatorList, 'checkBox51Status' => $checkBox51Status];
 
-        return view('coordinators.coordlistrejected')->with($data);
+        return view('coordinators.coord.coordlistrejected')->with($data);
     }
 
     /**
@@ -173,7 +173,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         $data = ['coordinatorList' => $coordinatorList, 'checkBox51Status' => $checkBox51Status];
 
-        return view('coordinators.coordretired')->with($data);
+        return view('coordinators.coord.coordretired')->with($data);
     }
 
     /**
@@ -203,7 +203,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             'confId' => $confId, 'regId' => $regId, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc, 'regLongName' => $regLongName,
         ];
 
-        return view('coordinators.editnew')->with($data);
+        return view('coordinators.coord.editnew')->with($data);
     }
 
     /**
@@ -358,7 +358,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             'secondaryPosition' => $secondaryPosition, 'cdPositionid' => $cdPositionid, 'cdAdminRole' => $cdAdminRole,
         ];
 
-        return view('coordinators.view')->with($data);
+        return view('coordinators.coord.view')->with($data);
     }
 
     /**
@@ -830,7 +830,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             'allAdminRoles' => $allAdminRoles, 'cdAdminRole' => $cdAdminRole
         ];
 
-        return view('coordinators.editrole')->with($data);
+        return view('coordinators.coord.editrole')->with($data);
     }
 
     /**
@@ -1164,7 +1164,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             'allStates' => $allStates, 'allMonths' => $allMonths, 'cdAdminRole' => $cdAdminRole, 'allCountries' => $allCountries,
         ];
 
-        return view('coordinators.editdetails')->with($data);
+        return view('coordinators.coord.editdetails')->with($data);
     }
 
     /**
@@ -1262,7 +1262,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             'allRecognitionGifts' => $allRecognitionGifts,
         ];
 
-        return view('coordinators.editrecognition')->with($data);
+        return view('coordinators.coord.editrecognition')->with($data);
     }
 
     /**
@@ -1370,7 +1370,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             'displayPosition' => $displayPosition, 'secondaryPosition' => $secondaryPosition, 'ReportTo' => $ReportTo,
         ];
 
-        return view('coordinators.viewprofile')->with($data);
+        return view('coordinators.coord.viewprofile')->with($data);
     }
 
     /**
@@ -1409,7 +1409,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             'displayPosition' => $displayPosition, 'secondaryPosition' => $secondaryPosition, 'ReportTo' => $ReportTo,
         ];
 
-        return view('coordinators.profile')->with($data);
+        return view('coordinators.coord.profile')->with($data);
     }
 
     /**
@@ -1508,7 +1508,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             'allStates' => $allStates, 'allRegions' => $allRegions, 'allCountries' => $allCountries, 'allPositions' => $allPositions,
         ];
 
-        return view('coordinators.viewapplication')->with($data);
+        return view('coordinators.coord.viewapplication')->with($data);
     }
 
     /**

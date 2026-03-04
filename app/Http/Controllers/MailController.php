@@ -118,7 +118,7 @@ class MailController extends Controller implements HasMiddleware
                 $metrics = $this->collectMetrics();
             }
 
-            return view('techreports.jobs', [
+            return view('coordinators.coordinators.techreports.jobs', [
                 'pendingJobs' => $pendingJobs,
                 'jobs' => $jobs,
                 'filters' => $filters,

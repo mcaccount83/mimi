@@ -1,24 +1,31 @@
-@extends('layouts.coordinator_theme')
+@extends('layouts.mimi_theme')
+
+@section('page_title', 'MOMS Club of ' . $chDetails->name . ', ' . $stateShortName)
+@section('breadcrumb', 'Chapter Profile')
 
 @section('content')
-   <div class="container">
+     <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
         <div class="row">
+        <div class="col-12">
+
+              <form method="POST" action="{{ route('process.donation') }}">
+                @csrf
+
                 <div class="col-md-12">
                     <div class="card card-primary card-outline">
-              <div class="card-body">
-                <div class="card-header text-center bg-transparent">
-                    <h2 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h2>
-                    {{-- <p class="mb-0">{{ $conferenceDescription }} Conference, {{ $conferenceDescription }} Region --}}
-                        <br>
-                        <h3>Sustaining Chapter & Mother-to-Mother Fund Donations</h3>
-                    </div>
-                        <!-- /.card-header -->
                     <div class="card-body">
-                        <div class="row">
+                        <div class="card-header bg-transparent border-0">
+                            <h3>Sustaining Chapter & Mother-to-Mother Fund Donation</h3>
+                        </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                    <div class="row">
                         <div class="col-md-12">
                             Sustaining chapter donations benefits the International MOMS Club, which is a 501 (c)(3) public charity.
                             Your donation will help us keep dues low and help new and existing chapters in the U.S. and around the world.<br>
-                        <br>
+                            <br>
                             The Mother-To-Mother Fund is our ONLY official MOMS Club charity and is supported only by donations from the local chapters.
                             Because of donations from chapters and volunteers in the past, we have been able to offer grants for emergency expenses to our MOMS Club mothers
                             suffering from devastating financial and natural disasters.<br>
@@ -44,8 +51,7 @@
                             </div>
                             @endif
 
-                            <form method="POST" action="{{ route('process.donation') }}">
-                                @csrf
+
                                 <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
 
                                 <div class="row mb-3">
@@ -136,7 +142,7 @@
                                 </div>
 
                                 <div class="card-body text-center mt-3">
-                                    <div class="col-md-12" style="color: red;"><center>Page will automatically re-direct after payment submission with success or error message.<br>
+                                    <div class="col-md-12" style="color: #dc3545;"><center>Page will automatically re-direct after payment submission with success or error message.<br>
                                         DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center></div>
                                     <br>
                                         <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>{{ __('Submit Payment') }}</button>
@@ -158,19 +164,25 @@
                     See an <a href="http://www.authorize.net/resources/howitworksdiagram/" target="blank">online payments diagram</a> to see how it works.</p>
                 </div>
 
-                </div>
+              </div>
+            </div>
+            <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
         </div>
-        <!-- /.card-body -->
-        </div>
-        <!-- /.card -->
+        <!-- /.col -->
+
+    </form>
+
+            </div>
+            <!-- /.col -->
+       </div>
     </div>
-    <!-- /.col -->
-    </div>
-    </div>
-<!-- /.container- -->
+    <!-- /.container- -->
 @endsection
 @section('customscript')
-
+@php $disableMode = 'disable-all'; @endphp
+@include('layouts.scripts.disablefields')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
     // Define the sections we need to handle

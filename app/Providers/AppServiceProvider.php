@@ -8,6 +8,7 @@ use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -27,6 +28,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Schema::defaultStringLength(191);
+
+        // Fix https mixed content issue on live for vite
+        if (config('app.env') === 'production') {
+                URL::forceScheme('https');
+            }
 
         // Register mail markdown views namespace
         $this->loadViewsFrom(resource_path('views/vendor/mail/html'), 'mail');

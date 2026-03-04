@@ -1,5 +1,6 @@
 <div class="col-md-6">
-    <h4 class="mb-0">{{$PresDetails->first_name}} {{$PresDetails->last_name}}</h4>
+    <label>{{$PresDetails->first_name}} {{$PresDetails->last_name}}</label>
+    <br>
     <a href="mailto:{{ $PresDetails->email }}">{{ $PresDetails->email }}</a>
     <br>
     <span class="phone-mask">{{$PresDetails->phone }}</span>

@@ -1,4 +1,4 @@
-@extends('layouts.coordinator_theme')
+@extends('layouts.mimi_theme')
 
 @section('page_title', 'IT Reports')
 @section('breadcrumb', 'System Error Logs')
@@ -80,6 +80,9 @@
     <div class="card-body">
 
       @if ($logs == null)
+        <div>
+          Log file >50M, please download it.
+        </div>
       @else
 
         <table id="table-log" class="table table-sm table-striped" data-ordering-index="{{ $standardFormat ? 2 : 0 }}">

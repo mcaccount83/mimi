@@ -94,7 +94,7 @@ class PaymentController extends Controller implements HasMiddleware
             'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'checkBox56Status' => $checkBox56Status,
         ];
 
-        return view('payment.chapreregistration')->with($data);
+        return view('coordinators.payment.chapreregistration')->with($data);
     }
 
     /**
@@ -117,12 +117,14 @@ class PaymentController extends Controller implements HasMiddleware
         $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
 
         try {
-            $chapters = Chapters::with(['state', 'conference', 'region'])
-                ->where('conference_id', $confId)
-                ->where('start_month_id', $currentMonth)
-                ->where('next_renewal_year', $currentYear)
-                ->where('active_status', 1)
-                ->get();
+               $chapters = Chapters::with(['state.conference'])
+                    ->whereHas('state.conference', function($q) use ($confId) {
+                        $q->where('conference.id', $confId);
+                    })
+                    ->where('start_month_id', $currentMonth)
+                    ->where('next_renewal_year', $currentYear)
+                    ->where('active_status', 1)
+                    ->get();
 
             if ($chapters->isEmpty()) {
                 return redirect()->back()->with('info', 'There are no Chapters with Registrations Due.');
@@ -207,11 +209,13 @@ class PaymentController extends Controller implements HasMiddleware
         $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
 
         try {
-            $chapters = Chapters::with(['state', 'conference', 'region'])
-                ->where('chapters.conference_id', $confId)
-                ->where('chapters.start_month_id', $lastMonth)
-                ->where('chapters.next_renewal_year', $currentYear)
-                ->where('chapters.active_status', 1)
+            $chapters = Chapters::with(['state.conference'])
+                ->whereHas('state.conference', function($q) use ($confId) {
+                    $q->where('conference.id', $confId);
+                })
+                ->where('start_month_id', $lastMonth)
+                ->where('next_renewal_year', $currentYear)
+                ->where('active_status', 1)
                 ->get();
 
             if ($chapters->isEmpty()) {
@@ -296,7 +300,7 @@ class PaymentController extends Controller implements HasMiddleware
             'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
         ];
 
-        return view('payment.chapdonations')->with($data);
+        return view('coordinators.payment.chapdonations')->with($data);
     }
 
     /**
@@ -327,7 +331,7 @@ class PaymentController extends Controller implements HasMiddleware
             'coorId' => $coorId, 'confId' => $confId, 'chConfId' => $chConfId, 'startDate' => $startDate, 'dueDate' => $dueDate, 'renewalDate' => $renewalDate
         ];
 
-        return view('payment.editpayment')->with($data);
+        return view('coordinators.payment.editpayment')->with($data);
     }
 
     /**
@@ -531,7 +535,7 @@ class PaymentController extends Controller implements HasMiddleware
             'reregHistory' => $reregHistory, 'm2mHistory' => $m2mHistory, 'sustainingHistory' => $sustainingHistory, 'startDate' => $startDate, 'dueDate' => $dueDate, 'renewalDate' => $renewalDate
         ];
 
-        return view('payment.paymenthistory')->with($data);
+        return view('coordinators.payment.paymenthistory')->with($data);
     }
 
       public function showGrantList(Request $request): View
@@ -559,7 +563,7 @@ class PaymentController extends Controller implements HasMiddleware
 
         $data = ['grantList' => $grantList, 'checkBox51Status' => $checkBox51Status];
 
-        return view('payment.grantlist')->with($data);
+        return view('coordinators.payment.grantlist')->with($data);
     }
 
     public function editGrantDetails(Request $request, $grantId): View
@@ -601,7 +605,7 @@ class PaymentController extends Controller implements HasMiddleware
             'grList' => $grList, 'loggedInName' => $loggedInName,
         ];
 
-        return view('payment.editgrantdetails')->with($data);
+        return view('coordinators.payment.editgrantdetails')->with($data);
     }
 
     public function updateGrantDetails(Request $request, $grantId): RedirectResponse

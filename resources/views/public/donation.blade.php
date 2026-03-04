@@ -20,7 +20,7 @@
                                     <div class="col-md-12"><br><br></div>
                                     <h2 class="text-center">Sustaining Chapter & Mother-to-Mother Fund Donations</h2>
                                     </h2>
-                                    <div class="col-md-12" style="color: red;"><center><br>
+                                    <div class="col-md-12" style="color: #dc3545;"><center><br>
                                         <p><b>This page is for making donations as an individual who is making a donation on their own, or for a company not associated with a MOMS Club chapter.<br>
                                             If you are a making a donation as a chapter,
                                             login and donate through your MIMI account so your chapter can be recognized as the donar!</b>
@@ -207,7 +207,7 @@
                         </div>
 
                     <div class="card-body text-center mt-3">
-                            <div class="col-md-12" style="color: red;"><center>Page will automatically re-direct after application submission with success or error message.<br>
+                            <div class="col-md-12" style="color: #dc3545;"><center>Page will automatically re-direct after application submission with success or error message.<br>
                                 DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center></div>
                             <br>
 

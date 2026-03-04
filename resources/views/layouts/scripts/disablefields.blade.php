@@ -1,4 +1,6 @@
 <script>
+    var disableFieldsMode = '{{ $disableMode ?? 'default' }}';
+
     var chActiveId = @json($chActiveId ?? null);
     var cdActiveId = @json($cdActiveId ?? null);
     var activeId = chActiveId ?? cdActiveId;
@@ -33,18 +35,26 @@
     );
 
     document.addEventListener('DOMContentLoaded', function () {
-        if (!shouldEnable) {
+        if (disableFieldsMode == 'disable-all') {
+            // Mode 2 - always disable regardless of shouldEnable
             $('input, select, textarea, button').prop('disabled', true);
-
             $('a[href^="mailto:"]').each(function() {
-                $(this).addClass('disabled-link');
-                $(this).attr('href', 'javascript:void(0);');
-                $(this).on('click', function(e) {
-                    e.preventDefault();
-                });
+                $(this).addClass('disabled-link').attr('href', 'javascript:void(0);');
+                $(this).on('click', function(e) { e.preventDefault(); });
             });
-
             $('.keep-enabled').prop('disabled', false);
+
+        } else {
+            // Mode 1 - default, use shouldEnable
+            if (!shouldEnable) {
+                $('input, select, textarea, button').prop('disabled', true);
+                $('a[href^="mailto:"]').each(function() {
+                    $(this).addClass('disabled-link').attr('href', 'javascript:void(0);');
+                    $(this).on('click', function(e) { e.preventDefault(); });
+                });
+                $('.keep-enabled').prop('disabled', false);
+            }
         }
     });
+
 </script>

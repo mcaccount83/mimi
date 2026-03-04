@@ -1,4 +1,4 @@
-@extends('layouts.coordinator_theme')
+@extends('layouts.mimi_theme')
 
 <style>
 .form-switch .form-check-label {
@@ -420,7 +420,7 @@
                         @if ($grantDetails->photos_path != null)
                             <div class="col-md-12" id="PhotosBlock">
                                     <label class="me-2">Photos of Damage Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $grantDetails['photos_path'] }}">View Photos</a><br>
-                                    <strong style="color:red">Please Note</strong>
+                                    <strong style="color: #dc3545;">Please Note</strong>
                                         This will refresh the screen - be sure to save all other work before clicking button to Replace Photos.<br>
                                     <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showGrantUploadModal('{{ $grantDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace Photos</button>
                                     <br>
@@ -428,7 +428,7 @@
                         @else
                             <div class="col-md-12" id="PhotosBlock">
                                     <label class="me-2">If there was damage to the member’s home or property, please upload any pictures here.</label><br>
-                                    <strong style="color:red">Please Note</strong>
+                                    <strong style="color: #dc3545;">Please Note</strong>
                                         This will refresh the screen - be sure to save all other work before clicking button to Upload Photos.<br>
                                     <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showGrantUploadModal('{{ $grantDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload Photos</button>
                                     <br>
