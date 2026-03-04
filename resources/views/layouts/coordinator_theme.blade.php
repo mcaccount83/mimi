@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
     <!--end::App Wrapper-->
 
-    @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/flash.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/flash.js'])
 
     @include('layouts.scripts.alert')
     @include('layouts.scripts.boards')

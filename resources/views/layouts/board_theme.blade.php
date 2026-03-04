@@ -179,7 +179,8 @@ document.addEventListener('DOMContentLoaded', function() {
     <!--end::App Wrapper-->
 
     <!-- Vite Compiled Assets -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/flash.js'])
+        @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/flash.js'])
+
 
     <!-- Sript Functions -->
     @include('layouts.scripts.alert')

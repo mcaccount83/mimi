@@ -15,7 +15,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Vite Compiled Assets -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/flash.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/flash.js'])
 
     <!-- Google Recaptcha -->
     <script src="https://www.google.com/recaptcha/enterprise.js?render={{ config('services.recaptcha.site_key') }}"></script>
