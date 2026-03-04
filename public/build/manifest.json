@@ -56,17 +56,17 @@
     "src": "node_modules/summernote/dist/font/summernote.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-BTKWh3Yh.css",
+    "file": "assets/app-CSSVVPyd.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-BBug_HIQ.js",
+    "file": "assets/app-iWcYferG.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-dXvciheX.css"
+      "assets/app-C0WruDv_.css"
     ],
     "assets": [
       "assets/fa-brands-400-D_cYUPeE.woff2",
