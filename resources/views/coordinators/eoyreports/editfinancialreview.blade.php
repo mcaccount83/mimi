@@ -442,7 +442,7 @@
                 </div>
 
                     <div class="card-body">
-                         @include('eoyreports.editfinancialreview_accordion', [ ])
+                         @include('coordinators.partials.editfinancialreview_accordion', [ ])
                     </div>
                 <!-- end of accordion -->
                 </div>
