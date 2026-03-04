@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => {
         base: env.VITE_ASSET_BASE_URL || '/build/',
         plugins: [
             laravel({
-                input: ['resources/css/app.css', 'resources/js/app.js'],
+                input: ['resources/css/app.css', 'resources/js/app.js', 'resources/js/flash.js'],
                 refresh: true,
             }),
         ],
@@ -16,16 +16,6 @@ export default defineConfig(({ mode }) => {
             alias: {
                 '$': 'jquery',
                 'jQuery': 'jquery',
-            },
-        },
-        build: {
-            rollupOptions: {
-                external: ['jquery'],
-                output: {
-                    globals: {
-                        jquery: '$'
-                    }
-                }
             },
         },
         css: {

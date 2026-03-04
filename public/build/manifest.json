@@ -61,7 +61,7 @@
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-CUbQDbo2.js",
+    "file": "assets/app-BBug_HIQ.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -84,5 +84,11 @@
       "assets/summernote-MGhHcnpK.woff",
       "assets/summernote-BDPkqvsB.ttf"
     ]
+  },
+  "resources/js/flash.js": {
+    "file": "assets/flash-MfIC-xcY.js",
+    "name": "flash",
+    "src": "resources/js/flash.js",
+    "isEntry": true
   }
 }
