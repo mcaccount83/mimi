@@ -55,13 +55,18 @@
     "file": "assets/summernote-tk6LuLER.woff2",
     "src": "node_modules/summernote/dist/font/summernote.woff2"
   },
+  "resources/css/app.css": {
+    "file": "assets/app-BTKWh3Yh.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
   "resources/js/app.js": {
-    "file": "assets/app-CeFswtrI.js",
+    "file": "assets/app-CUbQDbo2.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-CoeF-9Ke.css"
+      "assets/app-dXvciheX.css"
     ],
     "assets": [
       "assets/fa-brands-400-D_cYUPeE.woff2",
@@ -79,16 +84,5 @@
       "assets/summernote-MGhHcnpK.woff",
       "assets/summernote-BDPkqvsB.ttf"
     ]
-  },
-  "resources/js/flash.js": {
-    "file": "assets/flash-MfIC-xcY.js",
-    "name": "flash",
-    "src": "resources/js/flash.js",
-    "isEntry": true
-  },
-  "resources/sass/app.scss": {
-    "file": "assets/app-CTWRI2H1.css",
-    "src": "resources/sass/app.scss",
-    "isEntry": true
   }
 }
