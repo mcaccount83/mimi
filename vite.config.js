@@ -1,39 +1,39 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import laravel from 'laravel-vite-plugin';
 
-export default defineConfig({
-    base: '/mimi/build/',
-    plugins: [
-        laravel({
-            input: [
-                'resources/sass/app.scss',
-                'resources/js/app.js',
-                'resources/js/flash.js',
-            ],
-            refresh: true,
-        }),
-    ],
-    resolve: {
-        alias: {
-            '$': 'jquery',
-            'jQuery': 'jquery',
+export default defineConfig(({ mode }) => {
+    const env = loadEnv(mode, process.cwd(), '');
+
+    return {
+        base: env.VITE_ASSET_BASE_URL || '/build/',
+        plugins: [
+            laravel({
+                input: ['resources/css/app.css', 'resources/js/app.js'],
+                refresh: true,
+            }),
+        ],
+        resolve: {
+            alias: {
+                '$': 'jquery',
+                'jQuery': 'jquery',
+            },
         },
-    },
-    build: {
-        rollupOptions: {
-            external: ['jquery'],
-            output: {
-                globals: {
-                    jquery: '$'
+        build: {
+            rollupOptions: {
+                external: ['jquery'],
+                output: {
+                    globals: {
+                        jquery: '$'
+                    }
+                }
+            },
+        },
+        css: {
+            preprocessorOptions: {
+                scss: {
+                    silenceDeprecations: ['import', 'global-builtin', 'color-functions', 'if-function'],
                 }
             }
-        },
-    },
-    css: {
-        preprocessorOptions: {
-            scss: {
-                silenceDeprecations: ['import', 'global-builtin', 'color-functions', 'if-function'],
-            }
         }
-    }
+    };
 });
