@@ -7,6 +7,7 @@
     </li>
 
     <!-- ReReg Menu Item -->
+    @if(isset($chDetails))
     @php
         $boardRoute = route('board.editfinancialreportfinal', ['id' => $chDetails->id]);
 
@@ -22,8 +23,10 @@
             </a>
         </li>
     @endif
+    @endif
 
      <!-- ReReg Menu Item -->
+     @if(isset($chDetails))
     @php
         $boardRoute = route('board.editreregpayment', ['id' => $chDetails->id]);
 
@@ -39,8 +42,10 @@
             </a>
         </li>
     @endif
+    @endif
 
     <!-- Donations Menu Item -->
+    @if(isset($chDetails))
     @php
         $boardRoute = route('board.editdonate', ['id' => $chDetails->id]);
 
@@ -56,8 +61,10 @@
             </a>
         </li>
     @endif
+    @endif
 
     <!-- Documents Menu Item -->
+    @if(isset($chDetails))
     @php
         $boardRoute = route('board.editprofile', ['id' => $chDetails->id]);
 
@@ -72,4 +79,5 @@
                 <p>Documents</p>
             </a>
         </li>
+    @endif
     @endif

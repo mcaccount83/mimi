@@ -1,4 +1,5 @@
  <!-- Board Dashboard Menu Item -->
+ @if(isset($chDetails))
      @php
         $boardRoute = route('board-new.newchapterstatus', ['id' => $chDetails->id]);
 
@@ -14,3 +15,4 @@
             </a>
         </li>
     @endif
+@endif
