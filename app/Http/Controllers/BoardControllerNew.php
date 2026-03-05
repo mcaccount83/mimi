@@ -1138,6 +1138,7 @@ class BoardControllerNew extends Controller implements HasMiddleware
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
+        $chEOYDocuments = $baseQuery['chEOYDocuments'];
 
         $allWebLinks = $baseQuery['allWebLinks'];
         $allStates = $baseQuery['allStates'];
@@ -1157,6 +1158,7 @@ class BoardControllerNew extends Controller implements HasMiddleware
         $data = ['stateShortName' => $stateShortName, 'startMonthName' => $startMonthName, 'allStates' => $allStates, 'SECDetails' => $SECDetails, 'userAdmin' => $userAdmin,
             'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId,
             'allWebLinks' => $allWebLinks, 'allCountries' => $allCountries,  'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId,
+            'chEOYDocuments' => $chEOYDocuments
         ];
 
         return view('boards-new.editboardreport')->with($data);

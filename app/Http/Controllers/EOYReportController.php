@@ -388,6 +388,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
+        $chEOYDocuments = $baseQuery['chEOYDocuments'];
 
         $baseIncomingBoardQuery = $this->baseChapterController->getIncomingBoardDetails($id);
         $PresDetails = $baseIncomingBoardQuery['PresDetails'];
@@ -429,7 +430,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $data = [
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
-            'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'allCountries' => $allCountries, 'confId' => $confId, 'chConfId' => $chConfId,
+            'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'allCountries' => $allCountries, 'confId' => $confId, 'chConfId' => $chConfId, 'chEOYDocuments' => $chEOYDocuments
         ];
 
         return view('coordinators.eoyreports.editboardreport')->with($data);
@@ -623,7 +624,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $updatedBy = $userName;
 
         $input = $request->all();
-        $farthest_step_visited_coord = $input['FurthestStep'];
+        // $farthest_step_visited_coord = $input['FurthestStep'];
         $reviewer_id = isset($input['AssignedReviewer']) && ! empty($input['AssignedReviewer']) ? $input['AssignedReviewer'] : $coorId;
         $reportReceived = $input['submitted'];
         $submitType = $input['submit_type'];
@@ -691,6 +692,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $chapter = Chapters::find($id);
         $documentsEOY = DocumentsEOY::find($id);
         $financialReportReview = FinancialReportReview::find($id);
+        $farthest_step_visited_coord = max((int)$input['FurthestStep'], (int)$financialReportReview->farthest_step_visited_coord);
 
         DB::beginTransaction();
         try {
@@ -1377,11 +1379,12 @@ class EOYReportController extends Controller implements HasMiddleware
         $chapterStatus = $baseQuery['chapterStatus'];
         $chConfId = $baseQuery['chConfId'];
         $chPcId = $baseQuery['chPcId'];
+        $chEOYDocuments = $baseQuery['chEOYDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
 
         $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'coorId' => $coorId, 'confId' => $confId, 'chapterStatus' => $chapterStatus,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
-            'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
+            'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport, 'chEOYDocuments' => $chEOYDocuments
         ];
 
         return view('coordinators.eoyreports.editirssubmission')->with($data);

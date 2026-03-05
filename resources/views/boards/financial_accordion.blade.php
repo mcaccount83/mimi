@@ -524,7 +524,7 @@
 
         <div class="row">
         <div class="col-12 text-center">
-            <button type="submit" id="btn-step-2" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
+            <button type="button" id="btn-step-2" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
         </div>
     </div>
 
@@ -886,7 +886,7 @@
 
 <div class="row">
         <div class="col-12 text-center">
-    <button type="submit" id="btn-step-4" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
+    <button type="button" id="btn-step-4" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
         </div>
     </div>
 
@@ -1395,7 +1395,7 @@
 
 <div class="row">
         <div class="col-12 text-center">
-          <button type="submit" id="btn-step-7" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
+          <button type="button" id="btn-step-7" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
         </div>
     </div>
 
@@ -1538,7 +1538,7 @@
 
 <div class="row">
         <div class="col-12 text-center">
-            <button type="submit" id="btn-step-8" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
+            <button type="button" id="btn-step-8" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
         </div>
     </div>
 
@@ -2238,7 +2238,7 @@
 <hr>
 </div>
 <div class="card-body text-center mt-3">
-          <button type="submit" id="btn-step-10" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
+          <button type="button" id="btn-step-10" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
 </div>
 </section>
 </div><!-- end of accordion body -->
@@ -2362,7 +2362,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
 <br>
 </div>
 <div class="card-body text-center mt-3">
-<button type="submit" id="btn-step-11" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
+<button type="button" id="btn-step-11" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
 </div>
 </section>
 </div><!-- end of accordion body -->

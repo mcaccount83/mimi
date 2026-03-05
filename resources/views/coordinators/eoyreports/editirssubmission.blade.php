@@ -87,7 +87,7 @@
                         <div class="col-sm-9">
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="irs_verified" id="irs_verified" class="form-check-input"
-                                {{ $chDetails->documentsEOY->irs_verified == 1 ? 'checked' : ''}}>
+                                {{ $chEOYDocuments->irs_verified == 1 ? 'checked' : ''}}>
                                 <label class="form-check-label" for="irs_verified"></label>
                             </div>
                         </div>
@@ -99,19 +99,19 @@
                         <div class="col-sm-3">
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="irs_issues" id="irs_issues" class="form-check-input"
-                                {{ $chDetails->documentsEOY->irs_issues == 1 ? 'checked' : ''}}>
+                                {{ $chEOYDocuments->irs_issues == 1 ? 'checked' : ''}}>
                                 <label class="form-check-label" for="irs_issues"></label>
                             </div>
                         </div>
                     </div>
 
                     <!-- This row is hidden by default and shows when irs_issues is checked -->
-                    <div class="row mb-3 align-middle" id="irs_details_row" style="display: {{ $chDetails->documentsEOY->irs_issues == 1 ? 'flex' : 'none' }};">
+                    <div class="row mb-3 align-middle" id="irs_details_row" style="display: {{ $chEOYDocuments->irs_issues == 1 ? 'flex' : 'none' }};">
                         <label class="col-sm-2 col-form-label">Wrong Dates Listed:</label>
                         <div class="col-sm-1">
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="irs_wrongdate" id="irs_wrongdate" class="form-check-input exclusive-toggle"
-                                {{ $chDetails->documentsEOY->irs_wrongdate == 1 ? 'checked' : ''}}>
+                                {{ $chEOYDocuments->irs_wrongdate == 1 ? 'checked' : ''}}>
                                 <label class="form-check-label" for="irs_wrongdate"></label>
                             </div>
                         </div>
@@ -119,7 +119,7 @@
                         <div class="col-sm-1">
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="irs_notfound" id="irs_notfound" class="form-check-input exclusive-toggle"
-                                {{ $chDetails->documentsEOY->irs_notfound == 1 ? 'checked' : ''}}>
+                                {{ $chEOYDocuments->irs_notfound == 1 ? 'checked' : ''}}>
                                 <label class="form-check-label" for="irs_notfound"></label>
                             </div>
                         </div>
@@ -127,7 +127,7 @@
                         <div class="col-sm-1">
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="irs_filedwrong" id="irs_filedwrong" class="form-check-input exclusive-toggle"
-                                {{ $chDetails->documentsEOY->irs_filedwrong == 1 ? 'checked' : ''}}>
+                                {{ $chEOYDocumentsY->irs_filedwrong == 1 ? 'checked' : ''}}>
                                 <label class="form-check-label" for="irs_filedwrong"></label>
                             </div>
                         </div>
@@ -137,7 +137,7 @@
                             <div class="col-sm-1">
                                 <div class="form-check form-switch">
                                     <input type="checkbox" name="irs_notified" id="irs_notified" class="form-check-input"
-                                    {{ $chDetails->documentsEOY->irs_notified == 1 ? 'checked' : ''}} >
+                                    {{ $chEOYDocuments->irs_notified == 1 ? 'checked' : ''}} >
                                     <label class="form-check-label" for="irs_notified"></label>
                                 </div>
                             </div>
@@ -146,9 +146,9 @@
                             <div class="col-sm-1">
                                 <div class="form-check form-switch">
                                     <input type="checkbox" name="irs_notified" id="irs_notified" class="form-check-input"
-                                    {{ $chDetails->documentsEOY->irs_notified == 1 ? 'checked' : ''}} disabled>
+                                    {{ $chEOYDocuments->irs_notified == 1 ? 'checked' : ''}} disabled>
                                     <label class="form-check-label" for="irs_notified"></label>
-                                    <input type="hidden" name="irs_notified" value="{{ $chDetails->documentsEOY->irs_notified }}">
+                                    <input type="hidden" name="irs_notified" value="{{ $chEOYDocuments->irs_notified }}">
                                 </div>
                             </div>
                         @endif
@@ -158,7 +158,7 @@
                       <div class="row mb-2">
                         <label class="col-sm-3 col-form-label">990 Submission Notes:</label>
                         <div class="col-sm-9">
-                        <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chDetails->documentsEOY->irs_notes }}" >
+                        <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chEOYDocuments->irs_notes }}" >
                         </div>
                     </div>
 

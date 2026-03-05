@@ -109,7 +109,7 @@
 
                             <div class="col-md-12">
                                 <div class="card-body text-center mt-3">
-                                    <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board-new.editboardreport', ['id' => $chDetails->id]) }}'"><i class="bi bi-people-fill me-2"></i>Edit Board Information</button>
+                                    <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board-new.editboard', ['id' => $chDetails->id]) }}'"><i class="bi bi-people-fill me-2"></i>Edit Board Information</button>
                                 </div>
                             </div>
 

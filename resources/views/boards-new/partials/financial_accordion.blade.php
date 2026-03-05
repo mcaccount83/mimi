@@ -524,7 +524,7 @@
 
         <div class="row">
         <div class="col-12 text-center">
-            <button type="submit" id="btn-step-2" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
+            <button type="button" id="btn-step-2" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
         </div>
     </div>
 
@@ -886,7 +886,7 @@
 
 <div class="row">
         <div class="col-12 text-center">
-    <button type="submit" id="btn-step-4" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
+    <button type="button" id="btn-step-4" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
         </div>
     </div>
 
@@ -1395,7 +1395,7 @@
 
 <div class="row">
         <div class="col-12 text-center">
-          <button type="submit" id="btn-step-7" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
+          <button type="button" id="btn-step-7" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
         </div>
     </div>
 
@@ -1538,7 +1538,7 @@
 
 <div class="row">
         <div class="col-12 text-center">
-            <button type="submit" id="btn-step-8" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
+            <button type="button" id="btn-step-8" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
         </div>
     </div>
 
@@ -2238,7 +2238,7 @@
 <hr>
 </div>
 <div class="card-body text-center mt-3">
-          <button type="submit" id="btn-step-10" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
+          <button type="button" id="btn-step-10" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
 </div>
 </section>
 </div><!-- end of accordion body -->
@@ -2362,7 +2362,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
 <br>
 </div>
 <div class="card-body text-center mt-3">
-<button type="submit" id="btn-step-11" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
+<button type="button" id="btn-step-11" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
 </div>
 </section>
 </div><!-- end of accordion body -->
@@ -3127,37 +3127,37 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
 
 <script>
 
-/* Disable fields and buttons  */
-$(document).ready(function () {
-    setTimeout(function () {
-        var submitted = @json($chEOYDocuments->financial_report_received);
-        // var submittedfinal = @json($chEOYDocuments->final_report_received);
-        var userTypeId = @json($userTypeId);
-        var userAdmin = @json($userAdmin);
+// /* Disable fields and buttons  */
+// $(document).ready(function () {
+//     setTimeout(function () {
+//         var submitted = @json($chEOYDocuments->financial_report_received);
+//         // var submittedfinal = @json($chEOYDocuments->final_report_received);
+//         var userTypeId = @json($userTypeId);
+//         var userAdmin = @json($userAdmin);
 
-        // var effectiveSubmitted = (userTypeId == 'disbanded') ? submittedfinal : submitted;
+//         // var effectiveSubmitted = (userTypeId == 'disbanded') ? submittedfinal : submitted;
 
-       if (userTypeId == 1 && userAdmin != 1) {
-        $('button, input, select, textarea').not('#btn-back').prop('disabled', true);
+//        if (userTypeId == 1 && userAdmin != 1) {
+//         $('button, input, select, textarea').not('#btn-back').prop('disabled', true);
 
-        // } else if (effectiveSubmitted == '1') {
-        //     $('button').not('#btn-back, #btn-download-pdf').prop('disabled', true);
-        //     $('input, select, textarea').prop('disabled', true);
+//         // } else if (effectiveSubmitted == '1') {
+//         //     $('button').not('#btn-back, #btn-download-pdf').prop('disabled', true);
+//         //     $('input, select, textarea').prop('disabled', true);
 
-        } else {
-            $('button, input, select, textarea').prop('disabled', false);
-        }
+//         } else {
+//             $('button, input, select, textarea').prop('disabled', false);
+//         }
 
-        var allDisabled = true;
-        $('input, select, textarea').each(function() {
-            if (!$(this).prop('disabled')) {
-                allDisabled = false;
-                return false; // Exit loop early if any field is enabled
-            }
-        });
+//         var allDisabled = true;
+//         $('input, select, textarea').each(function() {
+//             if (!$(this).prop('disabled')) {
+//                 allDisabled = false;
+//                 return false; // Exit loop early if any field is enabled
+//             }
+//         });
 
-    }, 1000); // 1-second delay
-});
+//     }, 1000); // 1-second delay
+// });
 
 /* Curency Mask */
     document.addEventListener("DOMContentLoaded", function() {

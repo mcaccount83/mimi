@@ -90,8 +90,7 @@
     <!-- /.container- -->
 @endsection
 @section('customscript')
-@php $disableMode = 'disable-all'; @endphp
-@include('layouts.scripts.disablefields')
+@include('layouts.scripts.disablefieldseoy')
 @endsection
 
 

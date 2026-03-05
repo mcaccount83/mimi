@@ -38,9 +38,9 @@
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="new_board_submitted" id="new_board_submitted" class="form-check-input"
                                 @if($regionalCoordinatorCondition)
-                                        {{$chDetails->documentsEOY->new_board_submitted == 1 ? 'checked' : ''}}>
+                                        {{$chEOYDocuments->new_board_submitted == 1 ? 'checked' : ''}}>
                                 @else
-                                    {{$chDetails->documentsEOY->new_board_submitted == 1 ? 'checked' : ''}} disabled>
+                                    {{$chEOYDocuments->new_board_submitted == 1 ? 'checked' : ''}} disabled>
                                 @endif
                                 <label class="form-check-label" for="new_board_submitted"></label>
                             </div>
@@ -51,9 +51,9 @@
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="new_board_active" id="new_board_active" class="form-check-input"
                                 @if($regionalCoordinatorCondition)
-                                        {{$chDetails->documentsEOY->new_board_active == 1 ? 'checked' : ''}}>
+                                        {{$chEOYDocuments->new_board_active == 1 ? 'checked' : ''}}>
                                         @else
-                                        {{$chDetails->documentsEOY->new_board_active == 1 ? 'checked' : ''}} disabled>
+                                        {{$chEOYDocuments->new_board_active == 1 ? 'checked' : ''}} disabled>
                                         @endif
                                 <label class="form-check-label" for="new_board_active"></label>
                             </div>
@@ -64,9 +64,9 @@
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="financial_report_received" id="financial_report_received" class="form-check-input"
                                 @if($regionalCoordinatorCondition)
-                                    {{$chDetails->documentsEOY->financial_report_received == 1 ? 'checked' : ''}}>
+                                    {{$chEOYDocuments->financial_report_received == 1 ? 'checked' : ''}}>
                                     @else
-                                    {{$chDetails->documentsEOY->financial_report_received == 1 ? 'checked' : ''}} disabled>
+                                    {{$chEOYDocuments->financial_report_received == 1 ? 'checked' : ''}} disabled>
                                      @endif
                                 <label class="form-check-label" for="financial_report_received"></label>
                             </div>
@@ -77,9 +77,9 @@
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="financial_review_complete" id="financial_review_complete" class="form-check-input"
                                 @if($regionalCoordinatorCondition)
-                                    {{$chDetails->documentsEOY->financial_review_complete == 1 ? 'checked' : ''}}>
+                                    {{$chEOYDocuments->financial_review_complete == 1 ? 'checked' : ''}}>
                                     @else
-                                    {{$chDetails->documentsEOY->financial_review_complete == 1 ? 'checked' : ''}} disabled>
+                                    {{$chEOYDocumentsY->financial_review_complete == 1 ? 'checked' : ''}} disabled>
                                      @endif
                                 <label class="form-check-label" for="financial_review_complete"></label>
                             </div>
@@ -91,9 +91,9 @@
                                 <input type="checkbox" name="report_extension" id="report_extension" class="form-check-input"
                                        onchange="toggleExtensionNotes()"
                                        @if($regionalCoordinatorCondition)
-                                            {{$chDetails->documentsEOY->report_extension == 1 ? 'checked' : ''}}>
+                                            {{$chEOYDocuments->report_extension == 1 ? 'checked' : ''}}>
                                             @else
-                                            {{$chDetails->documentsEOY->report_extension == 1 ? 'checked' : ''}} disabled>
+                                            {{$chEOYDocuments->report_extension == 1 ? 'checked' : ''}} disabled>
                                              @endif
                                 <label class="form-check-label" for="report_extension"></label>
                             </div>
@@ -105,7 +105,7 @@
                                 <input type="checkbox" name="irs_verified" id="irs_verified" class="form-check-input"
                                        onchange="toggleIRSVerified()"
                                        @if($regionalCoordinatorCondition)
-                                            {{$chDetails->documentsEOY->irs_verified == 1 ? 'checked' : ''}}>
+                                            {{$chEOYDocuments->irs_verified == 1 ? 'checked' : ''}}>
                                             @else
                                             {{$chEOYDocuments->documentsEOY->irs_verified == 1 ? 'checked' : ''}} disabled>
                                              @endif

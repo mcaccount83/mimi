@@ -36,16 +36,15 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         if (disableFieldsMode == 'disable-all') {
-            // Mode 2 - always disable regardless of shouldEnable
-            $('input, select, textarea, button').prop('disabled', true);
-            $('a[href^="mailto:"]').each(function() {
-                $(this).addClass('disabled-link').attr('href', 'javascript:void(0);');
-                $(this).on('click', function(e) { e.preventDefault(); });
-            });
-            $('.keep-enabled').prop('disabled', false);
-
+            if (activeId != 0 && !hasITAccess) {
+                $('input, select, textarea, button').prop('disabled', true);
+                $('a[href^="mailto:"]').each(function() {
+                    $(this).addClass('disabled-link').attr('href', 'javascript:void(0);');
+                    $(this).on('click', function(e) { e.preventDefault(); });
+                });
+                $('.keep-enabled').prop('disabled', false);
+            }
         } else {
-            // Mode 1 - default, use shouldEnable
             if (!shouldEnable) {
                 $('input, select, textarea, button').prop('disabled', true);
                 $('a[href^="mailto:"]').each(function() {

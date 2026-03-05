@@ -192,7 +192,6 @@ class TechReportController extends Controller implements HasMiddleware
         $positionId = $user['cdPositionId'];
         $secPositionId = $user['cdSecPositionId'];
         $canEditFiles = ($positionId == CoordinatorPosition::IT || in_array(CoordinatorPosition::IT, $secPositionId));
-        // $canEditFiles = ($positionId == 13 || in_array(13, $secPositionId));  // IT Coordinator
 
         $admin = DB::table('admin')
             ->select('admin.*',

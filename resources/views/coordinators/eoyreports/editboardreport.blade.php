@@ -54,13 +54,13 @@
                     <!-- /.card-header -->
                     <ul class="list-group list-group-flush mb-3">
                     <li class="list-group-item">
-                        @if ($chDetails->documentsEOY->new_board_submitted != '1' )
+                        @if ($chEOYDocuments->new_board_submitted != '1' )
                             <p><span style="color:#dc3545;">Board Election Report has NOT been submitted.</span><br>
                                 <br>Chapter needs to complete and Submit the Board Election Report before new board members can be activated in MIMI.<br>
                                 <br>Submission can be made by a Coordinator <strong>HERE</strong>.<br>
                             </p>
                         @endif
-                        @if ($chDetails->documentsEOY->new_board_submitted == '1' && $chDetails->documentsEOY->new_board_active !='1')
+                        @if ($chEOYDocuments->new_board_submitted == '1' && $chEOYDocuments->new_board_active !='1')
                             <p><span style="color:#28a745;">Board Election Report HAS been submitted Submitted.</span><br>
                                 <br>Changes can be made by a Coordinator <strong>HERE</strong> Prior to Activation.<br>
                                 <br><span style="color:#dc3545;">Board Election Report has NOT been activated.</span><br>
@@ -68,7 +68,7 @@
                                 <br>Outgoing board members will have access to Financial Reports Only.<br>
                             </p>
                         @endif
-                        @if ($chDetails->documentsEOY->new_board_active =='1')
+                        @if ($chEOYDocuments->new_board_active =='1')
                             <p><span style="color:#28a745;">Board Election Report HAS been Submitted and Activated!</span><br>
                                 <br>New board members now have full MIMI Access.<br>
                                 <br>Outgoing board members have access to Financial Reports Only.<br>
@@ -85,7 +85,7 @@
             </div>
             <!-- /.col -->
 
-                @if ($chDetails->documentsEOY->new_board_active != '1')
+                @if ($chEOYDocuments->new_board_active != '1')
 
                 <div class="col-md-6">
                     <!-- Profile Image -->
@@ -497,18 +497,18 @@
 
           <div class="col-md-12">
             <div class="card-body text-center mt-3">
-                  @if ($chDetails->documentsEOY->new_board_active != '1')
+                  @if ($chEOYDocuments->new_board_active != '1')
                     <div class="d-flex justify-content-center align-items-start flex-wrap">
                             <form method="POST" action="#" onsubmit="return validateBeforeSubmit(true)">
                                 @csrf
-                                @if ($chDetails->documentsEOY->new_board_submitted != 1)
+                                @if ($chEOYDocuments->new_board_submitted != 1)
                                     <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>Submit</button>
                                 @else
                                     <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save</button>
                                 @endif
                             </form>
 
-                            @if ($chDetails->documentsEOY->new_board_submitted == '1' && $PresDetails->first_name != null)
+                            @if ($chEOYDocuments->new_board_submitted == '1' && $PresDetails->first_name != null)
                            <form id="activateSingleBoardForm" action="{{ route('eoyreports.activateboardreport', ['id' => $chDetails->id]) }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="board" value="active">

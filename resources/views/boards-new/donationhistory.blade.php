@@ -99,7 +99,7 @@
 
                             <div class="col-md-12">
                             <div class="card-body text-center mt-3">
-                                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('board-new.editdonate', ['id' => $chDetails->id]) }}'"><i class="bi bi-currency-dollar me-2"></i>Make a Donation</button>
+                                <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board-new.editdonate', ['id' => $chDetails->id]) }}'"><i class="bi bi-currency-dollar me-2"></i>Make a Donation</button>
                             </div>
                         </div>
 

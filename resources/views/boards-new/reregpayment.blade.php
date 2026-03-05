@@ -225,22 +225,10 @@
     <!-- /.container- -->
 @endsection
 @section('customscript')
+@php $disableMode = 'disable-all'; @endphp
+@include('layouts.scripts.disablefields')
 
 <script>
-/* Disable fields and buttons  */
-$(document).ready(function () {
-        var userTypeId = @json($userTypeId);
-        var userAdmin = @json($userAdmin);
-
-   if (userTypeId == 1 && userAdmin != 1) {
-            $('button, input, select, textarea').not('#btn-back').prop('disabled', true);
-    }
-
-    });
-
-    document.querySelector('form').addEventListener('submit', function(){
-        document.querySelector('button[type="submit"]').setAttribute('disabled', 'disabled');
-    });
 
     function formatCurrency(input) {
         let value = input.value.replace(/\D/g, '');

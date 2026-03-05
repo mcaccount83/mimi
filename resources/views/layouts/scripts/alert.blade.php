@@ -14,7 +14,7 @@
         }
 
     function customWarningAlert(message) {
-        Swal.fire({
+        return Swal.fire({
             title: 'Oops!',
             html: message,
             icon: 'warning',

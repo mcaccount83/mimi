@@ -12,7 +12,7 @@
             <form id="financial_report" name="financial_report" role="form" data-bs-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("eoyreports.updatefinancialreport", $chDetails->id) }}' novalidate>
                 @csrf
                 <input type="hidden" name="submitted" id="submitted" value="{{ $chEOYDocuments->financial_report_received ?? '' }}" />
-                <input type="hidden" name="FurthestStep" id="FurthestStep" value="{{ $chFinancialReport->farthest_step_visited_coord > 0 ? $chFinancialReport->farthest_step_visited_coord : '0' }}" />
+                <input type="hidden" name="FurthestStep" id="FurthestStep" value="{{ $chFinancialReportReview->farthest_step_visited_coord > 0 ? $chFinancialReportReview->farthest_step_visited_coord : '0' }}" />
                 <input type="hidden" name="submit_type" id="submit_type" value="" />
 
           <!-- Profile Image -->
@@ -344,7 +344,7 @@
                     </div>
                 </div>
                 <div class="row mb-1">
-                    @if ($chEOYDocuments->financial_report_received == 1 && $chFinancialReport->reviewer_id == null)
+                    @if ($chEOYDocuments->financial_report_received == 1 && $chFinancialReportReview->reviewer_id == null)
                         <div class="col-12">
                             <span style="color: #dc3545;">No Reviewer Assigned - Select Reviewer before continuing to prevent errors.</span>
                         </div>
@@ -355,17 +355,17 @@
                             <option value="" style="display:none" disabled selected>Select Reviewer</option>
                             @foreach($rrList as $coordinator)
                                 <option value="{{ $coordinator['cid'] }}"
-                                    {{ isset($chFinancialReport->reviewer_id) && $chFinancialReport->reviewer_id == $coordinator['cid'] ? 'selected' : '' }}>
+                                    {{ isset($chFinancialReportReview->reviewer_id) && $chFinancialReportReview->reviewer_id == $coordinator['cid'] ? 'selected' : '' }}>
                                     {{ $coordinator['cname'] }} {{ $coordinator['cpos'] }}
                                 </option>
                             @endforeach
                         </select>
                     </div>
                 </div>
-                <input type="hidden" id="ch_reportrev" value="{{ $chFinancialReport->reviewer_id }}">
+                <input type="hidden" id="ch_reportrev" value="{{ $chFinancialReportReview->reviewer_id }}">
                 <div id="emailMessageGroup" style="display: none;">
                     <label for="reviewer_email_message">Additional Email Message for Reviewer:</label>
-                    <textarea class="form-control" rows="8" name="reviewer_email_message" id="reviewer_email_message">{{ $chFinancialReport->reviewer_email_message }}</textarea>
+                    <textarea class="form-control" rows="8" name="reviewer_email_message" id="reviewer_email_message">{{ $chFinancialReportReview->reviewer_email_message }}</textarea>
                 </div>
             </li>
 
@@ -377,7 +377,7 @@
         </li>
          <li class="list-group-item">
                  <div class="card-body text-center">
-            <button type="submit" id="btn-step-14" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
+            <button type="button" id="btn-step-13" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
             <button class="btn btn-primary bg-gradient mb-2" type="button" id="email-chapter" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}', 'Financial Report Review')">
                 <i class="bi bi-envelope-fill me-2"></i>Email Board</button>
             <br>
@@ -472,6 +472,7 @@
 @endsection
 @section('customscript')
     @include('layouts.scripts.disablefieldseoy')
+    @include('layouts.scripts.financialreviewsave')
 
 <script>
    document.addEventListener('DOMContentLoaded', function() {
@@ -546,47 +547,45 @@
         }
     });
 
-    function submitFormWithStep(step) {
-        document.getElementById('FurthestStep').value = step;
-        document.getElementById('financial_report').submit();
-    }
+//     function submitFormWithStep(step) {
+//         document.getElementById('FurthestStep').value = step;
+//         document.getElementById('financial_report').submit();
+//     }
 
-    document.getElementById('btn-step-1')?.addEventListener('click', function() { if (!CheckMembers()) return false; submitFormWithStep(1); });
-    document.getElementById('btn-step-2')?.addEventListener('click', function() { submitFormWithStep(2); });
-    document.getElementById('btn-step-3')?.addEventListener('click', function() { if (!CheckService()) return false; submitFormWithStep(3); });
-    document.getElementById('btn-step-4')?.addEventListener('click', function() { if (!CheckParties()) return false; submitFormWithStep(4); });
-    document.getElementById('btn-step-5')?.addEventListener('click', function() { submitFormWithStep(5); });
-    document.getElementById('btn-step-6')?.addEventListener('click', function() { submitFormWithStep(6); });
-    document.getElementById('btn-step-7')?.addEventListener('click', function() { submitFormWithStep(7); });
-    document.getElementById('btn-step-8')?.addEventListener('click', function() { submitFormWithStep(8); });
-    document.getElementById('btn-step-9')?.addEventListener('click', function() { if (!CheckFinancial()) return false; submitFormWithStep(9); });
-    document.getElementById('btn-step-10')?.addEventListener('click', function() {
-        var post_balance = document.getElementById('post_balance').value;
-        if (post_balance == null || post_balance == '') {
-            customWarningAlert('Please enter Ending Balance');
-            document.getElementById('post_balance').focus();
-            return false;
-        }
-        if (!CheckReconciliation()) return false;
-        submitFormWithStep(10);
-    });
-    document.getElementById('btn-step-11')?.addEventListener('click', function() { submitFormWithStep(11); });
-    document.getElementById('btn-step-12')?.addEventListener('click', function() { if (!CheckQuestions()) return false; submitFormWithStep(12); });
-    document.getElementById('btn-step-13')?.addEventListener('click', function() { submitFormWithStep(13); });
-    document.getElementById('btn-step-14')?.addEventListener('click', function() {
-        var assignedReviewer = document.getElementById('AssignedReviewer').value;
-        if (assignedReviewer == null || assignedReviewer == '') {
-            customWarningAlert('Please select a Reviewer');
-            document.getElementById('AssignedReviewer').focus();
-            return false;
-        }
-        submitFormWithStep(14);
-    });
-});
+//     document.getElementById('btn-step-1')?.addEventListener('click', function() { if (!CheckMembers()) return false; submitFormWithStep(1); });
+//     document.getElementById('btn-step-2')?.addEventListener('click', function() { submitFormWithStep(2); });
+//     document.getElementById('btn-step-3')?.addEventListener('click', function() { if (!CheckService()) return false; submitFormWithStep(3); });
+//     document.getElementById('btn-step-4')?.addEventListener('click', function() { if (!CheckParties()) return false; submitFormWithStep(4); });
+//     document.getElementById('btn-step-5')?.addEventListener('click', function() { submitFormWithStep(5); });
+//     document.getElementById('btn-step-6')?.addEventListener('click', function() { submitFormWithStep(6); });
+//     document.getElementById('btn-step-7')?.addEventListener('click', function() { submitFormWithStep(7); });
+//     document.getElementById('btn-step-8')?.addEventListener('click', function() { submitFormWithStep(8); });
+//     document.getElementById('btn-step-9')?.addEventListener('click', function() { if (!CheckFinancial()) return false; submitFormWithStep(9); });
+//     document.getElementById('btn-step-10')?.addEventListener('click', function() {
+//         var post_balance = document.getElementById('post_balance').value;
+//         if (post_balance == null || post_balance == '') {
+//             customWarningAlert('Please enter Ending Balance');
+//             document.getElementById('post_balance').focus();
+//             return false;
+//         }
+//         if (!CheckReconciliation()) return false;
+//         submitFormWithStep(10);
+//     });
+//     document.getElementById('btn-step-11')?.addEventListener('click', function() { submitFormWithStep(11); });
+//     document.getElementById('btn-step-12')?.addEventListener('click', function() { if (!CheckQuestions()) return false; submitFormWithStep(12); });
+//     document.getElementById('btn-step-13')?.addEventListener('click', function() { submitFormWithStep(13); });
+//     document.getElementById('btn-step-14')?.addEventListener('click', function() {
+//         var assignedReviewer = document.getElementById('AssignedReviewer').value;
+//         if (assignedReviewer == null || assignedReviewer == '') {
+//             customWarningAlert('Please select a Reviewer');
+//             document.getElementById('AssignedReviewer').focus();
+//             return false;
+//         }
+//         submitFormWithStep(14);
+//     });
+ });
 </script>
 <script>
-    /* Disable fields and buttons  */
-
 
     function EnableNoteLogButton(NoteNumber){
         var noteValue = document.getElementById("Step" + NoteNumber + "_Note").value.trim();
@@ -648,83 +647,83 @@
         document.getElementById("Summary_Log").value = SummaryNote;
     }
 
-    function CheckMembers() {
-        var checkRosterAttached = document.querySelector('input[name="checkRosterAttached"]:checked');
-        var checkRenewalSeemsRight = document.querySelector('input[name="checkRenewalSeemsRight"]:checked');
+    // function CheckMembers() {
+    //     var checkRosterAttached = document.querySelector('input[name="checkRosterAttached"]:checked');
+    //     var checkRenewalSeemsRight = document.querySelector('input[name="checkRenewalSeemsRight"]:checked');
 
-        if (!checkRosterAttached || !checkRenewalSeemsRight) {
-            customWarningAlert("Answer Review Questions in CHAPTER DUES section to Continue.");
-            accordion.openAccordionItem('accordion-header-members');
-            return false;
-        }
-        return true;
-    }
+    //     if (!checkRosterAttached || !checkRenewalSeemsRight) {
+    //         customWarningAlert("Answer Review Questions in CHAPTER DUES section to Continue.");
+    //         accordion.openAccordionItem('accordion-header-members');
+    //         return false;
+    //     }
+    //     return true;
+    // }
 
-    function CheckService() {
-        var checkServiceProject = document.querySelector('input[name="checkServiceProject"]:checked');
-        var checkM2MDonation = document.querySelector('input[name="checkM2MDonation"]:checked');
+    // function CheckService() {
+    //     var checkServiceProject = document.querySelector('input[name="checkServiceProject"]:checked');
+    //     var checkM2MDonation = document.querySelector('input[name="checkM2MDonation"]:checked');
 
-        if (!checkServiceProject || !checkM2MDonation) {
-            customWarningAlert("Answer Review Questions in SERVICE PROJECTS section to Continue.");
-            accordion.openAccordionItem('accordion-header-service');
-            return false;
-        }
-        return true;
-    }
+    //     if (!checkServiceProject || !checkM2MDonation) {
+    //         customWarningAlert("Answer Review Questions in SERVICE PROJECTS section to Continue.");
+    //         accordion.openAccordionItem('accordion-header-service');
+    //         return false;
+    //     }
+    //     return true;
+    // }
 
-    function CheckParties() {
-        var check_party_percentage = document.querySelector('input[name="check_party_percentage"]:checked');
+    // function CheckParties() {
+    //     var check_party_percentage = document.querySelector('input[name="check_party_percentage"]:checked');
 
-        if (!check_party_percentage) {
-            customWarningAlert("Answer Review Questions in PARTIES & MEMBER BENEFITS section to Continue.");
-            accordion.openAccordionItem('accordion-header-parties');
-            return false;
-        }
-        return true;
-    }
+    //     if (!check_party_percentage) {
+    //         customWarningAlert("Answer Review Questions in PARTIES & MEMBER BENEFITS section to Continue.");
+    //         accordion.openAccordionItem('accordion-header-parties');
+    //         return false;
+    //     }
+    //     return true;
+    // }
 
-    function CheckFinancial() {
-        var checkTotalIncome = document.querySelector('input[name="checkTotalIncome"]:checked');
+    // function CheckFinancial() {
+    //     var checkTotalIncome = document.querySelector('input[name="checkTotalIncome"]:checked');
 
-        if (!checkTotalIncome) {
-            customWarningAlert("Answer Review Questions in FINANCIAL SUMMARY section to Continue.");
-            accordion.openAccordionItem('accordion-header-financial');
-            return false;
-        }
-        return true;
-    }
+    //     if (!checkTotalIncome) {
+    //         customWarningAlert("Answer Review Questions in FINANCIAL SUMMARY section to Continue.");
+    //         accordion.openAccordionItem('accordion-header-financial');
+    //         return false;
+    //     }
+    //     return true;
+    // }
 
-    function CheckReconciliation() {
-        var check_beginning_balance = document.querySelector('input[name="check_beginning_balance"]:checked');
-        var checkBankStatementIncluded = document.querySelector('input[name="checkBankStatementIncluded"]:checked');
-        var checkBankStatementMatches = document.querySelector('input[name="checkBankStatementMatches"]:checked');
-        var post_balance = document.getElementById('post_balance');
+    // function CheckReconciliation() {
+    //     var check_beginning_balance = document.querySelector('input[name="check_beginning_balance"]:checked');
+    //     var checkBankStatementIncluded = document.querySelector('input[name="checkBankStatementIncluded"]:checked');
+    //     var checkBankStatementMatches = document.querySelector('input[name="checkBankStatementMatches"]:checked');
+    //     var post_balance = document.getElementById('post_balance');
 
-        if (!check_beginning_balance || !checkBankStatementIncluded || !checkBankStatementMatches || !post_balance) {
-            customWarningAlert("Answer Review Questions in RECONCILIATION section to Continue.");
-            accordion.openAccordionItem('accordion-header-reconciliation');
-            return false;
-        }
-        return true;
-    }
+    //     if (!check_beginning_balance || !checkBankStatementIncluded || !checkBankStatementMatches || !post_balance) {
+    //         customWarningAlert("Answer Review Questions in RECONCILIATION section to Continue.");
+    //         accordion.openAccordionItem('accordion-header-reconciliation');
+    //         return false;
+    //     }
+    //     return true;
+    // }
 
-    function CheckQuestions() {
-        var checkPurchasedPins = document.querySelector('input[name="checkPurchasedPins"]:checked');
-        var checkPurchasedMCMerch = document.querySelector('input[name="checkPurchasedMCMerch"]:checked');
-        var checkOfferedMerch = document.querySelector('input[name="checkOfferedMerch"]:checked');
-        var checkBylawsMadeAvailable = document.querySelector('input[name="checkBylawsMadeAvailable"]:checked');
-        var checkSisteredAnotherChapter = document.querySelector('input[name="checkSisteredAnotherChapter"]:checked');
-        var checkAttendedTraining = document.querySelector('input[name="checkAttendedTraining"]:checked');
-        var checkCurrent990NAttached = document.querySelector('input[name="checkCurrent990NAttached"]:checked');
+    // function CheckQuestions() {
+    //     var checkPurchasedPins = document.querySelector('input[name="checkPurchasedPins"]:checked');
+    //     var checkPurchasedMCMerch = document.querySelector('input[name="checkPurchasedMCMerch"]:checked');
+    //     var checkOfferedMerch = document.querySelector('input[name="checkOfferedMerch"]:checked');
+    //     var checkBylawsMadeAvailable = document.querySelector('input[name="checkBylawsMadeAvailable"]:checked');
+    //     var checkSisteredAnotherChapter = document.querySelector('input[name="checkSisteredAnotherChapter"]:checked');
+    //     var checkAttendedTraining = document.querySelector('input[name="checkAttendedTraining"]:checked');
+    //     var checkCurrent990NAttached = document.querySelector('input[name="checkCurrent990NAttached"]:checked');
 
-        if (!checkPurchasedPins || !checkPurchasedMCMerch || !checkOfferedMerch || !checkBylawsMadeAvailable
-            || !checkSisteredAnotherChapter || !checkAttendedTraining || !checkCurrent990NAttached) {
-                customWarningAlert("Answer Review Questions in CHAPTER QUESTIONS section to Continue.");
-            accordion.openAccordionItem('accordion-header-questions');
-            return false;
-        }
-        return true;
-    }
+    //     if (!checkPurchasedPins || !checkPurchasedMCMerch || !checkOfferedMerch || !checkBylawsMadeAvailable
+    //         || !checkSisteredAnotherChapter || !checkAttendedTraining || !checkCurrent990NAttached) {
+    //             customWarningAlert("Answer Review Questions in CHAPTER QUESTIONS section to Continue.");
+    //         accordion.openAccordionItem('accordion-header-questions');
+    //         return false;
+    //     }
+    //     return true;
+    // }
 
 </script>
 @endsection

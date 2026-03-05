@@ -1,15 +1,15 @@
 <div class="accordion" id="accordion">
 
     {{------Start Step 1 ------}}
-    <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '1' ? 'active' : '' }}">
+    <div class="accordion-item {{ $chFinancialReportReview->farthest_step_visited_coord == '1' ? 'active' : '' }}">
         <h2 class="accordion-header" id="accordion-header-members">
-            <button class="accordion-button {{ $chFinancialReport->farthest_step_visited_coord == '1' ? '' : 'collapsed' }}"
+            <button class="accordion-button {{ $chFinancialReportReview->farthest_step_visited_coord == '1' ? '' : 'collapsed' }}"
                     type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
-                    aria-expanded="{{ $chFinancialReport->farthest_step_visited_coord == '1' ? 'true' : 'false' }}">
+                    aria-expanded="{{ $chFinancialReportReview->farthest_step_visited_coord == '1' ? 'true' : 'false' }}">
                 CHAPTER DUES
             </button>
         </h2>
-        <div id="collapseOne" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '1' ? 'show' : '' }}" data-bs-parent="#accordion">
+        <div id="collapseOne" class="accordion-collapse collapse {{ $chFinancialReportReview->farthest_step_visited_coord == '1' ? 'show' : '' }}" data-bs-parent="#accordion">
             <div class="accordion-body">
                 <section>
                     <div class="col-md-12">
@@ -249,7 +249,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12 text-center">
-                                    <button type="submit" id="btn-step-1" class="btn btn-primary bg-gradient mb-2">
+                                    <button type="button" id="btn-step-1" class="btn btn-primary bg-gradient mb-2">
                                         <i class="bi bi-floppy-fill me-2"></i>Save Report Review
                                     </button>
                                 </div>
@@ -265,15 +265,15 @@
     {{------End Step 1 ------}}
 
     {{------Start Step 2 ------}}
-    <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '2' ? 'active' : '' }}">
+    <div class="accordion-item {{ $chFinancialReportReview->farthest_step_visited_coord == '2' ? 'active' : '' }}">
         <h2 class="accordion-header" id="accordion-header-meetings">
-            <button class="accordion-button {{ $chFinancialReport->farthest_step_visited_coord == '2' ? '' : 'collapsed' }}"
+            <button class="accordion-button {{ $chFinancialReportReview->farthest_step_visited_coord == '2' ? '' : 'collapsed' }}"
                     type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo"
-                    aria-expanded="{{ $chFinancialReport->farthest_step_visited_coord == '2' ? 'true' : 'false' }}">
+                    aria-expanded="{{ $chFinancialReportReview->farthest_step_visited_coord == '2' ? 'true' : 'false' }}">
                 MONTHLY MEETING EXPENSES
             </button>
         </h2>
-        <div id="collapseTwo" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '2' ? 'show' : '' }}" data-bs-parent="#accordion">
+        <div id="collapseTwo" class="accordion-collapse collapse {{ $chFinancialReportReview->farthest_step_visited_coord == '2' ? 'show' : '' }}" data-bs-parent="#accordion">
             <div class="accordion-body">
                 <section>
                     <div class="col-md-12">
@@ -410,7 +410,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12 text-center">
-                                    <button type="submit" id="btn-step-2" class="btn btn-primary bg-gradient mb-2">
+                                    <button type="button" id="btn-step-2" class="btn btn-primary bg-gradient mb-2">
                                         <i class="bi bi-floppy-fill me-2"></i>Save Report Review
                                     </button>
                                 </div>
@@ -426,15 +426,15 @@
     {{------End Step 2 ------}}
 
     {{------Start Step 3 ------}}
-    <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '3' ? 'active' : '' }}">
+    <div class="accordion-item {{ $chFinancialReportReview->farthest_step_visited_coord == '3' ? 'active' : '' }}">
         <h2 class="accordion-header" id="accordion-header-service">
-            <button class="accordion-button {{ $chFinancialReport->farthest_step_visited_coord == '3' ? '' : 'collapsed' }}"
+            <button class="accordion-button {{ $chFinancialReportReview->farthest_step_visited_coord == '3' ? '' : 'collapsed' }}"
                     type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree"
-                    aria-expanded="{{ $chFinancialReport->farthest_step_visited_coord == '3' ? 'true' : 'false' }}">
+                    aria-expanded="{{ $chFinancialReportReview->farthest_step_visited_coord == '3' ? 'true' : 'false' }}">
                 SERVICE PROJECTS
             </button>
         </h2>
-        <div id="collapseThree" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '3' ? 'show' : '' }}" data-bs-parent="#accordion">
+        <div id="collapseThree" class="accordion-collapse collapse {{ $chFinancialReportReview->farthest_step_visited_coord == '3' ? 'show' : '' }}" data-bs-parent="#accordion">
             <div class="accordion-body">
                 <section>
                     <div class="col-md-12">
@@ -576,7 +576,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12 text-center">
-                                    <button type="submit" id="btn-step-3" class="btn btn-primary bg-gradient mb-2">
+                                    <button type="button" id="btn-step-3" class="btn btn-primary bg-gradient mb-2">
                                         <i class="bi bi-floppy-fill me-2"></i>Save Report Review
                                     </button>
                                 </div>
@@ -592,15 +592,15 @@
     {{------End Step 3 ------}}
 
     {{------Start Step 4 ------}}
-    <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '4' ? 'active' : '' }}">
+    <div class="accordion-item {{ $chFinancialReportReview->farthest_step_visited_coord == '4' ? 'active' : '' }}">
         <h2 class="accordion-header" id="accordion-header-parties">
-            <button class="accordion-button {{ $chFinancialReport->farthest_step_visited_coord == '4' ? '' : 'collapsed' }}"
+            <button class="accordion-button {{ $chFinancialReportReview->farthest_step_visited_coord == '4' ? '' : 'collapsed' }}"
                     type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour"
-                    aria-expanded="{{ $chFinancialReport->farthest_step_visited_coord == '4' ? 'true' : 'false' }}">
+                    aria-expanded="{{ $chFinancialReportReview->farthest_step_visited_coord == '4' ? 'true' : 'false' }}">
                 PARTIES & MEMBER BENEFITS
             </button>
         </h2>
-        <div id="collapseFour" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '4' ? 'show' : '' }}" data-bs-parent="#accordion">
+        <div id="collapseFour" class="accordion-collapse collapse {{ $chFinancialReportReview->farthest_step_visited_coord == '4' ? 'show' : '' }}" data-bs-parent="#accordion">
             <div class="accordion-body">
                 <section>
                     <table width="75%" style="border-collapse: collapse;">
@@ -678,17 +678,17 @@
                                     <label>Is the Chapter's Party Expense under 15%?<span class="field-required">*&nbsp;</span></label>
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="check_party_percentage" value="2"
+                                            <input class="form-check-input" type="radio" name="checkPartyPercentage" value="2"
                                                 {{ $chFinancialReportReview->party_percentage == 2 ? 'checked' : '' }} required>
                                             <label class="form-check-label">They are under 15%</label>
                                         </div>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="check_party_percentage" value="1"
+                                            <input class="form-check-input" type="radio" name="checkPartyPercentage" value="1"
                                                 {{ $chFinancialReportReview->party_percentage == 1 ? 'checked' : '' }}>
                                             <label class="form-check-label">They are between 15-20%</label>
                                         </div>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="check_party_percentage" value="0"
+                                            <input class="form-check-input" type="radio" name="checkPartyPercentage" value="0"
                                                 {{ !is_null($chFinancialReportReview->party_percentage) && $chFinancialReportReview->party_percentage == 0 ? 'checked' : '' }}>
                                             <label class="form-check-label">They are over 20%</label>
                                         </div>
@@ -713,7 +713,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12 text-center">
-                                    <button type="submit" id="btn-step-4" class="btn btn-primary bg-gradient mb-2">
+                                    <button type="button" id="btn-step-4" class="btn btn-primary bg-gradient mb-2">
                                         <i class="bi bi-floppy-fill me-2"></i>Save Report Review
                                     </button>
                                 </div>
@@ -729,15 +729,15 @@
     {{------End Step 4 ------}}
 
     {{------Start Step 5 ------}}
-    <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '5' ? 'active' : '' }}">
+    <div class="accordion-item {{ $chFinancialReportReview->farthest_step_visited_coord == '5' ? 'active' : '' }}">
         <h2 class="accordion-header" id="accordion-header-office">
-            <button class="accordion-button {{ $chFinancialReport->farthest_step_visited_coord == '5' ? '' : 'collapsed' }}"
+            <button class="accordion-button {{ $chFinancialReportReview->farthest_step_visited_coord == '5' ? '' : 'collapsed' }}"
                     type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive"
-                    aria-expanded="{{ $chFinancialReport->farthest_step_visited_coord == '5' ? 'true' : 'false' }}">
+                    aria-expanded="{{ $chFinancialReportReview->farthest_step_visited_coord == '5' ? 'true' : 'false' }}">
                 OFFICE & OPERATING EXPENSES
             </button>
         </h2>
-        <div id="collapseFive" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '5' ? 'show' : '' }}" data-bs-parent="#accordion">
+        <div id="collapseFive" class="accordion-collapse collapse {{ $chFinancialReportReview->farthest_step_visited_coord == '5' ? 'show' : '' }}" data-bs-parent="#accordion">
             <div class="accordion-body">
                 <section>
                     <div class="col-md-12">
@@ -820,7 +820,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12 text-center">
-                                    <button type="submit" id="btn-step-5" class="btn btn-primary bg-gradient mb-2">
+                                    <button type="button" id="btn-step-5" class="btn btn-primary bg-gradient mb-2">
                                         <i class="bi bi-floppy-fill me-2"></i>Save Report Review
                                     </button>
                                 </div>
@@ -836,15 +836,15 @@
     {{------End Step 5 ------}}
 
     {{------Start Step 6 ------}}
-    <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '6' ? 'active' : '' }}">
+    <div class="accordion-item {{ $chFinancialReportReview->farthest_step_visited_coord == '6' ? 'active' : '' }}">
         <h2 class="accordion-header" id="accordion-header-international">
-            <button class="accordion-button {{ $chFinancialReport->farthest_step_visited_coord == '6' ? '' : 'collapsed' }}"
+            <button class="accordion-button {{ $chFinancialReportReview->farthest_step_visited_coord == '6' ? '' : 'collapsed' }}"
                     type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix"
-                    aria-expanded="{{ $chFinancialReport->farthest_step_visited_coord == '6' ? 'true' : 'false' }}">
+                    aria-expanded="{{ $chFinancialReportReview->farthest_step_visited_coord == '6' ? 'true' : 'false' }}">
                 INTERNATIONAL EVENTS & RE-REGISTRATION
             </button>
         </h2>
-        <div id="collapseSix" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '6' ? 'show' : '' }}" data-bs-parent="#accordion">
+        <div id="collapseSix" class="accordion-collapse collapse {{ $chFinancialReportReview->farthest_step_visited_coord == '6' ? 'show' : '' }}" data-bs-parent="#accordion">
             <div class="accordion-body">
                 <section>
                     <div class="col-md-12">
@@ -955,7 +955,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12 text-center">
-                                    <button type="submit" id="btn-step-6" class="btn btn-primary bg-gradient mb-2">
+                                    <button type="button" id="btn-step-6" class="btn btn-primary bg-gradient mb-2">
                                         <i class="bi bi-floppy-fill me-2"></i>Save Report Review
                                     </button>
                                 </div>
@@ -971,15 +971,15 @@
     {{------End Step 6 ------}}
 
     {{------Start Step 7 ------}}
-    <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '7' ? 'active' : '' }}">
+    <div class="accordion-item {{ $chFinancialReportReview->farthest_step_visited_coord == '7' ? 'active' : '' }}">
         <h2 class="accordion-header" id="accordion-header-donations">
-            <button class="accordion-button {{ $chFinancialReport->farthest_step_visited_coord == '7' ? '' : 'collapsed' }}"
+            <button class="accordion-button {{ $chFinancialReportReview->farthest_step_visited_coord == '7' ? '' : 'collapsed' }}"
                     type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven"
-                    aria-expanded="{{ $chFinancialReport->farthest_step_visited_coord == '7' ? 'true' : 'false' }}">
+                    aria-expanded="{{ $chFinancialReportReview->farthest_step_visited_coord == '7' ? 'true' : 'false' }}">
                 DONATIONS TO YOUR CHAPTER
             </button>
         </h2>
-        <div id="collapseSeven" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '7' ? 'show' : '' }}" data-bs-parent="#accordion">
+        <div id="collapseSeven" class="accordion-collapse collapse {{ $chFinancialReportReview->farthest_step_visited_coord == '7' ? 'show' : '' }}" data-bs-parent="#accordion">
             <div class="accordion-body">
                 <section>
                     Monetary Donations:
@@ -1101,7 +1101,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12 text-center">
-                                    <button type="submit" id="btn-step-7" class="btn btn-primary bg-gradient mb-2">
+                                    <button type="button" id="btn-step-7" class="btn btn-primary bg-gradient mb-2">
                                         <i class="bi bi-floppy-fill me-2"></i>Save Report Review
                                     </button>
                                 </div>
@@ -1117,15 +1117,15 @@
     {{------End Step 7 ------}}
 
     {{------Start Step 8 ------}}
-    <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '8' ? 'active' : '' }}">
+    <div class="accordion-item {{ $chFinancialReportReview->farthest_step_visited_coord == '8' ? 'active' : '' }}">
         <h2 class="accordion-header" id="accordion-header-other">
-            <button class="accordion-button {{ $chFinancialReport->farthest_step_visited_coord == '8' ? '' : 'collapsed' }}"
+            <button class="accordion-button {{ $chFinancialReportReview->farthest_step_visited_coord == '8' ? '' : 'collapsed' }}"
                     type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight"
-                    aria-expanded="{{ $chFinancialReport->farthest_step_visited_coord == '8' ? 'true' : 'false' }}">
+                    aria-expanded="{{ $chFinancialReportReview->farthest_step_visited_coord == '8' ? 'true' : 'false' }}">
                 OTHER INCOME & EXPENSES
             </button>
         </h2>
-        <div id="collapseEight" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '8' ? 'show' : '' }}" data-bs-parent="#accordion">
+        <div id="collapseEight" class="accordion-collapse collapse {{ $chFinancialReportReview->farthest_step_visited_coord == '8' ? 'show' : '' }}" data-bs-parent="#accordion">
             <div class="accordion-body">
                 <section>
                     <table width="75%" style="border-collapse: collapse;">
@@ -1211,7 +1211,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12 text-center">
-                                    <button type="submit" id="btn-step-8" class="btn btn-primary bg-gradient mb-2">
+                                    <button type="button" id="btn-step-8" class="btn btn-primary bg-gradient mb-2">
                                         <i class="bi bi-floppy-fill me-2"></i>Save Report Review
                                     </button>
                                 </div>
@@ -1227,15 +1227,15 @@
     {{------End Step 8 ------}}
 
     {{------Start Step 9 ------}}
-    <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '9' ? 'active' : '' }}">
+    <div class="accordion-item {{ $chFinancialReportReview->farthest_step_visited_coord == '9' ? 'active' : '' }}">
         <h2 class="accordion-header" id="accordion-header-financial">
-            <button class="accordion-button {{ $chFinancialReport->farthest_step_visited_coord == '9' ? '' : 'collapsed' }}"
+            <button class="accordion-button {{ $chFinancialReportReview->farthest_step_visited_coord == '9' ? '' : 'collapsed' }}"
                     type="button" data-bs-toggle="collapse" data-bs-target="#collapseNine"
-                    aria-expanded="{{ $chFinancialReport->farthest_step_visited_coord == '9' ? 'true' : 'false' }}">
+                    aria-expanded="{{ $chFinancialReportReview->farthest_step_visited_coord == '9' ? 'true' : 'false' }}">
                 FINANCIAL SUMMARY
             </button>
         </h2>
-        <div id="collapseNine" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '9' ? 'show' : '' }}" data-bs-parent="#accordion">
+        <div id="collapseNine" class="accordion-collapse collapse {{ $chFinancialReportReview->farthest_step_visited_coord == '9' ? 'show' : '' }}" data-bs-parent="#accordion">
             <div class="accordion-body">
                 <section>
                     @php
@@ -1356,7 +1356,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12 text-center">
-                                    <button type="submit" id="btn-step-9" class="btn btn-primary bg-gradient mb-2">
+                                    <button type="button" id="btn-step-9" class="btn btn-primary bg-gradient mb-2">
                                         <i class="bi bi-floppy-fill me-2"></i>Save Report Review
                                     </button>
                                 </div>
@@ -1372,15 +1372,15 @@
     {{------End Step 9 ------}}
 
     {{------Start Step 10 ------}}
-    <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '10' ? 'active' : '' }}">
+    <div class="accordion-item {{ $chFinancialReportReview->farthest_step_visited_coord == '10' ? 'active' : '' }}">
         <h2 class="accordion-header" id="accordion-header-reconciliation">
-            <button class="accordion-button {{ $chFinancialReport->farthest_step_visited_coord == '10' ? '' : 'collapsed' }}"
+            <button class="accordion-button {{ $chFinancialReportReview->farthest_step_visited_coord == '10' ? '' : 'collapsed' }}"
                     type="button" data-bs-toggle="collapse" data-bs-target="#collapseTen"
-                    aria-expanded="{{ $chFinancialReport->farthest_step_visited_coord == '10' ? 'true' : 'false' }}">
+                    aria-expanded="{{ $chFinancialReportReview->farthest_step_visited_coord == '10' ? 'true' : 'false' }}">
                 BANK RECONCILIATION
             </button>
         </h2>
-        <div id="collapseTen" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '10' ? 'show' : '' }}" data-bs-parent="#accordion">
+        <div id="collapseTen" class="accordion-collapse collapse {{ $chFinancialReportReview->farthest_step_visited_coord == '10' ? 'show' : '' }}" data-bs-parent="#accordion">
             <div class="accordion-body">
                 <section>
                     <div class="col-md-12">
@@ -1606,7 +1606,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12 text-center">
-                                    <button type="submit" id="btn-step-10" class="btn btn-primary bg-gradient mb-2">
+                                    <button type="button" id="btn-step-10" class="btn btn-primary bg-gradient mb-2">
                                         <i class="bi bi-floppy-fill me-2"></i>Save Report Review
                                     </button>
                                 </div>
@@ -1622,15 +1622,15 @@
     {{------End Step 10 ------}}
 
     {{------Start Step 11 ------}}
-    <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '11' ? 'active' : '' }}">
+    <div class="accordion-item {{ $chFinancialReportReview->farthest_step_visited_coord == '11' ? 'active' : '' }}">
         <h2 class="accordion-header" id="accordion-header-990n">
-            <button class="accordion-button {{ $chFinancialReport->farthest_step_visited_coord == '11' ? '' : 'collapsed' }}"
+            <button class="accordion-button {{ $chFinancialReportReview->farthest_step_visited_coord == '11' ? '' : 'collapsed' }}"
                     type="button" data-bs-toggle="collapse" data-bs-target="#collapseEleven"
-                    aria-expanded="{{ $chFinancialReport->farthest_step_visited_coord == '11' ? 'true' : 'false' }}">
+                    aria-expanded="{{ $chFinancialReportReview->farthest_step_visited_coord == '11' ? 'true' : 'false' }}">
                 990N IRS FILING
             </button>
         </h2>
-        <div id="collapseEleven" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '11' ? 'show' : '' }}" data-bs-parent="#accordion">
+        <div id="collapseEleven" class="accordion-collapse collapse {{ $chFinancialReportReview->farthest_step_visited_coord == '11' ? 'show' : '' }}" data-bs-parent="#accordion">
             <div class="accordion-body">
                 <section>
                     <div class="col-md-12">
@@ -1710,7 +1710,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12 text-center">
-                                    <button type="submit" id="btn-step-11" class="btn btn-primary bg-gradient mb-2">
+                                    <button type="button" id="btn-step-11" class="btn btn-primary bg-gradient mb-2">
                                         <i class="bi bi-floppy-fill me-2"></i>Save Report Review
                                     </button>
                                 </div>
@@ -1726,15 +1726,15 @@
     {{------End Step 11 ------}}
 
     {{------Start Step 12 ------}}
-    <div class="accordion-item {{ $chFinancialReport->farthest_step_visited_coord == '12' ? 'active' : '' }}">
+    <div class="accordion-item {{ $chFinancialReportReview->farthest_step_visited_coord == '12' ? 'active' : '' }}">
         <h2 class="accordion-header" id="accordion-header-questions">
-            <button class="accordion-button {{ $chFinancialReport->farthest_step_visited_coord == '12' ? '' : 'collapsed' }}"
+            <button class="accordion-button {{ $chFinancialReportReview->farthest_step_visited_coord == '12' ? '' : 'collapsed' }}"
                     type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwelve"
-                    aria-expanded="{{ $chFinancialReport->farthest_step_visited_coord == '12' ? 'true' : 'false' }}">
+                    aria-expanded="{{ $chFinancialReportReview->farthest_step_visited_coord == '12' ? 'true' : 'false' }}">
                 CHAPTER QUESTIONS
             </button>
         </h2>
-        <div id="collapseTwelve" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited_coord == '12' ? 'show' : '' }}" data-bs-parent="#accordion">
+        <div id="collapseTwelve" class="accordion-collapse collapse {{ $chFinancialReportReview->farthest_step_visited_coord == '12' ? 'show' : '' }}" data-bs-parent="#accordion">
             <div class="accordion-body">
                 <section>
                     <table>
@@ -1974,7 +1974,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12 text-center">
-                                    <button type="submit" id="btn-step-12" class="btn btn-primary bg-gradient mb-2">
+                                    <button type="button" id="btn-step-12" class="btn btn-primary bg-gradient mb-2">
                                         <i class="bi bi-floppy-fill me-2"></i>Save Report Review
                                     </button>
                                 </div>

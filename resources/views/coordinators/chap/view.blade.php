@@ -512,7 +512,7 @@
                                     </div>
                                 @else
                                     <div class="col-sm-9">
-                                        990N Filing has not been verified on the IRS website. {{ $chFinancialReport?->check_current_990N_notes }}
+                                        990N Filing has not been verified on the IRS website. {{ $chFinancialReport?->current_990N_notes }}
                                     </div>
                                 @endif
                             </div>

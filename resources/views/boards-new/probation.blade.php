@@ -189,7 +189,6 @@
 @section('customscript')
 @php $disableMode = 'disable-all'; @endphp
 @include('layouts.scripts.disablefields')
-
 <script>
 
 document.addEventListener("DOMContentLoaded", function() {

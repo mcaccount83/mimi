@@ -40,16 +40,17 @@
               <!-- /.card-header -->
           <div class="card-body">
         <div class="row">
-            <p>&nbsp;&nbsp;Board members have the same list of links & file downloads available through their MIMI logins.</p>
+            <div class="col-12 mb-2">
+            Board members have the same list of links & file downloads available through their MIMI logins.
         </div>
         @if($canEditFiles)
-            <div class="row">
-                &nbsp;&nbsp;<button type="button" class="btn btn-success bg-gradient mb-2" data-bs-toggle="modal" data-bs-target="#modal-task"><i class="bi bi-plus me-2"></i>Add Resource</button>
+            <div class="col-12 mb-2">
+                <button type="button" class="btn btn-success bg-gradient mb-2" data-bs-toggle="modal" data-bs-target="#modal-task"><i class="bi bi-plus me-2"></i>Add Resource</button>
             </div>
-            <div class="row">&nbsp;</div>
         @endif
-        <div class="row">
+        </div>
 
+        <div class="row">
         <div class="grid">
             <!-- Grid item -->
 

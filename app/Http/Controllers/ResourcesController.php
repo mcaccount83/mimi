@@ -182,7 +182,8 @@ class ResourcesController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $positionId = $user['cdPositionId'];
         $secPositionId = $user['cdSecPositionId'];
-        $canEditFiles = ($positionId == CoordinatorPosition::CC || in_array(CoordinatorPosition::CC, $secPositionId));
+        $canEditFiles = ($positionId == CoordinatorPosition::IT || in_array(CoordinatorPosition::IT, $secPositionId));
+        // $canEditFiles = ($positionId == CoordinatorPosition::CC || in_array(CoordinatorPosition::CC, $secPositionId));
 
         $resources = Resources::with('resourceCategory', 'updatedBy')->get();
         $resourceCategories = ResourceCategory::all();
@@ -304,7 +305,6 @@ class ResourcesController extends Controller implements HasMiddleware
         $positionId = $user['cdPositionId'];
         $secPositionId = $user['cdSecPositionId'];
         $canEditFiles = ($positionId == CoordinatorPosition::IT || in_array(CoordinatorPosition::IT, $secPositionId));
-        // $canEditFiles = ($positionId == 13 || in_array(13, $secPositionId));  // IT Coordinator
 
         $resources = Resources::with('toolkitCategory', 'updatedBy')->get();
         $toolkitCategories = ToolkitCategory::all();

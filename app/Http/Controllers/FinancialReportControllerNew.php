@@ -151,7 +151,7 @@ class FinancialReportControllerNew extends Controller implements HasMiddleware
      */
     public function saveAccordionFields($financialReport, $input)
     {
-        $financialReport->farthest_step_visited = $input['FurthestStep'];
+        // $financialReport->farthest_step_visited = $input['FurthestStep'];
 
         // CHAPTER DUES
         $financialReport->changed_dues = $input['optChangeDues'] ?? null;
@@ -381,13 +381,15 @@ class FinancialReportControllerNew extends Controller implements HasMiddleware
         $reportReceived = $input['submitted'] ?? null;
 
         $financialReport = FinancialReport::find($chapterId);
+        $farthest_step_visited = max((int)$input['FurthestStep'], (int)$financialReport->farthest_step_visited_coord);
+
         $documentsEOY = DocumentsEOY::find($chapterId);
         $chapter = Chapters::find($chapterId);
 
         DB::beginTransaction();
         try {
             $this->saveAccordionFields($financialReport, $input);
-
+            $financialReport->farthest_step_visited = $farthest_step_visited;
             $financialReport->save();
 
             if ($reportReceived == 1) {
@@ -536,6 +538,8 @@ class FinancialReportControllerNew extends Controller implements HasMiddleware
         $reportReceived = $input['submitted'] ?? null;
 
         $financialReport = FinancialReportFinal::find($chapterId);
+        $farthest_step_visited = max((int)$input['FurthestStep'], (int)$financialReport->farthest_step_visited_coord);
+
         $documentsEOY = DocumentsEOY::find($chapterId);
         $chapter = Chapters::find($chapterId);
         $disbandChecklist = DisbandedChecklist::find($chapterId);
@@ -543,7 +547,7 @@ class FinancialReportControllerNew extends Controller implements HasMiddleware
         DB::beginTransaction();
         try {
             $this->saveAccordionFields($financialReport, $input);
-
+            $financialReport->farthest_step_visited = $farthest_step_visited;
             $financialReport->save();
 
             if ($reportReceived == 1) {

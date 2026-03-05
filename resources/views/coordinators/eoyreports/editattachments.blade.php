@@ -115,7 +115,7 @@
                     <div class="row mb-2">
                         <label class="col-sm-3 col-form-label">990 Submission Notes:</label>
                         <div class="col-sm-9">
-                        <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chDetails->documentsEOY->irs_notes }}" >
+                        <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chEOYDocuments->irs_notes }}" >
                         </div>
                     </div>
 
@@ -139,7 +139,7 @@
                         <div class="col-sm-9">
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="irs_verified" id="irs_verified" class="form-check-input"
-                                {{ $chDetails->documentsEOY->irs_verified == 1 ? 'checked' : ''}}>
+                                {{ $chEOYDocuments->irs_verified == 1 ? 'checked' : ''}}>
                                 <label class="form-check-label" for="irs_verified"></label>
                             </div>
                         </div>

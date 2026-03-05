@@ -79,7 +79,7 @@
 
                             <div class="col-md-12">
                             <div class="card-body text-center mt-3">
-                                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('board-new.editreregpayment', ['id' => $chDetails->id]) }}'"><i class="bi bi-credit-card-fill me-2"></i>Make a Payment</button>
+                                <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board-new.editreregpayment', ['id' => $chDetails->id]) }}'"><i class="bi bi-credit-card-fill me-2"></i>Make a Payment</button>
                             </div>
                         </div>
 
