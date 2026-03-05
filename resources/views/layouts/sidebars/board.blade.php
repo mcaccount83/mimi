@@ -6,7 +6,7 @@
             <p>Chapter Profile</p>
         </a>
     </li> --}}
-
+@if(isset($chDetails))
     @php
         $boardRoute = route('board-new.chapterprofile', ['id' => $chDetails->id]);
 
@@ -22,8 +22,10 @@
             </a>
         </li>
     @endif
+    @endif
 
     <!-- Board Menu Item -->
+    @if(isset($chDetails))
     @php
         $boardRoute = route('board-new.editboard', ['id' => $chDetails->id]);
 
@@ -39,8 +41,10 @@
             </a>
         </li>
     @endif
+    @endif
 
     <!-- Online Menu Item -->
+    @if(isset($chDetails))
     @php
         $boardRoute = route('board-new.editonline', ['id' => $chDetails->id]);
 
@@ -56,8 +60,10 @@
             </a>
         </li>
     @endif
+    @endif
 
     <!-- ReReg Menu Item -->
+    @if(isset($chDetails))
     @php
         $boardRoute = route('board-new.viewrereghistory', ['id' => $chDetails->id]);
 
@@ -74,8 +80,10 @@
             </a>
         </li>
     @endif
+    @endif
 
     <!-- Donations Menu Item -->
+    @if(isset($chDetails))
     @php
         $boardRoute = route('board-new.viewdonationhistory', ['id' => $chDetails->id]);
 
@@ -92,8 +100,10 @@
             </a>
         </li>
     @endif
+    @endif
 
     <!-- Documents Menu Item -->
+    @if(isset($chDetails))
     @php
         $boardRoute = route('board-new.viewdocuments', ['id' => $chDetails->id]);
 
@@ -109,9 +119,11 @@
             </a>
         </li>
     @endif
+    @endif
 
     {{-- @if($chDetails->probation_id == '3') --}}
         <!-- Quarterly Submission Menu Item -->
+        @if(isset($chDetails))
         @php
             $boardRoute = route('board-new.editprobation', ['id' => $chDetails->id]);
 
@@ -127,9 +139,11 @@
                 </a>
             </li>
         @endif
+        @endif
     {{-- @endif --}}
 
     <!-- Resources Menu Item -->
+    @if(isset($chDetails))
     @php
         $boardRoute = route('board-new.viewresources', ['id' => $chDetails->id]);
 
@@ -145,8 +159,10 @@
             </a>
         </li>
     @endif
+    @endif
 
     <!-- End of Year Menu Item -->
+    @if(isset($chDetails))
     @php
         $boardRoute = route('board-new.viewendofyear', ['id' => $chDetails->id]);
 
@@ -162,8 +178,10 @@
             </a>
         </li>
     @endif
+    @endif
 
     <!-- eLearning Menu Item -->
+    @if(isset($chDetails))
     @php
         $boardRoute = route('board-new.viewelearning', ['id' => $chDetails->id]);
 
@@ -178,6 +196,7 @@
                 <p>eLearning</p>
             </a>
         </li>
+    @endif
     @endif
 
     <!-- BoardList Forum Menu Item -->
