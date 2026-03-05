@@ -380,11 +380,10 @@ class FinancialReportControllerNew extends Controller implements HasMiddleware
         $input = $request->all();
         $reportReceived = $input['submitted'] ?? null;
 
+        $chapter = Chapters::find($chapterId);
+        $documentsEOY = DocumentsEOY::find($chapterId);
         $financialReport = FinancialReport::find($chapterId);
         $farthest_step_visited = max((int)$input['FurthestStep'], (int)$financialReport->farthest_step_visited_coord);
-
-        $documentsEOY = DocumentsEOY::find($chapterId);
-        $chapter = Chapters::find($chapterId);
 
         DB::beginTransaction();
         try {
@@ -554,12 +553,9 @@ class FinancialReportControllerNew extends Controller implements HasMiddleware
                 $financialReport->completed_name = $userName;
                 $financialReport->completed_email = $userEmail;
                 $financialReport->submitted = Carbon::now();
-
                 $financialReport->save();
 
                 $documentsEOY->final_report_received = 1;
-                // $documentsEOY->report_received = Carbon::now();
-                // $documentsEOY->report_extension = null;
                 $documentsEOY->save();
 
                 $disbandChecklist->file_financial = 1;
@@ -588,7 +584,6 @@ class FinancialReportControllerNew extends Controller implements HasMiddleware
             $cc_id = $baseQuery['cc_id'];
 
             $baseDsibandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chapterId);
-            // $PresDetails = $baseDsibandedBoardQuery['PresDisbandedDetails'];
             $PresDetails = $baseDsibandedBoardQuery['PresDetails'];
 
             $mailData = array_merge(

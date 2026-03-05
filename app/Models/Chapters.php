@@ -186,7 +186,7 @@ class Chapters extends Model
     {
         return $this->hasOneThrough(
             Coordinators::class,     // Final model we want
-            FinancialReport::class,  // Intermediate table
+            FinancialReportReview::class,  // Intermediate table
             'chapter_id',           // Foreign key on financial_reports pointing to chapters
             'id',                   // Foreign key on coordinators (primary key)
             'id',                   // Local key on chapters (primary key)

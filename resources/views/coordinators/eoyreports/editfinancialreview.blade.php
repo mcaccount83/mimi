@@ -320,8 +320,8 @@
                         $financial_report_notes = [];
                         for ($i = 1; $i <= 13; $i++) {
                             $key = 'step_' . $i . '_notes_log';
-                            if (isset($chFinancialReport[$key])) {
-                                $notes = explode("\n", $chFinancialReport[$key]);
+                            if (isset($chFinancialReportReview[$key])) {
+                                $notes = explode("\n", $chFinancialReportReview[$key]);
                                 $financial_report_notes = array_merge($financial_report_notes, $notes);
                             }
                         }

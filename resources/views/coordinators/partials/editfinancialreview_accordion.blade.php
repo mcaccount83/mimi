@@ -234,7 +234,7 @@
                                     <label for="Step1_Note">Add New Note:</label>
                                     <div class="col-12">
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(1)" name="Step1_Note" id="Step1_Note"
-                                            {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                            {{ $chFinancialReportReview->review_complete != "" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote1" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(1)" disabled>
@@ -245,7 +245,7 @@
                                 <div class="row mb-3">
                                     <label for="Step1_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
                                     <div class="col-12">
-                                        <textarea class="form-control" style="width:100%" rows="8" name="Step1_Log" id="Step1_Log" readonly>{{ $chFinancialReport->step_1_notes_log }}</textarea>
+                                        <textarea class="form-control" style="width:100%" rows="8" name="Step1_Log" id="Step1_Log" readonly>{{ $chFinancialReportReview->step_1_notes_log }}</textarea>
                                     </div>
                                 </div>
                                 <div class="col-12 text-center">
@@ -395,7 +395,7 @@
                                     <label for="Step2_Note">Add New Note:</label>
                                     <div class="col-12">
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(2)" name="Step2_Note" id="Step2_Note"
-                                            {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                            {{ $chFinancialReportReview->review_complete != "" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote2" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(2)" disabled>
@@ -406,7 +406,7 @@
                                 <div class="row mb-3">
                                     <label for="Step2_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
                                     <div class="col-12">
-                                        <textarea class="form-control" style="width:100%" rows="8" name="Step2_Log" id="Step2_Log" readonly>{{ $chFinancialReport->step_2_notes_log }}</textarea>
+                                        <textarea class="form-control" style="width:100%" rows="8" name="Step2_Log" id="Step2_Log" readonly>{{ $chFinancialReportReview->step_2_notes_log }}</textarea>
                                     </div>
                                 </div>
                                 <div class="col-12 text-center">
@@ -561,7 +561,7 @@
                                     <label for="Step3_Note">Add New Note:</label>
                                     <div class="col-12">
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(3)" name="Step3_Note" id="Step3_Note"
-                                            {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                            {{ $chFinancialReportReview->review_complete != "" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote3" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(3)" disabled>
@@ -572,7 +572,7 @@
                                 <div class="row mb-3">
                                     <label for="Step3_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
                                     <div class="col-12">
-                                        <textarea class="form-control" style="width:100%" rows="8" name="Step3_Log" id="Step3_Log" readonly>{{ $chFinancialReport->step_3_notes_log }}</textarea>
+                                        <textarea class="form-control" style="width:100%" rows="8" name="Step3_Log" id="Step3_Log" readonly>{{ $chFinancialReportReview->step_3_notes_log }}</textarea>
                                     </div>
                                 </div>
                                 <div class="col-12 text-center">
@@ -698,7 +698,7 @@
                                     <label for="Step4_Note">Add New Note:</label>
                                     <div class="col-12">
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(4)" name="Step4_Note" id="Step4_Note"
-                                            {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                            {{ $chFinancialReportReview->review_complete != "" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote4" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(4)" disabled>
@@ -709,7 +709,7 @@
                                 <div class="row mb-3">
                                     <label for="Step4_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
                                     <div class="col-12">
-                                        <textarea class="form-control" style="width:100%" rows="8" name="Step4_Log" id="Step4_Log" readonly>{{ $chFinancialReport->step_4_notes_log }}</textarea>
+                                        <textarea class="form-control" style="width:100%" rows="8" name="Step4_Log" id="Step4_Log" readonly>{{ $chFinancialReportReview->step_4_notes_log }}</textarea>
                                     </div>
                                 </div>
                                 <div class="col-12 text-center">
@@ -805,7 +805,7 @@
                                     <label for="Step5_Note">Add New Note:</label>
                                     <div class="col-12">
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(5)" name="Step5_Note" id="Step5_Note"
-                                            {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                            {{ $chFinancialReportReview->review_complete != "" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote5" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(5)" disabled>
@@ -816,7 +816,7 @@
                                 <div class="row mb-3">
                                     <label for="Step5_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
                                     <div class="col-12">
-                                        <textarea class="form-control" style="width:100%" rows="8" name="Step5_Log" id="Step5_Log" readonly>{{ $chFinancialReport->step_5_notes_log }}</textarea>
+                                        <textarea class="form-control" style="width:100%" rows="8" name="Step5_Log" id="Step5_Log" readonly>{{ $chFinancialReportReview->step_5_notes_log }}</textarea>
                                     </div>
                                 </div>
                                 <div class="col-12 text-center">
@@ -940,7 +940,7 @@
                                     <label for="Step6_Note">Add New Note:</label>
                                     <div class="col-12">
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(6)" name="Step6_Note" id="Step6_Note"
-                                            {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                            {{ $chFinancialReportReview->review_complete != "" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote6" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(6)" disabled>
@@ -951,7 +951,7 @@
                                 <div class="row mb-3">
                                     <label for="Step6_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
                                     <div class="col-12">
-                                        <textarea class="form-control" style="width:100%" rows="8" name="Step6_Log" id="Step6_Log" readonly>{{ $chFinancialReport->step_6_notes_log }}</textarea>
+                                        <textarea class="form-control" style="width:100%" rows="8" name="Step6_Log" id="Step6_Log" readonly>{{ $chFinancialReportReview->step_6_notes_log }}</textarea>
                                     </div>
                                 </div>
                                 <div class="col-12 text-center">
@@ -1086,7 +1086,7 @@
                                     <label for="Step7_Note">Add New Note:</label>
                                     <div class="col-12">
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(7)" name="Step7_Note" id="Step7_Note"
-                                            {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                            {{ $chFinancialReportReview->review_complete != "" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote7" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(7)" disabled>
@@ -1097,7 +1097,7 @@
                                 <div class="row mb-3">
                                     <label for="Step7_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
                                     <div class="col-12">
-                                        <textarea class="form-control" style="width:100%" rows="8" name="Step7_Log" id="Step7_Log" readonly>{{ $chFinancialReport->step_3_notes_log }}</textarea>
+                                        <textarea class="form-control" style="width:100%" rows="8" name="Step7_Log" id="Step7_Log" readonly>{{ $chFinancialReportReview->step_7_notes_log }}</textarea>
                                     </div>
                                 </div>
                                 <div class="col-12 text-center">
@@ -1196,7 +1196,7 @@
                                     <label for="Step8_Note">Add New Note:</label>
                                     <div class="col-12">
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(8)" name="Step8_Note" id="Step8_Note"
-                                            {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                            {{ $chFinancialReportReview->review_complete != "" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote8" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(8)" disabled>
@@ -1207,7 +1207,7 @@
                                 <div class="row mb-3">
                                     <label for="Step8_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
                                     <div class="col-12">
-                                        <textarea class="form-control" style="width:100%" rows="8" name="Step8_Log" id="Step8_Log" readonly>{{ $chFinancialReport->step_8_notes_log }}</textarea>
+                                        <textarea class="form-control" style="width:100%" rows="8" name="Step8_Log" id="Step8_Log" readonly>{{ $chFinancialReportReview->step_8_notes_log }}</textarea>
                                     </div>
                                 </div>
                                 <div class="col-12 text-center">
@@ -1341,7 +1341,7 @@
                                     <label for="Step9_Note">Add New Note:</label>
                                     <div class="col-12">
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(9)" name="Step9_Note" id="Step9_Note"
-                                            {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                            {{ $chFinancialReportReview->review_complete != "" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote9" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(9)" disabled>
@@ -1352,7 +1352,7 @@
                                 <div class="row mb-3">
                                     <label for="Step9_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
                                     <div class="col-12">
-                                        <textarea class="form-control" style="width:100%" rows="8" name="Step9_Log" id="Step9_Log" readonly>{{ $chFinancialReport->step_9_notes_log }}</textarea>
+                                        <textarea class="form-control" style="width:100%" rows="8" name="Step9_Log" id="Step9_Log" readonly>{{ $chFinancialReportReview->step_9_notes_log }}</textarea>
                                     </div>
                                 </div>
                                 <div class="col-12 text-center">
@@ -1498,7 +1498,7 @@
                                         <a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->statement_2_path }}">&nbsp; View Additional Bank Statement</a><br>
                                     </div>
                                 @endif
-                                <div class="col-12" id="StatementBlock">
+                                <div class="col-12 mb-2" id="StatementBlock">
                                     <strong style="color: #dc3545;">Please Note</strong><br>
                                     This will refresh the screen - be sure to save all work before clicking button to Upload or Replace Bank Statement(s).<br>
                                     @if (!is_null($chEOYDocuments->statement_1_path))
@@ -1591,7 +1591,7 @@
                                     <label for="AddNote10">Add New Note:</label>
                                     <div class="col-12">
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(10)" name="AddNote10" id="AddNote10"
-                                            {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                            {{ $chFinancialReportReview->review_complete != "" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote10Btn" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(10)" disabled>
@@ -1602,7 +1602,7 @@
                                 <div class="row mb-3">
                                     <label for="Step10_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
                                     <div class="col-12">
-                                        <textarea class="form-control" style="width:100%" rows="8" name="Step10_Log" id="Step10_Log" readonly>{{ $chFinancialReport->step_10_notes_log }}</textarea>
+                                        <textarea class="form-control" style="width:100%" rows="8" name="Step10_Log" id="Step10_Log" readonly>{{ $chFinancialReportReview->step_10_notes_log }}</textarea>
                                     </div>
                                 </div>
                                 <div class="col-12 text-center">
@@ -1695,7 +1695,7 @@
                                     <label for="Step11_Note">Add New Note:</label>
                                     <div class="col-12">
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(11)" name="Step11_Note" id="Step11_Note"
-                                            {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                            {{ $chFinancialReportReview->review_complete != "" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote11" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(11)" disabled>
@@ -1706,7 +1706,7 @@
                                 <div class="row mb-3">
                                     <label for="Step11_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
                                     <div class="col-12">
-                                        <textarea class="form-control" style="width:100%" rows="8" name="Step11_Log" id="Step11_Log" readonly>{{ $chFinancialReport->step_11_notes_log }}</textarea>
+                                        <textarea class="form-control" style="width:100%" rows="8" name="Step11_Log" id="Step11_Log" readonly>{{ $chFinancialReportReview->step_11_notes_log }}</textarea>
                                     </div>
                                 </div>
                                 <div class="col-12 text-center">
@@ -1959,7 +1959,7 @@
                                     <label for="Step12_Note">Add New Note:</label>
                                     <div class="col-12">
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(12)" name="Step12_Note" id="Step12_Note"
-                                            {{ $chFinancialReport->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                            {{ $chFinancialReportReview->review_complete != "" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote12" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(12)" disabled>
@@ -1970,7 +1970,7 @@
                                 <div class="row mb-3">
                                     <label for="Step12_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
                                     <div class="col-12">
-                                        <textarea class="form-control" style="width:100%" rows="8" name="Step12_Log" id="Step12_Log" readonly>{{ $chFinancialReport->step_12_notes_log }}</textarea>
+                                        <textarea class="form-control" style="width:100%" rows="8" name="Step12_Log" id="Step12_Log" readonly>{{ $chFinancialReportReview->step_12_notes_log }}</textarea>
                                     </div>
                                 </div>
                                 <div class="col-12 text-center">

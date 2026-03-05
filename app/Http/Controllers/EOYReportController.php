@@ -612,6 +612,62 @@ class EOYReportController extends Controller implements HasMiddleware
         return view('coordinators.eoyreports.editfinancialreview')->with($data);
     }
 
+    public function saveAccordionFields($financialReportReview, $input)
+    {
+        // CHAPTER DUES
+        $financialReportReview->roster_attached = $input['checkRosterAttached'] ?? null;
+        $financialReportReview->renewal_seems_right = $input['checkRenewalSeemsRight'] ?? null;
+        $financialReportReview->step_1_notes_log = $input['Step1_Log'] ?? null;
+
+        // MONTHLY MEETING EXPENSES
+        $financialReportReview->step_2_notes_log = $input['Step2_Log'] ?? null;
+
+        // SERVICE PROJECTS
+        $financialReportReview->minimum_service_project = $input['checkServiceProject'] ?? null;
+        $financialReportReview->m2m_donation = $input['checkM2MDonation'] ?? null;
+        $financialReportReview->step_3_notes_log = $input['Step3_Log'] ?? null;
+
+        // PARTY EXPENSES
+        $financialReportReview->party_percentage = $input['checkPartyPercentage'] ?? null;
+        $financialReportReview->step_4_notes_log = $input['Step4_Log'] ?? null;
+
+        // OFFICE & OPERATING EXPENSES
+        $financialReportReview->step_5_notes_log = $input['Step5_Log'] ?? null;
+
+        // INTERNATIONAL EVENTS & RE-REGISTRATION
+        $financialReportReview->attended_training = $input['checkAttendedTraining'] ?? null;
+        $financialReportReview->step_6_notes_log = $input['Step6_Log'] ?? null;
+
+        // DONATIONS TO CHAPTER
+        $financialReportReview->step_7_notes_log = $input['Step7_Log'] ?? null;
+
+        // OTHER INCOME & EXPENSES
+        $financialReportReview->step_8_notes_log = $input['Step8_Log'] ?? null;
+
+        // FINANCIAL SUMMARY
+        $financialReportReview->total_income_less = $input['checkTotalIncome'] ?? null;
+        $financialReportReview->step_9_notes_log = $input['Step9_Log'] ?? null;
+
+        // BANK RECONCILLIATION
+        $financialReportReview->beginning_balance = $input['checkBeginningBalance'] ?? null;
+        $financialReportReview->bank_statement_included = $input['checkBankStatementIncluded'] ?? null;
+        $financialReportReview->bank_statement_matches = $input['checkBankStatementMatches'] ?? null;
+        $financialReportReview->post_balance = isset($input['post_balance']) ? preg_replace('/[^\d.]/', '', $input['post_balance']) : null;
+        $financialReportReview->step_10_notes_log = $input['Step10_Log'] ?? null;
+
+        // 990 IRS FILING
+        $financialReportReview->current_990N_included = $input['checkCurrent990NAttached'] ?? null;
+        $financialReportReview->step_11_notes_log = $input['Step11_Log'] ?? null;
+
+        // CHAPTER QUESTIONS
+        $financialReportReview->purchased_pins = $input['checkPurchasedPins'] ?? null;
+        $financialReportReview->purchased_mc_merch = $input['checkPurchasedMCMerch'] ?? null;
+        $financialReportReview->offered_merch = $input['checkOfferedMerch'] ?? null;
+        $financialReportReview->bylaws_available = $input['checkBylawsMadeAvailable'] ?? null;
+        $financialReportReview->sistered_another_chapter = $input['checkSisteredAnotherChapter'] ?? null;
+        $financialReportReview->step_12_notes_log = $input['Step12_Log'] ?? null;
+    }
+
     /**
      * Save Financial Report Review
      */
@@ -620,68 +676,15 @@ class EOYReportController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
         $userName = $user['userName'];
+        $userEmail = $user['userEmail'];
         $updatedId = $user['userId'];
-        $updatedBy = $userName;
+        $updatedBy = $user['userName'];
 
         $input = $request->all();
-        // $farthest_step_visited_coord = $input['FurthestStep'];
         $reviewer_id = isset($input['AssignedReviewer']) && ! empty($input['AssignedReviewer']) ? $input['AssignedReviewer'] : $coorId;
         $reportReceived = $input['submitted'];
         $submitType = $input['submit_type'];
         $reviewer_email_message = $input['reviewer_email_message'];
-
-        // Step 1 - Dues
-        $roster_attached = isset($input['checkRosterAttached']) ? $input['checkRosterAttached'] : null;
-        $renewal_seems_right = isset($input['checkRenewalSeemsRight']) ? $input['checkRenewalSeemsRight'] : null;
-        $step_1_notes_log = $input['Step1_Log'];
-
-        // Step 2 - Meetings
-        $step_2_notes_log = $input['Step2_Log'];
-
-        // Step 3 - Service
-        $minimum_service_project = isset($input['checkServiceProject']) ? $input['checkServiceProject'] : null;
-        $m2m_donation = isset($input['checkM2MDonation']) ? $input['checkM2MDonation'] : null;
-        $step_3_notes_log = $input['Step3_Log'];
-
-        // Step 4 - Parties
-        $party_percentage = isset($input['party_percentage']) ? $input['party_percentage'] : null;
-        $step_4_notes_log = $input['Step4_Log'];
-
-        // Step 5 - Office & Operating
-        $step_5_notes_log = $input['Step5_Log'];
-
-        // Step 6 - International
-        $attended_training = isset($input['checkAttendedTraining']) ? $input['checkAttendedTraining'] : null;
-        $step_6_notes_log = $input['Step6_Log'];
-
-        // Step 7 - Donations
-        $step_7_notes_log = $input['Step7_Log'];
-
-        // Step 8 - Other
-        $step_8_notes_log = $input['Step8_Log'];
-
-        // Step 9 - Financial Summary
-        $total_income_less = isset($input['checkTotalIncome']) ? $input['checkTotalIncome'] : null;
-        $step_9_notes_log = $input['Step9_Log'];
-
-        // Step 10 - Reconciliation
-        $beginning_balance = isset($input['checkBeginningBalance']) ? $input['checkBeginningBalance'] : null;
-        $bank_statement_included = isset($input['checkBankStatementIncluded']) ? $input['checkBankStatementIncluded'] : null;
-        $bank_statement_matches = isset($input['checkBankStatementMatches']) ? $input['checkBankStatementMatches'] : null;
-        $post_balance = isset($input['post_balance']) ? preg_replace('/[^\d.]/', '', $input['post_balance']) : null;
-        $step_10_notes_log = $input['Step10_Log'];
-
-        // Step 11 - 990N
-         $current_990N_included = isset($input['checkCurrent990NAttached']) ? $input['checkCurrent990NAttached'] : null;
-         $step_11_notes_log = $input['Step11_Log'];
-
-        // Step 12 - Questions
-        $purchased_pins = isset($input['checkPurchasedPins']) ? $input['checkPurchasedPins'] : null;
-        $purchased_mc_merch = isset($input['checkPurchasedMCMerch']) ? $input['checkPurchasedMCMerch'] : null;
-        $offered_merch = isset($input['checkOfferedMerch']) ? $input['checkOfferedMerch'] : null;
-        $bylaws_available = isset($input['checkBylawsMadeAvailable']) ? $input['checkBylawsMadeAvailable'] : null;
-        $sistered_another_chapter = isset($input['checkSisteredAnotherChapter']) ? $input['checkSisteredAnotherChapter'] : null;
-        $step_12_notes_log = $input['Step12_Log'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -696,43 +699,15 @@ class EOYReportController extends Controller implements HasMiddleware
 
         DB::beginTransaction();
         try {
+            $this->saveAccordionFields($financialReportReview, $input);
             $financialReportReview->reviewer_id = $reviewer_id ?? $coorId;
-            $financialReportReview->step_1_notes_log = $step_1_notes_log;
-            $financialReportReview->step_2_notes_log = $step_2_notes_log;
-            $financialReportReview->step_3_notes_log = $step_3_notes_log;
-            $financialReportReview->step_4_notes_log = $step_4_notes_log;
-            $financialReportReview->step_5_notes_log = $step_5_notes_log;
-            $financialReportReview->step_6_notes_log = $step_6_notes_log;
-            $financialReportReview->step_7_notes_log = $step_7_notes_log;
-            $financialReportReview->step_8_notes_log = $step_8_notes_log;
-            $financialReportReview->step_9_notes_log = $step_9_notes_log;
-            $financialReportReview->step_10_notes_log = $step_10_notes_log;
-            $financialReportReview->step_11_notes_log = $step_11_notes_log;
-            $financialReportReview->step_12_notes_log = $step_12_notes_log;
-            $financialReportReview->roster_attached = $roster_attached;
-            $financialReportReview->renewal_seems_right = $renewal_seems_right;
-            $financialReportReview->minimum_service_project = $minimum_service_project;
-            $financialReportReview->m2m_donation = $m2m_donation;
-            $financialReportReview->party_percentage = $party_percentage;
-            $financialReportReview->attended_training = $attended_training;
-            $financialReportReview->beginning_balance = $beginning_balance;
-            $financialReportReview->bank_statement_matches = $bank_statement_matches;
-            $financialReportReview->bank_statement_included = $bank_statement_included;
-            $financialReportReview->beginning_balance = $beginning_balance;
-            $financialReportReview->post_balance = $post_balance;
-            $financialReportReview->purchased_pins = $purchased_pins;
-            $financialReportReview->purchased_mc_merch = $purchased_mc_merch;
-            $financialReportReview->offered_merch = $offered_merch;
-            $financialReportReview->bylaws_available = $bylaws_available;
-            $financialReportReview->current_990N_included = $current_990N_included;
-            $financialReportReview->total_income_less = $total_income_less;
-            $financialReportReview->sistered_another_chapter = $sistered_another_chapter;
             $financialReportReview->farthest_step_visited_coord = $farthest_step_visited_coord;
+
             if ($submitType == 'review_complete') {
                 $financialReportReview->review_complete = Carbon::now();
             }
 
-            $mailData = array_merge(
+             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getUserData($user),
                 $this->baseMailDataController->getFinancialReportData($chFinancialReport),
