@@ -82,13 +82,15 @@ class BaseBoardController extends Controller
         $chDisbanded = $chDetails->disbandCheck;
 
         $financialReportPdfs = [];
+        if ($chEOYDocuments) {
             foreach ($chEOYDocuments->getAttributes() as $column => $value) {
                 if (preg_match('/^(\d{4})_financial_pdf_path$/', $column, $matches) && !empty($value)) {
                     $year = $matches[1];
                     $financialReportPdfs[$year] = $value;
                 }
             }
-        krsort($financialReportPdfs); // newest year first
+            krsort($financialReportPdfs);
+        }
 
         // Load Board and Coordinators for Sending Email
         $emailData = $this->userController->loadEmailDetails($chId);
