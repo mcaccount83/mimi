@@ -607,19 +607,19 @@
                             @else
                                 <div class="row mb-3">
                                     <div class="col-12">
-                                        <label cladd="me-2">Board Report:</label>Report will be available on May 1st.
+                                        <label class="me-2">Board Report:</label>Report will be available on May 1st.
                                     </div>
                                 </div>
 
                                 <div class="row mb-3">
                                     <div class="col-12">
-                                        <label cladd="me-2">Financial Report:</label>Report will be available on June 1st.
+                                        <label class="me-2">Financial Report:</label>Report will be available on June 1st.
                                     </div>
                                 </div>
 
                                 <div class="row mb-3">
                                     <div class="col-12">
-                                        <label cladd="me-2">990N Submission:</label>Links/Instructions will be available on July 1st.
+                                        <label class="me-2">990N Submission:</label>Links/Instructions will be available on July 1st.
                                     </div>
                                 </div>
                             @endif

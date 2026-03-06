@@ -133,6 +133,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
         $startDate = $baseQuery['startDate'];
         $dueDate = $baseQuery['dueDate'];
         $renewalDate = $baseQuery['renewalDate'];
+        $chDisbanded = $baseQuery['chDisbanded'];
 
         $PresDetails = $baseQuery['PresDetails'];
         $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
@@ -147,7 +148,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
         $rangeStartDateFormatted = $rangeStartDate->format('m-d-Y');
         $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
 
-        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userAdmin' => $userAdmin,
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userAdmin' => $userAdmin, 'chDisbanded' => $chDisbanded,
             'startMonthName' => $startMonthName, 'endRange' => $rangeEndDateFormatted, 'startRange' => $rangeStartDateFormatted,
             'thisMonth' => $currentMonth, 'dueDate' => $dueDate, 'userTypeId' => $userTypeId,
             'startDate' => $startDate, 'renewalDate' => $renewalDate,
@@ -171,6 +172,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
         $stateShortName = $baseQuery['stateShortName'];
         $allStates = $baseQuery['allStates'];
         $allCountries = $baseQuery['allCountries'];
+        $chDisbanded = $baseQuery['chDisbanded'];
 
         $PresDetails = $baseQuery['PresDetails'];
         $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
@@ -180,7 +182,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,
             'PresDetails' => $PresDetails, 'allStates' => $allStates, 'allCountries' => $allCountries,
-            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId
+            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId,  'chDisbanded' => $chDisbanded,
         ];
 
         return view('boards-new.donation')->with($data);

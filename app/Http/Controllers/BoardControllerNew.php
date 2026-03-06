@@ -248,6 +248,7 @@ class BoardControllerNew extends Controller implements HasMiddleware
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
         $financialReportPdfs = $baseQuery['financialReportPdfs'];
         $boardActive = $chEOYDocuments->new_board_active;
+        $chDisbanded = $baseQuery['chDisbanded'];
 
         $startMonthName = $baseQuery['startMonthName'];
         $startDate = $baseQuery['startDate'];
@@ -272,7 +273,7 @@ class BoardControllerNew extends Controller implements HasMiddleware
             'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments, 'chEOYDocuments' => $chEOYDocuments,
             'boardActive' => $boardActive, 'startMonthId' => $startMonthId, 'chapterStatus' => $chapterStatus, 'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId,
             'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'startDate' => $startDate, 'renewalDate' => $renewalDate, 'allAwards' => $allAwards,
-            'resources' => $resources,
+            'resources' => $resources, 'chDisbanded' => $chDisbanded,
         ];
 
         return view('boards-new.documents')->with($data);

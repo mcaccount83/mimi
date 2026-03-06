@@ -21,6 +21,24 @@
                         </div>
                     <!-- /.card-header -->
                     <div class="card-body">
+                          @if ($chDetails->active_status == \App\Enums\ChapterStatusEnum::ZAPPED)
+                        @if ($chDisbanded?->donate_funds == '1')
+                        <div class="row">
+                                <div class="col-md-12">
+                                    Thank You for handling the donation of your chapter's funds!  If you need to submit another donation, change your Disbanding Checklist answer to NO and the donation
+                                    form will be available.
+                                </div>
+                            </div>
+                            <br>
+                            @else
+                            <div class="row">
+                                <div class="col-md-12">
+                                    As part of officially closing your chapter, you'll need to donate your chapter's remaining funds to a registred 501(c)(3).
+                                    Donating to the Sustaing Chapter or Mother-to-Mother Fund is a great way to do that!<br><br>
+                                </div>
+                            </div>
+                            @endif
+                            @else
                     <div class="row">
                         <div class="col-md-12">
                             Sustaining chapter donations benefits the International MOMS Club, which is a 501 (c)(3) public charity.
@@ -32,7 +50,9 @@
                     </div>
                 </div>
                 <br>
+    @endif
 
+                @if ($chDisbanded?->donate_funds != '1')
         {{-- Start of Payment Form --}}
         <div class="container">
             <div class="row justify-content-center">
@@ -163,6 +183,8 @@
                     The Authorize.Net Payment Gateway manages the complex routing of sensitive customer information through the electronic check and credit card processing networks.
                     See an <a href="http://www.authorize.net/resources/howitworksdiagram/" target="blank">online payments diagram</a> to see how it works.</p>
                 </div>
+
+                @endif
 
               </div>
             </div>

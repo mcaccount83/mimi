@@ -200,7 +200,7 @@
     @endif
 
     <!-- BoardList Forum Menu Item -->
-        <li class="nav-item position-relative">
+        {{-- <li class="nav-item position-relative">
         <a href="{{ url(config('forum.frontend.router.prefix') . '/unread') }}" target="_blank" class="nav-link">
             <i class="nav-icon bi bi-chat-quote-fill"></i>
             <p>
@@ -212,5 +212,5 @@
                 @endif
             </p>
         </a>
-    </li>
+    </li> --}}
 

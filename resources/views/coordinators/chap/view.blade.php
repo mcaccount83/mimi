@@ -87,12 +87,14 @@
                     <div class="general-field">
                         <div class="card-header bg-transparent border-0">
                             <h3>General Information
-                            @if (!isset($chDisbanded))
-                            <button class="btn btn-primary bg-gradient btn-xs ms-2" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'">View Chapter Profile As President</button>
-                            @endif
-                            @if (isset($chDisbanded))
-                            <button id="viewdisband" class="btn btn-primary bg-gradient btn-sm ms-2 keep-enabled" onclick="window.location.href='{{ route('board.editdisbandchecklist', ['id' => $chDetails->id]) }}'">View Disband Checklist As President</button>
-                            @endif
+                                @if ($chDetails->active_status == \App\Enums\ChapterStatusEnum::ACTIVE)
+                                    <button class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('board-new.chapterprofile', ['id' => $chDetails->id]) }}'">View Chapter Profile As President</button>
+                                @elseif ($chDetails->active_status == \App\Enums\ChapterStatusEnum::ZAPPED)
+                                    <button class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('board-new.editdisbandchecklist', ['id' => $chDetails->id]) }}'">View Disband Checklist As President</button>
+                                @elseif ($chDetails->active_status == \App\Enums\ChapterStatusEnum::PENDING ||
+                                        $chDetails->active_status == \App\Enums\ChapterStatusEnum::NOTAPPROVED)
+                                    <button class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('board-new.newchapterstatus', ['id' => $chDetails->id]) }}'">View Chapter Status As Founder</button>
+                                @endif
                         </h3>
                         </div>
                         <!-- /.card-header -->

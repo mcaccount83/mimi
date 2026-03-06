@@ -40,6 +40,18 @@
                     <div class="card-body">
                         <!-- /.card-header -->
                     <div class="card-body">
+
+                    @if ($chDetails->active_status == \App\Enums\ChapterStatusEnum::ZAPPED)
+
+                        Thank You for submitting your Final Re-Registration payment!  If you need to submit another payment, change your Disbanding Checklist answer to NO and the payment
+                        form will be available.
+
+
+
+
+                    <br>
+
+                    @else
                         <div class="row">
                              <div class="col-md-12">
                                 <h3>Last Year's Re-Registration Information</h3>
@@ -76,6 +88,7 @@
                         Your support to the MOMS Club is a service project for your chapter and should be included in its own line on your chapter’s Annual and Financial Reports.
                         Your donation will help us keep dues low and help new and existing chapters in the U.S. and around the world.</p>
                         <br>
+                    @endif
 
                 {{-- Start of Payment Form --}}
                 <div class="container">

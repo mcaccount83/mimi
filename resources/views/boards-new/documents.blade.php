@@ -18,6 +18,8 @@
                         </div>
                     <!-- /.card-header -->
                     <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
 
                         @if($chDetails->active_status == \App\Enums\ChapterStatusEnum::ZAPPED)
                             <div class="row">
@@ -106,6 +108,8 @@
                                 </div>
                             @endif
 
+                            @endif
+
                             @if (!empty($financialReportPdfs))
                                 <div class="row mb-2">
                                     <div class="col-sm-6">
@@ -122,7 +126,7 @@
                                 </div>
                             @endif
 
-                        @endif
+
                         </div>
                         </div>
                     </div>
