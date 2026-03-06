@@ -156,8 +156,8 @@
 
     <div class="card-body text-center mt-3">
 
-        <button id="Password" type="button" class="btn btn-primary bg-gradient mb-2" onclick="showChangePasswordAlert('{{ $chDetails->pendingPresident->user_id }}')"><i class="bi bi-lock-fill me-2" ></i>Change Password</button>
-        <button id="logout-btn" class="btn btn-primary bg-gradient mb-2" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="bi bi-box-arrow-right me-2" ></i>Logout</button>
+        <button type="button" id="Password" class="btn btn-primary bg-gradient mb-2" onclick="showChangePasswordAlert('{{ $chDetails->pendingPresident->user_id }}')"><i class="bi bi-lock-fill me-2" ></i>Change Password</button>
+        <button type="button" id="logout-btn" class="btn btn-primary bg-gradient mb-2" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="bi bi-box-arrow-right me-2" ></i>Logout</button>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                 @csrf
             </form>

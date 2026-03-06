@@ -463,6 +463,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/board-new/resources/{id}', [BoardControllerNew::class, 'viewResources'])->name('board-new.viewresources');
     Route::get('/board-new/resources/manual/{id}', [BoardControllerNew::class, 'editManualOrderForm'])->name('board-new.editmanual');
     Route::get('/board-new/elearning/{id}', [BoardControllerNew::class, 'viewELearning'])->name('board-new.viewelearning');
+    Route::get('/board-new/profile/{id}', [BoardControllerNew::class, 'editBoardProfile'])->name('board-new.profile');
+    Route::post('/board-new/profileupdate/{id}', [BoardControllerNew::class, 'updateBoardProfile'])->name('board-new.updateprofile');
 });
 
 // Board Payment Controller Routes...Board Login Required

@@ -187,9 +187,7 @@
 
            <div class="card-body text-center mt-3">
                 @if ($checkBox3Status)
-                    <button class="btn btn-primary bg-gradient mb-2" onclick="startExport('appreciation', 'Coordinator Appreciation List')"><i class="bi bi-download me-2"></i>Export Coordinator Appreciation List</button>
-                {{-- @else
-                    <button class="btn btn-primary bg-gradient mb-2 disabled" onclick="startExport('appreciation', 'Coordinator Appreciation List')" disabled><i class="bi bi-download me-2"></i>Export Coordinator Appreciation List</button> --}}
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="startExport('appreciation', 'Coordinator Appreciation List')"><i class="bi bi-download me-2"></i>Export Coordinator Appreciation List</button>
                 @endif
        </div>
             <!-- /.card-body for buttons -->

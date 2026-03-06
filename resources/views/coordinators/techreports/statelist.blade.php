@@ -71,9 +71,9 @@
                     </span>
                 </td>
                 <td>
-                    <button class="btn btn-primary bg-gradient btn-sm edit-state-btn">Edit Conf/Reg</button>
-                    <button class="btn btn-success bg-gradient btn-sm save-state-btn" style="display: none;">Save</button>
-                    <button class="btn btn-danger bg-gradient btn-sm cancel-state-btn" style="display: none;">Cancel</button>
+                    <button type="button" class="btn btn-primary bg-gradient btn-sm edit-state-btn">Edit Conf/Reg</button>
+                    <button type="button" class="btn btn-success bg-gradient btn-sm save-state-btn" style="display: none;">Save</button>
+                    <button type="button" class="btn btn-danger bg-gradient btn-sm cancel-state-btn" style="display: none;">Cancel</button>
                 </td>
             </tr>
             @endforeach

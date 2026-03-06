@@ -141,11 +141,9 @@
                             <a class="btn btn-primary bg-gradient mb-2" href="{{ route('payment.chaprereglatereminder') }}"><i class="bi bi-envelope-fill me-2"></i>Send One Month Late Notices</a>
                         @endif
                         @if ($checkBox3Status)
-                            <button class="btn btn-primary bg-gradient mb-2" onclick="startExport('reregoverdue', 'Overdue Re-Reg List')"><i class="bi bi-download me-2"></i>Export Overdue Re-Reg List</button>
+                            <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="startExport('reregoverdue', 'Overdue Re-Reg List')"><i class="bi bi-download me-2"></i>Export Overdue Re-Reg List</button>
                         @elseif ($checkBox51Status)
-                            <button class="btn btn-primary bg-gradient mb-2" onclick="startExport('intreregoverdue', 'International Overdue Re-Reg List')"><i class="bi bi-download me-2"></i>Export International Overdue Re-Reg List</button>
-                        {{-- @else
-                            <button class="btn btn-primary bg-gradient mb-2 disabled" onclick="startExport('reregoverdue', 'Overdue Re-Reg List')" disabled><i class="bi bi-download me-2"></i></i>Export Overdue Re-Reg List</button> --}}
+                            <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="startExport('intreregoverdue', 'International Overdue Re-Reg List')"><i class="bi bi-download me-2"></i>Export International Overdue Re-Reg List</button>
                         @endif
                     @endif
                 </div>

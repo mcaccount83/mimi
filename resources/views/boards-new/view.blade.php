@@ -353,9 +353,9 @@
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     @if($chDocuments->disband_letter_path != null)
-                                        <button class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="disband-letter" onclick="openPdfViewer('{{ $chDocuments->disband_letter_path }}')">Disband Letter</button>
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="disband-letter" onclick="openPdfViewer('{{ $chDocuments->disband_letter_path }}')">Disband Letter</button>
                                     @else
-                                        <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No Disband Letter on File</button>
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No Disband Letter on File</button>
                                     @endif
                                 </div>
                             </div>
@@ -365,9 +365,9 @@
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     @if($chDisbanded?->file_financial == 1 && $chEOYDocuments->final_financial_pdf_path != null)
-                                        <button class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="final-pdf" onclick="openPdfViewer('{{ $chEOYDocuments->final_financial_pdf_path }}')">Final Financial PDF</button>
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="final-pdf" onclick="openPdfViewer('{{ $chEOYDocuments->final_financial_pdf_path }}')">Final Financial PDF</button>
                                     @else
-                                        <button class="btn btn-primary bg-gradient btn-sm disabled" type="button" disabled>Final PDF Not Available</button>
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" type="button" disabled>Final PDF Not Available</button>
                                     @endif
                                 </div>
                             </div>
@@ -379,9 +379,9 @@
                             </div>
                             <div class="col-sm-6 mb-2">
                                 @if($chDocuments->ein_letter_path != null)
-                                    <button class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chDocuments->ein_letter_path }}')">EIN Letter from IRS</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chDocuments->ein_letter_path }}')">EIN Letter from IRS</button>
                                 @else
-                                    <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No EIN Letter on File</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No EIN Letter on File</button>
                                 @endif
                             </div>
                         </div>
@@ -392,7 +392,7 @@
                                     <label>Chapter in Good Standing Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button id="GoodStanding" type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}', '_blank')">Good Standing Chapter Letter</button><br>
+                                    <button type="button" id="GoodStanding" class="btn btn-primary bg-gradient btn-sm keep-enabled" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}', '_blank')">Good Standing Chapter Letter</button><br>
                                 </div>
                             </div>
 
@@ -403,9 +403,9 @@
                                     </div>
                                     <div class="col-sm-6 mb-2">
                                         @if($chDocuments->probation_path != null)
-                                            <button class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="probation-file" onclick="openPdfViewer('{{ $chDocuments->probation_path }}')">Probation Letter</button>
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="probation-file" onclick="openPdfViewer('{{ $chDocuments->probation_path }}')">Probation Letter</button>
                                         @else
-                                            <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No Probation Letter on File</button>
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No Probation Letter on File</button>
                                         @endif
                                     </div>
                                 </div>
@@ -417,7 +417,7 @@
                                     <label>Probation Release Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="probaton-release-file" onclick="openPdfViewer('{{ $chDocuments->probation_release_path }}')">Probation Release Letter</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="probaton-release-file" onclick="openPdfViewer('{{ $chDocuments->probation_release_path }}')">Probation Release Letter</button>
                                 </div>
                             </div>
                             @endif
@@ -428,7 +428,7 @@
                                         <label>Name Change Letter:</label>
                                     </div>
                                     <div class="col-sm-6">
-                                        <button class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="name-change-file" onclick="openPdfViewer('{{ $chDocuments->name_change_letter_path }}')">Name Change Letter</button>
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="name-change-file" onclick="openPdfViewer('{{ $chDocuments->name_change_letter_path }}')">Name Change Letter</button>
                                     </div>
                                 </div>
                             @endif
@@ -480,7 +480,7 @@
                                             @if($chEOYDocuments->new_board_active != '1')
                                                 <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='{{ route('board-new.editboardreport', ['id' => $chDetails->id]) }}'">View Board Election Report</button>
                                             @else
-                                                <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>Not available after Activation</button>
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>Not available after Activation</button>
                                             @endif
                                         </div>
                                     </div>
@@ -544,9 +544,9 @@
                                     </div>
                                     <div class="col-sm-8">
                                             @if (!empty($chEOYDocuments->roster_path))
-                                                <button class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-roster" onclick="openPdfViewer('{{ $chEOYDocuments->roster_path }}')">View Chapter Roster</button>
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-roster" onclick="openPdfViewer('{{ $chEOYDocuments->roster_path }}')">View Chapter Roster</button>
                                             @else
-                                                <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
                                             @endif
                                     </div>
                                 </div>
@@ -556,9 +556,9 @@
                                     </div>
                                     <div class="col-sm-8">
                                         @if (!empty($chEOYDocuments->statement_1_path))
-                                            <button class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-statement-1" onclick="openPdfViewer('{{ $chEOYDocuments->statement_1_path }}')">View Bank Statement</button>
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-statement-1" onclick="openPdfViewer('{{ $chEOYDocuments->statement_1_path }}')">View Bank Statement</button>
                                         @else
-                                            <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
                                         @endif
                                     </div>
                                 </div>
@@ -568,9 +568,9 @@
                                     </div>
                                     <div class="col-sm-8">
                                             @if (!empty($chEOYDocuments->statement_2_path))
-                                                <button class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-statement-2" onclick="openPdfViewer('{{ $chEOYDocuments->statement_2_path }}')">View Additional Bank Statement</button>
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-statement-2" onclick="openPdfViewer('{{ $chEOYDocuments->statement_2_path }}')">View Additional Bank Statement</button>
                                             @else
-                                                <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
                                             @endif
                                     </div>
                                 </div>
@@ -580,9 +580,9 @@
                                     </div>
                                     <div class="col-sm-8">
                                             @if (!empty($chEOYDocuments->irs_path))
-                                                <button class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chEOYDocuments->irs_path }}')">View 990N Confirmation</button>
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chEOYDocuments->irs_path }}')">View 990N Confirmation</button>
                                             @else
-                                                <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
                                                     @if($displayEINInstructionsLIVE == true)
                                                         <a href="https://www.irs.gov/charities-non-profits/annual-electronic-filing-requirement-for-small-exempt-organizations-form-990-n-e-postcard" target="_blank"  class="btn btn-primary bg-gradient btn-sm">990N IRS Website Link to File</a></td>
                                                         @foreach($resources as $resourceItem)
@@ -655,6 +655,8 @@
     <!-- /.content -->
 @endsection
 @section('customscript')
-@php $disableMode = 'disable-all'; @endphp
-@include('layouts.scripts.disablefields')
+@if($userTypeId == \App\Enums\UserTypeEnum::COORD)
+    @php $disableMode = 'disable-all'; @endphp
+    @include('layouts.scripts.disablefields')
+@endif
 @endsection

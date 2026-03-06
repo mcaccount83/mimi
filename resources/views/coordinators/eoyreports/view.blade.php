@@ -222,10 +222,10 @@
                         </div>
                         <div class="col-sm-9">
                                 @if (!empty($chEOYDocuments->roster_path))
-                                    <button class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-roster" onclick="openPdfViewer('{{ $chEOYDocuments->roster_path }}')">View Chapter Roster</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-roster" onclick="openPdfViewer('{{ $chEOYDocuments->roster_path }}')">View Chapter Roster</button>
                                     <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showRosterUploadModal('{{ $chDetails->id }}')">Replace Roster File</button>
                                 @else
-                                    <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
                                     <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showRosterUploadModal('{{ $chDetails->id }}')">Upload Roster File</button>
                                 @endif
                         </div>
@@ -237,10 +237,10 @@
                         </div>
                         <div class="col-sm-9">
                             @if (!empty($chEOYDocuments->statement_1_path))
-                                <button class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-statement-1" onclick="openPdfViewer('{{ $chEOYDocuments->statement_1_path }}')">View Bank Statement</button>
+                                <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-statement-1" onclick="openPdfViewer('{{ $chEOYDocuments->statement_1_path }}')">View Bank Statement</button>
                                 <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showStatement1UploadModal('{{ $chDetails->id }}')">Replace Bank Statement</button>
                             @else
-                                <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
+                                <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
                                 <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showStatement1UploadModal('{{ $chDetails->id }}')">Upload Bank Statement</button>
                             @endif
                         </div>
@@ -252,10 +252,10 @@
                         </div>
                         <div class="col-sm-9">
                                 @if (!empty($chEOYDocuments->statement_2_path))
-                                    <button class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-statement-2" onclick="openPdfViewer('{{ $chEOYDocuments->statement_2_path }}')">View Additional Bank Statement</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-statement-2" onclick="openPdfViewer('{{ $chEOYDocuments->statement_2_path }}')">View Additional Bank Statement</button>
                                     <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showStatement2UploadModal('{{ $chDetails->id }}')">Replace Additional Bank Statement</button>
                                 @else
-                                    <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
                                     <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showStatement2UploadModal('{{ $chDetails->id }}')">Upload Additional Bank Statement</button>
                                 @endif
                         </div>
@@ -273,10 +273,10 @@
                         </div>
                         <div class="col-sm-9">
                                 @if (!empty($chEOYDocuments->irs_path))
-                                    <button class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chEOYDocuments->irs_path }}')">View 990N Confirmation</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chEOYDocuments->irs_path }}')">View 990N Confirmation</button>
                                     <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="show990NUploadModal('{{ $chDetails->id }}')">Replace 990N Confirmation</button>
                                 @else
-                                    <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
                                     <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="show990NUploadModal('{{ $chDetails->id }}')">Upload 990N Confirmation</button>
                                 @endif
                         </div>
@@ -343,13 +343,13 @@
           <div class="col-md-12">
             <div class="card-body text-center mt-3">
                 @if ($coordinatorCondition)
-                    <button class="btn btn-primary bg-gradient mb-2" type="button" id="email-chapter" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}', 'EOY Reports')">
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" type="button" id="email-chapter" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}', 'EOY Reports')">
                         <i class="bi bi-envelope-fill me-2"></i>Email Board</button>
                         <button type="submit" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save EOY Information</button>
                     @if ($chDetails->boundary_issues != null)
                         <button type="button" id="back-eoy" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.editboundaries', ['id' => $chDetails->id]) }}'"><i class="bi bi-pin-map-fill me-2"></i>Update Boundary Issues</button>
                     @else
-                        <button class="btn btn-primary bg-gradient mb-2 disabled" disabled><i class="bi bi-pin-map-fill me-2"></i>Update Boundary Issues</button>
+                        <button type="button" class="btn btn-primary bg-gradient mb-2 disabled" disabled><i class="bi bi-pin-map-fill me-2"></i>Update Boundary Issues</button>
                     @endif
                         <button type="button" id="back-eoy" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.editawards', ['id' => $chDetails->id]) }}'"><i class="bi bi-award-fill me-2"></i>Update Award Information</button>
                     <br>

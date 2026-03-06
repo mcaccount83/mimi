@@ -118,9 +118,9 @@
                             <a class="btn btn-primary bg-gradient mb-2" href="{{ route('chapters.chaplistpending') }}"><i class="bi bi-house-add-fill me-2"></i>New Chapters Pending</a>
                         @endif
                         @if ($checkBox3Status)
-                            <button class="btn btn-primary bg-gradient mb-2" onclick="startExport('chapter', 'Chapter List')"><i class="bi bi-download me-2"></i>Export Chapter List</button>
+                            <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="startExport('chapter', 'Chapter List')"><i class="bi bi-download me-2"></i>Export Chapter List</button>
                         @elseif ($checkBox51Status)
-                            <button class="btn btn-primary bg-gradient mb-2" onclick="startExport('intchapter', 'International Chapter List')"><i class="bi bi-download me-2"></i>Export International Chapter List</button>
+                            <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="startExport('intchapter', 'International Chapter List')"><i class="bi bi-download me-2"></i>Export International Chapter List</button>
                         @endif
                 @endif
             </div>

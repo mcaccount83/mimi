@@ -113,7 +113,7 @@
 
                 <div class="card-body text-center mt-3">
                     @if ($checkBox3Status)
-                        <button class="btn btn-primary bg-gradient mb-2" onclick="startExport('chaptercoordinator', 'Chapter/Coordinator List')"><i class="bi bi-download me-2"></i>Export Chapter/Coordinator List</button>
+                        <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="startExport('chaptercoordinator', 'Chapter/Coordinator List')"><i class="bi bi-download me-2"></i>Export Chapter/Coordinator List</button>
                     @endif
               </div>
             <!-- /.card-body for buttons -->

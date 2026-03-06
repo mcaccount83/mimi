@@ -1,4 +1,11 @@
- <!-- Board Dashboard Menu Item -->
+ <!-- Chapter Status Menu Item -->
+<li class="nav-item">
+        <a href="{{ route('board-new.newchapterstatus', ['id' => $chDetails->id]) }}" class="nav-link {{ Request::is('board-new/newchapterstatus/*') ? 'active' : '' }}">
+            <i class="nav-icon bi bi-house-fill"></i>
+            <p>Chapter Status</p>
+        </a>
+    </li>
+{{--
  @if(isset($chDetails))
      @php
         $boardRoute = route('board-new.newchapterstatus', ['id' => $chDetails->id]);
@@ -15,4 +22,4 @@
             </a>
         </li>
     @endif
-@endif
+@endif --}}

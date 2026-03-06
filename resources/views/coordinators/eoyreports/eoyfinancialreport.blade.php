@@ -147,7 +147,9 @@
 
               <div class="card-body text-center mt-3">
                 @if ($regionalCoordinatorCondition)
-                    <a href="{{ route('eoyreports.eoyfinancialreportreminder') }}" onclick="return confirmSendFinancialRptReminder();"><button class="btn btn-primary bg-gradient mb-2"><i class="bi bi-envelope-fill me-2"></i>Send Financial Report Reminders</button></a>
+                    <a href="{{ route('eoyreports.eoyfinancialreportreminder') }}" onclick="return confirmSendFinancialRptReminder();" class="btn btn-primary bg-gradient mb-2">
+                        <i class="bi bi-envelope-fill me-2"></i>Send Financial Report Reminders
+                    </a>
                 @endif
              </div>
             <!-- /.card-body for buttons -->

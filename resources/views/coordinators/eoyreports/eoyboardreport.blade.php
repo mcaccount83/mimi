@@ -126,9 +126,11 @@
             <!-- /.card-body for checkboxes -->
                 <div class="card-body text-center mt-3">
                 <div class="d-flex justify-content-center align-items-start flex-wrap">
-				@if ($regionalCoordinatorCondition)
-                    <a href="{{ route('eoyreports.eoyboardreportreminder') }}" onclick="return confirmSendBoardRptReminder();">><button class="btn btn-primary bg-gradient mb-2"><i class="bi bi-envelope-fill me-2"></i>Send Board Election Reminders</button></a>
-				@endif
+                @if ($regionalCoordinatorCondition)
+                    <a href="{{ route('eoyreports.eoyboardreportreminder') }}" onclick="return confirmSendBoardRptReminder();" class="btn btn-primary bg-gradient mb-2">
+                        <i class="bi bi-envelope-fill me-2"></i>Send Board Election Reminders
+                    </a>
+                @endif
                 @if ($assistConferenceCoordinatorCondition)
                     <form id="activateAllBoardsForm" action="{{ route('eoyreports.eoyboardreport') }}" method="GET">
                         <input type="hidden" name="board" value="active">

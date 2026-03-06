@@ -85,7 +85,7 @@
                                                 Amount: ${{ number_format($chPayments->rereg_payment, 2) }}<br>
                                                 Members: {{ $chPayments->rereg_members }}<br>
                                                 @if($coordinatorCondition && $conferenceCoordinatorCondition)
-                                                    <button class="btn btn-primary bg-gradient btn-xs mt-1 mb-1" onclick="window.location.href='{{ route('adminreports.editrereg', ['id' => $chDetails->id]) }}'">Edit Payment Information</button>
+                                                    <button type="button" class="btn btn-primary bg-gradient btn-xs mt-1 mb-1" onclick="window.location.href='{{ route('adminreports.editrereg', ['id' => $chDetails->id]) }}'">Edit Payment Information</button>
                                                 @endif
                                             </div>
                                         </div>

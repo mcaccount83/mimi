@@ -18,7 +18,7 @@
                             @include('layouts.dropdown_menus.menu_reports_tech')
                         </div>
                         <div class="card-tools">
-                            <button class="btn btn-success bg-gradient btn-sm" onclick="addNewRow()">
+                            <button type="button" class="btn btn-success bg-gradient btn-sm" onclick="addNewRow()">
                                 <i class="bi bi-plus me-2"></i> Add Conference
                             </button>
                         </div>
@@ -47,10 +47,10 @@
                                         <td class="conference-description">{{ $conference->conference_description }}</td>
                                         <td class="short-description">{{ $conference->short_description }}</td>
                                         <td class="table-actions">
-                                            <button class="btn btn-primary bg-gradient btn-sm edit-btn" onclick="editRow(this)">
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm edit-btn" onclick="editRow(this)">
                                                 <i class="bi bi-pencil-square me-2"></i>Edit
                                             </button>
-                                            <button class="btn btn-danger bg-gradient btn-sm delete-btn" onclick="deleteRow(this)">
+                                            <button type="button" class="btn btn-danger bg-gradient btn-sm delete-btn" onclick="deleteRow(this)">
                                                 <i class="bi bi-ban"></i> Delete
                                             </button>
                                         </td>
@@ -139,10 +139,10 @@ function editRow(button) {
 
     // Change buttons
     row.querySelector('.table-actions').innerHTML = `
-        <button class="btn btn-success bg-gradient btn-sm" onclick="saveRow(this)">
+        <button type="button" class="btn btn-success bg-gradient btn-sm" onclick="saveRow(this)">
             <i class="bi bi-floppy-fill me-2"></i>Save
         </button>
-        <button class="btn btn-secondary bg-gradient btn-sm" onclick="cancelEdit(this.closest('tr'))">
+        <button type="button" class="btn btn-secondary bg-gradient btn-sm" onclick="cancelEdit(this.closest('tr'))">
             <i class="bi bi-x-lg me-2"></i>Cancel
         </button>
     `;
@@ -189,10 +189,10 @@ function saveRow(button) {
 
                 // Reset buttons
                 row.querySelector('.table-actions').innerHTML = `
-                    <button class="btn btn-primary bg-gradient btn-sm edit-btn" onclick="editRow(this)">
+                    <button type="button" class="btn btn-primary bg-gradient btn-sm edit-btn" onclick="editRow(this)">
                         <i class="bi bi-pencil-square me-2"></i>Edit
                     </button>
-                    <button class="btn btn-danger bg-gradient btn-sm delete-btn" onclick="deleteRow(this)">
+                    <button type="button" class="btn btn-danger bg-gradient btn-sm delete-btn" onclick="deleteRow(this)">
                         <i class="bi bi-ban"></i> Delete
                     </button>
                 `;
@@ -271,10 +271,10 @@ function addNewRow() {
             <input type="text" class="form-control form-control-sm" placeholder="Abbreviation">
         </td>
         <td class="table-actions">
-            <button class="btn btn-success bg-gradient btn-sm" onclick="saveNewRow(this)">
+            <button type="button" class="btn btn-success bg-gradient btn-sm" onclick="saveNewRow(this)">
                 <i class="bi bi-floppy-fill me-2"></i>Save
             </button>
-            <button class="btn btn-secondary bg-gradient btn-sm" onclick="cancelEdit(this.closest('tr'))">
+            <button type="button" class="btn btn-secondary bg-gradient btn-sm" onclick="cancelEdit(this.closest('tr'))">
                 <i class="bi bi-x-lg me-2"></i>Cancel
             </button>
         </td>
@@ -328,10 +328,10 @@ function saveNewRow(button) {
 
                 // Reset buttons
                 row.querySelector('.table-actions').innerHTML = `
-                    <button class="btn btn-primary bg-gradient btn-sm edit-btn" onclick="editRow(this)">
+                    <button type="button" class="btn btn-primary bg-gradient btn-sm edit-btn" onclick="editRow(this)">
                         <i class="bi bi-pencil-square me-2"></i>Edit
                     </button>
-                    <button class="btn btn-danger bg-gradient btn-sm delete-btn" onclick="deleteRow(this)">
+                    <button type="button" class="btn btn-danger bg-gradient btn-sm delete-btn" onclick="deleteRow(this)">
                         <i class="bi bi-ban"></i> Delete
                     </button>
                 `;

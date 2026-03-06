@@ -122,19 +122,17 @@
                 <div class="card-body text-center mt-3">
                     @if ($assistConferenceCoordinatorCondition)
                         @if ($checkBox3Status)
-                            <button class="btn btn-primary bg-gradient mb-2" onclick="startExport('einstatus', 'EIN Status List')"><i class="bi bi-download me-2"></i></i>Export EIN Status List</button>
+                            <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="startExport('einstatus', 'EIN Status List')"><i class="bi bi-download me-2"></i></i>Export EIN Status List</button>
                         @elseif ($checkBox51Status)
-                            <button class="btn btn-primary bg-gradient mb-2" onclick="startExport('inteinstatus', 'International EIN Status List')"><i class="bi bi-download me-2"></i>Export International EIN Status List</button>
-                        {{-- @else
-                            <button class="btn btn-primary bg-gradient mb-2 disabled" onclick="startExport('einstatus', 'EIN Status List')" disabled><i class="bi bi-download me-2"></i>Export EIN Status List</button> --}}
+                            <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="startExport('inteinstatus', 'International EIN Status List')"><i class="bi bi-download me-2"></i>Export International EIN Status List</button>
                         @endif
                     @endif
                 <br>
                     @if ($einCondition || $ITCondition)
                         @if ($checkBox51Status)
-                            <button class="btn btn-primary bg-gradient mb-2" onclick="showEODeptCoverSheetModal()"><i class="bi bi-file-earmark-pdf-fill me-2"></i>EO Dept Fax Coversheet</button>
-                            <button class="btn btn-primary bg-gradient mb-2" onclick="showIRSUpdatesModal()"><i class="bi bi-file-earmark-pdf-fill me-2"></i>IRS Updates to EO Dept</button>
-                            <button class="btn btn-primary bg-gradient mb-2" onclick="showSubordinateFilingModal()"><i class="bi bi-file-earmark-pdf-fill me-2"></i>Subordinate Filing PDF</button>
+                            <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showEODeptCoverSheetModal()"><i class="bi bi-file-earmark-pdf-fill me-2"></i>EO Dept Fax Coversheet</button>
+                            <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showIRSUpdatesModal()"><i class="bi bi-file-earmark-pdf-fill me-2"></i>IRS Updates to EO Dept</button>
+                            <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showSubordinateFilingModal()"><i class="bi bi-file-earmark-pdf-fill me-2"></i>Subordinate Filing PDF</button>
                         @endif
                     @endif
                     </div>

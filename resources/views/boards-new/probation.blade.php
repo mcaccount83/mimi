@@ -162,7 +162,7 @@
                             </div>
                         </div>
                         <div class="card-body text-center mt-3">
-                <button id="Save" type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>Submit</button>
+                <button type="submit" id="Save" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>Submit</button>
                     </div>
 
                     </div>
@@ -187,8 +187,10 @@
         @endsection
 
 @section('customscript')
-@php $disableMode = 'disable-all'; @endphp
-@include('layouts.scripts.disablefields')
+@if($userTypeId == \App\Enums\UserTypeEnum::COORD)
+    @php $disableMode = 'disable-all'; @endphp
+    @include('layouts.scripts.disablefields')
+@endif
 <script>
 
 document.addEventListener("DOMContentLoaded", function() {

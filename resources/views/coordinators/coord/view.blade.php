@@ -54,7 +54,7 @@
                     <div class="general-field">
                             <div class="card-header bg-transparent border-0">
                         <h3>Chapters & Coordinators
-                            <button class="btn btn-primary bg-gradient btn-xs ms-2" onclick="window.location.href='{{ route('coordreports.coordrptreportingtree') }}'">View Coordinator Reporting Tree</button>
+                            <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2" onclick="window.location.href='{{ route('coordreports.coordrptreportingtree') }}'">View Coordinator Reporting Tree</button>
                         </h3>
                         </div>
                         <!-- /.card-header -->
@@ -164,7 +164,7 @@
                                 Birthday: {{$cdDetails->birthdayMonth->month_long_name}} {{$cdDetails->birthday_day}}<br>
                                 Card Sent: <span class="date-mask">{{ $cdDetails->card_sent }}</span><br>
                                 @if ($assistConferenceCoordinatorCondition)
-                                    <button class="btn btn-primary bg-gradient btn-sm" onclick="updateCardSent()">Update Birthday Card Sent</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="updateCardSent()">Update Birthday Card Sent</button>
                                 @endif
                             </div>
                         </div>
@@ -195,9 +195,9 @@
                             @if ($assistConferenceCoordinatorCondition)
                                 <dd class="col-sm-6">
                                     @if (in_array(1, $Subscriptions))
-                                        <button class="btn btn-primary bg-gradient btn-sm" onclick="unsubscribe(1, {{ $cdDetails->user_id }})">Unsubscribe</button>
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="unsubscribe(1, {{ $cdDetails->user_id }})">Unsubscribe</button>
                                     @else
-                                        <button class="btn btn-primary bg-gradient btn-sm" onclick="subscribe(1, {{ $cdDetails->user_id }})">Subscribe</button>
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="subscribe(1, {{ $cdDetails->user_id }})">Subscribe</button>
                                     @endif
                                 </dd>
                             @endif
@@ -209,9 +209,9 @@
                             @if ($assistConferenceCoordinatorCondition)
                                 <dd class="col-sm-6">
                                     @if (in_array(2, $Subscriptions))
-                                        <button class="btn btn-primary bg-gradient btn-sm" onclick="unsubscribe(2, {{ $cdDetails->user_id }})">Unsubscribe</button>
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="unsubscribe(2, {{ $cdDetails->user_id }})">Unsubscribe</button>
                                     @else
-                                        <button class="btn btn-primary bg-gradient btn-sm" onclick="subscribe(2, {{ $cdDetails->user_id }})">Subscribe</button>
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="subscribe(2, {{ $cdDetails->user_id }})">Subscribe</button>
                                     @endif
                                 </dd>
                             @endif
@@ -271,16 +271,16 @@
           <div class="col-md-12">
             <div class="card-body text-center mt-3">
                 @if ($regionalCoordinatorCondition)
-                    <button class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.editrole', ['id' => $cdDetails->id]) }}'"><i class="bi bi-person-workspace me-2"></i>Update Role, Chapters & Coordinators</button>
-                    <button class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.editdetails', ['id' => $cdDetails->id]) }}'"><i class="bi bi-person-vcard-fill me-2"></i>Update Contact Information</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.editrole', ['id' => $cdDetails->id]) }}'"><i class="bi bi-person-workspace me-2"></i>Update Role, Chapters & Coordinators</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.editdetails', ['id' => $cdDetails->id]) }}'"><i class="bi bi-person-vcard-fill me-2"></i>Update Contact Information</button>
                 @endif
                 @if($assistConferenceCoordinatorCondition)
-                    <button class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.editrecognition', ['id' => $cdDetails->id]) }}'"><i class="bi bi-gift-fill me-2"></i>Update Appreciation & Recognition</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.editrecognition', ['id' => $cdDetails->id]) }}'"><i class="bi bi-gift-fill me-2"></i>Update Appreciation & Recognition</button>
                     <br>
                 @endif
                 @if($regionalCoordinatorCondition)
                 @if ($cdPositionid == \App\Enums\CoordinatorPosition::BS && $startDate->greaterThanOrEqualTo($threeMonthsAgo))
-                        <button id="BigSister" type="button" class="btn btn-primary bg-gradient mb-2" onclick="showBigSisterEmailModal({{ $cdDetails->id }})"><i class="bi bi-envelope-fill me-2"></i>Send Big Sister Welcome Email</button>
+                        <button type="button" id="BigSister" class="btn btn-primary bg-gradient mb-2" onclick="showBigSisterEmailModal({{ $cdDetails->id }})"><i class="bi bi-envelope-fill me-2"></i>Send Big Sister Welcome Email</button>
                     @endif
 
                     @if($cdLeave != 1)

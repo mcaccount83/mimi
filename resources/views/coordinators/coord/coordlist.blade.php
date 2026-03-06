@@ -119,9 +119,9 @@
                 @endif
                 @if ($regionalCoordinatorCondition)
                     @if ($checkBox3Status)
-                        <button class="btn btn-primary bg-gradient mb-2" onclick="startExport('coordinator', 'Coordinator List')"><i class="bi bi-download me-2"></i>Export Coordinator List</button>
+                        <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="startExport('coordinator', 'Coordinator List')"><i class="bi bi-download me-2"></i>Export Coordinator List</button>
                     @elseif ($checkBox51Status)
-                        <button class="btn btn-primary bg-gradient mb-2" onclick="startExport('intcoordinator', 'International Coordinator List')"><i class="bi bi-download me-2"></i>Export International Coordinator List</button>
+                        <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="startExport('intcoordinator', 'International Coordinator List')"><i class="bi bi-download me-2"></i>Export International Coordinator List</button>
                     @endif
                 @endif
                 @if (!$checkBox51Status && !$checkBox3Status)

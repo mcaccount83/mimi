@@ -121,7 +121,7 @@
                 </div>
 
                     <div class="card-body text-center mt-3">
-                        <button id="Password" type="button" class="btn btn-primary bg-gradient mb-2" onclick="showChangePasswordAlert('{{ $chDetails->pendingPresident->user_id }}')"><i class="bi bi-lock-fill me-2" ></i>Change Password</button>
+                        <button type="button" id="Password" class="btn btn-primary bg-gradient mb-2" onclick="showChangePasswordAlert('{{ $chDetails->pendingPresident->user_id }}')"><i class="bi bi-lock-fill me-2" ></i>Change Password</button>
                                 </div>
 
                </div>
@@ -148,6 +148,8 @@
 
 @endsection
 @section('customscript')
-@php $disableMode = 'disable-all'; @endphp
-@include('layouts.scripts.disablefields')
+@if($userTypeId == \App\Enums\UserTypeEnum::COORD)
+    @php $disableMode = 'disable-all'; @endphp
+    @include('layouts.scripts.disablefields')
+@endif
 @endsection

@@ -127,7 +127,7 @@
 
                 <div class="card-body text-center mt-3">
                         @if (($einCondition || $ITCondition) && ($checkBox51Status ?? '') == 'checked')
-                            <button class="btn btn-primary bg-gradient mb-2" onclick="showIRSFilingCorrectionsModal()"><i class="bi bi-file-earmark-pdf-fill me-2"></i>990N Filing corrections to EO Dept</button>
+                            <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showIRSFilingCorrectionsModal()"><i class="bi bi-file-earmark-pdf-fill me-2"></i>990N Filing corrections to EO Dept</button>
                         @endif
           </div>
             <!-- /.card-body for buttons -->

@@ -85,9 +85,7 @@
             <div class="card-body text-center mt-3">
                 @if ($assistConferenceCoordinatorCondition)
                     @if ($checkBox51Status)
-                        <button class="btn btn-primary bg-gradient mb-2" onclick="startExport('intzapchapter', 'International Zapped Chapter List')"><i class="bi bi-download me-2"></i>Export International Zapped Chapter List</button>
-                    {{-- @else
-                        <button class="btn btn-primary bg-gradient mb-2" onclick="startExport('zapchapter', 'Zapped Chapter List')"><i class="bi bi-download me-2"></i>Export Zapped Chapter List</button> --}}
+                        <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="startExport('intzapchapter', 'International Zapped Chapter List')"><i class="bi bi-download me-2"></i>Export International Zapped Chapter List</button>
                     @endif
                 @endif
              </div>

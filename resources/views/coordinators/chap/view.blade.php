@@ -21,10 +21,10 @@
                 @if ( $chDetails->ein == null && $conferenceCoordinatorCondition)
                     <br>
                     Apply for an EIN:
-                    <button class="btn btn-primary bg-gradient btn-xs ms-1" type="button" id="irs-ein" onclick="window.open('https://sa.www4.irs.gov/modiein/individual/index.jsp', '_blank')">Link to IRS</button>
+                    <button type="button" class="btn btn-primary bg-gradient btn-xs ms-1" type="button" id="irs-ein" onclick="window.open('https://sa.www4.irs.gov/modiein/individual/index.jsp', '_blank')">Link to IRS</button>
                     @foreach($resources as $resourceItem)
                     @if ($resourceItem->name == 'Applying for a Chapter EIN')
-                        <button class="btn btn-primary bg-gradient btn-xs ms-1" type="button" id="apply-ein" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">Instuctions</button>
+                        <button type="button" class="btn btn-primary bg-gradient btn-xs ms-1" type="button" id="apply-ein" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">Instuctions</button>
                     @endif
                     @endforeach
                 @endif
@@ -88,12 +88,12 @@
                         <div class="card-header bg-transparent border-0">
                             <h3>General Information
                                 @if ($chDetails->active_status == \App\Enums\ChapterStatusEnum::ACTIVE)
-                                    <button class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('board-new.chapterprofile', ['id' => $chDetails->id]) }}'">View Chapter Profile As President</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('board-new.chapterprofile', ['id' => $chDetails->id]) }}'">View Chapter Profile As President</button>
                                 @elseif ($chDetails->active_status == \App\Enums\ChapterStatusEnum::ZAPPED)
-                                    <button class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('board-new.editdisbandchecklist', ['id' => $chDetails->id]) }}'">View Disband Checklist As President</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('board-new.editdisbandchecklist', ['id' => $chDetails->id]) }}'">View Disband Checklist As President</button>
                                 @elseif ($chDetails->active_status == \App\Enums\ChapterStatusEnum::PENDING ||
                                         $chDetails->active_status == \App\Enums\ChapterStatusEnum::NOTAPPROVED)
-                                    <button class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('board-new.newchapterstatus', ['id' => $chDetails->id]) }}'">View Chapter Status As Founder</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('board-new.newchapterstatus', ['id' => $chDetails->id]) }}'">View Chapter Status As Founder</button>
                                 @endif
                         </h3>
                         </div>
@@ -180,9 +180,9 @@
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     @if($chDocuments->disband_letter_path != null)
-                                        <button class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="disband-letter" onclick="openPdfViewer('{{ $chDocuments->disband_letter_path }}')">Disband Letter</button>
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="disband-letter" onclick="openPdfViewer('{{ $chDocuments->disband_letter_path }}')">Disband Letter</button>
                                     @else
-                                        <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No Disband Letter on File</button>
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No Disband Letter on File</button>
                                     @endif
                                 </div>
                             </div>
@@ -192,9 +192,9 @@
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     @if($chDisbanded?->file_financial == 1 && $chEOYDocuments->final_financial_pdf_path != null)
-                                        <button class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="final-pdf" onclick="openPdfViewer('{{ $chEOYDocuments->final_financial_pdf_path }}')">Final Financial PDF</button>
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="final-pdf" onclick="openPdfViewer('{{ $chEOYDocuments->final_financial_pdf_path }}')">Final Financial PDF</button>
                                     @else
-                                        <button class="btn btn-primary bg-gradient btn-sm disabled" type="button" disabled>Final PDF Not Available</button>
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" type="button" disabled>Final PDF Not Available</button>
                                     @endif
                                 </div>
                             </div>
@@ -206,7 +206,7 @@
                                     <label>EIN Fax Coversheet:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button id="GoodStanding" type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.open('{{ route('pdf.newchapfaxcover', ['id' => $chDetails->id]) }}', '_blank')">EIN Fax Coversheet</button><br>
+                                    <button type="button" id="GoodStanding" class="btn btn-primary bg-gradient btn-sm" onclick="window.open('{{ route('pdf.newchapfaxcover', ['id' => $chDetails->id]) }}', '_blank')">EIN Fax Coversheet</button><br>
                                 </div>
                             </div>
                         @endif
@@ -217,9 +217,9 @@
                             </div>
                             <div class="col-sm-6 mb-2">
                                 @if($chDocuments->ein_letter_path != null)
-                                    <button class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chDocuments->ein_letter_path }}')">EIN Letter from IRS</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chDocuments->ein_letter_path }}')">EIN Letter from IRS</button>
                                 @else
-                                    <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No EIN Letter on File</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No EIN Letter on File</button>
                                 @endif
                             </div>
                         </div>
@@ -230,9 +230,9 @@
                             </div>
                             <div class="col-sm-6 mb-2">
                                 @if($chEOYDocuments->roster_path != null)
-                                    <button class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="roster-file" onclick="openPdfViewer('{{ $chEOYDocuments->roster_path }}')">Most Current Roster</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="roster-file" onclick="openPdfViewer('{{ $chEOYDocuments->roster_path }}')">Most Current Roster</button>
                                 @else
-                                    <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No Roster on File</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No Roster on File</button>
                                 @endif
                             </div>
                         </div>
@@ -243,7 +243,7 @@
                                     <label>Chapter in Good Standing Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button id="GoodStanding" type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}', '_blank')">Good Standing Chapter Letter</button><br>
+                                    <button type="button" id="GoodStanding" class="btn btn-primary bg-gradient btn-sm" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}', '_blank')">Good Standing Chapter Letter</button><br>
                                 </div>
                             </div>
 
@@ -253,9 +253,9 @@
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     @if($chDocuments->probation_path != null)
-                                        <button class="btn btn-primary bg-gradient btn-sm" type="button" id="probation-file" onclick="openPdfViewer('{{ $chDocuments->probation_path }}')">Probation Letter</button>
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="probation-file" onclick="openPdfViewer('{{ $chDocuments->probation_path }}')">Probation Letter</button>
                                     @else
-                                        <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No Probation Letter on File</button>
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No Probation Letter on File</button>
                                     @endif
                                 </div>
                             </div>
@@ -266,9 +266,9 @@
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     @if($chDocuments->probation_release_path != null)
-                                        <button class="btn btn-primary bg-gradient btn-sm" type="button" id="probaton-release-file" onclick="openPdfViewer('{{ $chDocuments->probation_release_path }}')">Probation Release Letter</button>
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="probaton-release-file" onclick="openPdfViewer('{{ $chDocuments->probation_release_path }}')">Probation Release Letter</button>
                                     @else
-                                        <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No Probation Release Letter on File</button>
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No Probation Release Letter on File</button>
                                     @endif
                                 </div>
                             </div>
@@ -279,7 +279,7 @@
                                     <label>Name Change Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button class="btn btn-primary bg-gradient btn-sm" type="button" id="name-change-file" onclick="openPdfViewer('{{ $chDocuments->name_change_letter_path }}')">Name Change Letter</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="name-change-file" onclick="openPdfViewer('{{ $chDocuments->name_change_letter_path }}')">Name Change Letter</button>
                                 </div>
                             </div>
                             @endif
@@ -324,7 +324,7 @@
                                     </div>
                                     <div class="col-sm-6 mb-2">
                                         @if ($chDetails->ein != null)
-                                            <button id="NewChapter" type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showNewChapterEmailModal({{ $chDetails->id }})">Send New Chapter Email</button>
+                                            <button type="button" id="NewChapter" class="btn btn-primary bg-gradient btn-sm" onclick="showNewChapterEmailModal({{ $chDetails->id }})">Send New Chapter Email</button>
                                         @else
                                             <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>Must have EIN Number</button>
                                         @endif
@@ -616,7 +616,7 @@
                                     @if ( $chDisbanded?->file_financial == 1)
                                     <button type="button" class="btn btn-danger bg-gradient btn-sm ms-2 keep-enabled keep-enabled" id="unsubmit">UnSubmit Report</button>
                                     @else
-                                    <button class="btn btn-danger bg-gradient btn-sm ms-2" disabled>UnSubmit Report</button>
+                                    <button type="button" class="btn btn-danger bg-gradient btn-sm ms-2" disabled>UnSubmit Report</button>
                                     @endif
                                 </div>
                             </div>
@@ -657,9 +657,9 @@
                                         <dt class="col-sm-3">Public Announcements</dt>
                                         <dd class="col-sm-9">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}
                                                 @if (in_array(1, $Subscriptions))
-                                                    <button class="btn btn-primary bg-gradient btn-xs ms-2" onclick="unsubscribe(1, {{ $PresDetails->user_id }})">Unsubscribe</button>
+                                                    <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2" onclick="unsubscribe(1, {{ $PresDetails->user_id }})">Unsubscribe</button>
                                                 @else
-                                                    <button class="btn btn-primary bg-gradient btn-xs ms-2" onclick="subscribe(1, {{ $PresDetails->user_id }})">Subscribe</button>
+                                                    <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2" onclick="subscribe(1, {{ $PresDetails->user_id }})">Subscribe</button>
                                                 @endif
                                             </dd>
                                         <div class="col-md-12">
@@ -714,9 +714,9 @@
                                     <dt class="col-sm-3">Public Announcements</dt>
                                     <dd class="col-sm-9">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}
                                         @if (in_array(1, $Subscriptions))
-                                            <button class="btn btn-primary bg-gradient btn-xs ms-2" onclick="unsubscribe(1, {{ $AVPDetails->user_id }})">Unsubscribe</button>
+                                            <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2" onclick="unsubscribe(1, {{ $AVPDetails->user_id }})">Unsubscribe</button>
                                         @else
-                                            <button class="btn btn-primary bg-gradient btn-xs ms-2" onclick="subscribe(1, {{ $AVPDetails->user_id }})">Subscribe</button>
+                                            <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2" onclick="subscribe(1, {{ $AVPDetails->user_id }})">Subscribe</button>
                                         @endif
                                     </dd>
                                 <div class="col-md-12">
@@ -771,9 +771,9 @@
                                     <dt class="col-sm-3">Public Announcements</dt>
                                     <dd class="col-sm-9">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}
                                             @if (in_array(1, $Subscriptions))
-                                                <button class="btn btn-primary bg-gradient btn-xs ms-2" onclick="unsubscribe(1, {{ $MVPDetails->user_id }})">Unsubscribe</button>
+                                                <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2" onclick="unsubscribe(1, {{ $MVPDetails->user_id }})">Unsubscribe</button>
                                             @else
-                                                <button class="btn btn-primary bg-gradient btn-xs ms-2" onclick="subscribe(1, {{ $MVPDetails->user_id }})">Subscribe</button>
+                                                <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2" onclick="subscribe(1, {{ $MVPDetails->user_id }})">Subscribe</button>
                                             @endif
                                         </dd>
                                     <div class="col-md-12">
@@ -828,9 +828,9 @@
                                     <dt class="col-sm-3">Public Announcements</dt>
                                     <dd class="col-sm-9">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}
                                             @if (in_array(1, $Subscriptions))
-                                                <button class="btn btn-primary bg-gradient btn-xs ms-2" onclick="unsubscribe(1, {{ $TRSDetails->user_id }})">Unsubscribe</button>
+                                                <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2" onclick="unsubscribe(1, {{ $TRSDetails->user_id }})">Unsubscribe</button>
                                             @else
-                                                <button class="btn btn-primary bg-gradient btn-xs ms-2" onclick="subscribe(1, {{ $TRSDetails->user_id }})">Subscribe</button>
+                                                <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2" onclick="subscribe(1, {{ $TRSDetails->user_id }})">Subscribe</button>
                                             @endif
                                         </dd>
                                     <div class="col-md-12">
@@ -885,9 +885,9 @@
                                 <dt class="col-sm-3">Public Announcements</dt>
                                 <dd class="col-sm-9">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}
                                         @if (in_array(1, $Subscriptions))
-                                            <button class="btn btn-primary bg-gradient btn-xs ms-2" onclick="unsubscribe(1, {{ $SECDetails->user_id }})">Unsubscribe</button>
+                                            <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2" onclick="unsubscribe(1, {{ $SECDetails->user_id }})">Unsubscribe</button>
                                         @else
-                                            <button class="btn btn-primary bg-gradient btn-xs ms-2" onclick="subscribe(1, {{ $SECDetails->user_id }})">Subscribe</button>
+                                            <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2" onclick="subscribe(1, {{ $SECDetails->user_id }})">Subscribe</button>
                                         @endif
                                     </dd>
                                 <div class="col-md-12">
@@ -922,7 +922,7 @@
                     $emailListChap = implode(',', $emailData['emailListChap']); // Convert array to comma-separated string
                     $emailListCoord = implode(',', $emailData['emailListCoord']); // Convert array to comma-separated string
                 @endphp
-                    <button class="btn btn-primary bg-gradient mb-2" type="button" id="email-chapter" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" type="button" id="email-chapter" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">
                         <i class="bi bi-envelope-fill me-2"></i>Email Board</button>
                     <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.edit', ['id' => $chDetails->id]) }}'"><i class="bi bi-house-fill me-2"></i>Update Chapter Information</button>
                     <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chDetails->id]) }}'"><i class="bi bi-person-bounding-box me-2"></i>Update Board Information</button>

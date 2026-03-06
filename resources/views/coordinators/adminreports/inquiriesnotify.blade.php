@@ -60,9 +60,9 @@
                 </td>
                 <td>
                     @if ($list->id != 0)
-                        <button class="btn btn-primary bg-gradient btn-sm edit-btn">Edit Email</button>
-                        <button class="btn btn-success bg-gradient btn-sm save-btn" style="display: none;">Save</button>
-                        <button class="btn btn-danger bg-gradient btn-sm cancel-btn" style="display: none;">Cancel</button>
+                        <button type="button" class="btn btn-primary bg-gradient btn-sm edit-btn">Edit Email</button>
+                        <button type="button" class="btn btn-success bg-gradient btn-sm save-btn" style="display: none;">Save</button>
+                        <button type="button" class="btn btn-danger bg-gradient btn-sm cancel-btn" style="display: none;">Cancel</button>
                     @endif
                 </td>
             </tr>

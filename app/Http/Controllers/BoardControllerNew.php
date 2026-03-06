@@ -1739,4 +1739,96 @@ class BoardControllerNew extends Controller implements HasMiddleware
         }
     }
 
+     public function editBoardProfile(Request $request, $chId): View
+    {
+        // $user = User::find($request->user()->id);
+        // $userId = $user->id;
+        $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
+        $userTypeId = $user['userTypeId'];
+        $userAdmin = $user['userAdmin'];
+
+        $bdDetails = Boards::with(['state', 'country', 'position'])
+            ->where('user_id', $userId)
+            ->get();
+
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+        $chDetails = $baseQuery['chDetails'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $emailListChap = $baseQuery['emailListChap'];
+        $emailListCoord = $baseQuery['emailListCoord'];
+        $emailCC = $baseQuery['emailCC'];
+
+        $allStates = $baseQuery['allStates'];
+        $allCountries = $baseQuery['allCountries'];
+
+        $PresDetails = $baseQuery['PresDetails'];
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdPositionId = $bdData['bdPositionId'];
+        $borDetails = $bdData['bdDetails'];
+        $bdTypeId = $bdData['bdTypeId'];
+
+        $data = ['chDetails' => $chDetails, 'allStates' => $allStates, 'allCountries' => $allCountries,
+            'stateShortName' => $stateShortName, 'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails,
+            'bdTypeId' => $bdTypeId, 'userId' => $userId
+        ];
+
+        return view('boards-new.profile')->with($data);
+    }
+
+    /**
+     * Save Coordiantor Profile
+     */
+    public function updateBoardProfile(Request $request): RedirectResponse
+    {
+        $user = User::find($request->user()->id);
+        $updatedId = $user['userId'];
+
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $updatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
+
+        $coordinator = Coordinators::find($cdId);
+        $cdUserId = $coordinator->user_id;
+        $user = User::find($cdUserId);
+
+        try {
+            $user->first_name = $request->input('cord_fname');
+            $user->last_name = $request->input('cord_lname');
+            $user->email = $request->input('cord_email');
+
+            $user->save();
+
+            $coordinator->first_name = $request->input('cord_fname');
+            $coordinator->last_name = $request->input('cord_lname');
+            $coordinator->email = $request->input('cord_email');
+            $coordinator->sec_email = $request->input('cord_sec_email');
+            $coordinator->address = $request->input('cord_addr');
+            $coordinator->city = $request->input('cord_city');
+            $coordinator->state_id = $request->input('cord_state');
+            $coordinator->zip = $request->input('cord_zip');
+            $coordinator->phone = $request->input('cord_phone');
+            $coordinator->alt_phone = $request->input('cord_altphone');
+            $coordinator->birthday_month_id = $request->input('cord_month');
+            $coordinator->birthday_day = $request->input('cord_day');
+            $coordinator->home_chapter = $request->input('cord_chapter');
+            $coordinator->updated_by = $updatedBy;
+            $coordinator->updated_id = $updatedId;
+
+            $coordinator->save();
+
+            DB::commit();
+
+            return redirect()->to('/profile/coordprofile')->with('success', 'Coordinator profile updated successfully');
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            return redirect()->to('/profile/coordprofile')->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
+    }
+
 }

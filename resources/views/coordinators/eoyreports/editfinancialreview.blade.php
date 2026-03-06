@@ -378,7 +378,7 @@
          <li class="list-group-item">
                  <div class="card-body text-center">
             <button type="button" id="btn-step-13" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-floppy-fill me-2"></i>Save Report Review</button>
-            <button class="btn btn-primary bg-gradient mb-2" type="button" id="email-chapter" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}', 'Financial Report Review')">
+            <button type="button" class="btn btn-primary bg-gradient mb-2" type="button" id="email-chapter" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}', 'Financial Report Review')">
                 <i class="bi bi-envelope-fill me-2"></i>Email Board</button>
             <br>
             @if ($chEOYDocuments->financial_review_complete != "" && $chEOYDocuments->financial_report_received)
@@ -397,9 +397,9 @@
             @endif
             <br><br>
             @if ($chEOYDocuments->$yearColumnName != null)
-                <button class="btn btn-primary bg-gradient mb-2" type="button" id="financial-pdf" onclick="openPdfViewer('{{ $chEOYDocuments->$yearColumnName }}')"><i class="bi bi-file-earmark-pdf-fill me-2"></i>View/Download Financial Report PDF</button>
+                <button type="button" class="btn btn-primary bg-gradient mb-2" type="button" id="financial-pdf" onclick="openPdfViewer('{{ $chEOYDocuments->$yearColumnName }}')"><i class="bi bi-file-earmark-pdf-fill me-2"></i>View/Download Financial Report PDF</button>
             @else
-                <button class="btn btn-primary bg-gradient mb-2 disabled" type="button" id="financial-pdf" disabled><i class="bi bi-file-earmark-pdf-fill me-2"></i>No PDF Report Available</button>
+                <button type="button" class="btn btn-primary bg-gradient mb-2 disabled" type="button" id="financial-pdf" disabled><i class="bi bi-file-earmark-pdf-fill me-2"></i>No PDF Report Available</button>
             @endif
             @if ($chEOYDocuments->$yearColumnName != null && $chEOYDocuments->financial_report_received)
                 <br>

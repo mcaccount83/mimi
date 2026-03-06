@@ -193,10 +193,10 @@
             <div class="pdf-header-info" id="pdf-info">Loading document information...</div>
         </div>
         <div class="pdf-actions">
-            <button id="download-btn" class="pdf-btn">
+            <button type="button" id="download-btn" class="pdf-btn">
                 <span class="pdf-btn-icon">↓</span> Download
             </button>
-            <button id="close-btn" class="pdf-btn">
+            <button type="button" id="close-btn" class="pdf-btn">
                 <span class="pdf-btn-icon">✕</span> Close
             </button>
         </div>
@@ -206,12 +206,12 @@
         <div class="pdf-toolbar-section">
             <!-- PDF Navigation (hidden for images) -->
             <div class="pdf-navigation" id="pdf-navigation">
-                <button id="prev-page" class="pdf-btn" title="Previous page">
+                <button type="button" id="prev-page" class="pdf-btn" title="Previous page">
                     <span class="pdf-btn-icon">◀</span>
                 </button>
                 <input type="number" id="page-input" value="1" min="1">
                 <span id="page-count">/ 0</span>
-                <button id="next-page" class="pdf-btn" title="Next page">
+                <button type="button" id="next-page" class="pdf-btn" title="Next page">
                     <span class="pdf-btn-icon">▶</span>
                 </button>
             </div>
@@ -219,18 +219,18 @@
 
         <div class="pdf-toolbar-section">
             <div class="pdf-zoom">
-                <button id="zoom-out" class="pdf-btn" title="Zoom out">−</button>
+                <button type="button" id="zoom-out" class="pdf-btn" title="Zoom out">−</button>
                 <span id="zoom-level">100%</span>
-                <button id="zoom-in" class="pdf-btn" title="Zoom in">+</button>
+                <button type="button" id="zoom-in" class="pdf-btn" title="Zoom in">+</button>
             </div>
-            <button id="fit-width-btn" class="pdf-btn" title="Fit to width">
+            <button type="button" id="fit-width-btn" class="pdf-btn" title="Fit to width">
                 <span class="pdf-btn-icon">↔</span>
             </button>
             <!-- Image-specific controls -->
-            <button id="fit-screen-btn" class="pdf-btn hidden" title="Fit to screen">
+            <button type="button" id="fit-screen-btn" class="pdf-btn hidden" title="Fit to screen">
                 <span class="pdf-btn-icon">⛶</span>
             </button>
-            <button id="actual-size-btn" class="pdf-btn hidden" title="Actual size">
+            <button type="button" id="actual-size-btn" class="pdf-btn hidden" title="Actual size">
                 <span class="pdf-btn-icon">1:1</span>
             </button>
         </div>
@@ -441,7 +441,7 @@
         errorDiv.className = 'pdf-error';
         errorDiv.innerHTML = `
             <strong>Error:</strong> ${message}<br>
-            <button id="retry-btn" class="pdf-btn pdf-btn-primary" style="margin-top: 16px;">
+            <button type="button" id="retry-btn" class="pdf-btn pdf-btn-primary" style="margin-top: 16px;">
                 Try Again
             </button>
             <a href="https://drive.google.com/file/d/${fileId}/view" target="_blank" class="pdf-btn" style="margin-top: 16px; margin-left: 8px;">

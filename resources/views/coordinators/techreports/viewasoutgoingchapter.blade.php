@@ -30,8 +30,8 @@
     };
 @endphp
 <div class="dropdown ms-3">
-    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
-            id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+    <button type="button" id="statusDropdown" class="btn btn-sm btn-outline-secondary dropdown-toggle"
+            data-bs-toggle="dropdown" aria-expanded="false">
         {{ $viewAsLabel }}
     </button>
     <ul class="dropdown-menu" aria-labelledby="statusDropdown">

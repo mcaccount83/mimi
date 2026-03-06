@@ -1,12 +1,12 @@
 
     <!-- Board Dashboard Menu Item -->
-    {{-- <li class="nav-item">
-        <a href="{{ route('board-new.chapterprofile', ['id' => $chDetails->id]) }}" class="nav-link {{ Request::is('chapterprofile') ? 'active' : '' }}">
+    <li class="nav-item">
+        <a href="{{ route('board-new.chapterprofile', ['id' => $chDetails->id]) }}" class="nav-link {{ Request::is('board-new/chapterprofile/*') ? 'active' : '' }}">
             <i class="nav-icon bi bi-house-fill"></i>
             <p>Chapter Profile</p>
         </a>
-    </li> --}}
-@if(isset($chDetails))
+    </li>
+{{-- @if(isset($chDetails))
     @php
         $boardRoute = route('board-new.chapterprofile', ['id' => $chDetails->id]);
 
@@ -22,7 +22,7 @@
             </a>
         </li>
     @endif
-    @endif
+    @endif --}}
 
     <!-- Board Menu Item -->
     @if(isset($chDetails))
@@ -213,4 +213,11 @@
             </p>
         </a>
     </li> --}}
+
+    <li class="nav-item">
+        <a href="{{ route('board-new.profile', ['id' => $chDetails->id]) }}" class="nav-link {{ Request::is('board-new/profile/*') ? 'active' : '' }}">
+        <i class="nav-icon bi bi-person-circle"></i>
+        <p>Update Profile</p>
+        </a>
+    </li>
 

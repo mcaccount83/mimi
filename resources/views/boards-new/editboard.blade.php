@@ -320,7 +320,7 @@
 
                  <div class="col-md-12">
                             <div class="card-body text-center mt-3">
-                    <button id="Save" type="submit" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save</button>
+                    <button type="submit" id="Save" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save</button>
                             </div>
                         </div>
 
@@ -341,6 +341,8 @@
     <!-- /.container- -->
 @endsection
 @section('customscript')
-@php $disableMode = 'disable-all'; @endphp
-@include('layouts.scripts.disablefields')
+@if($userTypeId == \App\Enums\UserTypeEnum::COORD)
+    @php $disableMode = 'disable-all'; @endphp
+    @include('layouts.scripts.disablefields')
+@endif
 @endsection

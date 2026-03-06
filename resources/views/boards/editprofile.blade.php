@@ -532,7 +532,7 @@
                             @else
                                 <button type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled " disabled>No EIN Letter on File</button><br>
                             @endif
-                            <button id="GoodStanding" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}', '_blank')">Chapter in Good Standing</button><br>
+                            <button type="button" id="GoodStanding" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}', '_blank')">Chapter in Good Standing</button><br>
                             @if($chDocuments->probation_path != null)
                                 <button type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="openPdfViewer('{{ $chDocuments->probation_path }}')">Probation Letter</button><br>
                             @endif
@@ -548,8 +548,8 @@
                       <li class="list-group-item">
                         <h3>Resources</h3>
                         <div class="col-sm-12">
-                            <button id="Resources" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location='{{ route('board.viewresources', ['id' => $chDetails->id]) }}'">Chapter Resources</button><br>
-                            <button id="Resources" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location='{{ route('board.viewelearning', ['id' => $chDetails->id]) }}'">eLearning Library</button><br>
+                            <button type="button" id="Resources" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location='{{ route('board.viewresources', ['id' => $chDetails->id]) }}'">Chapter Resources</button><br>
+                            <button type="button" id="Resources" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location='{{ route('board.viewelearning', ['id' => $chDetails->id]) }}'">eLearning Library</button><br>
                         </div>
                         </li>
 
@@ -558,59 +558,59 @@
                             <div class="col-sm-12">
                             @if($userTypeId == \App\Enums\UserTypeEnum::COORD && $chEOYDocuments->new_board_active!='1')
                                 @if($displayTESTING)
-                                    <button id="BoardReport" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location.href='{{ route('board.editboardreport', ['id' => $chDetails->id]) }}'">
+                                    <button type="button" id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location.href='{{ route('board.editboardreport', ['id' => $chDetails->id]) }}'">
                                         {{ $boardReportName }} *TESTING*
                                     </button><br>
                                 @elseif ($displayBoardRptLIVE)
-                                    <button id="BoardReport" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location.href='{{ route('board.editboardreport', ['id' => $chDetails->id]) }}'">
+                                    <button type="button" id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location.href='{{ route('board.editboardreport', ['id' => $chDetails->id]) }}'">
                                         {{ $boardReportName }}
                                     </button><br>
                                 @else
-                                    <button id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>Board Report Not Available</button><br>
+                                    <button type="button" id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>Board Report Not Available</button><br>
                                 @endif
                             @elseif($userTypeId == \App\Enums\UserTypeEnum::COORD && $chEOYDocuments->new_board_active =='1')
                                 @if($displayTESTING)
-                                    <button id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>Board Report Activated *TESTING*</button><br>
+                                    <button type="button" id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>Board Report Activated *TESTING*</button><br>
                                 @else
-                                    <button id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>Board Report Activated</button><br>
+                                    <button type="button" id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>Board Report Activated</button><br>
                                 @endif
                                 @elseif ($displayBoardRptLIVE)
                                 @if($chEOYDocuments->new_board_active!='1')
-                                    <button id="BoardReport" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location.href='{{ route('board.editboardreport', ['id' => $chDetails->id]) }}'">
+                                    <button type="button" id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location.href='{{ route('board.editboardreport', ['id' => $chDetails->id]) }}'">
                                         {{ $boardReportName }}
                                     </button><br>
                                 @else
-                                    <button id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>Board Report Activated</button><br>
+                                    <button type="button" id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>Board Report Activated</button><br>
                                 @endif
                             @else
-                                <button id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>Board Report Not Available</button><br>
+                                <button type="button" id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>Board Report Not Available</button><br>
                             @endif
 
                             @if($userTypeId == \App\Enums\UserTypeEnum::COORD)
                                 @if($displayTESTING)
-                                    <button id="FinancialReport" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location.href='{{ route('board.editfinancialreport', ['id' => $chDetails->id]) }}'">
+                                    <button type="button" id="FinancialReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location.href='{{ route('board.editfinancialreport', ['id' => $chDetails->id]) }}'">
                                         {{ $financialReportName }} *TESTING*
                                     </button><br>
                                 @elseif (($displayFinancialRptLIVE))
-                                    <button id="FinancialReport" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location.href='{{ route('board.editfinancialreport', ['id' => $chDetails->id]) }}'">
+                                    <button type="button" id="FinancialReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location.href='{{ route('board.editfinancialreport', ['id' => $chDetails->id]) }}'">
                                         {{ $financialReportName }}
                                     </button><br>
                                 @else
-                                    <button id="990NLink" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>Financial Report Not Available</button>
+                                    <button type="button" id="990NLink" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>Financial Report Not Available</button>
                                 @endif
                             @elseif($displayFinancialRptLIVE)
-                                <button id="FinancialReport" type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location.href='{{ route('board.editfinancialreport', ['id' => $chDetails->id]) }}'">
+                                <button type="button" id="FinancialReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location.href='{{ route('board.editfinancialreport', ['id' => $chDetails->id]) }}'">
                                     {{ $financialReportName }}
                                 </button><br>
                             @else
-                                <button id="FinancialReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>Financial Report Not Available</button><br>
+                                <button type="button" id="FinancialReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>Financial Report Not Available</button><br>
                             @endif
 
                              @if($displayEINInstructionsLIVE)
                                 <a href="https://sa.www4.irs.gov/sso/ial1?resumePath=%2Fas%2F5Ad0mGlkzW%2Fresume%2Fas%2Fauthorization.ping&allowInteraction=true&reauth=false&connectionId=SADIPACLIENT&REF=3C53421849B7D5B806E50960DF0AC7530889D9ADE9238D5D3B8B00000069&vnd_pi_requested_resource=https%3A%2F%2Fsa.www4.irs.gov%2Fepostcard%2F&vnd_pi_application_name=EPOSTCARD"
                                     class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" target="_blank" >{{ $irsFilingName }}</a>
                             @else
-                                <button id="990NLink" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>990N Not Available Until July 1st</button>
+                                <button type="button" id="990NLink" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>990N Not Available Until July 1st</button>
                             @endif
                         </div>
                     </li>
@@ -637,11 +637,11 @@
         </div>
 
     <div class="card-body text-center mt-3">
-        <button id="Save" type="submit" class="btn btn-primary bg-gradient mb-2" onclick="return validateEmailsBeforeSubmit()"><i class="bi bi-floppy-fill me-2"></i>Save</button>
+        <button type="submit" id="Save" class="btn btn-primary bg-gradient mb-2" onclick="return validateEmailsBeforeSubmit()"><i class="bi bi-floppy-fill me-2"></i>Save</button>
 
     </form>
-        <button id="Password" type="button" class="btn btn-primary bg-gradient mb-2" onclick="showChangePasswordAlert('{{ $borDetails->user_id }}')"><i class="bi bi-lock-fill me-2" ></i>Change Password</button>
-        <button id="logout-btn" class="btn btn-primary bg-gradient mb-2" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="bi bi-box-arrow-right me-2" ></i>Logout</button>
+        <button type="button" id="Password" class="btn btn-primary bg-gradient mb-2" onclick="showChangePasswordAlert('{{ $borDetails->user_id }}')"><i class="bi bi-lock-fill me-2" ></i>Change Password</button>
+        <button type="button" id="logout-btn" class="btn btn-primary bg-gradient mb-2" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="bi bi-box-arrow-right me-2" ></i>Logout</button>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                 @csrf
             </form>

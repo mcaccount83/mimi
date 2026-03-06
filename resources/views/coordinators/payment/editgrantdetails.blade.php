@@ -146,9 +146,9 @@
                     <button type="button" class="btn btn-danger bg-gradient mb-2" id="unsubmit"><i class="bi bi-arrow-counterclockwise me-2"></i>UnSubmit Request</button>
                 <br><br>
                 @if ($grantDetails->grant_pdf_path != null)
-                    <button class="btn btn-primary bg-gradient mb-2" type="button" id="financial-pdf" onclick="openPdfViewer('{{ $grantDetails->grant_pdf_path }}')"><i class="bi bi-file-earmark-pdf-fill me-2"></i>View/Download Grant Request PDF</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" type="button" id="financial-pdf" onclick="openPdfViewer('{{ $grantDetails->grant_pdf_path }}')"><i class="bi bi-file-earmark-pdf-fill me-2"></i>View/Download Grant Request PDF</button>
                 @else
-                    <button class="btn btn-primary bg-gradient mb-2 disabled" type="button" id="financial-pdf" disabled><i class="bi bi-file-earmark-pdf-fill me-2"></i>No PDF Report Available</button><br>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2 disabled" type="button" id="financial-pdf" disabled><i class="bi bi-file-earmark-pdf-fill me-2"></i>No PDF Report Available</button><br>
                 @endif
                 @if($chDetails != null)
                     <button type="button" id="btn-back" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('payment.paymenthistory', $grantDetails->chapter_id) }}'"><i class="bi bi-currency-dollar me-2" ></i>Chapter Donation History</button>

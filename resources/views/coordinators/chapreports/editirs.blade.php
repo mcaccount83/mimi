@@ -83,7 +83,7 @@
                            <div class="row mb-3">
                                                     <label class="col-sm-2 col-form-label mb-1">EIN Fax Coversheet:</label>
                                 <div class="col-sm-10">
-                                    <button id="GoodStanding" type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.open('{{ route('pdf.newchapfaxcover', ['id' => $chDetails->id]) }}', '_blank')">EIN Fax Coversheet</button><br>
+                                    <button type="button" id="GoodStanding" class="btn btn-primary bg-gradient btn-sm" onclick="window.open('{{ route('pdf.newchapfaxcover', ['id' => $chDetails->id]) }}', '_blank')">EIN Fax Coversheet</button><br>
                                 </div>
                             </div>
                         @endif
@@ -92,9 +92,9 @@
                                                     <label class="col-sm-2 col-form-label mb-1">EIN Letter:</label>
                             <div class="col-sm-10">
                                 @if($chEOYDocuments->ein_letter_path != null)
-                                    <button class="btn btn-primary bg-gradient btn-sm" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chEOYDocuments->ein_letter_path }}')">EIN Letter from IRS</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chEOYDocuments->ein_letter_path }}')">EIN Letter from IRS</button>
                                 @else
-                                    <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No EIN Letter on File</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No EIN Letter on File</button>
                                 @endif
                             </div>
                         </div>
@@ -139,9 +139,9 @@
                             </div>
                             <div class="col-sm-10">
                                 @if($chEOYDocuments->irs_path != null)
-                                    <button class="btn btn-primary bg-gradient btn-sm" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chEOYDocuments->irs_path }}')">View/Download 990N Submission</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chEOYDocuments->irs_path }}')">View/Download 990N Submission</button>
                                 @else
-                                    <button class="btn btn-primary bg-gradient btn-sm disabled" disabled>No 990N Submission on File</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No 990N Submission on File</button>
                                 @endif
                             </div>
                         </div>

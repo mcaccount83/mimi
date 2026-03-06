@@ -1,5 +1,11 @@
-    <!-- Board Dashboard Menu Item -->
-    @if(isset($chDetails))
+    <!-- Disband Checklist Dashboard Menu Item -->
+    <li class="nav-item">
+        <a href="{{ route('board-new.editdisbandchecklist', ['id' => $chDetails->id]) }}" class="nav-link {{ Request::is('board-new/disbandchecklist/*') ? 'active' : '' }}">
+            <i class="nav-icon bi bi-house-fill"></i>
+            <p>Disband Checklist</p>
+        </a>
+    </li>
+    {{-- @if(isset($chDetails))
      @php
         $boardRoute = route('board-new.editdisbandchecklist', ['id' => $chDetails->id]);
 
@@ -15,7 +21,7 @@
             </a>
         </li>
     @endif
-    @endif
+    @endif --}}
 
     <!-- ReReg Menu Item -->
     @if(isset($chDetails))

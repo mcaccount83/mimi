@@ -28,7 +28,7 @@
                                     @if($chEOYDocuments->new_board_active != '1')
                                         <button type="button" class="btn btn-primary bg-gradient" onclick="window.location.href='{{ route('board-new.editboardreport', ['id' => $chDetails->id]) }}'">{{$boardReportName}}</button>
                                     @else
-                                        <button class="btn btn-primary bg-gradient disabled" disabled>{{$boardReportName}} Activated</button>
+                                        <button type="button" class="btn btn-primary bg-gradient disabled" disabled>{{$boardReportName}} Activated</button>
                                     @endif
 
                                     <button type="button" class="btn btn-primary bg-gradient" onclick="window.location.href='{{ route('board-new.editfinancialreport', ['id' => $chDetails->id]) }}'">{{$financialReportName}}</button>
@@ -88,6 +88,8 @@
     <!-- /.container- -->
 @endsection
 @section('customscript')
-@php $disableMode = 'disable-all'; @endphp
-@include('layouts.scripts.disablefields')
+@if($userTypeId == \App\Enums\UserTypeEnum::COORD)
+    @php $disableMode = 'disable-all'; @endphp
+    @include('layouts.scripts.disablefields')
+@endif
 @endsection
