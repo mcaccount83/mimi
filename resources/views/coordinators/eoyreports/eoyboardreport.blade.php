@@ -1,8 +1,15 @@
 @extends('layouts.mimi_theme')
 
-@section('page_title', $title)
-@section('breadcrumb', $breadcrumb)
-
+@if ($ITCondition && !$displayTESTING && !$displayLIVE)
+    @section('page_title', 'EOY Reports *ADMIN*')
+    @section('breadcrumb', 'Board Election Reports')
+@elseif ($eoyTestCondition && $displayTESTING)
+    @section('page_title', 'EOY Reports *TESTING*')
+    @section('breadcrumb', 'Board Election Reports')
+@else
+    @section('page_title', 'EOY Reports')
+    @section('breadcrumb', 'Board Election Reports')
+@endif
 
 @section('content')
 <!-- Main content -->

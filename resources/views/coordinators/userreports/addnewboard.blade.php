@@ -1,6 +1,6 @@
 @extends('layouts.mimi_theme')
 
-@section('page_title', 'Board Details')
+@section('page_title', 'User Reports')
 @section('breadcrumb', 'Edit Board')
 <style>
 .disabled-link {

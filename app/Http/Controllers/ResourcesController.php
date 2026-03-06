@@ -46,29 +46,10 @@ class ResourcesController extends Controller implements HasMiddleware
     }
 
     /**
-     * View the EOY Report Title
-     */
-    public function getPageTitle(Request $request)
-    {
-        $titles = [
-            'admin_reports' => 'IT Reports',
-            'admin_details' => 'Chapter Details',
-            'resource_reports' => 'Resources',
-            'resource_details' => 'Resource Details',
-        ];
-
-        return $titles;
-    }
-
-    /**
      * View Tasks on Bugs & Enhancements List
      */
     public function showBugs(Request $request): View
     {
-        $titles = $this->getPageTitle($request);
-        $title = $titles['resource_reports'];
-        $breadcrumb = 'MIMI Bugs & Wishes';
-
         $user = $this->userController->loadUserInformation($request);
         $positionId = $user['cdPositionId'];
         $secPositionId = $user['cdSecPositionId'];
@@ -88,7 +69,7 @@ class ResourcesController extends Controller implements HasMiddleware
             ->orderByDesc('priority')
             ->get();
 
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'admin' => $admin, 'canEditDetails' => $canEditDetails];
+        $data = ['admin' => $admin, 'canEditDetails' => $canEditDetails];
 
         return view('coordinators.resources.bugs')->with($data);
     }

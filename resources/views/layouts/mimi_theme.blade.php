@@ -193,7 +193,6 @@
                     @if ($userTypeId == \App\Enums\UserTypeEnum::COORD && isset($bdTypeId) && $bdTypeId !== null)
                         <small><small>(Viewing as President)</small></small>
                     @endif
-
                 </h2></div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">

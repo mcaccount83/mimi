@@ -1,7 +1,7 @@
 @extends('layouts.mimi_theme')
 
 @section('page_title', 'MOMS Club of ' . $chDetails->name . ', ' . $stateShortName)
-@section('breadcrumb', 'Chapter Profile')
+@section('breadcrumb', 'Payment History')
 
 @section('content')
      <!-- Main content -->

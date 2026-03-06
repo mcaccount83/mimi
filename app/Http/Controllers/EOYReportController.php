@@ -59,51 +59,47 @@ class EOYReportController extends Controller implements HasMiddleware
         ];
     }
 
-    /**
-     * View the EOY Report Title
-     */
-    public function getPageTitle(Request $request)
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $positionId = $user['cdPositionId'];
-        $secPositionId = $user['cdSecPositionId'];
-        $userAdmin = $user['userAdmin'];
-        $admin = ($userAdmin == '1' || $userAdmin == '2');
+    // /**
+    //  * View the EOY Report Title
+    //  */
+    // public function getPageTitle(Request $request)
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $positionId = $user['cdPositionId'];
+    //     $secPositionId = $user['cdSecPositionId'];
+    //     $userAdmin = $user['userAdmin'];
+    //     $admin = ($userAdmin == '1' || $userAdmin == '2');
 
-        $conditions = $this->positionConditionsService->getConditionsForUser($positionId, $secPositionId);
-        $eoyTestCondition = $conditions['eoyTestCondition'];
+    //     $conditions = $this->positionConditionsService->getConditionsForUser($positionId, $secPositionId);
+    //     $eoyTestCondition = $conditions['eoyTestCondition'];
 
-        $EOYOptions = $this->positionConditionsService->getEOYOptions();
-        $displayTESTING = $EOYOptions['displayTESTING'];
-        $displayLIVE = $EOYOptions['displayLIVE'];
+    //     $EOYOptions = $this->positionConditionsService->getEOYOptions();
+    //     $displayTESTING = $EOYOptions['displayTESTING'];
+    //     $displayLIVE = $EOYOptions['displayLIVE'];
 
-        $titles = [
-            'eoy_reports' => 'End of Year Reports',
-            'eoy_details' => 'EOY Details',
-        ];
+    //     $titles = [
+    //         'eoy_reports' => 'End of Year Reports',
+    //         'eoy_details' => 'EOY Details',
+    //     ];
 
-        if ($admin && ! $displayTESTING && ! $displayLIVE) {
-            $titles['eoy_reports'] .= ' *ADMIN*';
-            $titles['eoy_details'] .= ' *ADMIN*';
-        }
+    //     if ($admin && ! $displayTESTING && ! $displayLIVE) {
+    //         $titles['eoy_reports'] .= ' *ADMIN*';
+    //         $titles['eoy_details'] .= ' *ADMIN*';
+    //     }
 
-        if ($eoyTestCondition && $displayTESTING) {
-            $titles['eoy_reports'] .= ' *TESTING*';
-            $titles['eoy_details'] .= ' *TESTING*';
-        }
+    //     if ($eoyTestCondition && $displayTESTING) {
+    //         $titles['eoy_reports'] .= ' *TESTING*';
+    //         $titles['eoy_details'] .= ' *TESTING*';
+    //     }
 
-        return $titles;
-    }
+    //     return $titles;
+    // }
 
     /**
      * View the EOY Status list
      */
     public function showEOYStatus(Request $request): View
     {
-        $titles = $this->getPageTitle($request);
-        $title = $titles['eoy_reports'];
-        $breadcrumb = 'EOY Status Report';
-
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
         $confId = $user['confId'];
@@ -138,7 +134,7 @@ class EOYReportController extends Controller implements HasMiddleware
 
         $countList = count($chapterList);
         $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status, 'checkBox2Status' => $checkBox2Status,
-            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'title' => $title, 'breadcrumb' => $breadcrumb,
+            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
@@ -150,10 +146,6 @@ class EOYReportController extends Controller implements HasMiddleware
      */
     public function editEOYDetails(Request $request, $id): View
     {
-        $titles = $this->getPageTitle($request);
-        $title = $titles['eoy_details'];
-        $breadcrumb = 'EOY Details';
-
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
         $confId = $user['confId'];
@@ -186,7 +178,7 @@ class EOYReportController extends Controller implements HasMiddleware
 
         $PresDetails = $baseBoardQuery['PresDetails'];
 
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'PresDetails' => $PresDetails,
+        $data = ['PresDetails' => $PresDetails,
             'coorId' => $coorId, 'confId' => $confId, 'allAwards' => $allAwards, 'chDocuments' => $chDocuments,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
@@ -275,10 +267,6 @@ class EOYReportController extends Controller implements HasMiddleware
      */
     public function showEOYBoardReport(Request $request)
     {
-        $titles = $this->getPageTitle($request);
-        $title = $titles['eoy_reports'];
-        $breadcrumb = 'Board Election Report';
-
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
         $confId = $user['confId'];
@@ -364,7 +352,7 @@ class EOYReportController extends Controller implements HasMiddleware
         }
 
         $countList = count($chapterList);
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status, 'checkBox2Status' => $checkBox2Status,
+        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status, 'checkBox2Status' => $checkBox2Status,
             'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
@@ -532,10 +520,6 @@ class EOYReportController extends Controller implements HasMiddleware
      */
     public function showEOYFinancialReport(Request $request): View
     {
-        $titles = $this->getPageTitle($request);
-        $title = $titles['eoy_reports'];
-        $breadcrumb = 'Financial Reports';
-
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
         $confId = $user['confId'];
@@ -568,7 +552,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
         $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status, 'checkBox2Status' => $checkBox2Status,
+        $data = ['chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status, 'checkBox2Status' => $checkBox2Status,
             'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
@@ -886,10 +870,6 @@ class EOYReportController extends Controller implements HasMiddleware
      */
     public function showEOYAttachments(Request $request): View
     {
-        $titles = $this->getPageTitle($request);
-        $title = $titles['eoy_reports'];
-        $breadcrumb = 'Financial Report Attacchments';
-
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
         $confId = $user['confId'];
@@ -919,7 +899,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
         $countList = count($chapterList);
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status,
+        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status,
             'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'checkBox2Status' => $checkBox2Status];
 
         return view('coordinators.eoyreports.eoyattachments')->with($data);
@@ -930,10 +910,6 @@ class EOYReportController extends Controller implements HasMiddleware
      */
     public function editEOYAttachments(Request $request, $id): View
     {
-        $titles = $this->getPageTitle($request);
-        $title = $titles['eoy_details'];
-        $breadcrumb = 'EOY Attachments';
-
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
         $confId = $user['confId'];
@@ -950,7 +926,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
 
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'coorId' => $coorId, 'confId' => $confId,
+        $data = ['coorId' => $coorId, 'confId' => $confId,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
             'chEOYDocuments' => $chEOYDocuments, 'chapterStatus' => $chapterStatus
@@ -1000,10 +976,6 @@ class EOYReportController extends Controller implements HasMiddleware
      */
     public function showEOYBoundaries(Request $request): View
     {
-        $titles = $this->getPageTitle($request);
-        $title = $titles['eoy_reports'];
-        $breadcrumb = 'Boundray Issues Report';
-
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
         $confId = $user['confId'];
@@ -1032,7 +1004,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
         $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status,
+        $data = ['chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status,
             'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'checkBox2Status' => $checkBox2Status];
 
         return view('coordinators.eoyreports.eoyboundaries')->with($data);
@@ -1043,10 +1015,6 @@ class EOYReportController extends Controller implements HasMiddleware
      */
     public function editEOYBoundaries(Request $request, $id): View
     {
-        $titles = $this->getPageTitle($request);
-        $title = $titles['eoy_details'];
-        $breadcrumb = 'EOY Boundaries';
-
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
         $confId = $user['confId'];
@@ -1062,7 +1030,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $chPcId = $baseQuery['chPcId'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
 
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'coorId' => $coorId, 'confId' => $confId,
+        $data = ['coorId' => $coorId, 'confId' => $confId,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport, 'chapterStatus' => $chapterStatus
         ];
@@ -1108,10 +1076,6 @@ class EOYReportController extends Controller implements HasMiddleware
      */
     public function showEOYAwards(Request $request): View
     {
-        $titles = $this->getPageTitle($request);
-        $title = $titles['eoy_reports'];
-        $breadcrumb = 'Chapter Awards Report';
-
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
         $confId = $user['confId'];
@@ -1154,7 +1118,7 @@ class EOYReportController extends Controller implements HasMiddleware
         }
 
         $countList = count($chapterList);
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status, 'checkBox2Status' => $checkBox2Status,
+        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status, 'checkBox2Status' => $checkBox2Status,
             'allAwards' => $allAwards, 'maxAwards' => $maxAwards, 'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
         ];
 
@@ -1166,10 +1130,6 @@ class EOYReportController extends Controller implements HasMiddleware
      */
     public function editEOYAwards(Request $request, $id): View
     {
-        $titles = $this->getPageTitle($request);
-        $title = $titles['eoy_details'];
-        $breadcrumb = 'EOY Awards';
-
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
         $confId = $user['confId'];
@@ -1186,7 +1146,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $allAwards = $baseQuery['allAwards'];
 
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'coorId' => $coorId, 'confId' => $confId, 'chapterStatus' => $chapterStatus,
+        $data = ['coorId' => $coorId, 'confId' => $confId, 'chapterStatus' => $chapterStatus,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
         ];
@@ -1292,10 +1252,6 @@ class EOYReportController extends Controller implements HasMiddleware
      */
     public function showIRSSubmission(Request $request): View
     {
-        $titles = $this->getPageTitle($request);
-        $title = $titles['eoy_reports'];
-        $breadcrumb = 'Financial Report Attacchments';
-
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
         $confId = $user['confId'];
@@ -1325,7 +1281,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
         $countList = count($chapterList);
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status,
+        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status,
             'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'checkBox2Status' => $checkBox2Status,
         ];
 
@@ -1337,10 +1293,6 @@ class EOYReportController extends Controller implements HasMiddleware
      */
     public function editIRSSubmission(Request $request, $id): View
     {
-        $titles = $this->getPageTitle($request);
-        $title = $titles['eoy_details'];
-        $breadcrumb = 'EOY Attachments';
-
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
         $confId = $user['confId'];
@@ -1357,7 +1309,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
 
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb, 'coorId' => $coorId, 'confId' => $confId, 'chapterStatus' => $chapterStatus,
+        $data = ['coorId' => $coorId, 'confId' => $confId, 'chapterStatus' => $chapterStatus,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport, 'chEOYDocuments' => $chEOYDocuments
         ];

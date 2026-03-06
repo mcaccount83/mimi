@@ -1,7 +1,7 @@
 @extends('layouts.mimi_theme')
 
 @section('page_title', 'Admin Reports')
-@section('breadcrumb', 'Re-Registration Renewal Dates')
+@section('breadcrumb', 'Grant Requests')
 
 @section('content')
 
@@ -16,7 +16,7 @@
                             <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Grant Request Report
                             </h3>
-                            @include('layouts.dropdown_menus.menu_reports_admin')
+                            @include('layouts.dropdown_menus.menu_payment')
                         </div>
                     </div>
                  <!-- /.card-header -->

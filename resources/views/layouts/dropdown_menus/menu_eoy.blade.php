@@ -1,4 +1,3 @@
-<span class="ms-2">Chapters that were added after June 30, {{ $currentYear }} will not be listed</span>
 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
     @if ($coordinatorCondition || $eoyReportCondition || $eoyTestCondition ||$ITCondition)
         <a class="dropdown-item" href="{{ route('eoyreports.eoystatus') }}">EOY Status Report</a>

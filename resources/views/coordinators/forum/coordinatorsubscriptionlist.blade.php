@@ -4,45 +4,23 @@
 @section('breadcrumb', 'Coordinator Subscription List')
 
 @section('content')
-
-@if ($message = Session::get('success'))
-      <div class="alert alert-success">
-		<button type="button" class="close" data-bs-dismiss="alert">×</button>
-         <p>{{ $message }}</p>
-      </div>
-    @endif
-	 @if ($message = Session::get('fail'))
-      <div class="alert alert-danger">
-		<button type="button" class="close" data-bs-dismiss="alert">×</button>
-         <p>{{ $message }}</p>
-      </div>
-    @endif
-
-    @if ($message = Session::get('info'))
-    <div class="alert alert-warning">
-        <button type="button" class="close" data-bs-dismiss="alert">×</button>
-        <p>{{ $message }}</p>
-    </div>
-@endif
-
- <!-- Main content -->
- <section class="content">
-    <div class="container-fluid">
-        <div class="row">
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+          <div class="row">
             <div class="col-12">
                 <div class="card card-outline card-primary">
                     <div class="card-header">
-                        <div class="dropdown">
-                            <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Coordinator Subscription List
-                            </h3>
-                            @include('layouts.dropdown_menus.menu_forum')
-                        </div>
+                    <div class="dropdown">
+                        <h3 class="card-title dropdown-toggle mb-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Coordinator Subscription List
+                        </h3>
+                        @include('layouts.dropdown_menus.menu_forum')
                     </div>
-                 <!-- /.card-header -->
-    <div class="card-body">
+                </div>
+                <!-- /.card-header -->
+            <div class="card-body">
         <table id="chapterlist" class="table table-sm table-hover" >
-              {{-- <table id="chapterlist_reRegDate" class="table table-bordered table-hover"> --}}
               <thead>
       			    <tr>
                         <th>Details</th>
@@ -95,6 +73,9 @@
                   </tbody>
                 </table>
             </div>
+            <!-- /.card-body -->
+
+        <div class="card-body">
             <div class="col-sm-12">
                     <div class="form-check form-switch">
                         <input type="checkbox" name="showDirect" id="showDirect" class="form-check-input" {{$checkBox1Status ? 'checked' : '' }} onchange="showDirect()" />
@@ -121,11 +102,20 @@
                         </div>
                     </div>
                 @endif
+ </div>
+            <!-- /.card-body for checkboxes -->
 
+            <div class="card-body text-center mt-3">
             </div>
+            <!-- /.card-body for buttons -->
 
         </div>
+        <!-- /.card -->
       </div>
+      <!-- /.col -->
     </div>
-    </section>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
 @endsection

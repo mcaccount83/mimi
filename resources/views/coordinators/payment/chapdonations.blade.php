@@ -21,7 +21,6 @@
                 <!-- /.card-header -->
             <div class="card-body">
                 <table id="chapterlist" class="table table-sm table-hover" >
-              {{-- <table id="chapterlist_donation" class="table table-bordered table-hover"> --}}
               <thead>
 			    <tr>
                 <th>

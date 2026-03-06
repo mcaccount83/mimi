@@ -1,16 +1,16 @@
 @extends('layouts.mimi_theme')
 
-@section('page_title', $title)
-@section('breadcrumb', $breadcrumb)
+@if ($ITCondition && !$displayTESTING && !$displayLIVE)
+    @section('page_title', 'EOY Details *ADMIN*')
+    @section('breadcrumb', 'EOY Details *ADMIN*')
+@elseif ($eoyTestCondition && $displayTESTING)
+    @section('page_title', 'EOY Details *TESTING*')
+    @section('breadcrumb', 'EOY Details *TESTING*')
+@else
+    @section('page_title', 'EOY Details')
+    @section('breadcrumb', 'EOY Details')
+@endif
 
-<style>
-.disabled-link {
-    pointer-events: none; /* Prevent click events */
-    cursor: default; /* Change cursor to default */
-    color: #343a40; /* Font color */
-}
-
-</style>
 @section('content')
     <!-- Main content -->
     <form class="form-horizontal" method="POST" action='{{ route("eoyreports.update", $chDetails->id) }}'>

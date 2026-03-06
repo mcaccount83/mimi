@@ -1,7 +1,15 @@
 @extends('layouts.mimi_theme')
 
-@section('page_title', $title)
-@section('breadcrumb', $breadcrumb)
+@if ($ITCondition && !$displayTESTING && !$displayLIVE)
+    @section('page_title', 'EOY Reports *ADMIN*')
+    @section('breadcrumb', 'EOY Stataus Report')
+@elseif ($eoyTestCondition && $displayTESTING)
+    @section('page_title', 'EOY Reports *TESTING*')
+    @section('breadcrumb', 'EOY Stataus Reports')
+@else
+    @section('page_title', 'EOY Reports')
+    @section('breadcrumb', 'EOY Stataus Reports')
+@endif
 
 @section('content')
  <!-- Main content -->
@@ -11,12 +19,13 @@
         <div class="col-12">
             <div class="card card-outline card-primary">
                 <div class="card-header">
-                <div class="dropdown">
-                    <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        EOY Status Report
-                    </h3>
-                    @include('layouts.dropdown_menus.menu_eoy')
-                </div>
+                    <div class="dropdown d-flex align-items-center">
+                        <h3 class="card-title dropdown-toggle mb-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            EOY Status Report
+                        </h3>
+                        @include('layouts.dropdown_menus.menu_eoy')
+                        <span class="ms-2 text-muted " style="font-size: 0.75rem; align-self: flex-end; line-height: 1.8;"><span class="ms-2">Chapters that were added after June 30, {{ $currentYear }} will not be listed</span>
+                    </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body">

@@ -1,22 +1,15 @@
 @extends('layouts.mimi_theme')
 
-@section('page_title', 'Chapter Details')
-@section('breadcrumb', 'Payments & Donations')
-
-<style>
-.disabled-link {
-    pointer-events: none; /* Prevent click events */
-    cursor: default; /* Change cursor to default */
-    color: #343a40; /* Font color */
-}
-
-.custom-span {
-    border: none !important;
-    background-color: transparent !important;
-    padding: 0.375rem 0 !important; /* Match the vertical padding of form-control */
-    box-shadow: none !important;
-}
-</style>
+@if ($ITCondition && !$displayTESTING && !$displayLIVE)
+    @section('page_title', 'EOY Details *ADMIN*')
+    @section('breadcrumb', 'Chapter Award History')
+@elseif ($eoyTestCondition && $displayTESTING)
+    @section('page_title', 'EOY Details *TESTING*')
+    @section('breadcrumb', 'Chapter Award History')
+@else
+    @section('page_title', 'EOY Details')
+    @section('breadcrumb', 'Chapter Award History')
+@endif
 
 @section('content')
     <!-- Main content -->

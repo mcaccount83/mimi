@@ -109,7 +109,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
             'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
         ];
 
-        return view('forum.chaptersubscriptionlist')->with($data);
+        return view('coordinators.forum.chaptersubscriptionlist')->with($data);
     }
 
     /**
@@ -137,7 +137,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
             'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'emailListCord' => $emailListCord,
         ];
 
-        return view('forum.coordinatorsubscriptionlist')->with($data);
+        return view('coordinators.forum.coordinatorsubscriptionlist')->with($data);
     }
 
     /**

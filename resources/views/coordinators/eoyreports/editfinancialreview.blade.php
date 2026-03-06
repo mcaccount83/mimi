@@ -1,7 +1,15 @@
 @extends('layouts.mimi_theme')
 
-@section('page_title', 'Financial Report')
-@section('breadcrumb', 'Financial Report Review')
+@if ($ITCondition && !$displayTESTING && !$displayLIVE)
+    @section('page_title', 'EOY Details *ADMIN*')
+    @section('breadcrumb', 'Financial Report')
+@elseif ($eoyTestCondition && $displayTESTING)
+    @section('page_title', 'EOY Details *TESTING*')
+    @section('breadcrumb', 'Financial Report')
+@else
+    @section('page_title', 'EOY Details')
+    @section('breadcrumb', 'Financial Report')
+@endif
 
 @section('content')
   <!-- Main content -->

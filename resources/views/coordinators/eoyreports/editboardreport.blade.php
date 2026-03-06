@@ -1,25 +1,15 @@
 @extends('layouts.mimi_theme')
 
-@section('page_title', 'Board Election Report')
-@section('breadcrumb', 'EOY Board Report')
-<style>
-.disabled-link {
-    pointer-events: none; /* Prevent click events */
-    cursor: default; /* Change cursor to default */
-    color: #343a40; /* Font color */
-}
-
-.align-bottom {
-        display: flex;
-        align-items: flex-end;
-    }
-
-    .align-middle {
-        display: flex;
-        align-items: center;
-    }
-
-</style>
+@if ($ITCondition && !$displayTESTING && !$displayLIVE)
+    @section('page_title', 'EOY Details *ADMIN*')
+    @section('breadcrumb', 'Board Election Report')
+@elseif ($eoyTestCondition && $displayTESTING)
+    @section('page_title', 'EOY Details *TESTING*')
+    @section('breadcrumb', 'Board Election Report')
+@else
+    @section('page_title', 'EOY Details')
+    @section('breadcrumb', 'Board Election Report')
+@endif
 
 @section('content')
     <!-- Main content -->

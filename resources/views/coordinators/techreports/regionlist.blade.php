@@ -1,6 +1,6 @@
 @extends('layouts.mimi_theme')
 
-@section('page_title', 'Admin Reports')
+@section('page_title', 'IY Reports')
 @section('breadcrumb', 'Region List')
 
 @section('content')

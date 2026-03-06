@@ -316,31 +316,13 @@ class AdminReportController extends Controller implements HasMiddleware
     }
 }
 
-/**
-     * View the EOY Report Title
-     */
-    public function getPageTitle(Request $request)
-    {
-        $titles = [
-            'admin_reports' => 'IT Reports',
-            'admin_details' => 'Chapter Details',
-            'resource_reports' => 'Resources',
-            'resource_details' => 'Resource Details',
-        ];
-
-        return $titles;
-    }
-
  /**
      * View the Downloads List
      */
     public function showDownloads(Request $request): View
     {
-        $titles = $this->getPageTitle($request);
-        $title = $titles['resource_reports'];
-        $breadcrumb = 'Download Reports';
 
-        $data = ['title' => $title, 'breadcrumb' => $breadcrumb];
+        $data = [];
 
         return view('coordinators.adminreports.downloads')->with($data);
     }

@@ -1,6 +1,6 @@
 @extends('layouts.mimi_theme')
 
-@section('page_title', 'Chapter Details')
+@section('page_title', 'Chapter Reports')
 @section('breadcrumb', 'IRS Information')
 <style>
 .disabled-link {

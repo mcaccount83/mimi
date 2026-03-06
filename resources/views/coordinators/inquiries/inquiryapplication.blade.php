@@ -1,7 +1,7 @@
 @extends('layouts.mimi_theme')
 
 @section('page_title', 'Chapters')
-@section('breadcrumb', 'Inquiry Applicaiton List')
+@section('breadcrumb', 'Inquiries Received List')
 
 @section('content')
      <!-- Main content -->

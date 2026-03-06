@@ -1,6 +1,6 @@
 @extends('layouts.mimi_theme')
 
-@section('page_title', 'eLearning Library')
+@section('page_title', 'Resources')
 @section('breadcrumb', 'eLearning Library')
 
 <style>
