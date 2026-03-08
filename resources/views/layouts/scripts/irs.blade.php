@@ -16,8 +16,8 @@
         confirmButtonText: 'Generate',
         cancelButtonText: 'Close',
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         },
         preConfirm: () => {
             const totalPages = Swal.getPopup().querySelector('#total_pages').value;
@@ -66,8 +66,8 @@ function showIRSUpdatesModal() {
         confirmButtonText: 'Generate',
         cancelButtonText: 'Close',
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         },
         preConfirm: () => {
             const totalPages = Swal.getPopup().querySelector('#total_pages').value;
@@ -116,8 +116,8 @@ function showSubordinateFilingModal() {
         confirmButtonText: 'Generate',
         cancelButtonText: 'Close',
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         },
         preConfirm: () => {
             const totalPages = Swal.getPopup().querySelector('#total_pages').value;
@@ -162,8 +162,8 @@ function showIRSFilingCorrectionsModal() {
         confirmButtonText: 'Generate',
         cancelButtonText: 'Close',
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         },
         preConfirm: () => {
             const totalPages = Swal.getPopup().querySelector('#total_pages').value;
@@ -207,8 +207,8 @@ function updateEIN(chapterId) {
                     confirmButtonText: 'Yes, replace it',
                     cancelButtonText: 'No',
                     customClass: {
-                        confirmButton: 'btn-sm btn-success',
-                        cancelButton: 'btn-sm btn-danger'
+                        confirmButton: 'btn btn-sm btn-success',
+                        cancelButton: 'btn btn-sm btn-danger'
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -228,7 +228,7 @@ function updateEIN(chapterId) {
                 icon: 'error',
                 confirmButtonText: 'OK',
                 customClass: {
-                    confirmButton: 'btn-sm btn-success'
+                    confirmButton: 'btn btn-sm btn-success'
                 }
             });
         }
@@ -255,8 +255,8 @@ function promptForNewEIN(chapterId) {
         confirmButtonText: 'OK',
         cancelButtonText: 'Close',
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         },
         preConfirm: () => {
             const ein = Swal.getPopup().querySelector('#ein').value;
@@ -283,8 +283,8 @@ function promptForNewEIN(chapterId) {
                 text: 'Please wait while we process your request.',
                 allowOutsideClick: false,
                 customClass: {
-                    confirmButton: 'btn-sm btn-success',
-                    cancelButton: 'btn-sm btn-danger'
+                    confirmButton: 'btn btn-sm btn-success',
+                    cancelButton: 'btn btn-sm btn-danger'
                 },
                 didOpen: () => {
                     Swal.showLoading();
@@ -307,7 +307,7 @@ function promptForNewEIN(chapterId) {
                                 showConfirmButton: false,  // Automatically close without "OK" button
                                 timer: 1500,
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             }).then(() => {
                                 location.reload(); // Reload the page to reflect changes
@@ -320,7 +320,7 @@ function promptForNewEIN(chapterId) {
                                 icon: 'error',
                                 confirmButtonText: 'OK',
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             });
                         }
@@ -386,8 +386,8 @@ function showFileUploadModal(chapter_id) {
             return false;
         },
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         }
     });
 }
@@ -412,8 +412,8 @@ function updateName(chapterId) {
         confirmButtonText: 'OK',
         cancelButtonText: 'Close',
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         },
         preConfirm: () => {
             const name = Swal.getPopup().querySelector('#name').value;
@@ -440,8 +440,8 @@ function updateName(chapterId) {
                 text: 'Please wait while we process your request.',
                 allowOutsideClick: false,
                 customClass: {
-                    confirmButton: 'btn-sm btn-success',
-                    cancelButton: 'btn-sm btn-danger'
+                    confirmButton: 'btn btn-sm btn-success',
+                    cancelButton: 'btn btn-sm btn-danger'
                 },
                 didOpen: () => {
                     Swal.showLoading();
@@ -464,7 +464,7 @@ function updateName(chapterId) {
                                 showConfirmButton: false,  // Automatically close without "OK" button
                                 timer: 1500,
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             }).then(() => {
                                 location.reload(); // Reload the page to reflect changes
@@ -477,7 +477,7 @@ function updateName(chapterId) {
                                 icon: 'error',
                                 confirmButtonText: 'OK',
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             });
                         }

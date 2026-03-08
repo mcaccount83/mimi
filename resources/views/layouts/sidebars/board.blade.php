@@ -6,23 +6,6 @@
             <p>Chapter Profile</p>
         </a>
     </li>
-{{-- @if(isset($chDetails))
-    @php
-        $boardRoute = route('board-new.chapterprofile', ['id' => $chDetails->id]);
-
-        $activeBoardRoutes = [
-            'board-new/chapterprofile/*',
-        ];
-    @endphp
-    @if (isset($boardRoute))
-        <li class="nav-item">
-            <a href="{{ $boardRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardRoutes) }}">
-                <i class="nav-icon bi bi-house-fill"></i>
-                <p>Chapter Profile</p>
-            </a>
-        </li>
-    @endif
-    @endif --}}
 
     <!-- Board Menu Item -->
     @if(isset($chDetails))
@@ -199,12 +182,44 @@
     @endif
     @endif
 
-    <!-- BoardList Forum Menu Item -->
-        {{-- <li class="nav-item position-relative">
+    <!-- ForumList Menu Item -->
+    @php
+        $forumRoute = url(config('forum.frontend.router.prefix') . '/unread');
+
+        $activeForumRoutes = [
+            'forum/*',
+        ];
+    @endphp
+    @if (isset($forumRoute))
+        <li class="nav-item">
+             @if ($userTypeId == \App\Enums\UserTypeEnum::COORD && isset($bdTypeId) && $bdTypeId !== null)
+        <a href="#" target="_blank" class="nav-link" style="cursor: default; pointer-events: none; background-color: transparent !important; color: #c2c7d0 !important;">
+            @else
+            <a href="{{ $forumRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeForumRoutes) }}">
+                @endif
+                <i class="nav-icon bi bi-chat-quote-fill"></i>
+                <p>ForumLists
+                    @if( $unreadForumCount > 0)
+                    <span class="badge bg-danger badge-pill notification-badge">
+                        UNREAD
+                    </span>
+                @endif
+                </p>
+            </a>
+        </li>
+    @endif
+
+{{--
+
+        <li class="nav-item position-relative">
+            @if ($userTypeId == \App\Enums\UserTypeEnum::COORD && isset($bdTypeId) && $bdTypeId !== null)
+        <a href="#" target="_blank" class="nav-link" style="cursor: default; pointer-events: none; background-color: transparent !important; color: #c2c7d0 !important;">
+            @else
         <a href="{{ url(config('forum.frontend.router.prefix') . '/unread') }}" target="_blank" class="nav-link">
+            @endif
             <i class="nav-icon bi bi-chat-quote-fill"></i>
             <p>
-                BoardList Forum
+                ForumLists
                 @if( $unreadForumCount > 0)
                     <span class="badge badge-danger badge-pill notification-badge">
                         UNREAD

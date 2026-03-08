@@ -350,8 +350,8 @@ function updateCardSent() {
         confirmButtonText: 'OK',
         cancelButtonText: 'Close',
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         },
         preConfirm: () => {
             const card_sent = Swal.getPopup().querySelector('#card_sent').value;
@@ -387,7 +387,7 @@ function updateCardSent() {
                         showConfirmButton: false,
                         timer: 1500,
                         customClass: {
-                            confirmButton: 'btn-sm btn-success'
+                            confirmButton: 'btn btn-sm btn-success'
                         }
                     }).then(() => {
                         if (response.redirect) {
@@ -402,7 +402,7 @@ function updateCardSent() {
                         icon: 'error',
                         confirmButtonText: 'OK',
                         customClass: {
-                            confirmButton: 'btn-sm btn-success'
+                            confirmButton: 'btn btn-sm btn-success'
                         }
                     });
                 }

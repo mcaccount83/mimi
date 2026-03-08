@@ -35,4 +35,31 @@ class ForumConditionsService
 
         return $threads->whereNull('read_at')->count();
     }
+
+    public function getPendingThreadsCount(): int
+    {
+        if (!Auth::check()) return 0;
+        $user = Auth::user();
+        if (!$this->canManageLists($user)) return 0;
+
+        return Thread::pendingApproval()->count();
+    }
+
+    public function getPendingPostsCount(): int
+    {
+        if (!Auth::check()) return 0;
+        $user = Auth::user();
+        if (!$this->canManageLists($user)) return 0;
+
+        return \TeamTeaTime\Forum\Models\Post::pendingApproval()
+            ->notFirstInThread()
+            ->count();
+    }
+
+    private function canManageLists($user): bool
+    {
+        return $user->type_id == \App\Enums\UserTypeEnum::COORD &&
+            ($user->is_admin == \App\Enums\AdminStatusEnum::ADMIN ||
+                $user->is_admin == \App\Enums\AdminStatusEnum::MODERATOR);
+    }
 }

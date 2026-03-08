@@ -23,7 +23,7 @@
                         icon: 'success',
                         confirmButtonText: 'OK',
                         customClass: {
-                            confirmButton: 'btn-sm btn-success'
+                            confirmButton: 'btn btn-sm btn-success'
                         }
                     });
                 },
@@ -35,13 +35,14 @@
                         icon: 'error',
                         confirmButtonText: 'OK',
                         customClass: {
-                            confirmButton: 'btn-sm btn-success'
+                            confirmButton: 'btn btn-sm btn-success'
                         }
                     });
                 }
             });
         });
     });
+});
 
     function showChangePasswordAlert(user_id) {
         Swal.fire({
@@ -67,8 +68,8 @@
             cancelButtonText: 'Cancel',
             showCancelButton: true,
             customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger'
             },
             preConfirm: () => {
                 const user_id = Swal.getPopup().querySelector('#user_id').value;
@@ -118,7 +119,7 @@
                     text: 'Please wait while we process your request.',
                     allowOutsideClick: false,
                     customClass: {
-                        confirmButton: 'btn-sm btn-success'
+                        confirmButton: 'btn btn-sm btn-success'
                     },
                     didOpen: () => Swal.showLoading()
                 });
@@ -141,7 +142,7 @@
                             icon: 'success',
                             confirmButtonText: 'OK',
                             customClass: {
-                                confirmButton: 'btn-sm btn-success'
+                                confirmButton: 'btn btn-sm btn-success'
                             }
                         });
                     },
@@ -152,7 +153,7 @@
                             icon: 'error',
                             confirmButtonText: 'OK',
                             customClass: {
-                                confirmButton: 'btn-sm btn-danger'
+                                confirmButton: 'btn btn-sm btn-danger'
                             }
                         });
                     }
@@ -160,5 +161,5 @@
             }
         });
     }
-    });
+
 </script>

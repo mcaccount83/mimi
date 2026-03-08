@@ -233,8 +233,8 @@ function showDeleteEmailModal(emailId, emailDescription) {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancel',
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         },
         preConfirm: () => {
             const emailId = Swal.getPopup().querySelector('#emailId').value;
@@ -252,8 +252,8 @@ function showDeleteEmailModal(emailId, emailDescription) {
                 text: 'Please wait while we process your request.',
                 allowOutsideClick: false,
                 customClass: {
-                    confirmButton: 'btn-sm btn-success',
-                    cancelButton: 'btn-sm btn-danger'
+                    confirmButton: 'btn btn-sm btn-success',
+                    cancelButton: 'btn btn-sm btn-danger'
                 },
                 didOpen: () => {
                     Swal.showLoading();
@@ -274,7 +274,7 @@ function showDeleteEmailModal(emailId, emailDescription) {
                                 showConfirmButton: false,
                                 timer: 1500,
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             }).then(() => {
                                 location.reload();
@@ -292,7 +292,7 @@ function showDeleteEmailModal(emailId, emailDescription) {
                                 icon: 'error',
                                 confirmButtonText: 'OK',
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             });
                         }

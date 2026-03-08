@@ -37,7 +37,8 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
     {
         return [
             new Middleware('auth', except: ['logout']),
-            \App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class,
+            new Middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class,
+                except: ['subscribeCategory', 'unsubscribeCategory']),
         ];
     }
 
@@ -67,7 +68,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
         ]);
 
         return response()->json([
-            'message' => 'Successfully subscribed to category',
+            'message' => 'Successfully subscribed to list',
             'redirect' => back()->getTargetUrl(),
         ]);
     }
@@ -81,7 +82,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
             ->delete();
 
         return response()->json([
-            'message' => 'Successfully unsubscribed from category',
+            'message' => 'Successfully unsubscribed from list',
             'redirect' => back()->getTargetUrl(),
         ]);
     }

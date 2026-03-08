@@ -1,10 +1,15 @@
 {{-- $thread is passed as NULL to the master layout view to prevent it from showing in the breadcrumbs --}}
 @extends('forum::layouts.main', ['thread' => null])
 
-@section('content')
-    @if ($category->description)
-        <p>{{ $category->description }}</p>
-    @endif
+@section('forum_content')
+    <div class="d-flex flex-row justify-content-between mb-2">
+        <h2><span style="color: {{ $category->color_light_mode }};">
+            {{ $category->title }} </span><br>
+            @if ($category->description)
+                <small><small>{{ $category->description }}</small></small>
+            @endif
+        </h2>
+    </div>
 
     <div id="category">
         <div class="clearfix">
@@ -22,24 +27,8 @@
                         </button>
                     @endcan
                 @endcan
-
-                {{-- @if(auth()->check())
-                @if(auth()->user()->categorySubscriptions()->where('category_id', $category->id)->exists())
-                    <form action="{{ Forum::route('category.unsubscribe', $category) }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Unsubscribe from Category</button>
-                    </form>
-                @else
-                    <form action="{{ Forum::route('category.subscribe', $category) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-primary">Subscribe to Category</button>
-                    </form>
-                @endif
-            @endif --}}
-
+            </div>
         </div>
-    </div>
 
         @if (!$category->children->isEmpty())
             @foreach ($category->children as $subcategory)
@@ -81,11 +70,11 @@
                             <div class="fixed-bottom-right pb-xs-0 pr-xs-0 pb-sm-3 pr-sm-3 m-2" style="z-index: 1000;">
                                 <transition name="fade">
                                     <div class="card text-white bg-secondary shadow-sm" v-if="state.selectedThreads.length">
-                                        <div class="card-header text-center bg-transparent">
+                                        <div class="card-header text-center">
                                             {{ trans('forum::general.with_selection') }}
                                         </div>
                                         <div class="card-body">
-                                            <div class="input-group mb-2">
+                                            <div class="input-group mb-3">
                                                 <div class="input-group-prepend">
                                                     <label class="input-group-text" for="bulk-actions">{{ trans_choice('forum::general.actions', 1) }}</label>
                                                 </div>
@@ -110,7 +99,7 @@
                                                 </select>
                                             </div>
 
-                                            <div class="mb-2" v-if="state.selectedAction == 'move'">
+                                            <div class="mb-3" v-if="state.selectedAction == 'move'">
                                                 <label for="category-id">{{ trans_choice('forum::categories.category', 1) }}</label>
                                                 <select name="category_id" id="category-id" class="form-select">
                                                     @include ('forum::category.partials.options', ['categories' => $threadDestinationCategories, 'hide' => $category])
@@ -209,7 +198,12 @@
     }
     </style>
 
-    <script type="module">
+    <script>
+        function mountForumApp() {
+    if (typeof window.Vue === 'undefined') {
+        setTimeout(mountForumApp, 50);
+        return;
+    }
     Vue.createApp({
         setup() {
             const selectableThreadIds = @json($selectableThreadIds);
@@ -248,7 +242,7 @@
 
             function submit(event)
             {
-                if (actionMethods[state.selectedAction] == 'DELETE' && !confirm("{{ trans('forum::general.generic_confirm') }}"))
+                if (actionMethods[state.selectedAction] === 'DELETE' && !confirm("{{ trans('forum::general.generic_confirm') }}"))
                 {
                     event.preventDefault();
                 }
@@ -274,5 +268,7 @@
             };
         }
     }).mount('#category');
+    }
+mountForumApp();
     </script>
 @stop

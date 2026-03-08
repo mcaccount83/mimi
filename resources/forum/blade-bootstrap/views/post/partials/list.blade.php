@@ -5,23 +5,13 @@
         @if (!isset($single) || !$single)
             <span class="float-end">
                 <a href="{{ Forum::route('thread.show', $post) }}">#{{ $post->sequence }}</a>
-                @if ($post->sequence != 1)
-                    @can ('deletePosts', $post->thread)
-                        @can ('delete', $post)
-                            <input type="checkbox" name="posts[]" :value="{{ $post->id }}" v-model="state.selectedPosts">
-                        @endcan
-                    @endcan
+                @if ($isSelectable)
+                    <input type="checkbox" name="posts[]" :value="{{ $post->id }}" v-model="state.selectedPosts">
                 @endif
             </span>
         @endif
 
-        @php
-            $authorNameWithDetails = $post->author ? $post->author->authorNameWithPosition() : 'Unknown Author';
-        @endphp
-
-        {!! $authorNameWithDetails !!}
-        <br>
-        {{-- {{ $post->authorName }} --}}
+        {{ $post->authorName }}
 
         <span class="text-muted">
             @include ('forum::partials.timestamp', ['carbon' => $post->created_at])
@@ -31,18 +21,18 @@
         </span>
     </div>
     <div class="card-body">
-        @if ($post->parent != null)
+        @if ($post->parent !== null)
             @include ('forum::post.partials.quote', ['post' => $post->parent])
         @endif
 
         @if ($post->trashed())
             @can ('viewTrashedPosts')
-                {!!Forum::render($post->content) !!}
+                {!! Forum::render($post->content) !!}
                 <br>
             @endcan
             <span class="badge rounded-pill bg-danger">{{ trans('forum::general.deleted') }}</span>
         @else
-            {!!Forum::render($post->content) !!}
+            {!! Forum::render($post->content) !!}
         @endif
 
         @if (!isset($single) || !$single)

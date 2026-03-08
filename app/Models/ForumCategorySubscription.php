@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ForumCategorySubscription extends Model
 {
+    protected $table = 'forum_category_subscriptions';
+
     protected $guarded = []; // ALL columns are mass-assignable
 
     public function user(): BelongsTo

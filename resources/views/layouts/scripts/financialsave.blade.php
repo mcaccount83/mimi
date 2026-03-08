@@ -92,8 +92,8 @@
             confirmButtonText: 'Submit Request',
             cancelButtonText: 'Cancel',
             customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger'
             }
         }).then((result) => {
             if (result.isConfirmed) {
@@ -104,7 +104,7 @@
                     allowOutsideClick: false,
                     didOpen: () => Swal.showLoading(),
                     customClass: {
-                        confirmButton: 'btn-sm btn-success'
+                        confirmButton: 'btn btn-sm btn-success'
                     }
                 });
 
@@ -259,8 +259,8 @@
                 confirmButtonText: 'Submit Anyway',
                 cancelButtonText: 'Return to Report',
                 customClass: {
-                    confirmButton: 'btn-sm btn-success',
-                    cancelButton: 'btn-sm btn-danger'
+                    confirmButton: 'btn btn-sm btn-success',
+                    cancelButton: 'btn btn-sm btn-danger'
                 }
             });
 

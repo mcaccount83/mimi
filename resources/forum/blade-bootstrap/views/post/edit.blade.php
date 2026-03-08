@@ -1,6 +1,6 @@
 @extends ('forum::layouts.main', ['breadcrumbs_append' => [trans('forum::posts.edit')]])
 
-@section ('content')
+@section ('forum_content')
     <div id="edit-post">
         <h2 class="flex-grow-1">{{ trans('forum::posts.edit') }} ({{ $thread->title }})</h2>
 
@@ -17,7 +17,7 @@
             @method('PATCH')
 
             <div class="mb-3">
-                <textarea name="content" class="form-control">{{ old('content') != null ? old('content') : $post->content }}</textarea>
+                <textarea name="content" class="form-control">{{ old('content') !== null ? old('content') : $post->content }}</textarea>
             </div>
 
             <div class="text-end">

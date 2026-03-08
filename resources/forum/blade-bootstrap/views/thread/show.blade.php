@@ -1,6 +1,6 @@
 @extends ('forum::layouts.main', ['thread' => null, 'breadcrumbs_append' => [$thread->title], 'thread_title' => $thread->title])
 
-@section ('content')
+@section ('forum_content')
     <div id="thread">
         <div class="d-flex flex-column flex-md-row justify-content-between">
             <h2 class="flex-grow-1">{{ $thread->title }}</h2>
@@ -8,11 +8,11 @@
             <div>
                 @if (Gate::allows('deleteThreads', $thread->category) && Gate::allows('delete', $thread))
                     @if ($thread->trashed())
-                        <a href="#" class="btn btn-danger me-3 mb-2" data-open-modal="perma-delete-thread">
+                        <a href="#" class="btn btn-danger mr-3 mb-2" data-open-modal="perma-delete-thread">
                             <i data-feather="trash"></i> {{ trans('forum::general.perma_delete') }}
                         </a>
                     @else
-                        <a href="#" class="btn btn-danger me-3 mb-2" data-open-modal="delete-thread">
+                        <a href="#" class="btn btn-danger mr-3 mb-2" data-open-modal="delete-thread">
                             <i data-feather="trash"></i> {{ trans('forum::general.delete') }}
                         </a>
                     @endif
@@ -120,14 +120,14 @@
         @endif
 
         @foreach ($posts as $post)
-            @include ('forum::post.partials.list', compact('post'))
+            @include ('forum::post.partials.list', ['post' => $post, 'isSelectable' => in_array($post->id, $selectablePosts)])
         @endforeach
 
         @if ((count($posts) > 1 || $posts->currentPage() > 1) && (Gate::allows('deletePosts', $thread) || Gate::allows('restorePosts', $thread)) && count($selectablePosts) > 0)
                 <div class="fixed-bottom-right pb-xs-0 pr-xs-0 pb-sm-3 pr-sm-3">
                     <transition name="fade">
                         <div class="card text-white bg-secondary shadow-sm" v-if="state.selectedPosts.length">
-                            <div class="card-header text-center bg-transparent">
+                            <div class="card-header text-center">
                                 {{ trans('forum::general.with_selection') }}
                             </div>
                             <div class="card-body">
@@ -349,7 +349,12 @@
     }
     </style>
 
-    <script type="module">
+    <script>
+        function mountForumApp() {
+    if (typeof window.Vue === 'undefined') {
+        setTimeout(mountForumApp, 50);
+        return;
+    }
     Vue.createApp({
         setup() {
             let posts = @json($posts);
@@ -376,14 +381,14 @@
             }
 
             function submitThread(event) {
-                if (threadActionMethods[state.selectedThreadAction] == 'DELETE' && !confirm("{{ trans('forum::general.generic_confirm') }}"))
+                if (threadActionMethods[state.selectedThreadAction] === 'DELETE' && !confirm("{{ trans('forum::general.generic_confirm') }}"))
                 {
                     event.preventDefault();
                 }
             }
 
             function submitPosts(event) {
-                if (postActionMethods[state.selectedPostAction] == 'DELETE' && !confirm("{{ trans('forum::general.generic_confirm') }}")) {
+                if (postActionMethods[state.selectedPostAction] === 'DELETE' && !confirm("{{ trans('forum::general.generic_confirm') }}")) {
                     event.preventDefault();
                 }
             }
@@ -400,5 +405,7 @@
             };
         }
     }).mount('#thread');
+    }
+mountForumApp();
     </script>
 @stop

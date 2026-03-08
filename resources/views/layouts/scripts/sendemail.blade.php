@@ -60,8 +60,8 @@
             confirmButtonText: 'OK',
             cancelButtonText: 'Close',
             customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger',
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger',
                 popup: 'swal-wide-popup'
             },
             didOpen: () => {
@@ -130,8 +130,8 @@
                     text: 'Please wait while we process your request.',
                     allowOutsideClick: false,
                     customClass: {
-                        confirmButton: 'btn-sm btn-success',
-                        cancelButton: 'btn-sm btn-danger'
+                        confirmButton: 'btn btn-sm btn-success',
+                        cancelButton: 'btn btn-sm btn-danger'
                     },
                     didOpen: () => {
                         Swal.showLoading();
@@ -152,7 +152,7 @@
                                     showConfirmButton: false,  // Automatically close without "OK" button
                                     timer: 1500,
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 }).then(() => {
                                     location.reload(); // Reload the page to reflect changes
@@ -165,7 +165,7 @@
                                     icon: 'error',
                                     confirmButtonText: 'OK',
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 });
                             }
@@ -199,8 +199,8 @@
         confirmButtonText: 'OK',
         cancelButtonText: 'Close',
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         },
         preConfirm: () => {
             const founderFirstName = Swal.getPopup().querySelector('#founder_first_name').value;
@@ -247,8 +247,8 @@
                 text: 'Please wait while we process your request.',
                 allowOutsideClick: false,
                 customClass: {
-                    confirmButton: 'btn-sm btn-success',
-                    cancelButton: 'btn-sm btn-danger'
+                    confirmButton: 'btn btn-sm btn-success',
+                    cancelButton: 'btn btn-sm btn-danger'
                 },
                 didOpen: () => {
                     Swal.showLoading();
@@ -273,7 +273,7 @@
                                 showConfirmButton: false,  // Automatically close without "OK" button
                                 timer: 1500,
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             }).then(() => {
                                 location.reload(); // Reload the page to reflect changes
@@ -286,7 +286,7 @@
                                 icon: 'error',
                                 confirmButtonText: 'OK',
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             });
                         }
@@ -323,8 +323,8 @@
         confirmButtonText: 'OK',
         cancelButtonText: 'Close',
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger',
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger',
             popup: 'swal-wide-popup'
         },
         didOpen: () => {
@@ -410,8 +410,8 @@
                     text: 'Please wait while we process your request.',
                     allowOutsideClick: false,
                     customClass: {
-                        confirmButton: 'btn-sm btn-success',
-                        cancelButton: 'btn-sm btn-danger'
+                        confirmButton: 'btn btn-sm btn-success',
+                        cancelButton: 'btn btn-sm btn-danger'
                     },
                     didOpen: () => {
                         Swal.showLoading();
@@ -433,7 +433,7 @@
                                     showConfirmButton: false,
                                     timer: 1500,
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 }).then(() => {
                                     location.reload();
@@ -446,7 +446,7 @@
                                     icon: 'error',
                                     confirmButtonText: 'OK',
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 });
                             }
@@ -468,8 +468,8 @@
         confirmButtonText: 'Send',
         cancelButtonText: 'Close',
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         },
         preConfirm: () => {
             const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
@@ -487,8 +487,8 @@
                     text: 'Please wait while we process your request.',
                     allowOutsideClick: false,
                     customClass: {
-                        confirmButton: 'btn-sm btn-success',
-                        cancelButton: 'btn-sm btn-danger'
+                        confirmButton: 'btn btn-sm btn-success',
+                        cancelButton: 'btn btn-sm btn-danger'
                     },
                     didOpen: () => {
                         Swal.showLoading();
@@ -509,7 +509,7 @@
                                     showConfirmButton: false,  // Automatically close without "OK" button
                                     timer: 1500,
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 }).then(() => {
                                     location.reload(); // Reload the page to reflect changes
@@ -522,7 +522,7 @@
                                     icon: 'error',
                                     confirmButtonText: 'OK',
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 });
                             }
@@ -544,8 +544,8 @@
         confirmButtonText: 'OK',
         cancelButtonText: 'Close',
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         },
         preConfirm: () => {
             const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
@@ -563,8 +563,8 @@
                     text: 'Please wait while we process your request.',
                     allowOutsideClick: false,
                     customClass: {
-                        confirmButton: 'btn-sm btn-success',
-                        cancelButton: 'btn-sm btn-danger'
+                        confirmButton: 'btn btn-sm btn-success',
+                        cancelButton: 'btn btn-sm btn-danger'
                     },
                     didOpen: () => {
                         Swal.showLoading();
@@ -585,7 +585,7 @@
                                     showConfirmButton: false,  // Automatically close without "OK" button
                                     timer: 1500,
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 }).then(() => {
                                     location.reload(); // Reload the page to reflect changes
@@ -598,7 +598,7 @@
                                     icon: 'error',
                                     confirmButtonText: 'OK',
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 });
                             }
@@ -620,8 +620,8 @@
         confirmButtonText: 'OK',
         cancelButtonText: 'Close',
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         },
         preConfirm: () => {
             const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
@@ -639,8 +639,8 @@
                     text: 'Please wait while we process your request.',
                     allowOutsideClick: false,
                     customClass: {
-                        confirmButton: 'btn-sm btn-success',
-                        cancelButton: 'btn-sm btn-danger'
+                        confirmButton: 'btn btn-sm btn-success',
+                        cancelButton: 'btn btn-sm btn-danger'
                     },
                     didOpen: () => {
                         Swal.showLoading();
@@ -660,7 +660,7 @@
                                     showConfirmButton: false,  // Automatically close without "OK" button
                                     timer: 1500,
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 }).then(() => {
                                     location.reload(); // Reload the page to reflect changes
@@ -673,7 +673,7 @@
                                     icon: 'error',
                                     confirmButtonText: 'OK',
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 });
                             }
@@ -712,8 +712,8 @@
             confirmButtonText: 'OK',
             cancelButtonText: 'Close',
             customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger',
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger',
                 popup: 'swal-wide-popup'
             },
             didOpen: () => {
@@ -781,8 +781,8 @@
                     text: 'Please wait while we process your request.',
                     allowOutsideClick: false,
                     customClass: {
-                        confirmButton: 'btn-sm btn-success',
-                        cancelButton: 'btn-sm btn-danger'
+                        confirmButton: 'btn btn-sm btn-success',
+                        cancelButton: 'btn btn-sm btn-danger'
                     },
                     didOpen: () => {
                         Swal.showLoading();
@@ -804,7 +804,7 @@
                                     showConfirmButton: false,  // Automatically close without "OK" button
                                     timer: 1500,
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 }).then(() => {
                                     location.reload(); // Reload the page to reflect changes
@@ -817,7 +817,7 @@
                                     icon: 'error',
                                     confirmButtonText: 'OK',
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 });
                             }
@@ -853,8 +853,8 @@
             confirmButtonText: 'OK',
             cancelButtonText: 'Close',
             customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger',
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger',
                 popup: 'swal-wide-popup'
             },
             didOpen: () => {
@@ -925,8 +925,8 @@
                     text: 'Please wait while we process your request.',
                     allowOutsideClick: false,
                     customClass: {
-                        confirmButton: 'btn-sm btn-success',
-                        cancelButton: 'btn-sm btn-danger'
+                        confirmButton: 'btn btn-sm btn-success',
+                        cancelButton: 'btn btn-sm btn-danger'
                     },
                     didOpen: () => {
                         Swal.showLoading();
@@ -948,7 +948,7 @@
                                     showConfirmButton: false,  // Automatically close without "OK" button
                                     timer: 1500,
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 }).then(() => {
                                     location.reload(); // Reload the page to reflect changes
@@ -961,7 +961,7 @@
                                     icon: 'error',
                                     confirmButtonText: 'OK',
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 });
                             }
@@ -983,8 +983,8 @@
         confirmButtonText: 'Send',
         cancelButtonText: 'Close',
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         },
         preConfirm: () => {
             const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
@@ -1002,8 +1002,8 @@
                     text: 'Please wait while we process your request.',
                     allowOutsideClick: false,
                     customClass: {
-                        confirmButton: 'btn-sm btn-success',
-                        cancelButton: 'btn-sm btn-danger'
+                        confirmButton: 'btn btn-sm btn-success',
+                        cancelButton: 'btn btn-sm btn-danger'
                     },
                     didOpen: () => {
                         Swal.showLoading();
@@ -1023,7 +1023,7 @@
                                     showConfirmButton: false,  // Automatically close without "OK" button
                                     timer: 1500,
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 }).then(() => {
                                     location.reload(); // Reload the page to reflect changes
@@ -1036,7 +1036,7 @@
                                     icon: 'error',
                                     confirmButtonText: 'OK',
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 });
                             }
@@ -1060,8 +1060,8 @@
         confirmButtonText: 'OK',
         cancelButtonText: 'Close',
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         },
        preConfirm: () => {
             const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
@@ -1081,8 +1081,8 @@
                 text: 'Please wait while we process your request.',
                 allowOutsideClick: false,
                 customClass: {
-                    confirmButton: 'btn-sm btn-success',
-                    cancelButton: 'btn-sm btn-danger'
+                    confirmButton: 'btn btn-sm btn-success',
+                    cancelButton: 'btn btn-sm btn-danger'
                 },
                 didOpen: () => {
                     Swal.showLoading();
@@ -1104,7 +1104,7 @@
                                 showConfirmButton: false,
                                 timer: 1500,
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             }).then(() => {
                                 location.reload();
@@ -1117,7 +1117,7 @@
                                 icon: 'error',
                                 confirmButtonText: 'OK',
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             });
                         }
@@ -1141,8 +1141,8 @@ function showDeleteCoordModal(coordId, firstName, lastName, activeStatus) {
         confirmButtonText: 'OK',
         cancelButtonText: 'Close',
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         },
         preConfirm: () => {
             const coordId = Swal.getPopup().querySelector('#coord_id').value;
@@ -1162,8 +1162,8 @@ function showDeleteCoordModal(coordId, firstName, lastName, activeStatus) {
                 text: 'Please wait while we process your request.',
                 allowOutsideClick: false,
                 customClass: {
-                    confirmButton: 'btn-sm btn-success',
-                    cancelButton: 'btn-sm btn-danger'
+                    confirmButton: 'btn btn-sm btn-success',
+                    cancelButton: 'btn btn-sm btn-danger'
                 },
                 didOpen: () => {
                     Swal.showLoading();
@@ -1185,7 +1185,7 @@ function showDeleteCoordModal(coordId, firstName, lastName, activeStatus) {
                                 showConfirmButton: false,
                                 timer: 1500,
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             }).then(() => {
                                 location.reload();
@@ -1198,7 +1198,7 @@ function showDeleteCoordModal(coordId, firstName, lastName, activeStatus) {
                                 icon: 'error',
                                 confirmButtonText: 'OK',
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             });
                         }
@@ -1221,8 +1221,8 @@ function showDeleteUserModal(userId, firstName, lastName) {
         confirmButtonText: 'OK',
         cancelButtonText: 'Close',
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         },
         preConfirm: () => {
             const userId = Swal.getPopup().querySelector('#user_id').value;
@@ -1240,8 +1240,8 @@ function showDeleteUserModal(userId, firstName, lastName) {
                 text: 'Please wait while we process your request.',
                 allowOutsideClick: false,
                 customClass: {
-                    confirmButton: 'btn-sm btn-success',
-                    cancelButton: 'btn-sm btn-danger'
+                    confirmButton: 'btn btn-sm btn-success',
+                    cancelButton: 'btn btn-sm btn-danger'
                 },
                 didOpen: () => {
                     Swal.showLoading();
@@ -1262,7 +1262,7 @@ function showDeleteUserModal(userId, firstName, lastName) {
                                 showConfirmButton: false,
                                 timer: 1500,
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             }).then(() => {
                                 location.reload();
@@ -1275,7 +1275,7 @@ function showDeleteUserModal(userId, firstName, lastName) {
                                 icon: 'error',
                                 confirmButtonText: 'OK',
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             });
                         }
@@ -1297,8 +1297,8 @@ function showNoChapterInquiryEmailModal(inquiryId, firstName, lastName) {
         confirmButtonText: 'Send',
         cancelButtonText: 'Close',
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         },  // <-- Added missing comma here
         preConfirm: () => {
             const inquiryId = Swal.getPopup().querySelector('#inquiry_id').value;
@@ -1316,8 +1316,8 @@ function showNoChapterInquiryEmailModal(inquiryId, firstName, lastName) {
                 text: 'Please wait while we process your request.',
                 allowOutsideClick: false,
                 customClass: {
-                    confirmButton: 'btn-sm btn-success',
-                    cancelButton: 'btn-sm btn-danger'
+                    confirmButton: 'btn btn-sm btn-success',
+                    cancelButton: 'btn btn-sm btn-danger'
                 },
                 didOpen: () => {
                     Swal.showLoading();
@@ -1338,7 +1338,7 @@ function showNoChapterInquiryEmailModal(inquiryId, firstName, lastName) {
                                 showConfirmButton: false,
                                 timer: 1500,
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             }).then(() => {
                                 window.location.href = '{{ route('inquiries.inquiryapplication') }}';
@@ -1351,7 +1351,7 @@ function showNoChapterInquiryEmailModal(inquiryId, firstName, lastName) {
                                 icon: 'error',
                                 confirmButtonText: 'OK',
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             });
                         }
@@ -1375,8 +1375,8 @@ function showYesChapterInquiryEmailModal(inquiryId, firstName, lastName, chapter
         confirmButtonText: 'Send',
         cancelButtonText: 'Close',
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         },  // <-- Added missing comma here
         preConfirm: () => {
             const inquiryId = Swal.getPopup().querySelector('#inquiry_id').value;
@@ -1396,8 +1396,8 @@ function showYesChapterInquiryEmailModal(inquiryId, firstName, lastName, chapter
                 text: 'Please wait while we process your request.',
                 allowOutsideClick: false,
                 customClass: {
-                    confirmButton: 'btn-sm btn-success',
-                    cancelButton: 'btn-sm btn-danger'
+                    confirmButton: 'btn btn-sm btn-success',
+                    cancelButton: 'btn btn-sm btn-danger'
                 },
                 didOpen: () => {
                     Swal.showLoading();
@@ -1419,7 +1419,7 @@ function showYesChapterInquiryEmailModal(inquiryId, firstName, lastName, chapter
                                 showConfirmButton: false,
                                 timer: 1500,
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             }).then(() => {
                                 window.location.href = '{{ route('inquiries.inquiryapplication') }}';
@@ -1432,7 +1432,7 @@ function showYesChapterInquiryEmailModal(inquiryId, firstName, lastName, chapter
                                 icon: 'error',
                                 confirmButtonText: 'OK',
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             });
                         }
@@ -1471,8 +1471,8 @@ function showChapterInquiryEmailModal(chapterName, chapterId, inquiryId, userNam
             confirmButtonText: 'OK',
             cancelButtonText: 'Close',
             customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger',
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger',
                 popup: 'swal-wide-popup'
             },
             didOpen: () => {
@@ -1543,8 +1543,8 @@ function showChapterInquiryEmailModal(chapterName, chapterId, inquiryId, userNam
                     text: 'Please wait while we process your request.',
                     allowOutsideClick: false,
                     customClass: {
-                        confirmButton: 'btn-sm btn-success',
-                        cancelButton: 'btn-sm btn-danger'
+                        confirmButton: 'btn btn-sm btn-success',
+                        cancelButton: 'btn btn-sm btn-danger'
                     },
                     didOpen: () => {
                         Swal.showLoading();
@@ -1566,7 +1566,7 @@ function showChapterInquiryEmailModal(chapterName, chapterId, inquiryId, userNam
                                     showConfirmButton: false,  // Automatically close without "OK" button
                                     timer: 1500,
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 }).then(() => {
                                     location.reload(); // Reload the page to reflect changes
@@ -1579,7 +1579,7 @@ function showChapterInquiryEmailModal(chapterName, chapterId, inquiryId, userNam
                                     icon: 'error',
                                     confirmButtonText: 'OK',
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 });
                             }
@@ -1617,8 +1617,8 @@ function showChapterInquiryEmailModal(chapterName, chapterId, inquiryId, userNam
             confirmButtonText: 'OK',
             cancelButtonText: 'Close',
             customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger',
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger',
                 popup: 'swal-wide-popup'
             },
             didOpen: () => {
@@ -1687,8 +1687,8 @@ function showChapterInquiryEmailModal(chapterName, chapterId, inquiryId, userNam
                     text: 'Please wait while we process your request.',
                     allowOutsideClick: false,
                     customClass: {
-                        confirmButton: 'btn-sm btn-success',
-                        cancelButton: 'btn-sm btn-danger'
+                        confirmButton: 'btn btn-sm btn-success',
+                        cancelButton: 'btn btn-sm btn-danger'
                     },
                     didOpen: () => {
                         Swal.showLoading();
@@ -1709,7 +1709,7 @@ function showChapterInquiryEmailModal(chapterName, chapterId, inquiryId, userNam
                                     showConfirmButton: false,  // Automatically close without "OK" button
                                     timer: 1500,
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 }).then(() => {
                                     location.reload(); // Reload the page to reflect changes
@@ -1722,7 +1722,7 @@ function showChapterInquiryEmailModal(chapterName, chapterId, inquiryId, userNam
                                     icon: 'error',
                                     confirmButtonText: 'OK',
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 });
                             }

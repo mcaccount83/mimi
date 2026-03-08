@@ -73,7 +73,7 @@ function startExport(exportType, exportName) {
                                 icon: 'success',
                                 confirmButtonText: 'OK',
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             });
                         },
@@ -85,7 +85,7 @@ function startExport(exportType, exportName) {
                                 icon: 'error',
                                 confirmButtonText: 'OK',
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-danger'
+                                    confirmButton: 'btn btn-sm btn-danger'
                                 }
                             });
                         }
@@ -102,7 +102,7 @@ function startExport(exportType, exportName) {
                 showConfirmButton: true,
                 confirmButtonText: 'Download Complete',
                 customClass: {
-                    confirmButton: 'btn-sm btn-success'
+                    confirmButton: 'btn btn-sm btn-success'
                 },
                 didOpen: () => {
                     // Create a hidden iframe to handle the download

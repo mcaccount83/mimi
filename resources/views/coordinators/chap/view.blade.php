@@ -1007,8 +1007,8 @@
             confirmButtonText: 'Yes, Unsubmit',
             cancelButtonText: 'Cancel',
             customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger'
             },
             buttonsStyling: false
         }).then((result) => {

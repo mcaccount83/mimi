@@ -80,6 +80,6 @@ class CategoryPolicy extends ForumCategoryPolicy
 
     public function markThreadsAsRead(User $user, Category $category): bool
     {
-        return $this->forumConditions->canManageLists($user);
+        return $this->forumConditions->canAccessList($user, $category);
     }
 }

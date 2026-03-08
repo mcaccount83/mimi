@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Enums\AdminStatusEnum;
 use App\Enums\UserTypeEnum;
+use App\Models\Chapters;
 use App\Services\ForumConditionsService;
 use App\Services\PositionConditionsService;
 use Illuminate\Support\Facades\Auth;
@@ -29,6 +30,7 @@ class ViewServiceProvider extends ServiceProvider
             $outgoing = false;
             $disbanded = false;
             $pending = false;
+            $chDetails = null;
 
             if (Auth::check()) {
                 $user = Auth::user();
@@ -40,6 +42,12 @@ class ViewServiceProvider extends ServiceProvider
                     $positionid = $corDetails['position_id'];
                     $secpositionid = $corDetails->secondaryPosition->pluck('id')->toArray(); // Get all secondary position IDs
                     $loggedIn = $corDetails['first_name'].' '.$corDetails['last_name'];
+                }
+
+                if ($userTypeId == UserTypeEnum::BOARD && $user->board) {
+                    $bdDetails = $user->board;
+                    $chId = $bdDetails['chapter_id'];
+                    $chDetails = Chapters::find($chId);
                 }
 
                 $userAdmin = $user->is_admin == AdminStatusEnum::ADMIN;
@@ -57,6 +65,8 @@ class ViewServiceProvider extends ServiceProvider
             $positionConditions = $positionConditionsService->getConditionsForUser($positionid, $secpositionid, $corId);
             $EOYOptions = $positionConditionsService->getEOYOptions();
             $forumCount = $forumConditionsService->getUnreadForumCount();
+            $pendingThreadsCount = $forumConditionsService->getPendingThreadsCount();
+            $pendingPostsCount = $forumConditionsService->getPendingPostsCount();
             $dateOptions = $positionConditionsService->getDateOptions();
 
             // Merge all variables
@@ -68,6 +78,8 @@ class ViewServiceProvider extends ServiceProvider
                 'userAdmin' => $userAdmin,
                 'userModerator' => $userModerator,
                 'unreadForumCount' => $forumCount,
+                'pendingThreadsCount' => $pendingThreadsCount,
+                'pendingPostsCount' => $pendingPostsCount,
                 'positionService' => $positionConditionsService,
                 'userTypeId' => $userTypeId,
                 'coordinator' => $coordinator,
@@ -79,6 +91,7 @@ class ViewServiceProvider extends ServiceProvider
                 $positionConditions,
                 $EOYOptions,
                 $dateOptions,
+                ($userTypeId == UserTypeEnum::BOARD ? ['chDetails' => $chDetails] : []),
             );
 
             // Pass all variables to views

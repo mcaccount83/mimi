@@ -134,34 +134,13 @@
         </li>
     @endif
 
-    <!-- List Subscription Menu Item -->
-    @php
-        // if ($coordinatorCondition && $conferenceCoordinatorCondition) {
-        if ($listAdminCondition || $ITCondition) {
-            $listSubscriptionRoute = route('forum.chaptersubscriptionlist');
-        } elseif ($listAdminCondition || $ITCondition) {
-            $listSubscriptionRoute = route('forum.chaptersubscriptionlist', ['check5' => 'yes']);
-        }
-        $activeChapterRoutes = [
-            'forum/chaptersubscriptionlist', 'forum/coordinatorsubscriptionlist',
-        ];
-    @endphp
-    @if (isset($listSubscriptionRoute))
-        <li class="nav-item">
-            <a href="{{ $listSubscriptionRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeChapterRoutes) }}">
-                <i class="nav-icon bi bi-card-list"></i>
-                <p>List Subscriptions</p>
-            </a>
-        </li>
-    @endif
-
     <!-- BoardList Email Menu Item -->
-    @php
+    {{-- @php
         if ($listAdminCondition || $ITCondition) {
             $boardlistRoute = route('chapters.chapboardlist');
         }
         $activeBoardlistRoutes = [
-            'forum/boardlist'
+            'listadmin/boardlist'
         ];
     @endphp
     @if (isset($boardlistRoute))
@@ -171,7 +150,7 @@
                 <p>BoardList Emails - OLD</p>
             </a>
         </li>
-    @endif
+    @endif --}}
 
     <!-- Chapter Reports Menu Item -->
     @php
@@ -248,6 +227,36 @@
             </li>
         @endif
 
+        <!-- ListAdmin Reports Menu Item -->
+        @php
+            // if ($coordinatorCondition && $conferenceCoordinatorCondition) {
+            if ($listAdminCondition || $ITCondition) {
+                $listSubscriptionRoute = route('forum.chaptersubscriptionlist');
+            } elseif ($listAdminCondition || $ITCondition) {
+                $listSubscriptionRoute = route('forum.chaptersubscriptionlist', ['check5' => 'yes']);
+            }
+            $activeChapterRoutes = [
+                'listadmin/*',
+            ];
+        @endphp
+        @if (isset($listSubscriptionRoute))
+            <li class="nav-item">
+                <a href="{{ $listSubscriptionRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeChapterRoutes) }}">
+                    <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em;">
+                            <i class="bi bi-chat-quote-fill position-absolute"></i>
+                            <i class="bi bi-gear-fill position-absolute" style="font-size: 0.5em; bottom: -0.1em; right: -0.1em; background-color: #343a40; border-radius: 90%;"></i>
+                        </span>
+                    <p>ListAdmin Reports
+                        @if( $pendingPostsCount  > 0 || $pendingThreadCount  > 0 )
+                        <span class="badge bg-danger badge-pill notification-badge">
+                            PENDING
+                        </span>
+                    @endif
+                    </p>
+                </a>
+            </li>
+        @endif
+
     <!-- Admin Reports Menu Item -->
     @php
         if ($coordinatorCondition && $conferenceCoordinatorCondition) {
@@ -269,7 +278,7 @@
         </li>
     @endif
 
-        <!-- User Reports Menu Item -->
+    <!-- User Reports Menu Item -->
     @php
         if ($ITCondition) {
             $userReportsRoute = route('userreports.useradmin');
@@ -323,8 +332,75 @@
         </li>
     @endif
 
-        <!-- CoordinatorList Menu Item -->
-        <li class="nav-item position-relative">
+        <!-- ForumList Menu Item -->
+        @php
+        $forumRoute = url(config('forum.frontend.router.prefix') . '/unread');
+
+        $activeForumRoutes = [
+            'forum/*',
+        ];
+        @endphp
+        @if (isset($forumRoute))
+            <li class="nav-item">
+                <a href="{{ $forumRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeForumRoutes) }}">
+                    <i class="nav-icon bi bi-chat-quote-fill"></i>
+                    <p>ForumLists
+                        @if( $unreadForumCount > 0)
+                        <span class="badge bg-success badge-pill notification-badge">
+                            UNREAD
+                        </span>
+                    @endif
+                    </p>
+                </a>
+            </li>
+        @endif
+
+        {{-- @php
+        $forumRoute = url(config('forum.frontend.router.prefix') . '/pending-approval/threads');
+
+        $activeForumRoutes = [
+            'forum/pending-approval/threads',
+        ];
+        @endphp
+        @if (isset($forumRoute))
+            <li class="nav-item">
+                <a href="{{ $forumRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeForumRoutes) }}">
+                    <i class="nav-icon bi bi-chat-quote-fill"></i>
+                    <p>ForumThreads
+                        @if( $pendingThreadsCount  > 0)
+                        <span class="badge bg-danger badge-pill notification-badge">
+                            PENDING
+                        </span>
+                    @endif
+                    </p>
+                </a>
+            </li>
+        @endif
+
+         @php
+        $forumRoute = url(config('forum.frontend.router.prefix') . '/pending-approval/posts');
+
+        $activeForumRoutes = [
+            'forum/pending-approval/posts',
+        ];
+        @endphp
+        @if (isset($forumRoute))
+            <li class="nav-item">
+                <a href="{{ $forumRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeForumRoutes) }}">
+                    <i class="nav-icon bi bi-chat-quote-fill"></i>
+                    <p>ForumPosts
+                        @if( $pendingPostsCount  > 0)
+                        <span class="badge bg-danger badge-pill notification-badge">
+                            PENDING
+                        </span>
+                    @endif
+                    </p>
+                </a>
+            </li>
+        @endif --}}
+
+
+        {{-- <li class="nav-item position-relative">
         <a href="{{ url(config('forum.frontend.router.prefix') . '/unread') }}" target="_blank" class="nav-link">
             <i class="nav-icon bi bi-chat-quote-fill"></i>
             <p>
@@ -336,7 +412,7 @@
                 @endif
             </p>
         </a>
-    </li>
+    </li> --}}
 
     <li class="nav-item">
         <a href="{{ route('coordinators.profile') }}" class="nav-link {{ Request::is('coordprofile') ? 'active' : '' }}">

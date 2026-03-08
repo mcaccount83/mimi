@@ -1,17 +1,16 @@
 <script>
-//Cusotmize AJAX Popups to Match Theme
     function customSuccessAlert(message) {
-            Swal.fire({
-                title: 'Success!',
-                html: message,
-                icon: 'success',
-                confirmButtonText: 'OK',
-                customClass: {
-                    confirmButton: 'btn-sm btn-success', // Match your theme button class
-                },
-                buttonsStyling: false // Disable default button styling
-            });
-        }
+        Swal.fire({
+            title: 'Success!',
+            html: message,
+            icon: 'success',
+            confirmButtonText: 'OK',
+            customClass: {
+                confirmButton: 'btn btn-sm btn-success',
+            },
+            buttonsStyling: false
+        });
+    }
 
     function customWarningAlert(message) {
         return Swal.fire({
@@ -20,9 +19,9 @@
             icon: 'warning',
             confirmButtonText: 'OK',
             customClass: {
-                confirmButton: 'btn-sm btn-success', // Match your theme button class
+                confirmButton: 'btn btn-sm btn-success',
             },
-            buttonsStyling: false // Disable default button styling
+            buttonsStyling: false
         });
     }
 
@@ -33,9 +32,9 @@
             icon: 'info',
             confirmButtonText: 'OK',
             customClass: {
-                confirmButton: 'btn-sm btn-success', // Match your theme button class
+                confirmButton: 'btn btn-sm btn-success',
             },
-            buttonsStyling: false // Disable default button styling
+            buttonsStyling: false
         });
     }
 
@@ -46,9 +45,9 @@
             icon: 'error',
             confirmButtonText: 'OK',
             customClass: {
-                confirmButton: 'btn-sm btn-success', // Match your theme button class
+                confirmButton: 'btn btn-sm btn-success',
             },
-            buttonsStyling: false // Disable default button styling
+            buttonsStyling: false
         });
     }
 </script>

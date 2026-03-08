@@ -1748,10 +1748,6 @@ class BoardControllerNew extends Controller implements HasMiddleware
         $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
-        $bdDetails = Boards::with(['state', 'country', 'position'])
-            ->where('user_id', $userId)
-            ->get();
-
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
@@ -1779,52 +1775,45 @@ class BoardControllerNew extends Controller implements HasMiddleware
     /**
      * Save Coordiantor Profile
      */
-    public function updateBoardProfile(Request $request): RedirectResponse
+    public function updateBoardProfile(Request $request, $chId): RedirectResponse
     {
         $user = User::find($request->user()->id);
-        $updatedId = $user['userId'];
+        $updatedId = $user->id;
+        $updatedBy = $user->first_name.' '.$user->last_name;
 
-        $cdDetails = $user->coordinator;
-        $cdId = $cdDetails->id;
-        $updatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
-
-        $coordinator = Coordinators::find($cdId);
-        $cdUserId = $coordinator->user_id;
-        $user = User::find($cdUserId);
+        $bdDetails = $user->board;
+        $bdId = $bdDetails->id;
+        $board = Boards::find($bdId);
 
         try {
-            $user->first_name = $request->input('cord_fname');
-            $user->last_name = $request->input('cord_lname');
-            $user->email = $request->input('cord_email');
+            $user ->first_name = $request->input('ch_bor_fname');
+            $user ->last_name = $request->input('ch_bor_lname');
+            $user ->email = $request->input('ch_bor_email');
 
-            $user->save();
+            $user ->save();
 
-            $coordinator->first_name = $request->input('cord_fname');
-            $coordinator->last_name = $request->input('cord_lname');
-            $coordinator->email = $request->input('cord_email');
-            $coordinator->sec_email = $request->input('cord_sec_email');
-            $coordinator->address = $request->input('cord_addr');
-            $coordinator->city = $request->input('cord_city');
-            $coordinator->state_id = $request->input('cord_state');
-            $coordinator->zip = $request->input('cord_zip');
-            $coordinator->phone = $request->input('cord_phone');
-            $coordinator->alt_phone = $request->input('cord_altphone');
-            $coordinator->birthday_month_id = $request->input('cord_month');
-            $coordinator->birthday_day = $request->input('cord_day');
-            $coordinator->home_chapter = $request->input('cord_chapter');
-            $coordinator->updated_by = $updatedBy;
-            $coordinator->updated_id = $updatedId;
+            $board->first_name = $request->input('ch_bor_fname');
+            $board->last_name = $request->input('ch_bor_lname');
+            $board->email = $request->input('ch_bor_email');
+            $board->street_address = $request->input('ch_bor_street');
+            $board->city = $request->input('ch_bor_city');
+            $board->state_id = $request->input('ch_bor_state');
+            $board->country_id = $request->input('ch_bor_country');
+            $board->zip = $request->input('ch_bor_zip');
+            $board->phone = $request->input('ch_bor_phone');
+            $board->updated_by = $updatedBy;
+            $board->updated_id = $updatedId;
 
-            $coordinator->save();
+            $board->save();
 
             DB::commit();
 
-            return redirect()->to('/profile/coordprofile')->with('success', 'Coordinator profile updated successfully');
+            return redirect()->back()->with('success', 'Board profile updated successfully');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
-            return redirect()->to('/profile/coordprofile')->with('fail', 'Something went wrong, Please try again.');
+            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();

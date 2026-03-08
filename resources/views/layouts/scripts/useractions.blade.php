@@ -11,8 +11,8 @@
             confirmButtonText: 'OK',
             cancelButtonText: 'Close',
             customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger'
             },
             preConfirm: () => {
                 const userId = Swal.getPopup().querySelector('#user_id').value;
@@ -44,7 +44,7 @@
                             showConfirmButton: false,  // Automatically close without "OK" button
                             timer: 1500,
                             customClass: {
-                                confirmButton: 'btn-sm btn-success'
+                                confirmButton: 'btn btn-sm btn-success'
                             }
                         }).then(() => {
                             if (response.redirect) {
@@ -59,7 +59,7 @@
                             icon: 'error',
                             confirmButtonText: 'OK',
                             customClass: {
-                                confirmButton: 'btn-sm btn-success'
+                                confirmButton: 'btn btn-sm btn-success'
                             }
                         });
                     }
@@ -70,9 +70,9 @@
 
     function unsubscribe(categoryId, userId) {
         Swal.fire({
-            title: 'Subscribe to List',
+            title: 'Unsubscribed from List',
             html: `
-                <p>Coordinator will be subscribed to the selected list. Please confirm by pressing OK.</p>
+                <p>User will be unsubscribed from the selected list. Please confirm by pressing OK.</p>
 
                 <input type="hidden" id="user_id" name="user_id" value="${userId}">
                 <input type="hidden" id="category_id" name="category_id" value="${categoryId}">
@@ -81,8 +81,8 @@
             confirmButtonText: 'OK',
             cancelButtonText: 'Close',
             customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger'
             },
             preConfirm: () => {
                 const userId = Swal.getPopup().querySelector('#user_id').value;
@@ -113,7 +113,7 @@
                             showConfirmButton: false,  // Automatically close without "OK" button
                             timer: 1500,
                             customClass: {
-                                confirmButton: 'btn-sm btn-success'
+                                confirmButton: 'btn btn-sm btn-success'
                             }
                         }).then(() => {
                             if (response.redirect) {
@@ -128,7 +128,7 @@
                             icon: 'error',
                             confirmButtonText: 'OK',
                             customClass: {
-                                confirmButton: 'btn-sm btn-success'
+                                confirmButton: 'btn btn-sm btn-success'
                             }
                         });
                     }
@@ -148,8 +148,8 @@
         confirmButtonText: 'OK',
         cancelButtonText: 'Close',
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         },
 
     }).then((result) => {
@@ -160,8 +160,8 @@
                 text: 'Please wait while we process your request.',
                 allowOutsideClick: false,
                 customClass: {
-                    confirmButton: 'btn-sm btn-success',
-                    cancelButton: 'btn-sm btn-danger'
+                    confirmButton: 'btn btn-sm btn-success',
+                    cancelButton: 'btn btn-sm btn-danger'
                 },
                 didOpen: () => {
                     Swal.showLoading();
@@ -181,7 +181,7 @@
                                 showConfirmButton: false,  // Automatically close without "OK" button
                                 timer: 1500,
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             }).then(() => {
                                 location.reload(); // Reload the page to reflect changes
@@ -194,7 +194,7 @@
                                 icon: 'error',
                                 confirmButtonText: 'OK',
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             });
                         }
@@ -216,8 +216,8 @@ function showResetProbationSubmisionModel() {
         confirmButtonText: 'OK',
         cancelButtonText: 'Close',
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         },
 
     }).then((result) => {
@@ -228,8 +228,8 @@ function showResetProbationSubmisionModel() {
                 text: 'Please wait while we process your request.',
                 allowOutsideClick: false,
                 customClass: {
-                    confirmButton: 'btn-sm btn-success',
-                    cancelButton: 'btn-sm btn-danger'
+                    confirmButton: 'btn btn-sm btn-success',
+                    cancelButton: 'btn btn-sm btn-danger'
                 },
                 didOpen: () => {
                     Swal.showLoading();
@@ -249,7 +249,7 @@ function showResetProbationSubmisionModel() {
                                 showConfirmButton: false,  // Automatically close without "OK" button
                                 timer: 1500,
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             }).then(() => {
                                 location.reload(); // Reload the page to reflect changes
@@ -262,7 +262,7 @@ function showResetProbationSubmisionModel() {
                                 icon: 'error',
                                 confirmButtonText: 'OK',
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             });
                         }
@@ -303,8 +303,8 @@ function showResetProbationSubmisionModel() {
             confirmButtonText: 'OK',
             cancelButtonText: 'Close',
             customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger'
             },
             didOpen: () => {
                 // Add event listener to checkbox
@@ -340,8 +340,8 @@ function showResetProbationSubmisionModel() {
                     text: 'Please wait while we process your request.',
                     allowOutsideClick: false,
                     customClass: {
-                        confirmButton: 'btn-sm btn-success',
-                        cancelButton: 'btn-sm btn-danger'
+                        confirmButton: 'btn btn-sm btn-success',
+                        cancelButton: 'btn btn-sm btn-danger'
                     },
                     didOpen: () => {
                         Swal.showLoading();
@@ -365,7 +365,7 @@ function showResetProbationSubmisionModel() {
                                     showConfirmButton: false,  // Automatically close without "OK" button
                                     timer: 1500,
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 }).then(() => {
                                     location.reload(); // Reload the page to reflect changes
@@ -378,7 +378,7 @@ function showResetProbationSubmisionModel() {
                                     icon: 'error',
                                     confirmButtonText: 'OK',
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 });
                             }
@@ -402,8 +402,8 @@ function showResetProbationSubmisionModel() {
             confirmButtonText: 'OK',
             cancelButtonText: 'Close',
             customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger'
             },
             preConfirm: () => {
                 const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
@@ -432,7 +432,7 @@ function showResetProbationSubmisionModel() {
                             showConfirmButton: false,  // Automatically close without "OK" button
                             timer: 1500,
                             customClass: {
-                                confirmButton: 'btn-sm btn-success'
+                                confirmButton: 'btn btn-sm btn-success'
                             }
                         }).then(() => {
                                     location.reload(); // Reload the page to reflect changes
@@ -445,7 +445,7 @@ function showResetProbationSubmisionModel() {
                             icon: 'error',
                             confirmButtonText: 'OK',
                             customClass: {
-                                confirmButton: 'btn-sm btn-success'
+                                confirmButton: 'btn btn-sm btn-success'
                             }
                         });
                     }
@@ -467,8 +467,8 @@ function showResetProbationSubmisionModel() {
             confirmButtonText: 'OK',
             cancelButtonText: 'Close',
             customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger'
             },
             preConfirm: () => {
                 const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
@@ -506,7 +506,7 @@ function showResetProbationSubmisionModel() {
                                     showConfirmButton: false,
                                     timer: 1500,
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 }).then(() => {
                                     if (response.redirect) {
@@ -520,7 +520,7 @@ function showResetProbationSubmisionModel() {
                                     icon: 'error',
                                     confirmButtonText: 'OK',
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 });
                             }
@@ -534,7 +534,7 @@ function showResetProbationSubmisionModel() {
                                 showConfirmButton: false,
                                 timer: 1500,
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             }).then(() => {
                                 window.location.href = '{{ route('chapters.view', ['id' => 'chapterId']) }}';
@@ -555,7 +555,7 @@ function showResetProbationSubmisionModel() {
                             icon: 'error',
                             confirmButtonText: 'OK',
                             customClass: {
-                                confirmButton: 'btn-sm btn-success'
+                                confirmButton: 'btn btn-sm btn-success'
                             }
                         });
                     }
@@ -578,8 +578,8 @@ function showResetProbationSubmisionModel() {
             confirmButtonText: 'OK',
             cancelButtonText: 'Close',
             customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger'
             },
             preConfirm: () => {
                 const disbandReason = Swal.getPopup().querySelector('#disband_reason').value;
@@ -619,7 +619,7 @@ function showResetProbationSubmisionModel() {
                                     showConfirmButton: false,
                                     timer: 1500,
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 }).then(() => {
                                     location.reload(); // Reload the page to reflect changes
@@ -631,7 +631,7 @@ function showResetProbationSubmisionModel() {
                                     icon: 'error',
                                     confirmButtonText: 'OK',
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 });
                             }
@@ -645,7 +645,7 @@ function showResetProbationSubmisionModel() {
                                 showConfirmButton: false,
                                 timer: 1500,
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             }).then(() => {
                                 location.reload(); // Reload the page to reflect changes
@@ -666,7 +666,7 @@ function showResetProbationSubmisionModel() {
                             icon: 'error',
                             confirmButtonText: 'OK',
                             customClass: {
-                                confirmButton: 'btn-sm btn-success'
+                                confirmButton: 'btn btn-sm btn-success'
                             }
                         });
                     }
@@ -686,8 +686,8 @@ function showResetProbationSubmisionModel() {
             confirmButtonText: 'OK',
             cancelButtonText: 'Close',
             customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger'
             },
             preConfirm: () => {
                 const coordId = Swal.getPopup().querySelector('#coord_id').value;
@@ -716,7 +716,7 @@ function showResetProbationSubmisionModel() {
                             showConfirmButton: false,  // Automatically close without "OK" button
                             timer: 1500,
                             customClass: {
-                                confirmButton: 'btn-sm btn-success'
+                                confirmButton: 'btn btn-sm btn-success'
                             }
                         }).then(() => {
                             if (response.redirect) {
@@ -731,7 +731,7 @@ function showResetProbationSubmisionModel() {
                             icon: 'error',
                             confirmButtonText: 'OK',
                             customClass: {
-                                confirmButton: 'btn-sm btn-success'
+                                confirmButton: 'btn btn-sm btn-success'
                             }
                         });
                     }
@@ -751,8 +751,8 @@ function showResetProbationSubmisionModel() {
             confirmButtonText: 'OK',
             cancelButtonText: 'Close',
             customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger'
             },
             preConfirm: () => {
                 const coordId = Swal.getPopup().querySelector('#coord_id').value;
@@ -780,7 +780,7 @@ function showResetProbationSubmisionModel() {
                             showConfirmButton: false,
                             timer: 1500,
                             customClass: {
-                                confirmButton: 'btn-sm btn-success'
+                                confirmButton: 'btn btn-sm btn-success'
                             }
                         }).then(() => {
                             if (response.redirect) {
@@ -795,7 +795,7 @@ function showResetProbationSubmisionModel() {
                             icon: 'error',
                             confirmButtonText: 'OK',
                             customClass: {
-                                confirmButton: 'btn-sm btn-success'
+                                confirmButton: 'btn btn-sm btn-success'
                             }
                         });
                     }
@@ -818,8 +818,8 @@ function showResetProbationSubmisionModel() {
             confirmButtonText: 'OK',
             cancelButtonText: 'Close',
             customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger'
             },
             preConfirm: () => {
                 const retireReason = Swal.getPopup().querySelector('#reason_retired').value;
@@ -855,7 +855,7 @@ function showResetProbationSubmisionModel() {
                             showConfirmButton: false,
                             timer: 1500,
                             customClass: {
-                                confirmButton: 'btn-sm btn-success'
+                                confirmButton: 'btn btn-sm btn-success'
                             }
                         }).then(() => {
                             if (response.redirect) {
@@ -870,7 +870,7 @@ function showResetProbationSubmisionModel() {
                             icon: 'error',
                             confirmButtonText: 'OK',
                             customClass: {
-                                confirmButton: 'btn-sm btn-success'
+                                confirmButton: 'btn btn-sm btn-success'
                             }
                         });
                     }
@@ -890,8 +890,8 @@ function showResetProbationSubmisionModel() {
             confirmButtonText: 'OK',
             cancelButtonText: 'Close',
             customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger'
             },
             preConfirm: () => {
                 const coordId = Swal.getPopup().querySelector('#coord_id').value;
@@ -920,7 +920,7 @@ function showResetProbationSubmisionModel() {
                             showConfirmButton: false,  // Automatically close without "OK" button
                             timer: 1500,
                             customClass: {
-                                confirmButton: 'btn-sm btn-success'
+                                confirmButton: 'btn btn-sm btn-success'
                             }
                         }).then(() => {
                             if (response.redirect) {
@@ -935,7 +935,7 @@ function showResetProbationSubmisionModel() {
                             icon: 'error',
                             confirmButtonText: 'OK',
                             customClass: {
-                                confirmButton: 'btn-sm btn-success'
+                                confirmButton: 'btn btn-sm btn-success'
                             }
                         });
                     }
@@ -957,8 +957,8 @@ function showResetProbationSubmisionModel() {
             confirmButtonText: 'OK',
             cancelButtonText: 'Close',
             customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger'
             },
             preConfirm: () => {
                 const coordId = Swal.getPopup().querySelector('#coord_id').value;
@@ -992,7 +992,7 @@ function showResetProbationSubmisionModel() {
                                     showConfirmButton: false,
                                     timer: 1500,
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 }).then(() => {
                                     if (response.redirect) {
@@ -1006,7 +1006,7 @@ function showResetProbationSubmisionModel() {
                                     icon: 'error',
                                     confirmButtonText: 'OK',
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 });
                             }
@@ -1020,7 +1020,7 @@ function showResetProbationSubmisionModel() {
                                 showConfirmButton: false,
                                 timer: 1500,
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             }).then(() => {
                                 window.location.href = '{{ route('coordinators.view', ['id' => 'coorId']) }}';
@@ -1041,7 +1041,7 @@ function showResetProbationSubmisionModel() {
                             icon: 'error',
                             confirmButtonText: 'OK',
                             customClass: {
-                                confirmButton: 'btn-sm btn-success'
+                                confirmButton: 'btn btn-sm btn-success'
                             }
                         });
                     }
@@ -1065,8 +1065,8 @@ function showResetProbationSubmisionModel() {
             confirmButtonText: 'OK',
             cancelButtonText: 'Close',
             customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger'
             },
             preConfirm: () => {
                 const retiredReason = Swal.getPopup().querySelector('#reason_retired').value;
@@ -1109,7 +1109,7 @@ function showResetProbationSubmisionModel() {
                                     showConfirmButton: false,
                                     timer: 1500,
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 }).then(() => {
                                     location.reload(); // Reload the page to reflect changes
@@ -1121,7 +1121,7 @@ function showResetProbationSubmisionModel() {
                                     icon: 'error',
                                     confirmButtonText: 'OK',
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 });
                             }
@@ -1135,7 +1135,7 @@ function showResetProbationSubmisionModel() {
                                 showConfirmButton: false,
                                 timer: 1500,
                                 customClass: {
-                                    confirmButton: 'btn-sm btn-success'
+                                    confirmButton: 'btn btn-sm btn-success'
                                 }
                             }).then(() => {
                                 location.reload(); // Reload the page to reflect changes
@@ -1156,7 +1156,7 @@ function showResetProbationSubmisionModel() {
                             icon: 'error',
                             confirmButtonText: 'OK',
                             customClass: {
-                                confirmButton: 'btn-sm btn-success'
+                                confirmButton: 'btn btn-sm btn-success'
                             }
                         });
                     }

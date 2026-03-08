@@ -49,8 +49,8 @@
             confirmButtonText: 'Generate Letter',
             cancelButtonText: 'Close',
             customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger'
             },
             preConfirm: () => {
                 const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
@@ -84,7 +84,7 @@
                                     showConfirmButton: false,
                                     timer: 1500,
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 }).then(() => {
                                     location.reload();
@@ -97,7 +97,7 @@
                                     icon: 'error',
                                     confirmButtonText: 'OK',
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 });
                             }
@@ -119,8 +119,8 @@
             confirmButtonText: 'Generate Letter',
             cancelButtonText: 'Close',
             customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger'
             },
             preConfirm: () => {
                 const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
@@ -155,7 +155,7 @@
                                     showConfirmButton: false,
                                     timer: 1500,
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 }).then(() => {
                                     location.reload();
@@ -168,7 +168,7 @@
                                     icon: 'error',
                                     confirmButtonText: 'OK',
                                     customClass: {
-                                        confirmButton: 'btn-sm btn-success'
+                                        confirmButton: 'btn btn-sm btn-success'
                                     }
                                 });
                             }

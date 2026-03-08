@@ -34,7 +34,7 @@
                 text: 'Please indicate whether your listed boundaries are correct.',
                 confirmButtonText: 'OK',
                 customClass: {
-                    confirmButton: 'btn-sm btn-danger'
+                    confirmButton: 'btn btn-sm btn-danger'
                 }
             });
             return false;
@@ -50,7 +50,7 @@
                     text: 'Please indicate which part of the Boundaries do NOT match your records.',
                     confirmButtonText: 'OK',
                     customClass: {
-                        confirmButton: 'btn-sm btn-danger'
+                        confirmButton: 'btn btn-sm btn-danger'
                     }
                 });
                 if (boundaryIssue) boundaryIssue.focus();
@@ -91,7 +91,7 @@
                 html: 'The following emails are duplicates: <br>' + duplicateEmails.join('<br>') + '<br>Please correct them before submitting.',
                 confirmButtonText: 'OK',
                 customClass: {
-                    confirmButton: 'btn-sm btn-danger'
+                    confirmButton: 'btn btn-sm btn-danger'
                 }
             });
             return false;

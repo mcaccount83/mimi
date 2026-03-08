@@ -161,6 +161,45 @@
                                     <input type="text" name="cord_day" id="cord_day" class="form-control" value="{{ $cdDetails->birthday_day }}" required>
                                     </div>
                                 </div>
+
+                                <div class="row mb-3">
+                            <label class="col-sm-2">ForumList Subscriptions:</label>
+                                        @php
+                                            $Subscriptions = $cdDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
+                                        @endphp
+                                        <div class="col-sm-10">
+                                            <div class="mb-1">You can always access all lists/posts through your MIMI profile, subscribing will allow you to receive individual emails when
+                                                a new post is made.</div>
+                                            <div class="mb-2">All coordinators are automatically subscribed to Public Announcements at the beginning of each fiscal year but are NOT automatically subscribed
+                                                to CoordinatorList or BoardList.  If you'd like to udpate the settings for any list, simply subscribe or unsubscribe below.
+                                            </div>
+                                            <div class="mb-1"><b>Public Announcements:</b>
+                                            {{ in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}
+                                            @if (in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
+                                                <button type="button" class="btn btn-danger bg-gradient btn-xs ms-2" onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $cdDetails->user_id }})"><i class="bi bi-ban me-2"></i>Unsubscribe</button>
+                                            @else
+                                                <button type="button" class="btn btn-success bg-gradient btn-xs ms-2" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $cdDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
+                                            @endif
+                                            </div>
+                                            <div class="mb-1"><b>CoordinatorList:</b>
+                                            {{ in_array(\App\Enums\ForumCategoryEnum::COORDLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}
+                                            @if (in_array(\App\Enums\ForumCategoryEnum::COORDLIST, $Subscriptions))
+                                                <button type="button" class="btn btn-danger bg-gradient btn-xs ms-2" onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::COORDLIST }}, {{ $cdDetails->user_id }})"><i class="bi bi-ban me-2"></i>Unsubscribe</button>
+                                            @else
+                                                <button type="button" class="btn btn-success bg-gradient btn-xs ms-2" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::COORDLIST }}, {{ $cdDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
+                                            @endif
+                                            </div>
+                                            <div class="mb-1"><b>BoardList:</b>
+                                            {{ in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}
+                                            @if (in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
+                                                <button type="button" class="btn btn-danger bg-gradient btn-xs ms-2" onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $cdDetails->user_id }})"><i class="bi bi-ban me-2"></i>Unsubscribe</button>
+                                            @else
+                                                <button type="button" class="btn btn-success bg-gradient btn-xs ms-2" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $cdDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
+                                            @endif
+                                            </div>
+                                        </div>
+                        </div>
+
                             </div>
                         </div>
               <!-- /.card-body -->

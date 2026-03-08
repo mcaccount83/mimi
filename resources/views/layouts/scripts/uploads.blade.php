@@ -54,8 +54,8 @@
             return false;
         },
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         }
     });
 }
@@ -115,8 +115,8 @@ function showStatement1UploadModal(chapter_id) {
             return false;
         },
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         }
     });
 }
@@ -176,8 +176,8 @@ function showStatement2UploadModal(chapter_id) {
             return false;
         },
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         }
     });
 }
@@ -237,8 +237,8 @@ function show990NUploadModal(chapter_id) {
             return false;
         },
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         }
     });
 }
@@ -298,8 +298,8 @@ function showAwardUploadModal(chapter_id) {
             return false;
         },
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         }
     });
 }
@@ -359,8 +359,8 @@ function showGrantUploadModal(id) {
             return false;
         },
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         }
     });
 }

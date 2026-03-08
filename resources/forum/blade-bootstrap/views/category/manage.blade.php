@@ -1,6 +1,6 @@
 @extends ('forum::layouts.main', ['category' => null, 'thread' => null, 'breadcrumbs_append' => [trans('forum::general.manage')]])
 
-@section ('content')
+@section ('forum_content')
     <div class="d-flex flex-row justify-content-between mb-2">
         <h2 class="flex-grow-1">{{ trans('forum::general.manage') }}</h2>
 
@@ -40,9 +40,9 @@
             :empty-insert-threshold="50"
             item-key="id">
             <template #item="{element}">
-                <li class="list-group-item mt-2" :data-id="element.id">
-                    <a class="float-end btn btn-sm btn-danger ms-2" :href="element.route + '#modal=delete-category'">{{ trans('forum::general.delete') }}</a>
-                    <a class="float-end btn btn-sm btn-link ms-2" :href="element.route + '#modal=edit-category'">{{ trans('forum::general.edit') }}</a>
+                <li class="list-group-item" :data-id="element.id">
+                    <a class="float-end btn btn-sm btn-danger ml-2" :href="element.route + '#modal=delete-category'">{{ trans('forum::general.delete') }}</a>
+                    <a class="float-end btn btn-sm btn-link ml-2" :href="element.route + '#modal=edit-category'">{{ trans('forum::general.edit') }}</a>
                     <strong :style="{ color: element.color }">@{{ element.title }}</strong>
                     <div class="text-muted">@{{ element.description }}</div>
 
@@ -52,7 +52,7 @@
         </draggable>
     </script>
 
-    <script type="module">
+    <script>
     const app = Vue.createApp({
         setup() {
             const state = Vue.reactive({
@@ -75,7 +75,7 @@
                 state.changesApplied = false;
 
                 var payload = { categories: state.categories };
-                axios.post('{{ route('forum.bulk.category.manage') }}', payload)
+                axios.post('{{ route('forum.bulk.category.reorder') }}', payload)
                     .then(response => {
                         state.changesApplied = true;
                         setTimeout(() => state.changesApplied = false, 3000);

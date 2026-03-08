@@ -635,8 +635,8 @@ $("#btn-submit").click(function(e) {
         confirmButtonText: 'Submit Request',
         cancelButtonText: 'Cancel',
         customClass: {
-            confirmButton: 'btn-sm btn-success',
-            cancelButton: 'btn-sm btn-danger'
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
         }
     }).then((result) => {
         if (result.isConfirmed) {
@@ -647,7 +647,7 @@ $("#btn-submit").click(function(e) {
                 allowOutsideClick: false,
                 didOpen: () => Swal.showLoading(),
                 customClass: {
-                    confirmButton: 'btn-sm btn-success'
+                    confirmButton: 'btn btn-sm btn-success'
                 }
             });
 
@@ -819,7 +819,7 @@ function customWarningAlert(message) {
         html: message,
         confirmButtonText: 'OK',
         customClass: {
-            confirmButton: 'btn-sm btn-primary'
+            confirmButton: 'btn btn-sm btn-primary'
         }
     });
 }

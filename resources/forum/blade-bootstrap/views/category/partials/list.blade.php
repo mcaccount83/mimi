@@ -4,8 +4,9 @@
             <div class="col-sm text-md-start">
                 <h5 class="card-title">
                     <a href="{{ Forum::route('category.show', $category) }}" style="color: {{ $category->color_light_mode }};">{{ $category->title }}</a>
+                    <br>
+                    <span class="text-muted">{{ $category->description }}</span>
                 </h5>
-                <p class="card-text text-muted">{{ $category->description }}</p>
             </div>
             <div class="col-sm-2 text-md-end">
                 @if ($category->accepts_threads)
@@ -40,7 +41,7 @@
     @if ($category->children->count() > 0)
         <div class="subcategories">
             @foreach ($category->children as $subcategory)
-                <div class="list-group-item mt-2">
+                <div class="list-group-item">
                     <div class="row align-items-center text-center">
                         <div class="col-sm text-md-start">
                             <a href="{{ Forum::route('category.show', $subcategory) }}" style="color: {{ $subcategory->color_light_mode }};">{{ $subcategory->title }}</a>

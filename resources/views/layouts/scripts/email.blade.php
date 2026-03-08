@@ -47,7 +47,7 @@
             html: 'The following emails are duplicates: <br>' + duplicateEmails.join('<br>') + '<br>Please correct them before submitting.',
             confirmButtonText: 'OK',
             customClass: {
-                confirmButton: 'btn-sm btn-success'
+                confirmButton: 'btn btn-sm btn-success'
             }
         });
         return false;

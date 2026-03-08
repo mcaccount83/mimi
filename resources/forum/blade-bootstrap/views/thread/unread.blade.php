@@ -1,9 +1,8 @@
 @extends ('forum::layouts.main', ['thread' => null, 'breadcrumbs_append' => [trans('forum::threads.unread_updated')]])
 
-@section ('content')
+@section ('forum_content')
     <div id="new-posts">
-        {{-- <h2>{{ trans('forum::threads.unread_updated') }}</h2> --}}
-        <h2>Unread Threads</h2>
+        <h2>{{ trans('forum::threads.unread_updated') }}</h2>
 
         @if (!$threads->isEmpty())
             <div class="threads list-group my-3 shadow-sm">

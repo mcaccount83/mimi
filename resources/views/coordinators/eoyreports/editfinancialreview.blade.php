@@ -497,7 +497,7 @@
             cancelButtonColor: '#3085d6',
             confirmButtonText: 'Yes, Unsubmit',
             cancelButtonText: 'Cancel',
-            customClass: { confirmButton: 'btn-sm btn-success', cancelButton: 'btn-sm btn-danger' },
+            customClass: { confirmButton: 'btn btn-sm btn-success', cancelButton: 'btn btn-sm btn-danger' },
             buttonsStyling: false
         }).then((result) => {
             if (result.isConfirmed) {
@@ -516,7 +516,7 @@
             cancelButtonColor: '#3085d6',
             confirmButtonText: 'Yes, Clear Review',
             cancelButtonText: 'Cancel',
-            customClass: { confirmButton: 'btn-sm btn-success', cancelButton: 'btn-sm btn-danger' },
+            customClass: { confirmButton: 'btn btn-sm btn-success', cancelButton: 'btn btn-sm btn-danger' },
             buttonsStyling: false
         }).then((result) => {
             if (result.isConfirmed) {

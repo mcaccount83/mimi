@@ -204,8 +204,8 @@ $(document).ready(function() {
             confirmButtonText: 'OK',
             cancelButtonText: 'Cancel',
             customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger'
             }
         }).then((result) => {
             if (result.isConfirmed) {
@@ -264,7 +264,7 @@ $(document).ready(function() {
             html: message,
             confirmButtonText: 'OK',
             customClass: {
-                confirmButton: 'btn-sm btn-primary'
+                confirmButton: 'btn btn-sm btn-primary'
             }
         });
     }

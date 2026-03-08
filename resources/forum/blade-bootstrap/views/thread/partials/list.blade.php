@@ -5,15 +5,7 @@
                 <a href="{{ Forum::route('thread.show', $thread) }}" @if (isset($category))style="color: {{ $category->color_light_mode }};"@endif>{{ $thread->title }}</a>
             </span>
             <br>
-            @php
-                $authorFullName = $thread->author ? $thread->author->authorNameWithPosition() : 'Unknown Author';
-            @endphp
-
-            {!! $authorFullName !!}
-            <br>
-            @include ('forum::partials.timestamp', ['carbon' => $thread->created_at])
-
-            {{-- {{ $thread->authorName }} <span class="text-muted">@include ('forum::partials.timestamp', ['carbon' => $thread->created_at])</span> --}}
+            {{ $thread->authorName }} <span class="text-muted">@include ('forum::partials.timestamp', ['carbon' => $thread->created_at])</span>
 
             @if (!isset($category))
                 <br>
@@ -27,7 +19,7 @@
             @if ($thread->locked)
                 <span class="badge rounded-pill bg-warning">{{ trans('forum::threads.locked') }}</span>
             @endif
-            @if ($thread->userReadStatus != null && !$thread->trashed())
+            @if ($thread->userReadStatus !== null && !$thread->trashed())
                 <span class="badge rounded-pill bg-success">{{ trans($thread->userReadStatus) }}</span>
             @endif
             @if ($thread->trashed())
@@ -43,14 +35,7 @@
             <div class="col-sm text-md-end text-muted">
                 <a href="{{ Forum::route('thread.show', $thread->lastPost) }}">{{ trans('forum::posts.view') }} &raquo;</a>
                 <br>
-                @php
-                    $authorFullName = $thread->lastPost->author ? $thread->lastPost->author->authorFullName() : 'Unknown Author';
-                    $authorNameWithPosition = $thread->lastPost->author ? $thread->lastPost->author->authorNameWithPosition() : 'Unknown Author';
-                @endphp
-
-                {!! $authorNameWithPosition !!}
-                <br>
-                {{-- {{ $thread->lastPost->authorName }} --}}
+                {{ $thread->lastPost->authorName }}
                 <span class="text-muted">@include ('forum::partials.timestamp', ['carbon' => $thread->lastPost->created_at])</span>
             </div>
         @endif

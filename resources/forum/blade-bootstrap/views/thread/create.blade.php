@@ -1,6 +1,6 @@
 @extends ('forum::layouts.main', ['breadcrumbs_append' => [trans('forum::threads.new_thread')]])
 
-@section ('content')
+@section ('forum_content')
     <div id="create-thread">
         <h2>{{ trans('forum::threads.new_thread') }} ({{ $category->title }})</h2>
 
@@ -13,7 +13,7 @@
             </div>
 
             <div class="mb-3">
-                <textarea name="content" class="form-control" rows="10">{{ old('content') }}</textarea>
+                <textarea name="content" class="form-control">{{ old('content') }}</textarea>
             </div>
 
             <div class="text-end">

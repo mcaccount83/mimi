@@ -15,7 +15,7 @@
                         <h3 class="card-title dropdown-toggle mb-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Chapter Subscription List
                         </h3>
-                        @include('layouts.dropdown_menus.menu_forum')
+                        @include('layouts.dropdown_menus.menu_reports_listadmin')
                         <span class="ms-2 text-muted " style="font-size: 0.75rem; align-self: flex-end; line-height: 1.8;">PA=Public Announcements | BL=BoardList</span>
                     </div>
                 </div>

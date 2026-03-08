@@ -47,6 +47,9 @@
     @include('layouts.styles.forms')
     @include('layouts.styles.sweetalert')
 
+    @stack('styles')
+    @stack('head_scripts')
+
   </head>
   <!--end::Head-->
   <!--begin::Body-->
@@ -278,6 +281,7 @@
     @include('layouts.scripts.useractions')
     @include('layouts.scripts.website')
 
+    @yield('footer')
     @yield('customscript')
     @stack('scripts')
 

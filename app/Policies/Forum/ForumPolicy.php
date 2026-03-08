@@ -35,6 +35,16 @@ class ForumPolicy extends BaseForumPolicy
 
     public function markThreadsAsRead($user): bool
     {
+        return true;
+    }
+
+    public function approveThreads($user): bool
+    {
+        return $this->forumConditions->canManageLists($user);
+    }
+
+    public function approvePosts($user): bool
+    {
         return $this->forumConditions->canManageLists($user);
     }
 
