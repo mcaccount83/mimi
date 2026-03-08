@@ -122,6 +122,7 @@ class PositionConditionsService
             ->limit(1)
             ->first();
         $fiscalYear = $admin->fiscal_year;  // "2024-2025"
+        $fiscalYearEOY = $admin->fiscal_year_eoy;  // "2024-2025"
         $years = explode('-', $fiscalYear);  // Extract years from fiscal_year string
         $lastYear = $years[0];  // "2024"
         $thisYear = $years[1];  // "2025"
@@ -140,6 +141,7 @@ class PositionConditionsService
 
         return [
             'fiscalYear' => $fiscalYear,
+            'fiscalYearEOY' => $fiscalYearEOY,
             'thisYear' => $thisYear,
             'nextYear' => $nextYear,
             'lastYear' => $lastYear,

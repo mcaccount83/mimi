@@ -4,7 +4,11 @@
     @section('page_title', $thread_title)
     @section('breadcrumb', $thread_title)
 @elseif (isset($category))
-    @section('page_title', $category->title)
+    @if ( $category->title == 'BoardList')
+        @section('page_title', $fiscalYear.' '.$category->title)
+    @else
+        @section('page_title', $category->title)
+    @endif
     @section('breadcrumb', $category->title)
 @else
     @section('page_title', trans('forum::general.home_title'))
@@ -28,7 +32,11 @@
                             <div class="dropdown">
                                 <h3 class="card-title dropdown-toggle mb-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     @if (isset($category) || isset($thread_title))
-                                        {{ $category->title}}
+                                        @if ( $category->title == 'BoardList')
+                                            {{ $fiscalYear }} {{ $category->title}}
+                                        @else
+                                            {{ $category->title}}
+                                        @endif
                                     @else
                                         {{ trans('forum::general.home_title')}}
                                     @endif

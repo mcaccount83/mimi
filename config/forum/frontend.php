@@ -43,7 +43,6 @@ return [
         'publicannouncementslink' => '/c/1-public-announcements',
         'coordinatorlistLink' => '/c/2-coordinatorlist',
         'boardlistLink' => '/c/3-boardlist',
-        'boardlistYear' => '2025-26',
     ],
 
     /*
