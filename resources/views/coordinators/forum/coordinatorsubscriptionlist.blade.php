@@ -15,7 +15,7 @@
                         <h3 class="card-title dropdown-toggle mb-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Coordinator Subscription List
                         </h3>
-                        @include('layouts.dropdown_menus.menu_reports_listadmin')
+                        @include('layouts.dropdown_menus.menu_listadmin')
                     </div>
                 </div>
                 <!-- /.card-header -->

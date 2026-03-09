@@ -146,6 +146,36 @@
         </li>
     @endif
 
+        <!-- ListAdmin Menu Item -->
+        @php
+            // if ($coordinatorCondition && $conferenceCoordinatorCondition) {
+            if ($listAdminCondition || $ITCondition) {
+                $listSubscriptionRoute = route('forum.chaptersubscriptionlist');
+            } elseif ($listAdminCondition || $ITCondition) {
+                $listSubscriptionRoute = route('forum.chaptersubscriptionlist', ['check5' => 'yes']);
+            }
+            $activeChapterRoutes = [
+                'listadmin/*',
+            ];
+        @endphp
+        @if (isset($listSubscriptionRoute))
+            <li class="nav-item">
+                <a href="{{ $listSubscriptionRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeChapterRoutes) }}">
+                    <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em;">
+                            <i class="bi bi-chat-quote-fill position-absolute"></i>
+                            <i class="bi bi-gear-fill position-absolute" style="font-size: 0.5em; bottom: -0.1em; right: -0.1em; background-color: #343a40; border-radius: 90%;"></i>
+                        </span>
+                    <p>ListAdmin
+                        @if( $pendingPostsCount > 0 || $pendingThreadsCount > 0 )
+                        <span class="badge bg-danger badge-pill notification-badge">
+                            PENDING
+                        </span>
+                    @endif
+                    </p>
+                </a>
+            </li>
+        @endif
+
     <!-- BoardList Email Menu Item -->
     {{-- @php
         if ($listAdminCondition || $ITCondition) {
@@ -234,36 +264,6 @@
                     <p>EOY Reports
                         @if ($ITCondition && !$displayEOYTESTING && !$displayEOYLIVE) *ADMIN*@endif
                         @if ($eoyTestCondition && $displayEOYTESTING) *TESTING*@endif
-                    </p>
-                </a>
-            </li>
-        @endif
-
-        <!-- ListAdmin Reports Menu Item -->
-        @php
-            // if ($coordinatorCondition && $conferenceCoordinatorCondition) {
-            if ($listAdminCondition || $ITCondition) {
-                $listSubscriptionRoute = route('forum.chaptersubscriptionlist');
-            } elseif ($listAdminCondition || $ITCondition) {
-                $listSubscriptionRoute = route('forum.chaptersubscriptionlist', ['check5' => 'yes']);
-            }
-            $activeChapterRoutes = [
-                'listadmin/*',
-            ];
-        @endphp
-        @if (isset($listSubscriptionRoute))
-            <li class="nav-item">
-                <a href="{{ $listSubscriptionRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeChapterRoutes) }}">
-                    <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em;">
-                            <i class="bi bi-chat-quote-fill position-absolute"></i>
-                            <i class="bi bi-gear-fill position-absolute" style="font-size: 0.5em; bottom: -0.1em; right: -0.1em; background-color: #343a40; border-radius: 90%;"></i>
-                        </span>
-                    <p>ListAdmin Reports
-                        @if( $pendingPostsCount > 0 || $pendingThreadsCount > 0 )
-                        <span class="badge bg-danger badge-pill notification-badge">
-                            PENDING
-                        </span>
-                    @endif
                     </p>
                 </a>
             </li>
