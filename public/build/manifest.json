@@ -1,4 +1,8 @@
 {
+  "__commonjsHelpers-D6-XlEtG.js": {
+    "file": "assets/_commonjsHelpers-D6-XlEtG.js",
+    "name": "_commonjsHelpers"
+  },
   "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf": {
     "file": "assets/fa-brands-400-D1LuMI3I.ttf",
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf"
@@ -60,11 +64,31 @@
     "src": "resources/css/app.css",
     "isEntry": true
   },
+  "resources/forum/blade-bootstrap/css/forum.css": {
+    "file": "assets/forum-BfRH-Frk.css",
+    "src": "resources/forum/blade-bootstrap/css/forum.css",
+    "isEntry": true
+  },
+  "resources/forum/blade-bootstrap/js/forum.js": {
+    "file": "assets/forum-nnL-5mCu.js",
+    "name": "forum",
+    "src": "resources/forum/blade-bootstrap/js/forum.js",
+    "isEntry": true,
+    "imports": [
+      "__commonjsHelpers-D6-XlEtG.js"
+    ],
+    "css": [
+      "assets/forum-CFMR0PwP.css"
+    ]
+  },
   "resources/js/app.js": {
-    "file": "assets/app-iWcYferG.js",
+    "file": "assets/app-D1YHfYpj.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
+    "imports": [
+      "__commonjsHelpers-D6-XlEtG.js"
+    ],
     "css": [
       "assets/app-C0WruDv_.css"
     ],
