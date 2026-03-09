@@ -6,6 +6,7 @@ use App\Enums\AdminStatusEnum;
 use App\Enums\UserTypeEnum;
 use App\Models\Chapters;
 use App\Services\ForumConditionsService;
+use App\Services\PendingConditionsService;
 use App\Services\PositionConditionsService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
@@ -31,6 +32,7 @@ class ViewServiceProvider extends ServiceProvider
             $disbanded = false;
             $pending = false;
             $chDetails = null;
+            $confId = null;
 
             if (Auth::check()) {
                 $user = Auth::user();
@@ -42,6 +44,7 @@ class ViewServiceProvider extends ServiceProvider
                     $positionid = $corDetails['position_id'];
                     $secpositionid = $corDetails->secondaryPosition->pluck('id')->toArray(); // Get all secondary position IDs
                     $loggedIn = $corDetails['first_name'].' '.$corDetails['last_name'];
+                    $confId = $corDetails->state->conference_id ?? null;
                 }
 
                 if ($userTypeId == UserTypeEnum::BOARD && $user->board) {
@@ -61,12 +64,16 @@ class ViewServiceProvider extends ServiceProvider
 
             $positionConditionsService = app(PositionConditionsService::class);
             $forumConditionsService = app(ForumConditionsService::class);
+            $PendingConditionsService = app(PendingConditionsService::class);
 
             $positionConditions = $positionConditionsService->getConditionsForUser($positionid, $secpositionid, $corId);
             $EOYOptions = $positionConditionsService->getEOYOptions();
             $forumCount = $forumConditionsService->getUnreadForumCount();
             $pendingThreadsCount = $forumConditionsService->getPendingThreadsCount();
             $pendingPostsCount = $forumConditionsService->getPendingPostsCount();
+            $pendingInquiryCount = ($confId) ? $PendingConditionsService->getPendingInquiryCount($confId) : 0;
+            $pendingNewChapterCount = ($confId) ? $PendingConditionsService->getpendingNewChapterCount($confId) : 0;
+            $pendingNewCoordCount = ($confId) ? $PendingConditionsService->getpendingNewCoordCount($confId) : 0;
             $dateOptions = $positionConditionsService->getDateOptions();
 
             // Merge all variables
@@ -81,6 +88,9 @@ class ViewServiceProvider extends ServiceProvider
                 'pendingThreadsCount' => $pendingThreadsCount,
                 'pendingPostsCount' => $pendingPostsCount,
                 'positionService' => $positionConditionsService,
+                'pendingInquiryCount' => $pendingInquiryCount,
+                'pendingNewChapterCount' => $pendingNewChapterCount,
+                'pendingNewCoordCount' => $pendingNewCoordCount,
                 'userTypeId' => $userTypeId,
                 'coordinator' => $coordinator,
                 'board' => $board,

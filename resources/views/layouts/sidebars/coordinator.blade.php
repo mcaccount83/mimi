@@ -109,7 +109,13 @@
         <li class="nav-item">
             <a href="{{ $inquiriesRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeInquiriesRoutes) }}">
                 <i class="nav-icon bi bi-pin-map-fill"></i>
-                <p>Inquiries</p>
+                <p>Inquiries
+                    @if($pendingInquiryCount > 0)
+                        <span class="badge bg-danger badge-pill notification-badge">
+                            PENDING
+                        </span>
+                    @endif
+                </p>
             </a>
         </li>
     @endif
@@ -129,7 +135,13 @@
         <li class="nav-item">
             <a href="{{ $newChaptersRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeNewChapterRoutes) }}">
                 <i class="nav-icon bi bi-asterisk"></i>
-                <p>New Chapters/Coordinators</p>
+                <p>New Chapters/Coordinators
+                     @if($pendingNewChapterCount > 0 || $pendingNewCoordCount > 0)
+                        <span class="badge bg-danger badge-pill notification-badge">
+                            PENDING
+                        </span>
+                    @endif
+                </p>
             </a>
         </li>
     @endif
@@ -346,7 +358,7 @@
                     <i class="nav-icon bi bi-chat-quote-fill"></i>
                     <p>ForumLists
                         @if( $unreadForumCount > 0)
-                        <span class="badge bg-success badge-pill notification-badge">
+                        <span class="badge bg-danger badge-pill notification-badge">
                             UNREAD
                         </span>
                     @endif
@@ -354,65 +366,6 @@
                 </a>
             </li>
         @endif
-
-        {{-- @php
-        $forumRoute = url(config('forum.frontend.router.prefix') . '/pending-approval/threads');
-
-        $activeForumRoutes = [
-            'forum/pending-approval/threads',
-        ];
-        @endphp
-        @if (isset($forumRoute))
-            <li class="nav-item">
-                <a href="{{ $forumRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeForumRoutes) }}">
-                    <i class="nav-icon bi bi-chat-quote-fill"></i>
-                    <p>ForumThreads
-                        @if( $pendingThreadsCount  > 0)
-                        <span class="badge bg-danger badge-pill notification-badge">
-                            PENDING
-                        </span>
-                    @endif
-                    </p>
-                </a>
-            </li>
-        @endif
-
-         @php
-        $forumRoute = url(config('forum.frontend.router.prefix') . '/pending-approval/posts');
-
-        $activeForumRoutes = [
-            'forum/pending-approval/posts',
-        ];
-        @endphp
-        @if (isset($forumRoute))
-            <li class="nav-item">
-                <a href="{{ $forumRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeForumRoutes) }}">
-                    <i class="nav-icon bi bi-chat-quote-fill"></i>
-                    <p>ForumPosts
-                        @if( $pendingPostsCount  > 0)
-                        <span class="badge bg-danger badge-pill notification-badge">
-                            PENDING
-                        </span>
-                    @endif
-                    </p>
-                </a>
-            </li>
-        @endif --}}
-
-
-        {{-- <li class="nav-item position-relative">
-        <a href="{{ url(config('forum.frontend.router.prefix') . '/unread') }}" target="_blank" class="nav-link">
-            <i class="nav-icon bi bi-chat-quote-fill"></i>
-            <p>
-                CoordinatorList Forum
-                @if( $unreadForumCount > 0)
-                    <span class="badge badge-danger badge-pill notification-badge">
-                        UNREAD
-                    </span>
-                @endif
-            </p>
-        </a>
-    </li> --}}
 
     <li class="nav-item">
         <a href="{{ route('coordinators.profile') }}" class="nav-link {{ Request::is('coordprofile') ? 'active' : '' }}">

@@ -1,14 +1,12 @@
 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
     @if(($listAdminCondition) || ($ITCondition))
-            <a class="dropdown-item d-flex align-items-center justify-content-between"
-    href="{{ url(config('forum.frontend.router.prefix') . '/pending-approval/threads') }}">
+    <a class="dropdown-item d-flex align-items-center justify-content-between" href="{{ url(config('forum.frontend.router.prefix') . '/pending-approval/threads') }}">
         Pending Threads
         @if($pendingThreadsCount > 0)
             <span class="badge bg-danger ms-2">{{ $pendingThreadsCount }} Pending</span>
         @endif
     </a>
-        <a class="dropdown-item d-flex align-items-center justify-content-between"
-    href="{{ url(config('forum.frontend.router.prefix') . '/pending-approval/posts') }}">
+    <a class="dropdown-item d-flex align-items-center justify-content-between" href="{{ url(config('forum.frontend.router.prefix') . '/pending-approval/posts') }}">
         Pending Posts
         @if($pendingPostsCount > 0)
             <span class="badge bg-danger ms-2">{{ $pendingPostsCount }} Pending</span>
