@@ -1,13 +1,13 @@
 @extends('layouts.mimi_theme')
 
-@if ($ITCondition && !$displayTESTING && !$displayLIVE)
-    @section('page_title', 'EOY Details *ADMIN*')
+@if ($ITCondition && !$displayEOYTESTING && !$displayEOYLIVE)
+    @section('page_title', $fiscalYearEOY.' EOY Details *ADMIN*')
     @section('breadcrumb', 'Boundary Issues')
-@elseif ($eoyTestCondition && $displayTESTING)
-    @section('page_title', 'EOY Details *TESTING*')
+@elseif ($eoyTestCondition && $displayEOYTESTING)
+    @section('page_title', $fiscalYearEOY.' EOY Details *TESTING*')
     @section('breadcrumb', 'Boundary Issues')
 @else
-    @section('page_title', 'EOY Details')
+    @section('page_title', $fiscalYearEOY.' EOY Details')
     @section('breadcrumb', 'Boundary Issues')
 @endif
 
@@ -49,9 +49,14 @@
 
           <div class="col-md-8">
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                <h3 class="profile-username">{{ $fiscalYear }} Boundary Issues</h3>
+                <div class="card-body">
+                    <div class="card-header bg-transparent border-0">
+                    <h3>{{ $fiscalYearEOY }} Boundary Issues</h3>
+                    </h3>
+                    </div>
                     <!-- /.card-header -->
+                    <div class="card-body">
+
                     <div class="row mb-3 align-middle">
                         <label class="col-sm-2 col-form-label">Boundary Issues Reported by Chapter:</label>
                         <div class="col-sm-10">
@@ -85,7 +90,7 @@
                         </div>
                     </div>
                     <!-- /.form group -->
-
+   </div>
                   </div>
               <!-- /.card-body -->
             </div>
@@ -104,7 +109,7 @@
                     <button type="button" id="back-boundaries" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('eoyreports.eoyboundaries', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-pin-map-fill me-2"></i>Back to International Boundaries Report</button>
                 @endif
                 <button type="button" id="back-eoy" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-file-earmark-bar-graph-fill me-2"></i>Back to EOY Details</button>
-            </div>
+           </div>
         </div>
         </div>
         <!-- /.row -->

@@ -557,7 +557,7 @@
                             <h3>End of Year Filing</h3>
                             <div class="col-sm-12">
                             @if($userTypeId == \App\Enums\UserTypeEnum::COORD && $chEOYDocuments->new_board_active!='1')
-                                @if($displayTESTING)
+                                @if($displayEOYTESTING)
                                     <button type="button" id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location.href='{{ route('board.editboardreport', ['id' => $chDetails->id]) }}'">
                                         {{ $boardReportName }} *TESTING*
                                     </button><br>
@@ -569,7 +569,7 @@
                                     <button type="button" id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>Board Report Not Available</button><br>
                                 @endif
                             @elseif($userTypeId == \App\Enums\UserTypeEnum::COORD && $chEOYDocuments->new_board_active =='1')
-                                @if($displayTESTING)
+                                @if($displayEOYTESTING)
                                     <button type="button" id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>Board Report Activated *TESTING*</button><br>
                                 @else
                                     <button type="button" id="BoardReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled" disabled>Board Report Activated</button><br>
@@ -587,7 +587,7 @@
                             @endif
 
                             @if($userTypeId == \App\Enums\UserTypeEnum::COORD)
-                                @if($displayTESTING)
+                                @if($displayEOYTESTING)
                                     <button type="button" id="FinancialReport" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location.href='{{ route('board.editfinancialreport', ['id' => $chDetails->id]) }}'">
                                         {{ $financialReportName }} *TESTING*
                                     </button><br>

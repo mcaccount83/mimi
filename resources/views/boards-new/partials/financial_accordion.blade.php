@@ -1564,7 +1564,7 @@
 <div class="row mb-3">
         <div class="col-12">
     @if($userTypeId != \App\Enums\UserTypeEnum::DISBANDED)
-<h3>July 1, {{ $lastYear }} - June 30, {{ $currentYear }}</h3>
+<h3>July 1, {{ $lastYearEOY }} - June 30, {{ $thisYearEOY }}</h3>
 @endif
 </div>
 </div>
@@ -2035,7 +2035,7 @@
                 @if($userTypeId == \App\Enums\UserTypeEnum::DISBANDED)
                 Beginning Balance:
                 @else
-                This Year's Beginning Balance (July 1, {{ $lastYear }}):
+                This Year's Beginning Balance (July 1, {{ $lastYearEOY }}):
                 @endif
             </label>
             <div class="mb-3">
@@ -2054,7 +2054,7 @@
                 @if($userTypeId == \App\Enums\UserTypeEnum::DISBANDED)
                 Last Report's Ending Balance:
                 @else
-                Last Year's Report Ending Balance (June 30, {{ $lastYear }}):
+                Last Year's Report Ending Balance (June 30, {{ $lastYearEOY }}):
                 @endif
             </label>
             <div class="mb-3">
@@ -2104,7 +2104,7 @@
                 @if($userTypeId == \App\Enums\UserTypeEnum::DISBANDED)
                 Ending Bank Statement Balance:
                 @else
-                Ending Bank Statement Balance (June 30, {{ $currentYear }}):
+                Ending Bank Statement Balance (June 30, {{ $thisYearEOY }}):
                 @endif
             </label>
             <div class="mb-3">
@@ -2751,11 +2751,11 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
                         <em>Given to existing chapters who Sister new Chapters</em>
                         </li>
                         <li>
-                        <strong>Outstanding Chapter</strong> (for chapters started before July 1, {{ $lastYear }})<br>
+                        <strong>Outstanding Chapter</strong> (for chapters started before July 1, {{ $lastYearEOY }})<br>
                         <em>Given for outstanding overall representation of MOMS Club goals, principles, and program (including program to members, community involvement, and support of International MOMS Club)</em>
                         </li>
                         <li>
-                        <strong>Outstanding New Chapter</strong> (for chapters started after July 1, {{ $lastYear }})<br>
+                        <strong>Outstanding New Chapter</strong> (for chapters started after July 1, {{ $lastYearEOY }})<br>
                         <em>Given for outstanding overall representation of MOMS Club goals, principles, and program (including program to members, community involvement, and support of International MOMS Club)</em>
                         </li>
                         <li>

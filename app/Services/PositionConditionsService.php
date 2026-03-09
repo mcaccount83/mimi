@@ -7,6 +7,7 @@ use App\Enums\ChapterStatusEnum;
 use App\Enums\UserTypeEnum;
 use App\Models\Admin;
 use App\Models\AdminEmail;
+use App\Models\AdminYear;
 use Illuminate\Support\Facades\Request;
 
 class PositionConditionsService
@@ -118,35 +119,39 @@ class PositionConditionsService
      */
     public function getEOYOptions(): array
     {
-        $admin = Admin::orderByDesc('id')
-            ->limit(1)
-            ->first();
-        $fiscalYear = $admin->fiscal_year;  // "2024-2025"
+        // $admin = Admin::orderByDesc('id')
+        //     ->limit(1)
+        //     ->first();
+        $adminYear = AdminYear::latest('id')->firstOrFail();
+        $fiscalYear = $adminYear->year_fiscal;  // "2025-2026"
+
+        $admin = Admin::latest('id')->firstOrFail();
         $fiscalYearEOY = $admin->fiscal_year_eoy;  // "2024-2025"
-        $years = explode('-', $fiscalYear);  // Extract years from fiscal_year string
-        $lastYear = $years[0];  // "2024"
-        $thisYear = $years[1];  // "2025"
-        $nextYear = $thisYear + 1;  // 2026
+        // $fiscalYearEOY = $admin->fiscal_year_eoy ?? $fiscalYear; //  "2024-2025" fall back to fiscalYear if null
+        $years = explode('-', $fiscalYearEOY);  // Extract years from fiscal_year string
+        $lastYearEOY = $years[0];  // "2024"
+        $thisYearEOY = $years[1];  // "2025"
+        // $nextYearEOY = $thisYearEOY + 1;  // 2026
 
         $display_testing = ($admin->display_testing == 1);
         $display_live = ($admin->display_live == 1);
 
-        $yearColumnName = $thisYear.'_financial_pdf_path'; // name for Database Column for Financial Report
-        $boardReportName = $thisYear.'-'.$nextYear.' Board Report';  // Board Report Name
-        $financialReportName = $lastYear.'-'.$thisYear.' Financial Report';  // Financial Report Name
-        $financialPDFName = $lastYear.'-'.$thisYear.' Financial PDF';  // Financial Report Name
-        $irsFilingName = $lastYear.' 990N IRS Filing';  // IRS Filing Name
+        $yearColumnName = $thisYearEOY.'_financial_pdf_path'; // "2025" name for Database Column for Financial Report
+        $boardReportName = $fiscalYear.' Board Report';  // "2025-2026" Board Report Name
+        $financialReportName = $fiscalYearEOY.' Financial Report';  // "2024-2025" Financial Report Name
+        $financialPDFName = $fiscalYearEOY.' Financial PDF';  // "2024-2025" Financial Report Name
+        $irsFilingName = $lastYearEOY.' 990N IRS Filing';  // "2024" IRS Filing Name
 
         $currentMonth = $this->getDateOptions()['currentMonth'];  // Current Month with leading zero
 
         return [
             'fiscalYear' => $fiscalYear,
             'fiscalYearEOY' => $fiscalYearEOY,
-            'thisYear' => $thisYear,
-            'nextYear' => $nextYear,
-            'lastYear' => $lastYear,
-            'displayTESTING' => ($display_testing && ! $display_live),
-            'displayLIVE' => ($display_live && $currentMonth >= 5 && $currentMonth <= 12),
+            'thisYearEOY' => $thisYearEOY,
+            // 'nextYearEOY' => $nextYearEOY,
+            'lastYearEOY' => $lastYearEOY,
+            'displayEOYTESTING' => ($display_testing && ! $display_live),
+            'displayEOYLIVE' => ($display_live && $currentMonth >= 5 && $currentMonth <= 12),
             'displayBoardRptLIVE' => ($display_live && $currentMonth >= 5 && $currentMonth <= 9),
             'displayFinancialRptLIVE' => ($display_live && $currentMonth >= 6 && $currentMonth <= 12),
             'displayEINInstructionsLIVE' => ($display_live && $currentMonth >= 7 && $currentMonth <= 12),

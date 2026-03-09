@@ -31,8 +31,8 @@
                     <div class="card-body">
                         <div class="card-header bg-transparent border-0">
                              <h3>{{ $boardReportName }}
-                            @if ($ITCondition && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
-                            @if ($eoyTestCondition && $displayTESTING) *TESTING*@endif
+                            @if ($ITCondition && !$displayEOYTESTING && !$displayEOYLIVE) *ADMIN*@endif
+                            @if ($eoyTestCondition && $displayEOYTESTING) *TESTING*@endif
                             </h3>
                         </div>
                     <!-- /.card-header -->

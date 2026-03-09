@@ -1,9 +1,9 @@
 <div class="col-md-12 text-center">
     <h4><u>Read carefully before starting!</u></h4>
-    All chapters must complete the {{ $fiscalYear}} End of Year Reports.  All reports are available through your chapter's MIMI profile login.<br>
+    All chapters must complete the {{ $fiscalYearEOY}} End of Year Reports.  All reports are available through your chapter's MIMI profile login.<br>
     <br>
 </div>
-@if($displayLIVE == false)
+@if($displayEOYLIVE == false)
 <div class="col-md-12 text-center text-danger">EOY Reports are not available at this time.</div><br>
 <div class="col-md-12 text-center">{{ $boardReportName }} - Available May 1st<br>
         {{ $financialReportName }} - Available June 1st<br>
@@ -11,7 +11,7 @@
         <br>
     </div>
 @endif
-@if($displayLIVE == true)
+@if($displayEOYLIVE == true)
 <div class="col-md-12 text-center">{{ $boardReportName }} - Due June 30th<br>
             {{ $financialReportName }} - Due July 15th<br>
             {{ $irsFilingName }} - Due after July 1st<br>
@@ -64,8 +64,8 @@
     <div class="col-md-12 text-center">
         <h5><u><b>Important things to remember</b></u></h5>
 
-    The fiscal year you are reporting for is <strong>July 1, {{ $lastYear }} - June 30, {{ $currentYear }}</strong>.<br>
-    The 990N tax filing associated with the fiscal year is <strong>{{ $lastYear }}.</strong><br>
+    The fiscal year you are reporting for is <strong>July 1, {{ $lastYearEOY }} - June 30, {{ $thisYearEOY }}</strong>.<br>
+    The 990N tax filing associated with the fiscal year is <strong>{{ $lastYearEOY }}.</strong><br>
     <br>
     Any board member of your chapter may fill out the report. We recommend that the Treasurer and President work together but any board member may complete it. All the information needed to complete it should be found in your financial records, newsletters, and meeting minutes.<br>
     <br>

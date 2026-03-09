@@ -18,7 +18,7 @@ class FinancialReportLastYear extends Model
 
         $positionConditionsService = app(\App\Services\PositionConditionsService::class);
         $dateOptions = $positionConditionsService->getDateOptions();
-        $lastYear = $dateOptions['lastYear'];
-        $this->table = 'financial_report_12_'.$lastYear;
+        $lastYearEOY = $dateOptions['lastYearEOY'];
+        $this->table = 'financial_report_12_'.$lastYearEOY;
     }
 }

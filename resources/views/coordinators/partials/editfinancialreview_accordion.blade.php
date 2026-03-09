@@ -1677,7 +1677,7 @@
                                 <input type="hidden" name="990NFiling" id="990NFiling" value="{{ $chEOYDocuments->irs_path }}">
                                 <br>
                                 <div class="row mb-3">
-                                    <label>Did the chapter file their {{ $irsFilingName }} with the date range of <strong>7/1/{{ $lastYear }} - 6/30/{{ $currentYear }}</strong>?<span class="field-required">*&nbsp;</span></label>
+                                    <label>Did the chapter file their {{ $irsFilingName }} with the date range of <strong>7/1/{{ $lastYearEOY }} - 6/30/{{ $thisYearEOY }}</strong>?<span class="field-required">*&nbsp;</span></label>
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkCurrent990NAttached" value="1"

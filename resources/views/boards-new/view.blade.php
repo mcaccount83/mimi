@@ -461,14 +461,14 @@
                 <div class="tab-pane" id="eoy">
                     <div class="eoy-field">
                         <div class="card-header bg-transparent border-0">
-                            <h3>{{ $fiscalYear }} End of Year Information
-                            @if ($ITCondition && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
-                            @if ($eoyTestCondition && $displayTESTING) *TESTING*@endif
+                            <h3>{{ $fiscalYearEOY }} End of Year Information
+                            @if ($ITCondition && !$displayEOYTESTING && !$displayEOYLIVE) *ADMIN*@endif
+                            @if ($eoyTestCondition && $displayEOYTESTING) *TESTING*@endif
                             </h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                             @if ($displayTESTING == '1' || $displayLIVE == '1' || $ITCondition)
+                             @if ($displayEOYTESTING == '1' || $displayEOYLIVE == '1' || $ITCondition)
                             <div class="row">
                             <div class="col-md-6 mb-3">
 

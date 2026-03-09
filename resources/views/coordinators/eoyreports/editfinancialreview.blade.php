@@ -1,13 +1,13 @@
 @extends('layouts.mimi_theme')
 
-@if ($ITCondition && !$displayTESTING && !$displayLIVE)
-    @section('page_title', 'EOY Details *ADMIN*')
+@if ($ITCondition && !$displayEOYTESTING && !$displayEOYLIVE)
+    @section('page_title', $fiscalYearEOY.' EOY Details *ADMIN*')
     @section('breadcrumb', 'Financial Report')
-@elseif ($eoyTestCondition && $displayTESTING)
-    @section('page_title', 'EOY Details *TESTING*')
+@elseif ($eoyTestCondition && $displayEOYTESTING)
+    @section('page_title', $fiscalYearEOY.' EOY Details *TESTING*')
     @section('breadcrumb', 'Financial Report')
 @else
-    @section('page_title', 'EOY Details')
+    @section('page_title', $fiscalYearEOY.' EOY Details')
     @section('breadcrumb', 'Financial Report')
 @endif
 
@@ -255,7 +255,7 @@
             </div>
             </div>
             <div class="row mb-1">
-                    <div class="col-auto fw-bold">Proof of 990N Filing <small>(7/1/{{ $lastYear}} - 6/30/{{ $currentYear }})</small>:</div>
+                    <div class="col-auto fw-bold">Proof of 990N Filing <small>(7/1/{{ $lastYearEOY}} - 6/30/{{ $thisYearEOY }})</small>:</div>
                     <div class="col text-end">
                     @if(is_null($chFinancialReportReview->current_990N_included))
                         <span class="badge bg-secondary fs-7">Please Review</span>

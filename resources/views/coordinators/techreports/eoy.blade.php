@@ -39,17 +39,36 @@
                       </div>
                       <!-- /.card-header -->
                   <div class="card-body">
-                <div class="row">
+                <div class="row mb-3">
                     <div class="col-md-2">
-                        <h3>Fiscal Year: {{ $admin->fiscal_year }}</h3>
+                        <h3>Fiscal Year:<br>
+                            {{ $fiscalYear }}</h3>
                     </div>
-                    <div class="col-md-6">
-                        <p><strong>RESET IN DECEMBER.</strong><br>
-                            Reset Data to disable all menus and buttons back to *ADMIN* ONLY and prep for New Year before dates auto change to new year on all Buttons/Links/Emails/Forms.</p>
-                            <h5>This CANNOT be undone!</h5>
-                            <button type="button" id="reset-year" class="btn btn-danger bg-gradient mb-2"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset for New Year</button>
+                    <div class="col-md-10">
+                        <b>RESET IN JULY</b> -- To be used in BoardList and other display areas.<br>
+                            This CANNOT be undone!<br>
+                            @if ($fiscalYearEOY != null)
+                                <button type="button" id="reset-year" class="btn btn-danger bg-gradient mb-2"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year</button>
+                            @else
+                                <button type="button" id="reset-year" class="btn btn-danger bg-gradient mb-2" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year</button>
+                            @endif
                     </div>
-                    <div class="col-md-12"><br></div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-2">
+                        <h3>Fiscal Year EOY:<br>
+                                {{ $fiscalYearEOY }}</h3>
+                    </div>
+                    <div class="col-md-10">
+                        <b>RESET IN JANUARY</b> -- To be used for all End of Year buttons/links/emails/forms.<br>
+                            This CANNOT be undone!<br>
+                            @if ($fiscalYearEOY == null)
+                                <button type="button" id="reset-yeareoy" class="btn btn-danger bg-gradient mb-2"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year EOY</button>
+                            @else
+                                <button type="button" id="reset-yeareoy" class="btn btn-danger bg-gradient mb-2" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year EOY</button>
+                            @endif
+                    </div>
                 </div>
 
      <div class="row">
@@ -264,6 +283,7 @@ $(document).ready(function() {
     var dataBaseUrl = '{{ route("techreports.updatedatadatabase") }}';   // Route for resetting user data tables
     var afterTestingBaseUrl = '{{ route("techreports.updateeoydatabaseafter") }}';  // Route for  resting database AFTER testing to go LIVE
     var resetBaseUrl = '{{ route("techreports.resetyear") }}';  // Route for reseting New Year
+    var eoyBaseUrl = '{{ route("techreports.resetyeareoy") }}';  // Route for reseting EOY Year
     var testingBaseUrl = '{{ route("techreports.updateeoytesting") }}';  // Route for displaying menues/buttons for testers
     var liveBaseUrl = '{{ route("techreports.updateeoylive") }}';  // Route for displaying menues/buttons for allusers
     var subscribeBaseUrl = '{{ route("techreports.updatesubscribelists") }}';  // Route for subscribing users to BoardList
@@ -330,6 +350,10 @@ $(document).ready(function() {
 
     $("#reset-year").click(function() {
         handleAjaxRequest(resetBaseUrl);
+    });
+
+     $("#reset-yeareoy").click(function() {
+        handleAjaxRequest(eoyBaseUrl);
     });
 });
 

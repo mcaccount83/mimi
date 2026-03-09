@@ -14,9 +14,9 @@
             <div class="card card-primary card-outline">
                     <div class="card-body">
                         <div class="card-header bg-transparent border-0">
-                             <h3>{{ $fiscalYear }} End of Year Information
-                            @if ($ITCondition && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
-                            @if ($eoyTestCondition && $displayTESTING) *TESTING*@endif
+                             <h3>{{ $fiscalYearEOY }} End of Year Information
+                            @if ($ITCondition && !$displayEOYTESTING && !$displayEOYLIVE) *ADMIN*@endif
+                            @if ($eoyTestCondition && $displayEOYTESTING) *TESTING*@endif
                             </h3>
                         </div>
                     <!-- /.card-header -->
@@ -24,7 +24,7 @@
 
                          <div class="row">
                             <div class="col-md-12 text-center mb-3">
-                                @if ($displayTESTING == '1' || $displayLIVE == '1' || $ITCondition)
+                                @if ($displayEOYTESTING == '1' || $displayEOYLIVE == '1' || $ITCondition)
                                     @if($chEOYDocuments->new_board_active != '1')
                                         <button type="button" class="btn btn-primary bg-gradient" onclick="window.location.href='{{ route('board-new.editboardreport', ['id' => $chDetails->id]) }}'">{{$boardReportName}}</button>
                                     @else

@@ -201,11 +201,11 @@
 
     <!-- End of Year Reports Menu Item-->
         @php
-            if (($coordinatorCondition && $displayLIVE) || ($eoyReportCondition && $displayLIVE) || ($eoyTestCondition && $displayTESTING)) {
+            if (($coordinatorCondition && $displayEOYLIVE) || ($eoyReportCondition && $displayEOYLIVE) || ($eoyTestCondition && $displayEOYTESTING)) {
                 $eoyReportsRoute = route('eoyreports.eoystatus');
             } elseif ($ITCondition) {
                 $eoyReportsRoute = route('eoyreports.eoystatus', ['check5' => 'yes']);
-            } elseif ($einCondition && $displayLIVE) {
+            } elseif ($einCondition && $displayEOYLIVE) {
                 $eoyReportsRoute = route('eoyreports.eoyirssubmission', ['check5' => 'yes']);
             }
             $activeEOYReportsRoutes = [
@@ -220,8 +220,8 @@
                         <i class="bi bi-gear-fill position-absolute" style="font-size: 0.5em; bottom: -0.1em; right: -0.1em; background-color: #343a40; border-radius: 90%;"></i>
                     </span>
                     <p>EOY Reports
-                        @if ($ITCondition && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
-                        @if ($eoyTestCondition && $displayTESTING) *TESTING*@endif
+                        @if ($ITCondition && !$displayEOYTESTING && !$displayEOYLIVE) *ADMIN*@endif
+                        @if ($eoyTestCondition && $displayEOYTESTING) *TESTING*@endif
                     </p>
                 </a>
             </li>

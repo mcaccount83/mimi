@@ -1,13 +1,13 @@
 @extends('layouts.mimi_theme')
 
-@if ($ITCondition && !$displayTESTING && !$displayLIVE)
-    @section('page_title', 'EOY Details *ADMIN*')
+@if ($ITCondition && !$displayEOYTESTING && !$displayEOYLIVE)
+    @section('page_title', $fiscalYearEOY.' EOY Details *ADMIN*')
     @section('breadcrumb', 'Chapter Award History')
-@elseif ($eoyTestCondition && $displayTESTING)
-    @section('page_title', 'EOY Details *TESTING*')
+@elseif ($eoyTestCondition && $displayEOYTESTING)
+    @section('page_title', $fiscalYearEOY.' EOY Details *TESTING*')
     @section('breadcrumb', 'Chapter Award History')
 @else
-    @section('page_title', 'EOY Details')
+    @section('page_title', $fiscalYearEOY.' EOY Details')
     @section('breadcrumb', 'Chapter Award History')
 @endif
 
@@ -48,7 +48,7 @@
                 {{-- Tab Headers --}}
                 <ul class="nav nav-pills">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#awards-current" data-bs-toggle="tab">{{ $fiscalYear }}</a>
+                        <a class="nav-link active" href="#awards-current" data-bs-toggle="tab">{{ $fiscalYearEOY }}</a>
                     </li>
                     @foreach($chAwards as $year => $awards)
                         <li class="nav-item">
@@ -64,7 +64,7 @@
                     {{-- Current Year Tab --}}
                     <div class="active tab-pane" id="awards-current">
                         <div class="card-header bg-transparent border-0">
-                            <h3>{{ $fiscalYear }} Chapter Awards</h3>
+                            <h3>{{ $fiscalYearEOY }} Chapter Awards</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -116,7 +116,7 @@
 
         <div class="col-md-12">
             <div class="card-body text-center mt-3">
-                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.editawards', ['id' => $chDetails->id]) }}'"><i class="bi bi-award-fill me-2"></i>Update {{ $fiscalYear }} Awards</button><br>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.editawards', ['id' => $chDetails->id]) }}'"><i class="bi bi-award-fill me-2"></i>Update {{ $fiscalYearEOY }} Awards</button><br>
                     @if ($confId == $chConfId)
                         <button type="button" id="back-awards" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('eoyreports.eoyawards') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-award-fill me-2"></i>Back to Awards Report</button>
                     @elseif ($confId != $chConfId && $ITCondition)

@@ -42,12 +42,10 @@
                     <div class="row mb-3">
                         <label class="col-sm-4 col-form-label">Are you being sistered by another chapter?</label>
                         <div class="col-sm-8">
-                            <input type="checkbox" name="SisteredBy" id="sisteredToggle"
-                                data-bootstrap-switch
-                                data-on-text="Yes"
-                                data-off-text="No"
-                                data-on-color="success"
-                                data-off-color="danger">
+                            <div class="form-check form-switch">
+    <input type="checkbox" name="SisteredBy" id="sisteredToggle" class="form-check-input" role="switch">
+    <label class="form-check-label" for="sisteredToggle"></label>
+</div>
                         </div>
                     </div>
 
@@ -166,29 +164,17 @@
                                 <input type="text" name="ch_pre_city" id="ch_pre_city" class="form-control" placeholder="City" required >
                                 </div>
                                 <div class="col-sm-3 mb-1">
-                                    <select name="ch_pre_state" id="ch_pre_state" class="form-control" style="width: 100%;" required>
-                                        <option value="">Select State</option>
-                                        @foreach($allStates as $state)
-                                        <option value="{{$state->id}}">
-                                            {{$state->state_long_name}}
-                                        </option>
-                                    @endforeach
-                                    </select>
+                                    <input type="text" id="ch_pre_state_display" class="form-control bg-light" placeholder="Same as Chapter State" readonly>
+                                    <input type="hidden" name="ch_pre_state" id="ch_pre_state">
                                 </div>
                                 <div class="col-sm-2 mb-1">
-                                    <input type="text" name="ch_pre_zip" id="ch_pre_zip" class="form-control" placeholder="Zip" required >
+                                    <input type="text" name="ch_pre_zip" id="ch_pre_zip" class="form-control" placeholder="Zip" required>
                                 </div>
-                            <div class="col-sm-2 mb-1" id="ch_pre_country-container" style="display: none;">
-                                <select name="ch_pre_country" id="ch_pre_country" class="form-control" style="width: 100%;" required>
-                                    <option value="">Select Country</option>
-                                    @foreach($allCountries as $country)
-                                        <option value="{{$country->id}}">
-                                            {{$country->name}}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <div class="col-sm-2 mb-1" id="ch_pre_country-container" style="display: none;">
+                                    <input type="text" id="ch_pre_country_display" class="form-control bg-light" placeholder="Same as Chapter Country" readonly>
+                                    <input type="hidden" name="ch_pre_country" id="ch_pre_country">
+                                </div>
                             </div>
-                        </div>
 
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">Password:</label>
@@ -208,13 +194,11 @@
                         </div>
                     </div>
 
-                    <hr>
-
-                    <div id="payment-section">
-                <h3 class="profile-username">Payment Information</h3>
-                <!-- /.card-header -->
-                <div class="row">
-                    <div class="col-md-12">
+                   <div id="payment-section">
+                     <hr>
+                        <h3 class="profile-username">Payment Information</h3>
+                        <div class="row">
+                            <div class="col-md-12">
 
                     @if ($errors->any())
                     <div class="alert alert-danger">
@@ -309,24 +293,44 @@
                             </div>
                         </div>
 
-                        <div class="card-body text-center mt-3">
-                             <div class="col-md-12" ><center>
-                                Please note: your payment will not be processed until your chapter is approved.<br>
-                                After it is approved, your payment will be processed and we will send you your MOMS Club Chapter Manual.<br>
-                                There are no refunds after the payment has been processed.
-                            </center></div>
-                            <br>
-                            <div class="col-md-12" style="color: #dc3545;"><center>Page will automatically re-direct after application submission with success or error message.<br>
-                                DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center></div>
-                            <br>
-
-                                <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>{{ __('Submit Application') }}</button>
+                      </div>
                         </div>
-                    </form>
-                </div>
-            </div>
+                    </div> {{-- END payment-section --}}
 
+            {{-- Authorize.net notice --}}
+                    {{-- <div class="col-md-12 mt-3" id="authorize-notice" style="font-size: 0.8em">
+                        <img src="{{ config('settings.base_url') }}images/authorize-net-seal.jpg" alt="authorize-net-seal" style="float: left; margin-right: 20px; width: 115px; height: 115px;">
+                        <p>You can pay with confidence! ...</p>
+                    </div> --}}
+
+                    {{-- Submit section - always visible --}}
+                    <div class="card-body text-center mt-3">
+                        <div class="col-md-12 mb-3" id="payment-notice"><center>
+                            Please note: your payment will not be processed until your chapter is approved.<br>
+                            After it is approved, your payment will be processed and we will send you your MOMS Club Chapter Manual.<br>
+                            There are no refunds after the payment has been processed.
+                        </center></div>
+                        <div class="col-md-12 mb-3" style="color: #dc3545;" id="submit-warning"><center>
+                            Page will automatically re-direct after application submission with success or error message.<br>
+                            DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!
+                        </center></div>
+                        <button type="submit" class="btn btn-primary bg-gradient mb-2" id="submit-btn">
+                            <i class="bi bi-chevron-double-right me-2"></i>{{ __('Submit Application') }}
+                        </button>
                     </div>
+
+                </form>
+                 <div class="col-md-12 mt-3" id="authorize-notice" style="font-size: 0.8em">
+                    <img src="{{ config('settings.base_url') }}images/authorize-net-seal.jpg" alt="authorize-net-seal" style="float: left; margin-right: 20px; width: 115px; height: 115px;">
+                    <p>You can pay with confidence! We have partnered with <a href="http://www.authorize.net" target="blank">Authorize.Net</a>, a leading payment gateway since 1996,
+                    to accept credit cards and electronic check payments safely and securely for our chapters.<br>
+                    <br>
+                    The Authorize.Net Payment Gateway manages the complex routing of sensitive customer information through the electronic check and credit card processing networks.
+                    See an <a href="http://www.authorize.net/resources/howitworksdiagram/" target="blank">online payments diagram</a> to see how it works.</p>
+                </div>
+
+            </div>
+      </div>
     <!-- /.card-body -->
     </div>
     <!-- /.card -->
@@ -334,258 +338,195 @@
     <!-- /.col -->
     </div>
 
-<div class="col-md-12" style="font-size: 0.8em"></div>
-<div class="col-md-12" style="font-size: 0.8em">
-    <img src="{{ config('settings.base_url') }}images/authorize-net-seal.jpg" alt="authorize-net-seal" style="float: left; margin-right: 20px; width: 115px; height: 115px;">
-    <p>You can pay with confidence! We have partnered with <a href="http://www.authorize.net" target="blank">Authorize.Net</a>, a leading payment gateway since 1996,
-    to accept credit cards and electronic check payments safely and securely for our chapters.<br>
-    <br>
-    The Authorize.Net Payment Gateway manages the complex routing of sensitive customer information through the electronic check and credit card processing networks.
-    See an <a href="http://www.authorize.net/resources/howitworksdiagram/" target="blank">online payments diagram</a> to see how it works.</p>
-</div>
-
 </div>
 <!-- /.container- -->
 @endsection
 @section('customscript')
 
 <script>
-$(function () {
-    // Initialize Bootstrap Switch
-    $("input[data-bootstrap-switch]").bootstrapSwitch();
+// ─── UTILITY FUNCTIONS (defined first so they're available everywhere) ───────
 
-    // Handle switch change event
-    $('#sisteredToggle').on('switchChange.bootstrapSwitch', function(event, state) {
-        if (state) {
-            // Switch is ON (Yes) - Show sistered field, hide hear about field
+function calculateTotal() {
+    var newchap = parseFloat(document.getElementById('newchap').value.replace('$', ''));
+    var fee = parseFloat(document.getElementById('fee').value.replace('$', ''));
+    var total = newchap + fee;
+    document.getElementById('total').value = '$' + total.toFixed(2);
+}
+
+function hidePaymentSection() {
+    document.getElementById('payment-section').style.display = 'none';
+    document.getElementById('payment-notice').style.display = 'none';
+    document.getElementById('authorize-notice').style.display = 'none';
+    document.getElementById('submit-btn').innerHTML = '<i class="bi bi-chevron-double-right me-2"></i>Submit Application';
+    document.getElementById('submit-warning').innerHTML = '<center>Page will automatically re-direct after application submission with success or error message.<br>Please do not refresh the page after clicking "Submit Application"!</center>';
+
+    // Remove required from payment fields
+    ['card_number','expiration_date','cvv','first_name','last_name','email','address','city','state','zip'].forEach(id => {
+        const f = document.getElementById(id);
+        if (f) { f.removeAttribute('required'); f.value = ''; }
+    });
+}
+
+function showPaymentSection() {
+    document.getElementById('payment-section').style.display = 'block';
+    document.getElementById('payment-notice').style.display = 'block';
+    document.getElementById('authorize-notice').style.display = 'block';
+    document.getElementById('submit-btn').innerHTML = '<i class="bi bi-chevron-double-right me-2"></i>Submit Payment';
+    document.getElementById('submit-warning').innerHTML = '<center>Page will automatically re-direct after application submission with success or error message.<br>DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center>';
+
+    // Restore required on payment fields
+    ['card_number','expiration_date','cvv','first_name','last_name','email','address','city','state','zip'].forEach(id => {
+        const f = document.getElementById(id);
+        if (f) f.setAttribute('required', 'required');
+    });
+
+    // Restore fee display fields
+    document.getElementById('newchap').value = '$30.00';
+    document.getElementById('fee').value = '$5.00';
+    calculateTotal();
+}
+
+// ─── DOM READY ────────────────────────────────────────────────────────────────
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    // Calculate total on page load
+    calculateTotal();
+
+   // ── Sistered toggle ──
+    const sisteredToggle = document.getElementById('sisteredToggle');
+
+    function handleSisteredToggle() {
+        if (sisteredToggle.checked) {
             $('#sisteredByField').slideDown(300);
             $('#hearAboutByField').slideUp(300);
             $('#ch_sisteredby').prop('required', true);
-            $('#ch_hearabout').prop('required', false).val(''); // Clear hear about field
+            $('#ch_hearabout').prop('required', false).val('');
         } else {
-            // Switch is OFF (No) - Hide sistered field, show hear about field
             $('#sisteredByField').slideUp(300);
             $('#hearAboutByField').slideDown(300);
-            $('#ch_sisteredby').prop('required', false).val(''); // Clear sistered field
+            $('#ch_sisteredby').prop('required', false).val('');
             $('#ch_hearabout').prop('required', true);
         }
+    }
+
+    // Set initial state
+    handleSisteredToggle();
+
+    // Listen for changes
+    sisteredToggle.addEventListener('change', handleSisteredToggle);
+
+    // // ── Chapter state / country dropdown ──
+    // const stateDropdown = document.getElementById('ch_state');
+    // const countryContainer = document.getElementById('country-container');
+    // const countrySelect = document.getElementById('ch_country');
+
+    // if (stateDropdown && countryContainer && countrySelect) {
+    //     toggleCountryField();
+    //     stateDropdown.addEventListener('change', toggleCountryField);
+
+    //     function toggleCountryField() {
+    //         const selectedStateId = parseInt(stateDropdown.value) || 0;
+    //         const specialStates = [52, 53, 54, 55];
+
+    //         if (specialStates.includes(selectedStateId)) {
+    //             countryContainer.style.display = 'flex';
+    //             countrySelect.setAttribute('required', 'required');
+    //             hidePaymentSection();
+    //         } else {
+    //             countryContainer.style.display = 'none';
+    //             countrySelect.removeAttribute('required');
+    //             countrySelect.value = "";
+    //             showPaymentSection();
+    //         }
+    //     }
+    // }
+
+    // // ── Founder/president state / country dropdown ──
+    // const statePreDropdown = document.getElementById('ch_pre_state');
+    // const countryPreContainer = document.getElementById('ch_pre_country-container');
+    // const countryPreSelect = document.getElementById('ch_pre_country');
+
+    // if (statePreDropdown && countryPreContainer && countryPreSelect) {
+    //     togglePreCountryField();
+    //     statePreDropdown.addEventListener('change', togglePreCountryField);
+
+    //     function togglePreCountryField() {
+    //         const selectedPreStateId = parseInt(statePreDropdown.value) || 0;
+    //         const specialPreStates = [52, 53, 54, 55];
+
+    //         if (specialPreStates.includes(selectedPreStateId)) {
+    //             countryPreContainer.style.display = 'flex';
+    //             countryPreSelect.setAttribute('required', 'required');
+    //         } else {
+    //             countryPreContainer.style.display = 'none';
+    //             countryPreSelect.removeAttribute('required');
+    //             countryPreSelect.value = "";
+    //         }
+    //     }
+    // }
+
+    // ── Chapter state / country dropdown (also mirrors to president fields) ──
+const stateDropdown = document.getElementById('ch_state');
+const countryContainer = document.getElementById('country-container');
+const countrySelect = document.getElementById('ch_country');
+const specialStates = [52, 53, 54, 55];
+
+if (stateDropdown && countryContainer && countrySelect) {
+    toggleCountryField();
+    stateDropdown.addEventListener('change', toggleCountryField);
+
+    function toggleCountryField() {
+        const selectedStateId = parseInt(stateDropdown.value) || 0;
+        const selectedStateText = stateDropdown.options[stateDropdown.selectedIndex].text;
+
+        // Mirror state to president display + hidden input
+        const preStateDisplay = document.getElementById('ch_pre_state_display');
+        const preStateHidden = document.getElementById('ch_pre_state');
+        if (preStateDisplay) preStateDisplay.value = stateDropdown.value ? selectedStateText : '';
+        if (preStateHidden) preStateHidden.value = stateDropdown.value || '';
+
+        if (specialStates.includes(selectedStateId)) {
+            // Show chapter country field
+            countryContainer.style.display = 'flex';
+            countrySelect.setAttribute('required', 'required');
+
+            // Show president country display field
+            const preCountryContainer = document.getElementById('ch_pre_country-container');
+            if (preCountryContainer) preCountryContainer.style.display = 'flex';
+
+            // Hide payment section
+            hidePaymentSection();
+        } else {
+            // Hide chapter country field
+            countryContainer.style.display = 'none';
+            countrySelect.removeAttribute('required');
+            countrySelect.value = '';
+
+            // Hide president country display field and clear it
+            const preCountryContainer = document.getElementById('ch_pre_country-container');
+            if (preCountryContainer) preCountryContainer.style.display = 'none';
+            const preCountryDisplay = document.getElementById('ch_pre_country_display');
+            const preCountryHidden = document.getElementById('ch_pre_country');
+            if (preCountryDisplay) preCountryDisplay.value = '';
+            if (preCountryHidden) preCountryHidden.value = '';
+
+            // Show payment section
+            showPaymentSection();
+        }
+    }
+
+    // Also mirror country selection to president fields when country changes
+    countrySelect.addEventListener('change', function() {
+        const selectedCountryText = countrySelect.options[countrySelect.selectedIndex].text;
+        const preCountryDisplay = document.getElementById('ch_pre_country_display');
+        const preCountryHidden = document.getElementById('ch_pre_country');
+        if (preCountryDisplay) preCountryDisplay.value = countrySelect.value ? selectedCountryText : '';
+        if (preCountryHidden) preCountryHidden.value = countrySelect.value || '';
     });
+}
 
-    // Initialize the field states on page load
-    var initialState = $('#sisteredToggle').bootstrapSwitch('state');
-
-    if (initialState) {
-        // YES - Show sistered field
-        $('#sisteredByField').show();
-        $('#hearAboutByField').hide();
-        $('#ch_sisteredby').prop('required', true);
-        $('#ch_hearabout').prop('required', false);
-    } else {
-        // NO - Show hear about field
-        $('#sisteredByField').hide();
-        $('#hearAboutByField').show();
-        $('#ch_sisteredby').prop('required', false);
-        $('#ch_hearabout').prop('required', true);
-    }
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Chapter state and country
-    const stateDropdown = document.getElementById('ch_state');
-    const countryContainer = document.getElementById('country-container');
-    const countrySelect = document.getElementById('ch_country');
-
-    // President state and country
-    const statePreDropdown = document.getElementById('ch_pre_state');
-    const countryPreContainer = document.getElementById('ch_pre_country-container');
-    const countryPreSelect = document.getElementById('ch_pre_country');
-
-    // Check if elements exist before adding listeners
-    if (stateDropdown && countryContainer && countrySelect) {
-        // Initially set country field requirement based on state selection
-        toggleCountryField();
-
-        // Add event listener to the state dropdown
-        stateDropdown.addEventListener('change', toggleCountryField);
-
-        function toggleCountryField() {
-            const selectedStateId = parseInt(stateDropdown.value) || 0;
-            const specialStates = [52, 53, 54, 55]; // States that should show the country field
-
-            if (specialStates.includes(selectedStateId)) {
-                // Show country field
-                countryContainer.style.display = 'flex';
-                countrySelect.setAttribute('required', 'required');
-
-                // Hide payment section and remove required attributes
-                hidePaymentSection();
-            } else {
-                // Hide country field
-                countryContainer.style.display = 'none';
-                countrySelect.removeAttribute('required');
-                countrySelect.value = "";
-
-                // Show payment section and restore required attributes
-                showPaymentSection();
-            }
-        }
-    }
-
-    // President state logic (unchanged)
-    if (statePreDropdown && countryPreContainer && countryPreSelect) {
-        togglePreCountryField();
-        statePreDropdown.addEventListener('change', togglePreCountryField);
-
-        function togglePreCountryField() {
-            const selectedPreStateId = parseInt(statePreDropdown.value) || 0;
-            const specialPreStates = [52, 53, 54, 55];
-
-            if (specialPreStates.includes(selectedPreStateId)) {
-                countryPreContainer.style.display = 'flex';
-                countryPreSelect.setAttribute('required', 'required');
-            } else {
-                countryPreContainer.style.display = 'none';
-                countryPreSelect.removeAttribute('required');
-                countryPreSelect.value = "";
-            }
-        }
-    }
-
-    function hidePaymentSection() {
-        // Hide payment fields section (everything except submit button and authorize notice)
-        const paymentHeading = Array.from(document.querySelectorAll('h3')).find(h3 =>
-            h3.textContent.trim() == 'Payment Information'
-        );
-
-        if (paymentHeading) {
-            // Hide the payment heading
-            paymentHeading.style.display = 'none';
-
-            // Hide all payment form groups
-            const paymentFields = [
-                'card_number', 'expiration_date', 'cvv', 'first_name',
-                'last_name', 'email', 'address', 'city', 'state', 'zip',
-                'newchap', 'fee', 'total'
-            ];
-
-            paymentFields.forEach(fieldId => {
-                const field = document.getElementById(fieldId);
-                if (field) {
-                    // Hide the entire form group
-                    let formGroup = field.closest('.form-group');
-                    if (formGroup) {
-                        formGroup.style.display = 'none';
-                    }
-
-                    // Remove required attribute and clear value
-                    field.removeAttribute('required');
-                    field.value = '';
-                }
-            });
-
-            // Hide the payment warning message (but keep the submit section warning)
-            const paymentWarningDiv = document.querySelector('.col-md-12[style*="color: red"]:not(.card-body .col-md-12)');
-            if (paymentWarningDiv && !paymentWarningDiv.closest('.card-body.text-center')) {
-                paymentWarningDiv.style.display = 'none';
-            }
-        }
-
-        // Hide the authorize.net notice section
-        const authorizeNotice = document.querySelector('img[alt="authorize-net-seal"]');
-        if (authorizeNotice) {
-            // Hide the entire authorize notice section
-            let noticeSection = authorizeNotice.closest('.col-md-12');
-            if (noticeSection) {
-                noticeSection.style.display = 'none';
-            }
-            // Also hide the preceding empty div
-            if (noticeSection && noticeSection.previousElementSibling) {
-                noticeSection.previousElementSibling.style.display = 'none';
-            }
-        }
-
-        // Update submit button text and warning message
-        const submitButton = document.querySelector('button[type="submit"]');
-        if (submitButton) {
-            submitButton.innerHTML = '<i class="bi bi-chevron-double-right me-2"></i>Submit Application';
-        }
-
-        // Update the submit section warning message for non-payment submissions
-        const submitWarningDiv = document.querySelector('.card-body.text-center .col-md-12[style*="color: red"]');
-        if (submitWarningDiv) {
-            submitWarningDiv.innerHTML = '<center>Page will automatically re-direct after application submission with success or error message.<br>Please do not refresh the page after clicking "Submit Application"!</center>';
-        }
-    }
-
-    function showPaymentSection() {
-        // Show payment fields section
-        const paymentHeading = Array.from(document.querySelectorAll('h3')).find(h3 =>
-            h3.textContent.trim() == 'Payment Information'
-        );
-
-        if (paymentHeading) {
-            // Show the payment heading
-            paymentHeading.style.display = 'block';
-
-            // Show all payment form groups and restore required attributes
-            const paymentFields = [
-                'card_number', 'expiration_date', 'cvv', 'first_name',
-                'last_name', 'email', 'address', 'city', 'state', 'zip',
-                'newchap', 'fee', 'total'
-            ];
-
-            paymentFields.forEach(fieldId => {
-                const field = document.getElementById(fieldId);
-                if (field) {
-                    // Show the entire form group
-                    let formGroup = field.closest('.form-group');
-                    if (formGroup) {
-                        formGroup.style.display = 'flex';
-                    }
-
-                    // Restore required attribute (except for readonly fields)
-                    if (fieldId != 'newchap' && fieldId != 'fee' && fieldId != 'total') {
-                        field.setAttribute('required', 'required');
-                    }
-                }
-            });
-
-            // Show the payment warning message (if there was one outside submit section)
-            const paymentWarningDiv = document.querySelector('.col-md-12[style*="color: red"]:not(.card-body .col-md-12)');
-            if (paymentWarningDiv && !paymentWarningDiv.closest('.card-body.text-center')) {
-                paymentWarningDiv.style.display = 'block';
-            }
-        }
-
-        // Show the authorize.net notice section
-        const authorizeNotice = document.querySelector('img[alt="authorize-net-seal"]');
-        if (authorizeNotice) {
-            // Show the entire authorize notice section
-            let noticeSection = authorizeNotice.closest('.col-md-12');
-            if (noticeSection) {
-                noticeSection.style.display = 'block';
-            }
-            // Also show the preceding empty div
-            if (noticeSection && noticeSection.previousElementSibling) {
-                noticeSection.previousElementSibling.style.display = 'block';
-            }
-        }
-
-        // Update submit button text and warning message
-        const submitButton = document.querySelector('button[type="submit"]');
-        if (submitButton) {
-            submitButton.innerHTML = '<i class="bi bi-chevron-double-right me-2"></i>Submit Payment';
-        }
-
-        // Update the submit section warning message for payment submissions
-        const submitWarningDiv = document.querySelector('.card-body.text-center .col-md-12[style*="color: red"]');
-        if (submitWarningDiv) {
-            submitWarningDiv.innerHTML = '<center>Page will automatically re-direct after application submission with success or error message.<br>DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center>';
-        }
-    }
-});
-
-document.addEventListener('DOMContentLoaded', function() {
+    // ── Password match check ──
     const password = document.getElementById('password');
     const confirmPassword = document.getElementById('confirm_password');
     const matchMessage = document.getElementById('password-match-message');
@@ -596,7 +537,6 @@ document.addEventListener('DOMContentLoaded', function() {
             matchMessage.className = 'form-text';
             return;
         }
-
         if (password.value == confirmPassword.value) {
             matchMessage.textContent = 'Passwords match!';
             matchMessage.className = 'form-text text-success';
@@ -608,39 +548,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Check on input in either field
     password.addEventListener('input', checkPasswordMatch);
     confirmPassword.addEventListener('input', checkPasswordMatch);
-});
 
-    // Function to calculate total due
-    function calculateTotal() {
-        var newchap = parseFloat(document.getElementById('newchap').value.replace('$', ''));
-        var fee = parseFloat(document.getElementById('fee').value.replace('$', ''));
-        var total = newchap + fee;
-
-        document.getElementById('total').value = '$' + total.toFixed(2);
+    // ── Cardholder email validation ──
+    const emailField = document.getElementById('email');
+    if (emailField) {
+        emailField.addEventListener('blur', function() {
+            let emailInput = this.value.trim();
+            let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailInput)) {
+                this.setCustomValidity('Please enter a valid email address.');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
     }
 
-    // Call the function when the page loads
-    document.addEventListener('DOMContentLoaded', function() {
-        calculateTotal();
-    });
-
-   // Additional email validation
-const emailField = document.getElementById('email');
-if (emailField) {
-    emailField.addEventListener('blur', function() {
-        let emailInput = this.value.trim();
-        let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!emailRegex.test(emailInput)) {
-            this.setCustomValidity('Please enter a valid email address.');
-        } else {
-            this.setCustomValidity('');
-        }
-    });
-}
-
+}); // end DOMContentLoaded
 </script>
 @endsection

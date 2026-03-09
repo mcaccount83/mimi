@@ -1,13 +1,13 @@
 @extends('layouts.mimi_theme')
 
-@if ($ITCondition && !$displayTESTING && !$displayLIVE)
-    @section('page_title', 'EOY Reports *ADMIN*')
+@if ($ITCondition && !$displayEOYTESTING && !$displayEOYLIVE)
+    @section('page_title', $fiscalYearEOY.' EOY Reports *ADMIN*')
     @section('breadcrumb', 'EOY Stataus Report')
-@elseif ($eoyTestCondition && $displayTESTING)
-    @section('page_title', 'EOY Reports *TESTING*')
+@elseif ($eoyTestCondition && $displayEOYTESTING)
+    @section('page_title', $fiscalYearEOY.' EOY Reports *TESTING*')
     @section('breadcrumb', 'EOY Stataus Reports')
 @else
-    @section('page_title', 'EOY Reports')
+    @section('page_title', $fiscalYearEOY.' EOY Reports')
     @section('breadcrumb', 'EOY Stataus Reports')
 @endif
 
@@ -24,7 +24,7 @@
                             EOY Status Report
                         </h3>
                         @include('layouts.dropdown_menus.menu_eoy')
-                        <span class="ms-2 text-muted " style="font-size: 0.75rem; align-self: flex-end; line-height: 1.8;"><span class="ms-2">Chapters that were added after June 30, {{ $currentYear }} will not be listed</span>
+                        <span class="ms-2 text-muted " style="font-size: 0.75rem; align-self: flex-end; line-height: 1.8;"><span class="ms-2">Chapters that were added after June 30, {{ $thisYearEOY }} will not be listed</span>
                     </div>
             </div>
             <!-- /.card-header -->

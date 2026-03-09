@@ -18,8 +18,8 @@
                     <div class="card-body">
                         <div class="card-header bg-transparent border-0">
                              <h3>{{ $financialReportName }}
-                            @if ($ITCondition && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
-                            @if ($eoyTestCondition && $displayTESTING) *TESTING*@endif
+                            @if ($ITCondition && !$displayEOYTESTING && !$displayEOYLIVE) *ADMIN*@endif
+                            @if ($eoyTestCondition && $displayEOYTESTING) *TESTING*@endif
                             </h3>
                         </div>
                     <!-- /.card-header -->
@@ -63,7 +63,7 @@
 
                     @include('boards-new.partials.financial_accordion', ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId,
                         'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chEOYDocuments' => $chEOYDocuments, 'stateShortName' => $stateShortName, 'chActiveId' => $chActiveId,
-                        'lastyear' => $lastYear, 'currentYear' => $currentYear, 'irsFilingName' => $irsFilingName
+                        'lastYearEOY' => $lastYearEOY, 'thisYearEOY' => $thisYearEOY, 'irsFilingName' => $irsFilingName
                     ])
 
                 </div>

@@ -385,23 +385,23 @@ class FinancialReportController extends Controller implements HasMiddleware
             );
 
             $EOYOptions = $this->positionConditionsService->getEOYOptions();
-            $fiscalYear = $EOYOptions['fiscalYear'];
+            $fiscalYearEOY = $EOYOptions['fiscafiscafiscalYearEOYlYearEOYlYear'];
 
             if ($reportReceived == 1) {
                 $pdfPath = $this->pdfController->saveFinancialReport($request, $chapterId, $PresDetails);   // Generate and Send the PDF
                 Mail::to($userEmail)
                     ->cc($emailListChap)
-                    ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath, $fiscalYear));
+                    ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath, $fiscalYearEOY));
 
                 if ($chFinancialReport->reviewer_id == null) {
                     DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chapterId]);
                     Mail::to($emailCC)
-                        ->queue(new EOYFinancialSubmitted($mailData, $pdfPath, $fiscalYear));
+                        ->queue(new EOYFinancialSubmitted($mailData, $pdfPath, $fiscalYearEOY));
                 }
 
                 if ($chFinancialReport->reviewer_id != null) {
                     Mail::to($reviewerEmail)
-                        ->queue(new EOYFinancialSubmitted($mailData, $pdfPath, $fiscalYear));
+                        ->queue(new EOYFinancialSubmitted($mailData, $pdfPath, $fiscalYearEOY));
                 }
 
             }
@@ -721,7 +721,7 @@ class FinancialReportController extends Controller implements HasMiddleware
 
         // Calculate the fiscal year (current year - next year)
         $EOYOptions = $this->positionConditionsService->getEOYOptions();
-        $fiscalYear = $EOYOptions['fiscalYear'];
+        $fiscalYearEOY = $EOYOptions['fiscalYearEOY'];
 
         $resources = Resources::with('resourceCategory')->get();
         $instructionsName = 'Officer Packet';
@@ -831,7 +831,7 @@ class FinancialReportController extends Controller implements HasMiddleware
                     $this->baseMailDataController->getCCData($emailCCData),
                     // $this->baseMailDataController->getUserData($user),
                     [
-                        'fiscalYear' => $fiscalYear,
+                        'fiscalYearEOY' => $fiscalYearEOY,
                     ]
                 );
 

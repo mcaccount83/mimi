@@ -381,16 +381,15 @@
                   <div class="tab-pane" id="eoy">
                     <div class="eoy-field">
                         <div class="card-header bg-transparent border-0">
-                                        <h3>
-                                            {{ $fiscalYear }} End of Year Information
-                            @if ($ITCondition && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
-                            @if ($eoyTestCondition && $displayTESTING) *TESTING*@endif
+                            <h3>{{ $fiscalYearEOY }} End of Year Information
+                            @if ($ITCondition && !$displayEOYTESTING && !$displayEOYLIVE) *ADMIN*@endif
+                            @if ($eoyTestCondition && $displayEOYTESTING) *TESTING*@endif
                             </h3>
                                 </div>
 
                                 <!-- /.card-header -->
                             <div class="card-body">
-                        @if($ITCondition || $eoyTestCondition && $displayTESTING || $displayLIVE)
+                        @if($ITCondition || $eoyTestCondition && $displayEOYTESTING || $displayEOYLIVE)
                             <div class="row mb-2">
                                 <div class="col-sm-3">
                                     <label>Boundary Issues:</label>
@@ -927,10 +926,10 @@
                     <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.edit', ['id' => $chDetails->id]) }}'"><i class="bi bi-house-fill me-2"></i>Update Chapter Information</button>
                     <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chDetails->id]) }}'"><i class="bi bi-person-bounding-box me-2"></i>Update Board Information</button>
                     @endif
-                @if ( $ITCondition || $eoyTestCondition && $displayTESTING || $regionalCoordinatorCondition && $displayLIVE )
+                @if ( $ITCondition || $eoyTestCondition && $displayEOYTESTING || $regionalCoordinatorCondition && $displayEOYLIVE )
                     <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-file-earmark-bar-graph-fill me-2"></i>Update EOY Information
-                        @if ($ITCondition && !$displayTESTING && !$displayLIVE) *ADMIN*@endif
-                        @if ($eoyTestCondition && $displayTESTING) *TESTING*@endif
+                        @if ($ITCondition && !$displayEOYTESTING && !$displayEOYLIVE) *ADMIN*@endif
+                        @if ($eoyTestCondition && $displayEOYTESTING) *TESTING*@endif
                     </button>
                 @endif
                 @if($coordinatorCondition && $conferenceCoordinatorCondition)

@@ -1,13 +1,13 @@
 @extends('layouts.mimi_theme')
 
-@if ($ITCondition && !$displayTESTING && !$displayLIVE)
-    @section('page_title', 'EOY Details *ADMIN*')
+@if ($ITCondition && !$displayEOYTESTING && !$displayEOYLIVE)
+    @section('page_title', $fiscalYearEOY.' EOY Details *ADMIN*')
     @section('breadcrumb', 'EOY Details *ADMIN*')
-@elseif ($eoyTestCondition && $displayTESTING)
-    @section('page_title', 'EOY Details *TESTING*')
+@elseif ($eoyTestCondition && $displayEOYTESTING)
+    @section('page_title', $fiscalYearEOY.' EOY Details *TESTING*')
     @section('breadcrumb', 'EOY Details *TESTING*')
 @else
-    @section('page_title', 'EOY Details')
+    @section('page_title', $fiscalYearEOY.' EOY Details')
     @section('breadcrumb', 'EOY Details')
 @endif
 
@@ -149,15 +149,15 @@
             <div class="card card-primary card-outline">
                 <div class="card-body">
                     <div class="card-header bg-transparent border-0">
-                <h3>{{ $fiscalYear }} End of Year Information</h3>
-                    @if ($displayTESTING == '1')
+                <h3>{{ $fiscalYearEOY }} End of Year Information</h3>
+                    @if ($displayEOYTESTING == '1')
                     *TESTING*
                     @endif
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
 
-                    @if ($displayTESTING == '1' || $displayLIVE == '1' || $ITCondition)
+                    @if ($displayEOYTESTING == '1' || $displayEOYLIVE == '1' || $ITCondition)
                         <div class="row mb-2">
                             <div class="col-sm-3">
                                 <label>Boundary Issues:</label>

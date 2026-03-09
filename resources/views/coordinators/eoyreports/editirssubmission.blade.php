@@ -1,13 +1,13 @@
 @extends('layouts.mimi_theme')
 
-@if ($ITCondition && !$displayTESTING && !$displayLIVE)
-    @section('page_title', 'EOY Details *ADMIN*')
+@if ($ITCondition && !$displayEOYTESTING && !$displayEOYLIVE)
+    @section('page_title', $fiscalYearEOY.' EOY Details *ADMIN*')
     @section('breadcrumb', '990N Filing')
-@elseif ($eoyTestCondition && $displayTESTING)
-    @section('page_title', 'EOY Details *TESTING*')
+@elseif ($eoyTestCondition && $displayEOYTESTING)
+    @section('page_title', $fiscalYearEOY.' EOY Details *TESTING*')
     @section('breadcrumb', '990N Filing')
 @else
-    @section('page_title', 'EOY Details')
+    @section('page_title', $fiscalYearEOY.' EOY Details')
     @section('breadcrumb', '990N Filing')
 @endif
 
@@ -52,7 +52,7 @@
             <div class="card card-primary card-outline">
                 <div class="card-body">
                     <div class="card-header bg-transparent border-0">
-                <h3>{{ $fiscalYear }} 990N Filing Details</h3>
+                <h3>{{ $fiscalYearEOY }} 990N Filing Details</h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
@@ -117,7 +117,7 @@
                         <div class="col-sm-1">
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="irs_filedwrong" id="irs_filedwrong" class="form-check-input exclusive-toggle"
-                                {{ $chEOYDocumentsY->irs_filedwrong == 1 ? 'checked' : ''}}>
+                                {{ $chEOYDocuments->irs_filedwrong == 1 ? 'checked' : ''}}>
                                 <label class="form-check-label" for="irs_filedwrong"></label>
                             </div>
                         </div>

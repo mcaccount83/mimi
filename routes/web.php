@@ -144,6 +144,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/techreports/resetProbationSubmission', [TechReportController::class, 'resetProbationSubmission'])->name('techreports.resetProbationSubmission');
     Route::get('/techreports/eoy', [TechReportController::class, 'showEOY'])->name('techreports.eoy');
     Route::post('/techreports/eoy/resetyear', [TechReportController::class, 'resetYear'])->name('techreports.resetyear');
+    Route::post('/techreports/eoy/resetyeareoy', [TechReportController::class, 'resetYearEOY'])->name('techreports.resetyeareoy');
     Route::post('/techreports/eoy/resetdisbandedusers', [TechReportController::class, 'resetDisbandedUsers'])->name('techreports.resetdisbandedusers');
     Route::post('/techreports/eoy/resetoutgoingusers', [TechReportController::class, 'resetOutgoingUsers'])->name('techreports.resetoutgoingusers');
     Route::post('/techreports/eoy/updateeoydatabase', [TechReportController::class, 'updateEOYDatabase'])->name('techreports.updateeoydatabase');
