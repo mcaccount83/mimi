@@ -295,12 +295,12 @@ if (!$recaptchaResult['success']) {
         $shippingCompany = $name = $input['ch_name'];
         $shippingAddress = $input['ch_pre_street'];
         $shippingCity = $input['ch_pre_city'];
-        $shipStateId = $input['ch_pre_state'];
+        $shipStateId = $input['ch_state'];
         $state = State::find($shipStateId);
         $shippingState = $state->state_short_name;
         $shippingZip = $input['ch_pre_zip'];
 
-        $shipStateId = intval($input['ch_pre_state']);
+        $shipStateId = intval($input['ch_state']);
         if ($shipStateId < 52) {
             $shippingCountry = 'USA';
         } else {
@@ -386,9 +386,9 @@ if (!$recaptchaResult['success']) {
                     'chapter_id' => $chapterId,
                     'street_address' => $input['ch_pre_street'],
                     'city' => $input['ch_pre_city'],
-                    'state_id' => $input['ch_pre_state'],
+                    'state_id' => $input['ch_state'],
                     'zip' => $input['ch_pre_zip'],
-                    'country_id' => $input['ch_pre_country'] ?? '198',
+                    'country_id' => $input['ch_country'] ?? '198',
                     'phone' => $input['ch_pre_phone'],
                     'updated_by' => $input['ch_pre_fname'].' '.$input['ch_pre_lname'],
                     'updated_id' => $userId,
