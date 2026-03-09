@@ -40,7 +40,6 @@ class AppServiceProvider extends ServiceProvider
         // Add global BCC to all emails
         Event::listen(MessageSending::class, function ($event) {
             $bccAddress = config('mail.bcc.address');
-
             if ($bccAddress) {
                 $event->message->bcc($bccAddress);
             }

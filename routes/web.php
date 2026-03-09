@@ -114,6 +114,10 @@ Route::get(config('sentemails.routepath'), [MySentEmailsController::class, 'inde
     ->middleware(config('sentemails.middleware'))
     ->name('sentemails');
 
+    Route::get('adminreports/sentemails/attachment-{id}', [MySentEmailsController::class, 'downloadAttachment'])
+    ->middleware(['web', 'auth'])
+    ->name('sentemails.downloadAttachment');
+
 // Keep the other package routes
 Route::get(config('sentemails.routepath').'/{id}', [\Dcblogdev\LaravelSentEmails\Controllers\SentEmailsController::class, 'show'])
     ->middleware(config('sentemails.middleware'))
