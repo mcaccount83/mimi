@@ -66,11 +66,11 @@ class ViewServiceProvider extends ServiceProvider
             $forumConditionsService = app(ForumConditionsService::class);
             $PendingConditionsService = app(PendingConditionsService::class);
 
-            $positionConditions = $positionConditionsService->getConditionsForUser($positionid, $secpositionid, $corId);
-            $EOYOptions = $positionConditionsService->getEOYOptions();
-            $forumCount = $forumConditionsService->getUnreadForumCount();
-            $pendingThreadsCount = $forumConditionsService->getPendingThreadsCount();
-            $pendingPostsCount = $forumConditionsService->getPendingPostsCount();
+            $positionConditions = Auth::check() ? $positionConditionsService->getConditionsForUser($positionid, $secpositionid, $corId) : [];
+            $EOYOptions = Auth::check() ? $positionConditionsService->getEOYOptions() : [];
+            $forumCount = Auth::check() ? $forumConditionsService->getUnreadForumCount() : 0;
+            $pendingThreadsCount = Auth::check() ? $forumConditionsService->getPendingThreadsCount() : 0;
+            $pendingPostsCount = Auth::check() ? $forumConditionsService->getPendingPostsCount() : 0;
             $pendingInquiryCount = ($confId) ? $PendingConditionsService->getPendingInquiryCount($confId) : 0;
             $pendingNewChapterCount = ($confId) ? $PendingConditionsService->getpendingNewChapterCount($confId) : 0;
             $pendingNewCoordCount = ($confId) ? $PendingConditionsService->getpendingNewCoordCount($confId) : 0;

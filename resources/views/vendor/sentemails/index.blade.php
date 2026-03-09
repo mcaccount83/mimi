@@ -90,7 +90,7 @@
                                     $parts = explode('<', $email->from);
                                     $from = isset($parts[1]) ? $parts[0] : $parts[0];
                                     @endphp
-                                    <a href="#" class="block px-6 pt-2 pb-2 bg-white emailitem border-b-2" data-id="{{ $email->id }}">
+                                    {{-- <a href="#" class="block px-6 pt-2 pb-2 bg-white emailitem border-b-2" data-id="{{ $email->id }}">
                                         <div class="flex justify-between">
                                             <span class="text-sm font-semibold text-gray-900">{{ $from }}</span>
                                             <span class="text-xs text-gray-500">{{ $email->created_at->diffForHumans() }}</span>
@@ -99,7 +99,19 @@
                                         @if(config('sentemails.storeAttachments'))
                                         <p class="text-sm text-gray-900">{{ __('Attachments') }}: {{ $email->attachments->count() }}</p>
                                         @endif
-                                    </a>
+                                    </a> --}}
+                                    <div class="block px-6 pt-2 pb-2 bg-white border-b-2">
+                                        <div class="flex justify-between">
+                                            <span class="text-sm font-semibold text-gray-900">{{ $from }}</span>
+                                            <span class="text-xs text-gray-500">{{ $email->created_at->diffForHumans() }}</span>
+                                        </div>
+                                        <a href="#" class="emailitem" data-id="{{ $email->id }}">
+                                            <p class="text-sm text-gray-900">{{ $email->subject }}</p>
+                                            </a>
+                                        @if(config('sentemails.storeAttachments'))
+                                        <p class="text-sm text-gray-500">{{ __('Attachments') }}: {{ $email->attachments->count() }}</p>
+                                        @endif
+                                    </div>
                                 @endforeach
                             </div>
                         </div>

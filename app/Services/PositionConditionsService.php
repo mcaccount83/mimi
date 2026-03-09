@@ -127,11 +127,9 @@ class PositionConditionsService
 
         $admin = Admin::latest('id')->firstOrFail();
         $fiscalYearEOY = $admin->fiscal_year_eoy;  // "2024-2025"
-        // $fiscalYearEOY = $admin->fiscal_year_eoy ?? $fiscalYear; //  "2024-2025" fall back to fiscalYear if null
         $years = explode('-', $fiscalYearEOY);  // Extract years from fiscal_year string
         $lastYearEOY = $years[0];  // "2024"
         $thisYearEOY = $years[1];  // "2025"
-        // $nextYearEOY = $thisYearEOY + 1;  // 2026
 
         $display_testing = ($admin->display_testing == 1);
         $display_live = ($admin->display_live == 1);
