@@ -55,16 +55,6 @@
                 <div class="row">
                     <div class="col-md-12"> --}}
 
-                    @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    @endif
-
                      <h3 class="profile-username">Donor Information</h3>
                     <!-- /.card-header -->
                     <div class="row">
@@ -115,9 +105,21 @@
                         </div>
                     </div>
 
-                    <hr>
+                     <div id="payment-section">
+                     <hr>
+                 <h3 class="profile-username">Payment Information</h3>
+                        <div class="row">
+                            <div class="col-md-12">
 
-                <h3 class="profile-username">Payment Information</h3>
+                                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
 
                         <div class="row mb-3">
                             <div class="col-md-6">
@@ -206,16 +208,29 @@
                             </div>
                         </div>
 
-                    <div class="card-body text-center mt-3">
-                            <div class="col-md-12" style="color: #dc3545;"><center>Page will automatically re-direct after application submission with success or error message.<br>
-                                DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center></div>
-                            <br>
-
-                                <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>{{ __('Submit Donation') }}</button>
+                         </div>
                         </div>
-                    </form>
+                    </div> {{-- END payment-section --}}
+                <div class="card-body text-center mt-3">
+                        <div class="col-md-12 mb-3" style="color: #dc3545;" id="submit-warning"><center>
+                            Page will automatically re-direct after application submission with success or error message.<br>
+                            DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!
+                        </center></div>
+                            <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>{{ __('Submit Donation') }}</button>
+                    </div>
+
+                </form>
+                 <div class="col-md-12 mt-3" id="authorize-notice" style="font-size: 0.8em">
+                    <img src="{{ config('settings.base_url') }}images/authorize-net-seal.jpg" alt="authorize-net-seal" style="float: left; margin-right: 20px; width: 115px; height: 115px;">
+                    <p>You can pay with confidence! We have partnered with <a href="http://www.authorize.net" target="blank">Authorize.Net</a>, a leading payment gateway since 1996,
+                    to accept credit cards and electronic check payments safely and securely for our chapters.<br>
+                    <br>
+                    The Authorize.Net Payment Gateway manages the complex routing of sensitive customer information through the electronic check and credit card processing networks.
+                    See an <a href="http://www.authorize.net/resources/howitworksdiagram/" target="blank">online payments diagram</a> to see how it works.</p>
                 </div>
-            </div>
+
+              </div>
+      </div>
     <!-- /.card-body -->
     </div>
     <!-- /.card -->
@@ -223,100 +238,54 @@
     <!-- /.col -->
     </div>
 
-<div class="col-md-12" style="font-size: 0.8em"></div>
-<div class="col-md-12" style="font-size: 0.8em">
-    <img src="{{ config('settings.base_url') }}images/authorize-net-seal.jpg" alt="authorize-net-seal" style="float: left; margin-right: 20px; width: 115px; height: 115px;">
-    <p>You can pay with confidence! We have partnered with <a href="http://www.authorize.net" target="blank">Authorize.Net</a>, a leading payment gateway since 1996,
-    to accept credit cards and electronic check payments safely and securely for our chapters.<br>
-    <br>
-    The Authorize.Net Payment Gateway manages the complex routing of sensitive customer information through the electronic check and credit card processing networks.
-    See an <a href="http://www.authorize.net/resources/howitworksdiagram/" target="blank">online payments diagram</a> to see how it works.</p>
-</div>
-
 </div>
 <!-- /.container- -->
 @endsection
 @section('customscript')
 
 <script>
-    function formatCurrency(input) {
-        let value = input.value.replace(/\D/g, '');
-        value = (value / 100).toFixed(2);
-        input.value = '$' + value;
-    }
-
-
-    // Function to calculate total due
-    function calculateTotal() {
-        var sustainingInput = document.getElementById('sustaining');
-        var sustainingValue = sustainingInput.value.trim();
-        var sustainingFee = parseFloat(sustainingValue.replace('$', ''));
-
-        // Check if sustaining fee is a valid number
-        if (isNaN(sustainingFee)) {
-            sustainingFee = 0; // Set to 0 if input is not a valid number
-        }
-
-        var donationInput = document.getElementById('m2m');
-        var donationValue = donationInput.value.trim();
-        var donationFee = parseFloat(donationValue.replace('$', ''));
-
-        // Check if donation fee is a valid number
-        if (isNaN(donationFee)) {
-            donationFee = 0; // Set to 0 if input is not a valid number
-        }
-
-        var feeInput = document.getElementById('fee');
-        var feeValue = feeInput.value.trim();
-        var fee = parseFloat(feeValue.replace('$', ''));
-
-        // Check if fee is a valid number
-        if (isNaN(fee)) {
-            fee = 0; // Set to 0 if input is not a valid number
-        }
-
-        var total = sustainingFee + donationFee + fee;
-
-        document.getElementById('total').value = '$' + total.toFixed(2);
-    }
-
-// Add event listeners to all input fields that affect the calculation
-document.getElementById('sustaining').addEventListener('input', calculateTotal);
-document.getElementById('m2m').addEventListener('input', calculateTotal);
-document.getElementById('fee').addEventListener('input', calculateTotal);
-
-// Call calculateTotal function initially to calculate total based on default values
-document.addEventListener('DOMContentLoaded', calculateTotal);
-
-    // Additional email validation
-const emailField = document.getElementById('email');
-if (emailField) {
-    emailField.addEventListener('blur', function() {
-        let emailInput = this.value.trim();
-        let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!emailRegex.test(emailInput)) {
-            this.setCustomValidity('Please enter a valid email address.');
-        } else {
-            this.setCustomValidity('');
-        }
-    });
+function formatCurrency(input) {
+    let value = input.value.replace(/\D/g, '');
+    value = (value / 100).toFixed(2);
+    input.value = '$' + value;
 }
 
-const emailField = document.getElementById('ship_email');
-if (emailField) {
-    emailField.addEventListener('blur', function() {
-        let emailInput = this.value.trim();
-        let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!emailRegex.test(emailInput)) {
-            this.setCustomValidity('Please enter a valid email address.');
-        } else {
-            this.setCustomValidity('');
-        }
-    });
+function calculateTotal() {
+    var sustaining = parseFloat(document.getElementById('sustaining').value.replace('$', '')) || 0;
+    var m2m = parseFloat(document.getElementById('m2m').value.replace('$', '')) || 0;
+    var fee = parseFloat(document.getElementById('fee').value.replace('$', '')) || 0;
+    var total = sustaining + m2m + fee;
+    document.getElementById('total').value = '$' + total.toFixed(2);
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+
+    // Calculate total on page load
+    calculateTotal();
+
+    // Recalculate when donation fields change
+    document.getElementById('sustaining').addEventListener('input', calculateTotal);
+    document.getElementById('m2m').addEventListener('input', calculateTotal);
+
+    // Email validation - cardholder email
+    const cardEmailField = document.getElementById('email');
+    if (cardEmailField) {
+        cardEmailField.addEventListener('blur', function() {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            this.setCustomValidity(emailRegex.test(this.value.trim()) ? '' : 'Please enter a valid email address.');
+        });
+    }
+
+    // Email validation - donor email
+    const shipEmailField = document.getElementById('ship_email');
+    if (shipEmailField) {
+        shipEmailField.addEventListener('blur', function() {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            this.setCustomValidity(emailRegex.test(this.value.trim()) ? '' : 'Please enter a valid email address.');
+        });
+    }
+
+}); // end DOMContentLoaded
 </script>
 @endsection
 
