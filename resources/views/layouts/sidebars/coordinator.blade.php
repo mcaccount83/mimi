@@ -247,7 +247,7 @@
                             <i class="bi bi-gear-fill position-absolute" style="font-size: 0.5em; bottom: -0.1em; right: -0.1em; background-color: #343a40; border-radius: 90%;"></i>
                         </span>
                     <p>ListAdmin Reports
-                        @if( $pendingPostsCount  > 0 || $pendingThreadCount  > 0 )
+                        @if( $pendingPostsCount > 0 || $pendingThreadsCount > 0 )
                         <span class="badge bg-danger badge-pill notification-badge">
                             PENDING
                         </span>
