@@ -376,6 +376,7 @@ class UserReportController extends Controller implements HasMiddleware
         $stateShortName = $baseChapterQuery['stateShortName'];
         $regionLongName = $baseChapterQuery['regionLongName'];
         $conferenceDescription = $baseChapterQuery['conferenceDescription'];
+        $chapterStatus = $baseChapterQuery['chapterStatus'];
         $chPcId = $baseChapterQuery['chPcId'];
         $chPayments = $baseChapterQuery['chPayments'];
         $chEOYDocuments = $baseChapterQuery['chEOYDocuments'];
@@ -390,6 +391,7 @@ class UserReportController extends Controller implements HasMiddleware
             'chPcId' => $chPcId, 'allStates' => $allStates, 'chConfId' => $chConfId, 'chPayments' => $chPayments, 'chEOYDocuments' =>$chEOYDocuments,
             'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'bdPosition' => $bdPosition,
             'startMonthName' => $startMonthName, 'AllUserStatus' => $AllUserStatus, 'AllUserType' => $AllUserType, 'AllAdminRole' => $AllAdminRole,
+            'chapterStatus' => $chapterStatus
         ];
 
         return view('coordinators.userreports.edituserboard')->with($data);
