@@ -18,6 +18,7 @@ use App\Mail\PaymentsNewChapOnline;
 use App\Mail\PaymentsPublicDonationOnline;
 use App\Mail\PaymentsSustainingPublicThankYou;
 use App\Models\Admin;
+use App\Models\AdminYear;
 use App\Models\BoardsPending;
 use App\Models\ChapterApplication;
 use App\Models\Chapters;
@@ -148,14 +149,39 @@ class PublicController extends Controller
         $resources = Resources::with('resourceCategory')->get();
         $resourceCategories = ResourceCategory::all();
 
+        $adminYear = AdminYear::latest('id')->firstOrFail();
+        $fiscalYear = $adminYear->year_fiscal;  // "2025-2026"
         $admin = Admin::latest('id')->firstOrFail();
         $fiscalYearEOY = $admin->fiscal_year_eoy;  // "2024-2025"
         $years = explode('-', $fiscalYearEOY);  // Extract years from fiscal_year string
         $lastYearEOY = $years[0];  // "2024"
         $thisYearEOY = $years[1];  // "2025"
+        $display_testing = ($admin->display_testing == 1);
+        $display_live = ($admin->display_live == 1);
+        $yearColumnName = $thisYearEOY.'_financial_pdf_path'; // "2025" name for Database Column for Financial Report
+        $boardReportName = $fiscalYear.' Board Report';  // "2025-2026" Board Report Name
+        $financialReportName = $fiscalYearEOY.' Financial Report';  // "2024-2025" Financial Report Name
+        $financialPDFName = $fiscalYearEOY.' Financial PDF';  // "2024-2025" Financial Report Name
+        $irsFilingName = $lastYearEOY.' 990N IRS Filing';  // "2024" IRS Filing Name
+        $currentDate = \Carbon\Carbon::now(); // Full Current Date
+        $currentMonth = $currentDate->format('m'); // Current Month with leading zero
 
-        $data = ['resources' => $resources, 'resourceCategories' => $resourceCategories, 'userTypeId' => $userTypeId, 'fiscalYearEOY' => $fiscalYearEOY,
-            'thisYearEOY' => $thisYearEOY, 'lastYearEOY' => $lastYearEOY,];
+        $data = ['resources' => $resources, 'resourceCategories' => $resourceCategories, 'userTypeId' => $userTypeId,
+            'fiscalYear' => $fiscalYear,
+            'fiscalYearEOY' => $fiscalYearEOY,
+            'thisYearEOY' => $thisYearEOY,
+            'lastYearEOY' => $lastYearEOY,
+            'displayEOYTESTING' => ($display_testing && ! $display_live),
+            'displayEOYLIVE' => ($display_live && $currentMonth >= 5 && $currentMonth <= 12),
+            'displayBoardRptLIVE' => ($display_live && $currentMonth >= 5 && $currentMonth <= 9),
+            'displayFinancialRptLIVE' => ($display_live && $currentMonth >= 6 && $currentMonth <= 12),
+            'displayEINInstructionsLIVE' => ($display_live && $currentMonth >= 7 && $currentMonth <= 12),
+            'yearColumnName' => $yearColumnName,
+            'boardReportName' => $boardReportName,
+            'financialReportName' => $financialReportName,
+            'financialPDFName' => $financialPDFName,
+            'irsFilingName' => $irsFilingName
+            ];
 
         return view('public.resources')->with($data);
 

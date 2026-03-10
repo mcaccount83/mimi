@@ -18,8 +18,22 @@
                             <section>
                                 @if($category->category_name == "END OF YEAR")
                                     <div class="col-md-12" style="margin-bottom: 5px;">
-                                        @include('partials.resources_accordion_eoy', ['resources' => $resources, 'fiscalYearEOY' => $fiscalYearEOY,
-            'thisYearEOY' => $thisYearEOY, 'lastYearEOY' => $lastYearEOY])
+                                        @include('partials.resources_accordion_eoy', ['resources' => $resources,
+                                            'fiscalYear' => $fiscalYear,
+                                            'fiscalYearEOY' => $fiscalYearEOY,
+                                            'thisYearEOY' => $thisYearEOY,
+                                            'lastYearEOY' => $lastYearEOY,
+                                            'displayEOYTESTING' => ($display_testing && ! $display_live),
+                                            'displayEOYLIVE' => ($display_live && $currentMonth >= 5 && $currentMonth <= 12),
+                                            'displayBoardRptLIVE' => ($display_live && $currentMonth >= 5 && $currentMonth <= 9),
+                                            'displayFinancialRptLIVE' => ($display_live && $currentMonth >= 6 && $currentMonth <= 12),
+                                            'displayEINInstructionsLIVE' => ($display_live && $currentMonth >= 7 && $currentMonth <= 12),
+                                            'yearColumnName' => $yearColumnName,
+                                            'boardReportName' => $boardReportName,
+                                            'financialReportName' => $financialReportName,
+                                            'financialPDFName' => $financialPDFName,
+                                            'irsFilingName' => $irsFilingName
+                                            ])
                                     </div>
                                 @else
                                     @foreach($resources->where('resourceCategory.category_name', $category->category_name) as $resourceItem)
