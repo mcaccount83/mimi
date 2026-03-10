@@ -166,16 +166,22 @@ class PublicController extends Controller
         $currentDate = \Carbon\Carbon::now(); // Full Current Date
         $currentMonth = $currentDate->format('m'); // Current Month with leading zero
 
+        $displayEOYTESTING = ($display_testing && ! $display_live);
+        $displayEOYLIVE = ($display_live && $currentMonth >= 5 && $currentMonth <= 12);
+        $displayBoardRptLIVE = ($display_live && $currentMonth >= 5 && $currentMonth <= 9);
+        $displayFinancialRptLIVE = ($display_live && $currentMonth >= 6 && $currentMonth <= 12);
+        $displayEINInstructionsLIVE = ($display_live && $currentMonth >= 7 && $currentMonth <= 12);
+
         $data = ['resources' => $resources, 'resourceCategories' => $resourceCategories, 'userTypeId' => $userTypeId,
             'fiscalYear' => $fiscalYear,
             'fiscalYearEOY' => $fiscalYearEOY,
             'thisYearEOY' => $thisYearEOY,
             'lastYearEOY' => $lastYearEOY,
-            'displayEOYTESTING' => ($display_testing && ! $display_live),
-            'displayEOYLIVE' => ($display_live && $currentMonth >= 5 && $currentMonth <= 12),
-            'displayBoardRptLIVE' => ($display_live && $currentMonth >= 5 && $currentMonth <= 9),
-            'displayFinancialRptLIVE' => ($display_live && $currentMonth >= 6 && $currentMonth <= 12),
-            'displayEINInstructionsLIVE' => ($display_live && $currentMonth >= 7 && $currentMonth <= 12),
+            'displayEOYTESTING' => $displayEOYTESTING,
+            'displayEOYLIVE' => $displayEOYLIVE,
+            'displayBoardRptLIVE' => $displayBoardRptLIVE,
+            'displayFinancialRptLIVE' => $displayFinancialRptLIVE,
+            'displayEINInstructionsLIVE' => $displayEINInstructionsLIVE,
             'yearColumnName' => $yearColumnName,
             'boardReportName' => $boardReportName,
             'financialReportName' => $financialReportName,
