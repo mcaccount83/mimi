@@ -174,6 +174,9 @@ class PublicController extends Controller
     {
         $fileId = $request->query('id');
 
+        // Decode in case it was double-encoded
+        $fileId = urldecode($fileId);
+
         if (empty($fileId)) {
             return abort(404, 'File ID is required');
         }
@@ -200,11 +203,19 @@ class PublicController extends Controller
 
         // If it's a full internal URL (generated PDF route)
         if (str_starts_with($fileId, 'http')) {
-            $path = parse_url($fileId, PHP_URL_PATH);
-            $request = Request::create($path, 'GET');
+        $disposition = $request->query('download') ? 'attachment' : 'inline';
 
-            $response = app()->handle($request);
-            $disposition = $request->query('download') ? 'attachment' : 'inline';
+        $urlPath = parse_url($fileId, PHP_URL_PATH);
+
+        // Strip subdirectory prefix (e.g. /mimi) on live
+        $basePath = $request->getBasePath(); // returns '/mimi' on live, '' on dev
+        if ($basePath && str_starts_with($urlPath, $basePath)) {
+            $urlPath = substr($urlPath, strlen($basePath));
+        }
+
+        $internalRequest = Request::create($urlPath, 'GET', [], $request->cookies->all());
+        $internalRequest->setLaravelSession($request->session());
+        $response = app()->handle($internalRequest);
 
             return response()->stream(
                 function () use ($response) {
