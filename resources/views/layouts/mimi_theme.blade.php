@@ -274,6 +274,7 @@
     @include('layouts.scripts.menu')
     @include('layouts.scripts.password')
     @include('layouts.scripts.pdfviewer')
+    @include('layouts.scripts.pleasewait')
     @include('layouts.scripts.probation')
     @include('layouts.scripts.resources')
     @include('layouts.scripts.sendemail')

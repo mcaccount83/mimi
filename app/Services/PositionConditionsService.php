@@ -63,6 +63,7 @@ class PositionConditionsService
             'm2mCondition' => $this->hasPosition(CoordinatorPosition::M2M, $positionId, $secPositionId) || $this->hasPosition(CoordinatorPosition::M2M2, $positionId, $secPositionId),
             'listAdminCondition' => $this->hasPosition(CoordinatorPosition::LIST, $positionId, $secPositionId),
             'ITCondition' => $this->hasPosition(CoordinatorPosition::IT, $positionId, $secPositionId),
+            'canEditFiles' => $this->hasPosition(CoordinatorPosition::IT, $positionId, $secPositionId),
         ];
     }
 

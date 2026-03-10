@@ -125,25 +125,6 @@
         @endif
     {{-- @endif --}}
 
-    <!-- Resources Menu Item -->
-    @if(isset($chDetails))
-    @php
-        $boardRoute = route('board-new.viewresources', ['id' => $chDetails->id]);
-
-        $activeBoardRoutes = [
-            'board-new/resources/*',
-        ];
-    @endphp
-    @if (isset($boardRoute))
-        <li class="nav-item">
-            <a href="{{ $boardRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardRoutes) }}">
-                <i class="nav-icon bi bi-briefcase-fill"></i>
-                <p>Resources</p>
-            </a>
-        </li>
-    @endif
-    @endif
-
     <!-- End of Year Menu Item -->
     @if(isset($chDetails))
     @php
@@ -158,6 +139,25 @@
             <a href="{{ $boardRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardRoutes) }}">
                 <i class="nav-icon bi bi-file-earmark-bar-graph-fill"></i>
                 <p>End of Year</p>
+            </a>
+        </li>
+    @endif
+    @endif
+
+    <!-- Resources Menu Item -->
+    @if(isset($chDetails))
+    @php
+        $boardRoute = route('board-new.viewresources', ['id' => $chDetails->id]);
+
+        $activeBoardRoutes = [
+            'board-new/resources/*',
+        ];
+    @endphp
+    @if (isset($boardRoute))
+        <li class="nav-item">
+            <a href="{{ $boardRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardRoutes) }}">
+                <i class="nav-icon bi bi-briefcase-fill"></i>
+                <p>Resources</p>
             </a>
         </li>
     @endif
