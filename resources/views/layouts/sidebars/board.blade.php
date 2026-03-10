@@ -209,6 +209,14 @@
         </li>
     @endif
 
+    <!-- Main MC Webstie -->
+    <li class="nav-item">
+        <a href="https://momsclub.org" target="_blank" rel="noopener noreferrer" class="nav-link">
+        <i class="nav-icon bi bi-globe-americas"></i>
+        <p>Main MC Website</p>
+        </a>
+    </li>
+
 {{--
 
         <li class="nav-item position-relative">

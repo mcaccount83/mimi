@@ -25,7 +25,6 @@
 			    <tr>
                     <th>User<br>Details</th>
                     <th>Name</th>
-                    {{-- <th>Position</th> --}}
                     <th>Email Address</th>
                     <th>User Type</th>
                     <th>Active User</th>
@@ -43,12 +42,6 @@
                         @endif
                     </td>
                     <td>{{ $list->first_name }} {{ $list->last_name }}</td>
-                    {{-- <td>@if ($list->type_id == \App\Enums\UserTypeEnum::COORD)
-                        {{{ $list->coordinator->displayPosition->long_title }}}
-                        @else
-                        {{{ $list->board->position->position }}}
-                        @endif
-                    </td> --}}
                         <td>{{ $list->email }}</td>
                         <td>
                             @IF($list->type_id == \App\Enums\UserTypeEnum::COORD)
