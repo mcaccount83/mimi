@@ -18,7 +18,8 @@
                             <section>
                                 @if($category->category_name == "END OF YEAR")
                                     <div class="col-md-12" style="margin-bottom: 5px;">
-                                        @include('partials.resources_accordion_eoy', ['resources' => $resources])
+                                        @include('partials.resources_accordion_eoy', ['resources' => $resources, 'fiscalYearEOY' => $fiscalYearEOY,
+            'thisYearEOY' => $thisYearEOY, 'lastYearEOY' => $lastYearEOY])
                                     </div>
                                 @else
                                     @foreach($resources->where('resourceCategory.category_name', $category->category_name) as $resourceItem)

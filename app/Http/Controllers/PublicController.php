@@ -17,6 +17,7 @@ use App\Mail\PaymentsM2MPublicThankYou;
 use App\Mail\PaymentsNewChapOnline;
 use App\Mail\PaymentsPublicDonationOnline;
 use App\Mail\PaymentsSustainingPublicThankYou;
+use App\Models\Admin;
 use App\Models\BoardsPending;
 use App\Models\ChapterApplication;
 use App\Models\Chapters;
@@ -147,7 +148,14 @@ class PublicController extends Controller
         $resources = Resources::with('resourceCategory')->get();
         $resourceCategories = ResourceCategory::all();
 
-        $data = ['resources' => $resources, 'resourceCategories' => $resourceCategories, 'userTypeId' => $userTypeId];
+        $admin = Admin::latest('id')->firstOrFail();
+        $fiscalYearEOY = $admin->fiscal_year_eoy;  // "2024-2025"
+        $years = explode('-', $fiscalYearEOY);  // Extract years from fiscal_year string
+        $lastYearEOY = $years[0];  // "2024"
+        $thisYearEOY = $years[1];  // "2025"
+
+        $data = ['resources' => $resources, 'resourceCategories' => $resourceCategories, 'userTypeId' => $userTypeId, 'fiscalYearEOY' => $fiscalYearEOY,
+            'thisYearEOY' => $thisYearEOY, 'lastYearEOY' => $lastYearEOY,];
 
         return view('public.resources')->with($data);
 
