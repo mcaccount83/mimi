@@ -392,7 +392,7 @@
                                     <label>Chapter in Good Standing Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button type="button" id="GoodStanding" class="btn btn-primary bg-gradient btn-sm keep-enabled" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}', '_blank')">Good Standing Chapter Letter</button><br>
+                                    <button type="button" id="GoodStanding" class="btn btn-primary bg-gradient btn-sm keep-enabled" onclick="openPdfViewer('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}')">Good Standing Chapter Letter</button><br>
                                 </div>
                             </div>
 

@@ -6,6 +6,17 @@
 <script src="https://cdn.tailwindcss.com"></script>
 
 @section('content')
+@if(session('error'))
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Swal.fire({
+            icon: 'error',
+            title: 'Attachment Not Found',
+            text: '{{ session('error') }}',
+        });
+    });
+</script>
+@endif
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid table-container">
@@ -90,16 +101,6 @@
                                     $parts = explode('<', $email->from);
                                     $from = isset($parts[1]) ? $parts[0] : $parts[0];
                                     @endphp
-                                    {{-- <a href="#" class="block px-6 pt-2 pb-2 bg-white emailitem border-b-2" data-id="{{ $email->id }}">
-                                        <div class="flex justify-between">
-                                            <span class="text-sm font-semibold text-gray-900">{{ $from }}</span>
-                                            <span class="text-xs text-gray-500">{{ $email->created_at->diffForHumans() }}</span>
-                                        </div>
-                                        <p class="text-sm text-gray-900">{{ $email->subject }}</p>
-                                        @if(config('sentemails.storeAttachments'))
-                                        <p class="text-sm text-gray-900">{{ __('Attachments') }}: {{ $email->attachments->count() }}</p>
-                                        @endif
-                                    </a> --}}
                                     <div class="block px-6 pt-2 pb-2 bg-white border-b-2">
                                         <div class="flex justify-between">
                                             <span class="text-sm font-semibold text-gray-900">{{ $from }}</span>

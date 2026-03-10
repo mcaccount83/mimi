@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\AdminStatusEnum;
 use App\Models\Region;
-use Dcblogdev\LaravelSentEmails\Controllers\SentEmailsController;
+// use Dcblogdev\LaravelSentEmails\Controllers\SentEmailsController;
 use Dcblogdev\LaravelSentEmails\Models\SentEmail;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -13,7 +13,8 @@ use Illuminate\Routing\Controllers\Middleware;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use App\Services\PositionConditionsService;
 
-class MySentEmailsController extends SentEmailsController implements HasMiddleware
+// class MySentEmailsController extends SentEmailsController implements HasMiddleware
+class MySentEmailsController extends Controller implements HasMiddleware
 {
     protected $userController;
 
@@ -124,7 +125,7 @@ class MySentEmailsController extends SentEmailsController implements HasMiddlewa
         ));
     }
 
- public function downloadAttachment(string $id): BinaryFileResponse
+public function downloadAttachment(string $id)
 {
     $attachment = \Dcblogdev\LaravelSentEmails\Models\SentEmailAttachment::findOrFail($id);
 
@@ -132,13 +133,14 @@ class MySentEmailsController extends SentEmailsController implements HasMiddlewa
     $legacyPath  = storage_path('app/' . $attachment->path);
 
     if (file_exists($privatePath)) {
-        return response()->download($privatePath, $attachment->filename);
+        return response()->file($privatePath, ['Content-Type' => 'application/pdf']);
     }
 
     if (file_exists($legacyPath)) {
-        return response()->download($legacyPath, $attachment->filename);
+        return response()->file($legacyPath, ['Content-Type' => 'application/pdf']);
     }
 
-    abort(404, 'Attachment file not found.');
+    return redirect()->route('sentemails')
+        ->with('error', 'Attachment file not found.');
 }
 }

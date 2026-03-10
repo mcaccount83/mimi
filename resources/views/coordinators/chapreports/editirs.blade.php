@@ -83,7 +83,7 @@
                            <div class="row mb-3">
                                                     <label class="col-sm-2 col-form-label mb-1">EIN Fax Coversheet:</label>
                                 <div class="col-sm-10">
-                                    <button type="button" id="GoodStanding" class="btn btn-primary bg-gradient btn-sm" onclick="window.open('{{ route('pdf.newchapfaxcover', ['id' => $chDetails->id]) }}', '_blank')">EIN Fax Coversheet</button><br>
+                                    <button type="button" id="GoodStanding" class="btn btn-primary bg-gradient btn-sm" onclick="openPdfViewer('{{ route('pdf.newchapfaxcover', ['id' => $chDetails->id]) }}')">EIN Fax Coversheet</button><br>
                                 </div>
                             </div>
                         @endif

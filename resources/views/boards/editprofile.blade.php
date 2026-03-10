@@ -532,7 +532,7 @@
                             @else
                                 <button type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1 disabled " disabled>No EIN Letter on File</button><br>
                             @endif
-                            <button type="button" id="GoodStanding" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}', '_blank')">Chapter in Good Standing</button><br>
+                            <button type="button" id="GoodStanding" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="openPdfViewer('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}')">Chapter in Good Standing</button><br>
                             @if($chDocuments->probation_path != null)
                                 <button type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="openPdfViewer('{{ $chDocuments->probation_path }}')">Probation Letter</button><br>
                             @endif

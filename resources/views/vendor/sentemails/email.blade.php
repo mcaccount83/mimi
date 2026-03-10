@@ -23,13 +23,20 @@
                         @if ($email->attachments->count() > 0)
                             {{ __('Attachment') }}
                         @endif
-                        @foreach($email->attachments as $attachment)
+                        {{-- @foreach($email->attachments as $attachment)
                             <a
                                 class="bg-gray-200 px-2 py-1 rounded-lg text-xs text-gray-800 hover:text-gray-900 hover:bg-gray-300"
                                 href="{{ route('sentemails.downloadAttachment', $attachment->id) }}">
                                     {{ $attachment->filename }}
                             </a>
-                        @endforeach
+                        @endforeach --}}
+                       @foreach($email->attachments as $attachment)
+    <button type="button"
+        class="bg-gray-200 px-2 py-1 rounded-lg text-xs text-gray-800 hover:text-gray-900 hover:bg-gray-300"
+        onclick="openPdfViewer('{{ $attachment->path }}')">
+        {{ $attachment->filename }}
+    </button>
+@endforeach
                     @endif
                 </span>
             </p>

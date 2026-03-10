@@ -6,7 +6,9 @@
         padding: 0;
         height: 100%;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        background-color: #f8f9fa;
+        /* background-color: #f8f9fa; */
+        background-color: #f0f0f0;  /* match the pdf-content background */
+
     }
     .pdf-container {
         max-width: 1200px;
@@ -51,7 +53,7 @@
     .pdf-content {
         background-color: #e9ecef;
         padding: 20px;
-        min-height: 70vh;
+    min-height: calc(100vh - 200px);  /* was 70vh */
         display: flex;
         justify-content: center;
         position: relative;
@@ -610,9 +612,21 @@
     });
 
     // Download button
+    // downloadBtn.addEventListener('click', () => {
+    //     if (fileId) {
+    //         window.open(`https://drive.google.com/uc?export=download&id=${fileId}`, '_blank');
+    //     }
+    // });
+    // Download button
     downloadBtn.addEventListener('click', () => {
         if (fileId) {
-            window.open(`https://drive.google.com/uc?export=download&id=${fileId}`, '_blank');
+            // If it's a Google Drive ID (no slashes or http)
+            if (!fileId.includes('/') && !fileId.startsWith('http')) {
+                window.open(`https://drive.google.com/uc?export=download&id=${fileId}`, '_blank');
+            } else {
+                // Local file or internal URL - use proxy with download header
+                window.open('{{ route("pdf-proxy") }}?id=' + encodeURIComponent(fileId) + '&download=1', '_blank');
+            }
         }
     });
 

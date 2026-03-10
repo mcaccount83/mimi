@@ -178,49 +178,86 @@ class PublicController extends Controller
             return abort(404, 'File ID is required');
         }
 
+        // If it's a local file path (starts with 'sent-emails/' or 'storage/')
+        if (str_starts_with($fileId, 'sent-emails/') || str_starts_with($fileId, 'storage/')) {
+            $disposition = $request->query('download') ? 'attachment' : 'inline';
+            $privatePath = storage_path('app/private/' . $fileId);
+            $legacyPath  = storage_path('app/' . $fileId);
+
+            if (file_exists($privatePath)) {
+                $path = $privatePath;
+            } elseif (file_exists($legacyPath)) {
+                $path = $legacyPath;
+            } else {
+                return abort(404, 'File not found');
+            }
+
+            return response()->file($path, [
+                'Content-Type'        => 'application/pdf',
+                'Content-Disposition' => $disposition . '; filename="' . basename($fileId) . '"',
+            ]);
+        }
+
+        // If it's a full internal URL (generated PDF route)
+        if (str_starts_with($fileId, 'http')) {
+            $path = parse_url($fileId, PHP_URL_PATH);
+            $request = Request::create($path, 'GET');
+
+            $response = app()->handle($request);
+            $disposition = $request->query('download') ? 'attachment' : 'inline';
+
+            return response()->stream(
+                function () use ($response) {
+                    echo $response->getContent();
+                },
+                200,
+                [
+                    'Content-Type'        => 'application/pdf',
+                    'Content-Disposition' => $disposition . '; filename="' . basename($fileId) . '"',
+                    'Cache-Control'       => 'no-cache',
+                ]
+            );
+        }
+
+        // Otherwise treat as Google Drive file ID
         try {
-            // Use your existing token method that's already working for uploads
             $accessToken = $this->token();
-
             $client = new Client;
-
-            // Use the Google Drive API directly with your auth token
             $response = $client->get("https://www.googleapis.com/drive/v3/files/{$fileId}?alt=media&supportsAllDrives=true", [
                 'headers' => [
                     'Authorization' => 'Bearer '.$accessToken,
                 ],
-                'stream' => true,
+                'stream'  => true,
                 'timeout' => 30,
             ]);
 
-            // Get content type from response headers
             $contentType = $response->getHeaderLine('Content-Type');
+            $disposition = $request->query('download') ? 'attachment' : 'inline';
 
-            // Stream the response back to the client
             return response()->stream(
                 function () use ($response) {
                     $body = $response->getBody();
-                    while (! $body->eof()) {
+                    while (!$body->eof()) {
                         echo $body->read(1024);
                     }
                 },
                 200,
                 [
-                    'Content-Type' => $contentType ?: 'application/pdf',
-                    'Content-Disposition' => 'inline; filename="document.pdf"',
-                    'Cache-Control' => 'no-cache',
+                    'Content-Type'        => $contentType ?: 'application/pdf',
+                    // 'Content-Disposition' => 'inline; filename="document.pdf"',
+                    'Content-Disposition' => $disposition . '; filename="' . basename($fileId) . '"',
+                    'Cache-Control'       => 'no-cache',
                 ]
             );
 
         } catch (\Exception $e) {
-            // Log the error for debugging
             Log::error('Google Drive API error', [
                 'message' => $e->getMessage(),
                 'file_id' => $fileId,
             ]);
 
             return response()->json([
-                'error' => 'Failed to fetch file from Google Drive',
+                'error'   => 'Failed to fetch file from Google Drive',
                 'message' => $e->getMessage(),
             ], 500);
         }
