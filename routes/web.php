@@ -186,6 +186,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/userreports/updateuserdelete', [UserController::class, 'updateUserDelete'])->name('userreports.updateuserdelete');
     Route::get('/userreports/useradmin', [UserReportController::class, 'showUserAdmin'])->name('userreports.useradmin');
+    Route::get('/userreports/invalidemail', [UserReportController::class, 'showInvalidEmail'])->name('userreports.invalidemail');
     Route::get('/userreports/duplicateuser', [UserReportController::class, 'showDuplicate'])->name('userreports.duplicateuser');
     Route::get('/userreports/duplicateboardid', [UserReportController::class, 'showDuplicateId'])->name('userreports.duplicateboardid');
     Route::get('/userreports/nopresident', [UserReportController::class, 'showNoPresident'])->name('userreports.nopresident');

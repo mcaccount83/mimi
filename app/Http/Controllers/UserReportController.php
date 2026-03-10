@@ -70,6 +70,30 @@ class UserReportController extends Controller implements HasMiddleware
     }
 
     /**
+     * Users with incomplete/unusable email address
+     */
+    public function showInvalidEmail(): View
+    {
+        $invalidEmailList = User::where('is_active', UserStatusEnum::ACTIVE)
+            ->where(function ($query) {
+                $query->whereRaw("email NOT REGEXP '^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$'")
+                    ->orWhereRaw("email != TRIM(email)")
+                    ->orWhereNull('email')
+                    ->orWhereRaw("email = ''");
+            })
+            ->get();
+
+        $invalidEmailCount = $invalidEmailList->count();
+
+        $data = [
+            'invalidEmailList'    => $invalidEmailList,
+            'invalidEmailCount' => $invalidEmailCount,
+        ];
+
+        return view('coordinators.userreports.invalidemail')->with($data);
+    }
+
+    /**
      * List of Duplicate Users
      */
     public function showDuplicate(): View

@@ -1,5 +1,6 @@
 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
     <a class="dropdown-item" href="{{ route('userreports.useradmin') }}">User Admins</a>
+    <a class="dropdown-item" href="{{ route('userreports.invalidemail') }}">Users with Invalid Email</a>
     <a class="dropdown-item" href="{{ route('userreports.duplicateuser') }}">Duplicate Users</a>
     <a class="dropdown-item" href="{{ route('userreports.duplicateboardid') }}">Duplicate Board Details</a>
     <a class="dropdown-item" href="{{ route('userreports.nopresident') }}">Chapters with No President</a>
