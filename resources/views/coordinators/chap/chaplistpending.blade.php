@@ -26,6 +26,7 @@
                   <tr>
                     <th>Pending<br>Details</th>
                     <th>Email</th>
+                    <th>Date</th>
                     <th>Conf</th>
                     <th>State</th>
                     <th>Name</th>
@@ -44,6 +45,7 @@
                             <td class="text-center align-middle">
                                 <a onclick="showChapterSetupEmailModal({{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="bi bi-envelope text-primary"></i></a>
                            </td>
+                            <td>{{ $list->created_at->format('m-d-Y') }}</td>
                             <td>
                                 @if ($list->state->conference_id > 0)
                                     {{ $list->state->conference->short_name }} / {{ $list->state->region->short_name }}

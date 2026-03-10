@@ -11,4 +11,8 @@ class FinancialReportAwards extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = []; // No fillable fields
+
+    protected $casts = [
+        'created_at' => 'datetime',
+    ];
 }

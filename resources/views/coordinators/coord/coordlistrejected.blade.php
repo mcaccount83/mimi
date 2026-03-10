@@ -25,6 +25,7 @@
                 <thead>
                   <tr>
                     <th>Rejected<br>Details</th>
+                    <th>Date</th>
                     <th>Conf</th>
                     <th>Coordinator Name</th>
 					<th>Display Position</th>
@@ -40,6 +41,7 @@
                   @foreach($coordinatorList as $list)
                     <tr>
                     <td class="text-center align-middle"><a href="{{ url("/application/coordapplication/{$list->id}") }}"><i class="bi bi-person-fill-x"></i></a></td>
+                    <td>{{ $list->created_at->format('m-d-Y') }}</td>
                     <td>
                         @if ($list->region->short_name != "None")
                             {{ $list->conference->short_name }} / {{ $list->region->short_name }}

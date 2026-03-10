@@ -94,9 +94,17 @@ class BaseCoordinatorController extends Controller
      */
     private function applySorting($baseQuery)
     {
+        $isPendingPage = request()->route()->getName() == 'coordinators.coordpending';
+        $isNotApprovedPage = request()->route()->getName() == 'chapters.coordrejected';
         $isRetiredPage = request()->route()->getName() == 'coordinators.coordretired';
         $isBirthdayPage = request()->route()->getName() == 'coordreports.coordrptbirthdays';
         $isUtilizationPage = request()->route()->getName() == 'coordreports.coordrptvolutilization';
+
+        if ($isPendingPage || $isNotApprovedPage) {
+            $baseQuery->orderByDesc('created_at');
+
+            return ['query' => $baseQuery];
+        }
 
         if ($isRetiredPage) {
             $baseQuery->orderByDesc('zapped_date');

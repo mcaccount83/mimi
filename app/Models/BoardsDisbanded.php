@@ -12,6 +12,10 @@ class BoardsDisbanded extends Model
 
     protected $guarded = []; // ALL columns are mass-assignable
 
+    protected $casts = [
+        'created_at' => 'datetime',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');  // 'user_id' in boards BelongsTo 'id' in user

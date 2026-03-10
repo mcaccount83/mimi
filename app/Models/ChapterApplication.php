@@ -13,6 +13,10 @@ class ChapterApplication extends Model
 
     protected $guarded = []; // ALL columns are mass-assignable
 
+    protected $casts = [
+        'created_at' => 'datetime',
+    ];
+
     public function chapter(): BelongsTo
     {
         return $this->belongsTo(Chapters::class, 'chapter_id', 'id');  // 'coordinator_id' in coordinator_tree BelongsTo 'id' in coordinators

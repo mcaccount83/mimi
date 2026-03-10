@@ -12,6 +12,10 @@ class FinancialReportLastYear extends Model
 
     protected $guarded = []; // ALL columns are mass-assignable
 
+    protected $casts = [
+        'created_at' => 'datetime',
+    ];
+
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);

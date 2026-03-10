@@ -15,6 +15,7 @@ class Chapters extends Model
     protected $casts = [
         'status_id' => 'integer',
         'active_status' => 'integer',
+        'created_at' => 'datetime',
     ];
 
     public function boards(): HasMany

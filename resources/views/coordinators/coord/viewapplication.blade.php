@@ -53,7 +53,7 @@
                                 </select>
                             </div>
                         </div>
- <div class="row align-items-center">
+                            <div class="row align-items-center">
                             <div class="col-sm-6 mt-1">
                                 <label class="col-form-label">Reports To:</label>
                             </div>

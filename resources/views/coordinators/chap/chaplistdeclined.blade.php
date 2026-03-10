@@ -25,6 +25,7 @@
                 <thead>
                   <tr>
                     <th>Declined<br>Details</th>
+                    <th>Date</th>
                     <th>Conf</th>
                     <th>State</th>
                     <th>Name</th>
@@ -41,6 +42,7 @@
 
                         <tr id="chapter-{{ $list->id }}">
                             <td class="text-center align-middle"><a href="{{ url("/application/chapterpendingedit/{$list->id}") }}"><i class="bi bi-house-x-fill"></i></a></td>
+                            <td>{{ $list->created_at->format('m-d-Y') }}</td>
                             <td>
                                 @if ($list->state->conference_id > 0)
                                     {{ $list->state->conference->short_name }} / {{ $list->state->region->short_name }}

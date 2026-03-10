@@ -13,6 +13,10 @@ class CoordinatorApplication extends Model
 
     protected $guarded = []; // ALL columns are mass-assignable
 
+    protected $casts = [
+        'created_at' => 'datetime',
+    ];
+
     public function coordinator(): BelongsTo
     {
         return $this->belongsTo(Coordinators::class, 'coordinator_id', 'id');  // 'coordinator_id' in coordinator_tree BelongsTo 'id' in coordinators

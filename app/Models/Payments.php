@@ -9,4 +9,8 @@ class Payments extends Model
     protected $primaryKey = 'chapter_id';
 
     protected $guarded = []; // ALL columns are mass-assignable
+
+    protected $casts = [
+        'created_at' => 'datetime',
+    ];
 }

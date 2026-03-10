@@ -14,6 +14,10 @@ class InquiryApplication extends Model
 
     protected $guarded = []; // ALL columns are mass-assignable
 
+    protected $casts = [
+        'created_at' => 'datetime',
+    ];
+
     public function chapter(): BelongsTo
     {
         return $this->belongsTo(Chapters::class, 'chapter_id', 'id');  // 'state' in chapters BelongsTo 'id' in state
