@@ -1,6 +1,9 @@
 <script>
   function convertDateFormat(dateString) {
-        var parts = dateString.split('-');
+        // Take only the date portion (before the space, if timestamp)
+        var datePart = dateString.trim().split(' ')[0];
+        var parts = datePart.split('-');
+        if (parts.length !== 3) return dateString; // safety fallback
         return parts[1] + '/' + parts[2] + '/' + parts[0];
     }
 

@@ -4,6 +4,7 @@
             {{ $chapterStatus }}
         @elseif ($chDetails->active_status == 2)
             <span class="badge bg-warning text-dark fs-7">Chapter is PENDING</span>
+            Application Date: <span class="date-mask">{{ $chDetails->created_at }}</span><br>
         @elseif ($chDetails->active_status == 3)
             <span class="badge bg-warning text-dark fs-7">Chapter was NOT APPROVED</span><br>
             Declined Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>

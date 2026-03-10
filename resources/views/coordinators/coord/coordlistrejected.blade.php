@@ -25,11 +25,10 @@
                 <thead>
                   <tr>
                     <th>Rejected<br>Details</th>
-                    <th>Date</th>
+                    <th>Application Date</th>
                     <th>Conf</th>
                     <th>Coordinator Name</th>
 					<th>Display Position</th>
-					<th>Application Date</th>
                     <th>Reason Not Approved</th>
                     <th>Rejected By</th>
                     @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
@@ -41,7 +40,7 @@
                   @foreach($coordinatorList as $list)
                     <tr>
                     <td class="text-center align-middle"><a href="{{ url("/application/coordapplication/{$list->id}") }}"><i class="bi bi-person-fill-x"></i></a></td>
-                    <td>{{ $list->created_at->format('m-d-Y') }}</td>
+                    <td><span class="date-mask">{{ $list->created_at }}</span></td>
                     <td>
                         @if ($list->region->short_name != "None")
                             {{ $list->conference->short_name }} / {{ $list->region->short_name }}
@@ -51,7 +50,6 @@
                     </td>
                         <td>{{ $list->first_name }} {{ $list->last_name }}</td>
                             <td>{{ $list->displayPosition->long_title }}</td>
-                	  <td><span class="date-mask">{{ $list->coordinator_start_date }}</span></td>
                       <td>{{ $list->reason_retired }}</td>
                       <td>{{ $list->reportsTo?->first_name }} {{ $list->reportsTo?->last_name }}</td>
                       @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')

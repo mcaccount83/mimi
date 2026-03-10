@@ -159,7 +159,7 @@
                                 <label>Date:</label>
                             </div>
                             <div class="col-sm-8 mb-2">
-                                {{ $inqDetails->created_at->format('m-d-Y') }}
+                                <span class="date-mask">{{ $inqDetails->created_at }}</span>
                             </div>
                         </div>
                         <div class="row mb-1">
