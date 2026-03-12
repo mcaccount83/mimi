@@ -10,8 +10,9 @@ return [
     ],
 
     'learndash' => [
-        'url' => env('LEARNDASH_API_URL'),
-        'user' => env('LEARNDASH_API_USER'),
+        'url'      => env('LEARNDASH_API_URL'),        // https://momsclub.org/elearning/wp-json/wp/v2
+        'base_url' => env('LEARNDASH_BASE_URL'),        // https://momsclub.org/elearning
+        'user'     => env('LEARNDASH_API_USER'),
         'password' => env('LEARNDASH_API_PASSWORD'),
     ],
 

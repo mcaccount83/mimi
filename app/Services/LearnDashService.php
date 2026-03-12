@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class LearnDashService
 {
@@ -49,6 +50,27 @@ class LearnDashService
 
         if ($response->successful()) {
             return $response->json();
+        }
+
+        return [];
+    }
+
+    public function getUserProgress(string $email): array
+    {
+        $url = config('services.learndash.base_url').'/wp-json/public/v1/user-progress';
+
+        $response = Http::withHeaders([
+            'Cache-Control' => 'no-cache, no-store, must-revalidate',
+        ])->get($url, [
+            'email'   => $email,
+            'nocache' => time(),
+        ]);
+
+        if ($response->successful()) {
+            $data = $response->json();
+            return collect($data['courses'] ?? [])
+                ->keyBy('course_id')
+                ->toArray();
         }
 
         return [];

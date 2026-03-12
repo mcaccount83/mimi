@@ -36,11 +36,21 @@
                                         </h4>
                                         <ul class="space-y-2">
                                             @foreach($categoryData['courses'] as $course)
-                                                <li>
+                                                <li class="mb-2 d-flex align-items-center gap-2">
                                                     <a href="{{ $course['auto_login_url'] }}" target="_blank"
                                                     class="text-blue-600 hover:text-blue-800 text-lg">
                                                         {{ $course['title']['rendered'] }}
                                                     </a>
+                                                    @if(!empty($course['progress']) && $course['progress']['status'] === 'completed')
+                                                        <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>Completed</span>
+                                                    @elseif(!empty($course['progress']) && $course['progress']['status'] === 'in_progress')
+                                                        <div class="progress mt-2" style="height: 8px;">
+                                                            <div class="progress-bar bg-primary" style="width: {{ $course['progress']['percent'] }}%"></div>
+                                                        </div>
+                                                        <small class="text-muted">{{ $course['progress']['percent'] }}% complete ({{ $course['progress']['steps_completed'] }}/{{ $course['progress']['steps_total'] }} steps)</small>
+                                                    @else
+                                                        <span class="badge bg-secondary">Not Started</span>
+                                                    @endif
                                                 </li>
                                             @endforeach
                                         </ul>
