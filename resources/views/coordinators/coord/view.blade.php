@@ -220,7 +220,7 @@
                                     @if (in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
                                         <button type="button" class="btn btn-danger bg-gradient btn-xs" onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $cdDetails->user_id }})"><i class="bi bi-ban me-2"></i>Unsubscribe</button>
                                     @else
-                                        <button type="button" class="btn btn-success bg-gradient btn-xs" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLBOARDLISTCLIST }}, {{ $cdDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
+                                        <button type="button" class="btn btn-success bg-gradient btn-xs" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $cdDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
                                     @endif
                                 </dd>
                             @endif
