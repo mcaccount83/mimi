@@ -173,7 +173,7 @@
                 </li>
                  <li class="nav-item">
                             <a href="{{ route('login') }}" class="nav-link">
-                                <i class="nav-icon fas fa-sign-in-alt"></i>
+                                <i class="nav-icon bi bi-box-arrow-in-right"></i>
                                 <p>Main Login Page</p>
                             </a>
                         </li>
@@ -205,35 +205,37 @@
                 </ol>
               </div>
             </div>
-                @if($ITCondition == 1 && isset($bdTypeId) && $bdTypeId !== null)
-                    @if ($bdTypeId == \App\Enums\UserTypeEnum::DISBANDED)
-                        <strong style="color: #dc3545;">You are Viewing DISBANDED Chapter Pages as an ADMIN Coordinator -- All Information is Editable just as it is for Board Members.</strong>
-                        <a class="nav-link" href="{{ route('chapters.view', ['id' => $chDetails->id]) }}"><u>Back to Coordinator View</u></a>
-                    @elseif ($bdTypeId == \App\Enums\UserTypeEnum::BOARD)
-                        <strong style="color: #dc3545;">You are Viewing ACTIVE Chapter Pages as an ADMIN Coordinator -- All Information is Editable just as it is for Board Members.</strong>
-                        <a class="nav-link" href="{{ route('chapters.view', ['id' => $chDetails->id]) }}"><u>Back to Coordinator View</u></a>
-                    @elseif ($bdTypeId == \App\Enums\UserTypeEnum::OUTGOING)
-                        <strong style="color: #dc3545;">You are Viewing OUTGOING Chapter Pages as an ADMIN Coordinator -- All Information is Editable just as it is for Board Members.</strong>
-                        <a class="nav-link" href="{{ route('chapters.view', ['id' => $chDetails->id]) }}"><u>Back to Coordinator View</u></a>
-                    @elseif ($bdTypeId == \App\Enums\UserTypeEnum::PENDING)
-                        <strong style="color: #dc3545;">You are Viewing PENDING Chapter Pages as an ADMIN Coordinator -- All Information is Editable just as it is for Board Members.</strong>
-                        <a class="nav-link" href="{{ route('chapters.editpending', ['id' => $chDetails->id]) }}"><u>Back to Coordinator View</u></a>
+                @auth
+                    @if($ITCondition == 1 && isset($bdTypeId) && $bdTypeId !== null)
+                        @if ($bdTypeId == \App\Enums\UserTypeEnum::DISBANDED)
+                            <strong style="color: #dc3545;">You are Viewing DISBANDED Chapter Pages as an ADMIN Coordinator -- All Information is Editable just as it is for Board Members.</strong>
+                            <a class="nav-link" href="{{ route('chapters.view', ['id' => $chDetails->id]) }}"><u>Back to Coordinator View</u></a>
+                        @elseif ($bdTypeId == \App\Enums\UserTypeEnum::BOARD)
+                            <strong style="color: #dc3545;">You are Viewing ACTIVE Chapter Pages as an ADMIN Coordinator -- All Information is Editable just as it is for Board Members.</strong>
+                            <a class="nav-link" href="{{ route('chapters.view', ['id' => $chDetails->id]) }}"><u>Back to Coordinator View</u></a>
+                        @elseif ($bdTypeId == \App\Enums\UserTypeEnum::OUTGOING)
+                            <strong style="color: #dc3545;">You are Viewing OUTGOING Chapter Pages as an ADMIN Coordinator -- All Information is Editable just as it is for Board Members.</strong>
+                            <a class="nav-link" href="{{ route('chapters.view', ['id' => $chDetails->id]) }}"><u>Back to Coordinator View</u></a>
+                        @elseif ($bdTypeId == \App\Enums\UserTypeEnum::PENDING)
+                            <strong style="color: #dc3545;">You are Viewing PENDING Chapter Pages as an ADMIN Coordinator -- All Information is Editable just as it is for Board Members.</strong>
+                            <a class="nav-link" href="{{ route('chapters.editpending', ['id' => $chDetails->id]) }}"><u>Back to Coordinator View</u></a>
+                        @endif
+                    @elseif (($userTypeId == \App\Enums\UserTypeEnum::COORD && $ITCondition != 1) && isset($bdTypeId) && $bdTypeId !== null)
+                        @if ($bdTypeId == \App\Enums\UserTypeEnum::DISBANDED)
+                            <strong style="color: #dc3545;">You are Viewing DISBANDED Chapter Pages as a Coordinator -- All Information is READ ONLY.</strong>
+                            <a class="nav-link" href="{{ route('chapters.view', ['id' => $chDetails->id]) }}"><u>Back to Coordinator View</u></a>
+                        @elseif ($bdTypeId == \App\Enums\UserTypeEnum::BOARD)
+                            <strong style="color: #dc3545;">You are Viewing ACTIVE Chapter Pages as a Coordinator -- All Information is READ ONLY.</strong>
+                            <a class="nav-link" href="{{ route('chapters.view', ['id' => $chDetails->id]) }}"><u>Back to Coordinator View</u></a>
+                        @elseif ($bdTypeId == \App\Enums\UserTypeEnum::OUTGOING)
+                            <strong style="color: #dc3545;">You are Viewing OUTGOING Chapter Pages as a Coordinator -- All Information is READ ONLY.</strong>
+                            <a class="nav-link" href="{{ route('chapters.view', ['id' => $chDetails->id]) }}"><u>Back to Coordinator View</u></a>
+                        @elseif ($bdTypeId == \App\Enums\UserTypeEnum::PENDING)
+                            <strong style="color: #dc3545;">You are Viewing PENDING Chapter Pages as a Coordinator -- All Information is READ ONLY.</strong>
+                            <a class="nav-link" href="{{ route('chapters.editpending', ['id' => $chDetails->id]) }}"><u>Back to Coordinator View</u></a>
+                        @endif
                     @endif
-                @elseif (($userTypeId == \App\Enums\UserTypeEnum::COORD && $ITCondition != 1) && isset($bdTypeId) && $bdTypeId !== null)
-                    @if ($bdTypeId == \App\Enums\UserTypeEnum::DISBANDED)
-                        <strong style="color: #dc3545;">You are Viewing DISBANDED Chapter Pages as a Coordinator -- All Information is READ ONLY.</strong>
-                        <a class="nav-link" href="{{ route('chapters.view', ['id' => $chDetails->id]) }}"><u>Back to Coordinator View</u></a>
-                    @elseif ($bdTypeId == \App\Enums\UserTypeEnum::BOARD)
-                        <strong style="color: #dc3545;">You are Viewing ACTIVE Chapter Pages as a Coordinator -- All Information is READ ONLY.</strong>
-                        <a class="nav-link" href="{{ route('chapters.view', ['id' => $chDetails->id]) }}"><u>Back to Coordinator View</u></a>
-                    @elseif ($bdTypeId == \App\Enums\UserTypeEnum::OUTGOING)
-                        <strong style="color: #dc3545;">You are Viewing OUTGOING Chapter Pages as a Coordinator -- All Information is READ ONLY.</strong>
-                        <a class="nav-link" href="{{ route('chapters.view', ['id' => $chDetails->id]) }}"><u>Back to Coordinator View</u></a>
-                    @elseif ($bdTypeId == \App\Enums\UserTypeEnum::PENDING)
-                        <strong style="color: #dc3545;">You are Viewing PENDING Chapter Pages as a Coordinator -- All Information is READ ONLY.</strong>
-                        <a class="nav-link" href="{{ route('chapters.editpending', ['id' => $chDetails->id]) }}"><u>Back to Coordinator View</u></a>
-                    @endif
-                @endif
+                @endauth
             <!--end::Row-->
           </div>
           <!--end::Container-->
