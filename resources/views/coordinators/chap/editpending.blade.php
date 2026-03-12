@@ -60,7 +60,7 @@
                         <button type="button" class="btn btn-primary bg-gradient mb-2"
                             onclick="showChapterSetupEmailModal({{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">
                             <i class="bi bi-envelope-fill me-2"></i>Send Startup Email</button>
-                        <button type="submit" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Updates</button>
+                        <button type="submit" class="btn btn-primary bg-gradient mb-2" onclick="return validateEmailsBeforeSubmit();"><i class="bi bi-floppy-fill me-2"></i>Save Updates</button>
                         <br>
                         Save all changes before approval, so information in emails will be correct!
                         <br>
@@ -170,7 +170,7 @@
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label">Contact:</label>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_pre_email" id="ch_pre_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{ $chDetails->pendingPresident->email }}" required placeholder="Email Address" >
+                                <input type="text" name="ch_pre_email" id="ch_pre_email" class="form-control" value="{{ $chDetails->pendingPresident->email }}" required placeholder="Email Address" >
                                 </div>
                                 <div class="col-sm-5 mb-1">
                                 <input type="text" name="ch_pre_phone" id="ch_pre_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{ $chDetails->pendingPresident->phone}}" required placeholder="Phone Number" >

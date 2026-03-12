@@ -63,7 +63,7 @@
                                 <div class="row mb-1">
                                     <label class="col-sm-2 col-form-label">Email/Secondary:</label>
                                     <div class="col-sm-5">
-                                    <input type="text" name="cord_email" id="cord_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)"  value="{{ $cdDetails->email }}"  required >
+                                    <input type="text" name="cord_email" id="cord_email" class="form-control" value="{{ $cdDetails->email }}"  required >
                                     <input type="hidden" id="cord_email_chk" value="{{ $cdDetails->email }}">
                                 </div>
                                     <div class="col-sm-5">
@@ -146,7 +146,7 @@
           <!-- /.col -->
           <div class="col-md-12">
             <div class="card-body text-center mt-3">
-                <button type="submit" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save</button>
+                <button type="submit" class="btn btn-primary bg-gradient mb-2" onclick="return validateEmailsBeforeSubmit();"><i class="bi bi-floppy-fill me-2"></i>Save</button>
                 <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.view', ['id' => $cdDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-people-fill me-2"></i>Back to Coordinator Details</button>
             </div>
         </div>

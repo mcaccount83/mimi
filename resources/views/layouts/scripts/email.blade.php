@@ -17,29 +17,37 @@
     // }
 
     function validateEmailsBeforeSubmit() {
-    // Get the values from the input fields
-    const emails = [
-        $('#ch_pre_email').val().trim(),
+    // Collect only email fields that exist on this page
+    const emailSelectors = [
+        '#ch_pre_email',
+        '#ch_avp_email',
+        '#ch_mvp_email',
+        '#ch_trs_email',
+        '#ch_sec_email',
+        '#ch_bor_email'
+        '#cord_email',
+        '#email'
     ];
 
-    // Filter out empty emails and check for duplicates
+    const emails = emailSelectors
+        .filter(selector => $(selector).length > 0)
+        .map(selector => ({ selector, value: $(selector).val().trim() }))
+        .filter(({ value }) => value !== '');
+
+    // Check for duplicates
     const emailSet = new Set();
     const duplicateEmails = [];
 
-    emails.forEach(email => {
-        if (email != '') {
-            if (emailSet.has(email)) {
-                // Check if the duplicate email is already in the array to avoid listing it multiple times
-                if (!duplicateEmails.includes(email)) {
-                    duplicateEmails.push(email);
-                }
-            } else {
-                emailSet.add(email);
+    emails.forEach(({ value }) => {
+        if (emailSet.has(value)) {
+            if (!duplicateEmails.includes(value)) {
+                duplicateEmails.push(value);
             }
+        } else {
+            emailSet.add(value);
         }
     });
 
-    // If duplicates are found, show an alert
     if (duplicateEmails.length > 0) {
         Swal.fire({
             icon: 'error',

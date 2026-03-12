@@ -125,7 +125,7 @@
                             </div>
                             <label class="col-sm-2 mb-3 col-form-label">Email:</label>
                             <div class="col-sm-5 mb-3">
-                        <input type="text" name="email" id="email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" required placeholder="Email Address" value="{{ $userDetails->email }}">
+                        <input type="text" name="email" id="email" class="form-control" required placeholder="Email Address" value="{{ $userDetails->email }}">
 
                         </div>
 

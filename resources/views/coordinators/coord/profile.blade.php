@@ -88,7 +88,7 @@
                                 <div class="row mb-3">
                                     <label class="col-sm-2 col-form-label">Email/Secondary:</label>
                                     <div class="col-sm-5">
-                                    <input type="text" name="cord_email" id="cord_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)"  value="{{ $cdDetails->email }}"  required >
+                                    <input type="text" name="cord_email" id="cord_email" class="form-control" value="{{ $cdDetails->email }}"  required >
                                     <input type="hidden" id="cord_email_chk" value="{{ $cdDetails->email }}">
                                 </div>
                                     <div class="col-sm-5">
@@ -209,7 +209,7 @@
           <!-- /.col -->
           <div class="col-md-12">
             <div class="card-body text-center mt-3">
-                <button type="submit" class="btn btn-primary bg-gradient mb-2" onclick="return PreSaveValidate();"><i class="bi bi-floppy-fill me-2"></i>Save</button>
+                <button type="submit" class="btn btn-primary bg-gradient mb-2" onclick="return validateEmailsBeforeSubmit();"><i class="bi bi-floppy-fill me-2"></i>Save</button>
                 <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showChangePasswordAlert('{{ $cdDetails->user_id }}')"><i class="bi bi-lock-fill me-2" ></i>Change Password</button>
             </div>
         </div>
@@ -224,28 +224,28 @@
 <script>
 
   //submit validation function
-  function PreSaveValidate(){
-          var NewPassword=document.getElementById("cord_pswd").value;
-				//They changed their password
-				if(document.getElementById("cord_pswd").value != document.getElementById("cord_pswd").getAttribute("value")){
-					if(document.getElementById("cord_pswd").value != document.getElementById("cord_pswd_cnf").value){  //Make sure the password and confirmation match
-						alert ("The provided passwords do not match, please re-enter your password.");
-						document.getElementById("cord_pswd_cnf").focus();
-						return false;
-					}
-					// Make sure the password is the right length
-					else if(NewPassword.length < 7){
-						alert("Password must be at least 7 characters.");
-						document.getElementById("cord_pswd").focus();
-						return false;
-					}
-					else{
-						document.getElementById("cord_pswd_chg").value="1";
-					}
-                }
-		//Okay, all validation passed, save the records to the database
-		return true;
-	}
+//   function PreSaveValidate(){
+//           var NewPassword=document.getElementById("cord_pswd").value;
+// 				//They changed their password
+// 				if(document.getElementById("cord_pswd").value != document.getElementById("cord_pswd").getAttribute("value")){
+// 					if(document.getElementById("cord_pswd").value != document.getElementById("cord_pswd_cnf").value){  //Make sure the password and confirmation match
+// 						alert ("The provided passwords do not match, please re-enter your password.");
+// 						document.getElementById("cord_pswd_cnf").focus();
+// 						return false;
+// 					}
+// 					// Make sure the password is the right length
+// 					else if(NewPassword.length < 7){
+// 						alert("Password must be at least 7 characters.");
+// 						document.getElementById("cord_pswd").focus();
+// 						return false;
+// 					}
+// 					else{
+// 						document.getElementById("cord_pswd_chg").value="1";
+// 					}
+//                 }
+// 		//Okay, all validation passed, save the records to the database
+// 		return true;
+// 	}
 
 </script>
 @endsection
