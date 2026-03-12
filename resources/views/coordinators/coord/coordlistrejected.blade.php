@@ -10,12 +10,12 @@
           <div class="row">
             <div class="col-12">
                 <div class="card card-outline card-primary">
-                    <div class="card-header">
+                    <div class="card-header d-flex align-items-center">
                     <div class="dropdown">
                         <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Not Approved Coordinator List
                         </h3>
-                        <span class="ms-2">New Coordinator Applications Not Approved</span>
+                        <span class="ms-3">New Coordinator Applications Not Approved</span>
                         @include('layouts.dropdown_menus.menu_chapters_new')
                     </div>
                 </div>

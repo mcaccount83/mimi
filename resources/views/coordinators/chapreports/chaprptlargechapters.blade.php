@@ -10,12 +10,12 @@
           <div class="row">
             <div class="col-12">
                 <div class="card card-outline card-primary">
-                    <div class="card-header">
+                    <div class="card-header d-flex align-items-center">
                     <div class="dropdown">
                         <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Large Chapter Report
                         </h3>
-                        <span class="ms">Includes chapters that have more than 75 Members</span>
+                        <span class="ms-3">Includes chapters that have more than 75 Members</span>
                         @include('layouts.dropdown_menus.menu_reports_chap')
                     </div>
                 </div>

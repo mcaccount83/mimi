@@ -28,23 +28,23 @@
                 @endif
                 <div class="col-12">
                     <div class="card card-outline card-primary">
-                            <div class="card-header">
-                            <div class="dropdown">
-                                <h3 class="card-title dropdown-toggle mb-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    @if (isset($category) || isset($thread_title))
-                                        @if ( $category->title == 'BoardList')
-                                            {{ $fiscalYear }} {{ $category->title}}
+                            <div class="card-header d-flex align-items-center">
+                                <div class="dropdown">
+                                    <h3 class="card-title dropdown-toggle mb-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        @if (isset($category) || isset($thread_title))
+                                            @if ($category->title == 'BoardList')
+                                                {{ $fiscalYear }} {{ $category->title }}
+                                            @else
+                                                {{ $category->title }}
+                                            @endif
                                         @else
-                                            {{ $category->title}}
+                                            {{ trans('forum::general.home_title') }}
                                         @endif
-                                    @else
-                                        {{ trans('forum::general.home_title')}}
-                                    @endif
-                                </h3>
-                                @include('layouts.dropdown_menus.menu_forum')
+                                    </h3>
+                                    @include('layouts.dropdown_menus.menu_forum')
+                                </div>
+                                @include('layouts.dropdown_menus.menu_forum_extra')
                             </div>
-                            @include('layouts.dropdown_menus.menu_forum_extra')
-                        </div>
                         <!-- /.card-header -->
                         <div class="card-body">
                             <div class="v-navbar" style="display:none">

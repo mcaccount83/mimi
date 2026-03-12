@@ -11,7 +11,7 @@
             <div class="col-12">
                 <div class="card card-outline card-primary">
                     <div class="card-header">
-                    <div class="dropdown">
+                    <div class="dropdown d-flex align-items-center">
                         <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Pending Chapter List
                         </h3>

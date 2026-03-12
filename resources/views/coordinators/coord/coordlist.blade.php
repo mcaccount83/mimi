@@ -10,7 +10,7 @@
       <div class="row">
         <div class="col-12">
             <div class="card card-outline card-primary">
-                <div class="card-header">
+                <div class="card-header d-flex align-items-center">
                 <div class="dropdown">
                     <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Active Coordinator List

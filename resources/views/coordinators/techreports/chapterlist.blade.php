@@ -10,12 +10,12 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card card-outline card-primary">
-                        <div class="card-header">
-                            <div class="dropdown">
+                        <div class="card-header d-flex align-items-center">
+                            <div class="dropdown d-flex align-items-center">
                                 <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Acitve Board Pages
                                 </h3>
-                                <span class="ms-2">View Board Pages as President</span>
+                                <span class="ms-3">View Board Pages as President</span>
                                 @include('layouts.dropdown_menus.menu_reports_tech')
                             </div>
                         </div>

@@ -16,4 +16,19 @@ class UserTypeEnum
     const OUTGOING = 4;
 
     const INCOMING = 5;
+
+   public static function label(?int $typeId): string
+    {
+        if ($typeId === null) return 'N/A';
+
+        return match($typeId) {
+            self::DISBANDED => 'Disbanded',
+            self::COORD     => 'Coordinator',
+            self::BOARD     => 'Board',
+            self::PENDING   => 'Pending',
+            self::OUTGOING  => 'Outgoing',
+            self::INCOMING  => 'Incoming',
+            default         => 'N/A',
+        };
+    }
 }

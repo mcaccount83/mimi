@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\CoordinatorPosition;
-use App\Enums\ForumCategoryEnum;
+use App\Enums\CheckboxFilterEnum;
 use App\Enums\UserStatusEnum;
 use App\Enums\UserTypeEnum;
 use App\Models\Admin;
@@ -107,130 +107,122 @@ class TechReportController extends Controller implements HasMiddleware
     }
 
     public function viewAsActiveChapter(Request $request): View
-{
-    $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
+    {
+        $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
 
-    $user = $this->userController->loadUserInformation($request);
-    $userTypeId = $user['userTypeId'];
-    $coorId = $user['cdId'];
-    $confId = $user['confId'];
-    $regId = $user['regId'];
-    $positionId = $user['cdPositionId'];
-    $secPositionId = $user['cdSecPositionId'];
+        $user = $this->userController->loadUserInformation($request);
+        $userTypeId = $user['userTypeId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
-    $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
-    $chapters = $baseQuery['query']->get();
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+        $chapterList = $baseQuery['query']->get();
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
-    $chapterBdData = [];
-    foreach ($chapters as $chapter) {
+        $chapterBdData = [];
+        foreach ($chapterList as $chapter) {
         $chDetails = $this->baseBoardController->getChapterDetails($chapter->id);
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $chDetails['PresDetails']);
+        $PresDetails = $chDetails['PresDetails'] ?? null;
+
+        if ($PresDetails === null) {
+            $chapterBdData[$chapter->id] = null; // or some default
+            continue;
+        }
+
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
         $chapterBdData[$chapter->id] = $bdData;
     }
 
-    unset($_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL]);
+    $countList = $chapterList->count();
+    $data = ['countList' => $countList, 'chapterList' => $chapterList,
+        'checkBox51Status' => $checkBox51Status, 'chapterBdData' => $chapterBdData, 'userTypeId' => $userTypeId,
+    ];
 
-    return view('coordinators.techreports.viewasactivechapter')->with([
-        'countList'     => count($chapters),
-        'chapters'      => $chapters,
-        'chapterBdData' => $chapterBdData,
-        'userTypeId'    => $userTypeId,
-    ]);
-}
+    $countList = $chapterList->count();
+        return view('coordinators.techreports.viewasactivechapter')->with($data);
+    }
 
-   public function viewAsDisbandedChapter(Request $request): View
-{
-    $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
+    public function viewAsDisbandedChapter(Request $request): View
+    {
+        $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
 
-    $user = $this->userController->loadUserInformation($request);
-    $userTypeId = $user['userTypeId'];
-    $coorId = $user['cdId'];
-    $confId = $user['confId'];
-    $regId = $user['regId'];
-    $positionId = $user['cdPositionId'];
-    $secPositionId = $user['cdSecPositionId'];
+        $user = $this->userController->loadUserInformation($request);
+        $userTypeId = $user['userTypeId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
-    $baseQuery = $this->baseChapterController->getBaseQuery(0, $coorId, $confId, $regId, $positionId, $secPositionId);
-    $chapters = $baseQuery['query']->get();
+        $baseQuery = $this->baseChapterController->getBaseQuery(0, $coorId, $confId, $regId, $positionId, $secPositionId);
+        $chapterList = $baseQuery['query']->get();
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
-    $chapterBdData = [];
-    foreach ($chapters as $chapter) {
+        $chapterBdData = [];
+        foreach ($chapterList as $chapter) {
         $chDetails = $this->baseBoardController->getChapterDetails($chapter->id);
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $chDetails['PresDetails']);
+        $PresDetails = $chDetails['PresDetails'] ?? null;
+
+        if ($PresDetails === null) {
+            $chapterBdData[$chapter->id] = null; // or some default
+            continue;
+        }
+
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
         $chapterBdData[$chapter->id] = $bdData;
     }
 
-    unset($_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL]);
+    $countList = $chapterList->count();
+    $data = ['countList' => $countList, 'chapterList' => $chapterList,
+        'checkBox51Status' => $checkBox51Status, 'chapterBdData' => $chapterBdData, 'userTypeId' => $userTypeId,
+    ];
 
-    return view('coordinators.techreports.viewasdisbandedchapter')->with([
-        'countList'     => count($chapters),
-        'chapters'      => $chapters,
-        'chapterBdData' => $chapterBdData,
-        'userTypeId'    => $userTypeId,
-    ]);
-}
+    $countList = $chapterList->count();
+        return view('coordinators.techreports.viewasdisbandedchapter')->with($data);
+    }
+
    public function viewAsPendingChapter(Request $request): View
-{
-    $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
+ {
+        $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
 
-    $user = $this->userController->loadUserInformation($request);
-    $userTypeId = $user['userTypeId'];
-    $coorId = $user['cdId'];
-    $confId = $user['confId'];
-    $regId = $user['regId'];
-    $positionId = $user['cdPositionId'];
-    $secPositionId = $user['cdSecPositionId'];
+        $user = $this->userController->loadUserInformation($request);
+        $userTypeId = $user['userTypeId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
 
-    $baseQuery = $this->baseChapterController->getBaseQuery(2, $coorId, $confId, $regId, $positionId, $secPositionId);
-    $chapters = $baseQuery['query']->get();
+        $baseQuery = $this->baseChapterController->getBaseQuery(3, $coorId, $confId, $regId, $positionId, $secPositionId);
+        $chapterList = $baseQuery['query']->get();
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
-    $chapterBdData = [];
-    foreach ($chapters as $chapter) {
+        $chapterBdData = [];
+        foreach ($chapterList as $chapter) {
         $chDetails = $this->baseBoardController->getChapterDetails($chapter->id);
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $chDetails['PresDetails']);
+        $PresDetails = $chDetails['PresDetails'] ?? null;
+
+        if ($PresDetails === null) {
+            $chapterBdData[$chapter->id] = null; // or some default
+            continue;
+        }
+
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
         $chapterBdData[$chapter->id] = $bdData;
     }
 
-    unset($_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL]);
+    $countList = $chapterList->count();
+    $data = ['countList' => $countList, 'chapterList' => $chapterList,
+        'checkBox51Status' => $checkBox51Status, 'chapterBdData' => $chapterBdData, 'userTypeId' => $userTypeId,
+    ];
 
-    return view('coordinators.techreports.viewaspendingchapter')->with([
-        'countList'     => count($chapters),
-        'chapters'      => $chapters,
-        'chapterBdData' => $chapterBdData,
-        'userTypeId'    => $userTypeId,
-    ]);
-}
-   public function viewAsOutgoingChapter(Request $request): View
-{
-    $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
-
-    $user = $this->userController->loadUserInformation($request);
-    $userTypeId = $user['userTypeId'];
-    $coorId = $user['cdId'];
-    $confId = $user['confId'];
-    $regId = $user['regId'];
-    $positionId = $user['cdPositionId'];
-    $secPositionId = $user['cdSecPositionId'];
-
-    $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
-    $chapters = $baseQuery['query']->get();
-
-    $chapterBdData = [];
-    foreach ($chapters as $chapter) {
-        $chDetails = $this->baseBoardController->getChapterDetails($chapter->id);
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $chDetails['PresDetails']);
-        $chapterBdData[$chapter->id] = $bdData;
+    $countList = $chapterList->count();
+        return view('coordinators.techreports.viewaspendingchapter')->with($data);
     }
 
-    unset($_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL]);
-
-    return view('coordinators.techreports.viewasoutgoingchapter')->with([
-        'countList'     => count($chapters),
-        'chapters'      => $chapters,
-        'chapterBdData' => $chapterBdData,
-        'userTypeId'    => $userTypeId,
-    ]);
-}
     /**
      * Admin Choose Zapped Chapter for Viewing
      */

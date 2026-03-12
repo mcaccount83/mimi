@@ -18,13 +18,13 @@
       <div class="row">
         <div class="col-12">
             <div class="card card-outline card-primary">
-                <div class="card-header">
+                <div class="card-header d-flex align-items-center">
                     <div class="dropdown d-flex align-items-center">
                         <h3 class="card-title dropdown-toggle mb-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             EOY Status Report
                         </h3>
+                         <span class="ms-3">Chapters that were added after June 30, {{ $thisYearEOY }} will not be listed</span>
                         @include('layouts.dropdown_menus.menu_eoy')
-                        <span class="ms-2 text-muted " style="font-size: 0.75rem; align-self: flex-end; line-height: 1.8;"><span class="ms-2">Chapters that were added after June 30, {{ $thisYearEOY }} will not be listed</span>
                     </div>
             </div>
             <!-- /.card-header -->

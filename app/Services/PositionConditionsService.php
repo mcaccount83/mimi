@@ -183,23 +183,23 @@ class PositionConditionsService
     }
 
     public function getViewAs(int $userTypeId, $PresDetails): array
-    {
-        $viewingAs = session('viewing_as', 'board');
-        $presTypeId = $PresDetails->user->type_id;
+{
+    $viewingAs = session('viewing_as', 'board');
+    $presTypeId = $PresDetails?->user?->type_id ?? null;
 
-        if ($userTypeId == UserTypeEnum::COORD && $viewingAs == 'coord') {
-            return [
-                'bdPositionId' => '1',
-                'bdDetails'    => $PresDetails,
-                'bdTypeId'     => $presTypeId,
-            ];
-        }
-
+    if ($userTypeId == UserTypeEnum::COORD && $viewingAs == 'coord') {
         return [
-            'bdPositionId' => $PresDetails ? $PresDetails->position_id : null,
+            'bdPositionId' => '1',
             'bdDetails'    => $PresDetails,
             'bdTypeId'     => $presTypeId,
         ];
     }
+
+    return [
+        'bdPositionId' => $PresDetails?->position_id ?? null,
+        'bdDetails'    => $PresDetails,
+        'bdTypeId'     => $presTypeId,
+    ];
+}
 
 }

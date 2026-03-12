@@ -135,14 +135,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/techreports/addgoogledrive', [TechReportController::class, 'addGoogleDrive'])->name('techreports.addgoogledrive');
     Route::post('/techreports/updategoogledrive/{id}', [TechReportController::class, 'updateGoogleDrive'])->name('techreports.updategoogledrive');
     Route::post('/techreports/deletegoogledrive', [TechReportController::class, 'deleteGoogleDrive'])->name('techreports.deletegoogledrive');
-    Route::get('/techreports/chapterlist', [TechReportController::class, 'listActiveChapters'])->name('techreports.chapterlist');
-        Route::get('/techreports/viewasactivechapter', [TechReportController::class, 'viewAsActiveChapter'])->name('techreports.viewaschapter.active');
-                Route::get('/techreports/viewasdisbandchapter', [TechReportController::class, 'viewAsDisbandedChapter'])->name('techreports.viewaschapter.disbanded');
-        Route::get('/techreports/viewaspendingchapter', [TechReportController::class, 'viewAsAsPendingChapter'])->name('techreports.viewaschapter.pending');
-        Route::get('/techreports/viewasoutgoingchapter', [TechReportController::class, 'viewAsOutgoingChapter'])->name('techreports.viewaschapter.outgoing');
 
-    Route::get('/techreports/chapterlistzapped', [TechReportController::class, 'listZappedChapters'])->name('techreports.chapterlistzapped');
-    Route::get('/techreports/chapterlistpending', [TechReportController::class, 'listPendingChapters'])->name('techreports.chapterlistpending');
+    Route::get('/techreports/viewasactivechapter', [TechReportController::class, 'viewAsActiveChapter'])->name('techreports.viewaschapter.active');
+    Route::get('/techreports/viewasdisbandchapter', [TechReportController::class, 'viewAsDisbandedChapter'])->name('techreports.viewaschapter.disbanded');
+    Route::get('/techreports/viewaspendingchapter', [TechReportController::class, 'viewAsPendingChapter'])->name('techreports.viewaschapter.pending');
+    // Route::get('/techreports/viewasoutgoingchapter', [TechReportController::class, 'viewAsOutgoingChapter'])->name('techreports.viewaschapter.outgoing');
+
+    // Route::get('/techreports/chapterlist', [TechReportController::class, 'listActiveChapters'])->name('techreports.chapterlist');
+    // Route::get('/techreports/chapterlistzapped', [TechReportController::class, 'listZappedChapters'])->name('techreports.chapterlistzapped');
+    // Route::get('/techreports/chapterlistpending', [TechReportController::class, 'listPendingChapters'])->name('techreports.chapterlistpending');
+
     Route::post('/techreports/updatechapterdelete', [TechReportController::class, 'updateChapterDelete'])->name('techreports.updatechapterdelete');
     Route::post('/techreports/updatecoordinatordelete', [TechReportController::class, 'updateCoordinatorDelete'])->name('techreports.updatecoordinatordelete');
     Route::post('/techreports/resetProbationSubmission', [TechReportController::class, 'resetProbationSubmission'])->name('techreports.resetProbationSubmission');
