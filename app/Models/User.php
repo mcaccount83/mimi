@@ -78,7 +78,7 @@ class User extends Authenticatable
 
     public function authorNameWithPosition()
     {
-        if ($this->user_type == 'coordinator') {
+        if ($this->type_id == '1') {
             $regionText = ($this->coordinator->region && $this->coordinator->region->long_name != 'None')
                 ? ', '.$this->coordinator->region->long_name.' Region'
                 : ', '.$this->coordinator->conference->conference_description;
@@ -86,12 +86,12 @@ class User extends Authenticatable
             return $this->first_name.' '.$this->last_name.', '.
                    $this->coordinator?->displayPosition->long_title.' <br> '.
                    $this->coordinator?->conference->conference_name.$regionText;
-        } elseif ($this->user_type == 'board') {
+        } elseif ($this->type_id == '2') {
             return $this->first_name.' '.$this->last_name.', '.
                    $this->board?->position->position.' <br> '.
                    $this->board?->chapters->name.', '.
                    $this->board?->chapters->state->state_short_name;
-        } elseif ($this->user_type == 'disbanded') {
+        } elseif ($this->type_id == '0') {
             return $this->first_name.' '.$this->last_name.', '.
                 $this->boardDisbanded?->position->position.' <br> '.
                 $this->boardDisbanded?->chapters->name.', '.
