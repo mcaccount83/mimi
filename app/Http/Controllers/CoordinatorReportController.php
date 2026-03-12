@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\CheckboxFilterEnum;
 use App\Services\ReportingService;
+use App\Services\LearnDashService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -19,13 +20,16 @@ class CoordinatorReportController extends Controller implements HasMiddleware
 
     protected $reportingService;
 
+    protected $learnDashService;
+
     public function __construct(UserController $userController, BaseCoordinatorController $baseCoordinatorController, BaseChapterController $baseChapterController,
-        ReportingService $reportingService)
+        ReportingService $reportingService, LearnDashService $learnDashService)
     {
         $this->userController = $userController;
         $this->baseChapterController = $baseChapterController;
         $this->baseCoordinatorController = $baseCoordinatorController;
         $this->reportingService = $reportingService;
+        $this->learnDashService = $learnDashService;
     }
 
     public static function middleware(): array
@@ -93,6 +97,33 @@ class CoordinatorReportController extends Controller implements HasMiddleware
         ];
 
         return view('coordinators.coordreports.coordrptappreciation')->with($data);
+    }
+
+    public function showRptELearning(Request $request): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
+
+        $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+        $coordinatorList = $baseQuery['query']->get();
+
+        // Collect all emails and fetch progress in one API call
+        $emails = $coordinatorList->pluck('email')->filter()->values()->toArray();
+        $bulkProgress = $this->learnDashService->getBulkUserProgress($emails);
+
+        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
+        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
+
+        $data = ['coordinatorList' => $coordinatorList, 'bulkProgress' => $bulkProgress, 'checkBox1Status' => $checkBox1Status,
+            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
+        ];
+
+        return view('coordinators.coordreports.coordrptelearning')->with($data);
     }
 
     public function showRptAppreciationOLD(Request $request): View

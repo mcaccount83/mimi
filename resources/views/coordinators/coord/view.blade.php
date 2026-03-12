@@ -44,7 +44,7 @@
                 <ul class="nav nav-pills">
                   <li class="nav-item"><a class="nav-link active" href="#general" data-bs-toggle="tab">Chapters & Coordinators</a></li>
                   <li class="nav-item"><a class="nav-link" href="#contact" data-bs-toggle="tab">Contact Information</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#subscriptions" data-bs-toggle="tab">Subscriptions</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#subscriptions" data-bs-toggle="tab">ForumLists & eLearning</a></li>
                   <li class="nav-item"><a class="nav-link" href="#recog" data-bs-toggle="tab">Appreciation & Recognitions</a></li>
                 </ul>
               </div><!-- /.card-header -->
@@ -182,41 +182,84 @@
                 <div class="tab-pane" id="subscriptions">
                     <div class="subscriptions-field">
                                 <div class="card-header bg-transparent border-0">
-                        <h3>Subscriptions</h3>
+                        <h3>ForumLists & ELearning</h3>
                          </div>
                                 <!-- /.card-header -->
                             <div class="card-body">
                         <div class="row">
+                            <h4>ForumList Subscriptions</h4>
                             @php
                                 $Subscriptions = $cdDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
                             @endphp
-                            <dt class="col-sm-3">Public Announcements</dt>
-                            <dd class="col-sm-2">{{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}</dd>
+                            <dt class="col-sm-3">Public Announcements:</dt>
+                            <dd class="col-sm-2">{{ in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}</dd>
                             @if ($assistConferenceCoordinatorCondition)
                                 <dd class="col-sm-6">
-                                    @if (in_array(1, $Subscriptions))
-                                        <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="unsubscribe(1, {{ $cdDetails->user_id }})">Unsubscribe</button>
+                                    @if (in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
+                                        <button type="button" class="btn btn-danger bg-gradient btn-xs" onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $cdDetails->user_id }})"><i class="bi bi-ban me-2"></i>Unsubscribe</button>
                                     @else
-                                        <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="subscribe(1, {{ $cdDetails->user_id }})">Subscribe</button>
+                                        <button type="button" class="btn btn-success bg-gradient btn-xs" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $cdDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
                                     @endif
                                 </dd>
                             @endif
-                            @php
-                                $Subscriptions = $cdDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
-                            @endphp
-                            <dt class="col-sm-3">CoordinatorList</dt>
-                            <dd class="col-sm-2">{{ in_array(2, $Subscriptions) ? 'YES' : 'NO' }}</dd>
+                            <dt class="col-sm-3">CoordinatorList:</dt>
+                            <dd class="col-sm-2">{{ in_array(\App\Enums\ForumCategoryEnum::COORDLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}</dd>
                             @if ($assistConferenceCoordinatorCondition)
                                 <dd class="col-sm-6">
-                                    @if (in_array(2, $Subscriptions))
-                                        <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="unsubscribe(2, {{ $cdDetails->user_id }})">Unsubscribe</button>
+                                    @if (in_array(\App\Enums\ForumCategoryEnum::COORDLIST, $Subscriptions))
+                                        <button type="button" class="btn btn-danger bg-gradient btn-xs" onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::COORDLIST }}, {{ $cdDetails->user_id }})"><i class="bi bi-ban me-2"></i>Unsubscribe</button>
                                     @else
-                                        <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="subscribe(2, {{ $cdDetails->user_id }})">Subscribe</button>
+                                        <button type="button" class="btn btn-success bg-gradient btn-xs" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::COORDLIST }}, {{ $cdDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
+                                    @endif
+                                </dd>
+                            @endif
+                            <dt class="col-sm-3">BoardList:</dt>
+                            <dd class="col-sm-2">{{ in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}</dd>
+                            @if ($assistConferenceCoordinatorCondition)
+                                <dd class="col-sm-6">
+                                    @if (in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
+                                        <button type="button" class="btn btn-danger bg-gradient btn-xs" onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $cdDetails->user_id }})"><i class="bi bi-ban me-2"></i>Unsubscribe</button>
+                                    @else
+                                        <button type="button" class="btn btn-success bg-gradient btn-xs" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLBOARDLISTCLIST }}, {{ $cdDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
                                     @endif
                                 </dd>
                             @endif
 
+
                         </div>
+
+                        <div class="row mt-3">
+                            <h4>eLearning Courses</h4>
+                        <div class="row">
+    @forelse($coursesByCategory as $categorySlug => $categoryData)
+        <div class="col-md-6">
+            <label class="mb-2">{{ $categoryData['name'] }}</label>
+            <ul class="list-unstyled mb-3">
+                @foreach($categoryData['courses'] as $course)
+                    <li class="mb-2 d-flex align-items-center gap-2">
+                        <span>{{ $course['title']['rendered'] }}</span>
+                        @if(!empty($course['progress']) && $course['progress']['status'] === 'completed')
+                            <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>Completed</span>
+                        @elseif(!empty($course['progress']) && $course['progress']['status'] === 'in_progress')
+                            <div>
+                                <div class="progress" style="height: 8px; width: 80px;">
+                                    <div class="progress-bar bg-primary" style="width: {{ $course['progress']['percent'] }}%"></div>
+                                </div>
+                                <small class="text-muted">{{ $course['progress']['percent'] }}% ({{ $course['progress']['steps_completed'] }}/{{ $course['progress']['steps_total'] }})</small>
+                            </div>
+                        @else
+                            <span class="badge bg-secondary">Not Started</span>
+                        @endif
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    @empty
+        <p class="text-muted">No courses found.</p>
+    @endforelse
+</div>
+                        </div>
+
                         </div>
                     <!-- /.card-body -->
                 </div>

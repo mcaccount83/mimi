@@ -347,7 +347,7 @@ class TechReportController extends Controller implements HasMiddleware
         $fiscalYearEOY = $admin->fiscal_year_eoy;  // "2024-2025"
 
         $subscribeListItems = [
-            'Subscribe Coordinators to BoardList',
+            // 'Subscribe Coordinators to BoardList',
             'Subscribe Board Members to BoardList',
             'Subscribe Board Members to Public Announcements',
         ];
@@ -418,7 +418,7 @@ class TechReportController extends Controller implements HasMiddleware
         $unSubscribeListItems = [
             'Remove Board Members from BoardList',
             'Remove Board Members from Publc Announcements',
-            'Remove Coordinators from BoardList',
+            // 'Remove Coordinators from BoardList',
         ];
 
         $data = ['admin' => $admin, 'adminYear' => $adminYear, 'canEditFiles' => $canEditFiles, 'fiscalYearEOY' => $fiscalYearEOY, 'fiscalYear' => $fiscalYear,
@@ -569,7 +569,7 @@ class TechReportController extends Controller implements HasMiddleware
 
         DB::beginTransaction();
         try {
-            $boardListAll = $this->forumSubscriptionController->bulkAddBoardList();
+            $boardListAll = $this->forumSubscriptionController->bulkAddBoardBoardList();
             $publicListBoard = $this->forumSubscriptionController->bulkAddBoardPublicAnnouncements();
 
             $adminYear = AdminYear::where('year_fiscal', $fiscalYear)->firstOrFail();
@@ -1110,7 +1110,7 @@ class TechReportController extends Controller implements HasMiddleware
 
         DB::beginTransaction();
         try {
-            $boardListAll = $this->forumSubscriptionController->bulkRemoveBoardList();
+            $boardListAll = $this->forumSubscriptionController->bulkRemoveBoardBoardList();
             $publicListBoard = $this->forumSubscriptionController->bulkRemoveBoardPublicAnnouncements();
 
             // $categoryBoardList = ForumCategory::where('title', 'BoardList')

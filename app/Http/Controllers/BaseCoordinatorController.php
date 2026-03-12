@@ -13,6 +13,7 @@ use App\Models\RecognitionGifts;
 use App\Models\Region;
 use App\Models\State;
 use App\Models\User;
+use App\Services\LearnDashService;
 use Illuminate\Support\Facades\DB;
 
 class BaseCoordinatorController extends Controller
@@ -21,10 +22,13 @@ class BaseCoordinatorController extends Controller
 
     protected $baseConditionsController;
 
-    public function __construct(UserController $userController, BaseConditionsController $baseConditionsController)
+    protected $learnDashService;
+
+    public function __construct(UserController $userController, BaseConditionsController $baseConditionsController, LearnDashService $learnDashService)
     {
         $this->userController = $userController;
         $this->baseConditionsController = $baseConditionsController;
+        $this->learnDashService = $learnDashService;
     }
 
     /**
@@ -292,12 +296,30 @@ class BaseCoordinatorController extends Controller
         $rc_email = $rcDetailsInfo['rc_email'];
         $rc_pos = $rcDetailsInfo['rc_pos'];
 
+        // Fetch coordinator courses and their progress
+        $coordinatorCourses = $this->learnDashService->getCoursesForUserType('coordinator');
+        $userProgress = $this->learnDashService->getUserProgress($cdDetails->user->email);
+
+        foreach ($coordinatorCourses as &$course) {
+            $course['progress'] = $userProgress[(int)$course['id']] ?? null;
+        }
+
+        $coursesByCategory = collect($coordinatorCourses)->groupBy(function ($course) {
+            return $course['categories'][0]['slug'] ?? 'uncategorized';
+        })->map(function ($courses, $slug) {
+            return [
+                'name'    => $courses->first()['categories'][0]['name'] ?? ucfirst(str_replace('-', ' ', $slug)),
+                'courses' => $courses,
+            ];
+        });
+
         return ['cdDetails' => $cdDetails, 'cdId' => $cdId, 'cdActiveId' => $cdActiveId, 'regionLongName' => $regionLongName, 'cdUserAdmin' => $cdUserAdmin, 'emailCC' => $emailCC,
             'conferenceDescription' => $conferenceDescription, 'cdConfId' => $cdConfId, 'cdRegId' => $cdRegId, 'cdRptId' => $cdRptId, 'allAdminRoles' => $allAdminRoles,
             'RptFName' => $RptFName, 'RptLName' => $RptLName, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'cdAdminRole' => $cdAdminRole, 'rc_email' => $rc_email,
             'secondaryPosition' => $secondaryPosition, 'allRegions' => $allRegions, 'allStates' => $allStates, 'allMonths' => $allMonths, 'secondaryPositionId' => $secondaryPositionId,
             'rcDetails' => $rcDetails, 'allPositions' => $allPositions, 'allCoordinators' => $allCoordinators, 'cdPositionid' => $cdPositionid, 'secondaryPositionShort' => $secondaryPositionShort,
             'allRecognitionGifts' => $allRecognitionGifts, 'allCountries' => $allCountries, 'cdstateShortName' => $cdstateShortName, 'cdApp' => $cdApp, 'emailCCData' => $emailCCData,
+            'coursesByCategory' => $coursesByCategory,
         ];
     }
 }

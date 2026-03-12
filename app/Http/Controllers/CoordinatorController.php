@@ -26,6 +26,7 @@ use App\Models\Month;
 use App\Models\Region;
 use App\Models\State;
 use App\Models\User;
+use App\Services\LearnDashService;
 use App\Services\PositionConditionsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -57,9 +58,11 @@ class CoordinatorController extends Controller implements HasMiddleware
 
     protected $emailController;
 
+    protected $learnDashService;
+
     public function __construct(UserController $userController, BaseCoordinatorController $baseCoordinatorController, ForumSubscriptionController $forumSubscriptionController,
         PositionConditionsService $positionConditionsService, BaseMailDataController $baseMailDataController, EmailController $emailController,
-        EmailTableController $emailTableController, BaseChapterController $baseChapterController)
+        EmailTableController $emailTableController, BaseChapterController $baseChapterController, LearnDashService $learnDashService)
     {
         $this->userController = $userController;
         $this->baseChapterController = $baseChapterController;
@@ -69,6 +72,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $this->baseMailDataController = $baseMailDataController;
         $this->emailTableController = $emailTableController;
         $this->emailController = $emailController;
+        $this->learnDashService = $learnDashService;
     }
 
     public static function middleware(): array
@@ -336,6 +340,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $cdLeave = $baseQuery['cdDetails']->on_leave;
         $cdUserAdmin = $baseQuery['cdUserAdmin'];
         $cdAdminRole = $baseQuery['cdAdminRole'];
+        $coursesByCategory = $baseQuery['coursesByCategory'];
 
         // $dateOptions = $this->positionConditionsService->getDateOptions();
         // $threeMonthsAgo = $dateOptions['threeMonthsAgo'];  // Big Sister Email
@@ -355,7 +360,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $data = ['cdDetails' => $cdDetails, 'cdConfId' => $cdConfId, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
             'cdActiveId' => $cdActiveId, 'confId' => $confId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
             'drList' => $drList, 'chList' => $chList, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'startDate' => $startDate,
-            'secondaryPosition' => $secondaryPosition, 'cdPositionid' => $cdPositionid, 'cdAdminRole' => $cdAdminRole,
+            'secondaryPosition' => $secondaryPosition, 'cdPositionid' => $cdPositionid, 'cdAdminRole' => $cdAdminRole, 'coursesByCategory' => $coursesByCategory
         ];
 
         return view('coordinators.coord.view')->with($data);
@@ -1328,6 +1333,42 @@ class CoordinatorController extends Controller implements HasMiddleware
         }
     }
 
+       public function viewCoordELearning(Request $request, $id): View
+    {
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
+
+        $cdDetailsUser = $user->coordinator;
+        $cdIdUser = $cdDetailsUser->id;
+
+        $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($id);
+        $cdDetails = $baseQuery['cdDetails'];
+        $cdId = $baseQuery['cdId'];
+        $cdActiveId = $baseQuery['cdActiveId'];
+        $regionLongName = $baseQuery['regionLongName'];
+        $conferenceDescription = $baseQuery['conferenceDescription'];
+        $cdConfId = $baseQuery['cdConfId'];
+        $cdRptId = $baseQuery['cdRptId'];
+        $RptFName = $baseQuery['RptFName'];
+        $RptLName = $baseQuery['RptLName'];
+        $ReportTo = $RptFName.' '.$RptLName;
+        $displayPosition = $baseQuery['displayPosition'];
+        $mimiPosition = $baseQuery['mimiPosition'];
+        $secondaryPosition = $baseQuery['secondaryPosition'];
+        $cdLeave = $baseQuery['cdDetails']->on_leave;
+        $cdUserAdmin = $baseQuery['cdUserAdmin'];
+        $cdAdminRole = $baseQuery['cdAdminRole'];
+        $coursesByCategory = $baseQuery['coursesByCategory'];
+
+        $data = ['cdDetails' => $cdDetails, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
+            'cdActiveId' => $cdActiveId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
+            'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'secondaryPosition' => $secondaryPosition, 'cdAdminRole' => $cdAdminRole,
+            'coursesByCategory' => $coursesByCategory,
+        ];
+
+        return view('coordinators.coord.viewelearning')->with($data);
+    }
+
     /**
      * View Coordiantor Profile
      */
@@ -1535,22 +1576,22 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         DB::beginTransaction();
         try {
-            $corduser->first_name = $request->input('cord_fname');
-            $corduser->last_name = $request->input('cord_lname');
-            $corduser->email = $request->input('cord_email');
+            // $corduser->first_name = $request->input('cord_fname');
+            // $corduser->last_name = $request->input('cord_lname');
+            // $corduser->email = $request->input('cord_email');
 
-            $corduser->save();
+            // $corduser->save();
 
             $coordinator->position_id = $request->input('cord_pos');
             $coordinator->display_position_id = $request->input('cord_disp_pos');
-            $coordinator->first_name = $request->input('cord_fname');
-            $coordinator->last_name = $request->input('cord_lname');
+            // $coordinator->first_name = $request->input('cord_fname');
+            // $coordinator->last_name = $request->input('cord_lname');
             $coordinator->region_id = $request->input('cord_region');
-            $coordinator->email = $request->input('cord_email');
-            $coordinator->sec_email = $request->input('cord_sec_email');
-            $coordinator->phone = $request->input('cord_phone');
-            $coordinator->alt_phone = $request->input('cord_altphone');
-            $coordinator->home_chapter = $request->input('cord_chapter');
+            // $coordinator->email = $request->input('cord_email');
+            // $coordinator->sec_email = $request->input('cord_sec_email');
+            // $coordinator->phone = $request->input('cord_phone');
+            // $coordinator->alt_phone = $request->input('cord_altphone');
+            // $coordinator->home_chapter = $request->input('cord_chapter');
             $coordinator->updated_by = $updatedBy;
             $coordinator->updated_id = $updatedId;
 

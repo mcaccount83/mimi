@@ -170,8 +170,8 @@
                                         <div class="col-sm-10">
                                             <div class="mb-1">You can always access all lists/posts through your MIMI profile, subscribing will allow you to receive individual emails when
                                                 a new post is made.</div>
-                                            <div class="mb-2">All coordinators are automatically subscribed to Public Announcements at the beginning of each fiscal year but are NOT automatically subscribed
-                                                to CoordinatorList or BoardList.  If you'd like to udpate the settings for any list, simply subscribe or unsubscribe below.
+                                            <div class="mb-2">All coordinators are automatically subscribed to all lists when becoming a volunteer. These settings are not automatically updated after they
+                                                are initially set. If you'd like to udpate the settings for any list, simply subscribe or unsubscribe below.
                                             </div>
                                             <div class="mb-1"><b>Public Announcements:</b>
                                             {{ in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}

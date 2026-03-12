@@ -346,6 +346,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/coordinator/details/update/{id}', [CoordinatorController::class, 'updateCoordDetails'])->name('coordinators.updatedetails');
     Route::get('/coordinator/details/editrecognition/{id}', [CoordinatorController::class, 'editCoordRecognition'])->name('coordinators.editrecognition');
     Route::post('/coordinator/details/updaterecognition/{id}', [CoordinatorController::class, 'updateCoordRecognition'])->name('coordinators.updaterecognition');
+    Route::get('/coordinator/details/viewelearning/{id}', [CoordinatorController::class, 'viewCoordELearning'])->name('coordinators.viewelearning');
     Route::get('viewprofile', [CoordinatorController::class, 'viewCoordProfile'])->name('coordinators.viewprofile');
     Route::get('/profile/profile', [CoordinatorController::class, 'editCoordProfile'])->name('coordinators.profile');
     Route::post('/profile/profileupdate', [CoordinatorController::class, 'updateCoordProfile'])->name('coordinators.profileupdate');
@@ -354,6 +355,7 @@ Route::middleware('auth')->group(function () {
 // CoordinatorReport Controller Routes...Coordinator Login Required
 Route::middleware('auth')->group(function () {
     Route::get('/coordreports/volunteerutilization', [CoordinatorReportController::class, 'showRptVolUtilization'])->name('coordreports.coordrptvolutilization');
+    Route::get('/coordreports/elearning', [CoordinatorReportController::class, 'showRptELearning'])->name('coordreports.coordrptelearning');
     Route::get('/coordreports/appreciation', [CoordinatorReportController::class, 'showRptAppreciation'])->name('coordreports.coordrptappreciation');
     Route::get('/coordreports/birthdays', [CoordinatorReportController::class, 'showRptBirthdays'])->name('coordreports.coordrptbirthdays');
     Route::get('/coordreports/reportingtree', [CoordinatorReportController::class, 'showRptReportingTree'])->name('coordreports.coordrptreportingtree');

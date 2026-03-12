@@ -81,8 +81,8 @@
                                         <div class="col-sm-10">
                                             <div class="mb-1">You can always access all Public Announcement & BoardList posts through your MIMI profile, subscribing will allow you to receive individual emails when
                                                 a new post is made.</div>
-                                            <div class="mb-2">All board members are automatically subscribed to Public Announcements at the beginning of each fiscal year but are NOT automatically subscribed
-                                                to BoardList.  If you'd like to udpate the settings for either list, simply subscribe or unsubscribe below.
+                                            <div class="mb-2">All board members are automatically subscribed to Public Announcements and BoardList at the beginning of each fiscal year.
+                                                If you'd like to udpate the settings for either list, simply subscribe or unsubscribe below.
                                             </div>
                                             <div class="mb-1"><b>Public Announcements:</b>
                                             {{ in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}

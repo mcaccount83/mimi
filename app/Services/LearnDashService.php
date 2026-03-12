@@ -75,4 +75,24 @@ class LearnDashService
 
         return [];
     }
+
+    public function getBulkUserProgress(array $emails): array
+    {
+        if (empty($emails)) {
+            return [];
+        }
+
+        $response = Http::withHeaders([
+            'Cache-Control' => 'no-cache, no-store, must-revalidate',
+        ])->get('https://momsclub.org/elearning/wp-json/public/v1/users-progress', [
+            'emails'  => $emails,
+            'nocache' => time(),
+        ]);
+
+        if ($response->successful()) {
+            return $response->json() ?? [];
+        }
+
+        return [];
+    }
 }

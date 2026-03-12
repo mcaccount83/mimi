@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\CheckboxFilterEnum;
+use App\Enums\ForumCategoryEnum;
 use App\Enums\UserTypeEnum;
 use App\Models\Chapters;
 use App\Models\Coordinators;
@@ -44,12 +45,16 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
 
     public function defaultCategories()
     {
-        // Public Annnouncemenets = 1
-        // CoordinatorList = 2
-        // BoardList =3
+        $coordinatorCategories = [
+            ForumCategoryEnum::PUBLICLIST,
+            ForumCategoryEnum::COORDLIST,
+            ForumCategoryEnum::BOARDLIST,
+        ];
 
-        $coordinatorCategories = [1, 2, 3];
-        $boardCategories = [1, 3];
+        $boardCategories = [
+            ForumCategoryEnum::PUBLICLIST,
+            ForumCategoryEnum::BOARDLIST,
+        ];
 
         return [
             'coordinatorCategories' => $coordinatorCategories,
