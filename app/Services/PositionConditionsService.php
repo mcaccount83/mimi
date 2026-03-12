@@ -125,6 +125,7 @@ class PositionConditionsService
         //     ->first();
         $adminYear = AdminYear::latest('id')->firstOrFail();
         $fiscalYear = $adminYear->year_fiscal;  // "2025-2026"
+        $fiscalYearStart =  $adminYear->year_start;
 
         $admin = Admin::latest('id')->firstOrFail();
         $fiscalYearEOY = $admin->fiscal_year_eoy;  // "2024-2025"
@@ -145,6 +146,7 @@ class PositionConditionsService
 
         return [
             'fiscalYear' => $fiscalYear,
+            'fiscalYearStart' => $fiscalYearStart,
             'fiscalYearEOY' => $fiscalYearEOY,
             'thisYearEOY' => $thisYearEOY,
             // 'nextYearEOY' => $nextYearEOY,

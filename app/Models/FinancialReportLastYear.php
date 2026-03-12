@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
+
 
 class FinancialReportLastYear extends Model
 {
@@ -16,13 +18,13 @@ class FinancialReportLastYear extends Model
         'created_at' => 'datetime',
     ];
 
-    public function __construct(array $attributes = [])
+    public function getTable(): string
     {
-        parent::__construct($attributes);
-
         $positionConditionsService = app(\App\Services\PositionConditionsService::class);
-        $dateOptions = $positionConditionsService->getDateOptions();
-        $lastYearEOY = $dateOptions['lastYearEOY'];
-        $this->table = 'financial_report_12_'.$lastYearEOY;
+        $getEOYOptions = $positionConditionsService->getEOYOptions();
+
+        $lastYearEOY = $getEOYOptions['lastYearEOY'];
+
+        return 'zzz_financial_report_12_' . $lastYearEOY;
     }
 }

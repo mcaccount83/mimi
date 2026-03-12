@@ -27,7 +27,7 @@
         <div class="row">
           <div class="col-md-4">
 
-            <input type="hidden" name="ch_state" value="{{$stateShortName}}">
+            <input type="hidden" name="ch_state" value="{{$chDetails->state_id}}">
             <input type="hidden" name="ch_hid_primarycor" value="{{$chDetails->primary_coordinator_id}}">
             <input type="hidden" id="ch_pre_email_chk" value="{{ $chDetails->pendingPresident->email }}">
             <input type="hidden" id="ch_region" name="ch_region" value="{{ $chDetails->region_id }}">

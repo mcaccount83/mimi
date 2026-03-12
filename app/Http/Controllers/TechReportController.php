@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\CoordinatorPosition;
+use App\Enums\ForumCategoryEnum;
 use App\Enums\UserStatusEnum;
 use App\Enums\UserTypeEnum;
 use App\Models\Admin;
@@ -23,6 +24,7 @@ use App\Models\CoordinatorTree;
 use App\Models\Documents;
 use App\Models\DocumentsEOY;
 use App\Models\FinancialReport;
+use App\Models\FinancialReportReview;
 use App\Models\ForumCategorySubscription;
 use App\Models\GoogleDrive;
 use App\Models\ProbationSubmission;
@@ -53,14 +55,17 @@ class TechReportController extends Controller implements HasMiddleware
 
     protected $positionConditionsService;
 
+    protected $forumSubscriptionController;
+
     public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController,
-        PositionConditionsService $positionConditionsService, BaseBoardController $baseBoardController)
+        PositionConditionsService $positionConditionsService, BaseBoardController $baseBoardController, ForumSubscriptionController $forumSubscriptionController)
     {
         $this->userController = $userController;
         $this->baseChapterController = $baseChapterController;
         $this->baseCoordinatorController = $baseCoordinatorController;
         $this->positionConditionsService = $positionConditionsService;
         $this->baseBoardController = $baseBoardController;
+        $this->forumSubscriptionController = $forumSubscriptionController;
     }
 
     public static function middleware(): array
@@ -324,16 +329,28 @@ class TechReportController extends Controller implements HasMiddleware
         $secPositionId = $user['cdSecPositionId'];
         $canEditFiles = ($positionId == CoordinatorPosition::IT || in_array(CoordinatorPosition::IT, $secPositionId));
 
-        $admin = DB::table('admin')
-            ->select('admin.*',
-                DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'), )
-            ->leftJoin('coordinators as cd', 'admin.updated_id', '=', 'cd.id')
-            ->orderByDesc('admin.id') // Assuming 'id' represents the order of insertion
-            ->first();
+        // $admin = DB::table('admin')
+        //     ->select('admin.*',
+        //         DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'), )
+        //     ->leftJoin('coordinators as cd', 'admin.updated_id', '=', 'cd.id')
+        //     ->orderByDesc('admin.id') // Assuming 'id' represents the order of insertion
+        //     ->first();
 
         // Fetch distinct fiscal years
-        $fiscalYears = DB::table('admin_year')->distinct()->pluck('year_fiscal');
-        $fiscalYearsEOY = DB::table('admin')->distinct()->pluck('fiscal_year_eoy');
+        // $fiscalYears = DB::table('admin_year')->distinct()->pluck('year_fiscal');
+        // $fiscalYearsEOY = DB::table('admin')->distinct()->pluck('fiscal_year_eoy');
+
+        $adminYear = AdminYear::latest('id')->firstOrFail();
+        $fiscalYear = $adminYear->year_fiscal;  // "2025-2026"
+
+        $admin = Admin::latest('id')->firstOrFail();
+        $fiscalYearEOY = $admin->fiscal_year_eoy;  // "2024-2025"
+
+        $subscribeListItems = [
+            'Subscribe Coordinators to BoardList',
+            'Subscribe Board Members to BoardList',
+            'Subscribe Board Members to Public Announcements',
+        ];
 
         $resetEOYTableItems = [
             'Set all Outgoing Users to Inactive',
@@ -341,9 +358,9 @@ class TechReportController extends Controller implements HasMiddleware
             'Clear Incoming Board Member Table',
             'Ending Balance Added to Documents from Financial Reports',
             'Approved Awards Added to Awards History from Financial Reports',
-            'Copy/Rename Financial Reports Table',
-            'Clear Financial Reports Table',
-            'Pre-Balance Added to Financial Report from Documents',
+            'Copy/Rename Financial Report & Review Tables',
+            'Clear Financial Report & Review Tables',
+            'Pre-Balance Added to Financial Report & Review from Documents',
             'EOY Fields Reset in Chapters Table',
             'EOY Fields Reset in Documents Table',
             'Add Outgoing Board Members from Board Details',
@@ -395,6 +412,7 @@ class TechReportController extends Controller implements HasMiddleware
             'Copy/Rename Boards Table',
             'Copy/Rename Coordinators Table',
             'Copy/Rename Users Table',
+            'Copy/Reset BoardList Forum Category',
         ];
 
         $unSubscribeListItems = [
@@ -403,13 +421,7 @@ class TechReportController extends Controller implements HasMiddleware
             'Remove Coordinators from BoardList',
         ];
 
-        $subscribeListItems = [
-            'Subscribe Coordinators to BoardList',
-            'Subscribe Board Members to BoardList',
-            'Subscribe Board Members to Public Announcements',
-        ];
-
-        $data = ['admin' => $admin, 'canEditFiles' => $canEditFiles, 'fiscalYearsEOY' => $fiscalYearsEOY, 'fiscalYears' => $fiscalYears,
+        $data = ['admin' => $admin, 'adminYear' => $adminYear, 'canEditFiles' => $canEditFiles, 'fiscalYearEOY' => $fiscalYearEOY, 'fiscalYear' => $fiscalYear,
             'resetEOYTableItems' => $resetEOYTableItems, 'displayCoorindatorMenuItems' => $displayCoorindatorMenuItems, 'displayChapterButtonItems' => $displayChapterButtonItems,
             'displayTestingItemsItems' => $displayTestingItemsItems, 'displayLiveItemsItems' => $displayLiveItemsItems, 'unSubscribeListItems' => $unSubscribeListItems,
             'resetAFTERtestingItems' => $resetAFTERtestingItems, 'updateUserTablesItems' => $updateUserTablesItems, 'subscribeListItems' => $subscribeListItems,
@@ -507,7 +519,7 @@ class TechReportController extends Controller implements HasMiddleware
     }
 
     /**
-     * Reset Fiscal Year in Jul for Subscription Lists
+     * Reset Fiscal Year in Jul for Subscription Lists  // Step 1
      */
     public function resetYear(): JsonResponse
     {
@@ -544,15 +556,112 @@ class TechReportController extends Controller implements HasMiddleware
         }
     }
 
+    /**
+     * Subscribe Users to ForumLists  // Step 2
+     */
+     public function updateSubscribeLists(Request $request): JsonResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['userId'];
+
+        $EOYOptions = $this->positionConditionsService->getEOYOptions();
+        $fiscalYear = $EOYOptions['fiscalYear'];
+
+        DB::beginTransaction();
+        try {
+            $boardListAll = $this->forumSubscriptionController->bulkAddBoardList();
+            $publicListBoard = $this->forumSubscriptionController->bulkAddBoardPublicAnnouncements();
+
+            $adminYear = AdminYear::where('year_fiscal', $fiscalYear)->firstOrFail();
+            $adminYear->update([
+                'subscribe_list' => 1,
+                'updated_id'       => $updatedId,
+            ]);
+
+            DB::commit(); // Commit transaction
+
+            return response()->json(['success' => 'Successfully subscribed to lists.']);
+        } catch (\Exception $e) {
+            DB::rollback(); // Rollback Transaction
+            Log::error($e); // Log the error
+
+            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+        }
+    }
+
+
+            // // Get BoardList category
+            // $categoryBoardList = ForumCategory::where('title', 'BoardList')
+            //     ->first();
+            // $categoryIdBoardList = $categoryBoardList->id;
+
+            // // Get Public Announcement category
+            // $categoryPublic = ForumCategory::where('title', 'Public Announcements')
+            //     ->first();
+            // $categoryIdPublic = $categoryPublic->id;
+
+            // // Get active coordinators
+            // $coordinatorUserIds = Coordinators::where('active_status', '1')
+            //     ->where('on_leave', '0')
+            //     ->get()
+            //     ->pluck('user_id')
+            //     ->unique();
+            // $activeCoordinators = User::whereIn('id', $coordinatorUserIds)->get();
+
+            // // Get board members from active chapters using with()
+            // $boardUserIds = Chapters::with('boards')
+            //     ->where('active_status', 1)
+            //     ->get()
+            //     ->pluck('boards')
+            //     ->flatten()
+            //     ->pluck('user_id')
+            //     ->unique();
+            // $activeBoards = User::whereIn('id', $boardUserIds)->get();
+
+            // // Combine the collections
+            // $allUsers = $activeCoordinators->concat($activeBoards);
+
+            // // Remove duplicates if a user is both coordinator and board member
+            // $uniqueUsers = $allUsers->unique('id');
+
+            // foreach ($uniqueUsers as $user) {
+            //     // Check if subscription already exists
+            //     $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
+            //         ->where('category_id', ForumCategoryEnum::BOARDLIST)
+            //         ->first();
+
+            //     if (! $existingSubscription) {
+            //         ForumCategorySubscription::create([
+            //             'user_id' => $user->id,
+            //             'category_id' => ForumCategoryEnum::BOARDLIST,
+            //         ]);
+            //     }
+            // }
+
+            // foreach ($activeBoards as $user) {
+            //     // Check if subscription already exists
+            //     $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
+            //         ->where('category_id', ForumCategoryEnum::PUBLICLIST)
+            //         ->first();
+
+            //     if (! $existingSubscription) {
+            //         ForumCategorySubscription::create([
+            //             'user_id' => $user->id,
+            //             'category_id' => ForumCategoryEnum::PUBLICLIST,
+            //         ]);
+            //     }
+            // }
+
+
+    /**
+     * Reset Fiscal Year EOY Files/Docs/Etc  // Step 3
+     */
     public function resetYearEOY(): JsonResponse
     {
         DB::beginTransaction();
         try {
             // Create a new Admin instance
             $admin = new Admin;
-
-            // // Find the last Admin entry
-            // $admin = Admin::latest('id')->firstOrFail();
 
             // Calculate the fiscal year EOY
             $dateOptions = $this->positionConditionsService->getDateOptions();
@@ -579,27 +688,37 @@ class TechReportController extends Controller implements HasMiddleware
     }
 
     /**
-     * Udate EOY Database Tables  // Step
+     * Udate EOY Database Tables  // Step 4
      */
     public function updateEOYDatabase(Request $request): JsonResponse
     {
+        $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['userId'];
+        $updatedBy = $user['userName'];
+
+        $EOYOptions = $this->positionConditionsService->getEOYOptions();
+        $fiscalYearEOY = $EOYOptions['fiscalYearEOY'];
+
+        $this->addFinancialPdfColumn($EOYOptions);
+        $this->archiveFinancialTables($EOYOptions);
+
         DB::beginTransaction();
         try {
-            $user = $this->userController->loadUserInformation($request);
-            $updatedId = $user['userId'];
-            $updatedBy = $user['userName'];
-
-            $EOYOptions = $this->positionConditionsService->getEOYOptions();
-
             $this->deactivateOutgoingUsers();
             $this->clearBoardTables();
             $this->updateChapterPreBalances();
             $this->copyAwardsToHistory($EOYOptions, $updatedId, $updatedBy);
-            $this->archiveAndResetFinancialReports($EOYOptions);
+            $this->resetFinancialReports($EOYOptions);
             $this->resetChapterFlags();
-            $this->resetDocumentsEOY($EOYOptions);
+            $this->resetDocumentsEOY();
             $this->updateGoogleDriveYear($EOYOptions);
-            $this->markAdminEOYComplete($updatedId);
+            // $this->markAdminEOYComplete($EOYOptions, $updatedId);
+
+            $admin = Admin::where('fiscal_year_eoy', $fiscalYearEOY)->firstOrFail();
+            $admin->update([
+                'reset_eoy_tables' => 1,
+                'updated_id'       => $updatedId,
+            ]);
 
             DB::commit();
 
@@ -609,16 +728,34 @@ class TechReportController extends Controller implements HasMiddleware
             Log::error($e);
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
-        } finally {
-            DB::disconnect();
         }
+    }
+
+    private function addFinancialPdfColumn(array $EOYOptions): void
+    {
+        $newColumnName   = $EOYOptions['thisYearEOY'] . '_financial_pdf_path';
+        $afterColumnName = $EOYOptions['lastYearEOY'] . '_financial_pdf_path';
+
+        Schema::table('documents_eoy', function (Blueprint $table) use ($newColumnName, $afterColumnName) {
+            $table->string($newColumnName, 255)->nullable()->after($afterColumnName);
+        });
+    }
+
+     private function archiveFinancialTables(array $EOYOptions): void
+    {
+        $lastYearEOY = $EOYOptions['lastYearEOY'];
+
+        DB::statement("CREATE TABLE zzz_financial_report_12_$lastYearEOY LIKE financial_report");
+        DB::statement("INSERT INTO zzz_financial_report_12_$lastYearEOY SELECT * FROM financial_report");
+        DB::statement("CREATE TABLE zzz_financial_report_review_12_$lastYearEOY LIKE financial_report_review");
+        DB::statement("INSERT INTO zzz_financial_report_review_12_$lastYearEOY SELECT * FROM financial_report_review");
     }
 
     private function deactivateOutgoingUsers(): void
     {
         User::where('type_id', UserTypeEnum::OUTGOING)
-        ->where('active_status', UserStatusEnum::ACTIVE)
-        ->update(['active_status' => UserStatusEnum::INACTIVE]);
+        ->where('is_active', UserStatusEnum::ACTIVE)
+        ->update(['is_active' => UserStatusEnum::INACTIVE]);
     }
 
     private function clearBoardTables(): void
@@ -629,10 +766,10 @@ class TechReportController extends Controller implements HasMiddleware
 
     private function updateChapterPreBalances(): void
     {
-        $chapters = Chapters::with('financialReport', 'documentsEOY')->get();
+        $chapters = Chapters::with('financialReportReview', 'documentsEOY')->get();
         foreach ($chapters as $chapter) {
-            if ($chapter->financialReport && $chapter->documentsEOY) {
-                $chapter->documentsEOY->pre_balance = $chapter->financialReport->post_balance;
+            if ($chapter->financialReportReview && $chapter->documentsEOY) {
+                $chapter->documentsEOY->pre_balance = $chapter->financialReportReview->post_balance;
                 $chapter->documentsEOY->save();
             }
         }
@@ -667,21 +804,21 @@ class TechReportController extends Controller implements HasMiddleware
         }
     }
 
-    private function archiveAndResetFinancialReports(array $EOYOptions): void
+    private function resetFinancialReports(array $EOYOptions): void
     {
-        $lastYearEOY = $EOYOptions['lastYearEOY'];
-
-        DB::statement("CREATE TABLE zzz_financial_report_12_$lastYearEOY LIKE financial_report");
-        DB::statement("INSERT INTO zzz_financial_report_12_$lastYearEOY SELECT * FROM financial_report");
-
         FinancialReport::query()->delete();
+        FinancialReportReview::query()->delete();
 
         $activeChapters = Chapters::with('documentsEOY')->where('active_status', 1)->get();
         foreach ($activeChapters as $chapter) {
             FinancialReport::create([
-                'chapter_id'                          => $chapter->id,
-                'pre_balance'                         => $chapter->documentsEOY->pre_balance,
-                'amount_reserved_from_previous_year'  => $chapter->documentsEOY->pre_balance,
+                'chapter_id'                         => $chapter->id,
+                'pre_balance'                        => $chapter->documentsEOY->pre_balance,
+                'amount_reserved_from_previous_year' => $chapter->documentsEOY->pre_balance,
+            ]);
+            FinancialReportReview::create([
+                'chapter_id'  => $chapter->id,
+                'pre_balance' => $chapter->documentsEOY->pre_balance,
             ]);
         }
     }
@@ -695,18 +832,8 @@ class TechReportController extends Controller implements HasMiddleware
         ]);
     }
 
-    private function resetDocumentsEOY(array $EOYOptions): void
+    private function resetDocumentsEOY(): void
     {
-        $thisYearEOY = $EOYOptions['thisYearEOY'];
-        $lastYearEOY = $EOYOptions['lastYearEOY'];
-
-        $newColumnName  = $thisYearEOY.'_financial_pdf_path';
-        $afterColumnName = $lastYearEOY.'_financial_pdf_path';
-
-        Schema::table('documents_eoy', function (Blueprint $table) use ($newColumnName, $afterColumnName) {
-            $table->string($newColumnName, 255)->nullable()->after($afterColumnName);
-        });
-
         DocumentsEoy::query()->update([
             'irs_verified'              => null,
             'irs_issues'                => null,
@@ -737,328 +864,24 @@ class TechReportController extends Controller implements HasMiddleware
             ->update(['version' => $EOYOptions['thisYearEOY']]);
     }
 
-    private function markAdminEOYComplete(int $updatedId): void
-    {
-        $admin = Admin::latest('id')->firstOrFail();
-        $admin->update([
-            'reset_eoy_tables' => 1,
-            'updated_id'       => $updatedId,
-        ]);
-    }
-
-    // public function updateEOYDatabase(Request $request): JsonResponse
-    // {
-    //     DB::beginTransaction();
-    //     try {
-    //         $user = $this->userController->loadUserInformation($request);
-    //         $updatedId = $user['userId'];
-    //         $updatedBy = $user['userName'];
-
-    //         // Get the current year +/- 1 for table renaming
-    //         $EOYOptions = $this->positionConditionsService->getEOYOptions();
-    //         $thisYear = $EOYOptions['thisYear'];
-    //         $nextYear = $EOYOptions['nextYear'];
-    //         $lastYear = $EOYOptions['lastYear'];
-
-    //         // Make outgoing users inactive
-    //         DB::table('users')
-    //             ->where('type_id', UserTypeEnum::OUTGOING)
-    //             ->where('active_status', UserStatusEnum::ACTIVE)
-    //             ->update([
-    //                 'active_status' => UserStatusEnum::INACTIVE,
-    //             ]);
-
-    //         // Remove Data from the `outgoing_board_member` and `incoming_board_member` tables
-    //         BoardsOutgoing::query()->delete();
-    //         BoardsIncoming::query()->delete();
-
-    //         // Fetch all chapters with their financial reports and update the balance BEFORE removing data from table
-    //         $chapters = Chapters::with('financialReport', 'documentsEOY')->get();
-    //         foreach ($chapters as $chapter) {
-    //             if ($chapter->financialReport && $chapter->documentsEOY) {
-    //                 $documentsEOY = $chapter->documents;
-    //                 $documentsEOY->pre_balance = $chapter->financialReport->post_balance;
-    //                 $documentsEOY->save();
-    //             }
-    //         }
-
-    //         // Copy approved awards from blob to history table before clearing financial_report
-    //         $allChapters = FinancialReport::whereNotNull('chapter_awards')->get();
-    //         foreach ($allChapters as $report) {
-    //             $awards = unserialize(base64_decode($report->chapter_awards));
-    //             if (!is_array($awards)) continue;
-
-    //             foreach ($awards as $award) {
-    //                 if (!empty($award['awards_approved'])) {
-    //                     ChapterAwardHistory::firstOrCreate(
-    //                         [
-    //                             'chapter_id'  => $report->chapter_id,
-    //                             'awards_type' => $award['awards_type'],
-    //                             'award_year'  => $lastYear.' - '.$thisYear,
-    //                         ],
-    //                         [
-    //                             'awards_desc' => $award['awards_desc'],
-    //                             'approved_at' => now(),
-    //                             'approved_by' => $updatedBy,
-    //                             'approved_id' => $updatedId,
-    //                         ]
-    //                     );
-    //                 }
-    //             }
-    //         }
-
-    //         // Copy and rename the `financial_report` table
-    //         DB::statement("CREATE TABLE zzz_financial_report_12_$lastYear LIKE financial_report");
-    //         DB::statement("INSERT INTO zzz_financial_report_12_$lastYear SELECT * FROM financial_report");
-
-    //         // Remove Data from the `financial_report` table
-    //         FinancialReport::query()->delete();
-
-    //         // Fetch all active chapters and insert each chapter's balance into financial_report
-    //         $activeChapters = Chapters::with('documentsEOY')->where('active_status', 1)->get();
-    //         foreach ($activeChapters as $chapter) {
-    //             FinancialReport::create([
-    //                 'chapter_id' => $chapter->id,  // Ensure chapter_id is provided
-    //                 'pre_balance' => $chapter->documentsEOY->pre_balance,
-    //                 'amount_reserved_from_previous_year' => $chapter->documentsEOY->pre_balance,
-    //             ]);
-    //         }
-
-    //         // Update chapters table: Set specified columns to NULL
-    //         DB::table('chapters')->update([
-    //             'boundary_issues' => null,
-    //             'boundary_issue_notes' => null,
-    //             'boundary_issue_resolved' => null,
-    //         ]);
-
-    //         // Add new column for the next year's financial PDF path
-    //         $newColumnName = $thisYear.'_financial_pdf_path';
-    //         $afterColumnName = $lastYear.'_financial_pdf_path';
-    //         Schema::table('documents_eoy', function (Blueprint $table) use ($newColumnName, $afterColumnName) {
-    //             $table->string($newColumnName, 255)->nullable()->after($afterColumnName);
-    //         });
-
-    //         // Update documents table: Set specified columns to NULL
-    //         DB::table('documents_eoy')->update([
-    //             'irs_verified' => null,
-    //             'irs_issues' => null,
-    //             'irs_wrongdate' => null,
-    //             'irs_notfound' => null,
-    //             'irs_filedwrong' => null,
-    //             'irs_notified' => null,
-    //             'new_board_submitted' => null,
-    //             'new_board_active' => null,
-    //             'financial_report_received' => null,
-    //             'report_received' => null,
-    //             'financial_review_complete' => null,
-    //             'review_complete' => null,
-    //             'report_notes' => null,
-    //             'report_extension' => null,
-    //             'extension_notes' => null,
-    //             'roster_path' => null,
-    //             'irs_path' => null,
-    //             'statement_1_path' => null,
-    //             'statement_2_path' => null,
-    //             'award_path' => null,
-
-    //         ]);
-
-    //         // Change Year for Google Drive Financial Report Attachmnets
-    //         DB::table('google_drive_new')
-    //             ->where('name', 'eoy_uploads')
-    //             ->update([
-    //                 'version' => $nextYear,
-    //             ]);
-
-    //         // Update admin table: Set specified columns to 1
-    //         // DB::table('admin')
-    //         //     ->orderByDesc('id')
-    //         //     ->limit(1)
-    //         //     ->update([
-    //         //         'reset_eoy_tables' => '1',
-    //         //         'updated_id' => $updatedId,
-    //         //     ]);
-
-    //         // Update admin table: Set specified columns to 1
-    //         $admin = Admin::latest('id')->firstOrFail();
-    //         $admin->update([
-    //             'reset_eoy_tables' => 1,
-    //             'updated_id' => $updatedId,
-    //         ]);
-
-    //         DB::commit(); // Commit transaction
-
-    //         return response()->json(['success' => 'Data tables successfully updated, copied, and renamed.']);
-    //     } catch (\Exception $e) {
-    //         DB::rollback(); // Rollback Transaction
-    //         Log::error($e); // Log the error
-
-    //         return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
-    //     } finally {
-    //         // This ensures DB connections are released even if exceptions occur
-    //         DB::disconnect();
-    //     }
-    // }
-
     /**
-     * Udate EOY Database Tables AFTER Testing
-     */
-    public function updateEOYDatabaseAFTERTesting(Request $request): JsonResponse
-    {
-        DB::beginTransaction();
-        try {
-            $user = $this->userController->loadUserInformation($request);
-            $updatedId = $user['userId'];
-
-            // Get the current year
-            $EOYOptions = $this->positionConditionsService->getEOYOptions();
-            $yearColumnName = $EOYOptions['yearColumnName'];
-
-            // Fetch all chapters with their financial reports and update the balance BEFORE removing data from table
-            $chapters = Chapters::with('financialReportLastYear', 'documentsEOY')->get();
-            foreach ($chapters as $chapter) {
-                if ($chapter->financialReportLastYear && $chapter->documentsEOY) {
-                    $documentsEOY = $chapter->documentsEOY;
-                    $documentsEOY->pre_balance = $chapter->financialReportLastYear->post_balance;
-                    $documentsEOY->save();
-                }
-            }
-
-            BoardsOutgoing::query()->delete();
-            BoardsIncoming::query()->delete();
-            FinancialReport::query()->delete();
-
-            // Fetch all active chapters and add balance into financial_report
-            $activeChapters = Chapters::with('documentsEOY')->where('active_status', 1)->get();
-            foreach ($activeChapters as $chapter) {
-                FinancialReport::create([
-                    'chapter_id' => $chapter->id,  // Ensure chapter_id is provided
-                    'pre_balance' => $chapter->documentsEOY->pre_balance,
-                    'amount_reserved_from_previous_year' => $chapter->documentsEOY->pre_balance,
-                ]);
-            }
-
-            // Update chapters table: Set specified columns to NULL
-            DB::table('chapters')->update([
-                'boundary_issues' => null,
-                'boundary_issue_notes' => null,
-                'boundary_issue_resolved' => null,
-            ]);
-
-            // Update documents table: Set specified columns to NULL
-            DB::table('documents_eoy')->update([
-                'new_board_submitted' => null,
-                'new_board_active' => null,
-                'financial_report_received' => null,
-                'report_received' => null,
-                'financial_review_complete' => null,
-                'review_complete' => null,
-                'report_notes' => null,
-                'report_extension' => null,
-                'extension_notes' => null,
-                $yearColumnName => null,
-                'roster_path' => null,
-                'irs_path' => null,
-                'statement_1_path' => null,
-                'statement_2_path' => null,
-                'award_path' => null,
-            ]);
-
-            // Update admin table: Set specified columns to 1
-            DB::table('admin')
-                ->orderByDesc('id')
-                ->limit(1)
-                ->update([
-                    'reset_AFTER_testing' => '1',
-                    'updated_id' => $updatedId,
-                ]);
-
-            DB::commit(); // Commit transaction
-
-            return response()->json(['success' => 'Data sucessfully reset.']);
-        } catch (\Exception $e) {
-            DB::rollback(); // Rollback Transaction
-            Log::error($e); // Log the error
-
-            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
-        } finally {
-            // This ensures DB connections are released even if exceptions occur
-            DB::disconnect();
-        }
-    }
-
-    /**
-     * Udate User Database Tables
-     */
-    public function updateDataDatabase(Request $request): JsonResponse
-    {
-        DB::beginTransaction();
-        try {
-            $user = $this->userController->loadUserInformation($request);
-            $updatedId = $user['userId'];
-
-            // Get the current month and year for table renaming
-            $dateOptions = $this->positionConditionsService->getDateOptions();
-            $currentYear = $dateOptions['currentYear'];
-            $currentMonth = str_pad($dateOptions['currentMonth'], 2, '0', STR_PAD_LEFT);
-
-            // Copy and rename the `chapters` table
-            DB::statement("CREATE TABLE zzz_chapters_{$currentMonth}_{$currentYear} LIKE chapters");
-            DB::statement("INSERT INTO zzz_chapters_{$currentMonth}_{$currentYear} SELECT * FROM chapters");
-
-            // Copy and rename the `boards` table
-            DB::statement("CREATE TABLE zzz_boards_{$currentMonth}_{$currentYear} LIKE boards");
-            DB::statement("INSERT INTO zzz_boards_{$currentMonth}_{$currentYear} SELECT * FROM boards");
-
-            // Copy and rename the `coordinators` table
-            DB::statement("CREATE TABLE zzz_coordinators_{$currentMonth}_{$currentYear} LIKE coordinators");
-            DB::statement("INSERT INTO zzz_coordinators_{$currentMonth}_{$currentYear} SELECT * FROM coordinators");
-
-            // Copy and rename the `users` table
-            DB::statement("CREATE TABLE zzz_users_{$currentMonth}_{$currentYear} LIKE users");
-            DB::statement("INSERT INTO zzz_users_{$currentMonth}_{$currentYear} SELECT * FROM users");
-
-            // Update admin table: Set specified columns to 1
-            DB::table('admin')
-                ->orderByDesc('id')
-                ->limit(1)
-                ->update([
-                    'update_user_tables' => '1',
-                    'updated_id' => $updatedId,
-                ]);
-
-            DB::commit(); // Commit transaction
-
-            return response()->json(['success' => 'User data tables successfully updated, copied, and renamed.']);
-        } catch (\Exception $e) {
-            DB::rollback(); // Rollback Transaction
-            Log::error($e); // Log the error
-
-            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
-        } finally {
-            // This ensures DB connections are released even if exceptions occur
-            DB::disconnect();
-        }
-    }
-
-    /**
-     * View EOY Teating Items
+     * View EOY Teating Items  // Step 5
      */
     public function updateEOYTesting(Request $request): JsonResponse
     {
+        $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['userId'];
+
+        $EOYOptions = $this->positionConditionsService->getEOYOptions();
+        $fiscalYearEOY = $EOYOptions['fiscalYearEOY'];
+
         DB::beginTransaction();
         try {
-            $user = $this->userController->loadUserInformation($request);
-            $updatedId = $user['userId'];
-
-            // Update admin table: Set specified columns to 1
-            DB::table('admin')
-                ->orderByDesc('id')
-                ->limit(1)
-                ->update([
-                    'display_testing' => '1',
-                    'updated_id' => $updatedId,
-                ]);
+            $admin = Admin::where('fiscal_year_eoy', $fiscalYearEOY)->firstOrFail();
+            $admin->update([
+                'display_testing' => 1,
+                'updated_id'       => $updatedId,
+            ]);
 
             DB::commit(); // Commit transaction
 
@@ -1068,14 +891,264 @@ class TechReportController extends Controller implements HasMiddleware
             Log::error($e); // Log the error
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
-        } finally {
-            // This ensures DB connections are released even if exceptions occur
-            DB::disconnect();
         }
     }
 
     /**
-     * View EOY Live Items
+     * Udate EOY Database Tables AFTER Testing  // Step 6
+     */
+    public function updateEOYDatabaseAFTERTesting(Request $request): JsonResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['userId'];
+
+        $EOYOptions = $this->positionConditionsService->getEOYOptions();
+        $fiscalYearEOY = $EOYOptions['fiscalYearEOY'];
+        $yearColumnName = $EOYOptions['yearColumnName'];
+
+        DB::beginTransaction();
+        try {
+            $this->updateChapterPostBalancesLIVE();
+            $this->clearTablesLIVE();
+            $this->updateChapterPreBalancesLIVE();
+            $this->resetDocumentsEOYLIVE($yearColumnName);
+
+         $admin = Admin::where('fiscal_year_eoy', $fiscalYearEOY)->firstOrFail();
+            $admin->update([
+                'reset_AFTER_testing' => 1,
+                'updated_id'       => $updatedId,
+            ]);
+
+            DB::commit(); // Commit transaction
+
+            return response()->json(['success' => 'Data sucessfully reset.']);
+        } catch (\Exception $e) {
+            DB::rollback(); // Rollback Transaction
+            Log::error($e); // Log the error
+
+            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+        }
+    }
+
+    private function updateChapterPostBalancesLIVE(): void
+    {
+        // Fetch all chapters with their financial reports and update the balance BEFORE removing data from table
+        $chapters = Chapters::with('financialReportLastYear', 'documentsEOY')->get();
+        foreach ($chapters as $chapter) {
+            if ($chapter->financialReportLastYear && $chapter->documentsEOY) {
+                $documentsEOY = $chapter->documentsEOY;
+                $documentsEOY->pre_balance = $chapter->financialReportLastYear->post_balance;
+                $documentsEOY->save();
+            }
+        }
+    }
+
+    private function clearTablesLIVE(): void
+    {
+        BoardsOutgoing::query()->delete();
+        BoardsIncoming::query()->delete();
+        FinancialReport::query()->delete();
+    }
+
+    private function updateChapterPreBalancesLIVE(): void
+    {
+        // Fetch all active chapters and add balance into financial_report
+        $activeChapters = Chapters::with('documentsEOY')->where('active_status', 1)->get();
+        foreach ($activeChapters as $chapter) {
+            FinancialReport::create([
+                'chapter_id' => $chapter->id,  // Ensure chapter_id is provided
+                'pre_balance' => $chapter->documentsEOY->pre_balance,
+                'amount_reserved_from_previous_year' => $chapter->documentsEOY->pre_balance,
+            ]);
+        }
+    }
+
+    private function resetDocumentsEOYLIVE(string $yearColumnName): void
+    {
+        // Update chapters table: Set specified columns to NULL
+        DB::table('chapters')->update([
+            'boundary_issues' => null,
+            'boundary_issue_notes' => null,
+            'boundary_issue_resolved' => null,
+        ]);
+
+        // Update documents table: Set specified columns to NULL
+        DB::table('documents_eoy')->update([
+            'new_board_submitted' => null,
+            'new_board_active' => null,
+            'financial_report_received' => null,
+            'report_received' => null,
+            'financial_review_complete' => null,
+            'review_complete' => null,
+            'report_notes' => null,
+            'report_extension' => null,
+            'extension_notes' => null,
+            $yearColumnName => null,
+            'roster_path' => null,
+            'irs_path' => null,
+            'statement_1_path' => null,
+            'statement_2_path' => null,
+            'award_path' => null,
+        ]);
+    }
+
+    /**
+     * Udate User Database Tables  // Step 7
+     */
+    public function updateDataDatabase(Request $request): JsonResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['userId'];
+
+        // Get the current month and year for table renaming
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentYear = $dateOptions['currentYear'];
+        $currentMonth = str_pad($dateOptions['currentMonth'], 2, '0', STR_PAD_LEFT);
+
+        $EOYOptions = $this->positionConditionsService->getEOYOptions();
+        $fiscalYearEOY = $EOYOptions['fiscalYearEOY'];
+
+        $this->copyTablesFINAL($currentMonth, $currentYear);
+
+        DB::beginTransaction();
+        try {
+            $this->resetBoardList($currentYear);
+
+            $admin = Admin::where('fiscal_year_eoy', $fiscalYearEOY)->firstOrFail();
+            $admin->update([
+                'update_user_tables' => 1,
+                'updated_id'       => $updatedId,
+            ]);
+
+            DB::commit(); // Commit transaction
+
+            return response()->json(['success' => 'User data tables successfully updated, copied, and renamed.']);
+        } catch (\Exception $e) {
+            DB::rollback(); // Rollback Transaction
+            Log::error($e); // Log the error
+
+            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+        }
+    }
+
+    private function copyTablesFINAL(int $currentMonth, int $currentYear): void
+    {
+        // Copy and rename the `chapters` table
+        DB::statement("CREATE TABLE zzz_chapters_{$currentMonth}_{$currentYear} LIKE chapters");
+        DB::statement("INSERT INTO zzz_chapters_{$currentMonth}_{$currentYear} SELECT * FROM chapters");
+
+        // Copy and rename the `boards` table
+        DB::statement("CREATE TABLE zzz_boards_{$currentMonth}_{$currentYear} LIKE boards");
+        DB::statement("INSERT INTO zzz_boards_{$currentMonth}_{$currentYear} SELECT * FROM boards");
+
+        // Copy and rename the `coordinators` table
+        DB::statement("CREATE TABLE zzz_coordinators_{$currentMonth}_{$currentYear} LIKE coordinators");
+        DB::statement("INSERT INTO zzz_coordinators_{$currentMonth}_{$currentYear} SELECT * FROM coordinators");
+
+        // Copy and rename the `users` table
+        DB::statement("CREATE TABLE zzz_users_{$currentMonth}_{$currentYear} LIKE users");
+        DB::statement("INSERT INTO zzz_users_{$currentMonth}_{$currentYear} SELECT * FROM users");
+    }
+
+      private function resetBoardList(int $currentYear): void
+    {
+        // Archive forum category 2 threads to a new year-labeled category
+        $lastYear = $currentYear - 1;
+
+        // Fetch category 2 to copy its settings
+        $category2 = DB::table('forum_categories')->where('id', 2)->first();
+        // Get max _lft/_rgt for positioning the new category at the end
+        $maxRgt = DB::table('forum_categories')->max('_rgt');
+
+        $newCategoryId = DB::table('forum_categories')->insertGetId([
+            'title'                    => "{$lastYear}-{$currentYear} BoardList",
+            'description'              => $category2->description,
+            'accepts_threads'          => $category2->accepts_threads,
+            'newest_thread_id'         => null,
+            'latest_active_thread_id'  => null,
+            'thread_count'             => $category2->thread_count,
+            'post_count'               => $category2->post_count,
+            'is_private'               => $category2->is_private,
+            'thread_approval_enabled'  => $category2->thread_approval_enabled,
+            'post_approval_enabled'    => $category2->post_approval_enabled,
+            'created_at'               => now(),
+            'updated_at'               => now(),
+            '_lft'                     => $maxRgt + 1,
+            '_rgt'                     => $maxRgt + 2,
+            'parent_id'                => $category2->parent_id,
+            'color_light_mode'         => $category2->color_light_mode,
+            'color_dark_mode'          => $category2->color_dark_mode,
+        ]);
+
+        // Move all threads from category 2 to the new archived category
+        DB::table('forum_threads')
+            ->where('category_id', 2)
+            ->update(['category_id' => $newCategoryId]);
+
+        // Reset category 2 counts (threads moved out, ready for new year)
+        DB::table('forum_categories')
+            ->where('id', 2)
+            ->update([
+                'newest_thread_id'        => null,
+                'latest_active_thread_id' => null,
+                'thread_count'            => 0,
+                'post_count'              => 0,
+                'updated_at'              => now(),
+            ]);
+    }
+
+    /**
+     * Unsubscribe Users from ForumLists  // Step 8
+     */
+    public function updateUnsubscribeLists(Request $request): JsonResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['userId'];
+
+        $EOYOptions = $this->positionConditionsService->getEOYOptions();
+        $fiscalYear = $EOYOptions['fiscalYear'];
+
+        DB::beginTransaction();
+        try {
+            $boardListAll = $this->forumSubscriptionController->bulkRemoveBoardList();
+            $publicListBoard = $this->forumSubscriptionController->bulkRemoveBoardPublicAnnouncements();
+
+            // $categoryBoardList = ForumCategory::where('title', 'BoardList')
+            //     ->first();
+
+            // $categoryPublic = ForumCategory::where('title', 'Public Announcements')
+            //     ->first();
+
+            // // Delete all subscriptions for this category
+            // $unsubscribeBoardList = ForumCategorySubscription::where('category_id', $categoryBoardList->id)
+            //     ->delete();
+
+            // // Delete board members for this category
+            // $unsubscribePublic = ForumCategorySubscription::where('category_id', $categoryPublic->id)
+            //     ->whereHas('user', function ($query) {
+            //         $query->where('type_id', UserTypeEnum::BOARD);
+            //     })
+            //     ->delete();
+
+            $adminYear = AdminYear::where('year_fiscal', $fiscalYear)->firstOrFail();
+            $adminYear->update([
+                'unsubscribe_list' => 1,
+                'updated_id'       => $updatedId,
+            ]);
+
+            DB::commit(); // Commit transaction
+
+            return response()->json(['success' => 'Successfully unsubscribed to lists.']);
+        } catch (\Exception $e) {
+            DB::rollback(); // Rollback Transaction
+            Log::error($e); // Log the error
+
+            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+        }
+    }
+
+    /**
+     * View EOY Live Items  // Step 9
      */
     public function updateEOYLive(Request $request): JsonResponse
     {
@@ -1096,145 +1169,6 @@ class TechReportController extends Controller implements HasMiddleware
             DB::commit(); // Commit transaction
 
             return response()->json(['success' => 'Live items successfully set to view.']);
-        } catch (\Exception $e) {
-            DB::rollback(); // Rollback Transaction
-            Log::error($e); // Log the error
-
-            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
-        } finally {
-            // This ensures DB connections are released even if exceptions occur
-            DB::disconnect();
-        }
-    }
-
-    public function updateSubscribeLists(Request $request): JsonResponse
-    {
-        DB::beginTransaction();
-        try {
-            $user = $this->userController->loadUserInformation($request);
-            $updatedId = $user['userId'];
-
-            // Get BoardList category
-            // $categoryBoardList = ForumCategory::where('title', 'BoardList')
-            //     ->first();
-            // $categoryIdBoardList = $categoryBoardList->id;
-
-            // Get Public Announcement category
-            $categoryPublic = ForumCategory::where('title', 'Public Announcements')
-                ->first();
-            $categoryIdPublic = $categoryPublic->id;
-
-            // Get active coordinators
-            $coordinatorUserIds = Coordinators::where('active_status', '1')
-                ->where('on_leave', '0')
-                ->get()
-                ->pluck('user_id')
-                ->unique();
-            $activeCoordinators = User::whereIn('id', $coordinatorUserIds)->get();
-
-            // Get board members from active chapters using with()
-            $boardUserIds = Chapters::with('boards')
-                ->where('active_status', 1)
-                ->get()
-                ->pluck('boards')
-                ->flatten()
-                ->pluck('user_id')
-                ->unique();
-            $activeBoards = User::whereIn('id', $boardUserIds)->get();
-
-            // Combine the collections
-            $allUsers = $activeCoordinators->concat($activeBoards);
-
-            // Remove duplicates if a user is both coordinator and board member
-            $uniqueUsers = $allUsers->unique('id');
-
-            // foreach ($uniqueUsers as $user) {
-            //     // Check if subscription already exists
-            //     $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
-            //         ->where('category_id', $categoryIdBoardList)
-            //         ->first();
-
-            //     if (! $existingSubscription) {
-            //         ForumCategorySubscription::create([
-            //             'user_id' => $user->id,
-            //             'category_id' => $categoryIdBoardList,
-            //         ]);
-            //     }
-            // }
-
-            foreach ($activeBoards as $user) {
-                // Check if subscription already exists
-                $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
-                    ->where('category_id', $categoryIdPublic)
-                    ->first();
-
-                if (! $existingSubscription) {
-                    ForumCategorySubscription::create([
-                        'user_id' => $user->id,
-                        'category_id' => $categoryIdPublic,
-                    ]);
-                }
-            }
-
-            // Update admin table: Set specified columns to 1
-            DB::table('admin')
-                ->orderByDesc('id')
-                ->limit(1)
-                ->update([
-                    'subscribe_list' => '1',
-                    'updated_id' => $updatedId,
-                ]);
-
-            DB::commit(); // Commit transaction
-
-            return response()->json(['success' => 'Successfully subscribed to lists.']);
-        } catch (\Exception $e) {
-            DB::rollback(); // Rollback Transaction
-            Log::error($e); // Log the error
-
-            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
-        } finally {
-            // This ensures DB connections are released even if exceptions occur
-            DB::disconnect();
-        }
-    }
-
-    public function updateUnsubscribeLists(Request $request): JsonResponse
-    {
-        DB::beginTransaction();
-        try {
-            $user = $this->userController->loadUserInformation($request);
-            $updatedId = $user['userId'];
-
-            // $categoryBoardList = ForumCategory::where('title', 'BoardList')
-            //     ->first();
-
-            $categoryPublic = ForumCategory::where('title', 'Public Announcements')
-                ->first();
-
-            // Delete all subscriptions for this category
-            // $unsubscribeBoardList = ForumCategorySubscription::where('category_id', $categoryBoardList->id)
-            //     ->delete();
-
-            // Delete board members for this category
-            $unsubscribePublic = ForumCategorySubscription::where('category_id', $categoryPublic->id)
-                ->whereHas('user', function ($query) {
-                    $query->where('type_id', UserTypeEnum::BOARD);
-                })
-                ->delete();
-
-            // Update admin table: Set specified columns to 1
-            DB::table('admin')
-                ->orderByDesc('id')
-                ->limit(1)
-                ->update([
-                    'unsubscribe_list' => '1',
-                    'updated_id' => $updatedId,
-                ]);
-
-            DB::commit(); // Commit transaction
-
-            return response()->json(['success' => 'Successfully unsubscribed to lists.']);
         } catch (\Exception $e) {
             DB::rollback(); // Rollback Transaction
             Log::error($e); // Log the error

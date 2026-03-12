@@ -1916,7 +1916,7 @@ class ChapterController extends Controller implements HasMiddleware
             $chapter->sanitized_name = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|', '.', ' '], '-', $chapterName);
             $chapter->territory = $request->input('ch-territory');
             $chapter->state_id = $request->input('ch_state');
-            $chapter->region_id = $request->input('ch_region');
+            // $chapter->region_id = $request->input('ch_region');
             $chapter->inquiries_contact = $request->input('ch_inqemailcontact');
             $chapter->inquiries_note = $request->input('ch_inqnote');
             $chapter->email = $request->input('ch_email');
