@@ -1,20 +1,20 @@
 <script>
-    function checkDuplicateEmail(email, id) {
-        $.ajax({
-            url: '{{ url("/checkemail/") }}' + '/' + email,
-            type: "GET",
-            success: function(result) {
-                if (result.exists) {
-                    alert('This Email already used in the system. Please try with new one.');
-                    $("#" + id).val('');
-                    $("#" + id).focus();
-                }
-            },
-            error: function(jqXHR, exception) {
-                console.error("Error checking email: ", exception);
-            }
-        });
-    }
+    // function checkDuplicateEmail(email, id) {
+    //     $.ajax({
+    //         url: '{{ url("/checkemail/") }}' + '/' + email,
+    //         type: "GET",
+    //         success: function(result) {
+    //             if (result.exists) {
+    //                 alert('This Email already used in the system. Please try with new one.');
+    //                 $("#" + id).val('');
+    //                 $("#" + id).focus();
+    //             }
+    //         },
+    //         error: function(jqXHR, exception) {
+    //             console.error("Error checking email: ", exception);
+    //         }
+    //     });
+    // }
 
     function validateEmailsBeforeSubmit() {
     // Get the values from the input fields
