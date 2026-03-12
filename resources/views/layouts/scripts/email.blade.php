@@ -24,13 +24,14 @@
         '#ch_mvp_email',
         '#ch_trs_email',
         '#ch_sec_email',
-        '#ch_bor_email'
+        '#ch_bor_email',
         '#cord_email',
         '#email'
     ];
 
     const emails = emailSelectors
         .filter(selector => $(selector).length > 0)
+        .filter(selector => $(selector).is(':visible'))  // ← skip hidden/vacant fields
         .map(selector => ({ selector, value: $(selector).val().trim() }))
         .filter(({ value }) => value !== '');
 
