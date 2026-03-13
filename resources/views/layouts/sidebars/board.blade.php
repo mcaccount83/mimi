@@ -240,7 +240,12 @@
     <li class="nav-item">
         <a href="{{ route('board-new.profile', ['id' => $chDetails->id]) }}" class="nav-link {{ Request::is('board-new/profile/*') ? 'active' : '' }}">
         <i class="nav-icon bi bi-person-circle"></i>
-        <p>Update Profile</p>
+        <p>Update Profile<br>
+            @if ($userTypeId == \App\Enums\UserTypeEnum::COORD && isset($bdTypeId) && $bdTypeId !== null)
+            (President)</p>
+            @else
+            ({{$loggedIn}})</p>
+            @endif
         </a>
     </li>
 

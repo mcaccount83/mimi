@@ -49,6 +49,7 @@ class ViewServiceProvider extends ServiceProvider
 
                 if ($userTypeId == UserTypeEnum::BOARD && $user->board) {
                     $bdDetails = $user->board;
+                    $loggedIn = $bdDetails['first_name'].' '.$bdDetails['last_name'];
                     $chId = $bdDetails['chapter_id'];
                     $chDetails = Chapters::find($chId);
                 }

@@ -370,7 +370,8 @@
     <li class="nav-item">
         <a href="{{ route('coordinators.profile') }}" class="nav-link {{ Request::is('coordprofile') ? 'active' : '' }}">
         <i class="nav-icon bi bi-person-circle"></i>
-        <p>Update Profile</p>
+        <p>Update Profile<br>
+        ({{$loggedIn}})</p>
         </a>
     </li>
 
