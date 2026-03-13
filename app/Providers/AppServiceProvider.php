@@ -37,14 +37,6 @@ class AppServiceProvider extends ServiceProvider
         // Register mail markdown views namespace
         $this->loadViewsFrom(resource_path('views/vendor/mail/html'), 'mail');
 
-        // Add global BCC to all emails
-        Event::listen(MessageSending::class, function ($event) {
-            $bccAddress = config('mail.bcc.address');
-            if ($bccAddress) {
-                $event->message->bcc($bccAddress);
-            }
-        });
-
         $this->bootRoute();
     }
 

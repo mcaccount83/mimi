@@ -17,6 +17,11 @@ class EmailLogger
             return;
         }
 
+        if ($message->getHeaders()->has('X-Already-Logged')) {
+            return;
+        }
+        $message->getHeaders()->addTextHeader('X-Already-Logged', 'true');
+
         $body = $message->getHtmlBody() ?: $message->getTextBody() ?: '';
 
         $email = SentEmail::create([

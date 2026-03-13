@@ -11,7 +11,18 @@ class SentEmailsServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
-        Event::listen(MessageSending::class, EmailLogger::class);
+
+    Event::forget(MessageSending::class);
+
+    Event::listen(MessageSending::class, [EmailLogger::class, 'handle']);
+
+    Event::listen(MessageSending::class, function ($event) {
+        $bccAddress = config('mail.bcc.address');
+        if ($bccAddress) {
+            $event->message->bcc($bccAddress);
+        }
+    });
+
 
         $viewsPath = resource_path('views/vendor/sentemails');
         if (!is_dir($viewsPath)) {
