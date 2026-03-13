@@ -11,11 +11,13 @@
             </span>
         @endif
 
-        @php
-            $authorNameWithDetails = $post->author ? $post->author->authorNameWithPosition() : 'Unknown Author';
-        @endphp
+       @php
+    $authorNameWithDetails = $post->author
+        ? $post->author->authorNameForDisplay($post->thread->category->id)
+        : 'Unknown Author';
+@endphp
 
-        {!! $authorNameWithDetails !!}
+{!! $authorNameWithDetails !!}
         <br>
         {{-- {{ $post->authorName }} --}}
 

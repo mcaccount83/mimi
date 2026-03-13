@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\AdminStatusEnum;
+use App\Enums\UserTypeEnum;
+use App\Enums\ForumCategoryEnum;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -76,6 +79,17 @@ class User extends Authenticatable
         return $this->first_name.' '.$this->last_name;
     }
 
+    public function authorFullNameForDisplay(int $categoryId): string
+    {
+        $anonymousCategories = [ForumCategoryEnum::PUBLICLIST, ForumCategoryEnum::BOARDLIST];
+
+        if (in_array($categoryId, $anonymousCategories) && $this->isListAdmin()) {
+            return 'ListAdmin';
+        }
+
+        return $this->authorFullName();
+    }
+
     public function authorNameWithPosition()
     {
         if ($this->type_id == '1') {
@@ -99,6 +113,23 @@ class User extends Authenticatable
         }
 
         return $this->first_name.' '.$this->last_name;
+    }
+
+    public function authorNameForDisplay(int $categoryId): string
+    {
+        $anonymousCategories = [ForumCategoryEnum::PUBLICLIST, ForumCategoryEnum::BOARDLIST];
+
+        if (in_array($categoryId, $anonymousCategories) && $this->isListAdmin()) {
+            return 'ListAdmin <br> International MOMS Club';
+        }
+
+        return $this->authorNameWithPosition();
+    }
+
+    public function isListAdmin(): bool
+    {
+        return $this->type_id == UserTypeEnum::COORD
+            && ($this->is_admin == AdminStatusEnum::ADMIN || $this->is_admin == AdminStatusEnum::MODERATOR);
     }
 
     public function categorySubscriptions(): HasMany

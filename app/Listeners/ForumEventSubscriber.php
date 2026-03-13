@@ -31,7 +31,7 @@ class ForumEventSubscriber
             $thread = $post->thread;
             $category = $thread->category;
             $author = $post->author;
-            $authorNameWithPosition = $author ? $author->authorNameWithPosition() : 'Unknown Author';
+$authorNameWithPosition = $author ? $author->authorNameForDisplay($category->id) : 'Unknown Author';
             $usersToNotify = $this->getUsersToNotify($thread);
 
             $this->sendForumBroadcast(
@@ -53,7 +53,7 @@ class ForumEventSubscriber
             $post = $thread->firstPost;
             $category = $thread->category;
             $author = $thread->author;
-            $authorNameWithPosition = $author ? $author->authorNameWithPosition() : 'Unknown Author';
+$authorNameWithPosition = $author ? $author->authorNameForDisplay($category->id) : 'Unknown Author';
             $usersToNotify = $this->getUsersToNotify($thread);
 
             $this->sendForumBroadcast(
@@ -75,7 +75,7 @@ class ForumEventSubscriber
         $post = $thread->firstPost;
         $category = $thread->category;
         $author = $thread->author;
-        $authorNameWithPosition = $author ? $author->authorNameWithPosition() : 'Unknown Author';
+$authorNameWithPosition = $author ? $author->authorNameForDisplay($category->id) : 'Unknown Author';
         $usersToNotify = $this->getUsersToNotify($thread);
 
         $this->sendForumBroadcast(
@@ -98,7 +98,7 @@ class ForumEventSubscriber
         $thread = $post->thread;
         $category = $thread->category;
         $author = $post->author;
-        $authorNameWithPosition = $author ? $author->authorNameWithPosition() : 'Unknown Author';
+$authorNameWithPosition = $author ? $author->authorNameForDisplay($category->id) : 'Unknown Author';
         $usersToNotify = $this->getUsersToNotify($thread);
 
         $this->sendForumBroadcast(
@@ -121,7 +121,7 @@ class ForumEventSubscriber
         $post = $thread->firstPost;
         $category = $thread->category;
         $author = $thread->author;
-        $authorNameWithPosition = $author ? $author->authorNameWithPosition() : 'Unknown Author';
+$authorNameWithPosition = $author ? $author->authorNameForDisplay($category->id) : 'Unknown Author';
         $usersToNotify = $this->getUsersToNotify($thread);
 
         $this->sendForumBroadcast(

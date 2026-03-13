@@ -6,10 +6,12 @@
             </span>
             <br>
             @php
-                $authorFullName = $thread->author ? $thread->author->authorNameWithPosition() : 'Unknown Author';
-            @endphp
+    $authorFullName = $thread->author
+        ? $thread->author->authorNameForDisplay($thread->category->id)
+        : 'Unknown Author';
+@endphp
 
-            {!! $authorFullName !!}
+{!! $authorFullName !!}
             <br>
             @include ('forum::partials.timestamp', ['carbon' => $thread->created_at])
 
@@ -44,11 +46,15 @@
                 <a href="{{ Forum::route('thread.show', $thread->lastPost) }}">{{ trans('forum::posts.view') }} &raquo;</a>
                 <br>
                  @php
-                    $authorFullName = $thread->lastPost->author ? $thread->lastPost->author->authorFullName() : 'Unknown Author';
-                    $authorNameWithPosition = $thread->lastPost->author ? $thread->lastPost->author->authorNameWithPosition() : 'Unknown Author';
-                @endphp
+    $authorFullName = $thread->lastPost->author
+        ? $thread->lastPost->author->authorFullNameForDisplay($thread->category->id)
+        : 'Unknown Author';
+    $authorNameWithPosition = $thread->lastPost->author
+        ? $thread->lastPost->author->authorNameForDisplay($thread->category->id)
+        : 'Unknown Author';
+@endphp
 
-                {!! $authorNameWithPosition !!}
+{!! $authorNameWithPosition !!}
                 <br>
                 {{-- {{ $thread->lastPost->authorName }} --}}
                 <span class="text-muted">@include ('forum::partials.timestamp', ['carbon' => $thread->lastPost->created_at])</span>

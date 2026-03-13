@@ -38,7 +38,7 @@ class CategoryPolicy extends ForumCategoryPolicy
                 || $this->forumConditions->canManageLists($user); // admins/mods still can
         }
 
-        if ($category->title == 'Public Announcements') {
+        if ($category->id == ForumCategoryEnum::PUBLICLIST) {
             return $this->forumConditions->canManageLists($user);
         }
 
