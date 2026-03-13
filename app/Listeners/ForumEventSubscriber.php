@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Enums\UserStatusEnum;
+use App\Mail\ForumBroadcastSummary;
 use App\Mail\NewForumPost;
 use App\Mail\NewForumThread;
 use App\Models\User;
@@ -13,9 +14,17 @@ use TeamTeaTime\Forum\Events\UserCreatedThread;
 use TeamTeaTime\Forum\Events\UserApprovedThread;
 use TeamTeaTime\Forum\Events\UserBulkApprovedPosts;
 use TeamTeaTime\Forum\Events\UserBulkApprovedThreads;
+use App\Services\PositionConditionsService;
 
 class ForumEventSubscriber
 {
+    protected $positionConditionsService;
+
+    public function __construct(PositionConditionsService $positionConditionsService)
+    {
+        $this->positionConditionsService = $positionConditionsService;
+    }
+
     public function handleApprovedPost(UserBulkApprovedPosts $event)
     {
         foreach ($event->collection as $post) {
@@ -26,11 +35,15 @@ class ForumEventSubscriber
             $usersToNotify = $this->getUsersToNotify($thread);
 
             $this->sendForumBroadcast(
-                $usersToNotify,
-                fn($user) => new NewForumPost($post, $thread, $category, $authorNameWithPosition),
-                "{$category->title} | RE:{$thread->title}",
-                $usersToNotify->count()
-            );
+    $usersToNotify,
+    fn($user) => new NewForumPost($post, $thread, $category, $authorNameWithPosition),
+    "{$category->title} | RE:{$thread->title}",
+    $usersToNotify->count(),
+    $post,
+    $thread,
+    $category,
+    $authorNameWithPosition
+);
         }
     }
 
@@ -44,11 +57,15 @@ class ForumEventSubscriber
             $usersToNotify = $this->getUsersToNotify($thread);
 
             $this->sendForumBroadcast(
-                $usersToNotify,
-                fn($user) => new NewForumThread($post, $thread, $category, $authorNameWithPosition),
-                "{$category->title} | {$thread->title}",
-                $usersToNotify->count()
-            );
+    $usersToNotify,
+    fn($user) => new NewForumPost($post, $thread, $category, $authorNameWithPosition),
+    "{$category->title} | RE:{$thread->title}",
+    $usersToNotify->count(),
+    $post,
+    $thread,
+    $category,
+    $authorNameWithPosition
+);
         }
     }
 
@@ -62,11 +79,15 @@ class ForumEventSubscriber
         $usersToNotify = $this->getUsersToNotify($thread);
 
         $this->sendForumBroadcast(
-            $usersToNotify,
-            fn($user) => new NewForumThread($post, $thread, $category, $authorNameWithPosition),
-            "{$category->title} | {$thread->title}",
-            $usersToNotify->count()
-        );
+    $usersToNotify,
+    fn($user) => new NewForumPost($post, $thread, $category, $authorNameWithPosition),
+    "{$category->title} | RE:{$thread->title}",
+    $usersToNotify->count(),
+    $post,
+    $thread,
+    $category,
+    $authorNameWithPosition
+);
     }
 
     public function handleNewPost(UserCreatedPost $event)
@@ -81,11 +102,15 @@ class ForumEventSubscriber
         $usersToNotify = $this->getUsersToNotify($thread);
 
         $this->sendForumBroadcast(
-            $usersToNotify,
-            fn($user) => new NewForumPost($post, $thread, $category, $authorNameWithPosition),
-            "{$category->title} | RE:{$thread->title}",
-            $usersToNotify->count()
-        );
+    $usersToNotify,
+    fn($user) => new NewForumPost($post, $thread, $category, $authorNameWithPosition),
+    "{$category->title} | RE:{$thread->title}",
+    $usersToNotify->count(),
+    $post,
+    $thread,
+    $category,
+    $authorNameWithPosition
+);
     }
 
     public function handleNewThread(UserCreatedThread $event)
@@ -100,17 +125,22 @@ class ForumEventSubscriber
         $usersToNotify = $this->getUsersToNotify($thread);
 
         $this->sendForumBroadcast(
-            $usersToNotify,
-            fn($user) => new NewForumThread($post, $thread, $category, $authorNameWithPosition),
-            "{$category->title} | {$thread->title}",
-            $usersToNotify->count()
-        );
+    $usersToNotify,
+    fn($user) => new NewForumPost($post, $thread, $category, $authorNameWithPosition),
+    "{$category->title} | RE:{$thread->title}",
+    $usersToNotify->count(),
+    $post,
+    $thread,
+    $category,
+    $authorNameWithPosition
+);
     }
 
     /**
      * Queue forum broadcast emails and write a single summary log entry.
      */
-   private function sendForumBroadcast($usersToNotify, callable $mailableFactory, string $subject, int $recipientCount): void
+    private function sendForumBroadcast($usersToNotify, callable $mailableFactory, string $subject, int $recipientCount,
+        $post, $thread, $category, $authorNameWithPosition): void
     {
         $delay = 0;
 
@@ -123,15 +153,25 @@ class ForumEventSubscriber
             }
         }
 
-        SentEmail::create([
-            'date'    => date('Y-m-d H:i:s'),
-            'from'    => config('mail.from.address'),
-            'to'      => "{$recipientCount} forum subscribers",
-            'cc'      => null,
-            'bcc'     => null,
-            'subject' => "[Forum Broadcast] {$subject}",
-            'body'    => "Notification sent for {$recipientCount} subscribers.",
-        ]);
+        $adminEmails = app(PositionConditionsService::class)->getAdminEmail();
+        $listAdmin = $adminEmails['list_admin'];
+
+        if ($listAdmin) {
+            Mail::to($listAdmin)->queue(new ForumBroadcastSummary(
+                $subject, $recipientCount, $post, $thread, $category, $authorNameWithPosition
+            ));
+
+        } else {
+            SentEmail::create([
+                'date'    => date('Y-m-d H:i:s'),
+                'from'    => config('mail.from.address'),
+                'to'      => "{$recipientCount} forum subscribers",
+                'cc'      => $listAdmin ?: null,
+                'bcc'     => null,
+                'subject' => "[Forum Broadcast] {$subject}",
+                'body'    => "Notification queued for {$recipientCount} subscribers.",
+            ]);
+        }
     }
 
     /**

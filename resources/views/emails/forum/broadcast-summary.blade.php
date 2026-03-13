@@ -1,5 +1,10 @@
 @component('mail::message')
-# {{ $category->title }} New Topic Created
+# {{ $category->title }} Forum Broadcast Sent
+
+A notification was sent to **{{ $recipientCount }} subscribers** with the following post.
+{{-- **{{ $broadcastSubject  }}** --}}
+
+--------------------------------------------------------
 
 ## {{ $thread->title }}
 
