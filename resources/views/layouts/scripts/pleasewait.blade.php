@@ -25,6 +25,9 @@
             if (link.href.startsWith('#')) return;
             if (link.href.startsWith('javascript')) return;
             if (link.dataset.noWait !== undefined) return; // add data-no-wait to skip
+            if (link.dataset.bsToggle === 'tab') return;      // add this
+            if (link.dataset.bsToggle === 'pill') return;
+            if (link.dataset.bsToggle === 'collapse') return;    // accordions
 
             overlayTimer = setTimeout(showOverlay, THRESHOLD_MS);
         });
