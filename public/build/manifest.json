@@ -43,24 +43,8 @@
     "file": "assets/bootstrap-icons-mSm7cUeB.woff2",
     "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2"
   },
-  "node_modules/summernote/dist/font/summernote.eot": {
-    "file": "assets/summernote-jt9apK1s.eot",
-    "src": "node_modules/summernote/dist/font/summernote.eot"
-  },
-  "node_modules/summernote/dist/font/summernote.ttf": {
-    "file": "assets/summernote-BDPkqvsB.ttf",
-    "src": "node_modules/summernote/dist/font/summernote.ttf"
-  },
-  "node_modules/summernote/dist/font/summernote.woff": {
-    "file": "assets/summernote-MGhHcnpK.woff",
-    "src": "node_modules/summernote/dist/font/summernote.woff"
-  },
-  "node_modules/summernote/dist/font/summernote.woff2": {
-    "file": "assets/summernote-tk6LuLER.woff2",
-    "src": "node_modules/summernote/dist/font/summernote.woff2"
-  },
   "resources/css/app.css": {
-    "file": "assets/app-CSSVVPyd.css",
+    "file": "assets/app-BKsBhaJb.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
@@ -82,7 +66,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-D1YHfYpj.js",
+    "file": "assets/app-f--X7x18.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -90,7 +74,7 @@
       "__commonjsHelpers-D6-XlEtG.js"
     ],
     "css": [
-      "assets/app-C0WruDv_.css"
+      "assets/app-CQ8OhWv5.css"
     ],
     "assets": [
       "assets/fa-brands-400-D_cYUPeE.woff2",
@@ -102,11 +86,7 @@
       "assets/fa-v4compatibility-C9RhG_FT.woff2",
       "assets/fa-v4compatibility-CCth-dXg.ttf",
       "assets/bootstrap-icons-mSm7cUeB.woff2",
-      "assets/bootstrap-icons-BeopsB42.woff",
-      "assets/summernote-jt9apK1s.eot",
-      "assets/summernote-tk6LuLER.woff2",
-      "assets/summernote-MGhHcnpK.woff",
-      "assets/summernote-BDPkqvsB.ttf"
+      "assets/bootstrap-icons-BeopsB42.woff"
     ]
   },
   "resources/js/flash.js": {

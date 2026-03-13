@@ -33,148 +33,163 @@
     });
 
     function showChapterEmailModal(chapterName, chapterId, userName, userPosition, userConfName, userConfDesc, predefinedSubject = '', predefinedMessage = '') {
-        Swal.fire({
-            title: 'Chapter Email Message',
-            html: `
-                <p>This will send your message to the full board and full coordinator list for <b>${chapterName}</b>.<br>
-                <small>To send a message through your email client go to: Chapter Details->Documents->Blank Email to Board.</small></p>
-                <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
-                    <input type="text" id="email_subject" name="email_subject" class="swal2-input" placeholder="Enter Subject" required style="width: 100%; margin: 0 !important;" value="${predefinedSubject}">
-                </div>
-                <div style="width: 100%; margin-bottom: 10px; text-align: left;">
+
+    let messageEditor = null;
+
+    Swal.fire({
+        title: 'Chapter Email Message',
+        html: `
+            <p>This will send your message to the full board and full coordinator list for <b>${chapterName}</b>.<br>
+            <small>To send a message through your email client go to: Chapter Details->Documents->Blank Email to Board.</small></p>
+            <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
+                <input type="text" id="email_subject" name="email_subject" class="swal2-input" placeholder="Enter Subject" required style="width: 100%; margin: 0 !important;" value="${predefinedSubject}">
+            </div>
+            <div style="width: 100%; margin-bottom: 10px; text-align: left;">
                 <p><br><b>MOMS Club of ${chapterName}:</b></p>
-                </div>
-                <div style="width: 100%; margin-bottom: 10px;">
-                    <textarea id="email_message" name="email_message" class="rich-editor" ${predefinedMessage ? '' : 'placeholder="Email Message"'} required style="width: 100%; height: 150px; margin: 0 !important; box-sizing: border-box;">${predefinedMessage}</textarea>
-                </div>
-                <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
-                <div style="width: 100%; margin-bottom: 10px; text-align: left;">
+            </div>
+            <div style="width: 100%; margin-bottom: 10px;">
+                <div id="email_message_editor" style="height: 150px;"></div>
+            </div>
+            <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
+            <div style="width: 100%; margin-bottom: 10px; text-align: left;">
                 <p><b>MCL,</b><br>
-                    ${userName}<br>
-                    ${userPosition}<br>
-                    ${userConfName}, ${userConfDesc}<br>
-                    International MOMS Club</p>
-                </div>
-            `,
-            showCancelButton: true,
-            confirmButtonText: 'OK',
-            cancelButtonText: 'Close',
-            customClass: {
-                confirmButton: 'btn btn-sm btn-success',
-                cancelButton: 'btn btn-sm btn-danger',
-                popup: 'swal-wide-popup'
-            },
-            didOpen: () => {
-                $('#email_message').summernote({
-                    height: 150,
+                ${userName}<br>
+                ${userPosition}<br>
+                ${userConfName}, ${userConfDesc}<br>
+                International MOMS Club</p>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger',
+            popup: 'swal-wide-popup'
+        },
+        didOpen: () => {
+
+            if (!document.getElementById('swal-wide-popup-style')) {
+                const style = document.createElement('style');
+                style.id = 'swal-wide-popup-style';
+                style.innerHTML = `
+                    .swal-wide-popup {
+                        width: 80% !important;
+                        max-width: 800px !important;
+                    }
+                    .ql-toolbar {
+                        background: #f8f9fa;
+                        border-radius: 4px 4px 0 0;
+                    }
+                    .ql-container {
+                        border-radius: 0 0 4px 4px;
+                        font-size: 14px;
+                    }
+                    .ql-editor {
+                        text-align: left;
+                        min-height: 120px;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            messageEditor = new Quill('#email_message_editor', {
+                theme: 'snow',
+                placeholder: 'Email Message',
+                modules: {
                     toolbar: [
-                        ['style', ['bold', 'italic', 'underline', 'clear']],
-                        ['font', ['strikethrough']],
-                        ['para', ['ul', 'ol']],
-                        ['insert', ['link']]
-                    ],
-                    callbacks: {
-                        onChange: function(contents) {
-                            $(this).val(contents);
-                        }
-                    }
-                });
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ list: 'ordered' }, { list: 'bullet' }],
+                        ['link'],
+                        ['clean']
+                    ]
+                }
+            });
 
-                if (!document.getElementById('swal-wide-popup-style')) {
-                    const style = document.createElement('style');
-                    style.id = 'swal-wide-popup-style';
-                    style.innerHTML = `
-                        .swal-wide-popup {
-                            width: 80% !important;
-                            max-width: 800px !important;
-                        }
-                        .note-editor {
-                            margin-bottom: 10px !important;
-                            width: 100% !important;
-                        }
-                        .note-editable {
-                            text-align: left !important;
-                        }
-                        .note-editing-area {
-                            width: 100% !important;
-                        }
-                    `;
-                    document.head.appendChild(style);
-                }
-            },
-            preConfirm: () => {
-                const subject = Swal.getPopup().querySelector('#email_subject').value;
-                // Get the HTML content from Summernote
-                const message = $('#email_message').summernote('code');
-                const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
-                if (!subject) {
-                    Swal.showValidationMessage('Please enter subject.');
-                    return false;
-                }
-                if (!message) {
-                    Swal.showValidationMessage('Please enter message.');
-                    return false;
-                }
-                return {
-                    email_subject: subject,
-                    email_message: message,
-                    chapter_id: chapterId,
-                };
+            if (predefinedMessage) {
+                messageEditor.clipboard.dangerouslyPasteHTML(predefinedMessage);
             }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const data = result.value;
+        },
+        willClose: () => {
+            if (messageEditor) {
+                messageEditor = null;
+            }
+        },
+        preConfirm: () => {
+            const subject = Swal.getPopup().querySelector('#email_subject').value;
+            const message = messageEditor.root.innerHTML;
+            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
 
-                Swal.fire({
-                    title: 'Processing...',
-                    text: 'Please wait while we process your request.',
-                    allowOutsideClick: false,
-                    customClass: {
-                        confirmButton: 'btn btn-sm btn-success',
-                        cancelButton: 'btn btn-sm btn-danger'
-                    },
-                    didOpen: () => {
-                        Swal.showLoading();
-                        $.ajax({
-                            url: '{{ route('chapters.sendchapter') }}',
-                            type: 'POST',
-                            data: {
-                                subject: data.email_subject,
-                                message: data.email_message,
-                                chapterId: data.chapter_id,
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: response.message,
-                                    icon: 'success',
-                                    showConfirmButton: false,  // Automatically close without "OK" button
-                                    timer: 1500,
-                                    customClass: {
-                                        confirmButton: 'btn btn-sm btn-success'
-                                    }
-                                }).then(() => {
-                                    location.reload(); // Reload the page to reflect changes
-                                });
-                            },
-                            error: function(jqXHR, exception) {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'Something went wrong, Please try again.',
-                                    icon: 'error',
-                                    confirmButtonText: 'OK',
-                                    customClass: {
-                                        confirmButton: 'btn btn-sm btn-success'
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
+            const isEmpty = (html) => html === '<p><br></p>' || html.trim() === '';
+
+            if (!subject) {
+                Swal.showValidationMessage('Please enter subject.');
+                return false;
             }
-        });
-    }
+            if (isEmpty(message)) {
+                Swal.showValidationMessage('Please enter message.');
+                return false;
+            }
+            return {
+                email_subject: subject,
+                email_message: message,
+                chapter_id: chapterId,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn btn-sm btn-success',
+                    cancelButton: 'btn btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+                    $.ajax({
+                        url: '{{ route('chapters.sendchapter') }}',
+                        type: 'POST',
+                        data: {
+                            subject: data.email_subject,
+                            message: data.email_message,
+                            chapterId: data.chapter_id,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                location.reload();
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
 
     function showChapterSetupModalBlank() {
     Swal.fire({
@@ -298,21 +313,25 @@
 }
 
     function showChapterSetupEmailModal(chapterId, userName, userPosition, userConfName, userConfDesc, predefinedBoundaries = '', predefinedName = '') {
+
+    let boundaryEditor = null;
+    let nameEditor = null;
+
     Swal.fire({
         title: 'Chapter Startup Message',
         html: `
             <p>This will send the initial chapter startup email to potential founder to facilitate the discussion on boundaries and name. Please enter additional boundary and name details to include in the email and press OK to send.</p>
             <div style="width: 100%; margin-bottom: 10px;">
                 <p><br><b>Boundary Details/Options</b></p>
-                <textarea id="boundary_details" name="boundary_details" class="rich-editor" ${predefinedBoundaries ? '' : 'placeholder="Boundary Details/Options"'} required style="width: 100%; height: 150px; margin: 0 !important; box-sizing: border-box;">${predefinedBoundaries}</textarea>
+                <div id="boundary_details_editor" style="height: 150px;"></div>
             </div>
             <div style="width: 100%; margin-bottom: 10px;">
                 <p><br><b>Name Details/Options</b></p>
-                <textarea id="name_details" name="name_details" class="rich-editor" ${predefinedName ? '' : 'placeholder="Name Details/Options"'} required style="width: 100%; height: 150px; margin: 0 !important; box-sizing: border-box;">${predefinedName}</textarea>
+                <div id="name_details_editor" style="height: 150px;"></div>
             </div>
             <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
             <div style="width: 100%; margin-bottom: 10px; text-align: left;">
-            <p><b>MCL,</b><br>
+                <p><b>MCL,</b><br>
                 ${userName}<br>
                 ${userPosition}<br>
                 ${userConfName}, ${userConfDesc}<br>
@@ -328,35 +347,6 @@
             popup: 'swal-wide-popup'
         },
         didOpen: () => {
-            $('#boundary_details').summernote({
-                height: 150,
-                toolbar: [
-                    ['style', ['bold', 'italic', 'underline', 'clear']],
-                    ['font', ['strikethrough']],
-                    ['para', ['ul', 'ol']],
-                    ['insert', ['link']]
-                ],
-                callbacks: {
-                    onChange: function(contents) {
-                        $(this).val(contents);
-                    }
-                }
-            });
-
-            $('#name_details').summernote({
-                height: 150,
-                toolbar: [
-                    ['style', ['bold', 'italic', 'underline', 'clear']],
-                    ['font', ['strikethrough']],
-                    ['para', ['ul', 'ol']],
-                    ['insert', ['link']]
-                ],
-                callbacks: {
-                    onChange: function(contents) {
-                        $(this).val(contents);
-                    }
-                }
-            });
 
             if (!document.getElementById('swal-wide-popup-style')) {
                 const style = document.createElement('style');
@@ -366,31 +356,79 @@
                         width: 80% !important;
                         max-width: 800px !important;
                     }
-                    .note-editor {
-                        margin-bottom: 10px !important;
-                        width: 100% !important;
+                    .ql-toolbar {
+                        background: #f8f9fa;
+                        border-radius: 4px 4px 0 0;
                     }
-                    .note-editable {
-                        text-align: left !important;
+                    .ql-container {
+                        border-radius: 0 0 4px 4px;
+                        font-size: 14px;
                     }
-                    .note-editing-area {
-                        width: 100% !important;
+                    .ql-editor {
+                        text-align: left;
+                        min-height: 120px;
                     }
                 `;
                 document.head.appendChild(style);
             }
+
+            boundaryEditor = new Quill('#boundary_details_editor', {
+                theme: 'snow',
+                placeholder: 'Boundary Details/Options',
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ list: 'ordered' }, { list: 'bullet' }],
+                        ['link'],
+                        ['clean']
+                    ]
+                }
+            });
+
+            nameEditor = new Quill('#name_details_editor', {
+                theme: 'snow',
+                placeholder: 'Name Details/Options',
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ list: 'ordered' }, { list: 'bullet' }],
+                        ['link'],
+                        ['clean']
+                    ]
+                }
+            });
+
+            // Populate predefined content if provided
+            if (predefinedBoundaries) {
+                boundaryEditor.clipboard.dangerouslyPasteHTML(predefinedBoundaries);
+            }
+            if (predefinedName) {
+                nameEditor.clipboard.dangerouslyPasteHTML(predefinedName);
+            }
+        },
+        willClose: () => {
+            // Clean up Quill instances to prevent reinit issues
+            if (boundaryEditor) {
+                boundaryEditor = null;
+            }
+            if (nameEditor) {
+                nameEditor = null;
+            }
         },
         preConfirm: () => {
-            const boundaryDetails = $('#boundary_details').summernote('code');
-            const nameDetails = $('#name_details').summernote('code');
+            const boundaryDetails = boundaryEditor.root.innerHTML;
+            const nameDetails = nameEditor.root.innerHTML;
             const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
 
-            if (!boundaryDetails) {
+            // Quill's empty state is just <p><br></p>
+            const isEmpty = (html) => html === '<p><br></p>' || html.trim() === '';
+
+            if (isEmpty(boundaryDetails)) {
                 Swal.showValidationMessage('Please enter boundary details.');
                 return false;
             }
 
-            if (!nameDetails) {
+            if (isEmpty(nameDetails)) {
                 Swal.showValidationMessage('Please enter name details.');
                 return false;
             }
@@ -401,61 +439,61 @@
                 name_details: nameDetails,
             };
         }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const data = result.value;
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
 
-                Swal.fire({
-                    title: 'Processing...',
-                    text: 'Please wait while we process your request.',
-                    allowOutsideClick: false,
-                    customClass: {
-                        confirmButton: 'btn btn-sm btn-success',
-                        cancelButton: 'btn btn-sm btn-danger'
-                    },
-                    didOpen: () => {
-                        Swal.showLoading();
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn btn-sm btn-success',
+                    cancelButton: 'btn btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
 
-                        $.ajax({
-                            url: '{{ route('chapters.sendstartup') }}',
-                            type: 'POST',
-                            data: {
-                                chapterId: data.chapter_id,
-                                boundaryDetails: data.boundary_details,
-                                nameDetails: data.name_details,
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: response.message,
-                                    icon: 'success',
-                                    showConfirmButton: false,
-                                    timer: 1500,
-                                    customClass: {
-                                        confirmButton: 'btn btn-sm btn-success'
-                                    }
-                                }).then(() => {
-                                    location.reload();
-                                });
-                            },
-                            error: function(jqXHR, exception) {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'Something went wrong, Please try again.',
-                                    icon: 'error',
-                                    confirmButtonText: 'OK',
-                                    customClass: {
-                                        confirmButton: 'btn btn-sm btn-success'
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    }
+                    $.ajax({
+                        url: '{{ route('chapters.sendstartup') }}',
+                        type: 'POST',
+                        data: {
+                            chapterId: data.chapter_id,
+                            boundaryDetails: data.boundary_details,
+                            nameDetails: data.name_details,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                location.reload();
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
 
     function showNewChapterEmailModal(chapterId) {
     Swal.fire({
@@ -686,291 +724,321 @@
 
 // Functions for Coordinator Email Modals
     function showCoordEmailModal(coordFName, coordLName, coordId, userName, userPosition, userConfName, userConfDesc, predefinedSubject = '', predefinedMessage = '') {
-        Swal.fire({
-            title: 'Coordinator Email Message',
-            html: `
-                <p>This will send your message to <b>${coordFName} ${coordLName}</b> and their full upline.<br>
-                <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
-                    <input type="text" id="email_subject" name="email_subject" class="swal2-input" placeholder="Enter Subject" required style="width: 100%; margin: 0 !important;" value="${predefinedSubject}">
-                </div>
-                <div style="width: 100%; margin-bottom: 10px; text-align: left;">
+
+    let messageEditor = null;
+
+    Swal.fire({
+        title: 'Coordinator Email Message',
+        html: `
+            <p>This will send your message to <b>${coordFName} ${coordLName}</b> and their full upline.</p>
+            <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
+                <input type="text" id="email_subject" name="email_subject" class="swal2-input" placeholder="Enter Subject" required style="width: 100%; margin: 0 !important;" value="${predefinedSubject}">
+            </div>
+            <div style="width: 100%; margin-bottom: 10px; text-align: left;">
                 <p><br><b>${coordFName}:</b></p>
-                </div>
-                <div style="width: 100%; margin-bottom: 10px;">
-                    <textarea id="email_message" name="email_message" class="rich-editor" ${predefinedMessage ? '' : 'placeholder="Email Message"'} required style="width: 100%; height: 150px; margin: 0 !important; box-sizing: border-box;">${predefinedMessage}</textarea>
-                </div>
-                <input type="hidden" id="coord_id" name="coord_id" value="${coordId}">
-                <div style="width: 100%; margin-bottom: 10px; text-align: left;">
+            </div>
+            <div style="width: 100%; margin-bottom: 10px;">
+                <div id="email_message_editor" style="height: 150px;"></div>
+            </div>
+            <input type="hidden" id="coord_id" name="coord_id" value="${coordId}">
+            <div style="width: 100%; margin-bottom: 10px; text-align: left;">
                 <p><b>MCL,</b><br>
-                    ${userName}<br>
-                    ${userPosition}<br>
-                    ${userConfName}, ${userConfDesc}<br>
-                    International MOMS Club</p>
-                </div>
-            `,
-            showCancelButton: true,
-            confirmButtonText: 'OK',
-            cancelButtonText: 'Close',
-            customClass: {
-                confirmButton: 'btn btn-sm btn-success',
-                cancelButton: 'btn btn-sm btn-danger',
-                popup: 'swal-wide-popup'
-            },
-            didOpen: () => {
-                $('#email_message').summernote({
-                    height: 150,
+                ${userName}<br>
+                ${userPosition}<br>
+                ${userConfName}, ${userConfDesc}<br>
+                International MOMS Club</p>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger',
+            popup: 'swal-wide-popup'
+        },
+        didOpen: () => {
+
+            if (!document.getElementById('swal-wide-popup-style')) {
+                const style = document.createElement('style');
+                style.id = 'swal-wide-popup-style';
+                style.innerHTML = `
+                    .swal-wide-popup {
+                        width: 80% !important;
+                        max-width: 800px !important;
+                    }
+                    .ql-toolbar {
+                        background: #f8f9fa;
+                        border-radius: 4px 4px 0 0;
+                    }
+                    .ql-container {
+                        border-radius: 0 0 4px 4px;
+                        font-size: 14px;
+                    }
+                    .ql-editor {
+                        text-align: left;
+                        min-height: 120px;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            messageEditor = new Quill('#email_message_editor', {
+                theme: 'snow',
+                placeholder: 'Email Message',
+                modules: {
                     toolbar: [
-                        ['style', ['bold', 'italic', 'underline', 'clear']],
-                        ['font', ['strikethrough']],
-                        ['para', ['ul', 'ol']],
-                        ['insert', ['link']]
-                    ],
-                    callbacks: {
-                        onChange: function(contents) {
-                            $(this).val(contents);
-                        }
-                    }
-                });
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ list: 'ordered' }, { list: 'bullet' }],
+                        ['link'],
+                        ['clean']
+                    ]
+                }
+            });
 
-                if (!document.getElementById('swal-wide-popup-style')) {
-                    const style = document.createElement('style');
-                    style.id = 'swal-wide-popup-style';
-                    style.innerHTML = `
-                        .swal-wide-popup {
-                            width: 80% !important;
-                            max-width: 800px !important;
-                        }
-                        .note-editor {
-                            margin-bottom: 10px !important;
-                            width: 100% !important;
-                        }
-                        .note-editable {
-                            text-align: left !important;
-                        }
-                        .note-editing-area {
-                            width: 100% !important;
-                        }
-                    `;
-                    document.head.appendChild(style);
-                }
-            },
-            preConfirm: () => {
-                const subject = Swal.getPopup().querySelector('#email_subject').value;
-                const message = $('#email_message').summernote('code');
-                const coordId = Swal.getPopup().querySelector('#coord_id').value;
-                if (!subject) {
-                    Swal.showValidationMessage('Please enter subject.');
-                    return false;
-                }
-                if (!message) {
-                    Swal.showValidationMessage('Please enter message.');
-                    return false;
-                }
-                return {
-                    email_subject: subject,
-                    email_message: message,
-                    coord_id: coordId,
-                };
+            if (predefinedMessage) {
+                messageEditor.clipboard.dangerouslyPasteHTML(predefinedMessage);
             }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const data = result.value;
-
-                Swal.fire({
-                    title: 'Processing...',
-                    text: 'Please wait while we process your request.',
-                    allowOutsideClick: false,
-                    customClass: {
-                        confirmButton: 'btn btn-sm btn-success',
-                        cancelButton: 'btn btn-sm btn-danger'
-                    },
-                    didOpen: () => {
-                        Swal.showLoading();
-
-                        $.ajax({
-                            url: '{{ route('coordinators.sendcoord') }}',
-                            type: 'POST',
-                            data: {
-                                subject: data.email_subject,
-                                message: data.email_message,
-                                coordId: data.coord_id,
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: response.message,
-                                    icon: 'success',
-                                    showConfirmButton: false,  // Automatically close without "OK" button
-                                    timer: 1500,
-                                    customClass: {
-                                        confirmButton: 'btn btn-sm btn-success'
-                                    }
-                                }).then(() => {
-                                    location.reload(); // Reload the page to reflect changes
-                                });
-                            },
-                            error: function(jqXHR, exception) {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'Something went wrong, Please try again.',
-                                    icon: 'error',
-                                    confirmButtonText: 'OK',
-                                    customClass: {
-                                        confirmButton: 'btn btn-sm btn-success'
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
+        },
+        willClose: () => {
+            if (messageEditor) {
+                messageEditor = null;
             }
-        });
-    }
+        },
+        preConfirm: () => {
+            const subject = Swal.getPopup().querySelector('#email_subject').value;
+            const message = messageEditor.root.innerHTML;
+            const coordId = Swal.getPopup().querySelector('#coord_id').value;
 
-    function showCoordUplineEmailModal(userCoordId, userName, userPosition, userConfName, userConfDesc, predefinedSubject = '', predefinedMessage = '') {
-        Swal.fire({
-            title: 'Coordinator Email Message',
-            html: `
-                <p>This will send your message to all Coordinators reporting to <b>${userName}</b>.<br>
-                    <small>This does not include any Coordinaors marked "On Leave".</small>
-                <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
-                    <input type="text" id="email_subject" name="email_subject" class="swal2-input" placeholder="Enter Subject" required style="width: 100%; margin: 0 !important;" value="${predefinedSubject}">
-                </div>
-                <div style="width: 100%; margin-bottom: 10px;">
-                    <textarea id="email_message" name="email_message" class="rich-editor" ${predefinedMessage ? '' : 'placeholder="Email Message"'} required style="width: 100%; height: 150px; margin: 0 !important; box-sizing: border-box;">${predefinedMessage}</textarea>
-                </div>
-                <input type="hidden" id="coord_id" name="coord_id" value="${userCoordId}">
-                <div style="width: 100%; margin-bottom: 10px; text-align: left;">
+            const isEmpty = (html) => html === '<p><br></p>' || html.trim() === '';
+
+            if (!subject) {
+                Swal.showValidationMessage('Please enter subject.');
+                return false;
+            }
+            if (isEmpty(message)) {
+                Swal.showValidationMessage('Please enter message.');
+                return false;
+            }
+            return {
+                email_subject: subject,
+                email_message: message,
+                coord_id: coordId,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn btn-sm btn-success',
+                    cancelButton: 'btn btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    $.ajax({
+                        url: '{{ route('coordinators.sendcoord') }}',
+                        type: 'POST',
+                        data: {
+                            subject: data.email_subject,
+                            message: data.email_message,
+                            coordId: data.coord_id,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                location.reload();
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+   function showCoordUplineEmailModal(userCoordId, userName, userPosition, userConfName, userConfDesc, predefinedSubject = '', predefinedMessage = '') {
+
+    let messageEditor = null;
+
+    Swal.fire({
+        title: 'Coordinator Email Message',
+        html: `
+            <p>This will send your message to all Coordinators reporting to <b>${userName}</b>.<br>
+                <small>This does not include any Coordinators marked "On Leave".</small>
+            </p>
+            <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
+                <input type="text" id="email_subject" name="email_subject" class="swal2-input" placeholder="Enter Subject" required style="width: 100%; margin: 0 !important;" value="${predefinedSubject}">
+            </div>
+            <div style="width: 100%; margin-bottom: 10px;">
+                <div id="email_message_editor" style="height: 150px;"></div>
+            </div>
+            <input type="hidden" id="coord_id" name="coord_id" value="${userCoordId}">
+            <div style="width: 100%; margin-bottom: 10px; text-align: left;">
                 <p><b>MCL,</b><br>
-                    ${userName}<br>
-                    ${userPosition}<br>
-                    ${userConfName}, ${userConfDesc}<br>
-                    International MOMS Club</p>
-                </div>
-            `,
-            showCancelButton: true,
-            confirmButtonText: 'OK',
-            cancelButtonText: 'Close',
-            customClass: {
-                confirmButton: 'btn btn-sm btn-success',
-                cancelButton: 'btn btn-sm btn-danger',
-                popup: 'swal-wide-popup'
-            },
-            didOpen: () => {
-                $('#email_message').summernote({
-                    height: 150,
+                ${userName}<br>
+                ${userPosition}<br>
+                ${userConfName}, ${userConfDesc}<br>
+                International MOMS Club</p>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger',
+            popup: 'swal-wide-popup'
+        },
+        didOpen: () => {
+
+            if (!document.getElementById('swal-wide-popup-style')) {
+                const style = document.createElement('style');
+                style.id = 'swal-wide-popup-style';
+                style.innerHTML = `
+                    .swal-wide-popup {
+                        width: 80% !important;
+                        max-width: 800px !important;
+                    }
+                    .ql-toolbar {
+                        background: #f8f9fa;
+                        border-radius: 4px 4px 0 0;
+                    }
+                    .ql-container {
+                        border-radius: 0 0 4px 4px;
+                        font-size: 14px;
+                    }
+                    .ql-editor {
+                        text-align: left;
+                        min-height: 120px;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            messageEditor = new Quill('#email_message_editor', {
+                theme: 'snow',
+                placeholder: 'Email Message',
+                modules: {
                     toolbar: [
-                        ['style', ['bold', 'italic', 'underline', 'clear']],
-                        ['font', ['strikethrough']],
-                        ['para', ['ul', 'ol']],
-                        ['insert', ['link']]
-                    ],
-                    callbacks: {
-                        onChange: function(contents) {
-                            $(this).val(contents);
-                        }
-                    }
-                });
-
-                if (!document.getElementById('swal-wide-popup-style')) {
-                    const style = document.createElement('style');
-                    style.id = 'swal-wide-popup-style';
-                    style.innerHTML = `
-                        .swal-wide-popup {
-                            width: 80% !important;
-                            max-width: 800px !important;
-                        }
-                        .note-editor {
-                            margin-bottom: 10px !important;
-                            width: 100% !important;
-                        }
-                        .note-editable {
-                            text-align: left !important;
-                        }
-                        .note-editing-area {
-                            width: 100% !important;
-                        }
-                    `;
-                    document.head.appendChild(style);
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ list: 'ordered' }, { list: 'bullet' }],
+                        ['link'],
+                        ['clean']
+                    ]
                 }
-            },
-            preConfirm: () => {
-                const subject = Swal.getPopup().querySelector('#email_subject').value;
-                const message = $('#email_message').summernote('code');
-                const userCoordId = Swal.getPopup().querySelector('#coord_id').value;
+            });
 
-                if (!subject) {
-                    Swal.showValidationMessage('Please enter subject.');
-                    return false;
-                }
-
-                if (!message) {
-                    Swal.showValidationMessage('Please enter message.');
-                    return false;
-                }
-
-                return {
-                    email_subject: subject,
-                    email_message: message,
-                    coord_id: userCoordId,
-                };
+            if (predefinedMessage) {
+                messageEditor.clipboard.dangerouslyPasteHTML(predefinedMessage);
             }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const data = result.value;
-
-                Swal.fire({
-                    title: 'Processing...',
-                    text: 'Please wait while we process your request.',
-                    allowOutsideClick: false,
-                    customClass: {
-                        confirmButton: 'btn btn-sm btn-success',
-                        cancelButton: 'btn btn-sm btn-danger'
-                    },
-                    didOpen: () => {
-                        Swal.showLoading();
-
-                        $.ajax({
-                            url: '{{ route('coordinators.sendcoordup') }}',
-                            type: 'POST',
-                            data: {
-                                subject: data.email_subject,
-                                message: data.email_message,
-                                userCoordId: data.coord_id,
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: response.message,
-                                    icon: 'success',
-                                    showConfirmButton: false,  // Automatically close without "OK" button
-                                    timer: 1500,
-                                    customClass: {
-                                        confirmButton: 'btn btn-sm btn-success'
-                                    }
-                                }).then(() => {
-                                    location.reload(); // Reload the page to reflect changes
-                                });
-                            },
-                            error: function(jqXHR, exception) {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'Something went wrong, Please try again.',
-                                    icon: 'error',
-                                    confirmButtonText: 'OK',
-                                    customClass: {
-                                        confirmButton: 'btn btn-sm btn-success'
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
+        },
+        willClose: () => {
+            if (messageEditor) {
+                messageEditor = null;
             }
-        });
-    }
+        },
+        preConfirm: () => {
+            const subject = Swal.getPopup().querySelector('#email_subject').value;
+            const message = messageEditor.root.innerHTML;
+            const userCoordId = Swal.getPopup().querySelector('#coord_id').value;
+
+            const isEmpty = (html) => html === '<p><br></p>' || html.trim() === '';
+
+            if (!subject) {
+                Swal.showValidationMessage('Please enter subject.');
+                return false;
+            }
+            if (isEmpty(message)) {
+                Swal.showValidationMessage('Please enter message.');
+                return false;
+            }
+            return {
+                email_subject: subject,
+                email_message: message,
+                coord_id: userCoordId,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn btn-sm btn-success',
+                    cancelButton: 'btn btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    $.ajax({
+                        url: '{{ route('coordinators.sendcoordup') }}',
+                        type: 'POST',
+                        data: {
+                            subject: data.email_subject,
+                            message: data.email_message,
+                            userCoordId: data.coord_id,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                location.reload();
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
 
     function showBigSisterEmailModal(chapterId) {
     Swal.fire({
@@ -1444,294 +1512,324 @@ function showYesChapterInquiryEmailModal(inquiryId, firstName, lastName, chapter
 }
 
 function showChapterInquiryEmailModal(chapterName, chapterId, inquiryId, userName, userPosition, userConfName, userConfDesc, predefinedSubject = '', predefinedMessage = '') {
-        Swal.fire({
-            title: 'Chapter Email Message',
-            html: `
-                <p>This will send your message to the inquiries email address for <b>${chapterName}</b>.<br>
-                <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
-                    <input type="text" id="email_subject" name="email_subject" class="swal2-input" placeholder="Enter Subject" required style="width: 100%; margin: 0 !important;" value="${predefinedSubject}">
-                </div>
-                <div style="width: 100%; margin-bottom: 10px; text-align: left;">
+
+    let messageEditor = null;
+
+    Swal.fire({
+        title: 'Chapter Email Message',
+        html: `
+            <p>This will send your message to the inquiries email address for <b>${chapterName}</b>.</p>
+            <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
+                <input type="text" id="email_subject" name="email_subject" class="swal2-input" placeholder="Enter Subject" required style="width: 100%; margin: 0 !important;" value="${predefinedSubject}">
+            </div>
+            <div style="width: 100%; margin-bottom: 10px; text-align: left;">
                 <p><br><b>MOMS Club of ${chapterName}:</b></p>
-                </div>
-                <div style="width: 100%; margin-bottom: 10px;">
-                    <textarea id="email_message" name="email_message" class="rich-editor" ${predefinedMessage ? '' : 'placeholder="Email Message"'} required style="width: 100%; height: 150px; margin: 0 !important; box-sizing: border-box;">${predefinedMessage}</textarea>
-                </div>
-                <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
-                <input type="hidden" id="inquiry_id" name="inquiry_id" value="${inquiryId}">
-                <div style="width: 100%; margin-bottom: 10px; text-align: left;">
+            </div>
+            <div style="width: 100%; margin-bottom: 10px;">
+                <div id="email_message_editor" style="height: 150px;"></div>
+            </div>
+            <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
+            <input type="hidden" id="inquiry_id" name="inquiry_id" value="${inquiryId}">
+            <div style="width: 100%; margin-bottom: 10px; text-align: left;">
                 <p><b>MCL,</b><br>
-                    ${userName}<br>
-                    ${userPosition}<br>
-                    ${userConfName}, ${userConfDesc}<br>
-                    International MOMS Club</p>
-                </div>
-            `,
-            showCancelButton: true,
-            confirmButtonText: 'OK',
-            cancelButtonText: 'Close',
-            customClass: {
-                confirmButton: 'btn btn-sm btn-success',
-                cancelButton: 'btn btn-sm btn-danger',
-                popup: 'swal-wide-popup'
-            },
-            didOpen: () => {
-                $('#email_message').summernote({
-                    height: 150,
+                ${userName}<br>
+                ${userPosition}<br>
+                ${userConfName}, ${userConfDesc}<br>
+                International MOMS Club</p>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger',
+            popup: 'swal-wide-popup'
+        },
+        didOpen: () => {
+
+            if (!document.getElementById('swal-wide-popup-style')) {
+                const style = document.createElement('style');
+                style.id = 'swal-wide-popup-style';
+                style.innerHTML = `
+                    .swal-wide-popup {
+                        width: 80% !important;
+                        max-width: 800px !important;
+                    }
+                    .ql-toolbar {
+                        background: #f8f9fa;
+                        border-radius: 4px 4px 0 0;
+                    }
+                    .ql-container {
+                        border-radius: 0 0 4px 4px;
+                        font-size: 14px;
+                    }
+                    .ql-editor {
+                        text-align: left;
+                        min-height: 120px;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            messageEditor = new Quill('#email_message_editor', {
+                theme: 'snow',
+                placeholder: 'Email Message',
+                modules: {
                     toolbar: [
-                        ['style', ['bold', 'italic', 'underline', 'clear']],
-                        ['font', ['strikethrough']],
-                        ['para', ['ul', 'ol']],
-                        ['insert', ['link']]
-                    ],
-                    callbacks: {
-                        onChange: function(contents) {
-                            $(this).val(contents);
-                        }
-                    }
-                });
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ list: 'ordered' }, { list: 'bullet' }],
+                        ['link'],
+                        ['clean']
+                    ]
+                }
+            });
 
-                if (!document.getElementById('swal-wide-popup-style')) {
-                    const style = document.createElement('style');
-                    style.id = 'swal-wide-popup-style';
-                    style.innerHTML = `
-                        .swal-wide-popup {
-                            width: 80% !important;
-                            max-width: 800px !important;
-                        }
-                        .note-editor {
-                            margin-bottom: 10px !important;
-                            width: 100% !important;
-                        }
-                        .note-editable {
-                            text-align: left !important;
-                        }
-                        .note-editing-area {
-                            width: 100% !important;
-                        }
-                    `;
-                    document.head.appendChild(style);
-                }
-            },
-            preConfirm: () => {
-                const subject = Swal.getPopup().querySelector('#email_subject').value;
-                // Get the HTML content from Summernote
-                const message = $('#email_message').summernote('code');
-                const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
-                const inquiryId = Swal.getPopup().querySelector('#inquiry_id').value;
-                if (!subject) {
-                    Swal.showValidationMessage('Please enter subject.');
-                    return false;
-                }
-                if (!message) {
-                    Swal.showValidationMessage('Please enter message.');
-                    return false;
-                }
-                return {
-                    email_subject: subject,
-                    email_message: message,
-                    chapter_id: chapterId,
-                    inquiry_id: inquiryId,
-                };
+            if (predefinedMessage) {
+                messageEditor.clipboard.dangerouslyPasteHTML(predefinedMessage);
             }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const data = result.value;
-
-                Swal.fire({
-                    title: 'Processing...',
-                    text: 'Please wait while we process your request.',
-                    allowOutsideClick: false,
-                    customClass: {
-                        confirmButton: 'btn btn-sm btn-success',
-                        cancelButton: 'btn btn-sm btn-danger'
-                    },
-                    didOpen: () => {
-                        Swal.showLoading();
-                        $.ajax({
-                            url: '{{ route('inquiries.sendchapter') }}',
-                            type: 'POST',
-                            data: {
-                                subject: data.email_subject,
-                                message: data.email_message,
-                                chapterId: data.chapter_id,
-                                inquiryId: data.inquiry_id,
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: response.message,
-                                    icon: 'success',
-                                    showConfirmButton: false,  // Automatically close without "OK" button
-                                    timer: 1500,
-                                    customClass: {
-                                        confirmButton: 'btn btn-sm btn-success'
-                                    }
-                                }).then(() => {
-                                    location.reload(); // Reload the page to reflect changes
-                                });
-                            },
-                            error: function(jqXHR, exception) {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'Something went wrong, Please try again.',
-                                    icon: 'error',
-                                    confirmButtonText: 'OK',
-                                    customClass: {
-                                        confirmButton: 'btn btn-sm btn-success'
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
+        },
+        willClose: () => {
+            if (messageEditor) {
+                messageEditor = null;
             }
-        });
-    }
+        },
+        preConfirm: () => {
+            const subject = Swal.getPopup().querySelector('#email_subject').value;
+            const message = messageEditor.root.innerHTML;
+            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+            const inquiryId = Swal.getPopup().querySelector('#inquiry_id').value;
 
-    function showMemberInquiryEmailModal(inquiryId, inquiryFirstName, inquiryLastName, userName, userPosition, userConfName, userConfDesc, predefinedSubject = '', predefinedMessage = '') {
-        Swal.fire({
-            title: 'Chapter Email Message',
-            html: `
-                <p>This will send your message to <b>${inquiryFirstName} ${inquiryLastName}</b>.<br>
-                <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
-                    <input type="text" id="email_subject" name="email_subject" class="swal2-input" placeholder="Enter Subject" required style="width: 100%; margin: 0 !important;" value="${predefinedSubject}">
-                </div>
-                <div style="width: 100%; margin-bottom: 10px; text-align: left;">
+            const isEmpty = (html) => html === '<p><br></p>' || html.trim() === '';
+
+            if (!subject) {
+                Swal.showValidationMessage('Please enter subject.');
+                return false;
+            }
+            if (isEmpty(message)) {
+                Swal.showValidationMessage('Please enter message.');
+                return false;
+            }
+            return {
+                email_subject: subject,
+                email_message: message,
+                chapter_id: chapterId,
+                inquiry_id: inquiryId,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn btn-sm btn-success',
+                    cancelButton: 'btn btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+                    $.ajax({
+                        url: '{{ route('inquiries.sendchapter') }}',
+                        type: 'POST',
+                        data: {
+                            subject: data.email_subject,
+                            message: data.email_message,
+                            chapterId: data.chapter_id,
+                            inquiryId: data.inquiry_id,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                location.reload();
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+   function showMemberInquiryEmailModal(inquiryId, inquiryFirstName, inquiryLastName, userName, userPosition, userConfName, userConfDesc, predefinedSubject = '', predefinedMessage = '') {
+
+    let messageEditor = null;
+
+    Swal.fire({
+        title: 'Chapter Email Message',
+        html: `
+            <p>This will send your message to <b>${inquiryFirstName} ${inquiryLastName}</b>.</p>
+            <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
+                <input type="text" id="email_subject" name="email_subject" class="swal2-input" placeholder="Enter Subject" required style="width: 100%; margin: 0 !important;" value="${predefinedSubject}">
+            </div>
+            <div style="width: 100%; margin-bottom: 10px; text-align: left;">
                 <p><br><b>${inquiryFirstName}:</b></p>
-                </div>
-                <div style="width: 100%; margin-bottom: 10px;">
-                    <textarea id="email_message" name="email_message" class="rich-editor" ${predefinedMessage ? '' : 'placeholder="Email Message"'} required style="width: 100%; height: 150px; margin: 0 !important; box-sizing: border-box;">${predefinedMessage}</textarea>
-                </div>
-                <input type="hidden" id="inquiry_id" name="inquiry_id" value="${inquiryId}">
-                <div style="width: 100%; margin-bottom: 10px; text-align: left;">
+            </div>
+            <div style="width: 100%; margin-bottom: 10px;">
+                <div id="email_message_editor" style="height: 150px;"></div>
+            </div>
+            <input type="hidden" id="inquiry_id" name="inquiry_id" value="${inquiryId}">
+            <div style="width: 100%; margin-bottom: 10px; text-align: left;">
                 <p><b>MCL,</b><br>
-                    ${userName}<br>
-                    ${userPosition}<br>
-                    ${userConfName}, ${userConfDesc}<br>
-                    International MOMS Club</p>
-                </div>
-            `,
-            showCancelButton: true,
-            confirmButtonText: 'OK',
-            cancelButtonText: 'Close',
-            customClass: {
-                confirmButton: 'btn btn-sm btn-success',
-                cancelButton: 'btn btn-sm btn-danger',
-                popup: 'swal-wide-popup'
-            },
-            didOpen: () => {
-                $('#email_message').summernote({
-                    height: 150,
+                ${userName}<br>
+                ${userPosition}<br>
+                ${userConfName}, ${userConfDesc}<br>
+                International MOMS Club</p>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger',
+            popup: 'swal-wide-popup'
+        },
+        didOpen: () => {
+
+            if (!document.getElementById('swal-wide-popup-style')) {
+                const style = document.createElement('style');
+                style.id = 'swal-wide-popup-style';
+                style.innerHTML = `
+                    .swal-wide-popup {
+                        width: 80% !important;
+                        max-width: 800px !important;
+                    }
+                    .ql-toolbar {
+                        background: #f8f9fa;
+                        border-radius: 4px 4px 0 0;
+                    }
+                    .ql-container {
+                        border-radius: 0 0 4px 4px;
+                        font-size: 14px;
+                    }
+                    .ql-editor {
+                        text-align: left;
+                        min-height: 120px;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            messageEditor = new Quill('#email_message_editor', {
+                theme: 'snow',
+                placeholder: 'Email Message',
+                modules: {
                     toolbar: [
-                        ['style', ['bold', 'italic', 'underline', 'clear']],
-                        ['font', ['strikethrough']],
-                        ['para', ['ul', 'ol']],
-                        ['insert', ['link']]
-                    ],
-                    callbacks: {
-                        onChange: function(contents) {
-                            $(this).val(contents);
-                        }
-                    }
-                });
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ list: 'ordered' }, { list: 'bullet' }],
+                        ['link'],
+                        ['clean']
+                    ]
+                }
+            });
 
-                if (!document.getElementById('swal-wide-popup-style')) {
-                    const style = document.createElement('style');
-                    style.id = 'swal-wide-popup-style';
-                    style.innerHTML = `
-                        .swal-wide-popup {
-                            width: 80% !important;
-                            max-width: 800px !important;
-                        }
-                        .note-editor {
-                            margin-bottom: 10px !important;
-                            width: 100% !important;
-                        }
-                        .note-editable {
-                            text-align: left !important;
-                        }
-                        .note-editing-area {
-                            width: 100% !important;
-                        }
-                    `;
-                    document.head.appendChild(style);
-                }
-            },
-            preConfirm: () => {
-                const subject = Swal.getPopup().querySelector('#email_subject').value;
-                // Get the HTML content from Summernote
-                const message = $('#email_message').summernote('code');
-                const inquiryId = Swal.getPopup().querySelector('#inquiry_id').value;
-                if (!subject) {
-                    Swal.showValidationMessage('Please enter subject.');
-                    return false;
-                }
-                if (!message) {
-                    Swal.showValidationMessage('Please enter message.');
-                    return false;
-                }
-                return {
-                    email_subject: subject,
-                    email_message: message,
-                    inquiry_id: inquiryId,
-                };
+            if (predefinedMessage) {
+                messageEditor.clipboard.dangerouslyPasteHTML(predefinedMessage);
             }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const data = result.value;
+        },
+        willClose: () => {
+            if (messageEditor) {
+                messageEditor = null;
+            }
+        },
+        preConfirm: () => {
+            const subject = Swal.getPopup().querySelector('#email_subject').value;
+            const message = messageEditor.root.innerHTML;
+            const inquiryId = Swal.getPopup().querySelector('#inquiry_id').value;
 
-                Swal.fire({
-                    title: 'Processing...',
-                    text: 'Please wait while we process your request.',
-                    allowOutsideClick: false,
-                    customClass: {
-                        confirmButton: 'btn btn-sm btn-success',
-                        cancelButton: 'btn btn-sm btn-danger'
-                    },
-                    didOpen: () => {
-                        Swal.showLoading();
-                        $.ajax({
-                            url: '{{ route('inquiries.sendmember') }}',
-                            type: 'POST',
-                            data: {
-                                subject: data.email_subject,
-                                message: data.email_message,
-                                inquiryId: data.inquiry_id,
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: response.message,
-                                    icon: 'success',
-                                    showConfirmButton: false,  // Automatically close without "OK" button
-                                    timer: 1500,
-                                    customClass: {
-                                        confirmButton: 'btn btn-sm btn-success'
-                                    }
-                                }).then(() => {
-                                    location.reload(); // Reload the page to reflect changes
-                                });
-                            },
-                            error: function(jqXHR, exception) {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'Something went wrong, Please try again.',
-                                    icon: 'error',
-                                    confirmButtonText: 'OK',
-                                    customClass: {
-                                        confirmButton: 'btn btn-sm btn-success'
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
+            const isEmpty = (html) => html === '<p><br></p>' || html.trim() === '';
+
+            if (!subject) {
+                Swal.showValidationMessage('Please enter subject.');
+                return false;
             }
-        });
-    }
+            if (isEmpty(message)) {
+                Swal.showValidationMessage('Please enter message.');
+                return false;
+            }
+            return {
+                email_subject: subject,
+                email_message: message,
+                inquiry_id: inquiryId,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn btn-sm btn-success',
+                    cancelButton: 'btn btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+                    $.ajax({
+                        url: '{{ route('inquiries.sendmember') }}',
+                        type: 'POST',
+                        data: {
+                            subject: data.email_subject,
+                            message: data.email_message,
+                            inquiryId: data.inquiry_id,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                location.reload();
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
 
 </script>
 

@@ -36,9 +36,9 @@ $.fn.dataTable = DataTable;
 import JSZip from 'jszip';
 window.JSZip = JSZip;
 
-// Summernote (BS5 version)
-import 'summernote/dist/summernote-bs5.min.css';
-import 'summernote/dist/summernote-bs5.min.js';
+// Quill (for texterra emails)
+import Quill from 'quill';
+window.Quill = Quill;
 
 // Daterangepicker
 import 'daterangepicker/daterangepicker.css';

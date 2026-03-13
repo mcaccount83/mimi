@@ -13,7 +13,7 @@
                         <div class="card-header">
                             <div class="dropdown">
                                 <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Active Board Members with Inactive User
+                                    Active Details with User Mismatch
                                 </h3>
                                 @include('layouts.dropdown_menus.menu_reports_user')
                             </div>

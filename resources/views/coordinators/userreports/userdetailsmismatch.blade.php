@@ -1,7 +1,7 @@
 @extends('layouts.mimi_theme')
 
 @section('page_title', 'User Reports')
-@section('breadcrumb', 'Active Board Members with Inactive User')
+@section('breadcrumb', 'UserInfo/Details Mismatch')
 
 @section('content')
     <!-- Main content -->
@@ -13,7 +13,7 @@
                         <div class="card-header">
                             <div class="dropdown">
                                 <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Active User with No Active Board Member
+                                    Active User with Details Mismatch
                                 </h3>
                                 <span class="ms-2">Update User Active Status and/or Type</span>
                                 @include('layouts.dropdown_menus.menu_reports_user')

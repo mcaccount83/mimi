@@ -12,6 +12,11 @@ class EmailLogger
     public function handle(MessageSending $event): void
     {
         $message = $event->message;
+
+        if ($message->getHeaders()->has('X-Forum-Broadcast')) {
+            return;
+        }
+
         $body = $message->getHtmlBody() ?: $message->getTextBody() ?: '';
 
         $email = SentEmail::create([

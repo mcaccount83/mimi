@@ -240,7 +240,7 @@ class UserReportController extends Controller implements HasMiddleware
         }
     }
 
-   public function showUserNoActiveBoard(): View
+   public function showUserDetailsMismatch(): View
     {
         $userList = User::where('is_active', UserStatusEnum::ACTIVE)
             ->whereIn('type_id', [
@@ -259,7 +259,7 @@ class UserReportController extends Controller implements HasMiddleware
             'userList'  => $userList,
         ];
 
-        return view('coordinators.userreports.usernoactiveboard')->with($data);
+        return view('coordinators.userreports.userdetailsmismatch')->with($data);
     }
 
     private function checkUserTableStatus(User $user): User

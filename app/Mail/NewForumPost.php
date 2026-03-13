@@ -2,28 +2,44 @@
 
 namespace App\Mail;
 
+use Illuminate\Mail\Mailables\Address;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Mail\Mailables\Headers;
+
 class NewForumPost extends BaseMailable
 {
-    public $post;
+    public function __construct(
+        public $post,
+        public $thread,
+        public $category,
+        public $authorNameWithPosition
+    ) {}
 
-    public $thread;
-
-    public $category;
-
-    public $authorNameWithPosition;
-
-    public function __construct($post, $thread, $category, $authorNameWithPosition)
+    public function envelope(): Envelope
     {
-        $this->post = $post;
-        $this->thread = $thread;
-        $this->category = $category;
-        $this->authorNameWithPosition = $authorNameWithPosition;
+        return new Envelope(
+            from: new Address('noreply@momsclub.org', 'MOMS Club'),
+            subject: "{$this->category->title} | RE:{$this->thread->title}",
+        );
     }
 
-    public function build()
+    public function content(): Content
     {
-        return $this->markdown('emails.forum.new-post')
-                    // ->subject("New Reply in: {$this->thread->title}");
-            ->subject("{$this->category->title} | RE:{$this->thread->title}");
+        return new Content(
+            markdown: 'emails.forum.new-post',
+        );
+    }
+
+    public function attachments(): array
+    {
+        return [];
+    }
+
+    public function headers(): Headers
+    {
+        return new Headers(
+            text: ['X-Forum-Broadcast' => 'true'],
+        );
     }
 }
