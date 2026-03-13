@@ -2,6 +2,7 @@
 
 namespace App\Policies\Forum;
 
+use App\Enums\ForumCategoryEnum;
 use Illuminate\Foundation\Auth\User;
 use TeamTeaTime\Forum\Models\Category;
 use TeamTeaTime\Forum\Policies\CategoryPolicy as ForumCategoryPolicy;
@@ -32,6 +33,11 @@ class CategoryPolicy extends ForumCategoryPolicy
 
     public function createThreads(User $user, Category $category): bool
     {
+        if ($category->id == ForumCategoryEnum::BOARDLIST) {
+            return $this->forumConditions->canPostToBoardList($user)
+                || $this->forumConditions->canManageLists($user); // admins/mods still can
+        }
+
         if ($category->title == 'Public Announcements') {
             return $this->forumConditions->canManageLists($user);
         }

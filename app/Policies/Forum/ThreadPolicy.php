@@ -2,6 +2,7 @@
 
 namespace App\Policies\Forum;
 
+use App\Enums\ForumCategoryEnum;
 use TeamTeaTime\Forum\Models\Thread;
 use TeamTeaTime\Forum\Policies\ThreadPolicy as ForumThreadPolicy;
 
@@ -28,9 +29,13 @@ class ThreadPolicy extends ForumThreadPolicy
 
     public function reply($user, Thread $thread): bool
     {
+        if ($thread->category->id == ForumCategoryEnum::BOARDLIST) {
+            return $this->forumConditions->canPostToBoardList($user)
+                || $this->forumConditions->canManageLists($user);
+        }
+
         return $this->forumConditions->canManageLists($user)
-            // || $this->forumConditions->canManageThreads($user, $thread)
-            || ! $thread->locked;
+        || ($this->forumConditions->canAccessList($user, $thread->category) && !$thread->locked);
     }
 
     public function delete($user, Thread $thread): bool

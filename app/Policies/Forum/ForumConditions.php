@@ -4,6 +4,7 @@ namespace App\Policies\Forum;
 
 use App\Enums\AdminStatusEnum;
 use App\Enums\UserTypeEnum;
+use App\Enums\ForumCategoryEnum;
 use App\Models\Coordinators;
 use App\Services\PositionConditionsService;
 use Illuminate\Foundation\Auth\User;
@@ -28,11 +29,19 @@ class ForumConditions
             return false; // Hide ALL from outgoing/disbanded/pending
         }
 
-        if ($category->title == 'CoordinatorList' && $user->type_id != UserTypeEnum::COORD) {
+        if ($category->id == ForumCategoryEnum::COORDLIST && $user->type_id != UserTypeEnum::COORD) {
             return false; // Hide CoordinatorList from everyone except coordinators
         }
 
         return true; // Default: allow access
+    }
+
+    /**
+     * Who can post on BoardList //  Board members only
+     */
+    public function canPostToBoardList(User $user): bool
+    {
+        return $user->type_id == UserTypeEnum::BOARD;
     }
 
     /**
