@@ -130,7 +130,7 @@ class ForumEventSubscriber
             'cc'      => null,
             'bcc'     => null,
             'subject' => "[Forum Broadcast] {$subject}",
-            'body'    => "Notification queued for {$recipientCount} subscribers.",
+            'body'    => "Notification sent for {$recipientCount} subscribers.",
         ]);
     }
 
