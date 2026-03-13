@@ -260,6 +260,7 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/flash.js'])
 
+    @include('layouts.scripts.pleasewait')
     @include('layouts.scripts.alert')
     @include('layouts.scripts.boards')
     @include('layouts.scripts.boardreport')
@@ -276,7 +277,6 @@
     @include('layouts.scripts.menu')
     @include('layouts.scripts.password')
     @include('layouts.scripts.pdfviewer')
-    @include('layouts.scripts.pleasewait')
     @include('layouts.scripts.probation')
     @include('layouts.scripts.resources')
     @include('layouts.scripts.sendemail')
