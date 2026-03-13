@@ -111,24 +111,28 @@ class ForumEventSubscriber
      * Queue forum broadcast emails and write a single summary log entry.
      */
    private function sendForumBroadcast($usersToNotify, callable $mailableFactory, string $subject, int $recipientCount): void
-{
-    foreach ($usersToNotify->chunk(25) as $userBatch) {
-        foreach ($userBatch as $user) {
-            $mailable = $mailableFactory($user);
-            Mail::to($user->email)->queue($mailable);
-        }
-    }
+    {
+        $delay = 0;
 
-    SentEmail::create([
-        'date'    => date('Y-m-d H:i:s'),
-        'from'    => config('mail.from.address'),
-        'to'      => "{$recipientCount} forum subscribers",
-        'cc'      => null,
-        'bcc'     => null,
-        'subject' => "[Forum Broadcast] {$subject}",
-        'body'    => "Notification queued for {$recipientCount} subscribers.",
-    ]);
-}
+        foreach ($usersToNotify->chunk(25) as $userBatch) {
+            foreach ($userBatch as $user) {
+                $mailable = $mailableFactory($user);
+                Mail::to($user->email)
+                    ->later(now()->addSeconds($delay), $mailable);
+                $delay += 3;
+            }
+        }
+
+        SentEmail::create([
+            'date'    => date('Y-m-d H:i:s'),
+            'from'    => config('mail.from.address'),
+            'to'      => "{$recipientCount} forum subscribers",
+            'cc'      => null,
+            'bcc'     => null,
+            'subject' => "[Forum Broadcast] {$subject}",
+            'body'    => "Notification queued for {$recipientCount} subscribers.",
+        ]);
+    }
 
     /**
      * Get users who should be notified about thread updates.
