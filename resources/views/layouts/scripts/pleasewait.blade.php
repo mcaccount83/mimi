@@ -22,8 +22,8 @@
             const link = e.target.closest('a');
             if (!link) return;
             if (link.target === '_blank') return;
-            if (link.href.startsWith('#')) return;
-            if (link.href.startsWith('javascript')) return;
+            if (link.getAttribute('href') === '#') return;
+            if (link.getAttribute('href')?.startsWith('javascript')) return;
             if (link.dataset.noWait !== undefined) return; // add data-no-wait to skip
             if (link.dataset.bsToggle === 'tab') return;      // add this
             if (link.dataset.bsToggle === 'pill') return;
