@@ -24,10 +24,12 @@
             if (link.target === '_blank') return;
             if (link.getAttribute('href') === '#') return;
             if (link.getAttribute('href')?.startsWith('javascript')) return;
-            if (link.dataset.noWait !== undefined) return; // add data-no-wait to skip
-            if (link.dataset.bsToggle === 'tab') return;      // add this
+            if (link.getAttribute('href')?.startsWith('mailto:')) return;
+            if (link.getAttribute('href')?.startsWith('tel:')) return;
+            if (link.dataset.noWait !== undefined) return;
+            if (link.dataset.bsToggle === 'tab') return;
             if (link.dataset.bsToggle === 'pill') return;
-            if (link.dataset.bsToggle === 'collapse') return;    // accordions
+            if (link.dataset.bsToggle === 'collapse') return;
 
             overlayTimer = setTimeout(showOverlay, THRESHOLD_MS);
         });
