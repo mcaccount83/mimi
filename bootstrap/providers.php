@@ -2,6 +2,7 @@
 
 return [
     App\Providers\AppServiceProvider::class,
+    App\Providers\BladeDirectivesServiceProvider::class,
     App\Providers\ForumServiceProvider::class,
     App\Providers\LogViewerServiceProvider::class,
     App\Providers\QueuemonitorServiceProvider::class,

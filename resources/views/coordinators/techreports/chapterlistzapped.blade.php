@@ -54,7 +54,7 @@
                                                 <a href="{{ route('board.editdisbandchecklist', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-primary bg-gradient btn-sm me-2">Disband Checklist & Financial Report</a>
                                             </div>
                                         </td>
-                                        <td><span class="date-mask">{{ $chapter->zap_date }}</span></td>
+                                        <td>@formatDate($chapter->zap_date)</td>
                                     </tr>
                                 @endforeach
                             </tbody>

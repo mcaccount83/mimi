@@ -55,7 +55,7 @@
                             @endif
                         </td>
                     <td>{{ $list->first_name }} {{ $list->last_name }}</td>
-                    <td><span class="date-mask">{{ $list->coordinator_start_date }}</span></td>
+                    <td>@formatDate($list->coordinator_start_date)</td>
 
                     <td>@if($list->recognition->recognition_pin=='1')
                         YES

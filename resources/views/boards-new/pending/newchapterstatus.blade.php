@@ -22,7 +22,7 @@
                             <div class="col-md-12 mb-3">
                         <div class="col-md-12 mb-1">
                             <label class="me-2">Submitted:</label>
-                            <span class="date-mask">{{ $chDetails->created_at }}</span>
+                            @formatDate($chDetails->created_at)
                         </div>
                         <div class="col-md-12 mb-1">
                             <label class="me-2">Status:</label>

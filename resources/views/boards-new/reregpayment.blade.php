@@ -37,7 +37,7 @@
                                     As part of officially closing your chapter, you'll need to pay your chapter's final re-registration payment.<br><br>
                                 </div>
                                 <div class="col-12 mb-3">
-                                        <label class="me-2">RE-REGISTRATION DUES LAST PAID:</label><span class="date-mask">{{$chDetails->payments->rereg_date}}</span>
+                                        <label class="me-2">RE-REGISTRATION DUES LAST PAID:</label>@formatDate($chDetails->payments->rereg_date)
                                     <br>
                                         <label class="me-2">LAST NUMBER OF MEMBERS REGISTERED:</label>{{ $chDetails->payments->rereg_members}}
                                 </div>
@@ -72,12 +72,12 @@
                             Your next payment:
                             @if ($currentDate->gte($dueDate))
                                 @if ($chDetails->start_month_id == $currentMonth)
-                                    <span class="badge bg-success fs-7">Due Now (<span class="date-mask">{{ $renewalDate }})</span></span>
+                                    <span class="badge bg-success fs-7">Due Now (@formatDate( $renewalDate))</span>
                                 @else
-                                    <span class="badge bg-danger fs-7">Overdue (<span class="date-mask">{{ $renewalDate }})</span></span>
+                                    <span class="badge bg-danger fs-7">Overdue (@formatDate($renewalDate))</span>
                                 @endif
                             @else
-                                Due on <span class="date-mask">{{ $renewalDate }}</span>
+                                Due on @formatDate($renewalDate)
                             @endif
                         </div>
                     </div>
@@ -85,7 +85,7 @@
 
                     <div class="row">
                         <div class="col-12 mb-3">
-                                <label class="me-2">RE-REGISTRATION DUES LAST PAID:</label><span class="date-mask">{{$chDetails->payments->rereg_date}}</span>
+                                <label class="me-2">RE-REGISTRATION DUES LAST PAID:</label>@formatDate($chDetails->payments->rereg_date)
                             <br>
                                 <label class="me-2">LAST NUMBER OF MEMBERS REGISTERED:</label>{{ $chDetails->payments->rereg_members}}
                         </div>

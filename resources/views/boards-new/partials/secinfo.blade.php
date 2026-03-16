@@ -8,7 +8,7 @@
         <br>
         <a href="mailto:{{ $SECDetails->email }}">{{ $SECDetails->email }}</a>
         <br>
-        <span class="phone-mask">{{$SECDetails->phone}}</span>
+        @tel($SECDetails->phone)
         <br>
         {{$SECDetails->street_address}}
         <br>

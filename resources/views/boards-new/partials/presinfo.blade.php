@@ -3,7 +3,7 @@
     <br>
     <a href="mailto:{{ $PresDetails->email }}">{{ $PresDetails->email }}</a>
     <br>
-    <span class="phone-mask">{{$PresDetails->phone }}</span>
+    @tel($PresDetails->phone)
     <br>
     {{$PresDetails->street_address}}
     <br>

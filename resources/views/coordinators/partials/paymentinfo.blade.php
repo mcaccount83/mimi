@@ -2,7 +2,7 @@
         <div class="col-auto fw-bold">Re-Registration Payment:</div>
         <div class="col text-end">
             @if ($chPayments->rereg_members)
-                <b>{{ $chPayments->rereg_members }} Members</b> on <b><span class="date-mask">{{ $chPayments->rereg_date }}</span></b>
+                <b>{{ $chPayments->rereg_members }} Members</b> on <b>@formatDate($chPayments->rereg_date)</b>
             @else
                 No Payment Recorded
             @endif
@@ -14,12 +14,12 @@
         <div class="col text-end">
             @if ($currentDate->gte($dueDate))
                 @if ($chDetails->start_month_id == $currentMonth)
-                    <span class="badge bg-success fs-7">Due Now (<span class="date-mask">{{ $renewalDate }})</span></span>
+                    <span class="badge bg-success fs-7">Due Now (@formatDate($renewalDate))</span>
                 @else
-                    <span class="badge bg-danger fs-7">Overdue (<span class="date-mask">{{ $renewalDate }})</span></span>
+                    <span class="badge bg-danger fs-7">Overdue (@formatDate($renewalDate))</span>
                 @endif
             @else
-                Next Due on <span class="date-mask">{{ $renewalDate }}</span>
+                Next Due on @formatDate($renewalDate)
             @endif
         </div>
     </div>

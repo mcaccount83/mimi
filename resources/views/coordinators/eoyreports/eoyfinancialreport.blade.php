@@ -103,13 +103,13 @@
                             @if($list->documentsEOY->financial_report_received == '1') YES @else NO @endif
                         </td>
                         <td @if($list->documentsEOY->financial_report_received == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->documentsEOY->financial_report_received != null)<span class="date-mask">{{ $list->documentsEOY->report_received }}</span>@endif
+                            @if($list->documentsEOY->financial_report_received != null)@formatDate($list->documentsEOY->report_received)@endif
                         </td>
                         <td @if($list->documentsEOY->financial_review_complete == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             @if($list->documentsEOY->financial_review_complete == '1') YES @else NO @endif
                         </td>
                         <td @if($list->documentsEOY->financial_review_complete == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->documentsEOY->review_complete != null)<span class="date-mask">{{ $list->documentsEOY->review_complete }}</span>@endif
+                            @if($list->documentsEOY->review_complete != null)@formatDate($list->documentsEOY->review_complete)@endif
                         </td>
                     </tr>
                     @endforeach

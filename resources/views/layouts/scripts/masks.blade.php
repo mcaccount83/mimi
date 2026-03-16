@@ -1,20 +1,20 @@
 <script>
-  function convertDateFormat(dateString) {
-        // Take only the date portion (before the space, if timestamp)
-        var datePart = dateString.trim().split(' ')[0];
-        var parts = datePart.split('-');
-        if (parts.length !== 3) return dateString; // safety fallback
-        return parts[1] + '/' + parts[2] + '/' + parts[0];
-    }
+//   function convertDateFormat(dateString) {
+//         // Take only the date portion (before the space, if timestamp)
+//         var datePart = dateString.trim().split(' ')[0];
+//         var parts = datePart.split('-');
+//         if (parts.length !== 3) return dateString; // safety fallback
+//         return parts[1] + '/' + parts[2] + '/' + parts[0];
+//     }
 
-    function applyDateMask() {
-        $('.date-mask').each(function() {
-            var originalDate = $(this).text();
-            var formattedDate = convertDateFormat(originalDate);
-            $(this).text(formattedDate);
-        });
-        Inputmask({"mask": "99/99/9999"}).mask(".date-mask");
-    }
+//     function applyDateMask() {
+//         $('.date-mask').each(function() {
+//             var originalDate = $(this).text();
+//             var formattedDate = convertDateFormat(originalDate);
+//             $(this).text(formattedDate);
+//         });
+//         Inputmask({"mask": "99/99/9999"}).mask(".date-mask");
+//     }
 
   function applyPhoneMask() {
         Inputmask({"mask": "(999) 999-9999"}).mask(".phone-mask");

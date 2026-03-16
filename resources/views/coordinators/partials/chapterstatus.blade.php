@@ -4,14 +4,14 @@
             {{ $chapterStatus }}
         @elseif ($chDetails->active_status == 2)
             <span class="badge bg-warning text-dark fs-7">Chapter is PENDING</span><br>
-            Application Date: <span class="date-mask">{{ $chDetails->created_at }}</span><br>
+            Application Date: @formatDate($chDetails->created_at)<br>
         @elseif ($chDetails->active_status == 3)
             <span class="badge bg-warning text-dark fs-7">Chapter was NOT APPROVED</span><br>
-            Declined Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
+            Declined Date: @formatDate($chDetails->zap_date)<br>
             {{ $chDetails->disband_reason }}
         @elseif ($chDetails->active_status == 0)
             <span class="badge bg-danger fs-7">Chapter is NOT ACTIVE</span><br>
-            Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
+            Disband Date: <@formatDate($chDetails->zap_date)<br>
             {{ $chDetails->disband_reason }}
         @endif
         <br>

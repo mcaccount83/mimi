@@ -41,7 +41,7 @@
                   @foreach($coordinatorList as $list)
                     <tr>
                     <td class="text-center align-middle"><a href="{{ url("/application/coordapplication/{$list->id}") }}"><i class="bi bi-person-fill-add"></i></a></td>
-                    <td><span class="date-mask">{{ $list->created_at }}</span></td>
+                    <td>@formatDate($list->created_at)</td>
                     <td>
                         @if ($list->region->short_name != "None")
                             {{ $list->conference->short_name }} / {{ $list->region->short_name }}
@@ -52,7 +52,7 @@
                         <td>{{ $list->first_name }} {{ $list->last_name }}</td>
                         <td>{{ $list->displayPosition->long_title }}</td>
                       <td><a href="mailto:{{ $list->sec_email }}">{{ $list->sec_email }}</a></td>
-                    <td>{{ $list->phone }}</td>
+                    <td>@tel($list->phone)</td>
                       <td>{{ $list->reportsTo?->first_name }} {{ $list->reportsTo?->last_name }}</td>
                      @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
                         <td class="text-center align-middle"><i class="bi bi-ban"

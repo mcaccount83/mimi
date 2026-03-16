@@ -148,10 +148,10 @@
                                 <a href="mailto:{{ $cdDetails->sec_email }}">{{ $cdDetails->sec_email }}</a>
                                 @endif
                                 <br>
-                                <span class="phone-mask">{{$cdDetails->phone }}</span>
+                                @tel($cdDetails->phone)
                                 @if ($cdDetails->alt_phone != null )
                                 <br>
-                                <span class="phone-mask">{{$cdDetails->alt_phone }}</span>
+                                @tel($cdDetails->alt_phone)
                                 @endif
                                 <br>
                                 {{$cdDetails->address}}
@@ -162,7 +162,7 @@
                             </div>
                             <div class="col-md-6">
                                 Birthday: {{$cdDetails->birthdayMonth->month_long_name}} {{$cdDetails->birthday_day}}<br>
-                                Card Sent: <span class="date-mask">{{ $cdDetails->card_sent }}</span><br>
+                                Card Sent: @formatDate($cdDetails->card_sent)<br>
                                 @if ($assistConferenceCoordinatorCondition)
                                     <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="updateCardSent()">Update Birthday Card Sent</button>
                                 @endif

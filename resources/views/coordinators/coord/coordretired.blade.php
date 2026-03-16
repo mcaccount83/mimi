@@ -54,7 +54,7 @@
                             @empty
                             @endforelse
                         </td>
-                        <td><span class="date-mask">{{ $list->zapped_date }}</span></td>
+                        <td>@formatDate($list->zapped_date)</td>
                         <td>{{ $list->reason_retired }}</td>
                         @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
                         <td class="text-center align-middle"><i class="bi bi-ban"

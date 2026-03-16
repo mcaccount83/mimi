@@ -1,13 +1,13 @@
 <div class="row">
         <div class="col-auto fw-bold">Start Date:</div>
         <div class="col text-end">
-            <span class="date-mask">{{ $cdDetails->coordinator_start_date }}</span>
+            @formatDate($cdDetails->coordinator_start_date)
             </div>
         </div>
         <div class="row">
         <div class="col-auto fw-bold">Last Promotion Date:</div>
         <div class="col text-end">
-            <span class="date-mask">{{ $cdDetails->last_promoted }}</span>
+            @formatDate($cdDetails->last_promoted)
         </div>
         </div>
         <div class="row">

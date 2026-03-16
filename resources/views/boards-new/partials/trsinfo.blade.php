@@ -8,7 +8,7 @@
         <br>
         <a href="mailto:{{ $TRSDetails->email }}">{{ $TRSDetails->email }}</a>
         <br>
-        <span class="phone-mask">{{$TRSDetails->phone}}</span>
+        @tel($TRSDetails->phone)
         <br>
         {{$TRSDetails->street_address}}
         <br>

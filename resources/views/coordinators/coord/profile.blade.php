@@ -49,9 +49,9 @@
 
                     </li>
                     <li class="list-group-item mt-2">
-                        <b>Start Date:</b> <span class="float-end date-mask">{{ $cdDetails->coordinator_start_date }}</span>
+                        <b>Start Date:</b> @formatDate($cdDetails->coordinator_start_date)
                         <br>
-                        <b>Last Promotion Date:</b> <span class="float-end date-mask">{{ $cdDetails->last_promoted }}</span>
+                        <b>Last Promotion Date:</b> @formatDate($cdDetails->last_promoted)
                         <br>
                         <div class="row mb-3">
                             <label class="col-sm-6 col-form-label">Home Chapter:</label>

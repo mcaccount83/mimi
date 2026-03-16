@@ -177,8 +177,8 @@
                   <li class="list-group-item ">
                     <div class="row">
                         <div class="col-auto fw-bold">Application Date:</div>
-                            <div class="col text-end date-mask">
-                            {{ $cdDetails->coordinator_start_date }}
+                            <div class="col text-end">
+                            @formatDate($cdDetails->coordinator_start_date)
                         </div>
                     </div>
 

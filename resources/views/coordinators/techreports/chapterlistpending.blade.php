@@ -54,7 +54,6 @@
                                                 <a href="{{ route('board.newchapterstatus', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-primary bg-gradient btn-sm me-2">New Chapter Status</a>
                                             </div>
                                         </td>
-                                        {{-- <td><span class="date-mask">{{ $chapter->zap_date }}</span></td> --}}
                                     </tr>
                                 @endforeach
                             </tbody>

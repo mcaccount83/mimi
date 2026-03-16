@@ -87,15 +87,15 @@
                           </div>
                           <div class="row">
                             <div class="col-auto fw-bold">Phone:</div>
-                            <div class="col text-end phone-mask">
-                                {{$cdDetails->phone }}
+                            <div class="col text-end">
+                                @tel($cdDetails->phone)
                         @if ($cdDetails->alt_phone != null )
                         </div>
                           </div>
                           <div class="row">
                             <div class="col-auto fw-bold">Atl Phone:</div>
-                            <div class="col text-end phone-mask">
-                                {{$cdDetails->alt_phone }}
+                            <div class="col text-end">
+                                @tel($cdDetails->alt_phone)
                         @endif
                         </div>
                           </div>

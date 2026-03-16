@@ -40,7 +40,7 @@
                   @foreach($coordinatorList as $list)
                     <tr>
                     <td class="text-center align-middle"><a href="{{ url("/application/coordapplication/{$list->id}") }}"><i class="bi bi-person-fill-x"></i></a></td>
-                    <td><span class="date-mask">{{ $list->created_at }}</span></td>
+                    <td>@formatDate($list->created_at)</td>
                     <td>
                         @if ($list->region->short_name != "None")
                             {{ $list->conference->short_name }} / {{ $list->region->short_name }}

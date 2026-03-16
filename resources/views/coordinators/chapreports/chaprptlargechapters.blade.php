@@ -54,7 +54,7 @@
                         </td>
                         <td>{{ $list->name }}</td>
                         <td>{{ $list->payments->rereg_members }}</td>
-						<td><span class="date-mask">{{ $list->payments->rereg_date }}</span></td>
+						<td>@formatDate($list->payments->rereg_date)</td>
 					   </tr>
                   @endforeach
                   </tbody>

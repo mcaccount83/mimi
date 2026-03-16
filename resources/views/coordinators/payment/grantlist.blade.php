@@ -49,16 +49,11 @@
                         </td>
                         <td>
                             {{$list->chapterstate->state_short_name}}
-                            {{-- @if($list->chapters->state_id < 52)
-                                {{$list->chapters->state->state_short_name}}
-                            @else
-                                {{$list->chapters->country->short_name}}
-                            @endif --}}
                         </td>
                         <td>{{ $list->chapters?->name }}</td>
                         <td>{{ $list->first_name }} {{ $list->last_name }}</td>
                         <td>
-                            @if($list->submitted == '1') Submitted | <span class="date-mask">{{ $list->submitted_at}}</span> @else Draft @endif
+                            @if($list->submitted == '1') Submitted | @formatDate($list->submitted_at) @else Draft @endif
                         </td>
                          <td>
                             @if($list->grant_approved == '1') Approved

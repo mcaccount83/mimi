@@ -639,7 +639,7 @@
                                         <h3 class="mb-0">{{$PresDetails->first_name}} {{$PresDetails->last_name}}</h3>
                                         <a href="mailto:{{ $PresDetails->email }}">{{ $PresDetails->email }}</a>
                                         <br>
-                                        <span class="phone-mask">{{$PresDetails->phone }}</span>
+                                        @tel($PresDetails->phone)
                                         <br>
                                         {{$PresDetails->street_address}}
                                         <br>
@@ -704,7 +704,7 @@
                                         <h3 class="mb-0">{{$AVPDetails->first_name}} {{$AVPDetails->last_name}}</h3>
                                         <a href="mailto:{{ $AVPDetails->email }}">{{ $AVPDetails->email }}</a>
                                         <br>
-                                        <span class="phone-mask">{{$AVPDetails->phone}}</span>
+                                        @tel($AVPDetails->phone)
                                         <br>
                                         {{$AVPDetails->street_address}}
                                         <br>
@@ -769,7 +769,7 @@
                                         <h3 class="mb-0">{{$MVPDetails->first_name}} {{$MVPDetails->last_name}}</h3>
                                         <a href="mailto:{{ $MVPDetails->email }}">{{ $MVPDetails->email }}</a>
                                         <br>
-                                        <span class="phone-mask">{{$MVPDetails->phone}}</span>
+                                        @tel($MVPDetails->phone)
                                         <br>
                                         {{$MVPDetails->street_address}}
                                         <br>
@@ -834,7 +834,7 @@
                                     <h3 class="mb-0">{{$TRSDetails->first_name}} {{$TRSDetails->last_name}}</h3>
                                     <a href="mailto:{{ $TRSDetails->email }}">{{ $TRSDetails->email }}</a>
                                     <br>
-                                    <span class="phone-mask">{{$TRSDetails->phone}}</span>
+                                    @tel($TRSDetails->phone)
                                     <br>
                                     {{$TRSDetails->street_address}}
                                     <br>
@@ -899,7 +899,7 @@
                                 <h3 class="mb-0">{{$SECDetails->first_name}} {{$SECDetails->last_name}}</h3>
                                 <a href="mailto:{{ $SECDetails->email }}">{{ $SECDetails->email }}</a>
                                 <br>
-                                <span class="phone-mask">{{$SECDetails->phone}}</span>
+                                @tel($SECDetails->phone)
                                 <br>
                                 {{$SECDetails->street_address}}
                                 <br>

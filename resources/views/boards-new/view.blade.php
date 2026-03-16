@@ -169,7 +169,7 @@
                               <div class="col-12 mb-3">
                                     <label class="me-2">Last Re-Registration Payment:</label>
                                         @if ($chPayments->rereg_members)
-                                            ${{ number_format($chPayments->rereg_payment, 2) }} for {{ $chPayments->rereg_members }} Members on <span class="date-mask">{{ $chPayments->rereg_date }}</span>
+                                            ${{ number_format($chPayments->rereg_payment, 2) }} for {{ $chPayments->rereg_members }} Members on @formatDate($chPayments->rereg_date)
                                         @else
                                             No Payment Recorded
                                         @endif
@@ -177,12 +177,12 @@
                                     <label class="me-2">Next Re-Registration Payment:</label>
                                     @if ($currentDate->gte($dueDate))
                                         @if ($chDetails->start_month_id == $currentMonth)
-                                            <span class="badge bg-success fs-7">Due Now (<span class="date-mask">{{ $renewalDate }})</span></span>
+                                            <span class="badge bg-success fs-7">Due Now (@formatDate($renewalDate))</span>
                                         @else
-                                            <span class="badge bg-danger fs-7">Overdue (<span class="date-mask">{{ $renewalDate }})</span></span>
+                                            <span class="badge bg-danger fs-7">Overdue (@formatDate($renewalDate))</span>
                                         @endif
                                     @else
-                                        Due on <span class="date-mask">{{ $renewalDate }}</span>
+                                        Due on @formatDate($renewalDate)
                                     @endif
                                     <br>
                                 </div>

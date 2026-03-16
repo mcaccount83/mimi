@@ -45,7 +45,7 @@
                             <td class="text-center align-middle">
                                 <a onclick="showChapterSetupEmailModal({{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="bi bi-envelope text-primary"></i></a>
                            </td>
-                            <td><span class="date-mask">{{ $list->created_at }}</span></td>
+                            <td>@formatDate($list->created_at)</td>
                             <td>
                                 @if ($list->state->conference_id > 0)
                                     {{ $list->state->conference->short_name }} / {{ $list->state->region->short_name }}
@@ -65,7 +65,7 @@
                             <td class="email-column">
                                 <a href="mailto:{{ $list->pendingPresident->email }}">{{ $list->pendingPresident->email }}</a>
                             </td>
-                            <td><span class="phone-mask">{{ $list->pendingPresident->phone }}</span></td>
+                            <td><@tel($list->pendingPresident->phone)</td>
                             @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
                         <td class="text-center align-middle"><i class="bi bi-ban"
                             onclick="showDeleteChapterModal({{ $list->id }}, '{{ $list->name }}', '{{ $list->activeStatus->active_status }}')"
