@@ -15,13 +15,13 @@ class BladeDirectivesServiceProvider extends ServiceProvider
         });
         // example - @mailto($MVPDetails->email)
 
-       Blade::directive('tel', function ($expression) {
-            return "<?php echo !empty($expression) ? '<a href=\"tel:+1' . preg_replace('/[^0-9]/', '', $expression) . '\">' . $expression . '</a>' : ''; ?>";
+       Blade::directive('formatDate', function ($expression) {
+            return "<?php echo $expression ? \\Carbon\\Carbon::parse($expression)->format('m/d/Y') : ''; ?>";
         });
         // example - @formatDate($chPayments->rereg_date)
 
         Blade::directive('tel', function ($expression) {
-            return "<?php echo 'tel:+1' . preg_replace('/[^0-9]/', '', $expression); ?>";
+            return "<?php echo !empty($expression) ? '<a href=\"tel:+1' . preg_replace('/[^0-9]/', '', $expression) . '\">' . $expression . '</a>' : ''; ?>";
         });
         // example - @tel($chapter->phone)
 
