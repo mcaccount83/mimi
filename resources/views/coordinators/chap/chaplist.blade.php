@@ -63,7 +63,7 @@
                             <td>{{ $list->ein }}</td>
                             <td>{{ $list->president->first_name }} {{ $list->president->last_name }}</td>
                             <td class="email-column">
-                                <a href="mailto:{{ $list->president->email }}">{{ $list->president->email }}</a>
+                                @mailto($list->president->email)
                             </td>
                             <td>@tel($list->president->phone)</td>
                             <td>{{ $list->primaryCoordinator?->first_name }} {{ $list->primaryCoordinator?->last_name }}</td>

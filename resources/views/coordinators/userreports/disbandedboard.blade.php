@@ -51,7 +51,7 @@
                         <td>{{ $list->boardDisbanded?->chapters->name }}</td>
                         <td>{{ $list->first_name }} {{ $list->last_name }}</td>
                         <td class="email-column">
-                            <a href="mailto:{{ $list->email }}">{{ $list->email }}</a>
+                            @mailto($list->email)
                         </td>
                         <td>
                            @IF($list->type_id == \App\Enums\UserTypeEnum::COORD)

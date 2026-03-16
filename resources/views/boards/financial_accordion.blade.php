@@ -3091,7 +3091,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
             <br>
             @if ($userTypeId != \App\Enums\UserTypeEnum::COORD)
                 <strong>Name:</strong> {{ $userName }}<br>
-                <strong>Email:</strong> <a href="mailto:{{ $userEmail }}">{{ $userEmail }}</a>
+                <strong>Email:</strong> @mailto($userEmail)
             @else
                 <strong>Name:</strong><br>
                 <strong>Email:</strong>

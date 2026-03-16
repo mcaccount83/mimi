@@ -18,7 +18,7 @@
 <br>
 <center><b>YOUR MENTORING COORDINATOR</b></center>
     <p><center>{{ $mailData['cdReportTo'] }}<br>
-                <a href="mailto:{{ $mailData['cdReportEmail'] }}">{{ $mailData['cdReportEmail'] }}</a><br>
+                @mailto($mailData['cdReportEmail'])<br>
                {{ $mailData['cdReportPhone'] }}</center></p>
 <br>
 <hr>

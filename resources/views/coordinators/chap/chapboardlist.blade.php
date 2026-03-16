@@ -56,12 +56,12 @@
                         @endif
                     </td>
                     <td>{{ $list->name }}</td>
-                    <td class="email-column"><a href="mailto:{{ $list->email?? null }}">{{ $list->email?? null }}</a></td>
-                    <td class="email-column"><a href="mailto:{{ $list->president->email }}">{{ $list->president->email }}</a></td>
-                    <td class="email-column"><a href="mailto:{{ $list->avp->email?? null }}">{{ $list->avp->email?? null }}</a></td>
-                    <td class="email-column"><a href="mailto:{{ $list->mvp->email?? null }}">{{ $list->mvp->email?? null }}</a></td>
-                    <td class="email-column"><a href="mailto:{{ $list->secretary->email?? null }}">{{ $list->secretary->email?? null }}</a></td>
-                    <td class="email-column"><a href="mailto:{{ $list->treasurer->email?? null }}">{{ $list->treasurer->email?? null }}</a></td>
+                    <td class="email-column">@mailto($list->email?? null)</td>
+                    <td class="email-column">@mailto($list->president->email)</td>
+                    <td class="email-column">@mailto($list->avp->email?? null)</td>
+                    <td class="email-column">@mailto($list->mvp->email?? null)</td>
+                    <td class="email-column">@mailto($list->secretary->email?? null)</td>
+                    <td class="email-column">@mailto($list->treasurer->email?? null)</td>
 			      </tr>
                   @endforeach
                   </tbody>

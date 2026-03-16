@@ -119,7 +119,7 @@
                     </div>
                     <div class="d-flex align-items-center justify-content-between w-100">
                         <label>Email:</label>
-                        <a href="mailto:{{ $grantDetails->board_email }}">{{ $grantDetails->board_email }}</a>
+                        @mailto($grantDetails->board_email)
                     </div>
                     <div class="d-flex align-items-center justify-content-between w-100">
                         <label>Phone:</label>

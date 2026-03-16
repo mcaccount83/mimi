@@ -6,7 +6,7 @@
     <div class="col-md-6">
         <label>{{$SECDetails->first_name}} {{$SECDetails->last_name}}</label>
         <br>
-        <a href="mailto:{{ $SECDetails->email }}">{{ $SECDetails->email }}</a>
+        @mailto($SECDetails->email)
         <br>
         @tel($SECDetails->phone)
         <br>

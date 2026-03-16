@@ -65,7 +65,7 @@
                                 ${{ $list->amount_awarded }}
                             @endif
                         </td>
-                        <td><a href="mailto:{{ $list->board_email }}">{{ $list->board_email }}</a></td>
+                        <td>@mailto($list->board_email)</td>
                     </tr>
                   @endforeach
                   </tbody>

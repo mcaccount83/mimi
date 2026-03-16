@@ -51,7 +51,7 @@
                     </td>
                         <td>{{ $list->first_name }} {{ $list->last_name }}</td>
                         <td>{{ $list->displayPosition->long_title }}</td>
-                      <td><a href="mailto:{{ $list->sec_email }}">{{ $list->sec_email }}</a></td>
+                      <td>@mailto($list->sec_email)</td>
                     <td>@tel($list->phone)</td>
                       <td>{{ $list->reportsTo?->first_name }} {{ $list->reportsTo?->last_name }}</td>
                      @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')

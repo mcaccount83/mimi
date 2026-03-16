@@ -348,7 +348,7 @@
                 <div class="row mb-1">
                     <div class="col-auto fw-bold">Contact Email:</div>
                     <div class="col text-end">
-                        <a href="mailto:{{ !is_null($chFinancialReport) ? $chFinancialReport->completed_email : '' }}">{{ !is_null($chFinancialReport) ? $chFinancialReport->completed_email : '' }}</a>
+                        @mailto(!is_null($chFinancialReport) ? $chFinancialReport->completed_email : '')
                     </div>
                 </div>
                 <div class="row mb-1">

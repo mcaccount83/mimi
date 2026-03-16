@@ -142,10 +142,10 @@
                             <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <a href="mailto:{{ $cdDetails->email }}">{{ $cdDetails->email }}</a>
+                                @mailto($cdDetails->email)
                                 @if ($cdDetails->sec_email != null )
                                 <br>
-                                <a href="mailto:{{ $cdDetails->sec_email }}">{{ $cdDetails->sec_email }}</a>
+                                @mailto($cdDetails->sec_email)
                                 @endif
                                 <br>
                                 @tel($cdDetails->phone)

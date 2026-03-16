@@ -64,7 +64,7 @@
                             </td>
                         @endif
                 	  <td>@formatDate($list->coordinator_start_date)</td>
-                      <td><a href="mailto:{{ $list->email }}">{{ $list->email }}</a></td>
+                      <td>@mailto($list->email)</td>
                       <td>{{ $list->reportsTo?->first_name }} {{ $list->reportsTo?->last_name }}</td>
                       @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
                         <td class="text-center align-middle"><i class="bi bi-ban"

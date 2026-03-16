@@ -40,7 +40,7 @@
 <p><b>Coordinator Team</b></p>
 <p>All MOMS Club chapters have an International Coordinator assigned to help them. She is there for anything that you need! Any questions you have or good news you want to share -- talk to her, she loves to hear from you!<br>
 <center>{{ $mailData['pcName'] }}<br>
-                <a href="mailto:{{ $mailData['pcEmail'] }}">{{ $mailData['pcEmail'] }}</a></center></p>
+                @mailto($mailData['pcEmail'])</center></p>
 <br>
 <hr>
 <p><b>Chapter Resources</b></p>

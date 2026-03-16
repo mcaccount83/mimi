@@ -61,7 +61,7 @@
                         </div>
                         <div class="info-row">
                             <div class="info-label-empty"></div>
-                            <div class="info-data"><a href="mailto:{{ $chDetails->pendingPresident->email }}">{{ $chDetails->pendingPresident->email }}</a></div>
+                            <div class="info-data">@mailto($chDetails->pendingPresident->email)</div>
                         </div>
                         <div class="info-row">
                             <div class="info-label-empty"></div>

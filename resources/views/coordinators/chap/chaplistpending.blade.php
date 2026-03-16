@@ -63,7 +63,7 @@
                             <td>{{ $list->name }}</td>
                             <td>{{ $list->pendingPresident->first_name }} {{ $list->pendingPresident->last_name }}</td>
                             <td class="email-column">
-                                <a href="mailto:{{ $list->pendingPresident->email }}">{{ $list->pendingPresident->email }}</a>
+                                @mailto($list->pendingPresident->email)
                             </td>
                             <td><@tel($list->pendingPresident->phone)</td>
                             @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')

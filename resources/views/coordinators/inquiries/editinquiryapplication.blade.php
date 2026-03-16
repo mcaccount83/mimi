@@ -175,7 +175,7 @@
                                 <label>Email:</label>
                             </div>
                             <div class="col-sm-8 mb-2">
-                                <a href="mailto:{{ $inqDetails->inquiry_email }}">{{ $inqDetails->inquiry_email }}</a>
+                                @mailto($inqDetails->inquiry_email)
                             </div>
                         </div>
                          <div class="row mb-1">

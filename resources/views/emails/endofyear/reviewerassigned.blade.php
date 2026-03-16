@@ -8,7 +8,7 @@ Message from {{$mailData['userName']}}:<br>
 <br>
 The Financial Report PDF is attached and other documnets that can be downloaded are listed below.<br>
 <br>
-Submitted by: {{$mailData['completedName']}}, <a href="mailto:{{$mailData['completedEmail']}}">{{$mailData['completedEmail']}}</a><br>
+Submitted by: {{$mailData['completedName']}}, @mailto($mailData['completedEmail'])</a><br>
 <br>
 Downloads Available:
 <ul>

@@ -51,7 +51,7 @@
                         N/A
                     @else
                         <span class="email-display">
-                            <a href="mailto:{{ $list->inquiries?->inquiries_email }}">{{ $list->inquiries?->inquiries_email }}</a>
+                            @mailto($list->inquiries?->inquiries_email)
                         </span>
                         <span class="email-edit" style="display: none;">
                             <input type="email" class="form-control form-control-sm email-input" value="{{ $list->inquiries?->inquiries_email }}">

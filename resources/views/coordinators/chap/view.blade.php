@@ -116,9 +116,9 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label>Chapter Email Address:</label> <a href="mailto:{{ $chDetails->email}}">{{ $chDetails->email}}</a>
+                                    <label>Chapter Email Address:</label> @mailto($chDetails->email)
                                 <br>
-                                <label>Email used for Inquiries:</label> <a href="mailto:{{ $chDetails->inquiries_contact}}">{{ $chDetails->inquiries_contact}}</a>
+                                <label>Email used for Inquiries:</label> @mailto($chDetails->inquiries_contact)
                                 <br>
                                 <label>Inquiries Notes (not visible to board members):</label><br>
                                 {{ $chDetails->inquiries_note}}
@@ -637,7 +637,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <h3 class="mb-0">{{$PresDetails->first_name}} {{$PresDetails->last_name}}</h3>
-                                        <a href="mailto:{{ $PresDetails->email }}">{{ $PresDetails->email }}</a>
+                                        @mailto($PresDetails->email)
                                         <br>
                                         @tel($PresDetails->phone)
                                         <br>
@@ -702,7 +702,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <h3 class="mb-0">{{$AVPDetails->first_name}} {{$AVPDetails->last_name}}</h3>
-                                        <a href="mailto:{{ $AVPDetails->email }}">{{ $AVPDetails->email }}</a>
+                                        @mailto($AVPDetails->email)
                                         <br>
                                         @tel($AVPDetails->phone)
                                         <br>
@@ -767,7 +767,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <h3 class="mb-0">{{$MVPDetails->first_name}} {{$MVPDetails->last_name}}</h3>
-                                        <a href="mailto:{{ $MVPDetails->email }}">{{ $MVPDetails->email }}</a>
+                                        @mailto($MVPDetails->email)
                                         <br>
                                         @tel($MVPDetails->phone)
                                         <br>
@@ -832,7 +832,7 @@
                               <div class="row">
                                 <div class="col-md-6">
                                     <h3 class="mb-0">{{$TRSDetails->first_name}} {{$TRSDetails->last_name}}</h3>
-                                    <a href="mailto:{{ $TRSDetails->email }}">{{ $TRSDetails->email }}</a>
+                                    @mailto($TRSDetails->email)
                                     <br>
                                     @tel($TRSDetails->phone)
                                     <br>
@@ -897,7 +897,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <h3 class="mb-0">{{$SECDetails->first_name}} {{$SECDetails->last_name}}</h3>
-                                <a href="mailto:{{ $SECDetails->email }}">{{ $SECDetails->email }}</a>
+                                <@mailto($SECDetails->email)
                                 <br>
                                 @tel($SECDetails->phone)
                                 <br>
