@@ -461,7 +461,6 @@ function showResetProbationSubmisionModel() {
                 <p>Approving a chapter application will create their MIMI login, request their @momsclub.org email address, add them to the BoardList, and PublicList as well as give
                     them access to Board elearning. Please verify this is what you want to do by pressing OK.</p>
                 <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
-                <input type="hidden" id="ch_region" name="ch_region" value="${chapterRegion}">
             `,
             showCancelButton: true,
             confirmButtonText: 'OK',
@@ -472,12 +471,6 @@ function showResetProbationSubmisionModel() {
             },
             preConfirm: () => {
                 const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
-                const chapterRegion = Swal.getPopup().querySelector('#ch_region').value;
-
-                if (chapterRegion == 0 || chapterRegion == null) {
-                    Swal.showValidationMessage('Please select region.');
-                    return false;
-                }
 
                 return {
                     chapter_id: chapterId,

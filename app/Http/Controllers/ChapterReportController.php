@@ -6,6 +6,7 @@ use App\Enums\CheckboxFilterEnum;
 use App\Enums\OperatingStatusEnum;
 use App\Models\Chapters;
 use App\Models\Documents;
+use App\Models\DocumentsEOY;
 use App\Services\PositionConditionsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -131,6 +132,7 @@ class ChapterReportController extends Controller implements HasMiddleware
 
         $chapter = Chapters::find($id);
         $documents = Documents::find($id);
+        $documentsEOY = DocumentsEOY::find($id);
 
         DB::beginTransaction();
         try {
@@ -140,10 +142,12 @@ class ChapterReportController extends Controller implements HasMiddleware
 
             $documents->ein_letter = $request->has('ch_ein_letter') ? 1 : 0;
             $documents->ein_notes = $request->input('ein_notes');
-            $documents->irs_verified = $request->has('irs_verified') ? 1 : 0;
             $documents->ein_sent = $request->has('ein_sent') ? 1 : 0;
-            $documents->irs_notes = $request->input('irs_notes');
             $documents->save();
+
+            $documentsEOY->irs_verified = $request->has('irs_verified') ? 1 : 0;
+            $documentsEOY->irs_notes = $request->input('irs_notes');
+            $documentsEOY->save();
 
             DB::commit();
 
