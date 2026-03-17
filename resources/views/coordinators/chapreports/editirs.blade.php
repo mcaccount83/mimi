@@ -91,7 +91,7 @@
                        <div class="row mb-3">
                                                     <label class="col-sm-2 col-form-label mb-1">EIN Letter:</label>
                             <div class="col-sm-10">
-                                @if($chEOYDocuments->ein_letter_path != null)
+                                @if($chDocuments->ein_letter_path != null)
                                     <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chEOYDocuments->ein_letter_path }}')">EIN Letter from IRS</button>
                                 @else
                                     <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No EIN Letter on File</button>
@@ -101,7 +101,7 @@
                         <div class="row mb-3">
                             <label class="col-sm-2 col-form-label mb-1">EIN Notes:</label>
                             <div class="col-sm-10">
-                                <input type="text" name="ein_notes" id="ein_notes" class="form-control" value="{{ $chEOYDocuments->ein_notes }}" placeholder="EIN Notes">
+                                <input type="text" name="ein_notes" id="ein_notes" class="form-control" value="{{ $chDocuments->ein_notes }}" placeholder="EIN Notes">
                             </div>
                         </div>
 
@@ -109,7 +109,7 @@
                             <div class="row mb-3 row align-items-center  mb-3">
                                 <label class="col-sm-2 col-form-label">Added as Subordinate:</label>
                                 <div class="col-sm-10 form-check form-switch">
-                                    <input type="checkbox" name="ein_sent" id="ein_sent" class="form-check-input" {{$chEOYDocuments->ein_sent == 1 ? 'checked' : ''}}>
+                                    <input type="checkbox" name="ein_sent" id="ein_sent" class="form-check-input" {{$chDocuments->ein_sent == 1 ? 'checked' : ''}}>
                                     <label class="form-check-label" for="ein_sent"></label>
                                 </div>
                             </div>
@@ -117,10 +117,10 @@
                             <div class="row mb-3 row align-items-center  mb-3">
                                 <label class="col-sm-2 col-form-label">Added as Subordinate:</label>
                                 <div class="col-sm-10 form-check form-switch">
-                                    <input type="checkbox" name="ein_sent" id="ein_sent" class="form-check-input" {{$chEOYDocuments->ein_sent == 1 ? 'checked' : ''}} disabled>
+                                    <input type="checkbox" name="ein_sent" id="ein_sent" class="form-check-input" {{$chDocuments->ein_sent == 1 ? 'checked' : ''}} disabled>
                                     <label class="form-check-label" for="ein_sent"></label>
                                     <!-- Hidden input to submit the value -->
-                                    <input type="hidden" name="ein_sent" value="{{ $chEOYDocuments->ein_sent }}">
+                                    <input type="hidden" name="ein_sent" value="{{ $chDocuments->ein_sent }}">
                                 </div>
                             </div>
                         @endif
