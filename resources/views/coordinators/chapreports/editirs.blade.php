@@ -72,10 +72,10 @@
                             <div class="row mb-3 row align-items-center">
                             <label class="col-sm-2 col-form-label">EIN Letter Received:</label>
                             <div class="col-sm-10 form-check form-switch">
-                                <input type="checkbox" name="ch_ein_letter_display" id="ch_ein_letter" class="form-check-input" {{$chEOYDocuments->ein_letter == 1 ? 'checked' : ''}} disabled>
+                                <input type="checkbox" name="ch_ein_letter_display" id="ch_ein_letter" class="form-check-input" {{$chDocuments->ein_letter == 1 ? 'checked' : ''}} disabled>
                                 <label class="form-check-label" for="ch_ein_letter"></label>
                                 <!-- Hidden input to submit the value -->
-                                <input type="hidden" name="ch_ein_letter" value="{{ $chEOYDocuments->ein_letter }}">
+                                <input type="hidden" name="ch_ein_letter" value="{{ $chDocuments->ein_letter }}">
                             </div>
                         </div>
 
@@ -92,7 +92,7 @@
                                                     <label class="col-sm-2 col-form-label mb-1">EIN Letter:</label>
                             <div class="col-sm-10">
                                 @if($chDocuments->ein_letter_path != null)
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chEOYDocuments->ein_letter_path }}')">EIN Letter from IRS</button>
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chDocuments->ein_letter_path }}')">EIN Letter from IRS</button>
                                 @else
                                     <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No EIN Letter on File</button>
                                 @endif
