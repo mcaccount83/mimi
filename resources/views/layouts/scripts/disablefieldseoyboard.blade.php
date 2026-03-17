@@ -1,7 +1,8 @@
 <script>
  document.addEventListener('DOMContentLoaded', function () {
-    var submitted = @json($chEOYDocuments->financial_review_complete);
-    var received = @json($chEOYDocuments->financial_report_received);
+    // var submitted = @json($chEOYDocuments->financial_review_complete);
+    // var received = @json($chEOYDocuments->financial_report_received);
+    var activated = @json($chEOYDocuments->new_board_active);
     var ITCondition = @json($ITCondition ?? false);
     var eoyTestCondition = @json($eoyTestCondition ?? false);
     var includeEoyConditions = @json($includeEoyConditions ?? false);
@@ -39,12 +40,12 @@
          $('.keep-enabled').prop('disabled', false);
     }
 
-    if (received != '1' && !shouldEnable) {
+    if (activated != '1' && !shouldEnable) {
         disableButtons();
         disableFields();
-    } else if (submitted == '1' && !shouldEnable) {
-        disableButtons(['review-clear', 'financial-pdf', 'generate-pdf']);
-        disableFields();
+    // } else if (activated == '1' && !shouldEnable) {
+    //     disableButtons(['review-clear', 'financial-pdf', 'generate-pdf']);
+    //     disableFields();
     }
 
     var allDisabled = true;

@@ -345,4 +345,5 @@
     @php $disableMode = 'disable-all'; @endphp
     @include('layouts.scripts.disablefields')
 @endif
+@include('layouts.scripts.disablefieldseoyboard')
 @endsection

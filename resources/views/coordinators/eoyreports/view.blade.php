@@ -181,16 +181,18 @@
                                 <label>Board Report:</label>
                             </div>
                             <div class="col-sm-9">
-                                @if($chEOYDocuments->new_board_active != '1')
+                                {{-- @if($chEOYDocuments->new_board_active != '1') --}}
                                     <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='{{ route('eoyreports.editboardreport', ['id' => $chDetails->id]) }}'">View Board Election Report</button>
-                                    @if($chEOYDocuments->new_board_submitted == '1')
-                                        <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="return PreSaveValidate(false)" >Activate Board</button>
-                                    @else
-                                        <button type="button" class="btn btn-primary bg-gradient btn-sm" disabled >Report Not Submitted</button>
+                                    @if($chEOYDocuments->new_board_active != '1')
+                                        @if($chEOYDocuments->new_board_submitted == '1')
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="return PreSaveValidate(false)" >Activate Board</button>
+                                        @else
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm" disabled >Report Not Submitted</button>
+                                        @endif
                                     @endif
-                                @else
+                                {{-- @else
                                     Board Report is no longer available after activation.
-                                @endif
+                                @endif --}}
                             </div>
                         </div>
                     @else

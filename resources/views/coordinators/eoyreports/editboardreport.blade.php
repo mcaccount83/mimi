@@ -62,7 +62,7 @@
                                 <br>
                                 Outgoing board members have access to Financial Reports Only.<br>
                                 <br>
-                                Future board member changes can be made on the Chapter Details pages.<br>
+                                Changes can be made on the Chapter Details page.<br>
                                 <br>
                         @endif
                     </li>
@@ -459,7 +459,7 @@
                     <div class="card card-primary card-outline">
         <div class="card-body">
             <div class="card-header bg-transparent border-0">
-                <h3>{{ $boardReportName}} Details</h3>
+                <h3>Current Board Details</h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -557,7 +557,7 @@
     <!-- /.content -->
 @endsection
 @section('customscript')
-@include('layouts.scripts.disablefieldseoy')
+@include('layouts.scripts.disablefieldseoyfinancial')
 <script>
 
 $(document).ready(function() {

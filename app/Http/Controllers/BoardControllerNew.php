@@ -970,6 +970,7 @@ class BoardControllerNew extends Controller implements HasMiddleware
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $startMonthName = $baseQuery['startMonthName'];
+        $chEOYDocuments = $baseQuery['chEOYDocuments'];
         $websiteLink = $baseQuery['websiteLink'];
 
         $allWebLinks = $baseQuery['allWebLinks'];
@@ -982,7 +983,7 @@ class BoardControllerNew extends Controller implements HasMiddleware
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userAdmin' => $userAdmin,
             'websiteLink' => $websiteLink, 'allWebLinks' => $allWebLinks, 'userTypeId' => $userTypeId, 'bdPositionId' => $bdPositionId,
-            'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
+            'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails, 'chEOYDocuments' => $chEOYDocuments
         ];
 
         return view('boards-new.editonline')->with($data);
