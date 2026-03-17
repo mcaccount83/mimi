@@ -50,17 +50,26 @@
 
                         <!-- /.form group -->
                         <div class="row mb-3">
-                             <label class="col-sm-2 col-form-label">Social Media:</label>
-                                <div class="col-sm-2">
+                             <label class="col-sm-2 col-form-label">Forum/Group/App:</label>
+                                <div class="col-sm-6">
                                 <input type="text" name="ch_onlinediss" id="ch_onlinediss" class="form-control" value="{{ $chDetails->egroup }}"  placeholder="Forum/Group/App" >
                                 </div>
-                                <div class="col-sm-2">
+                        </div>
+                        <div class="row mb-3">
+                             <label class="col-sm-2 col-form-label">Facebook:</label>
+                                <div class="col-sm-6">
                                 <input type="text" name="ch_social1" id="ch_social1" class="form-control" value="{{ $chDetails->social1 }}" placeholder="Facebook"  >
                                 </div>
-                                <div class="col-sm-2">
+                        </div>
+                        <div class="row mb-3">
+                             <label class="col-sm-2 col-form-label">Twitter:</label>
+                                <div class="col-sm-6">
                                     <input type="text" name="ch_social2" id="ch_social2" class="form-control" value="{{ $chDetails->social2 }}"  placeholder="Twitter" >
                                 </div>
-                                <div class="col-sm-2">
+                        </div>
+                        <div class="row mb-3">
+                             <label class="col-sm-2 col-form-label">Instagram:</label>
+                                <div class="col-sm-6">
                                     <input type="text" name="ch_social3" id="ch_social3" class="form-control" value="{{ $chDetails->social3 }}"  placeholder="Instagram" >
                                 </div>
                         </div>

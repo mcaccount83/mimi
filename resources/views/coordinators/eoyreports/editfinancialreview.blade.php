@@ -348,7 +348,7 @@
                 <div class="row mb-1">
                     <div class="col-auto fw-bold">Contact Email:</div>
                     <div class="col text-end">
-                        @mailto(!is_null($chFinancialReport) ? $chFinancialReport->completed_email : '')
+                        @mailto((!is_null($chFinancialReport) ? $chFinancialReport->completed_email : ''))
                     </div>
                 </div>
                 <div class="row mb-1">

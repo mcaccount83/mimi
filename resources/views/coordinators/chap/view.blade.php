@@ -248,31 +248,27 @@
                                 </div>
                             </div>
 
+                            @if($chDocuments->probation_path != null)
                             <div class="row">
                                 <div class="col-sm-6 mb-2">
                                     <label>Probation Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    @if($chDocuments->probation_path != null)
-                                        <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="probation-file" onclick="openPdfViewer('{{ $chDocuments->probation_path }}')">Probation Letter</button>
-                                    @else
-                                        <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No Probation Letter on File</button>
-                                    @endif
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="probation-file" onclick="openPdfViewer('{{ $chDocuments->probation_path }}')">Probation Letter</button>
                                 </div>
                             </div>
+                            @endif
 
+                            @if($chDocuments->probation_release_path != null)
                             <div class="row">
                                 <div class="col-sm-6 mb-2">
                                     <label>Probation Release Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    @if($chDocuments->probation_release_path != null)
-                                        <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="probaton-release-file" onclick="openPdfViewer('{{ $chDocuments->probation_release_path }}')">Probation Release Letter</button>
-                                    @else
-                                        <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No Probation Release Letter on File</button>
-                                    @endif
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="probaton-release-file" onclick="openPdfViewer('{{ $chDocuments->probation_release_path }}')">Probation Release Letter</button>
                                 </div>
                             </div>
+                            @endif
 
                             @if($chDocuments->name_change_letter_path != null)
                             <div class="row">

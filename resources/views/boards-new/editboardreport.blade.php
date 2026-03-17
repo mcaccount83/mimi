@@ -147,7 +147,7 @@
                                 <div class="row mb-3">
                                     <label class="col-sm-2 mb-1 col-form-label">AVP:</label>
                                     <div class="col-sm-10 mt-1 form-check form-switch">
-                                        <input type="checkbox" name="AVPVacant" id="AVPVacant" class="form-check-input" {{$AVPDetails->id == '' ? 'checked' : ''}} onchange="ConfirmVacant(this.id)">
+                                        <input type="checkbox" name="AVPVacant" id="AVPVacant" class="form-check-input" {{$AVPDetails->id == '' ? 'checked' : ''}}>
                                         <label class="form-check-label" for="AVPVacant">Vacant</label>
                                     </div>
                                     <div class="avp-field row mb-3">
@@ -204,7 +204,7 @@
                                  <div class="row mb-3">
                                     <label class="col-sm-2 mb-1 col-form-label">MVP:</label>
                                     <div class="col-sm-10 mt-1 form-check form-switch">
-                                            <input type="checkbox" name="MVPVacant" id="MVPVacant" class="form-check-input" {{$MVPDetails->id == '' ? 'checked' : ''}} onchange="ConfirmVacant(this.id)">
+                                            <input type="checkbox" name="MVPVacant" id="MVPVacant" class="form-check-input" {{$MVPDetails->id == '' ? 'checked' : ''}}>
                                             <label class="form-check-label" for="MVPVacant">Vacant</label>
                                     </div>
                                      <div class="mvp-field row mb-3">
@@ -261,7 +261,7 @@
                                 <div class="row mb-3">
                                     <label class="col-sm-2 mb-1 col-form-label">Treasurer:</label>
                                     <div class="col-sm-10 mt-1 form-check form-switch">
-                                            <input type="checkbox" name="TreasVacant" id="TreasVacant" class="form-check-input" {{$TRSDetails->id == '' ? 'checked' : ''}} onchange="ConfirmVacant(this.id)">
+                                            <input type="checkbox" name="TreasVacant" id="TreasVacant" class="form-check-input" {{$TRSDetails->id == '' ? 'checked' : ''}}>
                                             <label class="form-check-label" for="TreasVacant">Vacant</label>
                                     </div>
                                     <div class="trs-field row mb-3">
@@ -318,7 +318,7 @@
                                 <div class="row mb-3">
                                     <label class="col-sm-2 mb-1 col-form-label">Secretary:</label>
                                     <div class="col-sm-10 mt-1 form-check form-switch">
-                                            <input type="checkbox" name="SecVacant" id="SecVacant" class="form-check-input" {{$SECDetails->id == '' ? 'checked' : ''}} onchange="ConfirmVacant(this.id)">
+                                            <input type="checkbox" name="SecVacant" id="SecVacant" class="form-check-input" {{$SECDetails->id == '' ? 'checked' : ''}}>
                                             <label class="form-check-label" for="SecVacant">Vacant</label>
                                     </div>
                                     <div class="sec-field row mb-3">

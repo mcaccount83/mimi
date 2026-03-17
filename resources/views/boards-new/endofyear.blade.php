@@ -71,7 +71,7 @@
                             @endif
 
                             <div class="row">
-                            @include('boards-new.partials.resources_accordion_eoy', ['resources' => $resources])
+                            @include('partials.resources_accordion_eoy', ['resources' => $resources])
                             </div>
 
                           </div>

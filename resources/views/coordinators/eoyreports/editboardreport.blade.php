@@ -33,7 +33,7 @@
     <section class="content">
       <div class="container-fluid">
         <div class="row">
-          <div class="col-md-3">
+          <div class="col-md-4">
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
@@ -45,25 +45,25 @@
                     <ul class="list-group list-group-flush mb-3">
                     <li class="list-group-item">
                         @if ($chEOYDocuments->new_board_submitted != '1' )
-                            <p><span style="color:#dc3545;">Board Election Report has NOT been submitted.</span><br>
-                                <br>Chapter needs to complete and Submit the Board Election Report before new board members can be activated in MIMI.<br>
-                                <br>Submission can be made by a Coordinator <strong>HERE</strong>.<br>
-                            </p>
+                            <label class="me-2">Report Status:</label><span class="badge bg-danger fs-7">Not Submitted</span><br><br>
+                                Chapter needs to Complete and Submit the Board Election Report before new board members can be activated in MIMI.<br>
+                                Submission can also be made by a Coordinator <strong>HERE</strong>.<br>
                         @endif
                         @if ($chEOYDocuments->new_board_submitted == '1' && $chEOYDocuments->new_board_active !='1')
-                            <p><span style="color:#28a745;">Board Election Report HAS been submitted Submitted.</span><br>
-                                <br>Changes can be made by a Coordinator <strong>HERE</strong> Prior to Activation.<br>
-                                <br><span style="color:#dc3545;">Board Election Report has NOT been activated.</span><br>
-                                <br>New Board Members will need to be activated by a Coordinator after July 1st! Once activated, they will have full MIMI Access.<br>
-                                <br>Outgoing board members will have access to Financial Reports Only.<br>
-                            </p>
+                            <label class="me-2">Report Status:</label><span class="badge bg-warning text-dark fs-7">Submitted</span><br><br>
+                                Changes are can no longer be made by the Chapter, but can be updated by a Coordinator <strong>HERE</strong> prior to Activation.<br>
+                                <br>
+                                New Board Members will need to be activated by a Coordinator after July 1st! Once activated, they will have full MIMI Access.<br>
+                                Outgoing board members will have access to Financial Reports Only.<br>
                         @endif
                         @if ($chEOYDocuments->new_board_active =='1')
-                            <p><span style="color:#28a745;">Board Election Report HAS been Submitted and Activated!</span><br>
-                                <br>New board members now have full MIMI Access.<br>
-                                <br>Outgoing board members have access to Financial Reports Only.<br>
-                                <br>Future board member changes can be made on the Chapter Details pages.<br>
-                            </p>
+                            <label class="me-2">Report Status:</label><span class="badge bg-success fs-7">Activated</span><br><br>
+                                New board members now have full MIMI Access.<br>
+                                <br>
+                                Outgoing board members have access to Financial Reports Only.<br>
+                                <br>
+                                Future board member changes can be made on the Chapter Details pages.<br>
+                                <br>
                         @endif
                     </li>
                 </ul>
@@ -76,17 +76,41 @@
             <!-- /.col -->
 
                 @if ($chEOYDocuments->new_board_active != '1')
+                 <div class="col-md-8">
+                        <div class="card card-primary card-outline">
+                            <div class="card-body">
+                                <div class="card-header bg-transparent border-0">
+                                    <h3>{{ $boardReportName}} Details</h3>
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body">
 
-                <div class="col-md-6">
-                    <!-- Profile Image -->
-                    <div class="card card-primary card-outline">
-                        <div class="card-body">
-                        <div class="card-header bg-transparent border-0">
-                                <h3>Board Members</h3>
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                            <!-- /.form group -->
+                    <div class="row">
+                                    <div class="col-md-12">
+                                            <label>Boundaries listed in MIMI (used for Inquiries):</label>
+                                            <div>{{ $chDetails->territory }}</div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label>Are your listed boundaries correct?<span class="field-required">*</span></label>
+                                    <div class="col-12 d-flex gap-4">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" id="BoundaryStatusYes" name="BoundaryStatus" value="0" {{ !is_null($chDetails->boundary_issues) && $chDetails->boundary_issues == 0 ? 'checked' : '' }} onChange="ShowBoundaryError()">
+                                            <label class="form-check-label" for="BoundaryStatusYes">Yes</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" id="BoundaryStatusNo" name="BoundaryStatus" value="1" {{ $chDetails->boundary_issues == 1 ? 'checked' : '' }} onChange="ShowBoundaryError()">
+                                            <label class="form-check-label" for="BoundaryStatusNo">No</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12" id="divBoundaryIssue">
+                                        <div class="col-sm-12">
+                                        <label for="BoundaryIssue">Please indicate which part of the Boundaries not NOT match our records<span class="field-required">*</span></label>
+                                        <input type="text" rows="2"class="form-control" name="BoundaryIssue" id="BoundaryIssue" value="{{ $chDetails->boundary_issue_notes }}" ></input>
+                                     </div>
+                                    </div>
+                                    </div>
+
                                 <div class="row mb-3">
                                     <label class="col-sm-2 mb-1 col-form-label">President:</label>
                                     <div class="col-sm-5 mb-1">
@@ -97,17 +121,17 @@
                                     </div>
                                     <label class="col-sm-2 mb-1 col-form-label"></label>
                                     <div class="col-sm-5 mb-1">
-                                    <input type="text" name="ch_pre_email" id="ch_pre_email" class="form-control"  value="{{ $PresDetails->email }}" required placeholder="Email Address" >
+                                    <input type="text" name="ch_pre_email" id="ch_pre_email" class="form-control" value="{{ $PresDetails->email }}" required placeholder="Email Address" >
                                     </div>
                                     <div class="col-sm-5 mb-1">
                                     <input type="text" name="ch_pre_phone" id="ch_pre_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{ $PresDetails->phone }}" required placeholder="Phone Number" >
                                     </div>
                                     <label class="col-sm-2 mb-1 col-form-label"></label>
                                     <div class="col-sm-10 mb-1">
-                                    <input type="text" name="ch_pre_street" id="ch_pre_street" class="form-control" value="{{ $PresDetails->street_address }}" placeholder="Address" required >
+                                    <input type="text" name="ch_pre_street" id="ch_pre_street" class="form-control" placeholder="Address" value="{{ $PresDetails->street_address }}" required >
                                     </div>
                                     <label class="col-sm-2 mb-1 col-form-label"><br></label>
-                                   <div class="col-sm-3 mb-1">
+                                    <div class="col-sm-3 mb-1">
                                 <input type="text" name="ch_pre_city" id="ch_pre_city" class="form-control" value="{{ $PresDetails->city }}"  required placeholder="City">
                                 </div>
                                 <div class="col-sm-3 mb-1">
@@ -137,11 +161,10 @@
                             </div>
                                 </div>
 
-                                <!-- /.form group -->
                                 <div class="row mb-3">
                                     <label class="col-sm-2 mb-1 col-form-label">AVP:</label>
                                     <div class="col-sm-10 mt-1 form-check form-switch">
-                                        <input type="checkbox" name="AVPVacant" id="AVPVacant" class="form-check-input" {{$AVPDetails->id == '' ? 'checked' : ''}} >
+                                        <input type="checkbox" name="AVPVacant" id="AVPVacant" class="form-check-input" {{$AVPDetails->id == '' ? 'checked' : ''}}>
                                         <label class="form-check-label" for="AVPVacant">Vacant</label>
                                     </div>
                                     <div class="avp-field row mb-3">
@@ -161,7 +184,7 @@
                                         </div>
                                         <label class="col-sm-2 mb-1 col-form-label"></label>
                                         <div class="col-sm-10 mb-1">
-                                        <input type="text" name="ch_avp_street" id="ch_avp_street" class="form-control" value="{{$AVPDetails->street_address != ''  ? $AVPDetails->street_address : ''}}" Placeholder="Address" required >
+                                        <input type="text" name="ch_avp_street" id="ch_avp_street" class="form-control" value="{{$AVPDetails->street_address != ''  ? $AVPDetails->street_address : ''}}"  required >
                                         </div>
                                         <label class="col-sm-2 mb-1 col-form-label"><br></label>
                                         <div class="col-sm-3 mb-1">
@@ -195,14 +218,13 @@
                         </div>
                                 </div>
 
-                                 <!-- /.form group -->
                                  <div class="row mb-3">
                                     <label class="col-sm-2 mb-1 col-form-label">MVP:</label>
                                     <div class="col-sm-10 mt-1 form-check form-switch">
-                                            <input type="checkbox" name="MVPVacant" id="MVPVacant" class="form-check-input" {{$MVPDetails->id == '' ? 'checked' : ''}} >
+                                            <input type="checkbox" name="MVPVacant" id="MVPVacant" class="form-check-input" {{$MVPDetails->id == '' ? 'checked' : ''}}>
                                             <label class="form-check-label" for="MVPVacant">Vacant</label>
                                     </div>
-                                    <div class="mvp-field row mb-3">
+                                     <div class="mvp-field row mb-3">
                                     <label class="col-sm-2 mb-1 col-form-label"></label>
                                     <div class="col-sm-5 mb-1">
                                     <input type="text" name="ch_mvp_fname" id="ch_mvp_fname" class="form-control" value="{{$MVPDetails->first_name != ''  ? $MVPDetails->first_name : ''}}" required placeholder="First Name" >
@@ -219,10 +241,10 @@
                                     </div>
                                     <label class="col-sm-2 mb-1 col-form-label"></label>
                                     <div class="col-sm-10 mb-1">
-                                    <input type="text" name="ch_mvp_street" id="ch_mvp_street" class="form-control" value="{{$MVPDetails->street_address != ''  ? $MVPDetails->street_address : ''}}" placeholder="Address" required >
+                                    <input type="text" name="ch_mvp_street" id="ch_mvp_street" class="form-control" placeholder="Address" value="{{$MVPDetails->street_address != ''  ? $MVPDetails->street_address : ''}}" required >
                                     </div>
                                     <label class="col-sm-2 mb-1 col-form-label"><br></label>
-                                  <div class="col-sm-3 mb-1">
+                                     <div class="col-sm-3 mb-1">
                                 <input type="text" name="ch_mvp_city" id="ch_mvp_city" class="form-control" value="{{$MVPDetails->city != ''  ? $MVPDetails->city : ''}}"  required placeholder="City">
                                 </div>
                                 <div class="col-sm-3 mb-1">
@@ -250,17 +272,16 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
                                 </div>
+                            </div>
 
-                                <!-- /.form group -->
                                 <div class="row mb-3">
                                     <label class="col-sm-2 mb-1 col-form-label">Treasurer:</label>
                                     <div class="col-sm-10 mt-1 form-check form-switch">
-                                            <input type="checkbox" name="TreasVacant" id="TreasVacant" class="form-check-input" {{$TRSDetails->id == '' ? 'checked' : ''}} >
+                                            <input type="checkbox" name="TreasVacant" id="TreasVacant" class="form-check-input" {{$TRSDetails->id == '' ? 'checked' : ''}}>
                                             <label class="form-check-label" for="TreasVacant">Vacant</label>
                                     </div>
-                                <div class="trs-field row mb-3">
+                                    <div class="trs-field row mb-3">
                                     <label class="col-sm-2 mb-1 col-form-label"></label>
                                     <div class="col-sm-5 mb-1">
                                     <input type="text" name="ch_trs_fname" id="ch_trs_fname" class="form-control"  value="{{$TRSDetails->first_name != ''  ? $TRSDetails->first_name : ''}}" required placeholder="First Name" >
@@ -277,10 +298,10 @@
                                     </div>
                                     <label class="col-sm-2 mb-1 col-form-label"></label>
                                     <div class="col-sm-10 mb-1">
-                                    <input type="text" name="ch_trs_street" id="ch_trs_street" class="form-control" value="{{$TRSDetails->street_address != ''  ? $TRSDetails->street_address : ''}}" placeholder="Address" required >
+                                    <input type="text" name="ch_trs_street" id="ch_trs_street" class="form-control" placeholder="Address" value="{{$TRSDetails->street_address != ''  ? $TRSDetails->street_address : ''}}" required >
                                     </div>
                                     <label class="col-sm-2 mb-1 col-form-label"><br></label>
-                                 <div class="col-sm-3 mb-1">
+                                    <div class="col-sm-3 mb-1">
                                 <input type="text" name="ch_trs_city" id="ch_trs_city" class="form-control" value="{{$TRSDetails->city != ''  ? $TRSDetails->city : ''}}"  required placeholder="City">
                                 </div>
                                 <div class="col-sm-3 mb-1">
@@ -308,10 +329,9 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
                                 </div>
+                            </div>
 
-                                <!-- /.form group -->
                                 <div class="row mb-3">
                                     <label class="col-sm-2 mb-1 col-form-label">Secretary:</label>
                                     <div class="col-sm-10 mt-1 form-check form-switch">
@@ -335,7 +355,7 @@
                                     </div>
                                     <label class="col-sm-2 mb-1 col-form-label"></label>
                                     <div class="col-sm-10 mb-1">
-                                    <input type="text" name="ch_sec_street" id="ch_sec_street" class="form-control" value="{{$SECDetails->street_address != ''  ? $SECDetails->street_address : ''}}" placeholder="Address" required >
+                                    <input type="text" name="ch_sec_street" id="ch_sec_street" class="form-control" placeholder="Address" value="{{$SECDetails->street_address != ''  ? $SECDetails->street_address : ''}}" required >
                                     </div>
                                     <label class="col-sm-2 mb-1 col-form-label"><br></label>
                                    <div class="col-sm-3 mb-1">
@@ -369,69 +389,24 @@
                                 </div>
                             </div>
 
-
-
-                    </div>
-                </div>
-                    <!-- /.card-body -->
-                    </div>
-                    <!-- /.card -->
-                </div>
-                <!-- /.col -->
-
-                    <div class="col-md-3">
-                        <!-- Profile Image -->
-                        <div class="card card-primary card-outline">
-                            <div class="card-body">
-                            <div class="card-header bg-transparent border-0">
-                                <h3>Chapter Information</h3>
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="mb-3">
-                                            <label>Boundaries listed in MIMI (used for Inquiries)</label>
-                                            <div>{{ $chDetails->territory }}</div>
-                                        </div>
-                                    </div>
+                            <!-- /.form group -->
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">Inquiries Email:</label>
+                                <div class="col-sm-6">
+                                <input type="text" name="ch_inqemailcontact" id="ch_inqemailcontact" class="form-control" value="{{ $chDetails->inquiries_contact }}"  required >
                                 </div>
-                                    <div class="row mb-3">
-                                        <label class="col-sm-12 col-form-label">Are your listed boundaries correct?<span class="field-required">*</span></label>
-                                        <div class="col-sm-12 row ms-2 mb-2">
-                                            <div class="form-check" style="margin-right: 20px;">
-                                                <input class="form-check-input" type="radio" id="BoundaryStatusYes" name="BoundaryStatus" value="0" {{ !is_null($chDetails->boundary_issues) && $chDetails->boundary_issues == 0 ? 'checked' : '' }} onChange="ShowBoundaryError()">
-                                                <label class="form-check-label" for="BoundaryStatusYes">Yes</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" id="BoundaryStatusNo" name="BoundaryStatus" value="1" {{ $chDetails->boundary_issues == 1 ? 'checked' : '' }} onChange="ShowBoundaryError()">
-                                                <label class="form-check-label" for="BoundaryStatusNo">No</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12" id="divBoundaryIssue">
-                                            <label for="BoundaryIssue">Please indicate which part of the Boundaries not NOT match our records<span class="field-required">*</span></label>
-                                            <input type="text" rows="2"class="form-control" name="BoundaryIssue" id="BoundaryIssue" value="{{ $chDetails->boundary_issue_notes }}" ></input>
-                                        </div>
-                                    </div>
-
-                                     <div class="row mb-3">
-                                    <label class="col-sm-12 col-form-label">Inquiries Email:</label>
-                                    <div class="col-sm-12">
-                                    <input type="text" name="ch_inqemailcontact" id="ch_inqemailcontact" class="form-control" value="{{ $chDetails->inquiries_contact }}" placeholder="Inquiries Email Address" required >
-                                    </div>
+                            </div>
+                                <!-- /.form group -->
+                             <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">Chapter Email:</label>
+                                <div class="col-sm-6">
+                                <input type="text" name="ch_email" id="ch_email" class="form-control" value="{{ $chDetails->email }}"  placeholder="Chapter Email Address" >
                                 </div>
-
-                                <div class="row mb-3">
-                                    <label class="col-sm-12 col-form-label">Chapter Email:</label>
-                                    <div class="col-sm-12">
-                                    <input type="text" name="ch_email" id="ch_email" class="form-control" value="{{ $chDetails->email }}" placeholder="Chapter Email Address"  >
-                                    </div>
-                                </div>
-
-                                 <div class="row mb-3">
-                                <label class="col-sm-12 col-form-label">Website:</label>
-                                <div class="col-sm-12">
+                            </div>
+                                <!-- /.form group -->
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label">Website:</label>
+                                <div class="col-sm-6">
                                     <input type="text" name="ch_website" id="ch_website" class="form-control"
                                         value="{{$chDetails->website_url}}"
                                         placeholder="Chapter Website">
@@ -439,8 +414,9 @@
                             </div>
 
                             <!-- Website Status Container - Hidden by default -->
-                            <div class="row mb-3" id="ch_webstatus-container" style="display: none; margin-top: -8px;">
-                                <div class="col-sm-8">
+                            <div class="row mb-3" id="ch_webstatus-container" style="display: none;">
+                                <label class="col-sm-2 col-form-label">Link Status:</label>
+                                <div class="col-sm-3">
                                     <select name="ch_webstatus" id="ch_webstatus" class="form-control" style="width: 100%;">
                                         <option value="">Select Status</option>
                                         @foreach($allWebLinks as $status)
@@ -455,35 +431,89 @@
 
                         <!-- /.form group -->
                         <div class="row mb-3">
-                            <label class="col-sm-12 col-form-label">Social Media:</label>
-                            <div class="col-sm-12">
-                            <input type="text" name="ch_onlinediss" id="ch_onlinediss" class="form-control" value="{{ $chDetails->egroup }}"  placeholder="Forum/Group/App" >
-                            </div>
-                            <div class="col-sm-12">
-                            <input type="text" name="ch_social1" id="ch_social1" class="form-control" value="{{ $chDetails->social1 }}" placeholder="Facebook"  >
-                            </div>
-
-                            <div class="col-sm-12">
-                                <input type="text" name="ch_social2" id="ch_social2" class="form-control" value="{{ $chDetails->social2 }}"  placeholder="Twitter" >
-                            </div>
-                            <div class="col-sm-12">
-                                <input type="text" name="ch_social3" id="ch_social3" class="form-control" value="{{ $chDetails->social3 }}"  placeholder="Instagram" >
-                            </div>
+                             <label class="col-sm-2 col-form-label">Social Media:</label>
+                                <div class="col-sm-2">
+                                <input type="text" name="ch_onlinediss" id="ch_onlinediss" class="form-control" value="{{ $chDetails->egroup }}"  placeholder="Forum/Group/App" >
+                                </div>
+                                <div class="col-sm-2">
+                                <input type="text" name="ch_social1" id="ch_social1" class="form-control" value="{{ $chDetails->social1 }}" placeholder="Facebook"  >
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" name="ch_social2" id="ch_social2" class="form-control" value="{{ $chDetails->social2 }}"  placeholder="Twitter" >
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" name="ch_social3" id="ch_social3" class="form-control" value="{{ $chDetails->social3 }}"  placeholder="Instagram" >
+                                </div>
                         </div>
 
-                            </div>
-                        </div>
-                        <!-- /.card-body -->
-                        </div>
-                        <!-- /.card -->
-                    </div>
-                    <!-- /.col -->
+                </div>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
 
-            @else
-                <div class="col-md-10"><br></div>
+           @else
+                <div class="col-md-8">
+                    <div class="card card-primary card-outline">
+        <div class="card-body">
+            <div class="card-header bg-transparent border-0">
+                <h3>{{ $boardReportName}} Details</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+  <div class="row mb-3">
+                                <div class="col-12 col-md-3">
+                                    <label class="me-2">President:</label>
+                                </div>
+                                <div class="col-12 col-md-9">
+                                    @include('boards-new.partials.presinfo')
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-12 col-md-3">
+                                    <label class="me-2">AVP:</label>
+                                </div>
+                                <div class="col-12 col-md-9">
+                                    @include('boards-new.partials.avpinfo')
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-12 col-md-3">
+                                    <label class="me-2">MVP:</label>
+                                </div>
+                                <div class="col-12 col-md-9">
+                                    @include('boards-new.partials.mvpinfo')
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-12 col-md-3">
+                                    <label class="me-2">Treasurer:</label>
+                                </div>
+                                <div class="col-12 col-md-9">
+                                    @include('boards-new.partials.trsinfo')
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-12 col-md-3">
+                                    <label class="me-2">Secretary:</label>
+                                </div>
+                                <div class="col-12 col-md-9">
+                                    @include('boards-new.partials.secinfo')
+                                </div>
+                            </div>
+
+             </div>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+
             @endif
 
-        </div>
 
           <div class="col-md-12">
             <div class="card-body text-center mt-3">
@@ -502,7 +532,7 @@
                            <form id="activateSingleBoardForm" action="{{ route('eoyreports.activateboardreport', ['id' => $chDetails->id]) }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="board" value="active">
-                                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="confirmActivateSingleBoard()">
+                                <button type="button" class="btn btn-primary bg-gradient mb-2 ms-1" onclick="confirmActivateSingleBoard()">
                                     <i class="bi bi-play-fill me-2"></i>Activate Board
                                 </button>
                             </form>
@@ -516,6 +546,7 @@
                         <button type="button" id="back-eoy" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.eoyboardreport', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-person-bounding-box me-2"></i>Back to International Board Election Report</button>
                     @endif
                     <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-file-earmark-bar-graph-fill me-2"></i>Back to EOY Details</button>
+                    <button type="button" id="back-details" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Chapter Details</button>
             </div>
      </div>
         </div>
@@ -524,5 +555,27 @@
       <!-- /.container-fluid -->
     </section>
     <!-- /.content -->
+@endsection
+@section('customscript')
+@include('layouts.scripts.disablefieldseoy')
+<script>
+
+$(document).ready(function() {
+    ShowBoundaryError();
+});
+
+function ShowBoundaryError() {
+        var selectedRadio = document.querySelector('input[name="BoundaryStatus"]:checked');
+        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 4 */
+
+        if (selectedValue == "1") {
+            $('#divBoundaryIssue').addClass('tx-cls');
+            document.getElementById("divBoundaryIssue").style.display = 'block'; // If "Yes" is selected
+        } else {
+            $('#divBoundaryIssue').removeClass('tx-cls');
+            document.getElementById("divBoundaryIssue").style.display = 'none'; // If "No" is selected
+        }
+    }
+</script>
 @endsection
 

@@ -37,25 +37,34 @@
     });
 });
 
-    // Function to handle show/hide logic for vacant checkboxes
     function handleVacantCheckbox(checkboxId, fieldClass) {
-        var fields = $("." + fieldClass);
+    var checkbox = $("#" + checkboxId);
+    var fields = $("." + fieldClass);
+    var label = $('label[for="' + checkboxId + '"]');
 
-        $("#" + checkboxId).change(function () {
-            if ($(this).prop("checked")) {
-                fields.hide().find('input, select, textarea').prop('required', false).val(null);
-            } else {
-                fields.show().find('input, select, textarea').prop('required', true);
-            }
-        });
+    function updateLabel(isChecked) {
+        label.text(isChecked ? 'Vacant (toggle if filled)' : 'Toggle if Vacant');
+    }
 
-        // Initial show/hide logic on page load
-        if ($("#" + checkboxId).prop("checked")) {
+    checkbox.change(function () {
+        var checked = $(this).prop("checked");
+        if (checked) {
             fields.hide().find('input, select, textarea').prop('required', false).val(null);
         } else {
             fields.show().find('input, select, textarea').prop('required', true);
         }
+        updateLabel(checked);
+    });
+
+    // Initial show/hide and label on page load
+    var initiallyChecked = checkbox.prop("checked");
+    if (initiallyChecked) {
+        fields.hide().find('input, select, textarea').prop('required', false).val(null);
+    } else {
+        fields.show().find('input, select, textarea').prop('required', true);
     }
+    updateLabel(initiallyChecked);
+}
 
     // Apply the logic for each checkbox with a specific class
     handleVacantCheckbox("MVPVacant", "mvp-field");

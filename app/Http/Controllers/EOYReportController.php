@@ -378,12 +378,24 @@ class EOYReportController extends Controller implements HasMiddleware
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
 
-        $baseIncomingBoardQuery = $this->baseChapterController->getIncomingBoardDetails($id);
-        $PresDetails = $baseIncomingBoardQuery['PresDetails'];
-        $AVPDetails = $baseIncomingBoardQuery['AVPDetails'];
-        $MVPDetails = $baseIncomingBoardQuery['MVPDetails'];
-        $TRSDetails = $baseIncomingBoardQuery['TRSDetails'];
-        $SECDetails = $baseIncomingBoardQuery['SECDetails'];
+        $PresDetails = $AVPDetails = $MVPDetails = $TRSDetails = $SECDetails = null;
+
+        if ($chEOYDocuments->new_board_active != '1') {
+            $baseIncomingBoardQuery = $this->baseChapterController->getIncomingBoardDetails($id);
+            $PresDetails = $baseIncomingBoardQuery['PresDetails'];
+            $AVPDetails  = $baseIncomingBoardQuery['AVPDetails'];
+            $MVPDetails  = $baseIncomingBoardQuery['MVPDetails'];
+            $TRSDetails  = $baseIncomingBoardQuery['TRSDetails'];
+            $SECDetails  = $baseIncomingBoardQuery['SECDetails'];
+        }
+        if ($chEOYDocuments->new_board_active == '1') {
+            $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
+            $PresDetails = $baseActiveBoardQuery['PresDetails'];
+            $AVPDetails  = $baseActiveBoardQuery['AVPDetails'];
+            $MVPDetails  = $baseActiveBoardQuery['MVPDetails'];
+            $TRSDetails  = $baseActiveBoardQuery['TRSDetails'];
+            $SECDetails  = $baseActiveBoardQuery['SECDetails'];
+        }
 
         $allWebLinks = Website::all();  // Full List for Dropdown Menu
         $allStates = State::all();  // Full List for Dropdown Menu
