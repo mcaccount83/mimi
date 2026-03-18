@@ -22,16 +22,16 @@
             <!-- /.card-header -->
             <div class="card-body">
 					    <div>
-                            <button type="button" class="btn btn-themeBlue margin" onclick="startExport('chapter', 'Chapter List')"><i class="bi bi-download me-2"></i>Export Chapter List</button>
+                            <button type="button" class="btn btn-themeBlue margin" data-no-wait onclick="startExport('chapter', 'Chapter List')"><i class="bi bi-download me-2"></i>Export Chapter List</button>
                         </div>
                         <div>
-                            <button type="button" class="btn btn-themeBlue margin" onclick="startExport('zapchapter', 'Zapped Chapter List')"><i class="bi bi-download me-2"></i>Export Zapped Chapter List</button>
+                            <button type="button" class="btn btn-themeBlue margin" data-no-wait onclick="startExport('zapchapter', 'Zapped Chapter List')"><i class="bi bi-download me-2"></i>Export Zapped Chapter List</button>
                         </div>
                         <div>
-                            <button type="button" class="btn btn-themeBlue margin" onclick="startExport('coordinator', 'Coordinator List')"><i class="bi bi-download me-2"></i>Export Coordinator List</button>
+                            <button type="button" class="btn btn-themeBlue margin" data-no-wait onclick="startExport('coordinator', 'Coordinator List')"><i class="bi bi-download me-2"></i>Export Coordinator List</button>
                         </div>
                         <div>
-                            <button type="button" class="btn btn-themeBlue margin" onclick="startExport('retiredcoordinator', 'Retired Coordinator List')"><i class="bi bi-download me-2"></i>Export Retired Coordinator List</button>
+                            <button type="button" class="btn btn-themeBlue margin" data-no-wait onclick="startExport('retiredcoordinator', 'Retired Coordinator List')"><i class="bi bi-download me-2"></i>Export Retired Coordinator List</button>
                         </div>
                         <div>
                             <button type="button" class="btn btn-themeBlue margin" onclick="startExport('appreciation', 'Coordinator Appreciation List')"><i class="bi bi-download me-2"></i>Export Coordinator Appriciation List</button>

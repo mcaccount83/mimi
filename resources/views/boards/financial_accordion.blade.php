@@ -1284,7 +1284,7 @@
             <td>
                 <div class="mb-3">
                     <input type="date" class="form-control" name="MonDonationDate{{ $row }}" id="MonDonationDate{{ $row }}" value="{{ $monetary_dontations_to_chapter[$row]['mon_donation_date'] ?? '' }}"
-                        data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask >
+                        data-inputmask='"alias": "datetime", "inputFormat": "mm/dd/yyyy"' data-mask>
                 </div>
             </td>
             <td>
@@ -1373,7 +1373,7 @@
             <td>
                 <div class="mb-3">
                     <input type="date" class="form-control" name="NonMonDonationDate{{ $row }}" id="NonMonDonationDate{{ $row }}" value="{{ $non_monetary_dontations_to_chapter[$row]['nonmon_donation_date'] ?? '' }}"
-                        data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask >
+                        data-inputmask='"alias": "datetime", "inputFormat": "mm/dd/yyyy"' data-mask>
                 </div>
             </td>
         </tr>
@@ -2150,7 +2150,7 @@
                 <td>
                     <div class="mb-3">
                         <input type="date" class="form-control" name="BankRecDate{{ $row }}" id="BankRecDate{{ $row }}"
-                        data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $bank_rec_array[$row]['bank_rec_date'] ?? '' }}" >
+                            data-inputmask='"alias": "datetime", "inputFormat": "mm/dd/yyyy"' data-mask value="{{ $bank_rec_array[$row]['bank_rec_date'] ?? '' }}" >
                     </div>
                 </td>
 

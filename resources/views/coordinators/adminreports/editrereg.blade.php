@@ -77,7 +77,7 @@
                 <div class="row mb-3">
                     <label class="col-sm-4 mb-1 col-form-label">Dues Last Paid:</label>
                     <div class="col-sm-3 mb-1">
-                        <input type="date" name="ch_duespaid" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $chPayments->rereg_date }}">
+                        <input type="date" name="ch_duespaid" class="form-control" data-inputmask='"alias": "datetime", "inputFormat": "mm/dd/yyyy"' data-mask value="{{ $chPayments->rereg_date }}">
                     </div>
                 </div>
                 <!-- /.form group -->

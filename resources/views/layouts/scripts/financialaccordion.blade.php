@@ -777,7 +777,7 @@ function AddPartyExpenseRow() {
         var cell4 = row.insertCell(3);
         var cell5 = row.insertCell(4);
 
-        cell1.innerHTML = `<div class="mb-3"><input type="date" class="form-control" name="BankRecDate${ExpenseCount}" id="BankRecDate${ExpenseCount}" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $bank_rec_array[$row]['bank_rec_date'] ?? '' }}"></div>`;
+        cell1.innerHTML = `<div class="mb-3"><input type="date" class="form-control" name="BankRecDate${ExpenseCount}" id="BankRecDate${ExpenseCount}" data-inputmask='"alias": "datetime", "inputFormat": "mm/dd/yyyy"' data-mask value="{{ $bank_rec_array[$row]['bank_rec_date'] ?? '' }}"></div>`;
         cell2.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="BankRecCheckNo${ExpenseCount}" id="BankRecCheckNo${ExpenseCount}"  oninput="ChangeBankRec()"></div>`;
         cell3.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="BankRecDesc${ExpenseCount}" id="BankRecDesc${ExpenseCount}"></div>`;
         cell4.innerHTML = `<div class="mb-3"><div class="input-group"><span class="input-group-text">$</span><input type="text" class="form-control" name="BankRecPaymentAmount${ExpenseCount}" id="BankRecPaymentAmount${ExpenseCount}" oninput="ChangeBankRec()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;

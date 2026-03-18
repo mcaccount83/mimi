@@ -90,7 +90,7 @@
     <!-- /.container- -->
 @endsection
 @section('customscript')
-@include('layouts.scripts.disablefieldseoyfinancial')
+@include('layouts.scripts.disablefieldseoy')
 @endsection
 
 

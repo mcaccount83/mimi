@@ -479,7 +479,7 @@
     <!-- /.content -->
 @endsection
 @section('customscript')
-    @include('layouts.scripts.disablefieldseoyfinancial')
+    @include('layouts.scripts.disablefieldseoy')
     @include('layouts.scripts.financialreviewsave')
 
 <script>

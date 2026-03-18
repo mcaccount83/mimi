@@ -557,7 +557,7 @@
     <!-- /.content -->
 @endsection
 @section('customscript')
-@include('layouts.scripts.disablefieldseoyfinancial')
+@include('layouts.scripts.disablefieldseoy')
 <script>
 
 $(document).ready(function() {

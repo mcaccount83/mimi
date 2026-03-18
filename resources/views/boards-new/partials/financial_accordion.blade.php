@@ -1284,7 +1284,7 @@
             <td>
                 <div class="mb-3">
                     <input type="date" class="form-control" name="MonDonationDate{{ $row }}" id="MonDonationDate{{ $row }}" value="{{ $monetary_dontations_to_chapter[$row]['mon_donation_date'] ?? '' }}"
-                        data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask >
+                        data-inputmask='"alias": "datetime", "inputFormat": "mm/dd/yyyy"' data-mask>
                 </div>
             </td>
             <td>
@@ -1373,7 +1373,7 @@
             <td>
                 <div class="mb-3">
                     <input type="date" class="form-control" name="NonMonDonationDate{{ $row }}" id="NonMonDonationDate{{ $row }}" value="{{ $non_monetary_dontations_to_chapter[$row]['nonmon_donation_date'] ?? '' }}"
-                        data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask >
+                        data-inputmask='"alias": "datetime", "inputFormat": "mm/dd/yyyy"' data-mask>
                 </div>
             </td>
         </tr>
@@ -2150,7 +2150,7 @@
                 <td>
                     <div class="mb-3">
                         <input type="date" class="form-control" name="BankRecDate{{ $row }}" id="BankRecDate{{ $row }}"
-                        data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $bank_rec_array[$row]['bank_rec_date'] ?? '' }}" >
+                            data-inputmask='"alias": "datetime", "inputFormat": "mm/dd/yyyy"' data-mask value="{{ $bank_rec_array[$row]['bank_rec_date'] ?? '' }}" >
                     </div>
                 </td>
 
@@ -3103,7 +3103,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
             <button type="button" class="btn btn-primary bg-gradient mb-2" id="btn-step-14">
                 <i class="bi bi-floppy-fill me-2"></i>Save
             </button>
-            <p style="color: #dc3545;">Report is currently Save Only. Submission will be available beginnign July 1st.</p>
+            <p style="color: #dc3545;">Report is currently Save Only. Submission will be available beginning July 1st.</p>
             @if($displayEINInstructionsLIVE)
                 <button type="button" class="btn btn-success bg-gradient mb-2" id="final-submit">
                     <i class="bi bi-chevron-double-right me-2"></i>Submit Report
