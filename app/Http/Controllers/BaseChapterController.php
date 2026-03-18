@@ -438,4 +438,136 @@ class BaseChapterController extends Controller
         return ['PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
         ];
     }
+
+    /**
+     * Bulk chapter details for export - skips all dropdown/email data
+     * Returns [ chapter_id => $chapterData ] matching format function keys
+     */
+    public function getChapterDetailsForExport(array $chapterIds): array
+    {
+        $chapters = Chapters::with([
+            'country',
+            'state.region',
+            'state.conference',
+            'startMonth',
+            'webLink',
+            'documents',
+            'payments',
+            'documentsEOY',
+            'primaryCoordinator',
+            'activeStatus',
+            'status',
+            'probation',
+        ])->whereIn('id', $chapterIds)->get()->keyBy('id');
+
+        $result = [];
+        $default = (object) [
+            'id' => null, 'first_name' => '', 'last_name' => '', 'email' => '',
+            'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '',
+            'state_id' => '', 'country_id' => '', 'user_id' => '',
+            'state' => (object) ['state_short_name' => ''],
+        ];
+
+        foreach ($chapterIds as $id) {
+            $ch = $chapters->get($id);
+            if (! $ch) continue;
+
+            $stateShortName = $ch->state_id < 52
+                ? $ch->state->state_short_name
+                : $ch->country->short_name;
+
+            $pc = $ch->primaryCoordinator;
+
+            $result[$id] = [
+                'chDetails'      => $ch,
+                'chDocuments'    => $ch->documents,
+                'chPayments'     => $ch->payments,
+                'chEOYDocuments' => $ch->documentsEOY,
+                'stateShortName' => $stateShortName,
+                'regionLongName' => $ch->state->region->long_name,
+                'chConfId'       => $ch->state->conference_id,
+                'startMonthName' => $ch->startMonth?->month_long_name ?? '',
+                'chapterStatus'  => $ch->status?->chapter_status ?? '',
+                'websiteLink'    => $ch->webLink?->link_status ?? null,
+                'pcName'         => $pc ? $pc->first_name.' '.$pc->last_name : '',
+                'probationReason'=> $ch->probation?->probation_reason ?? '',
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Bulk active board details for export
+     * Returns [ chapter_id => board keys ] matching format function keys
+     */
+    public function getActiveBoardDetailsForExport(array $chapterIds): array
+    {
+        // Load all board members for all chapters in one query
+        $allBoards = Chapters::with([
+            'boards.state',
+            'boards.country',
+        ])->whereIn('id', $chapterIds)->get()->keyBy('id');
+
+        $default = (object) [
+            'id' => null, 'first_name' => '', 'last_name' => '', 'email' => '',
+            'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '',
+            'state_id' => '', 'country_id' => '', 'user_id' => '',
+            'state' => (object) ['state_short_name' => ''],
+        ];
+
+        $result = [];
+        foreach ($chapterIds as $id) {
+            $ch = $allBoards->get($id);
+            $bdDetails = $ch
+                ? $ch->boards->groupBy('board_position_id')
+                : collect();
+
+            $result[$id] = [
+                'PresDetails' => $bdDetails->get(BoardPosition::PRES, collect([$default]))->first(),
+                'AVPDetails'  => $bdDetails->get(BoardPosition::AVP,  collect([$default]))->first(),
+                'MVPDetails'  => $bdDetails->get(BoardPosition::MVP,  collect([$default]))->first(),
+                'TRSDetails'  => $bdDetails->get(BoardPosition::TRS,  collect([$default]))->first(),
+                'SECDetails'  => $bdDetails->get(BoardPosition::SEC,  collect([$default]))->first(),
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Bulk disbanded board details for export (zapped chapter exports)
+     */
+    public function getDisbandedBoardDetailsForExport(array $chapterIds): array
+    {
+        $allBoards = Chapters::with([
+            'boardsDisbanded.state',
+            'boardsDisbanded.country',
+        ])->whereIn('id', $chapterIds)->get()->keyBy('id');
+
+        $default = (object) [
+            'id' => null, 'first_name' => '', 'last_name' => '', 'email' => '',
+            'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '',
+            'state_id' => '', 'country_id' => '', 'user_id' => '',
+            'state' => (object) ['state_short_name' => ''],
+        ];
+
+        $result = [];
+        foreach ($chapterIds as $id) {
+            $ch = $allBoards->get($id);
+            $bdDetails = $ch
+                ? $ch->boardsDisbanded->groupBy('board_position_id')
+                : collect();
+
+            $result[$id] = [
+                'PresDetails' => $bdDetails->get(BoardPosition::PRES, collect([$default]))->first(),
+                'AVPDetails'  => $bdDetails->get(BoardPosition::AVP,  collect([$default]))->first(),
+                'MVPDetails'  => $bdDetails->get(BoardPosition::MVP,  collect([$default]))->first(),
+                'TRSDetails'  => $bdDetails->get(BoardPosition::TRS,  collect([$default]))->first(),
+                'SECDetails'  => $bdDetails->get(BoardPosition::SEC,  collect([$default]))->first(),
+            ];
+        }
+
+        return $result;
+    }
 }

@@ -332,9 +332,8 @@ class ExportController extends Controller implements HasMiddleware
      */
     public function indexChapter(Request $request)
     {
-        // Increase memory limit and execution time for large exports
         ini_set('memory_limit', '512M');
-        set_time_limit(300); // 5 minutes
+        set_time_limit(300);
 
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentDateYmd = $dateOptions['currentDateYmd'];
@@ -356,8 +355,6 @@ class ExportController extends Controller implements HasMiddleware
         $secPositionId = $user['cdSecPositionId'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
-
-        // Get all chapter IDs first
         $chapterIds = $baseQuery['query']->pluck('id')->toArray();
 
         if (empty($chapterIds)) {
@@ -367,53 +364,31 @@ class ExportController extends Controller implements HasMiddleware
         $callback = function () use ($chapterIds) {
             $file = fopen('php://output', 'w');
 
-            // Write headers
-            $headers = [
+            fputcsv($file, [
                 'EIN', 'EIN Letter', 'Conference', 'Region', 'State', 'Name', 'Bounraries', 'Status',
                 'Notes', 'Primary Coordinator', 'Inquiries Email', 'Inquiries Notes', 'Chapter Email',
                 'Chapter P.O. Box', 'President Name', 'President Email', 'President Phone',
                 'AVP Name', 'AVP Email', 'AVP Phone', 'MVP Name', 'MVP Email', 'MVP Phone',
                 'Treasurer Name', 'Treasurer Email', 'Treasurer Phone', 'Secretary Name',
                 'Secretary Email', 'Secretary Phone', 'Website', 'Linked Status', 'EGroup',
-                'Social Media',  'Next Renewal', 'Dues Last Paid', 'Members paid for', 'Re-Reg Notes',
+                'Social Media', 'Next Renewal', 'Dues Last Paid', 'Members paid for', 'Re-Reg Notes',
                 'Start Month', 'Start Year', 'Founder', 'Sistered By', 'FormerName',
-            ];
-            fputcsv($file, $headers);
+            ]);
 
-            // Process chapters in chunks to manage memory
-            $chunkSize = 50; // Smaller chunks since each getChapterDetails call is heavy
-            $chunks = array_chunk($chapterIds, $chunkSize);
+            foreach (array_chunk($chapterIds, 200) as $chunk) {
+                $chapterCache = $this->baseChapterController->getChapterDetailsForExport($chunk);
+                $boardCache   = $this->baseChapterController->getActiveBoardDetailsForExport($chunk);
 
-            foreach ($chunks as $chunkIndex => $chunk) {
                 foreach ($chunk as $chId) {
-                    // Use your existing base controller method
-                    $chapterData = $this->baseChapterController->getChapterDetails($chId);
-                    $boardData = $this->baseChapterController->getActiveBoardDetails($chId);
-                    // Merge the data arrays
-                    $combinedData = array_merge($chapterData, $boardData);
-
-                    $rowData = $this->formatFullChapterRow($combinedData);
-                    fputcsv($file, $rowData);
-
-                    // Clear memory periodically within chunks
-                    if (($chunkIndex * $chunkSize + array_search($chId, $chunk)) % 10 == 0) {
-                        if (ob_get_level()) {
-                            ob_flush();
-                        }
-                        flush();
-                    }
+                    if (! isset($chapterCache[$chId])) continue;
+                    $combinedData = array_merge($chapterCache[$chId], $boardCache[$chId] ?? []);
+                    fputcsv($file, $this->formatFullChapterRow($combinedData));
                 }
 
-                // Force garbage collection after each chunk
-                if (function_exists('gc_collect_cycles')) {
-                    gc_collect_cycles();
-                }
-
-                // Clear memory after each chunk
-                if (ob_get_level()) {
-                    ob_flush();
-                }
+                if (ob_get_level()) { ob_flush(); }
                 flush();
+                unset($chapterCache, $boardCache);
+                gc_collect_cycles();
             }
 
             fclose($file);
@@ -462,8 +437,7 @@ class ExportController extends Controller implements HasMiddleware
         $callback = function () use ($chapterIds) {
             $file = fopen('php://output', 'w');
 
-            // Write headers
-            $headers = [
+            fputcsv($file, [
                 'EIN', 'EIN Letter', 'Conference', 'Region', 'State', 'Name', 'Bounraries', 'Status',
                 'Notes', 'Primary Coordinator', 'Inquiries Email', 'Inquiries Notes', 'Chapter Email',
                 'Chapter P.O. Box', 'President Name', 'President Email', 'President Phone',
@@ -473,43 +447,22 @@ class ExportController extends Controller implements HasMiddleware
                 'Social Media',  'Next Renewal', 'Dues Last Paid', 'Members paid for', 'Re-Reg Notes',
                 'Start Month', 'Start Year', 'Founder', 'Sistered By', 'FormerName',
                 'Disband Date', 'Disband Reason',
-            ];
-            fputcsv($file, $headers);
+            ]);
 
-            // Process chapters in chunks to manage memory
-            $chunkSize = 50; // Smaller chunks since each getChapterDetails call is heavy
-            $chunks = array_chunk($chapterIds, $chunkSize);
+             foreach (array_chunk($chapterIds, 200) as $chunk) {
+                $chapterCache = $this->baseChapterController->getChapterDetailsForExport($chunk);
+                $boardCache   = $this->baseChapterController->getDisbandedBoardDetailsForExport($chunk);
 
-            foreach ($chunks as $chunkIndex => $chunk) {
                 foreach ($chunk as $chId) {
-                    // Use your existing base controller method
-                    $chapterData = $this->baseChapterController->getChapterDetails($chId);
-                    $boardData = $this->baseChapterController->getDisbandedBoardDetails($chId);
-                    // Merge the data arrays
-                    $combinedData = array_merge($chapterData, $boardData);
-
-                    $rowData = $this->formatZappedChapterRow($combinedData);
-                    fputcsv($file, $rowData);
-
-                    // Clear memory periodically within chunks
-                    if (($chunkIndex * $chunkSize + array_search($chId, $chunk)) % 10 == 0) {
-                        if (ob_get_level()) {
-                            ob_flush();
-                        }
-                        flush();
-                    }
+                    if (! isset($chapterCache[$chId])) continue;
+                    $combinedData = array_merge($chapterCache[$chId], $boardCache[$chId] ?? []);
+                    fputcsv($file, $this->formatZappedChapterRow($combinedData));
                 }
 
-                // Force garbage collection after each chunk
-                if (function_exists('gc_collect_cycles')) {
-                    gc_collect_cycles();
-                }
-
-                // Clear memory after each chunk
-                if (ob_get_level()) {
-                    ob_flush();
-                }
+                if (ob_get_level()) { ob_flush(); }
                 flush();
+                unset($chapterCache, $boardCache);
+                gc_collect_cycles();
             }
 
             fclose($file);
@@ -562,8 +515,7 @@ class ExportController extends Controller implements HasMiddleware
         $callback = function () use ($chapterIds) {
             $file = fopen('php://output', 'w');
 
-            // Write headers
-            $headers = [
+            fputcsv($file, [
                 'EIN', 'EIN Letter', 'Conference', 'Region', 'State', 'Name', 'Bounraries', 'Status',
                 'Notes', 'Primary Coordinator', 'Inquiries Email', 'Inquiries Notes', 'Chapter Email',
                 'Chapter P.O. Box', 'President Name', 'President Email', 'President Phone',
@@ -572,43 +524,22 @@ class ExportController extends Controller implements HasMiddleware
                 'Secretary Email', 'Secretary Phone', 'Website', 'Linked Status', 'EGroup',
                 'Social Media',  'Next Renewal', 'Dues Last Paid', 'Members paid for', 'Re-Reg Notes',
                 'Start Month', 'Start Year', 'Founder', 'Sistered By', 'FormerName',
-            ];
-            fputcsv($file, $headers);
+            ]);
 
-            // Process chapters in chunks to manage memory
-            $chunkSize = 50; // Smaller chunks since each getChapterDetails call is heavy
-            $chunks = array_chunk($chapterIds, $chunkSize);
+            foreach (array_chunk($chapterIds, 200) as $chunk) {
+                $chapterCache = $this->baseChapterController->getChapterDetailsForExport($chunk);
+                $boardCache   = $this->baseChapterController->getActiveBoardDetailsForExport($chunk);
 
-            foreach ($chunks as $chunkIndex => $chunk) {
                 foreach ($chunk as $chId) {
-                    // Use your existing base controller method
-                    $chapterData = $this->baseChapterController->getChapterDetails($chId);
-                    $boardData = $this->baseChapterController->getActiveBoardDetails($chId);
-                    // Merge the data arrays
-                    $combinedData = array_merge($chapterData, $boardData);
-
-                    $rowData = $this->formatFullChapterRow($combinedData);
-                    fputcsv($file, $rowData);
-
-                    // Clear memory periodically within chunks
-                    if (($chunkIndex * $chunkSize + array_search($chId, $chunk)) % 10 == 0) {
-                        if (ob_get_level()) {
-                            ob_flush();
-                        }
-                        flush();
-                    }
+                    if (! isset($chapterCache[$chId])) continue;
+                    $combinedData = array_merge($chapterCache[$chId], $boardCache[$chId] ?? []);
+                    fputcsv($file, $this->formatFullChapterRow($combinedData));
                 }
 
-                // Force garbage collection after each chunk
-                if (function_exists('gc_collect_cycles')) {
-                    gc_collect_cycles();
-                }
-
-                // Clear memory after each chunk
-                if (ob_get_level()) {
-                    ob_flush();
-                }
+                if (ob_get_level()) { ob_flush(); }
                 flush();
+                unset($chapterCache, $boardCache);
+                gc_collect_cycles();
             }
 
             fclose($file);
@@ -661,8 +592,7 @@ class ExportController extends Controller implements HasMiddleware
         $callback = function () use ($chapterIds) {
             $file = fopen('php://output', 'w');
 
-            // Write headers
-            $headers = [
+            fputcsv($file, [
                 'EIN', 'EIN Letter', 'Conference', 'Region', 'State', 'Name', 'Bounraries', 'Status',
                 'Notes', 'Primary Coordinator', 'Inquiries Email', 'Inquiries Notes', 'Chapter Email',
                 'Chapter P.O. Box', 'President Name', 'President Email', 'President Phone',
@@ -672,43 +602,22 @@ class ExportController extends Controller implements HasMiddleware
                 'Social Media',  'Next Renewal', 'Dues Last Paid', 'Members paid for', 'Re-Reg Notes',
                 'Start Month', 'Start Year', 'Founder', 'Sistered By', 'FormerName',
                 'Disband Date', 'Disband Reason',
-            ];
-            fputcsv($file, $headers);
+            ]);
 
-            // Process chapters in chunks to manage memory
-            $chunkSize = 50; // Smaller chunks since each getChapterDetails call is heavy
-            $chunks = array_chunk($chapterIds, $chunkSize);
+            foreach (array_chunk($chapterIds, 200) as $chunk) {
+                $chapterCache = $this->baseChapterController->getChapterDetailsForExport($chunk);
+                $boardCache   = $this->baseChapterController->getDisbandedBoardDetailsForExport($chunk);
 
-            foreach ($chunks as $chunkIndex => $chunk) {
                 foreach ($chunk as $chId) {
-                    // Use your existing base controller method
-                    $chapterData = $this->baseChapterController->getChapterDetails($chId);
-                    $boardData = $this->baseChapterController->getDisbandedBoardDetails($chId);
-                    // Merge the data arrays
-                    $combinedData = array_merge($chapterData, $boardData);
-
-                    $rowData = $this->formatZappedChapterRow($combinedData);
-                    fputcsv($file, $rowData);
-
-                    // Clear memory periodically within chunks
-                    if (($chunkIndex * $chunkSize + array_search($chId, $chunk)) % 10 == 0) {
-                        if (ob_get_level()) {
-                            ob_flush();
-                        }
-                        flush();
-                    }
+                    if (! isset($chapterCache[$chId])) continue;
+                    $combinedData = array_merge($chapterCache[$chId], $boardCache[$chId] ?? []);
+                    fputcsv($file, $this->formatZappedChapterRow($combinedData));
                 }
 
-                // Force garbage collection after each chunk
-                if (function_exists('gc_collect_cycles')) {
-                    gc_collect_cycles();
-                }
-
-                // Clear memory after each chunk
-                if (ob_get_level()) {
-                    ob_flush();
-                }
+                if (ob_get_level()) { ob_flush(); }
                 flush();
+                unset($chapterCache, $boardCache);
+                gc_collect_cycles();
             }
 
             fclose($file);
@@ -771,30 +680,25 @@ class ExportController extends Controller implements HasMiddleware
         $callback = function () use ($reChapterIds) {
             $file = fopen('php://output', 'w');
 
-            // Write headers based on what formatReRegRow returns
-            $headers = [
+            fputcsv($file, [
                 'Conference', 'Region', 'State', 'Name',
                 'Start Month', 'Start Year', 'Next Renewal Year', 'Dues Last Paid',
                 'Members paid for', 'Re-Reg Notes',
-            ];
-            fputcsv($file, $headers);
+             ]);
 
-            // Process in chunks
-            $chunkSize = 50;
-            $chunks = array_chunk($reChapterIds, $chunkSize);
+            foreach (array_chunk($reChapterIds, 200) as $chunk) {
+                $chapterCache = $this->baseChapterController->getChapterDetailsForExport($chunk);
 
-            foreach ($chunks as $chunk) {
                 foreach ($chunk as $chId) {
-                    $chapterData = $this->baseChapterController->getChapterDetails($chId);
-                    $rowData = $this->formatReRegRow($chapterData);
-                    fputcsv($file, $rowData);
+                    if (! isset($chapterCache[$chId])) continue;
+                    $combinedData = array_merge($chapterCache[$chId], $boardCache[$chId] ?? []);
+                    fputcsv($file, $this->formatReRegRow($combinedData));
                 }
 
-                // Memory cleanup
-                if (ob_get_level()) {
-                    ob_flush();
-                }
+                if (ob_get_level()) { ob_flush(); }
                 flush();
+                unset($chapterCache, $boardCache);
+                gc_collect_cycles();
             }
 
             fclose($file);
@@ -863,30 +767,25 @@ class ExportController extends Controller implements HasMiddleware
         $callback = function () use ($reChapterIds) {
             $file = fopen('php://output', 'w');
 
-            // Write headers based on what formatReRegRow returns
-            $headers = [
+            fputcsv($file, [
                 'Conference', 'Region', 'State', 'Name',
                 'Start Month', 'Start Year', 'Next Renewal Year', 'Dues Last Paid',
                 'Members paid for', 'Re-Reg Notes',
-            ];
-            fputcsv($file, $headers);
+            ]);
 
-            // Process in chunks
-            $chunkSize = 50;
-            $chunks = array_chunk($reChapterIds, $chunkSize);
+            foreach (array_chunk($reChapterIds, 200) as $chunk) {
+                $chapterCache = $this->baseChapterController->getChapterDetailsForExport($chunk);
 
-            foreach ($chunks as $chunk) {
                 foreach ($chunk as $chId) {
-                    $chapterData = $this->baseChapterController->getChapterDetails($chId);
-                    $rowData = $this->formatReRegRow($chapterData);
-                    fputcsv($file, $rowData);
+                    if (! isset($chapterCache[$chId])) continue;
+                    $combinedData = array_merge($chapterCache[$chId], $boardCache[$chId] ?? []);
+                    fputcsv($file, $this->formatReRegRow($combinedData));
                 }
 
-                // Memory cleanup
-                if (ob_get_level()) {
-                    ob_flush();
-                }
+                if (ob_get_level()) { ob_flush(); }
                 flush();
+                unset($chapterCache, $boardCache);
+                gc_collect_cycles();
             }
 
             fclose($file);
@@ -933,33 +832,25 @@ class ExportController extends Controller implements HasMiddleware
         $callback = function () use ($chapterIds) {
             $file = fopen('php://output', 'w');
 
-            // Write headers based on what formatEINStatusRow returns
-            $headers = [
+            fputcsv($file, [
                 'Conference', 'Region', 'State', 'Name', 'EIN', 'EIN Letter', 'Start Month', 'Start Year',
                 'Pres Name', 'Pres Address', 'Pres City', 'Pres State', 'Pres Zip', 'Pres Phone', 'Pres Email',
-            ];
-            fputcsv($file, $headers);
+            ]);
 
-            // Process in chunks
-            $chunkSize = 50;
-            $chunks = array_chunk($chapterIds, $chunkSize);
+            foreach (array_chunk($chapterIds, 200) as $chunk) {
+                $chapterCache = $this->baseChapterController->getChapterDetailsForExport($chunk);
+                $boardCache   = $this->baseChapterController->getActiveBoardDetailsForExport($chunk);
 
-            foreach ($chunks as $chunk) {
                 foreach ($chunk as $chId) {
-                    $chapterData = $this->baseChapterController->getChapterDetails($chId);
-                    $boardData = $this->baseChapterController->getActiveBoardDetails($chId);
-                    // Merge the data arrays
-                    $combinedData = array_merge($chapterData, $boardData);
-
-                    $rowData = $this->formatEINStatusRow($combinedData);
-                    fputcsv($file, $rowData);
+                    if (! isset($chapterCache[$chId])) continue;
+                    $combinedData = array_merge($chapterCache[$chId], $boardCache[$chId] ?? []);
+                    fputcsv($file, $this->formatEINStatusRow($combinedData));
                 }
 
-                // Memory cleanup
-                if (ob_get_level()) {
-                    ob_flush();
-                }
+                if (ob_get_level()) { ob_flush(); }
                 flush();
+                unset($chapterCache, $boardCache);
+                gc_collect_cycles();
             }
 
             fclose($file);
@@ -1012,33 +903,25 @@ class ExportController extends Controller implements HasMiddleware
         $callback = function () use ($chapterIds) {
             $file = fopen('php://output', 'w');
 
-            // Write headers based on what formatEINStatusRow returns
-            $headers = [
+            fputcsv($file, [
                 'Conference', 'Region', 'State', 'Name', 'EIN', 'EIN Letter', 'Start Month', 'Start Year',
                 'Pres Name', 'Pres Address', 'Pres City', 'Pres State', 'Pres Zip', 'Pres Phone', 'Pres Email',
-            ];
-            fputcsv($file, $headers);
+            ]);
 
-            // Process in chunks
-            $chunkSize = 50;
-            $chunks = array_chunk($chapterIds, $chunkSize);
+            foreach (array_chunk($chapterIds, 200) as $chunk) {
+                $chapterCache = $this->baseChapterController->getChapterDetailsForExport($chunk);
+                $boardCache   = $this->baseChapterController->getActiveBoardDetailsForExport($chunk);
 
-            foreach ($chunks as $chunk) {
                 foreach ($chunk as $chId) {
-                    $chapterData = $this->baseChapterController->getChapterDetails($chId);
-                    $boardData = $this->baseChapterController->getActiveBoardDetails($chId);
-                    // Merge the data arrays
-                    $combinedData = array_merge($chapterData, $boardData);
-
-                    $rowData = $this->formatEINStatusRow($combinedData);
-                    fputcsv($file, $rowData);
+                    if (! isset($chapterCache[$chId])) continue;
+                    $combinedData = array_merge($chapterCache[$chId], $boardCache[$chId] ?? []);
+                    fputcsv($file, $this->formatEINStatusRow($combinedData));
                 }
 
-                // Memory cleanup
-                if (ob_get_level()) {
-                    ob_flush();
-                }
+                if (ob_get_level()) { ob_flush(); }
                 flush();
+                unset($chapterCache, $boardCache);
+                gc_collect_cycles();
             }
 
             fclose($file);
@@ -1490,44 +1373,24 @@ class ExportController extends Controller implements HasMiddleware
         $callback = function () use ($coordIds) {
             $file = fopen('php://output', 'w');
 
-            // Write headers
-            $headers = [
+            fputcsv($file, [
                 'Conference', 'Region', 'Coordinator Name', 'Position', 'Sec Position', 'Admin',
                 'Report To', 'Email', 'Email2', 'Phone', 'Phone2', 'Address', 'City', 'State', 'Zip',
                 'Birthday', 'Coordinator Start', 'Last Promoted', 'Leave of Absense', 'Leave Date',
-            ];
-            fputcsv($file, $headers);
+            ]);
 
-            // Process chapters in chunks to manage memory
-            $chunkSize = 50; // Smaller chunks since each getChapterDetails call is heavy
-            $chunks = array_chunk($coordIds, $chunkSize);
+            foreach (array_chunk($coordIds, 200) as $chunk) {
+                $coordCache  = $this->baseCoordinatorController->getCoordinatorDetailsForExport($chunk);
 
-            foreach ($chunks as $chunkIndex => $chunk) {
                 foreach ($chunk as $cdId) {
-                    // Use your existing base controller method
-                    $coordData = $this->baseCoordinatorController->getCoordinatorDetails($cdId);
-                    $rowData = $this->formatFullCoordinatorRow($coordData);
-                    fputcsv($file, $rowData);
-
-                    // Clear memory periodically within chunks
-                    if (($chunkIndex * $chunkSize + array_search($cdId, $chunk)) % 10 == 0) {
-                        if (ob_get_level()) {
-                            ob_flush();
-                        }
-                        flush();
-                    }
+                    if (! isset($coordCache[$cdId])) continue;
+                    fputcsv($file, $this->formatFullCoordinatorRow($coordCache[$cdId]));
                 }
 
-                // Force garbage collection after each chunk
-                if (function_exists('gc_collect_cycles')) {
-                    gc_collect_cycles();
-                }
-
-                // Clear memory after each chunk
-                if (ob_get_level()) {
-                    ob_flush();
-                }
+                if (ob_get_level()) { ob_flush(); }
                 flush();
+                unset($chapterCache, $boardCache);
+                gc_collect_cycles();
             }
 
             fclose($file);
@@ -1580,44 +1443,24 @@ class ExportController extends Controller implements HasMiddleware
         $callback = function () use ($coordIds) {
             $file = fopen('php://output', 'w');
 
-            // Write headers
-            $headers = [
+            fputcsv($file, [
                 'Conference', 'Region', 'Coordinator Name', 'Position', 'Sec Position', 'Admin',
                 'Report To', 'Email', 'Email2', 'Phone', 'Phone2', 'Address', 'City', 'State', 'Zip',
                 'Birthday', 'Coordinator Start', 'Last Promoted', 'Leave of Absense', 'Leave Date',
-            ];
-            fputcsv($file, $headers);
+            ]);
 
-            // Process chapters in chunks to manage memory
-            $chunkSize = 50; // Smaller chunks since each getChapterDetails call is heavy
-            $chunks = array_chunk($coordIds, $chunkSize);
+            foreach (array_chunk($coordIds, 200) as $chunk) {
+                $coordCache  = $this->baseCoordinatorController->getCoordinatorDetailsForExport($chunk);
 
-            foreach ($chunks as $chunkIndex => $chunk) {
                 foreach ($chunk as $cdId) {
-                    // Use your existing base controller method
-                    $coordData = $this->baseCoordinatorController->getCoordinatorDetails($cdId);
-                    $rowData = $this->formatFullCoordinatorRow($coordData);
-                    fputcsv($file, $rowData);
-
-                    // Clear memory periodically within chunks
-                    if (($chunkIndex * $chunkSize + array_search($cdId, $chunk)) % 10 == 0) {
-                        if (ob_get_level()) {
-                            ob_flush();
-                        }
-                        flush();
-                    }
+                    if (! isset($coordCache[$cdId])) continue;
+                    fputcsv($file, $this->formatFullCoordinatorRow($coordCache[$cdId]));
                 }
 
-                // Force garbage collection after each chunk
-                if (function_exists('gc_collect_cycles')) {
-                    gc_collect_cycles();
-                }
-
-                // Clear memory after each chunk
-                if (ob_get_level()) {
-                    ob_flush();
-                }
+                if (ob_get_level()) { ob_flush(); }
                 flush();
+                unset($chapterCache, $boardCache);
+                gc_collect_cycles();
             }
 
             fclose($file);
@@ -1666,45 +1509,25 @@ class ExportController extends Controller implements HasMiddleware
         $callback = function () use ($coordIds) {
             $file = fopen('php://output', 'w');
 
-            // Write headers
-            $headers = [
+            fputcsv($file, [
                 'Conference', 'Region', 'Coordinator Name', 'Position', 'Sec Position', 'Admin',
                 'Report To', 'Email', 'Email2', 'Phone', 'Phone2', 'Address', 'City', 'State', 'Zip',
                 'Birthday', 'Coordinator Start', 'Last Promoted', 'Leave of Absense', 'Leave Date',
                 'Retire Date', 'Retire Reason',
-            ];
-            fputcsv($file, $headers);
+             ]);
 
-            // Process chapters in chunks to manage memory
-            $chunkSize = 50; // Smaller chunks since each getChapterDetails call is heavy
-            $chunks = array_chunk($coordIds, $chunkSize);
+            foreach (array_chunk($coordIds, 200) as $chunk) {
+                $coordCache  = $this->baseCoordinatorController->getCoordinatorDetailsForExport($chunk);
 
-            foreach ($chunks as $chunkIndex => $chunk) {
                 foreach ($chunk as $cdId) {
-                    // Use your existing base controller method
-                    $coordData = $this->baseCoordinatorController->getCoordinatorDetails($cdId);
-                    $rowData = $this->formatRetiredCoordinatorRow($coordData);
-                    fputcsv($file, $rowData);
-
-                    // Clear memory periodically within chunks
-                    if (($chunkIndex * $chunkSize + array_search($cdId, $chunk)) % 10 == 0) {
-                        if (ob_get_level()) {
-                            ob_flush();
-                        }
-                        flush();
-                    }
+                    if (! isset($coordCache[$cdId])) continue;
+                    fputcsv($file, $this->formatRetiredCoordinatorRow($coordCache[$cdId]));
                 }
 
-                // Force garbage collection after each chunk
-                if (function_exists('gc_collect_cycles')) {
-                    gc_collect_cycles();
-                }
-
-                // Clear memory after each chunk
-                if (ob_get_level()) {
-                    ob_flush();
-                }
+                if (ob_get_level()) { ob_flush(); }
                 flush();
+                unset($chapterCache, $boardCache);
+                gc_collect_cycles();
             }
 
             fclose($file);
@@ -1759,45 +1582,25 @@ class ExportController extends Controller implements HasMiddleware
         $callback = function () use ($coordIds) {
             $file = fopen('php://output', 'w');
 
-            // Write headers
-            $headers = [
+            fputcsv($file, [
                 'Conference', 'Region', 'Coordinator Name', 'Position', 'Sec Position', 'Admin',
                 'Report To', 'Email', 'Email2', 'Phone', 'Phone2', 'Address', 'City', 'State', 'Zip',
                 'Birthday', 'Coordinator Start', 'Last Promoted', 'Leave of Absense', 'Leave Date',
                 'Retire Date', 'Retire Reason',
-            ];
-            fputcsv($file, $headers);
+            ]);
 
-            // Process chapters in chunks to manage memory
-            $chunkSize = 50; // Smaller chunks since each getChapterDetails call is heavy
-            $chunks = array_chunk($coordIds, $chunkSize);
+            foreach (array_chunk($coordIds, 200) as $chunk) {
+                $coordCache  = $this->baseCoordinatorController->getCoordinatorDetailsForExport($chunk);
 
-            foreach ($chunks as $chunkIndex => $chunk) {
                 foreach ($chunk as $cdId) {
-                    // Use your existing base controller method
-                    $coordData = $this->baseCoordinatorController->getCoordinatorDetails($cdId);
-                    $rowData = $this->formatRetiredCoordinatorRow($coordData);
-                    fputcsv($file, $rowData);
-
-                    // Clear memory periodically within chunks
-                    if (($chunkIndex * $chunkSize + array_search($cdId, $chunk)) % 10 == 0) {
-                        if (ob_get_level()) {
-                            ob_flush();
-                        }
-                        flush();
-                    }
+                    if (! isset($coordCache[$cdId])) continue;
+                    fputcsv($file, $this->formatRetiredCoordinatorRow($coordCache[$cdId]));
                 }
 
-                // Force garbage collection after each chunk
-                if (function_exists('gc_collect_cycles')) {
-                    gc_collect_cycles();
-                }
-
-                // Clear memory after each chunk
-                if (ob_get_level()) {
-                    ob_flush();
-                }
+                if (ob_get_level()) { ob_flush(); }
                 flush();
+                unset($chapterCache, $boardCache);
+                gc_collect_cycles();
             }
 
             fclose($file);
@@ -1846,44 +1649,24 @@ class ExportController extends Controller implements HasMiddleware
         $callback = function () use ($coordIds) {
             $file = fopen('php://output', 'w');
 
-            // Write headers
-            $headers = [
+            fputcsv($file, [
                 'Conference', 'Region', 'Coordinator Name', 'Position', 'Sec Position',
                 'Start Date', '<1 Year', '1 Year', '2 Year', '3 Year', '4 Year', '5 Year', '6 Year',
                 '7 Year', '8 Year', '9 Year', 'Necklace', 'Top Tier/Other',
-            ];
-            fputcsv($file, $headers);
+            ]);
 
-            // Process chapters in chunks to manage memory
-            $chunkSize = 50; // Smaller chunks since each getChapterDetails call is heavy
-            $chunks = array_chunk($coordIds, $chunkSize);
+            foreach (array_chunk($coordIds, 200) as $chunk) {
+                $coordCache  = $this->baseCoordinatorController->getCoordinatorDetailsForExport($chunk);
 
-            foreach ($chunks as $chunkIndex => $chunk) {
                 foreach ($chunk as $cdId) {
-                    // Use your existing base controller method
-                    $coordData = $this->baseCoordinatorController->getCoordinatorDetails($cdId);
-                    $rowData = $this->formatCoordinatorAppreciationRow($coordData);
-                    fputcsv($file, $rowData);
-
-                    // Clear memory periodically within chunks
-                    if (($chunkIndex * $chunkSize + array_search($cdId, $chunk)) % 10 == 0) {
-                        if (ob_get_level()) {
-                            ob_flush();
-                        }
-                        flush();
-                    }
+                    if (! isset($coordCache[$cdId])) continue;
+                    fputcsv($file, $this->formatCoordinatorAppreciationRow($coordCache[$cdId]));
                 }
 
-                // Force garbage collection after each chunk
-                if (function_exists('gc_collect_cycles')) {
-                    gc_collect_cycles();
-                }
-
-                // Clear memory after each chunk
-                if (ob_get_level()) {
-                    ob_flush();
-                }
+                if (ob_get_level()) { ob_flush(); }
                 flush();
+                unset($chapterCache, $boardCache);
+                gc_collect_cycles();
             }
 
             fclose($file);
