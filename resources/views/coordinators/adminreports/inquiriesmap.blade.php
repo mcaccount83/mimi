@@ -1,7 +1,7 @@
 @extends('layouts.mimi_theme')
 
 @section('page_title', 'Admin Reports')
-@section('breadcrumb', 'Inquiries Notifications')
+@section('breadcrumb', 'Inquiries Mpas')
 
 @section('content')
     <!-- Main content -->
@@ -13,7 +13,7 @@
                         <div class="card-header">
                             <div class="dropdown">
                                 <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Inquiries Notifications
+                                    Inquiries Map Links
                                 </h3>
                                 @include('layouts.dropdown_menus.menu_reports_admin')
                             </div>
@@ -46,17 +46,24 @@
                         {{ $list->states->pluck('state_short_name')->implode(', ') }}
                     @endif
                 </td>
-                <td class="email-column">
+                <td class="link-column">
                     @if ($list->id == 0)
                         N/A
                     @else
-                        {{-- <span class="email-display">
-                            @mailto($list->inquiries?->inquiries_email)
+                        <span class="link-display">
+                            @if ($list->inquiries?->inquiries_map_link)
+                                <a href="{{ $list->inquiries->inquiries_map_link }}" target="_blank">
+                                    {{ $list->inquiries->inquiries_map_link }}
+                                </a>
+                            @else
+                                <em class="text-muted">No link set</em>
+                            @endif
                         </span>
-                        <span class="email-edit" style="display: none;">
-                            <input type="email" class="form-control form-control-sm email-input" value="{{ $list->inquiries?->inquiries_email }}">
-                        </span> --}}
-                        {{ $list->inquiries?->inquiries_map_link }}
+                        <span class="link-edit" style="display: none;">
+                            <input type="url" class="form-control form-control-sm link-input"
+                                value="{{ $list->inquiries?->inquiries_map_link }}"
+                                data-original="{{ $list->inquiries?->inquiries_map_link }}">
+                        </span>
                     @endif
                 </td>
                 <td>
@@ -130,9 +137,8 @@ $(document).ready(function() {
         $row.find('.save-btn').hide();
         $row.find('.edit-btn').show();
 
-        // Reset inputs to original values
-        var originalEmail = $row.find('.link-display a').text();
-        $row.find('.link-input').val(originalEmail);
+        // Reset input to original value
+        $row.find('.link-input').val($row.find('.link-input').data('original'));
     });
 
     // Save button click
@@ -141,21 +147,21 @@ $(document).ready(function() {
         var regionId = $row.data('region-id');
         var newLink = $row.find('.link-input').val();
 
-        // Validate email
-        // if (!newEmail || !isValidEmail(newEmail)) {
-        //     Swal.fire({
-        //         position: 'top-end',
-        //         icon: 'warning',
-        //         title: 'Please enter a valid link url.',
-        //         showConfirmButton: false,
-        //         timer: 1500
-        //     });
-        //     return;
-        // }
+        // Validate URL
+        if (newLink && !isValidUrl(newLink)) {
+            Swal.fire({
+                position: 'top-end',
+                icon: 'warning',
+                title: 'Please enter a valid URL (e.g. https://...).',
+                showConfirmButton: false,
+                timer: 2000
+            });
+            return;
+        }
 
         // Send AJAX request
         $.ajax({
-            url: '{{ route('adminreports.updateinquiries', ['id' => '__ID__']) }}'.replace('__ID__', regionId),
+            url: '{{ route('adminreports.updateinquiriesmap', ['id' => '__ID__']) }}'.replace('__ID__', regionId),
             method: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',
@@ -163,7 +169,13 @@ $(document).ready(function() {
             },
             success: function(response) {
                 // Update displays
-                // $row.find('.link-display a').text(response.link).attr('href', 'mailto:' + response.link);
+                var $display = $row.find('.link-display');
+                if (newLink) {
+                    $display.html('<a href="' + newLink + '" target="_blank">' + newLink + '</a>');
+                } else {
+                    $display.html('<em class="text-muted">No link set</em>');
+                }
+                $row.find('.link-input').data('original', newLink);
 
                 // Hide inputs, show displays
                 $row.find('.link-edit').hide();
@@ -201,9 +213,13 @@ $(document).ready(function() {
         });
     });
 
-    function isValidEmail(email) {
-        var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
+    function isValidUrl(url) {
+        try {
+            var u = new URL(url);
+            return u.protocol === 'http:' || u.protocol === 'https:';
+        } catch (e) {
+            return false;
+        }
     }
 });
 </script>

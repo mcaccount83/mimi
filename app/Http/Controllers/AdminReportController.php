@@ -358,14 +358,14 @@ public function inquiriesMap(Request $request): View
         // Find or create the RegionInquiry record
         $inquiries = RegionInquiry::firstOrNew(['region_id' => $region->id]);
 
-        $inquiries->inquiries_map_link = $request->inquiries_map;
+        $inquiries->inquiries_map_link = $request->inquiries_link;
         $inquiries->save();
 
         return response()->json([
-            'success' => true,
-            'message' => 'Inquiries information updated successfully!',
-            'email' => $request->inquiries_email,
-        ]);
+        'success' => true,
+        'message' => 'Inquiries information updated successfully!',
+        'link' => $request->inquiries_link,
+    ]);
     } catch (\Illuminate\Validation\ValidationException $e) {
         Log::error('Inquiries validation error: ' . json_encode($e->errors()));
 

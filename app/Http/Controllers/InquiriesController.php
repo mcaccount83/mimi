@@ -118,9 +118,6 @@ class InquiriesController extends Controller implements HasMiddleware
         $inqConfId = $inqDetails->state->conference_id;
         $chapterName = $inqDetails->chapter?->name;
 
-        $inqCoord = RegionInquiry::with('region')->find($regioniId);
-        $inqCoordName = $inqCoord->inquiries_name;
-
         $chDetails = Chapters::find($chapterId);
 
         $stateChapters = Chapters::
@@ -128,8 +125,11 @@ class InquiriesController extends Controller implements HasMiddleware
             ->where('state_id', $stateId)
             ->get();
 
+        $inqCoord = RegionInquiry::with('region')->find($regioniId);
+        $inquiriesMapLink = $inqCoord->inquiries_map_link;
+
         $data = ['id' => $id,  'chapterId' => $chapterId, 'inqDetails' => $inqDetails, 'stateChapters' => $stateChapters, 'chapterName' => $chapterName,
-            'inqCoordName' => $inqCoordName, 'chDetails' => $chDetails, 'confId' => $confId, 'inqConfId' => $inqConfId,
+            'chDetails' => $chDetails, 'confId' => $confId, 'inqConfId' => $inqConfId, 'inquiriesMapLink' => $inquiriesMapLink,
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 

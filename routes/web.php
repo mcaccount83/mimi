@@ -178,8 +178,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/adminreports/reregedit/{id}', [AdminReportController::class, 'editReReg'])->name('adminreports.editrereg');
     Route::post('/adminreports/regdateupdate/{id}', [AdminReportController::class, 'updateReReg'])->name('adminreports.updaterereg');
     Route::get('/adminreports/inquiriesnotify', [AdminReportController::class, 'inquiriesNotify'])->name('adminreports.inquiriesnotify');
-    Route::get('/adminreports/inquiriesmap', [AdminReportController::class, 'inquiriesMap'])->name('adminreports.inquiriesmap');
     Route::post('/adminreports/updateinquiries/{id}', [AdminReportController::class, 'updateInquiriesEmail'])->name('adminreports.updateinquiries');
+    Route::get('/adminreports/inquiriesmap', [AdminReportController::class, 'inquiriesMap'])->name('adminreports.inquiriesmap');
+    Route::post('/adminreports/updateinquiriesmao/{id}', [AdminReportController::class, 'updateInquiriesMap'])->name('adminreports.updateinquiriesmap');
     Route::get('/adminreports/downloads', [AdminReportController::class, 'showDownloads'])->name('adminreports.downloads');
 });
 
