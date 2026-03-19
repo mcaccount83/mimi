@@ -316,6 +316,75 @@ class AdminReportController extends Controller implements HasMiddleware
     }
 }
 
+public function inquiriesMap(Request $request): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $confId = $user['confId'];
+
+        $checkBox51Status = $request->has(\App\Enums\CheckboxFilterEnum::INTERNATIONAL);
+
+        // Base query
+        $query = Region::with([
+            'inquiries',
+            'conference',
+            'states' => function ($query) {
+                $query->orderBy('state_short_name');
+            }
+        ])
+        ->join('conference', 'region.conference_id', '=', 'conference.id');
+
+        // Add conference filter if not showing international
+        if (!$checkBox51Status) {
+            $query->where('region.conference_id', $confId);
+        }
+
+        $regList = $query
+            ->orderBy('conference.short_name')
+            ->orderBy('region.long_name')
+            ->select('region.*')
+            ->get();
+
+        $data = ['regList' => $regList, 'checkBox51Status' => $checkBox51Status];
+
+        return view('coordinators.adminreports.inquiriesmap')->with($data);
+    }
+
+   public function updateInquiriesMap(Request $request, $id)
+{
+    try {
+
+        $region = Region::findOrFail($id);
+
+        // Find or create the RegionInquiry record
+        $inquiries = RegionInquiry::firstOrNew(['region_id' => $region->id]);
+
+        $inquiries->inquiries_map_link = $request->inquiries_map;
+        $inquiries->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Inquiries information updated successfully!',
+            'email' => $request->inquiries_email,
+        ]);
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        Log::error('Inquiries validation error: ' . json_encode($e->errors()));
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Validation failed.',
+            'errors' => $e->errors()
+        ], 422);
+    } catch (\Exception $e) {
+        Log::error('Inquiries update error: ' . $e->getMessage());
+        Log::error('Stack trace: ' . $e->getTraceAsString());
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
  /**
      * View the Downloads List
      */

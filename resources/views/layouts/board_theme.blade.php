@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
     @include('layouts.scripts.bdcoordinatorlist')
     @include('layouts.scripts.boards')
     @include('layouts.scripts.boardreport')
-    @include('layouts.scripts.datetime')
+    @include('layouts.scripts.datamask')
     @include('layouts.scripts.email')
     @include('layouts.scripts.masks')
     @include('layouts.scripts.password')

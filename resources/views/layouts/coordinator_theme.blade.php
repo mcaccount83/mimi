@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', function() {
     @include('layouts.scripts.checkboxes')
     @include('layouts.scripts.coordinatorlist')
     @include('layouts.scripts.datatable')
-    @include('layouts.scripts.datetime')
+    @include('layouts.scripts.datamask')
     @include('layouts.scripts.email')
     @include('layouts.scripts.export')
     @include('layouts.scripts.information')

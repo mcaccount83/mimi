@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- Sript Functions -->
 @include('layouts.scripts.alert')
-@include('layouts.scripts.datetime')
+@include('layouts.scripts.datamask')
 @include('layouts.scripts.masks')
 @include('layouts.scripts.pdfviewer')
 @include('layouts.scripts.recaptcha')
