@@ -36,10 +36,6 @@
                         <h3 class="mb-0">{{ $inqDetails->state->state_long_name}}</h3>
                         <p class="mb-0">{{ $inqDetails->state->conference->conference_description }} Conference, {{ $inqDetails->state->region->long_name }} Region
                         <br>
-
-                        {{-- <h3><b>{{ $inqDetails->state->state_long_name}}</b></h3>
-                        <h3>{{ $inqDetails->state->region->long_name }} Region</h3>
-                        <h3>{{ $inqDetails->state->conference->conference_description }} Conference</h3> --}}
                         @if ($inquiriesMapLink)
                             <a href="{{ $inquiriesMapLink }}" target="_blank" class="btn btn-primary bg-gradient btn-xs m-1">
                                 <i class="bi bi-pin-map-fill me-2"></i>VIEW REGION MAP
