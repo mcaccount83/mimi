@@ -116,7 +116,7 @@
 
 <!------Start Step 4 ------>
 <div style="break-inside: avoid; margin-bottom: 0.5rem;">
-<div class="accordion-item {{ $admin->reset_eoy_tables == 1 ? 'step-complete' : '' }}">
+<div class="accordion-item {{$fiscalYearEOYReset && $admin->reset_eoy_tables == 1 ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-eoy-tables">
             <button class="accordion-button collapsed"type="button"
                     data-bs-toggle="collapse" data-bs-target="#collapseFour"
@@ -156,7 +156,7 @@
 
 <!------Start Step 5 ------>
 <div style="break-inside: avoid; margin-bottom: 0.5rem;">
-<div class="accordion-item {{ $admin->display_testing == 1 ? 'step-complete' : '' }}">
+<div class="accordion-item {{$fiscalYearEOYReset && $admin->display_testing == 1 ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-display-testing">
             <button class="accordion-button collapsed"type="button"
                     data-bs-toggle="collapse" data-bs-target="#collapseFive"
@@ -196,7 +196,7 @@
 
 <!------Start Step 6 ------>
 <div style="break-inside: avoid; margin-bottom: 0.5rem;">
-<div class="accordion-item {{ $admin->reset_AFTER_testing == 1 ? 'step-complete' : '' }}">
+<div class="accordion-item {{$fiscalYearEOYReset && $admin->reset_AFTER_testing == 1 ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-reset-tables-after">
             <button class="accordion-button collapsed"type="button"
                     data-bs-toggle="collapse" data-bs-target="#collapseSix"
@@ -236,7 +236,7 @@
 
 <!------Start Step 7 ------>
 <div style="break-inside: avoid; margin-bottom: 0.5rem;">
-<div class="accordion-item {{ $admin->update_user_tables == 1 ? 'step-complete' : '' }}">
+<div class="accordion-item {{$fiscalYearEOYReset && $admin->update_user_tables == 1 ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-user-tables">
             <button class="accordion-button collapsed"type="button"
                     data-bs-toggle="collapse" data-bs-target="#collapseSeven"
@@ -278,7 +278,7 @@
 
 <!------Start Step 9 ------>
 <div style="break-inside: avoid; margin-bottom: 0.5rem;">
-<div class="accordion-item {{ $admin->display_live == 1 ? 'step-complete' : '' }}">
+<div class="accordion-item {{$fiscalYearEOYReset && $admin->display_live == 1 ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-display-live">
             <button class="accordion-button collapsed"type="button"
                     data-bs-toggle="collapse" data-bs-target="#collapseNine"
@@ -318,7 +318,7 @@
 
 <!------Start Step 8 ------>
 <div style="break-inside: avoid; margin-bottom: 0.5rem;">
-<div class="accordion-item {{ $adminYear->unsubscribe_list == 1 ? 'step-complete' : '' }}">
+<div class="accordion-item {{$fiscalYearEOYReset && $adminYear->unsubscribe_list == 1 ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-unsubscribe-list">
             <button class="accordion-button collapsed"type="button"
                     data-bs-toggle="collapse" data-bs-target="#collapseEight"
