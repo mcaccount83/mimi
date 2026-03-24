@@ -53,7 +53,7 @@
                 <section>
                     <div class="col-md-12">
                     Complete in August, after activating boards, so new board members receive subscription to Lists.<br>
-                    @if (($adminYear->subscribe_list != 1) && ( $currentMonth >= 2 && $currentMonth <= 9 ))
+                    @if ($adminYear->subscribe_list != 1 && ( $currentMonth >= 2 && $currentMonth <= 9 ))
                                 <button type="button" id="update-eoy-subscribelists" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-plus-lg me-2"></i>Subscribe to Lists</button>
                     @else
                                 <button type="button" id="update-eoy-subscribelists" class="btn btn-primary bg-gradient-primary mb-3" disabled><i class="bi bi-plus-lg me-2"></i>Subscribe to Lists</button>
@@ -88,7 +88,7 @@
 </div> --}}
 <!------Start Step 2 ------>
 <div style="break-inside: avoid; margin-bottom: 0.5rem;">
-<div class="accordion-item {{ $fiscalYearStart == $thisYearEOY ? 'step-complete' : '' }}">
+<div class="accordion-item {{ $fiscalYearEOYReset ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-reset-yeareoy">
             <button class="accordion-button collapsed"type="button"
                     data-bs-toggle="collapse" data-bs-target="#collapseThree"
@@ -101,7 +101,7 @@
     <section>
         <div class="col-md-12">
             To be used for all End of Year buttons/links/emails/forms.<br>
-            @if ($adminYear->subscribe_list == 1 && ($fiscalYearStart != $thisYearEOY) && ( $currentMonth >= 1 && $currentMonth <= 5 ))
+            @if ($adminYear->subscribe_list == 1 && !$fiscalYearEOYReset && ($currentMonth >= 1 && $currentMonth <= 5))
                 <button type="button" id="reset-yeareoy" class="btn btn-danger bg-gradient mb-2"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year EOY</button>
             @else
                 <button type="button" id="reset-yeareoy" class="btn btn-danger bg-gradient mb-2" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year EOY</button>
@@ -129,7 +129,7 @@
     <section>
         <div class="col-md-12">
             Complete in Feb/March to prepare for data for testing.<br>
-            @if (($fiscalYearStart == $thisYearEOY) && ($admin->reset_eoy_tables != 1) && ( $currentMonth >= 1 && $currentMonth <= 5 ))
+            @if ($fiscalYearEOYReset && $admin->reset_eoy_tables != 1 && ($currentMonth >= 1 && $currentMonth <= 5))
                                 <button type="button" id="update-eoy-database" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset EOY Tables Data Tables</button>
                 @else
                                 <button type="button" id="update-eoy-database" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset EOY Tables Data Tables</button>
@@ -169,7 +169,7 @@
     <section>
             <div class="col-md-12">
             Complete in Feb/March when ready for data for testing.<br>
-            @if ($admin->reset_eoy_tables == 1 && ($admin->display_testing != 1) && ( $currentMonth >= 1 && $currentMonth <= 5 ))
+                @if ($fiscalYearEOYReset && $admin->reset_eoy_tables == 1 && $admin->display_testing != 1 && $currentMonth >= 1 && $currentMonth <= 5)
                                 <button type="button" id="view-eoy-testing" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-toggle-on me-2"></i>Display EOY Testing Items</button>
             @else
                                 <button type="button" id="view-eoy-testing" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-toggle-on me-2"></i>Display EOY Testing Items</button>
@@ -209,7 +209,7 @@
     <section>
             <div class="col-md-12">
             Complete in May, after testing, so all data tables are clean and ready to go.<br>
-            @if ($admin->display_testing == 1 && ($admin->reset_AFTER_testing != 1) && ( $currentMonth >= 3 && $currentMonth <= 6 ))
+            @if ($fiscalYearEOYReset && $admin->display_testing == 1 && $admin->reset_AFTER_testing != 1 && ( $currentMonth >= 3 && $currentMonth <= 6 ))
                                 <button type="button" id="reset-database-after" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Database AFTER Testing</button>
             @else
                                 <button type="button" id="reset-database-after" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Database AFTER Testing</button>
@@ -249,7 +249,7 @@
     <section>
         <div class="col-md-12">
             Complete in May, before going live to save old board/coordinator/user information.<br>
-            @if ($admin->reset_AFTER_testing == 1 && ($admin->update_user_tables != 1) && ( $currentMonth >= 3 && $currentMonth <= 6 ))
+            @if ($fiscalYearEOYReset && $admin->reset_AFTER_testing == 1 && $admin->update_user_tables != 1 && ( $currentMonth >= 3 && $currentMonth <= 6 ))
                                 <button type="button" id="update-data-database" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-copy me-2"></i>Copy Data Tables</button>
             @else
                                 <button type="button" id="update-data-database" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-copy me-2"></i>Copy Data Tables</button>
@@ -291,7 +291,7 @@
     <section>
         <div class="col-md-12">
             Complete in May, after testing, for live viewing.<br>
-            @if ($admin->update_user_tables == 1 && ($admin->display_live != 1) && ( $currentMonth >= 3 && $currentMonth <= 6 ))
+            @if ($fiscalYearEOYReset && $admin->update_user_tables == 1 && $admin->display_live != 1 && ( $currentMonth >= 3 && $currentMonth <= 6 ))
                                 <button type="button" id="view-eoy-live" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-toggle-on me-2"></i>Display EOY LIVE Items</button>
             @else
                                 <button type="button" id="view-eoy-live" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-toggle-on me-2"></i>Display EOY LIVE Items</button>
@@ -331,7 +331,7 @@
     <section>
         <div class="col-md-12">
             Complete in June, before new board reports are activated.<br>
-            @if ($admin->display_live == 1 && ($adminYear->unsubscribe_list != 4) && ( $currentMonth >= 3 && $currentMonth <= 6 ))
+            @if ($fiscalYearEOYReset && $admin->display_live == 1 && $adminYear->unsubscribe_list != 4 && ( $currentMonth >= 3 && $currentMonth <= 6 ))
                                 <button type="button" id="update-eoy-unsubscribelists" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-ban me-2"></i>Unsubscribe from Lists</button>
             @else
                                 <button type="button" id="update-eoy-unsubscribelists" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-ban me-2"></i>Unsubscribe from Lists</button>
@@ -372,7 +372,7 @@
                 <section>
                     <div class="col-md-12">
                     To be used in BoardList and other display areas.<br>
-                    @if ($adminYear->unsubscribe_list == 1 && ($fiscalYearStart == $thisYearEOY) && ( $currentMonth >= 6 && $currentMonth <= 9 ))
+                    @if ($fiscalYearEOYReset && $adminYear->unsubscribe_list == 1 && $fiscalYearStart == $thisYearEOY && ( $currentMonth >= 6 && $currentMonth <= 9 ))
                                 <button type="button" id="reset-year" class="btn btn-danger bg-gradient mb-2"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year</button>
                             @else
                                 <button type="button" id="reset-year" class="btn btn-danger bg-gradient mb-2" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year</button>

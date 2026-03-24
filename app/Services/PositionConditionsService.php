@@ -133,6 +133,8 @@ class PositionConditionsService
         $lastYearEOY = $years[0];  // "2024"
         $thisYearEOY = $years[1];  // "2025"
 
+        $fiscalYearEOYReset = $fiscalYearStart == $thisYearEOY;
+
         $display_testing = ($admin->display_testing == 1);
         $display_live = ($admin->display_live == 1);
 
@@ -149,6 +151,7 @@ class PositionConditionsService
             'fiscalYearStart' => $fiscalYearStart,
             'fiscalYearEOY' => $fiscalYearEOY,
             'thisYearEOY' => $thisYearEOY,
+            'fiscalYearEOYReset' => $fiscalYearEOYReset,
             // 'nextYearEOY' => $nextYearEOY,
             'lastYearEOY' => $lastYearEOY,
             'displayEOYTESTING' => ($display_testing && ! $display_live),
