@@ -1146,13 +1146,27 @@ class BoardControllerNew extends Controller implements HasMiddleware
         $allStates = $baseQuery['allStates'];
         $allCountries = $baseQuery['allCountries'];
 
-        $PresDetails = $baseQuery['PresDetails'];
-        $AVPDetails = $baseQuery['AVPDetails'];
-        $MVPDetails = $baseQuery['MVPDetails'];
-        $TRSDetails = $baseQuery['TRSDetails'];
-        $SECDetails = $baseQuery['SECDetails'];
+        $PresDetails = $AVPDetails = $MVPDetails = $TRSDetails = $SECDetails = null;
 
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($chId);
+        $activePresDetails = $baseActiveBoardQuery['PresDetails'];
+
+        if ($chEOYDocuments->new_board_active != '1') {
+            $baseIncomingBoardQuery = $this->baseChapterController->getIncomingBoardDetails($chId);
+            $PresDetails = $baseIncomingBoardQuery['PresDetails'];
+            $AVPDetails  = $baseIncomingBoardQuery['AVPDetails'];
+            $MVPDetails  = $baseIncomingBoardQuery['MVPDetails'];
+            $TRSDetails  = $baseIncomingBoardQuery['TRSDetails'];
+            $SECDetails  = $baseIncomingBoardQuery['SECDetails'];
+        } else {
+            $PresDetails = $baseActiveBoardQuery['PresDetails'];
+            $AVPDetails  = $baseActiveBoardQuery['AVPDetails'];
+            $MVPDetails  = $baseActiveBoardQuery['MVPDetails'];
+            $TRSDetails  = $baseActiveBoardQuery['TRSDetails'];
+            $SECDetails  = $baseActiveBoardQuery['SECDetails'];
+        }
+
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $activePresDetails);
         $bdPositionId = $bdData['bdPositionId'];
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];
