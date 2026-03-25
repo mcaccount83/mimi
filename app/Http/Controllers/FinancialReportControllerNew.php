@@ -157,6 +157,7 @@ class FinancialReportControllerNew extends Controller implements HasMiddleware
         $financialReport->changed_dues = $input['optChangeDues'] ?? null;
         $financialReport->different_dues = $input['optNewOldDifferent'] ?? null;
         $financialReport->not_all_full_dues = $input['optNoFullDues'] ?? null;
+        $financialReport->not_full_dues_array = $input['Dues'] ?? null;
         $financialReport->total_new_members = $input['TotalNewMembers'] ?? null;
         $financialReport->total_renewed_members = $input['TotalRenewedMembers'] ?? null;
         $financialReport->dues_per_member = $input['MemberDues'] ?? null;

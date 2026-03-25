@@ -49,7 +49,7 @@
             }
         } else {
             // default — mirrors the original script exactly
-            if (received != '1' && !shouldEnable) {
+            if (received == '1' && !shouldEnable) {
                 disableButtons();
                 disableFields();
             } else if (submitted == '1' && !shouldEnable) {
