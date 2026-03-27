@@ -65,7 +65,7 @@
                             <td class="email-column">
                                 @mailto($list->pendingPresident->email)
                             </td>
-                            <td><@tel($list->pendingPresident->phone)</td>
+                            <td>@tel($list->pendingPresident->phone)</td>
                             @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
                         <td class="text-center align-middle"><i class="bi bi-ban"
                             onclick="showDeleteChapterModal({{ $list->id }}, '{{ $list->name }}', '{{ $list->activeStatus->active_status }}')"
