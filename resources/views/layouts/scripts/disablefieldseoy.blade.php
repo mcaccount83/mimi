@@ -47,6 +47,14 @@
                 disableButtons();
                 disableFields();
             }
+        } else if (disableEOYMode === 'disable-review') {
+            if (received != '1') {
+                disableButtons();
+                disableFields();
+            } else if (submitted == '1') {
+                disableButtons(['review-clear', 'financial-pdf', 'generate-pdf']);
+                disableFields();
+            }
         } else {
             // default — mirrors the original script exactly
             if (received == '1' && !shouldEnable) {
