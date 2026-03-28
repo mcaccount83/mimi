@@ -1017,8 +1017,8 @@ class PDFController extends Controller
 
         // Get the update, add and zap lists
         $chapterUpdateList = $this->generateIRSUpdateList($coorId, $confId, $regId, $positionId, $secPositionId, $currentDate);
-        $chapterAddList = $this->generateIRSAddList($coorId, $confId, $regId, $positionId, $secPositionId, $currentDate);
-        $chapterZapList = $this->generateIRSZapList($coorId, $confId, $regId, $positionId, $secPositionId, $currentDate);
+        $chapterAddList = $this->generateIRSAddList($coorId, $confId, $regId, $positionId, $secPositionId, $inputDate);
+        $chapterZapList = $this->generateIRSZapList($coorId, $confId, $regId, $positionId, $secPositionId, $inputDate);
 
         // Clean up the simulated parameter
         unset($_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL]);
@@ -1149,8 +1149,8 @@ class PDFController extends Controller
         $currentDateWords = $dateOptions['currentDateWords'];
 
         // Get the add and zap lists
-        $chapterAddList = $this->generateIRSAddList2($coorId, $confId, $regId, $positionId, $secPositionId, $currentDate);
-        $chapterZapList = $this->generateIRSZapList($coorId, $confId, $regId, $positionId, $secPositionId, $currentDate);
+        $chapterAddList = $this->generateIRSAddList2($coorId, $confId, $regId, $positionId, $secPositionId, $inputDate);
+        $chapterZapList = $this->generateIRSZapList($coorId, $confId, $regId, $positionId, $secPositionId, $inputDate);
 
         // Clean up the simulated parameter
         unset($_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL]);
@@ -1438,7 +1438,7 @@ class PDFController extends Controller
                 'bd_active.last_name as pres_last_name',
                 'bd_active.street_address as pres_address',
                 'bd_active.city as pres_city',
-                'state.state_short_name as pres_state',
+                'pres_state.state_short_name as pres_state',
                 'bd_active.zip as pres_zip',
             ])
             ->leftJoin('documents', 'chapters.id', '=', 'documents.chapter_id')
@@ -1446,7 +1446,7 @@ class PDFController extends Controller
                 $join->on('chapters.id', '=', 'bd_active.chapter_id')
                     ->where('bd_active.board_position_id', '=', 1);
             })
-            ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
+            ->leftJoin('state as pres_state', 'bd_active.state_id', '=', 'pres_state.id')
             ->where('documents.irs_wrongdate', 1)
             ->where(function ($query) {
                 $query->whereNull('documents.irs_notified')
@@ -1470,7 +1470,7 @@ class PDFController extends Controller
                 'bd_active.last_name as pres_last_name',
                 'bd_active.street_address as pres_address',
                 'bd_active.city as pres_city',
-                'state.state_short_name as pres_state',
+                'pres_state.state_short_name as pres_state',
                 'bd_active.zip as pres_zip',
             ])
             ->leftJoin('documents', 'chapters.id', '=', 'documents.chapter_id')
@@ -1478,7 +1478,7 @@ class PDFController extends Controller
                 $join->on('chapters.id', '=', 'bd_active.chapter_id')
                     ->where('bd_active.board_position_id', '=', 1);
             })
-            ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
+            ->leftJoin('state as pres_state', 'bd_active.state_id', '=', 'pres_state.id')
             ->where('documents.irs_notfound', 1)
             ->where(function ($query) {
                 $query->whereNull('documents.irs_notified')
@@ -1502,7 +1502,7 @@ class PDFController extends Controller
                 'bd_active.last_name as pres_last_name',
                 'bd_active.street_address as pres_address',
                 'bd_active.city as pres_city',
-                'state.state_short_name as pres_state',
+                'pres_state.state_short_name as pres_state',
                 'bd_active.zip as pres_zip',
             ])
             ->leftJoin('documents', 'chapters.id', '=', 'documents.chapter_id')
@@ -1510,7 +1510,7 @@ class PDFController extends Controller
                 $join->on('chapters.id', '=', 'bd_active.chapter_id')
                     ->where('bd_active.board_position_id', '=', 1);
             })
-            ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
+            ->leftJoin('state as pres_state', 'bd_active.state_id', '=', 'pres_state.id')
             ->where('documents.irs_filedwrong', 1)
             ->where(function ($query) {
                 $query->whereNull('documents.irs_notified')
