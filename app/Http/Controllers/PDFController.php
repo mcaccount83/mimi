@@ -1199,7 +1199,7 @@ class PDFController extends Controller
                 'bd_active.last_name as pres_last_name',
                 'bd_active.street_address as pres_address',
                 'bd_active.city as pres_city',
-                'state.state_short_name as pres_state',
+                'pres_state.state_short_name as pres_state',
                 'bd_active.zip as pres_zip',
             ])
             ->whereNotNull('chapters.ein')
@@ -1216,7 +1216,7 @@ class PDFController extends Controller
                 $join->on('chapters.id', '=', 'bd_active.chapter_id')
                     ->where('bd_active.board_position_id', '=', 1);
             })
-            ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
+            ->leftJoin('state as pres_state', 'bd_active.state_id', '=', 'pres_state.id')
             ->get()
             ->sortBy('ein');
     }
@@ -1235,7 +1235,7 @@ class PDFController extends Controller
                 'bd_active.last_name as pres_last_name',
                 'bd_active.street_address as pres_address',
                 'bd_active.city as pres_city',
-                'state.state_short_name as pres_state',
+                'pres_state.state_short_name as pres_state',
                 'bd_active.zip as pres_zip',
             ])
             ->whereNotNull('chapters.ein')
@@ -1252,7 +1252,7 @@ class PDFController extends Controller
                 $join->on('chapters.id', '=', 'bd_active.chapter_id')
                     ->where('bd_active.board_position_id', '=', 1);
             })
-            ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
+            ->leftJoin('state as pres_state', 'bd_active.state_id', '=', 'pres_state.id')
             ->get()
             ->sortBy('ein');
     }
@@ -1271,7 +1271,7 @@ class PDFController extends Controller
                 'bd_active.last_name as pres_last_name',
                 'bd_active.street_address as pres_address',
                 'bd_active.city as pres_city',
-                'state.state_short_name as pres_state',
+                'pres_state.state_short_name as pres_state',
                 'bd_active.zip as pres_zip',
             ])
             ->whereNotNull('chapters.ein')
@@ -1282,7 +1282,7 @@ class PDFController extends Controller
                 $join->on('chapters.id', '=', 'bd_active.chapter_id')
                     ->where('bd_active.board_position_id', '=', 1);
             })
-            ->leftJoin('state', 'bd_active.state_id', '=', 'state.id')
+            ->leftJoin('state as pres_state', 'bd_active.state_id', '=', 'pres_state.id')
             ->where(function ($query) {
                 $query->whereNull('doc.ein_sent')
                     ->orWhere('doc.ein_sent', '!=', 1);

@@ -53,8 +53,8 @@ function showIRSUpdatesModal() {
     Swal.fire({
         title: 'IRS Updates to EO Dept',
         html: `
-            <p>This will generate the Fax Coversheet for the IRS EO Department. Enter the total number of pages (including the coversheet) to be faxed as well as
-                a brief message describing the contents of the fax.</p>
+            <p>This will generate the Fax Coversheet for the IRS EO Department. Enter the total number of pages (including the coversheet) to be faxed and the date of the
+                last filing/update sent.</p>
             <div style="display: flex; align-items: center;">
                 <input type="text" id="total_pages" name="total_pages" class="swal2-input" placeholder="Enter Total Pages" required style="width: 100%;">
             </div>
@@ -103,8 +103,8 @@ function showSubordinateFilingModal() {
     Swal.fire({
         title: 'IRS Updates to EO Dept',
         html: `
-            <p>This will generate the Fax Coversheet for the IRS EO Department. Enter the total number of pages (including the coversheet) to be faxed as well as
-                a brief message describing the contents of the fax.</p>
+            <p>This will generate the Fax Coversheet for the IRS EO Department. Enter the total number of pages (including the coversheet) to be faxed and the beginning date
+                of the fiscal year.</p>
             <div style="display: flex; align-items: center;">
                 <input type="text" id="total_pages" name="total_pages" class="swal2-input" placeholder="Enter Total Pages" required style="width: 100%;">
             </div>
