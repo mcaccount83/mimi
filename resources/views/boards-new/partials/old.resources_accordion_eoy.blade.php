@@ -64,8 +64,8 @@
     <div class="col-md-12 text-center">
         <h5><u><b>Important things to remember</b></u></h5>
 
-    The fiscal year you are reporting for is <strong>July 1, {{ $lastYearEOY }} - June 30, {{ $thisYearEOY }}</strong>.<br>
-    The 990N tax filing associated with the fiscal year is <strong>{{ $lastYearEOY }}.</strong><br>
+    The fiscal year you are reporting for is <strong>July 1, {{ $reportYearStart }} - June 30, {{ $reportYearEnd }}</strong>.<br>
+    The 990N tax filing associated with the fiscal year is <strong>{{ $reportYearStart }}.</strong><br>
     <br>
     Any board member of your chapter may fill out the report. We recommend that the Treasurer and President work together but any board member may complete it. All the information needed to complete it should be found in your financial records, newsletters, and meeting minutes.<br>
     <br>

@@ -17,8 +17,8 @@ use App\Mail\PaymentsM2MPublicThankYou;
 use App\Mail\PaymentsNewChapOnline;
 use App\Mail\PaymentsPublicDonationOnline;
 use App\Mail\PaymentsSustainingPublicThankYou;
-use App\Models\Admin;
-use App\Models\AdminYear;
+use App\Models\AdminReport;
+use App\Models\FiscalYear;
 use App\Models\BoardsPending;
 use App\Models\ChapterApplication;
 use App\Models\Chapters;
@@ -149,22 +149,48 @@ class PublicController extends Controller
         $resources = Resources::with('resourceCategory')->get();
         $resourceCategories = ResourceCategory::all();
 
-        $adminYear = AdminYear::latest('id')->firstOrFail();
-        $fiscalYear = $adminYear->year_fiscal;  // "2025-2026"
-        $admin = Admin::latest('id')->firstOrFail();
-        $fiscalYearEOY = $admin->fiscal_year_eoy;  // "2024-2025"
-        $years = explode('-', $fiscalYearEOY);  // Extract years from fiscal_year string
-        $lastYearEOY = $years[0];  // "2024"
-        $thisYearEOY = $years[1];  // "2025"
-        $display_testing = ($admin->display_testing == 1);
-        $display_live = ($admin->display_live == 1);
-        $yearColumnName = $thisYearEOY.'_financial_pdf_path'; // "2025" name for Database Column for Financial Report
-        $boardReportName = $fiscalYear.' Board Report';  // "2025-2026" Board Report Name
-        $financialReportName = $fiscalYearEOY.' Financial Report';  // "2024-2025" Financial Report Name
-        $financialPDFName = $fiscalYearEOY.' Financial PDF';  // "2024-2025" Financial Report Name
-        $irsFilingName = $lastYearEOY.' 990N IRS Filing';  // "2024" IRS Filing Name
+        $fiscalYear = FiscalYear::orderBy('created_at', 'desc') // newest created row first
+                        ->first();
+        $fiscalYearId = $fiscalYear->id;
+        $fiscalYearRange = $fiscalYear->fiscal_year;
+
+        $reportYear = AdminReport::with('fiscalYear')
+                        ->orderBy('created_at', 'desc') // newest created row first
+                        ->first();
+        $reportYearId = $reportYear->fiscalYear->id;
+        $reportYearRange = $reportYear->fiscalYear->report_year; // "2024-2025"
+        $reportYearStart = $reportYear->fiscalYear->report_start;    // "2024"
+        $reportYearEnd = $reportYear->fiscalYear->report_end;
+
+        // Optional display names
+        $yearColumnName = $reportYearEnd.'_financial_pdf_path';
+        $boardReportName = $fiscalYearRange.' Board Report';
+        $financialReportName = $reportYearRange.' Financial Report';
+        $financialPDFName = $reportYearEnd.' Financial PDF';
+        $irsFilingName = $reportYearStart.' 990N IRS Filing';// "2025"
+
+        // Display Options
+        $display_testing = ($reportYear->display_testing == 1);
+        $display_live = ($reportYear->display_live == 1);
         $currentDate = \Carbon\Carbon::now(); // Full Current Date
-        $currentMonth = $currentDate->format('m'); // Current Month with leading zero
+        $currentMonth = $currentDate->format('m');  // Current Month with leading zero
+
+        // $adminYear = AdminYear::latest('id')->firstOrFail();
+        // $fiscalYear = $adminYear->year_fiscal;  // "2025-2026"
+        // $admin = Admin::latest('id')->firstOrFail();
+        // $fiscalYearEOY = $admin->fiscal_year_eoy;  // "2024-2025"
+        // $years = explode('-', $fiscalYearEOY);  // Extract years from fiscal_year string
+        // $lastYearEOY = $years[0];  // "2024"
+        // $thisYearEOY = $years[1];  // "2025"
+        // $display_testing = ($admin->display_testing == 1);
+        // $display_live = ($admin->display_live == 1);
+        // $yearColumnName = $thisYearEOY.'_financial_pdf_path'; // "2025" name for Database Column for Financial Report
+        // $boardReportName = $fiscalYear.' Board Report';  // "2025-2026" Board Report Name
+        // $financialReportName = $fiscalYearEOY.' Financial Report';  // "2024-2025" Financial Report Name
+        // $financialPDFName = $fiscalYearEOY.' Financial PDF';  // "2024-2025" Financial Report Name
+        // $irsFilingName = $lastYearEOY.' 990N IRS Filing';  // "2024" IRS Filing Name
+        // $currentDate = \Carbon\Carbon::now(); // Full Current Date
+        // $currentMonth = $currentDate->format('m'); // Current Month with leading zero
 
         $displayEOYTESTING = ($display_testing && ! $display_live);
         $displayEOYLIVE = ($display_live && $currentMonth >= 5 && $currentMonth <= 12);
@@ -173,10 +199,10 @@ class PublicController extends Controller
         $displayEINInstructionsLIVE = ($display_live && $currentMonth >= 7 && $currentMonth <= 12);
 
         $data = ['resources' => $resources, 'resourceCategories' => $resourceCategories, 'userTypeId' => $userTypeId,
-            'fiscalYear' => $fiscalYear,
-            'fiscalYearEOY' => $fiscalYearEOY,
-            'thisYearEOY' => $thisYearEOY,
-            'lastYearEOY' => $lastYearEOY,
+            'fiscalYearRange' => $fiscalYearRange,
+            'reportYearRange' => $reportYearRange,
+            'reportYearEnd' => $reportYearEnd,
+            'reportYearStart' => $reportYearStart,
             'displayEOYTESTING' => $displayEOYTESTING,
             'displayEOYLIVE' => $displayEOYLIVE,
             'displayBoardRptLIVE' => $displayBoardRptLIVE,

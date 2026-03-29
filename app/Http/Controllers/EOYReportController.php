@@ -111,16 +111,16 @@ class EOYReportController extends Controller implements HasMiddleware
         $userConfName = $user['confName'];
         $userConfDesc = $user['confDesc'];
 
-        $EOYOptions = $this->positionConditionsService->getEOYOptions();
-        $thisYearEOY = $EOYOptions['thisYearEOY'];
+        $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
+        $reportYearStart = $reportYearOptions['reportYearStart'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
-            ->where(function ($query) use ($thisYearEOY) {
-                $query->where(function ($q) use ($thisYearEOY) {
-                    $q->where('start_year', '<', $thisYearEOY)
-                        ->orWhere(function ($q) use ($thisYearEOY) {
-                            $q->where('start_year', '=', $thisYearEOY)
+            ->where(function ($query) use ($reportYearStart) {
+                $query->where(function ($q) use ($reportYearStart) {
+                    $q->where('start_year', '<', $reportYearStart)
+                        ->orWhere(function ($q) use ($reportYearStart) {
+                            $q->where('start_year', '=', $reportYearStart)
                                 ->where('start_month_id', '<', 7); // July is month 7
                         });
                 });
@@ -279,16 +279,16 @@ class EOYReportController extends Controller implements HasMiddleware
         $userConfName = $user['confName'];
         $userConfDesc = $user['confDesc'];
 
-        $EOYOptions = $this->positionConditionsService->getEOYOptions();
-        $thisYearEOY = $EOYOptions['thisYearEOY'];
+        $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
+        $reportYearStart = $reportYearOptions['reportYearStart'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
-            ->where(function ($query) use ($thisYearEOY) {
-                $query->where(function ($q) use ($thisYearEOY) {
-                    $q->where('start_year', '<', $thisYearEOY)
-                        ->orWhere(function ($q) use ($thisYearEOY) {
-                            $q->where('start_year', '=', $thisYearEOY)
+            ->where(function ($query) use ($reportYearStart) {
+                $query->where(function ($q) use ($reportYearStart) {
+                    $q->where('start_year', '<', $reportYearStart)
+                        ->orWhere(function ($q) use ($reportYearStart) {
+                            $q->where('start_year', '=', $reportYearStart)
                                 ->where('start_month_id', '<', 7); // July is month 7
                         });
                 });
@@ -543,16 +543,16 @@ class EOYReportController extends Controller implements HasMiddleware
         $userConfName = $user['confName'];
         $userConfDesc = $user['confDesc'];
 
-        $EOYOptions = $this->positionConditionsService->getEOYOptions();
-        $thisYearEOY = $EOYOptions['thisYearEOY'];
+        $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
+        $reportYearStart = $reportYearOptions['reportYearStart'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
-            ->where(function ($query) use ($thisYearEOY) {
-                $query->where(function ($q) use ($thisYearEOY) {
-                    $q->where('start_year', '<', $thisYearEOY)
-                        ->orWhere(function ($q) use ($thisYearEOY) {
-                            $q->where('start_year', '=', $thisYearEOY)
+            ->where(function ($query) use ($reportYearStart) {
+                $query->where(function ($q) use ($reportYearStart) {
+                    $q->where('start_year', '<', $reportYearStart)
+                        ->orWhere(function ($q) use ($reportYearStart) {
+                            $q->where('start_year', '=', $reportYearStart)
                                 ->where('start_month_id', '<', 7); // July is month 7
                         });
                 });
@@ -889,16 +889,16 @@ class EOYReportController extends Controller implements HasMiddleware
         $positionId = $user['cdPositionId'];
         $secPositionId = $user['cdSecPositionId'];
 
-        $EOYOptions = $this->positionConditionsService->getEOYOptions();
-        $thisYearEOY = $EOYOptions['thisYearEOY'];
+        $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
+        $reportYearStart = $reportYearOptions['reportYearStart'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
-            ->where(function ($query) use ($thisYearEOY) {
-                $query->where(function ($q) use ($thisYearEOY) {
-                    $q->where('start_year', '<', $thisYearEOY)
-                        ->orWhere(function ($q) use ($thisYearEOY) {
-                            $q->where('start_year', '=', $thisYearEOY)
+            ->where(function ($query) use ($reportYearStart) {
+                $query->where(function ($q) use ($reportYearStart) {
+                    $q->where('start_year', '<', $reportYearStart)
+                        ->orWhere(function ($q) use ($reportYearStart) {
+                            $q->where('start_year', '=', $reportYearStart)
                                 ->where('start_month_id', '<', 7); // July is month 7
                         });
                 });
@@ -995,16 +995,16 @@ class EOYReportController extends Controller implements HasMiddleware
         $positionId = $user['cdPositionId'];
         $secPositionId = $user['cdSecPositionId'];
 
-        $EOYOptions = $this->positionConditionsService->getEOYOptions();
-        $thisYearEOY = $EOYOptions['thisYearEOY'];
+        $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
+        $reportYearStart = $reportYearOptions['reportYearStart'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
-            ->where(function ($query) use ($thisYearEOY) {
-                $query->where(function ($q) use ($thisYearEOY) {
-                    $q->where('start_year', '<', $thisYearEOY)
-                        ->orWhere(function ($q) use ($thisYearEOY) {
-                            $q->where('start_year', '=', $thisYearEOY)
+            ->where(function ($query) use ($reportYearStart) {
+                $query->where(function ($q) use ($reportYearStart) {
+                    $q->where('start_year', '<', $reportYearStart)
+                        ->orWhere(function ($q) use ($reportYearStart) {
+                            $q->where('start_year', '=', $reportYearStart)
                                 ->where('start_month_id', '<', 7); // July is month 7
                         });
                 });
@@ -1097,16 +1097,16 @@ class EOYReportController extends Controller implements HasMiddleware
         $secPositionId = $user['cdSecPositionId'];
         $updatedBy = $user['userName'];
 
-        $EOYOptions = $this->positionConditionsService->getEOYOptions();
-        $thisYearEOY = $EOYOptions['thisYearEOY'];
+        $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
+        $reportYearStart = $reportYearOptions['reportYearStart'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
-            ->where(function ($query) use ($thisYearEOY) {
-                $query->where(function ($q) use ($thisYearEOY) {
-                    $q->where('start_year', '<', $thisYearEOY)
-                        ->orWhere(function ($q) use ($thisYearEOY) {
-                            $q->where('start_year', '=', $thisYearEOY)
+            ->where(function ($query) use ($reportYearStart) {
+                $query->where(function ($q) use ($reportYearStart) {
+                    $q->where('start_year', '<', $reportYearStart)
+                        ->orWhere(function ($q) use ($reportYearStart) {
+                            $q->where('start_year', '=', $reportYearStart)
                                 ->where('start_month_id', '<', 7); // July is month 7
                         });
                 });
@@ -1273,16 +1273,16 @@ class EOYReportController extends Controller implements HasMiddleware
         $positionId = $user['cdPositionId'];
         $secPositionId = $user['cdSecPositionId'];
 
-        $EOYOptions = $this->positionConditionsService->getEOYOptions();
-        $thisYearEOY = $EOYOptions['thisYearEOY'];
+        $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
+        $reportYearStart = $reportYearOptions['reportYearStart'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
-            ->where(function ($query) use ($thisYearEOY) {
-                $query->where(function ($q) use ($thisYearEOY) {
-                    $q->where('start_year', '<', $thisYearEOY)
-                        ->orWhere(function ($q) use ($thisYearEOY) {
-                            $q->where('start_year', '=', $thisYearEOY)
+            ->where(function ($query) use ($reportYearStart) {
+                $query->where(function ($q) use ($reportYearStart) {
+                    $q->where('start_year', '<', $reportYearStart)
+                        ->orWhere(function ($q) use ($reportYearStart) {
+                            $q->where('start_year', '=', $reportYearStart)
                                 ->where('start_month_id', '<', 7); // July is month 7
                         });
                 });

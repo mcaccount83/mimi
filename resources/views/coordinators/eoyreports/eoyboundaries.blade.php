@@ -23,7 +23,7 @@
                         <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Boundary Issues Report
                         </h3>
-                        <span class="ms-3">Chapters that were added after June 30, {{ $thisYearEOY }} will not be listed</span>
+                        <span class="ms-3">Chapters that were added after June 30, {{ $reportYearEnd }} will not be listed</span>
                         @include('layouts.dropdown_menus.menu_eoy')
                     </div>
                 </div>

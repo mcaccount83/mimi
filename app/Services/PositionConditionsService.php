@@ -131,16 +131,18 @@ class PositionConditionsService
                         ->orderBy('created_at', 'desc') // newest created row first
                         ->first();
 
-        // Fiscal & report year values directly from table
-        $fiscalYearRange = $adminYear->fiscalYear->fiscal_year;      // "2025-2026"
-        $fiscalYearStart = $adminYear->fiscalYear->fiscal_start;    // "2025"
-        $fiscalYearEnd = $adminYear->fiscalYear->fiscal_end;        // "2026"
+        // Fiscal year values directly from table
+        $fiscalYearId = $fiscalYear->id;
+        $fiscalYearRange = $fiscalYear->fiscal_year;      // "2025-2026"
+        $fiscalYearStart = $fiscalYear->fiscal_start;    // "2025"
+        $fiscalYearEnd = $fiscalYear->fiscal_end;        // "2026"
         $fiscalYearStartDate = $fiscalYearStart . '-07-01';  // "2025-07-01"
 
         return [
             'fiscalYear' => $fiscalYear,
             'adminYear' => $adminYear,
             'irsYear' => $irsYear,
+            'fiscalYearId' => $fiscalYearId,
             'fiscalYearRange' => $fiscalYearRange,
             'fiscalYearStart' => $fiscalYearStart,
             'fiscalYearEnd' => $fiscalYearEnd,
@@ -155,18 +157,18 @@ class PositionConditionsService
                         ->orderBy('created_at', 'desc') // newest created row first
                         ->first();
 
-        $reportYearRange = $reportYear->fiscalYear->report_year;
+        $reportYearId = $reportYear->fiscalYear->id;
         $reportYearRange = $reportYear->fiscalYear->report_year; // "2024-2025"
         $reportYearStart = $reportYear->fiscalYear->report_start;    // "2024"
         $reportYearEnd = $reportYear->fiscalYear->report_end;        // "2025"
 
-        $getFiscalYearOptions = $this->getFiscalYearOptions();
-        // $reportYear = $EOYOptions['reportYear'];
-        $fiscalYearRange = $getFiscalYearOptions['fiscalYearRange'];
+        $boardReportStart = $reportYearEnd; // "2025"
+        $boardReportEnd = (int)$reportYearEnd + 1; // 2026
+        $boardReportRange = $boardReportStart.'-'.$boardReportEnd;
 
         // Optional display names
         $yearColumnName = $reportYearEnd.'_financial_pdf_path';
-        $boardReportName = $fiscalYearRange.' Board Report';
+        $boardReportName = $boardReportRange.' Board Report';
         $financialReportName = $reportYearRange.' Financial Report';
         $financialPDFName = $reportYearEnd.' Financial PDF';
         $irsFilingName = $reportYearStart.' 990N IRS Filing';
@@ -178,7 +180,8 @@ class PositionConditionsService
 
         return [
             'reportYear' => $reportYear,
-            'fiscalYearRange' => $fiscalYearRange,
+            'boardReportRange' => $boardReportRange,
+            'reportYearId' => $reportYearId,
             'reportYearRange' => $reportYearRange,
             'reportYearStart' => $reportYearStart,
             'reportYearEnd' => $reportYearEnd,

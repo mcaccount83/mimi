@@ -149,7 +149,7 @@
             <div class="card card-primary card-outline">
                 <div class="card-body">
                     <div class="card-header bg-transparent border-0">
-                <h3>{{ $fiscalYearEOY }} End of Year Information</h3>
+                <h3>{{ $reportYearRange }} End of Year Information</h3>
                     @if ($displayEOYTESTING == '1')
                     *TESTING*
                     @endif

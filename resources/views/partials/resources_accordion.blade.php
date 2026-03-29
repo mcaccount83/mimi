@@ -19,10 +19,10 @@
                                 @if($category->category_name == "END OF YEAR")
                                     <div class="col-md-12" style="margin-bottom: 5px;">
                                         @include('partials.resources_accordion_eoy', ['resources' => $resources,
-                                            'fiscalYear' => $fiscalYear,
-                                            'fiscalYearEOY' => $fiscalYearEOY,
-                                            'thisYearEOY' => $thisYearEOY,
-                                            'lastYearEOY' => $lastYearEOY,
+                                            'fiscalYearRange' => $fiscalYearRange,
+                                            'reportYearRange' => $reportYearRange,
+                                            'reportYearEnd' => $reportYearEnd,
+                                            'reportYearStart' => $reportYearStart,
                                             'displayEOYTESTING' => $displayEOYTESTING,
                                             'displayEOYLIVE' => $displayEOYLIVE,
                                             'displayBoardRptLIVE' => $displayBoardRptLIVE,

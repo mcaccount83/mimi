@@ -300,10 +300,10 @@ class PDFController extends Controller
 
         $pdf = Pdf::loadView('pdf.financialreport', compact('pdfData'));
 
-        $EOYOptions = $this->positionConditionsService->getEOYOptions();
-        $fiscalYearEOY = $EOYOptions['fiscalYearEOY'];
+        $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
+        $reportYearRange = $reportYearOptions['reportYearRange'];
 
-        $filename = $fiscalYearEOY.'_'.$pdfData['chapterState'].'_'.$pdfData['chapterNameSanitized'].'_FinancialReport.pdf';
+        $filename = $reportYearRange.'_'.$pdfData['chapterState'].'_'.$pdfData['chapterNameSanitized'].'_FinancialReport.pdf';
 
         // if ($streamResponse) {
         //     return $pdf->stream($filename, ['Attachment' => 0]);

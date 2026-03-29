@@ -8,7 +8,10 @@ use App\Enums\UserStatusEnum;
 use App\Enums\UserTypeEnum;
 use App\Models\Admin;
 use App\Models\AdminEmail;
+use App\Models\AdminIRS;
 use App\Models\AdminYear;
+use App\Models\AdminReport;
+use App\Models\FiscalYear;
 use App\Models\Boards;
 use App\Models\BoardsDisbanded;
 use App\Models\BoardsIncoming;
@@ -322,25 +325,13 @@ class TechReportController extends Controller implements HasMiddleware
         $canEditFiles = ($positionId == CoordinatorPosition::IT || in_array(CoordinatorPosition::IT, $secPositionId));
 
         $fiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
-        // $fiscalYearRange = $fiscalYearOptions['fiscalYearRange'];
         $adminYear = $fiscalYearOptions['adminYear'];
         $irsYear = $fiscalYearOptions['irsYear'];
 
         $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
-        // $reportYearRange = $reportYearOptions['reportYearRange'];
         $reportYear = $reportYearOptions['reportYear'];
 
-        // $fiscalYear = $EOYOptions['fiscalYear'];
-        // $fiscalYearEOY = $EOYOptions['fiscalYearEOY'];
-
-        // $adminYear = AdminYear::where('year_fiscal', $fiscalYear)->firstOrFail();
-        // $adminYearEOY = AdminYear::where('year_fiscal', $fiscalYearEOY)->firstOrFail();
-
-        // $admin = Admin::where('fiscal_year_eoy', $fiscalYearEOY)->firstOrFail();
-
-
         $subscribeListItems = [
-            // 'Subscribe Coordinators to BoardList',
             'Subscribe Board Members to BoardList',
             'Subscribe Board Members to Public Announcements',
         ];
@@ -364,12 +355,7 @@ class TechReportController extends Controller implements HasMiddleware
         $unSubscribeListItems = [
             'Remove Board Members from BoardList',
             'Remove Board Members from Publc Announcements',
-            // 'Remove Coordinators from BoardList',
         ];
-
-        // $admin = Admin::latest('id')->firstOrFail();
-        // $fiscalYearEOY = $admin->fiscal_year_eoy;  // "2024-2025"
-
 
         $resetEOYTableItems = [
             'Set all Outgoing Users to Inactive',
@@ -537,25 +523,29 @@ class TechReportController extends Controller implements HasMiddleware
      */
     public function resetYear(): JsonResponse
     {
+        // Calculate the new fiscal year (current year - next year)
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $fiscal_start = $dateOptions['currentYear'];
+        $fiscal_end = $dateOptions['nextYear'];
+        $fiscal_year = $fiscal_start.'-'.$fiscal_end;
+
         DB::beginTransaction();
         try {
-            // Create a new Admin instance
+            $fiscalYear = new FiscalYear;
+            $fiscalYear->fiscal_year = $fiscal_year;
+            $fiscalYear->fiscal_start = $fiscal_start;
+            $fiscalYear->fiscal_end = $fiscal_end;
+            $fiscalYear->save();
+
+            $fiscalYearId = $fiscalYear->id;
+
             $adminYear = new AdminYear;
-
-            // Calculate the fiscal year (current year - next year)
-            $dateOptions = $this->positionConditionsService->getDateOptions();
-            $currentYear = $dateOptions['currentYear'];
-            $nextYear = $dateOptions['nextYear'];
-            $fiscalYear = $currentYear.'-'.$nextYear;
-
-            // Set the fiscal year field
-            $adminYear->year_fiscal = $fiscalYear;
-            $adminYear->year_start = $currentYear;
-            $adminYear->year_end = $nextYear;
-            $adminYear->reset_fiscal_year = '1';
-
-            // Save the new entry
+            $adminYear->fiscal_year_id = $fiscalYearId;
             $adminYear->save();
+
+            $adminIRS = new AdminIRS;
+            $adminIRS->fiscal_year_id = $fiscalYearId;
+            $adminIRS->save();
 
             DB::commit(); // Commit transaction
 
@@ -576,21 +566,17 @@ class TechReportController extends Controller implements HasMiddleware
      */
      public function updateSubscribeLists(Request $request): JsonResponse
     {
-        $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['userId'];
-
-        $EOYOptions = $this->positionConditionsService->getEOYOptions();
-        $fiscalYear = $EOYOptions['fiscalYear'];
+        $fiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
+        $fiscalYearId = $fiscalYearOptions['fiscalYearId'];
 
         DB::beginTransaction();
         try {
             $boardListAll = $this->forumSubscriptionController->bulkAddBoardBoardList();
             $publicListBoard = $this->forumSubscriptionController->bulkAddBoardPublicAnnouncements();
 
-            $adminYear = AdminYear::where('year_fiscal', $fiscalYear)->firstOrFail();
+            $adminYear = AdminYear::where('fiscal_year_id', $fiscalYearId)->firstOrFail();
             $adminYear->update([
                 'subscribe_list' => 1,
-                'updated_id'       => $updatedId,
             ]);
 
             DB::commit(); // Commit transaction
@@ -609,19 +595,15 @@ class TechReportController extends Controller implements HasMiddleware
      */
      public function updateFilingSept(Request $request): JsonResponse
     {
-        $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['userId'];
-
-        $EOYOptions = $this->positionConditionsService->getEOYOptions();
-        $fiscalYear = $EOYOptions['fiscalYear'];
+        $fiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
+        $fiscalYearId = $fiscalYearOptions['fiscalYearId'];
 
         DB::beginTransaction();
         try {
-            $adminYear = AdminYear::where('year_fiscal', $fiscalYear)->firstOrFail();
-            $adminYear->update([
+            $adminIRS = AdminIRS::where('fiscal_year_id', $fiscalYearId)->firstOrFail();
+            $adminIRS->update([
                 'file_sept' => 1,
                 'sept_file_date' => now(),
-                'updated_id' => $updatedId,
             ]);
 
             DB::commit(); // Commit transaction
@@ -640,19 +622,15 @@ class TechReportController extends Controller implements HasMiddleware
      */
      public function updateFilingDec(Request $request): JsonResponse
     {
-        $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['userId'];
-
-        $EOYOptions = $this->positionConditionsService->getEOYOptions();
-        $fiscalYear = $EOYOptions['fiscalYear'];
+        $fiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
+        $fiscalYearId = $fiscalYearOptions['fiscalYearId'];
 
         DB::beginTransaction();
         try {
-            $adminYear = AdminYear::where('year_fiscal', $fiscalYear)->firstOrFail();
-            $adminYear->update([
+            $adminIRS = AdminIRS::where('fiscal_year_id', $fiscalYearId)->firstOrFail();
+            $adminIRS->update([
                 'file_dec' => 1,
                 'dec_file_date' => now(),
-                'updated_id' => $updatedId,
             ]);
 
             DB::commit(); // Commit transaction
@@ -671,19 +649,15 @@ class TechReportController extends Controller implements HasMiddleware
      */
      public function updateSubordinateFiling(Request $request): JsonResponse
     {
-        $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['userId'];
-
-        $EOYOptions = $this->positionConditionsService->getEOYOptions();
-        $fiscalYear = $EOYOptions['fiscalYear'];
+        $fiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
+        $fiscalYearId = $fiscalYearOptions['fiscalYearId'];
 
         DB::beginTransaction();
         try {
-            $adminYear = AdminYear::where('year_fiscal', $fiscalYear)->firstOrFail();
-            $adminYear->update([
+            $adminIRS = AdminIRS::where('fiscal_year_id', $fiscalYearId)->firstOrFail();
+            $adminIRS->update([
                 'file_subordinate' => 1,
                 'sub_file_date' => now(),
-                'updated_id' => $updatedId,
             ]);
 
             DB::commit(); // Commit transaction
@@ -702,16 +676,13 @@ class TechReportController extends Controller implements HasMiddleware
      */
     public function updateDataDatabase(Request $request): JsonResponse
     {
-        $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['userId'];
+        $fiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
+        $fiscalYearId = $fiscalYearOptions['fiscalYearId'];
 
         // Get the current month and year for table renaming
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentYear = $dateOptions['currentYear'];
         $currentMonth = str_pad($dateOptions['currentMonth'], 2, '0', STR_PAD_LEFT);
-
-        $EOYOptions = $this->positionConditionsService->getEOYOptions();
-        $fiscalYear = $EOYOptions['fiscalYear'];
 
         $this->copyTablesFINAL($currentMonth, $currentYear);
 
@@ -719,10 +690,9 @@ class TechReportController extends Controller implements HasMiddleware
         try {
             $this->resetBoardList($currentYear);
 
-            $adminYear = AdminYear::where('year_fiscal', $fiscalYear)->firstOrFail();
+            $adminYear = AdminYear::where('fiscal_year_id', $fiscalYearId)->firstOrFail();
             $adminYear->update([
                 'update_user_tables' => 1,
-                'updated_id'       => $updatedId,
             ]);
 
             DB::commit(); // Commit transaction
@@ -741,19 +711,15 @@ class TechReportController extends Controller implements HasMiddleware
      */
      public function updateFilingJune(Request $request): JsonResponse
     {
-        $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['userId'];
-
-        $EOYOptions = $this->positionConditionsService->getEOYOptions();
-        $fiscalYear = $EOYOptions['fiscalYear'];
+        $fiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
+        $fiscalYearId = $fiscalYearOptions['fiscalYearId'];
 
         DB::beginTransaction();
         try {
-            $adminYear = AdminYear::where('year_fiscal', $fiscalYear)->firstOrFail();
-            $adminYear->update([
+            $adminIRS = AdminIRS::where('fiscal_year_id', $fiscalYearId)->firstOrFail();
+            $adminIRS->update([
                 'file_june' => 1,
                 'june_file_date' => now(),
-                'updated_id' => $updatedId,
             ]);
 
             DB::commit(); // Commit transaction
@@ -772,21 +738,17 @@ class TechReportController extends Controller implements HasMiddleware
      */
     public function updateUnsubscribeLists(Request $request): JsonResponse
     {
-        $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['userId'];
-
-        $EOYOptions = $this->positionConditionsService->getEOYOptions();
-        $fiscalYear = $EOYOptions['fiscalYear'];
+        $fiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
+        $fiscalYearId = $fiscalYearOptions['fiscalYearId'];
 
         DB::beginTransaction();
         try {
             $boardListAll = $this->forumSubscriptionController->bulkRemoveBoardBoardList();
             $publicListBoard = $this->forumSubscriptionController->bulkRemoveBoardPublicAnnouncements();
 
-            $adminYear = AdminYear::where('year_fiscal', $fiscalYear)->firstOrFail();
+            $adminYear = AdminYear::where('fiscal_year_id', $fiscalYearId)->firstOrFail();
             $adminYear->update([
                 'unsubscribe_list' => 1,
-                'updated_id'       => $updatedId,
             ]);
 
             DB::commit(); // Commit transaction
@@ -806,23 +768,26 @@ class TechReportController extends Controller implements HasMiddleware
      */
     public function resetYearEOY(): JsonResponse
     {
+        $fiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
+        $fiscalYearId = $fiscalYearOptions['fiscalYearId'];
+        $report_start = $fiscalYearOptions['reportYearStart'];
+        $report_end = $fiscalYearOptions['reportYearEnd'];
+        $report_year = $fiscalYearOptions['reportYearEnd'];
+
         DB::beginTransaction();
         try {
-            // Create a new Admin instance
-            $admin = new Admin;
+            $fiscalYear = FiscalYear::findOrFail($fiscalYearId);
+            $fiscalYear->fiscal_year = $report_year;
+            $fiscalYear->fiscal_start = $report_start;
+            $fiscalYear->fiscal_end = $report_end;
+            $fiscalYear->save();
 
-            // Calculate the fiscal year EOY
-            $dateOptions = $this->positionConditionsService->getDateOptions();
-            $lastYear = $dateOptions['lastYear'];
-            $currentYear = $dateOptions['currentYear'];
-            $fiscalYearEOY = $lastYear.'-'.$currentYear;
+            $adminReport = new AdminReport;
+            $adminReport->report_year_id = $fiscalYearId;
+            $adminReport->reset_report_year = '1';
+            $adminReport->save();
 
-            // Update the fiscal_year_eoy field on the existing entry
-            $admin->fiscal_year_eoy = $fiscalYearEOY;
-            $admin->reset_year = '1';
-            $admin->save();
-
-            DB::commit(); // Commit transaction
+            DB::commit();
 
             return response()->json(['success' => 'EOY Fiscal year reset successfully.']);
         } catch (\Exception $e) {
@@ -843,30 +808,29 @@ class TechReportController extends Controller implements HasMiddleware
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
-        $updatedBy = $user['userName'];
+        $updatedBy = $user['updatedBy'];
 
-        $EOYOptions = $this->positionConditionsService->getEOYOptions();
-        $fiscalYearEOY = $EOYOptions['fiscalYearEOY'];
+        $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
+        $reportYearId = $reportYearOptions['reportYearId'];
 
-        $this->addFinancialPdfColumn($EOYOptions);
-        $this->archiveFinancialTables($EOYOptions);
+        $this->addFinancialPdfColumn($reportYearOptions);
+        $this->archiveFinancialTables($reportYearOptions);
 
         DB::beginTransaction();
         try {
             $this->deactivateOutgoingUsers();
             $this->clearBoardTables();
             $this->updateChapterPreBalances();
-            $this->copyAwardsToHistory($EOYOptions, $updatedId, $updatedBy);
-            $this->resetFinancialReports($EOYOptions);
+            $this->copyAwardsToHistory($reportYearOptions, $updatedId, $updatedBy);
+            $this->resetFinancialReports($reportYearOptions);
             $this->resetChapterFlags();
             $this->resetDocumentsEOY();
-            $this->updateGoogleDriveYear($EOYOptions);
+            $this->updateGoogleDriveYear($reportYearOptions);
             // $this->markAdminEOYComplete($EOYOptions, $updatedId);
 
-            $admin = Admin::where('fiscal_year_eoy', $fiscalYearEOY)->firstOrFail();
-            $admin->update([
+            $adminReport = AdminReport::where('report_year_id', $reportYearId)->firstOrFail();
+            $adminReport->update([
                 'reset_eoy_tables' => 1,
-                'updated_id'       => $updatedId,
             ]);
 
             DB::commit();
@@ -880,24 +844,24 @@ class TechReportController extends Controller implements HasMiddleware
         }
     }
 
-    private function addFinancialPdfColumn(array $EOYOptions): void
+    private function addFinancialPdfColumn(array $getFiscalYearOptions): void
     {
-        $newColumnName   = $EOYOptions['thisYearEOY'] . '_financial_pdf_path';
-        $afterColumnName = $EOYOptions['lastYearEOY'] . '_financial_pdf_path';
+        $newColumnName   = $getFiscalYearOptions['fiscalYearEnd'] . '_financial_pdf_path';
+        $afterColumnName = $getFiscalYearOptions['fiscalYearStart'] . '_financial_pdf_path';
 
         Schema::table('documents_eoy', function (Blueprint $table) use ($newColumnName, $afterColumnName) {
             $table->string($newColumnName, 255)->nullable()->after($afterColumnName);
         });
     }
 
-     private function archiveFinancialTables(array $EOYOptions): void
+     private function archiveFinancialTables(array $getFiscalYearOptions): void
     {
-        $lastYearEOY = $EOYOptions['lastYearEOY'];
+        $fiscalYearStart = $getFiscalYearOptions['fiscalYearStart'];
 
-        DB::statement("CREATE TABLE zzz_financial_report_12_$lastYearEOY LIKE financial_report");
-        DB::statement("INSERT INTO zzz_financial_report_12_$lastYearEOY SELECT * FROM financial_report");
-        DB::statement("CREATE TABLE zzz_financial_report_review_12_$lastYearEOY LIKE financial_report_review");
-        DB::statement("INSERT INTO zzz_financial_report_review_12_$lastYearEOY SELECT * FROM financial_report_review");
+        DB::statement("CREATE TABLE zzz_financial_report_12_$fiscalYearStart LIKE financial_report");
+        DB::statement("INSERT INTO zzz_financial_report_12_$fiscalYearStart SELECT * FROM financial_report");
+        DB::statement("CREATE TABLE zzz_financial_report_review_12_$fiscalYearStart LIKE financial_report_review");
+        DB::statement("INSERT INTO zzz_financial_report_review_12_$fiscalYearStart SELECT * FROM financial_report_review");
     }
 
     private function deactivateOutgoingUsers(): void
@@ -924,9 +888,9 @@ class TechReportController extends Controller implements HasMiddleware
         }
     }
 
-    private function copyAwardsToHistory(array $EOYOptions, int $updatedId, string $updatedBy): void
+    private function copyAwardsToHistory(array $reportYearOptions, int $updatedId, string $updatedBy): void
     {
-        $fiscalYearEOY = $EOYOptions['fiscalYearEOY'];
+        $reportYearRange = $reportYearOptions['reportYearRange'];
 
         $allChapters = FinancialReport::whereNotNull('chapter_awards')->get();
         foreach ($allChapters as $report) {
@@ -939,7 +903,7 @@ class TechReportController extends Controller implements HasMiddleware
                         [
                             'chapter_id'  => $report->chapter_id,
                             'awards_type' => $award['awards_type'],
-                            'award_year'  => $fiscalYearEOY,
+                            'award_year'  => $reportYearRange,
                         ],
                         [
                             'awards_desc' => $award['awards_desc'],
@@ -1018,18 +982,14 @@ class TechReportController extends Controller implements HasMiddleware
      */
     public function updateEOYTesting(Request $request): JsonResponse
     {
-        $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['userId'];
-
-        $EOYOptions = $this->positionConditionsService->getEOYOptions();
-        $fiscalYearEOY = $EOYOptions['fiscalYearEOY'];
+        $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
+        $reportYearId = $reportYearOptions['reportYearId'];
 
         DB::beginTransaction();
         try {
-            $admin = Admin::where('fiscal_year_eoy', $fiscalYearEOY)->firstOrFail();
-            $admin->update([
+            $adminReport = AdminReport::where('report_year_id', $reportYearId)->firstOrFail();
+            $adminReport->update([
                 'display_testing' => 1,
-                'updated_id'       => $updatedId,
             ]);
 
             DB::commit(); // Commit transaction
@@ -1048,12 +1008,9 @@ class TechReportController extends Controller implements HasMiddleware
      */
     public function updateEOYDatabaseAFTERTesting(Request $request): JsonResponse
     {
-        $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['userId'];
-
-        $EOYOptions = $this->positionConditionsService->getEOYOptions();
-        $fiscalYearEOY = $EOYOptions['fiscalYearEOY'];
-        $yearColumnName = $EOYOptions['yearColumnName'];
+        $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
+        $reportYearId = $reportYearOptions['reportYearId'];
+        $yearColumnName = $reportYearOptions['yearColumnName'];
 
         DB::beginTransaction();
         try {
@@ -1062,10 +1019,9 @@ class TechReportController extends Controller implements HasMiddleware
             $this->updateChapterPreBalancesLIVE();
             $this->resetDocumentsEOYLIVE($yearColumnName);
 
-         $admin = Admin::where('fiscal_year_eoy', $fiscalYearEOY)->firstOrFail();
-            $admin->update([
+         $adminReport = AdminReport::where('report_year_id', $reportYearId)->firstOrFail();
+            $adminReport->update([
                 'reset_AFTER_testing' => 1,
-                'updated_id'       => $updatedId,
             ]);
 
             DB::commit(); // Commit transaction
@@ -1212,25 +1168,21 @@ class TechReportController extends Controller implements HasMiddleware
      */
     public function updateEOYLive(Request $request): JsonResponse
     {
-        $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['userId'];
-
-        $EOYOptions = $this->positionConditionsService->getEOYOptions();
-        $fiscalYearRange = $EOYOptions['fiscalYearRange'];
-        $reportYearRange = $EOYOptions['reportYearRange'];
+        $fiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
+        $fiscalYearId = $fiscalYearOptions['fiscalYearId'];
+        $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
+        $reportYearId = $reportYearOptions['reportYearId'];
 
         DB::beginTransaction();
         try {
-            $admin = Admin::where('fiscal_year_eoy', $reportYearRange)->firstOrFail();
-            $admin->update([
+            $adminReport = AdminReport::where('report_year_id', $reportYearId)->firstOrFail();
+            $adminReport->update([
                 'display_live' => 1,
-                'updated_id' => $updatedId,
             ]);
 
-            $adminYear = AdminYear::where('year_fiscal', $fiscalYearRange)->firstOrFail();
+            $adminYear = AdminYear::where('fiscal_year_id', $fiscalYearId)->firstOrFail();
             $adminYear->update([
                 'test_eoy' => 1,
-                'updated_id' => $updatedId,
             ]);
 
             DB::commit(); // Commit transaction

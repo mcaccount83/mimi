@@ -1269,9 +1269,9 @@ class BoardControllerNew extends Controller implements HasMiddleware
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
             );
 
-            $EOYOptions = $this->positionConditionsService->getEOYOptions();
-            $displayEOYLIVE = $EOYOptions['displayEOYLIVE'];  // Months 5-12 Live Activation
-            $displayBoardRptLIVE = $EOYOptions['displayBoardRptLIVE'];  // Months 5-9 Live Activation
+            $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
+            $displayEOYLIVE = $reportYearOptions['displayEOYLIVE'];  // Months 5-12 Live Activation
+            $displayBoardRptLIVE = $reportYearOptions['displayBoardRptLIVE'];  // Months 5-9 Live Activation
 
             if ($displayBoardRptLIVE) {
                 $message = 'Board info has been Submitted';
@@ -1407,24 +1407,24 @@ class BoardControllerNew extends Controller implements HasMiddleware
                 $this->baseMailDataController->getFinancialReportData($chEOYDocuments, $chFinancialReport, $reviewer_email_message = null),
             );
 
-            $EOYOptions = $this->positionConditionsService->getEOYOptions();
-            $fiscalYearEOY = $EOYOptions['fiscalYearEOY'];
+            $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
+            $reportYearStart = $reportYearOptions['reportYearStart'];
 
             if ($reportReceived == 1) {
                 $pdfPath = $this->pdfController->saveFinancialReport($request, $chId, $PresDetails);   // Generate and Send the PDF
                 Mail::to($userEmail)
                     ->cc($emailListChap)
-                    ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath, $fiscalYearEOY));
+                    ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath, $reportYearStart));
 
                 if ($chFinancialReport->reviewer_id == null) {
                     DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chId]);
                     Mail::to($emailCC)
-                        ->queue(new EOYFinancialSubmitted($mailData, $pdfPath, $fiscalYearEOY));
+                        ->queue(new EOYFinancialSubmitted($mailData, $pdfPath, $reportYearStart));
                 }
 
                 if ($chFinancialReport->reviewer_id != null) {
                     Mail::to($reviewerEmail)
-                        ->queue(new EOYFinancialSubmitted($mailData, $pdfPath, $fiscalYearEOY));
+                        ->queue(new EOYFinancialSubmitted($mailData, $pdfPath, $reportYearStart));
                 }
             }
 

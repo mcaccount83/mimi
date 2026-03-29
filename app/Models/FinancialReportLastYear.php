@@ -21,10 +21,10 @@ class FinancialReportLastYear extends Model
     public function getTable(): string
     {
         $positionConditionsService = app(\App\Services\PositionConditionsService::class);
-        $getEOYOptions = $positionConditionsService->getEOYOptions();
+        $reportYearOptions = $positionConditionsService->getReportYearOptions();
 
-        $lastYearEOY = $getEOYOptions['lastYearEOY'];
+        $reportYearStart = $reportYearOptions['reportYearStart'];
 
-        return 'zzz_financial_report_12_' . $lastYearEOY;
+        return 'zzz_financial_report_12_' . $reportYearStart;
     }
 }
