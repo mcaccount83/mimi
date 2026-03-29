@@ -544,6 +544,7 @@ class TechReportController extends Controller implements HasMiddleware
             $adminYear->year_fiscal = $fiscalYear;
             $adminYear->year_start = $currentYear;
             $adminYear->year_end = $nextYear;
+            $adminYear->reset_fiscal_year = '1';
 
             // Save the new entry
             $adminYear->save();
@@ -771,6 +772,7 @@ class TechReportController extends Controller implements HasMiddleware
 
             // Update the fiscal_year_eoy field on the existing entry
             $admin->fiscal_year_eoy = $fiscalYearEOY;
+            $admin->reset_year = '1';
             $admin->save();
 
             DB::commit(); // Commit transaction

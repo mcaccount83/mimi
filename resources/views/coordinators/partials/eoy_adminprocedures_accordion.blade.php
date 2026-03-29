@@ -150,7 +150,7 @@
 
 <!------Start Step 5 ------>
 <div style="break-inside: avoid; margin-bottom: 0.5rem;">
-        <div class="accordion-item {{ $adminYear->test_eoy == 1 ? 'step-complete' : ($fiscalYearEOYReset ? 'step-inprogress' : '') }}">
+        <div class="accordion-item {{ $adminYear->test_eoy == 1 ? 'step-complete' : ($admin->reset_year == 1 ? 'step-inprogress' : '') }}">
         <h2 class="accordion-header" id="header-display-testing">
             <button class="accordion-button collapsed"type="button"
                     data-bs-toggle="collapse" data-bs-target="#collapseAdminFive"
@@ -163,7 +163,7 @@
         <section>
             <div class="col-md-12">
                 To be used for all End of Year buttons/links/emails/forms.<br>
-                @if (!$fiscalYearEOYReset && ($currentMonth >= 1 && $currentMonth <= 5))
+                @if ($admin->reset_year != 1 && ($currentMonth >= 1 && $currentMonth <= 5))
                     <button type="button" id="reset-yeareoy" class="btn btn-danger bg-gradient mb-2"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year EOY</button>
                 @else
                     <button type="button" id="reset-yeareoy" class="btn btn-danger bg-gradient mb-2" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year EOY</button>
@@ -304,7 +304,7 @@
 
 <!------Start Step 8 ------>
 <div style="break-inside: avoid; margin-bottom: 0.5rem;">
-<div class="accordion-item {{$fiscalYearEOYReset && $adminYear->unsubscribe_list == 1 ? 'step-complete' : '' }}">
+<div class="accordion-item {{$adminYear->unsubscribe_list == 1 ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-unsubscribe-list">
             <button class="accordion-button collapsed"type="button"
                     data-bs-toggle="collapse" data-bs-target="#collapseAdminEight"
@@ -358,7 +358,7 @@
                 <section>
                     <div class="col-md-12">
                     To be used in BoardList and other display areas.<br>
-                    @if ($fiscalYearEOYReset && $adminYear->unsubscribe_list == 1 && $fiscalYearStart == $thisYearEOY && ( $currentMonth >= 6 && $currentMonth <= 9 ))
+                    @if ($adminYear->unsubscribe_list == 1 && $fiscalYearStart == $thisYearEOY && ( $currentMonth >= 6 && $currentMonth <= 9 ))
                                 <button type="button" id="reset-year" class="btn btn-danger bg-gradient mb-2"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year</button>
                             @else
                                 <button type="button" id="reset-year" class="btn btn-danger bg-gradient mb-2" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year</button>

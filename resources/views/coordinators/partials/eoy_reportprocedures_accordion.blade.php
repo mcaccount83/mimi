@@ -65,7 +65,7 @@
 
 <!------Start Step 3 ------>
 <div style="break-inside: avoid; margin-bottom: 0.5rem;">
-<div class="accordion-item {{ $fiscalYearEOYReset ? 'step-complete' : '' }}">
+<div class="accordion-item {{ $admin->reset_year == 1 ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-reset-yeareoy">
             <button class="accordion-button collapsed"type="button"
                     data-bs-toggle="collapse" data-bs-target="#collapseReportThree"
@@ -78,7 +78,7 @@
     <section>
         <div class="col-md-12">
             To be used for all End of Year buttons/links/emails/forms.<br>
-            @if (!$fiscalYearEOYReset && ($currentMonth >= 1 && $currentMonth <= 3))
+            @if ($admin->reset_year != 1 && ($currentMonth >= 1 && $currentMonth <= 3))
                 <button type="button" id="reset-yeareoy" class="btn btn-danger bg-gradient mb-2"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year EOY</button>
             @else
                 <button type="button" id="reset-yeareoy" class="btn btn-danger bg-gradient mb-2" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year EOY</button>
@@ -93,7 +93,7 @@
 
 <!------Start Step 4 ------>
 <div style="break-inside: avoid; margin-bottom: 0.5rem;">
-<div class="accordion-item {{$fiscalYearEOYReset && $admin->reset_eoy_tables == 1 ? 'step-complete' : '' }}">
+<div class="accordion-item {{$admin->reset_eoy_tables == 1 ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-eoy-tables">
             <button class="accordion-button collapsed"type="button"
                     data-bs-toggle="collapse" data-bs-target="#collapseReportFour"
@@ -106,7 +106,7 @@
     <section>
         <div class="col-md-12">
             Complete in Feb/March to prepare for data for testing.<br>
-            @if ($fiscalYearEOYReset && $admin->reset_eoy_tables != 1 && ($currentMonth >= 1 && $currentMonth <= 5))
+            @if ($admin->reset_year == 1 && $admin->reset_eoy_tables != 1 && ($currentMonth >= 1 && $currentMonth <= 5))
                                 <button type="button" id="update-eoy-database" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset EOY Tables Data Tables</button>
                 @else
                                 <button type="button" id="update-eoy-database" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset EOY Tables Data Tables</button>
@@ -133,7 +133,7 @@
 
 <!------Start Step 5 ------>
 <div style="break-inside: avoid; margin-bottom: 0.5rem;">
-<div class="accordion-item {{$fiscalYearEOYReset && $admin->display_testing == 1 ? 'step-complete' : '' }}">
+<div class="accordion-item {{$admin->display_testing == 1 ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-display-testing">
             <button class="accordion-button collapsed"type="button"
                     data-bs-toggle="collapse" data-bs-target="#collapseReportFive"
@@ -146,7 +146,7 @@
     <section>
             <div class="col-md-12">
             Complete in Feb/March when ready for data for testing.<br>
-                @if ($fiscalYearEOYReset && $admin->reset_eoy_tables == 1 && $admin->display_testing != 1 && $currentMonth >= 1 && $currentMonth <= 5)
+                @if ($admin->reset_eoy_tables == 1 && $admin->display_testing != 1 && $currentMonth >= 1 && $currentMonth <= 5)
                                 <button type="button" id="view-eoy-testing" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-toggle-on me-2"></i>Display EOY Testing Items</button>
             @else
                                 <button type="button" id="view-eoy-testing" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-toggle-on me-2"></i>Display EOY Testing Items</button>
@@ -173,7 +173,7 @@
 
 <!------Start Step 6 ------>
 <div style="break-inside: avoid; margin-bottom: 0.5rem;">
-<div class="accordion-item {{$fiscalYearEOYReset && $admin->reset_AFTER_testing == 1 ? 'step-complete' : '' }}">
+<div class="accordion-item {{$admin->reset_AFTER_testing == 1 ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-reset-tables-after">
             <button class="accordion-button collapsed"type="button"
                     data-bs-toggle="collapse" data-bs-target="#collapseReportSix"
@@ -186,7 +186,7 @@
     <section>
             <div class="col-md-12">
             Complete in May, after testing is complete, so all data tables are clean and ready to go.<br>
-            @if ($fiscalYearEOYReset && $admin->display_testing == 1 && $admin->reset_AFTER_testing != 1 && ( $currentMonth >= 3 && $currentMonth <= 6 ))
+            @if ($admin->display_testing == 1 && $admin->reset_AFTER_testing != 1 && ( $currentMonth >= 3 && $currentMonth <= 6 ))
                 <button type="button" id="reset-database-after" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Database AFTER Testing</button>
             @else
                 <button type="button" id="reset-database-after" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Database AFTER Testing</button>
@@ -213,7 +213,7 @@
 
 <!------Start Step 7 ------>
 <div style="break-inside: avoid; margin-bottom: 0.5rem;">
-<div class="accordion-item {{$fiscalYearEOYReset && $admin->update_user_tables == 1 ? 'step-complete' : '' }}">
+<div class="accordion-item {{$admin->update_user_tables == 1 ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-user-tables">
             <button class="accordion-button collapsed"type="button"
                     data-bs-toggle="collapse" data-bs-target="#collapseReportSeven"
@@ -226,7 +226,7 @@
     <section>
         <div class="col-md-12">
             Complete in May, before going live to save old board/coordinator/user information.<br>
-            @if ($fiscalYearEOYReset && $admin->reset_AFTER_testing == 1 && $admin->update_user_tables != 1 && ( $currentMonth >= 3 && $currentMonth <= 6 ))
+            @if ($admin->reset_AFTER_testing == 1 && $admin->update_user_tables != 1 && ( $currentMonth >= 3 && $currentMonth <= 6 ))
                 <button type="button" id="update-data-database" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-copy me-2"></i>Copy Data Tables</button>
             @else
                 <button type="button" id="update-data-database" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-copy me-2"></i>Copy Data Tables</button>
@@ -255,7 +255,7 @@
 
 <!------Start Step 9 ------>
 <div style="break-inside: avoid; margin-bottom: 0.5rem;">
-<div class="accordion-item {{$fiscalYearEOYReset && $admin->display_live == 1 ? 'step-complete' : '' }}">
+<div class="accordion-item {{$admin->display_live == 1 ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-display-live">
             <button class="accordion-button collapsed"type="button"
                     data-bs-toggle="collapse" data-bs-target="#collapseReportNine"
@@ -268,7 +268,7 @@
     <section>
         <div class="col-md-12">
             Complete in May, after testing, for live viewing.<br>
-            @if ($fiscalYearEOYReset && $admin->update_user_tables == 1 && $admin->display_live != 1 && ( $currentMonth >= 3 && $currentMonth <= 6 ))
+            @if ($admin->update_user_tables == 1 && $admin->display_live != 1 && ( $currentMonth >= 3 && $currentMonth <= 6 ))
                 <button type="button" id="view-eoy-live" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-toggle-on me-2"></i>Display EOY LIVE Items</button>
             @else
                 <button type="button" id="view-eoy-live" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-toggle-on me-2"></i>Display EOY LIVE Items</button>
