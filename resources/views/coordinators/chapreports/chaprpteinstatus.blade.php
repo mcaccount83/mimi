@@ -127,12 +127,12 @@
                             <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="startExport('inteinstatus', 'International EIN Status List')"><i class="bi bi-download me-2"></i>Export International EIN Status List</button>
                         @endif
                     @endif
-                <br>
+                {{-- <br> --}}
                     @if ($einCondition || $ITCondition)
                         @if ($checkBox51Status)
                             <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showEODeptCoverSheetModal()"><i class="bi bi-file-earmark-pdf-fill me-2"></i>EO Dept Fax Coversheet</button>
-                            <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showIRSUpdatesModal()"><i class="bi bi-file-earmark-pdf-fill me-2"></i>IRS Updates to EO Dept</button>
-                            <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showSubordinateFilingModal()"><i class="bi bi-file-earmark-pdf-fill me-2"></i>Subordinate Filing PDF</button>
+                            {{-- <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showIRSUpdatesModal()"><i class="bi bi-file-earmark-pdf-fill me-2"></i>IRS Updates to EO Dept</button> --}}
+                            {{-- <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showSubordinateFilingModal()"><i class="bi bi-file-earmark-pdf-fill me-2"></i>Subordinate Filing PDF</button> --}}
                         @endif
                     @endif
                     </div>
