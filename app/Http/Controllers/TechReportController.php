@@ -321,28 +321,47 @@ class TechReportController extends Controller implements HasMiddleware
         $secPositionId = $user['cdSecPositionId'];
         $canEditFiles = ($positionId == CoordinatorPosition::IT || in_array(CoordinatorPosition::IT, $secPositionId));
 
-        // $admin = DB::table('admin')
-        //     ->select('admin.*',
-        //         DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'), )
-        //     ->leftJoin('coordinators as cd', 'admin.updated_id', '=', 'cd.id')
-        //     ->orderByDesc('admin.id') // Assuming 'id' represents the order of insertion
-        //     ->first();
+        $EOYOptions = $this->positionConditionsService->getEOYOptions();
+        $fiscalYear = $EOYOptions['fiscalYear'];
+        $fiscalYearEOY = $EOYOptions['fiscalYearEOY'];
 
-        // Fetch distinct fiscal years
-        // $fiscalYears = DB::table('admin_year')->distinct()->pluck('year_fiscal');
-        // $fiscalYearsEOY = DB::table('admin')->distinct()->pluck('fiscal_year_eoy');
+        $adminYear = AdminYear::where('year_fiscal', $fiscalYear)->firstOrFail();
+        $adminYearEOY = AdminYear::where('year_fiscal', $fiscalYearEOY)->firstOrFail();
 
-        $adminYear = AdminYear::latest('id')->firstOrFail();
-        $fiscalYear = $adminYear->year_fiscal;  // "2025-2026"
+        $admin = Admin::where('fiscal_year_eoy', $fiscalYearEOY)->firstOrFail();
 
-        $admin = Admin::latest('id')->firstOrFail();
-        $fiscalYearEOY = $admin->fiscal_year_eoy;  // "2024-2025"
 
         $subscribeListItems = [
             // 'Subscribe Coordinators to BoardList',
             'Subscribe Board Members to BoardList',
             'Subscribe Board Members to Public Announcements',
         ];
+
+        $irsSubordinateListItems = [
+          'All Chapters Currently Active',
+          'Chapters Added this Fiscal Year',
+          'Chapters Removed this Fiscal Year'
+        ];
+
+        $irsUpdateListItems1 = [
+          'Chapters Added since Subordinate Filing',
+          'Chapters Removed since Subordinate Filing'
+        ];
+
+        $irsUpdateListItems2 = [
+          'Chapters Added since Last Update',
+          'Chapters Removed since Last Update'
+        ];
+
+        $unSubscribeListItems = [
+            'Remove Board Members from BoardList',
+            'Remove Board Members from Publc Announcements',
+            // 'Remove Coordinators from BoardList',
+        ];
+
+        // $admin = Admin::latest('id')->firstOrFail();
+        // $fiscalYearEOY = $admin->fiscal_year_eoy;  // "2024-2025"
+
 
         $resetEOYTableItems = [
             'Set all Outgoing Users to Inactive',
@@ -407,16 +426,11 @@ class TechReportController extends Controller implements HasMiddleware
             'Copy/Reset BoardList Forum Category',
         ];
 
-        $unSubscribeListItems = [
-            'Remove Board Members from BoardList',
-            'Remove Board Members from Publc Announcements',
-            // 'Remove Coordinators from BoardList',
-        ];
-
-        $data = ['admin' => $admin, 'adminYear' => $adminYear, 'canEditFiles' => $canEditFiles, 'fiscalYearEOY' => $fiscalYearEOY, 'fiscalYear' => $fiscalYear,
+        $data = ['admin' => $admin, 'adminYear' => $adminYear, 'canEditFiles' => $canEditFiles, 'fiscalYearEOY' => $fiscalYearEOY, 'fiscalYear' => $fiscalYear, 'adminYearEOY' => $adminYearEOY,
             'resetEOYTableItems' => $resetEOYTableItems, 'displayCoorindatorMenuItems' => $displayCoorindatorMenuItems, 'displayChapterButtonItems' => $displayChapterButtonItems,
             'displayTestingItemsItems' => $displayTestingItemsItems, 'displayLiveItemsItems' => $displayLiveItemsItems, 'unSubscribeListItems' => $unSubscribeListItems,
             'resetAFTERtestingItems' => $resetAFTERtestingItems, 'updateUserTablesItems' => $updateUserTablesItems, 'subscribeListItems' => $subscribeListItems,
+            'irsUpdateListItems1' => $irsUpdateListItems1, 'irsUpdateListItems2' => $irsUpdateListItems2, 'irsSubordinateListItems' => $irsSubordinateListItems
         ];
 
         return view('coordinators.techreports.eoy')->with($data);
@@ -581,68 +595,162 @@ class TechReportController extends Controller implements HasMiddleware
         }
     }
 
+    /**
+     * Record IRS September Update  // Step 2
+     */
+     public function updateFilingSept(Request $request): JsonResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['userId'];
 
-            // // Get BoardList category
-            // $categoryBoardList = ForumCategory::where('title', 'BoardList')
-            //     ->first();
-            // $categoryIdBoardList = $categoryBoardList->id;
+        $EOYOptions = $this->positionConditionsService->getEOYOptions();
+        $fiscalYear = $EOYOptions['fiscalYear'];
 
-            // // Get Public Announcement category
-            // $categoryPublic = ForumCategory::where('title', 'Public Announcements')
-            //     ->first();
-            // $categoryIdPublic = $categoryPublic->id;
+        DB::beginTransaction();
+        try {
+            $adminYear = AdminYear::where('year_fiscal', $fiscalYear)->firstOrFail();
+            $adminYear->update([
+                'file_sept' => 1,
+                'sept_file_date' => now(),
+                'updated_id' => $updatedId,
+            ]);
 
-            // // Get active coordinators
-            // $coordinatorUserIds = Coordinators::where('active_status', '1')
-            //     ->where('on_leave', '0')
-            //     ->get()
-            //     ->pluck('user_id')
-            //     ->unique();
-            // $activeCoordinators = User::whereIn('id', $coordinatorUserIds)->get();
+            DB::commit(); // Commit transaction
 
-            // // Get board members from active chapters using with()
-            // $boardUserIds = Chapters::with('boards')
-            //     ->where('active_status', 1)
-            //     ->get()
-            //     ->pluck('boards')
-            //     ->flatten()
-            //     ->pluck('user_id')
-            //     ->unique();
-            // $activeBoards = User::whereIn('id', $boardUserIds)->get();
+            return response()->json(['success' => 'Successfully recorded filing update.']);
+        } catch (\Exception $e) {
+            DB::rollback(); // Rollback Transaction
+            Log::error($e); // Log the error
 
-            // // Combine the collections
-            // $allUsers = $activeCoordinators->concat($activeBoards);
+            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+        }
+    }
 
-            // // Remove duplicates if a user is both coordinator and board member
-            // $uniqueUsers = $allUsers->unique('id');
+    /**
+     * Record IRS December Update  // Step 2
+     */
+     public function updateFilingDec(Request $request): JsonResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['userId'];
 
-            // foreach ($uniqueUsers as $user) {
-            //     // Check if subscription already exists
-            //     $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
-            //         ->where('category_id', ForumCategoryEnum::BOARDLIST)
-            //         ->first();
+        $EOYOptions = $this->positionConditionsService->getEOYOptions();
+        $fiscalYear = $EOYOptions['fiscalYear'];
 
-            //     if (! $existingSubscription) {
-            //         ForumCategorySubscription::create([
-            //             'user_id' => $user->id,
-            //             'category_id' => ForumCategoryEnum::BOARDLIST,
-            //         ]);
-            //     }
-            // }
+        DB::beginTransaction();
+        try {
+            $adminYear = AdminYear::where('year_fiscal', $fiscalYear)->firstOrFail();
+            $adminYear->update([
+                'file_dec' => 1,
+                'dec_file_date' => now(),
+                'updated_id' => $updatedId,
+            ]);
 
-            // foreach ($activeBoards as $user) {
-            //     // Check if subscription already exists
-            //     $existingSubscription = ForumCategorySubscription::where('user_id', $user->id)
-            //         ->where('category_id', ForumCategoryEnum::PUBLICLIST)
-            //         ->first();
+            DB::commit(); // Commit transaction
 
-            //     if (! $existingSubscription) {
-            //         ForumCategorySubscription::create([
-            //             'user_id' => $user->id,
-            //             'category_id' => ForumCategoryEnum::PUBLICLIST,
-            //         ]);
-            //     }
-            // }
+            return response()->json(['success' => 'Successfully recorded filing update.']);
+        } catch (\Exception $e) {
+            DB::rollback(); // Rollback Transaction
+            Log::error($e); // Log the error
+
+            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+        }
+    }
+
+    /**
+     * Record IRS Subordinate Filing  // Step 2
+     */
+     public function updateSubordinateFiling(Request $request): JsonResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['userId'];
+
+        $EOYOptions = $this->positionConditionsService->getEOYOptions();
+        $fiscalYear = $EOYOptions['fiscalYear'];
+
+        DB::beginTransaction();
+        try {
+            $adminYear = AdminYear::where('year_fiscal', $fiscalYear)->firstOrFail();
+            $adminYear->update([
+                'file_subordinate' => 1,
+                'sub_file_date' => now(),
+                'updated_id' => $updatedId,
+            ]);
+
+            DB::commit(); // Commit transaction
+
+            return response()->json(['success' => 'Successfully recorded subordinate filing.']);
+        } catch (\Exception $e) {
+            DB::rollback(); // Rollback Transaction
+            Log::error($e); // Log the error
+
+            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+        }
+    }
+
+    /**
+     * Record IRS June Update  // Step 2
+     */
+     public function updateFilingJune(Request $request): JsonResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['userId'];
+
+        $EOYOptions = $this->positionConditionsService->getEOYOptions();
+        $fiscalYear = $EOYOptions['fiscalYear'];
+
+        DB::beginTransaction();
+        try {
+            $adminYear = AdminYear::where('year_fiscal', $fiscalYear)->firstOrFail();
+            $adminYear->update([
+                'file_june' => 1,
+                'june_file_date' => now(),
+                'updated_id' => $updatedId,
+            ]);
+
+            DB::commit(); // Commit transaction
+
+            return response()->json(['success' => 'Successfully recorded filing update.']);
+        } catch (\Exception $e) {
+            DB::rollback(); // Rollback Transaction
+            Log::error($e); // Log the error
+
+            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+        }
+    }
+
+     /**
+     * Unsubscribe Users from ForumLists  // Step 8
+     */
+    public function updateUnsubscribeLists(Request $request): JsonResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['userId'];
+
+        $EOYOptions = $this->positionConditionsService->getEOYOptions();
+        $fiscalYear = $EOYOptions['fiscalYear'];
+
+        DB::beginTransaction();
+        try {
+            $boardListAll = $this->forumSubscriptionController->bulkRemoveBoardBoardList();
+            $publicListBoard = $this->forumSubscriptionController->bulkRemoveBoardPublicAnnouncements();
+
+            $adminYear = AdminYear::where('year_fiscal', $fiscalYear)->firstOrFail();
+            $adminYear->update([
+                'unsubscribe_list' => 1,
+                'updated_id'       => $updatedId,
+            ]);
+
+            DB::commit(); // Commit transaction
+
+            return response()->json(['success' => 'Successfully unsubscribed to lists.']);
+        } catch (\Exception $e) {
+            DB::rollback(); // Rollback Transaction
+            Log::error($e); // Log the error
+
+            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+        }
+    }
 
 
     /**
@@ -1090,73 +1198,30 @@ class TechReportController extends Controller implements HasMiddleware
     }
 
     /**
-     * Unsubscribe Users from ForumLists  // Step 8
+     * View EOY Live Items  // Step 9
      */
-    public function updateUnsubscribeLists(Request $request): JsonResponse
+    public function updateEOYLive(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
 
         $EOYOptions = $this->positionConditionsService->getEOYOptions();
         $fiscalYear = $EOYOptions['fiscalYear'];
+        $fiscalYearEOY = $EOYOptions['fiscalYearEOY'];
 
         DB::beginTransaction();
         try {
-            $boardListAll = $this->forumSubscriptionController->bulkRemoveBoardBoardList();
-            $publicListBoard = $this->forumSubscriptionController->bulkRemoveBoardPublicAnnouncements();
-
-            // $categoryBoardList = ForumCategory::where('title', 'BoardList')
-            //     ->first();
-
-            // $categoryPublic = ForumCategory::where('title', 'Public Announcements')
-            //     ->first();
-
-            // // Delete all subscriptions for this category
-            // $unsubscribeBoardList = ForumCategorySubscription::where('category_id', $categoryBoardList->id)
-            //     ->delete();
-
-            // // Delete board members for this category
-            // $unsubscribePublic = ForumCategorySubscription::where('category_id', $categoryPublic->id)
-            //     ->whereHas('user', function ($query) {
-            //         $query->where('type_id', UserTypeEnum::BOARD);
-            //     })
-            //     ->delete();
+            $admin = Admin::where('fiscal_year_eoy', $fiscalYearEOY)->firstOrFail();
+            $admin->update([
+                'display_live' => 1,
+                'updated_id' => $updatedId,
+            ]);
 
             $adminYear = AdminYear::where('year_fiscal', $fiscalYear)->firstOrFail();
             $adminYear->update([
-                'unsubscribe_list' => 1,
-                'updated_id'       => $updatedId,
+                'test_eoy' => 1,
+                'updated_id' => $updatedId,
             ]);
-
-            DB::commit(); // Commit transaction
-
-            return response()->json(['success' => 'Successfully unsubscribed to lists.']);
-        } catch (\Exception $e) {
-            DB::rollback(); // Rollback Transaction
-            Log::error($e); // Log the error
-
-            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
-        }
-    }
-
-    /**
-     * View EOY Live Items  // Step 9
-     */
-    public function updateEOYLive(Request $request): JsonResponse
-    {
-        DB::beginTransaction();
-        try {
-            $user = $this->userController->loadUserInformation($request);
-            $updatedId = $user['userId'];
-
-            // Update admin table: Set specified columns to 1
-            DB::table('admin')
-                ->orderByDesc('id')
-                ->limit(1)
-                ->update([
-                    'display_live' => '1',
-                    'updated_id' => $updatedId,
-                ]);
 
             DB::commit(); // Commit transaction
 

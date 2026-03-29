@@ -49,7 +49,7 @@
     });
 }
 
-function showIRSUpdatesModal() {
+function showIRSUpdatesModal(fromDate) {
     Swal.fire({
         title: 'IRS Updates to EO Dept',
         html: `
@@ -62,6 +62,11 @@ function showIRSUpdatesModal() {
                 <input type="date" id="from_date" name="from_date" class="swal2-input" required style="width: 100%;">
             </div>
             `,
+        didOpen: () => {
+            if (fromDate) {
+                document.getElementById('from_date').value = fromDate;
+            }
+        },
         showCancelButton: true,
         confirmButtonText: 'Generate',
         cancelButtonText: 'Close',
@@ -99,7 +104,7 @@ function showIRSUpdatesModal() {
     });
 }
 
-function showSubordinateFilingModal() {
+function showSubordinateFilingModal(fromDate) {
     Swal.fire({
         title: 'IRS Updates to EO Dept',
         html: `
@@ -112,6 +117,11 @@ function showSubordinateFilingModal() {
                 <input type="date" id="from_date" name="from_date" class="swal2-input" required style="width: 100%;">
             </div>
             `,
+        didOpen: () => {
+            if (fromDate) {
+                document.getElementById('from_date').value = fromDate;
+            }
+        },
         showCancelButton: true,
         confirmButtonText: 'Generate',
         cancelButtonText: 'Close',

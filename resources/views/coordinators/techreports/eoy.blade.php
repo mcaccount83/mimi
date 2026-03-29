@@ -4,21 +4,32 @@
 @section('breadcrumb', 'EOY Procedures')
 
 <style>
-
-/* Completed accordion step - green header */
+/* Completed accordion step - AdminLTE success */
 .accordion-item.step-complete > h2 .accordion-button {
-    background-color: #198754 !important;  /* Bootstrap success green */
+    background-color: var(--bs-success) !important;
     color: white !important;
 }
 
-/* The collapse arrow icon also needs to be white when green */
 .accordion-item.step-complete > h2 .accordion-button::after {
     filter: brightness(0) invert(1);
 }
 
-/* Optional: subtle green tint on the accordion-item border too */
 .accordion-item.step-complete {
-    border-color: #198754;
+    border-color: var(--bs-success);
+}
+
+/* In-progress accordion step - AdminLTE warning */
+.accordion-item.step-inprogress > h2 .accordion-button {
+    background-color: var(--bs-warning) !important;
+    color: var(--bs-dark) !important;  /* dark text for yellow contrast */
+}
+
+.accordion-item.step-inprogress > h2 .accordion-button::after {
+    filter: none;  /* keep arrow dark on yellow */
+}
+
+.accordion-item.step-inprogress {
+    border-color: var(--bs-warning);
 }
 
 .accordion-item.fiscalyear .accordion-button::after {
@@ -44,20 +55,82 @@
                       </div>
                       <!-- /.card-header -->
                   <div class="card-body">
-                <div class="row mb-3">
-                    <div class="col-md-12">
-                        <h3>Fiscal Year: {{ $fiscalYear }}</h3>
+
+
+
+                    <div class="card-header p-2">
+                {{-- Tab Headers --}}
+                <ul class="nav nav-pills">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#admin" data-bs-toggle="tab">ADMIN PROCEDURES</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#report" data-bs-toggle="tab">REPORT PROCEDURES</a>
+                    </li>
+                </ul>
+                </div>
+                {{-- Tab Content --}}
+                <div class="card-body">
+                <div class="tab-content">
+
+                    {{-- Admin Tab --}}
+                    <div class="active tab-pane" id="admin">
+                        <div class="card-header bg-transparent border-0">
+                            <h3>Fiscal Year: {{ $fiscalYear }}</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+
+                            <div class="row">
+                                @include('coordinators.partials.eoy_adminprocedures_accordion')
+                            </div>
+                        </div>
                     </div>
 
+                    {{-- EOY Tab --}}
+                        <div class="tab-pane" id="report">
+                            <div class="card-header bg-transparent border-0">
+                                <h3>Report Year: {{ $fiscalYearEOY }}</h3>
+                            </div>
+                        <!-- /.card-header -->
+                            <div class="card-body">
+
+                        <div class="row">
+                            @include('coordinators.partials.eoy_reportprocedures_accordion')
+                        </div>
+                                </div>
+                            </div>
+                        </div>
+
+                </div>
+
+            </div>
+
+
+                {{-- <div class="row mb-3">
                     <div class="col-md-12">
-                        <h3>Fiscal Year EOY: {{ $fiscalYearEOY }}</h3>
+                        <h3>Admin Procedures</h3>
+                            <h4>Fiscal Year: {{ $fiscalYear }}</h4>
+                    </div>
+                </div>
+
+                <div class="row">
+                    @include('coordinators.partials.eoy_adminprocedures_accordion')
+                </div>
+
+                <hr>
+
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <h3>Report Procedures</h3>
+                            <h4>Fiscal Year EOY: {{ $fiscalYearEOY }}</h4>
                     </div>
 
                 </div>
 
      <div class="row">
-        @include('coordinators.partials.eoyprocedures_accordion')
-     </div>
+        @include('coordinators.partials.eoy_reportprocedures_accordion')
+     </div> --}}
             </div>
 
                 <div class="card-body text-center mt-3">
@@ -78,16 +151,32 @@
 @section('customscript')
 
 <script>
+$(document).on('click', '#view-reportprocedures', function() {
+    // Deactivate all tabs and panes
+    $('.nav-pills .nav-link').removeClass('active');
+    $('.tab-pane').removeClass('active show');
+
+    // Activate the report tab and pane
+    $('[href="#report"]').addClass('active');
+    $('#report').addClass('active show');
+});
+
 $(document).ready(function() {
+    var fiscalYearBaseUrl = '{{ route("techreports.resetyear") }}';  // Route for reseting New Year
+    var subscribeBaseUrl = '{{ route("techreports.updatesubscribelists") }}';  // Route for subscribing users to BoardList
+    var irsSeptBaseUrl = '{{ route("techreports.updateirssept") }}';
+    var irsDecBaseUrl = '{{ route("techreports.updateirsdec") }}';
+    var irsSubordinateBaseUrl = '{{ route("techreports.updateirssubordinate") }}';
+    var irsJuneBaseUrl = '{{ route("techreports.updateirsjune") }}';
+    var unsubscribeBaseUrl = '{{ route("techreports.updateunsubscribelists") }}';  // Route for unsubscribing users to BoardList
+
+    var reportYearBaseUrl = '{{ route("techreports.resetyeareoy") }}';  // Route for reseting EOY Year
     var eoyBaseUrl = '{{ route("techreports.updateeoydatabase") }}';  // Route for resetting financial data tables
     var dataBaseUrl = '{{ route("techreports.updatedatadatabase") }}';   // Route for resetting user data tables
-    var afterTestingBaseUrl = '{{ route("techreports.updateeoydatabaseafter") }}';  // Route for  resting database AFTER testing to go LIVE
-    var resetBaseUrl = '{{ route("techreports.resetyear") }}';  // Route for reseting New Year
-    var yearBaseUrl = '{{ route("techreports.resetyeareoy") }}';  // Route for reseting EOY Year
     var testingBaseUrl = '{{ route("techreports.updateeoytesting") }}';  // Route for displaying menues/buttons for testers
+    var afterTestingBaseUrl = '{{ route("techreports.updateeoydatabaseafter") }}';  // Route for  resting database AFTER testing to go LIVE
     var liveBaseUrl = '{{ route("techreports.updateeoylive") }}';  // Route for displaying menues/buttons for allusers
-    var subscribeBaseUrl = '{{ route("techreports.updatesubscribelists") }}';  // Route for subscribing users to BoardList
-    var unsubscribeBaseUrl = '{{ route("techreports.updateunsubscribelists") }}';  // Route for unsubscribing users to BoardList
+
 
     function handleAjaxRequest(baseUrl) {
         $.ajax({
@@ -120,6 +209,41 @@ $(document).ready(function() {
     }
 
     // Attach the function to all buttons
+    $("#reset-year").click(function() {
+        handleAjaxRequest(fiscalYearBaseUrl);
+    });
+
+    $("#update-eoy-subscribelists").click(function() {
+        handleAjaxRequest(subscribeBaseUrl);
+    });
+
+    $("#update-eoy-irssept").click(function() {
+        handleAjaxRequest(irsSeptBaseUrl);
+    });
+
+    $("#update-eoy-irsdec").click(function() {
+        handleAjaxRequest(irsDecBaseUrl);
+    });
+
+    $("#update-eoy-irssubordinate").click(function() {
+        handleAjaxRequest(irsSubordinateBaseUrl);
+    });
+
+    $("#update-eoy-irsjune").click(function() {
+        handleAjaxRequest(irsJuneBaseUrl);
+    });
+
+
+    $("#update-eoy-unsubscribelists").click(function() {
+        handleAjaxRequest(unsubscribeBaseUrl);
+    });
+
+     $("#reset-yeareoy").click(function() {
+        handleAjaxRequest(reportYearBaseUrl);
+    });
+
+
+
     $("#view-eoy-testing").click(function() {
         handleAjaxRequest(testingBaseUrl);
     });
@@ -128,13 +252,7 @@ $(document).ready(function() {
         handleAjaxRequest(liveBaseUrl);
     });
 
-    $("#update-eoy-subscribelists").click(function() {
-        handleAjaxRequest(subscribeBaseUrl);
-    });
 
-    $("#update-eoy-unsubscribelists").click(function() {
-        handleAjaxRequest(unsubscribeBaseUrl);
-    });
 
     $("#update-eoy-database").click(function() {
         handleAjaxRequest(eoyBaseUrl);
@@ -148,13 +266,9 @@ $(document).ready(function() {
         handleAjaxRequest(afterTestingBaseUrl);
     });
 
-    $("#reset-year").click(function() {
-        handleAjaxRequest(resetBaseUrl);
-    });
 
-     $("#reset-yeareoy").click(function() {
-        handleAjaxRequest(yearBaseUrl);
-    });
+
+
 });
 
 </script>

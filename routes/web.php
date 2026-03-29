@@ -148,6 +148,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/techreports/resetProbationSubmission', [TechReportController::class, 'resetProbationSubmission'])->name('techreports.resetProbationSubmission');
     Route::get('/techreports/eoy', [TechReportController::class, 'showEOY'])->name('techreports.eoy');
     Route::post('/techreports/eoy/resetyear', [TechReportController::class, 'resetYear'])->name('techreports.resetyear');
+    Route::post('/techreports/eoy/updateirssept', [TechReportController::class, 'updateFilingSept'])->name('techreports.updateirssept');
+    Route::post('/techreports/eoy/updateirsdec', [TechReportController::class, 'updateFilingDec'])->name('techreports.updateirsdec');
+    // Route::post('/techreports/eoy/updatetesteoy', [TechReportController::class, 'updateTestEOY'])->name('techreports.updatetesteoy');
+    Route::post('/techreports/eoy/updateirssubordinate', [TechReportController::class, 'updateSubordinateFiling'])->name('techreports.updateirssubordinate');
+    Route::post('/techreports/eoy/updateirsjune', [TechReportController::class, 'updateFilingJune'])->name('techreports.updateirsjune');
     Route::post('/techreports/eoy/resetyeareoy', [TechReportController::class, 'resetYearEOY'])->name('techreports.resetyeareoy');
     Route::post('/techreports/eoy/resetdisbandedusers', [TechReportController::class, 'resetDisbandedUsers'])->name('techreports.resetdisbandedusers');
     Route::post('/techreports/eoy/resetoutgoingusers', [TechReportController::class, 'resetOutgoingUsers'])->name('techreports.resetoutgoingusers');

@@ -1,54 +1,40 @@
 <div class="container-fluid">
     <div class="accordion"  id="accordion"  style="column-count: 2; column-gap: 1rem;">
-
-        {{-- <div style="break-inside: avoid; margin-bottom: 0.5rem;">
-<div class="accordion-item fiscalyear {{ $adminYear->subscribe_list != null ? 'step-complete' : '' }}">
-        <h2 class="accordion-header" id="header-subscribe-list">
-            <button class="accordion-button collapsed" type="button"                    >
-                #1 - Reset Fiscal Year - JULY - USE RESET BUTTON ABOVE
-            </button>
-        </h2>
-    </div>
-</div> --}}
 <!------Start Step 1 ------>
-        <div style="break-inside: avoid; margin-bottom: 0.5rem;">
+        {{-- <div style="break-inside: avoid; margin-bottom: 0.5rem;">
 <div class="accordion-item step-complete">
         <h2 class="accordion-header" id="header-fiscal-year">
             <button class="accordion-button collapsed"type="button"
-                    data-bs-toggle="collapse" data-bs-target="#collapseOne"
-                    aria-expanded="false" aria-controls="collapseOne">
+                    data-bs-toggle="collapse" data-bs-target="#collapseReportOne"
+                    aria-expanded="false" aria-controls="collapseReportOne">
                     #1 - Reset Fiscal Year - JULY
             </button>
         </h2>
-        <div id="collapseOne" class="accordion-collapse collapse"data-bs-parent="#accordion">
+        <div id="collapseReportOne" class="accordion-collapse collapse"data-bs-parent="#accordion">
             <div class="accordion-body">
                 <section>
                     <div class="col-md-12">
                     To be used in BoardList and other display areas.<br>
-                    {{-- @if ($fiscalYearStart == $thisYearEOY)
-                                <button type="button" id="reset-year" class="btn btn-danger bg-gradient mb-2"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year</button>
-                            @else --}}
-                                <button type="button" id="reset-year" class="btn btn-danger bg-gradient mb-2" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year</button>
-                            {{-- @endif --}}
+                    <button type="button" id="reset-year" class="btn btn-danger bg-gradient mb-2" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year</button>
                 </div>
 </section>
 </div><!-- end of accordion body -->
 </div><!-- end of accordion item -->
 </div>
-</div>
+</div> --}}
     {{------End Step 1 ------}}
 
         <!------Start Step 2 ------>
-        <div style="break-inside: avoid; margin-bottom: 0.5rem;">
+        {{-- <div style="break-inside: avoid; margin-bottom: 0.5rem;">
 <div class="accordion-item {{ $adminYear->subscribe_list == 1 ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-subscribe-list">
             <button class="accordion-button collapsed"type="button"
-                    data-bs-toggle="collapse" data-bs-target="#collapseTwo"
-                    aria-expanded="false" aria-controls="collapseTwo">
+                    data-bs-toggle="collapse" data-bs-target="#collapseReportTwo"
+                    aria-expanded="false" aria-controls="collapseReportTwo">
                 #2 - Subscribe Users to ForumLists - JUL/AUG
             </button>
         </h2>
-        <div id="collapseTwo" class="accordion-collapse collapse"data-bs-parent="#accordion">
+        <div id="collapseReportTwo" class="accordion-collapse collapse"data-bs-parent="#accordion">
             <div class="accordion-body">
                 <section>
                     <div class="col-md-12">
@@ -74,34 +60,25 @@
 </div><!-- end of accordion body -->
 </div><!-- end of accordion item -->
 </div>
-</div>
-    {{------End Step 3 ------}}
-
-    {{-- <div style="break-inside: avoid; margin-bottom: 0.5rem;">
-<div class="accordion-item fiscalyear {{ $adminYear->subscribe_list != null ? 'step-complete' : '' }}">
-        <h2 class="accordion-header" id="header-subscribe-list">
-            <button class="accordion-button collapsed" type="button"                    >
-                #3 - Reset EOY Fiscal Year - JAN - USE RESET BUTTON ABOVE
-            </button>
-        </h2>
-    </div>
 </div> --}}
-<!------Start Step 2 ------>
+    {{------End Step 2 ------}}
+
+<!------Start Step 3 ------>
 <div style="break-inside: avoid; margin-bottom: 0.5rem;">
 <div class="accordion-item {{ $fiscalYearEOYReset ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-reset-yeareoy">
             <button class="accordion-button collapsed"type="button"
-                    data-bs-toggle="collapse" data-bs-target="#collapseThree"
-                    aria-expanded="false" aria-controls="collapseThree">
-                #3 - Reset EOY Fiscal Year - JAN
+                    data-bs-toggle="collapse" data-bs-target="#collapseReportThree"
+                    aria-expanded="false" aria-controls="collapseReportThree">
+                #1 - Reset EOY/Report Year - JAN
             </button>
         </h2>
-        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordion">
+        <div id="collapseReportThree" class="accordion-collapse collapse" data-bs-parent="#accordion">
             <div class="accordion-body">
     <section>
         <div class="col-md-12">
             To be used for all End of Year buttons/links/emails/forms.<br>
-            @if ($adminYear->subscribe_list == 1 && !$fiscalYearEOYReset && ($currentMonth >= 1 && $currentMonth <= 5))
+            @if (!$fiscalYearEOYReset && ($currentMonth >= 1 && $currentMonth <= 3))
                 <button type="button" id="reset-yeareoy" class="btn btn-danger bg-gradient mb-2"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year EOY</button>
             @else
                 <button type="button" id="reset-yeareoy" class="btn btn-danger bg-gradient mb-2" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year EOY</button>
@@ -119,12 +96,12 @@
 <div class="accordion-item {{$fiscalYearEOYReset && $admin->reset_eoy_tables == 1 ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-eoy-tables">
             <button class="accordion-button collapsed"type="button"
-                    data-bs-toggle="collapse" data-bs-target="#collapseFour"
-                    aria-expanded="false" aria-controls="collapseFour">
-                #4 - Reset Tables BEFORE testing - FEB/MAR
+                    data-bs-toggle="collapse" data-bs-target="#collapseReportFour"
+                    aria-expanded="false" aria-controls="collapseReportFour">
+                #2 - *TESTING* Reset Tables for Testing - FEB/MAR
             </button>
         </h2>
-        <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordion">
+        <div id="collapseReportFour" class="accordion-collapse collapse" data-bs-parent="#accordion">
             <div class="accordion-body">
     <section>
         <div class="col-md-12">
@@ -159,12 +136,12 @@
 <div class="accordion-item {{$fiscalYearEOYReset && $admin->display_testing == 1 ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-display-testing">
             <button class="accordion-button collapsed"type="button"
-                    data-bs-toggle="collapse" data-bs-target="#collapseFive"
-                    aria-expanded="false" aria-controls="collapseFive">
-                #5 - Activate *TESTING* Menus/Buttons/Links BEFORE Testing - FEB/MAR
+                    data-bs-toggle="collapse" data-bs-target="#collapseReportFive"
+                    aria-expanded="false" aria-controls="collapseReportFive">
+                #3 - *TESTING* Activate Menus/Buttons/Links for Testing - FEB/MAR
             </button>
         </h2>
-        <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#accordion">
+        <div id="collapseReportFive" class="accordion-collapse collapse" data-bs-parent="#accordion">
             <div class="accordion-body">
     <section>
             <div class="col-md-12">
@@ -199,20 +176,20 @@
 <div class="accordion-item {{$fiscalYearEOYReset && $admin->reset_AFTER_testing == 1 ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-reset-tables-after">
             <button class="accordion-button collapsed"type="button"
-                    data-bs-toggle="collapse" data-bs-target="#collapseSix"
-                    aria-expanded="false" aria-controls="collapseSix">
-                #6 - Reset Tables AFTER testing is complete - MAY
+                    data-bs-toggle="collapse" data-bs-target="#collapseReportSix"
+                    aria-expanded="false" aria-controls="collapseReportSix">
+                #4 - *LIVE* Reset Tables AFTER Testing - MAY
             </button>
         </h2>
-        <div id="collapseSix" class="accordion-collapse collapse" data-bs-parent="#accordion">
+        <div id="collapseReportSix" class="accordion-collapse collapse" data-bs-parent="#accordion">
             <div class="accordion-body">
     <section>
             <div class="col-md-12">
-            Complete in May, after testing, so all data tables are clean and ready to go.<br>
+            Complete in May, after testing is complete, so all data tables are clean and ready to go.<br>
             @if ($fiscalYearEOYReset && $admin->display_testing == 1 && $admin->reset_AFTER_testing != 1 && ( $currentMonth >= 3 && $currentMonth <= 6 ))
-                                <button type="button" id="reset-database-after" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Database AFTER Testing</button>
+                <button type="button" id="reset-database-after" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Database AFTER Testing</button>
             @else
-                                <button type="button" id="reset-database-after" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Database AFTER Testing</button>
+                <button type="button" id="reset-database-after" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Database AFTER Testing</button>
             @endif
                 <p style="font-weight: bold;">The following functions will be performed:</p>
                     @foreach($resetAFTERtestingItems as $item)
@@ -239,20 +216,20 @@
 <div class="accordion-item {{$fiscalYearEOYReset && $admin->update_user_tables == 1 ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-user-tables">
             <button class="accordion-button collapsed"type="button"
-                    data-bs-toggle="collapse" data-bs-target="#collapseSeven"
-                    aria-expanded="false" aria-controls="collapseSeven">
-                #7 - Copy Data to New Tables - MAY
+                    data-bs-toggle="collapse" data-bs-target="#collapseReportSeven"
+                    aria-expanded="false" aria-controls="collapseReportSeven">
+                #5 - *LIVE* Copy/Save Data to New Tables - MAY
             </button>
         </h2>
-        <div id="collapseSeven" class="accordion-collapse collapse" data-bs-parent="#accordion">
+        <div id="collapseReportSeven" class="accordion-collapse collapse" data-bs-parent="#accordion">
             <div class="accordion-body">
     <section>
         <div class="col-md-12">
             Complete in May, before going live to save old board/coordinator/user information.<br>
             @if ($fiscalYearEOYReset && $admin->reset_AFTER_testing == 1 && $admin->update_user_tables != 1 && ( $currentMonth >= 3 && $currentMonth <= 6 ))
-                                <button type="button" id="update-data-database" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-copy me-2"></i>Copy Data Tables</button>
+                <button type="button" id="update-data-database" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-copy me-2"></i>Copy Data Tables</button>
             @else
-                                <button type="button" id="update-data-database" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-copy me-2"></i>Copy Data Tables</button>
+                <button type="button" id="update-data-database" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-copy me-2"></i>Copy Data Tables</button>
             @endif
                 <p style="font-weight: bold;">The following functions will be performed:</p>
                     @foreach($updateUserTablesItems as $item)
@@ -281,20 +258,20 @@
 <div class="accordion-item {{$fiscalYearEOYReset && $admin->display_live == 1 ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-display-live">
             <button class="accordion-button collapsed"type="button"
-                    data-bs-toggle="collapse" data-bs-target="#collapseNine"
-                    aria-expanded="false" aria-controls="collapseNine">
-                #8 -  Activate Menus/Buttons/Links AFTER testing - MAY
+                    data-bs-toggle="collapse" data-bs-target="#collapseReportNine"
+                    aria-expanded="false" aria-controls="collapseReportNine">
+                #6 -  *LIVE* Activate Menus/Buttons/Links AFTER Testing - MAY
             </button>
         </h2>
-        <div id="collapseNine" class="accordion-collapse collapse" data-bs-parent="#accordion">
+        <div id="collapseReportNine" class="accordion-collapse collapse" data-bs-parent="#accordion">
             <div class="accordion-body">
     <section>
         <div class="col-md-12">
             Complete in May, after testing, for live viewing.<br>
             @if ($fiscalYearEOYReset && $admin->update_user_tables == 1 && $admin->display_live != 1 && ( $currentMonth >= 3 && $currentMonth <= 6 ))
-                                <button type="button" id="view-eoy-live" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-toggle-on me-2"></i>Display EOY LIVE Items</button>
+                <button type="button" id="view-eoy-live" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-toggle-on me-2"></i>Display EOY LIVE Items</button>
             @else
-                                <button type="button" id="view-eoy-live" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-toggle-on me-2"></i>Display EOY LIVE Items</button>
+                <button type="button" id="view-eoy-live" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-toggle-on me-2"></i>Display EOY LIVE Items</button>
             @endif
                 <p style="font-weight: bold;">The following functions will be performed:</p>
                     @foreach($displayLiveItemsItems as $item)
@@ -317,16 +294,16 @@
 <!------End Step 9 ------>
 
 <!------Start Step 8 ------>
-<div style="break-inside: avoid; margin-bottom: 0.5rem;">
+{{-- <div style="break-inside: avoid; margin-bottom: 0.5rem;">
 <div class="accordion-item {{$fiscalYearEOYReset && $adminYear->unsubscribe_list == 1 ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-unsubscribe-list">
             <button class="accordion-button collapsed"type="button"
-                    data-bs-toggle="collapse" data-bs-target="#collapseEight"
-                    aria-expanded="false" aria-controls="collapseEight">
+                    data-bs-toggle="collapse" data-bs-target="#collapseReportEight"
+                    aria-expanded="false" aria-controls="collapseReportEight">
                 #9 - Unsubscribe from BoardList - JUNE
             </button>
         </h2>
-        <div id="collapseEight" class="accordion-collapse collapse" data-bs-parent="#accordion">
+        <div id="collapseReportEight" class="accordion-collapse collapse" data-bs-parent="#accordion">
             <div class="accordion-body">
     <section>
         <div class="col-md-12">
@@ -353,26 +330,25 @@
 </div><!-- end of accordion body -->
 </div><!-- end of accordion item -->
 </div>
-</div>
+</div> --}}
 <!------End Step 8 ------>
 
-
 <!------Start Step 10 ------>
-        <div style="break-inside: avoid; margin-bottom: 0.5rem;">
+        {{-- <div style="break-inside: avoid; margin-bottom: 0.5rem;">
 <div class="accordion-item">
         <h2 class="accordion-header" id="header-fiscal-year2">
             <button class="accordion-button collapsed"type="button"
-                    data-bs-toggle="collapse" data-bs-target="#collapseTen"
-                    aria-expanded="false" aria-controls="collapseTen">
+                    data-bs-toggle="collapse" data-bs-target="#collapseReportTen"
+                    aria-expanded="false" aria-controls="collapseReportTen">
                     #10 - Reset Fiscal Year - JULY
             </button>
         </h2>
-        <div id="collapseTen" class="accordion-collapse collapse"data-bs-parent="#accordion">
+        <div id="collapseReportTen" class="accordion-collapse collapse"data-bs-parent="#accordion">
             <div class="accordion-body">
                 <section>
                     <div class="col-md-12">
                     To be used in BoardList and other display areas.<br>
-                    @if ($fiscalYearEOYReset && $adminYear->unsubscribe_list == 1 && $fiscalYearStart == $thisYearEOY && ( $currentMonth >= 6 && $currentMonth <= 9 ))
+                    @if ($fiscalYearEOYReset && $admin->display_live == 1 && $fiscalYearStart == $thisYearEOY && ( $currentMonth >= 6 && $currentMonth <= 9 ))
                                 <button type="button" id="reset-year" class="btn btn-danger bg-gradient mb-2"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year</button>
                             @else
                                 <button type="button" id="reset-year" class="btn btn-danger bg-gradient mb-2" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year</button>
@@ -382,7 +358,7 @@
 </div><!-- end of accordion body -->
 </div><!-- end of accordion item -->
 </div>
-</div>
+</div> --}}
     {{------End Step 10 ------}}
 
 </div><!-- end of accordion -->
