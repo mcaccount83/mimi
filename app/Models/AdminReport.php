@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AdminYear extends Model
+class AdminReport extends Model
 {
-    protected $table = 'admin_year';
+    protected $table = 'admin_report';
 
     protected $primaryKey = 'id';
 
@@ -14,7 +14,7 @@ class AdminYear extends Model
 
     public function fiscalYear()
     {
-        return $this->belongsTo(FiscalYear::class, 'fiscal_year_id', 'id');
+        return $this->belongsTo(FiscalYear::class, 'report_year_id', 'id');
     }
 
 }

@@ -5,9 +5,11 @@ namespace App\Services;
 use App\Enums\CoordinatorPosition;
 use App\Enums\ChapterStatusEnum;
 use App\Enums\UserTypeEnum;
-use App\Models\Admin;
+use App\Models\FiscalYear;
 use App\Models\AdminEmail;
 use App\Models\AdminYear;
+use App\Models\AdminIRS;
+use App\Models\AdminReport;
 use Illuminate\Support\Facades\Request;
 
 class PositionConditionsService
@@ -118,51 +120,78 @@ class PositionConditionsService
     /**
      * Get EOY Date options based on fiscal year // Loaded automatically for blades in ViewServiceProvider & Called manually when needed
      */
-    public function getEOYOptions(): array
+    public function getFiscalYearOptions(): array
     {
-        $adminYear = AdminYear::latest('id')->firstOrFail();
-        $fiscalYear = $adminYear->year_fiscal;  // "2025-2026"
-        $fiscalYearStart =  $adminYear->year_start;
-        $fiscalYearStartDate = $fiscalYearStart . '-07-01';
+        $fiscalYear = FiscalYear::orderBy('created_at', 'desc') // newest created row first
+                        ->first();
+        $adminYear = AdminYear::with('fiscalYear')
+                        ->orderBy('created_at', 'desc') // newest created row first
+                        ->first();
+        $irsYear = AdminIRS::with('fiscalYear')
+                        ->orderBy('created_at', 'desc') // newest created row first
+                        ->first();
 
-        $admin = Admin::latest('id')->firstOrFail();
-        $fiscalYearEOY = $admin->fiscal_year_eoy;  // "2024-2025"
-        $years = explode('-', $fiscalYearEOY);  // Extract years from fiscal_year string
-        $lastYearEOY = $years[0];  // "2024"
-        $thisYearEOY = $years[1];  // "2025"
-
-        $fiscalYearEOYReset = $fiscalYearStart == $thisYearEOY;
-
-        $display_testing = ($admin->display_testing == 1);
-        $display_live = ($admin->display_live == 1);
-
-        $yearColumnName = $thisYearEOY.'_financial_pdf_path'; // "2025" name for Database Column for Financial Report
-        $boardReportName = $fiscalYear.' Board Report';  // "2025-2026" Board Report Name
-        $financialReportName = $fiscalYearEOY.' Financial Report';  // "2024-2025" Financial Report Name
-        $financialPDFName = $fiscalYearEOY.' Financial PDF';  // "2024-2025" Financial Report Name
-        $irsFilingName = $lastYearEOY.' 990N IRS Filing';  // "2024" IRS Filing Name
-
-        $currentMonth = $this->getDateOptions()['currentMonth'];  // Current Month with leading zero
+        // Fiscal & report year values directly from table
+        $fiscalYearRange = $adminYear->fiscalYear->fiscal_year;      // "2025-2026"
+        $fiscalYearStart = $adminYear->fiscalYear->fiscal_start;    // "2025"
+        $fiscalYearEnd = $adminYear->fiscalYear->fiscal_end;        // "2026"
+        $fiscalYearStartDate = $fiscalYearStart . '-07-01';  // "2025-07-01"
 
         return [
             'fiscalYear' => $fiscalYear,
+            'adminYear' => $adminYear,
+            'irsYear' => $irsYear,
+            'fiscalYearRange' => $fiscalYearRange,
             'fiscalYearStart' => $fiscalYearStart,
+            'fiscalYearEnd' => $fiscalYearEnd,
             'fiscalYearStartDate' => $fiscalYearStartDate,
-            'fiscalYearEOY' => $fiscalYearEOY,
-            'thisYearEOY' => $thisYearEOY,
-            'fiscalYearEOYReset' => $fiscalYearEOYReset,
-            // 'nextYearEOY' => $nextYearEOY,
-            'lastYearEOY' => $lastYearEOY,
-            'displayEOYTESTING' => ($display_testing && ! $display_live),
-            'displayEOYLIVE' => ($display_live && $currentMonth >= 5 && $currentMonth <= 12),
-            'displayBoardRptLIVE' => ($display_live && $currentMonth >= 5 && $currentMonth <= 9),
-            'displayFinancialRptLIVE' => ($display_live && $currentMonth >= 6 && $currentMonth <= 12),
-            'displayEINInstructionsLIVE' => ($display_live && $currentMonth >= 7 && $currentMonth <= 12),
+        ];
+    }
+
+
+    public function getReportYearOptions(): array
+    {
+        $reportYear = AdminReport::with('fiscalYear')
+                        ->orderBy('created_at', 'desc') // newest created row first
+                        ->first();
+
+        $reportYearRange = $reportYear->fiscalYear->report_year;
+        $reportYearRange = $reportYear->fiscalYear->report_year; // "2024-2025"
+        $reportYearStart = $reportYear->fiscalYear->report_start;    // "2024"
+        $reportYearEnd = $reportYear->fiscalYear->report_end;        // "2025"
+
+        $getFiscalYearOptions = $this->getFiscalYearOptions();
+        // $reportYear = $EOYOptions['reportYear'];
+        $fiscalYearRange = $getFiscalYearOptions['fiscalYearRange'];
+
+        // Optional display names
+        $yearColumnName = $reportYearEnd.'_financial_pdf_path';
+        $boardReportName = $fiscalYearRange.' Board Report';
+        $financialReportName = $reportYearRange.' Financial Report';
+        $financialPDFName = $reportYearEnd.' Financial PDF';
+        $irsFilingName = $reportYearStart.' 990N IRS Filing';
+
+        // Display Options
+        $display_testing = ($reportYear->display_testing == 1);
+        $display_live = ($reportYear->display_live == 1);
+        $currentMonth = $this->getDateOptions()['currentMonth'];
+
+        return [
+            'reportYear' => $reportYear,
+            'fiscalYearRange' => $fiscalYearRange,
+            'reportYearRange' => $reportYearRange,
+            'reportYearStart' => $reportYearStart,
+            'reportYearEnd' => $reportYearEnd,
             'yearColumnName' => $yearColumnName,
             'boardReportName' => $boardReportName,
             'financialReportName' => $financialReportName,
             'financialPDFName' => $financialPDFName,
             'irsFilingName' => $irsFilingName,
+            'displayEOYTESTING' => ($display_testing && ! $display_live),
+            'displayEOYLIVE' => ($display_live && $currentMonth >= 5 && $currentMonth <= 12),
+            'displayBoardRptLIVE' => ($display_live && $currentMonth >= 5 && $currentMonth <= 9),
+            'displayFinancialRptLIVE' => ($display_live && $currentMonth >= 6 && $currentMonth <= 12),
+            'displayEINInstructionsLIVE' => ($display_live && $currentMonth >= 7 && $currentMonth <= 12),
         ];
     }
 

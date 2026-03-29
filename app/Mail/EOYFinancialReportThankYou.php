@@ -13,13 +13,13 @@ class EOYFinancialReportThankYou extends BaseMailable
 
     protected $pdfPath;
 
-    protected $fiscalYearEOY;
+    protected $reportYearRange;
 
-    public function __construct($mailData, $pdfPath, $fiscalYearEOY)
+    public function __construct($mailData, $pdfPath, $reportYearRange)
     {
         $this->mailData = $mailData;
         $this->pdfPath = $pdfPath;
-        $this->fiscalYearEOY = $fiscalYearEOY;
+        $this->reportYearRange = $reportYearRange;
     }
 
     public function envelope(): Envelope
@@ -44,7 +44,7 @@ class EOYFinancialReportThankYou extends BaseMailable
     {
         return [
             Attachment::fromPath($this->pdfPath)
-                ->as($this->fiscalYearEOY.'_'.$this->mailData['chapterState'].'_'.$this->mailData['chapterNameSanitized'].'_FinancialReport.pdf')
+                ->as($this->reportYearRange.'_'.$this->mailData['chapterState'].'_'.$this->mailData['chapterNameSanitized'].'_FinancialReport.pdf')
                 ->withMime('application/pdf'),
         ];
     }

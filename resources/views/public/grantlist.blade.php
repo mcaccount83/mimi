@@ -40,8 +40,8 @@
                     </div>
                 </div>
 
-                  @foreach($grantsByFiscalYear as $fiscalYear => $grants)
-                <h3 class="mt-4">Fiscal Year {{ $fiscalYear }}</h3>
+                  @foreach($grantsByFiscalYear as $fiscalYearRange => $grants)
+                <h3 class="mt-4">Fiscal Year {{ $fiscalYearRange }}</h3>
 
                 @if($grants->count() > 0)
                     <table width="100%" style="border-collapse: collapse;">
@@ -63,13 +63,13 @@
                                 </tr>
                             @endforeach
                             <tr style="border-top: 2px solid #333; font-weight: bold;">
-                                <td colspan="3" style="text-align: right; padding-top: 10px;">Total for Fiscal Year {{ $fiscalYear }}:</td>
+                                <td colspan="3" style="text-align: right; padding-top: 10px;">Total for Fiscal Year {{ $fiscalYearRange }}:</td>
                                 <td style="padding-top: 10px;"><span class="ms-5">${{ number_format($grants->sum('amount_awarded'), 2) }}</span></td>
                             </tr>
                         </tbody>
                     </table>
                 @else
-                    <p>No grants for fiscal year {{ $fiscalYear }}</p>
+                    <p>No grants for fiscal year {{ $fiscalYearRange }}</p>
                 @endif
 
                 <br><br>

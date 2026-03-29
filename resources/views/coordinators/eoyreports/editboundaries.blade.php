@@ -1,13 +1,13 @@
 @extends('layouts.mimi_theme')
 
 @if ($ITCondition && !$displayEOYTESTING && !$displayEOYLIVE)
-    @section('page_title', $fiscalYearEOY.' EOY Details *ADMIN*')
+    @section('page_title', $reportYearRange.' EOY Details *ADMIN*')
     @section('breadcrumb', 'Boundary Issues')
 @elseif ($eoyTestCondition && $displayEOYTESTING)
-    @section('page_title', $fiscalYearEOY.' EOY Details *TESTING*')
+    @section('page_title', $reportYearRange.' EOY Details *TESTING*')
     @section('breadcrumb', 'Boundary Issues')
 @else
-    @section('page_title', $fiscalYearEOY.' EOY Details')
+    @section('page_title', $reportYearRange.' EOY Details')
     @section('breadcrumb', 'Boundary Issues')
 @endif
 
@@ -51,7 +51,7 @@
             <div class="card card-primary card-outline">
                 <div class="card-body">
                     <div class="card-header bg-transparent border-0">
-                    <h3>{{ $fiscalYearEOY }} Boundary Issues</h3>
+                    <h3>{{ $reportYearRange }} Boundary Issues</h3>
                     </h3>
                     </div>
                     <!-- /.card-header -->

@@ -1,6 +1,6 @@
 <div class="col-md-12 text-center">
     <h4><u>Read carefully before starting!</u></h4>
-    All chapters must complete the {{ $fiscalYearEOY}} End of Year Reports.  All reports are available through your chapter's MIMI profile login.<br>
+    All chapters must complete the {{ $reportYearRange}} End of Year Reports.  All reports are available through your chapter's MIMI profile login.<br>
     <br>
 </div>
 @if($displayEOYLIVE == false)

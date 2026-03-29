@@ -5,7 +5,7 @@
     @section('breadcrumb', $thread_title)
 @elseif (isset($category))
     @if ( $category->title == 'BoardList')
-        @section('page_title', $fiscalYear.' '.$category->title)
+        @section('page_title', $fiscalYearRange.' '.$category->title)
     @else
         @section('page_title', $category->title)
     @endif
@@ -33,7 +33,7 @@
                                     <h3 class="card-title dropdown-toggle mb-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         @if (isset($category) || isset($thread_title))
                                             @if ($category->title == 'BoardList')
-                                                {{ $fiscalYear }} {{ $category->title }}
+                                                {{ $fiscalYearRange }} {{ $category->title }}
                                             @else
                                                 {{ $category->title }}
                                             @endif

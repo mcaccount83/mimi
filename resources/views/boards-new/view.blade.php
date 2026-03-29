@@ -461,7 +461,7 @@
                 <div class="tab-pane" id="eoy">
                     <div class="eoy-field">
                         <div class="card-header bg-transparent border-0">
-                            <h3>{{ $fiscalYearEOY }} End of Year Information
+                            <h3>{{ $reportYearRange }} End of Year Information
                             @if ($ITCondition && !$displayEOYTESTING && !$displayEOYLIVE) *ADMIN*@endif
                             @if ($eoyTestCondition && $displayEOYTESTING) *TESTING*@endif
                             </h3>

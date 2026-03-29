@@ -321,14 +321,22 @@ class TechReportController extends Controller implements HasMiddleware
         $secPositionId = $user['cdSecPositionId'];
         $canEditFiles = ($positionId == CoordinatorPosition::IT || in_array(CoordinatorPosition::IT, $secPositionId));
 
-        $EOYOptions = $this->positionConditionsService->getEOYOptions();
-        $fiscalYear = $EOYOptions['fiscalYear'];
-        $fiscalYearEOY = $EOYOptions['fiscalYearEOY'];
+        $fiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
+        // $fiscalYearRange = $fiscalYearOptions['fiscalYearRange'];
+        $adminYear = $fiscalYearOptions['adminYear'];
+        $irsYear = $fiscalYearOptions['irsYear'];
 
-        $adminYear = AdminYear::where('year_fiscal', $fiscalYear)->firstOrFail();
-        $adminYearEOY = AdminYear::where('year_fiscal', $fiscalYearEOY)->firstOrFail();
+        $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
+        // $reportYearRange = $reportYearOptions['reportYearRange'];
+        $reportYear = $reportYearOptions['reportYear'];
 
-        $admin = Admin::where('fiscal_year_eoy', $fiscalYearEOY)->firstOrFail();
+        // $fiscalYear = $EOYOptions['fiscalYear'];
+        // $fiscalYearEOY = $EOYOptions['fiscalYearEOY'];
+
+        // $adminYear = AdminYear::where('year_fiscal', $fiscalYear)->firstOrFail();
+        // $adminYearEOY = AdminYear::where('year_fiscal', $fiscalYearEOY)->firstOrFail();
+
+        // $admin = Admin::where('fiscal_year_eoy', $fiscalYearEOY)->firstOrFail();
 
 
         $subscribeListItems = [
@@ -426,7 +434,7 @@ class TechReportController extends Controller implements HasMiddleware
             'Copy/Reset BoardList Forum Category',
         ];
 
-        $data = ['admin' => $admin, 'adminYear' => $adminYear, 'canEditFiles' => $canEditFiles, 'fiscalYearEOY' => $fiscalYearEOY, 'fiscalYear' => $fiscalYear, 'adminYearEOY' => $adminYearEOY,
+        $data = ['adminYear' => $adminYear, 'canEditFiles' => $canEditFiles, 'irsYear' => $irsYear, 'reportYear' => $reportYear,
             'resetEOYTableItems' => $resetEOYTableItems, 'displayCoorindatorMenuItems' => $displayCoorindatorMenuItems, 'displayChapterButtonItems' => $displayChapterButtonItems,
             'displayTestingItemsItems' => $displayTestingItemsItems, 'displayLiveItemsItems' => $displayLiveItemsItems, 'unSubscribeListItems' => $unSubscribeListItems,
             'resetAFTERtestingItems' => $resetAFTERtestingItems, 'updateUserTablesItems' => $updateUserTablesItems, 'subscribeListItems' => $subscribeListItems,
@@ -681,6 +689,45 @@ class TechReportController extends Controller implements HasMiddleware
             DB::commit(); // Commit transaction
 
             return response()->json(['success' => 'Successfully recorded subordinate filing.']);
+        } catch (\Exception $e) {
+            DB::rollback(); // Rollback Transaction
+            Log::error($e); // Log the error
+
+            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+        }
+    }
+
+    /**
+     * Udate User Database Tables  // Step 7
+     */
+    public function updateDataDatabase(Request $request): JsonResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $updatedId = $user['userId'];
+
+        // Get the current month and year for table renaming
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentYear = $dateOptions['currentYear'];
+        $currentMonth = str_pad($dateOptions['currentMonth'], 2, '0', STR_PAD_LEFT);
+
+        $EOYOptions = $this->positionConditionsService->getEOYOptions();
+        $fiscalYear = $EOYOptions['fiscalYear'];
+
+        $this->copyTablesFINAL($currentMonth, $currentYear);
+
+        DB::beginTransaction();
+        try {
+            $this->resetBoardList($currentYear);
+
+            $adminYear = AdminYear::where('year_fiscal', $fiscalYear)->firstOrFail();
+            $adminYear->update([
+                'update_user_tables' => 1,
+                'updated_id'       => $updatedId,
+            ]);
+
+            DB::commit(); // Commit transaction
+
+            return response()->json(['success' => 'User data tables successfully updated, copied, and renamed.']);
         } catch (\Exception $e) {
             DB::rollback(); // Rollback Transaction
             Log::error($e); // Log the error
@@ -1094,45 +1141,6 @@ class TechReportController extends Controller implements HasMiddleware
         ]);
     }
 
-    /**
-     * Udate User Database Tables  // Step 7
-     */
-    public function updateDataDatabase(Request $request): JsonResponse
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $updatedId = $user['userId'];
-
-        // Get the current month and year for table renaming
-        $dateOptions = $this->positionConditionsService->getDateOptions();
-        $currentYear = $dateOptions['currentYear'];
-        $currentMonth = str_pad($dateOptions['currentMonth'], 2, '0', STR_PAD_LEFT);
-
-        $EOYOptions = $this->positionConditionsService->getEOYOptions();
-        $fiscalYearEOY = $EOYOptions['fiscalYearEOY'];
-
-        $this->copyTablesFINAL($currentMonth, $currentYear);
-
-        DB::beginTransaction();
-        try {
-            $this->resetBoardList($currentYear);
-
-            $admin = Admin::where('fiscal_year_eoy', $fiscalYearEOY)->firstOrFail();
-            $admin->update([
-                'update_user_tables' => 1,
-                'updated_id'       => $updatedId,
-            ]);
-
-            DB::commit(); // Commit transaction
-
-            return response()->json(['success' => 'User data tables successfully updated, copied, and renamed.']);
-        } catch (\Exception $e) {
-            DB::rollback(); // Rollback Transaction
-            Log::error($e); // Log the error
-
-            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
-        }
-    }
-
     private function copyTablesFINAL(int $currentMonth, int $currentYear): void
     {
         // Copy and rename the `chapters` table
@@ -1208,18 +1216,18 @@ class TechReportController extends Controller implements HasMiddleware
         $updatedId = $user['userId'];
 
         $EOYOptions = $this->positionConditionsService->getEOYOptions();
-        $fiscalYear = $EOYOptions['fiscalYear'];
-        $fiscalYearEOY = $EOYOptions['fiscalYearEOY'];
+        $fiscalYearRange = $EOYOptions['fiscalYearRange'];
+        $reportYearRange = $EOYOptions['reportYearRange'];
 
         DB::beginTransaction();
         try {
-            $admin = Admin::where('fiscal_year_eoy', $fiscalYearEOY)->firstOrFail();
+            $admin = Admin::where('fiscal_year_eoy', $reportYearRange)->firstOrFail();
             $admin->update([
                 'display_live' => 1,
                 'updated_id' => $updatedId,
             ]);
 
-            $adminYear = AdminYear::where('year_fiscal', $fiscalYear)->firstOrFail();
+            $adminYear = AdminYear::where('year_fiscal', $fiscalYearRange)->firstOrFail();
             $adminYear->update([
                 'test_eoy' => 1,
                 'updated_id' => $updatedId,

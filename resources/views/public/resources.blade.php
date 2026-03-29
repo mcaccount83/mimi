@@ -6,20 +6,20 @@
     <div class="row">
     {{-- @include('boards.resources_accordion', ['resources' => $resources, 'resourceCategories' => $resourceCategories]) --}}
     @include('partials.resources_accordion', ['resources' => $resources, 'resourceCategories' => $resourceCategories,
-            'fiscalYear' => $fiscalYear,
-            'fiscalYearEOY' => $fiscalYearEOY,
-            'thisYearEOY' => $thisYearEOY,
-            'lastYearEOY' => $lastYearEOY,
-            'displayEOYTESTING' => $displayEOYTESTING,
-            'displayEOYLIVE' => $displayEOYLIVE,
-            'displayBoardRptLIVE' => $displayBoardRptLIVE,
-            'displayFinancialRptLIVE' => $displayFinancialRptLIVE,
-            'displayEINInstructionsLIVE' => $displayEINInstructionsLIVE,
+            'fiscalYearRange' => $fiscalYearRange,
+            'reportYearRange' => $reportYearRange,
+            'reportYearStart' => $reportYearStart,
+            'reportYearEnd' => $reportYearEnd,
             'yearColumnName' => $yearColumnName,
             'boardReportName' => $boardReportName,
             'financialReportName' => $financialReportName,
             'financialPDFName' => $financialPDFName,
-            'irsFilingName' => $irsFilingName
+            'irsFilingName' => $irsFilingName,
+            'displayEOYTESTING' => ($display_testing && ! $display_live),
+            'displayEOYLIVE' => ($display_live && $currentMonth >= 5 && $currentMonth <= 12),
+            'displayBoardRptLIVE' => ($display_live && $currentMonth >= 5 && $currentMonth <= 9),
+            'displayFinancialRptLIVE' => ($display_live && $currentMonth >= 6 && $currentMonth <= 12),
+            'displayEINInstructionsLIVE' => ($display_live && $currentMonth >= 7 && $currentMonth <= 12),
             ])
     </div>
 </div>

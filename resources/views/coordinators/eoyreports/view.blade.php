@@ -1,13 +1,13 @@
 @extends('layouts.mimi_theme')
 
 @if ($ITCondition && !$displayEOYTESTING && !$displayEOYLIVE)
-    @section('page_title', $fiscalYearEOY.' EOY Details *ADMIN*')
+    @section('page_title', $reportYearRange.' EOY Details *ADMIN*')
     @section('breadcrumb', 'EOY Details *ADMIN*')
 @elseif ($eoyTestCondition && $displayEOYTESTING)
-    @section('page_title', $fiscalYearEOY.' EOY Details *TESTING*')
+    @section('page_title', $reportYearRange.' EOY Details *TESTING*')
     @section('breadcrumb', 'EOY Details *TESTING*')
 @else
-    @section('page_title', $fiscalYearEOY.' EOY Details')
+    @section('page_title', $reportYearRange.' EOY Details')
     @section('breadcrumb', 'EOY Details')
 @endif
 

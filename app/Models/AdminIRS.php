@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AdminYear extends Model
+class AdminIRS extends Model
 {
-    protected $table = 'admin_year';
+    protected $table = 'admin_irs';
 
     protected $primaryKey = 'id';
 

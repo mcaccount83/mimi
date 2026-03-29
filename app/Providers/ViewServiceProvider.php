@@ -68,7 +68,8 @@ class ViewServiceProvider extends ServiceProvider
             $PendingConditionsService = app(PendingConditionsService::class);
 
             $positionConditions = Auth::check() ? $positionConditionsService->getConditionsForUser($positionid, $secpositionid, $corId) : [];
-            $EOYOptions = Auth::check() ? $positionConditionsService->getEOYOptions() : [];
+            $getFiscalYearOptions = Auth::check() ? $positionConditionsService->getFiscalYearOptions() : [];
+            $getReportYearOptions = Auth::check() ? $positionConditionsService->getReportYearOptions() : [];
             $forumCount = Auth::check() ? $forumConditionsService->getUnreadForumCount() : 0;
             $pendingThreadsCount = Auth::check() ? $forumConditionsService->getPendingThreadsCount() : 0;
             $pendingPostsCount = Auth::check() ? $forumConditionsService->getPendingPostsCount() : 0;
@@ -100,7 +101,8 @@ class ViewServiceProvider extends ServiceProvider
                 'pending' => $pending,
             ],
                 $positionConditions,
-                $EOYOptions,
+                $getFiscalYearOptions,
+                $getReportYearOptions,
                 $dateOptions,
                 ($userTypeId == UserTypeEnum::BOARD ? ['chDetails' => $chDetails] : []),
             );

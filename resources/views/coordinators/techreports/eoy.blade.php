@@ -37,7 +37,6 @@
 }
 </style>
 
-
 @section('content')
 <!-- Main content -->
 <section class="content">
@@ -56,13 +55,14 @@
                       <!-- /.card-header -->
                   <div class="card-body">
 
-
-
                     <div class="card-header p-2">
                 {{-- Tab Headers --}}
                 <ul class="nav nav-pills">
                     <li class="nav-item">
                         <a class="nav-link active" href="#admin" data-bs-toggle="tab">ADMIN PROCEDURES</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#irs" data-bs-toggle="tab">IRS PROCEDURES</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#report" data-bs-toggle="tab">REPORT PROCEDURES</a>
@@ -76,7 +76,7 @@
                     {{-- Admin Tab --}}
                     <div class="active tab-pane" id="admin">
                         <div class="card-header bg-transparent border-0">
-                            <h3>Fiscal Year: {{ $fiscalYear }}</h3>
+                            <h3>Fiscal Year: {{ $fiscalYearRange }}</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -87,10 +87,24 @@
                         </div>
                     </div>
 
-                    {{-- EOY Tab --}}
+                    {{-- IRS Tab --}}
+                   <div class="tab-pane" id="irs">
+                        <div class="card-header bg-transparent border-0">
+                            <h3>Fiscal Year: {{ $fiscalYearRange }}</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+
+                            <div class="row">
+                                @include('coordinators.partials.eoy_irsprocedures_accordion')
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Report Tab --}}
                         <div class="tab-pane" id="report">
                             <div class="card-header bg-transparent border-0">
-                                <h3>Report Year: {{ $fiscalYearEOY }}</h3>
+                                <h3>Report Year: {{ $reportYearRange }}</h3>
                             </div>
                         <!-- /.card-header -->
                             <div class="card-body">
@@ -105,32 +119,6 @@
                 </div>
 
             </div>
-
-
-                {{-- <div class="row mb-3">
-                    <div class="col-md-12">
-                        <h3>Admin Procedures</h3>
-                            <h4>Fiscal Year: {{ $fiscalYear }}</h4>
-                    </div>
-                </div>
-
-                <div class="row">
-                    @include('coordinators.partials.eoy_adminprocedures_accordion')
-                </div>
-
-                <hr>
-
-                <div class="row mb-3">
-                    <div class="col-md-12">
-                        <h3>Report Procedures</h3>
-                            <h4>Fiscal Year EOY: {{ $fiscalYearEOY }}</h4>
-                    </div>
-
-                </div>
-
-     <div class="row">
-        @include('coordinators.partials.eoy_reportprocedures_accordion')
-     </div> --}}
             </div>
 
                 <div class="card-body text-center mt-3">
@@ -176,7 +164,6 @@ $(document).ready(function() {
     var testingBaseUrl = '{{ route("techreports.updateeoytesting") }}';  // Route for displaying menues/buttons for testers
     var afterTestingBaseUrl = '{{ route("techreports.updateeoydatabaseafter") }}';  // Route for  resting database AFTER testing to go LIVE
     var liveBaseUrl = '{{ route("techreports.updateeoylive") }}';  // Route for displaying menues/buttons for allusers
-
 
     function handleAjaxRequest(baseUrl) {
         $.ajax({
@@ -233,7 +220,6 @@ $(document).ready(function() {
         handleAjaxRequest(irsJuneBaseUrl);
     });
 
-
     $("#update-eoy-unsubscribelists").click(function() {
         handleAjaxRequest(unsubscribeBaseUrl);
     });
@@ -242,8 +228,6 @@ $(document).ready(function() {
         handleAjaxRequest(reportYearBaseUrl);
     });
 
-
-
     $("#view-eoy-testing").click(function() {
         handleAjaxRequest(testingBaseUrl);
     });
@@ -251,8 +235,6 @@ $(document).ready(function() {
     $("#view-eoy-live").click(function() {
         handleAjaxRequest(liveBaseUrl);
     });
-
-
 
     $("#update-eoy-database").click(function() {
         handleAjaxRequest(eoyBaseUrl);
@@ -265,9 +247,6 @@ $(document).ready(function() {
     $("#reset-database-after").click(function() {
         handleAjaxRequest(afterTestingBaseUrl);
     });
-
-
-
 
 });
 
