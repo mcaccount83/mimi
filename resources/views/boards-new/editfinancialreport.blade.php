@@ -57,7 +57,7 @@
                                 </div>
                                 <div class="card-body">
                     When you have filled in all the answers, submit the report and save a copy in your chapter's permanent files.
-                    The International MOMS Club does not keep copies of your reports long term. You need to be sure your chapter has a copy and keeps it for the life of your chapter,
+                    The International MOMS Club is not responsible for keeping copies of your reports long term. You need to be sure your chapter has a copy and keeps it for the life of your chapter,
                     as this would be the information you would need if the IRS were to do an audit. The Financial Report and all required additional documents are due no later than July 15th.
                     <br><br>
 

@@ -40,7 +40,7 @@
 
         <div class="col-md-10 offset-md-1 mt-1 mb-3">
             <h5><u><b>Financial Report</b></u></h5>
-            <div>When you have filled in all the answers, submit the report and save a copy in your chapter's permanent files. The International MOMS Club does not keep copies of your reports long term.
+            <div>When you have filled in all the answers, submit the report and save a copy in your chapter's permanent files. The International MOMS Club is not responsible for keeping copies of your reports long term.
                 You need to be sure your chapter has a copy and keeps it for the life of your chapter, as this would be the information you would need if the IRS were to do an audit.<br></div>
             <div class="mt-2"><b>Note:</b> New chapters who have not started meeting prior to June 30th, do NOT need to fill out this report!<br></div>
             <div class="mt-2">
