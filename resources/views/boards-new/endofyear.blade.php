@@ -24,14 +24,27 @@
 
                          <div class="row">
                             <div class="col-md-12 text-center mb-3">
-                                @if ($displayEOYTESTING == '1' || $displayEOYLIVE == '1' || $ITCondition)
-                                    @if($chEOYDocuments->new_board_active != '1')
-                                        <button type="button" class="btn btn-primary bg-gradient" onclick="window.location.href='{{ route('board-new.editboardreport', ['id' => $chDetails->id]) }}'">{{$boardReportName}}</button>
+                                @if ($userTypeId == \App\Enums\UserTypeEnum::COORD
+                                ? ($displayEOYTESTING || $displayEOYLIVE || $ITCondition)
+                                : $displayEOYLIVE)
+                                    @if ($userTypeId == \App\Enums\UserTypeEnum::COORD
+                                        ? ($displayEOYTESTING || $displayEOYLIVE || $ITCondition)
+                                        : $displayBoardRptLIVE)
+                                        @if($chEOYDocuments->new_board_active != '1')
+                                            <button type="button" class="btn btn-primary bg-gradient" onclick="window.location.href='{{ route('board-new.editboardreport', ['id' => $chDetails->id]) }}'">{{$boardReportName}}</button>
+                                        @else
+                                            <button type="button" class="btn btn-primary bg-gradient disabled" disabled>{{$boardReportName}} Activated</button>
+                                        @endif
                                     @else
-                                        <button type="button" class="btn btn-primary bg-gradient disabled" disabled>{{$boardReportName}} Activated</button>
+                                        <button type="button" class="btn btn-primary bg-gradient disabled" disabled>{{$boardReportName}} Not Available</button>
                                     @endif
-
-                                    <button type="button" class="btn btn-primary bg-gradient" onclick="window.location.href='{{ route('board-new.editfinancialreport', ['id' => $chDetails->id]) }}'">{{$financialReportName}}</button>
+                                    @if ($userTypeId == \App\Enums\UserTypeEnum::COORD
+                                        ? ($displayEOYTESTING || $displayEOYLIVE || $ITCondition)
+                                        : $displayFinancialRptLIVE)
+                                        <button type="button" class="btn btn-primary bg-gradient" onclick="window.location.href='{{ route('board-new.editfinancialreport', ['id' => $chDetails->id]) }}'">{{$financialReportName}}</button>
+                                    @else
+                                        <button type="button" class="btn btn-primary bg-gradient" disabled>{{$financialReportName}} Not Available</button>
+                                    @endif
                                     @if (!empty($chEOYDocuments->$yearColumnName))
                                         <button type="button" class="btn btn-primary bg-gradient" onclick="openPdfViewer('{{ $chEOYDocuments->$yearColumnName }}')">{{$financialPDFName}}</button>
                                     @endif

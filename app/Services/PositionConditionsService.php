@@ -190,7 +190,7 @@ class PositionConditionsService
             'financialReportName' => $financialReportName,
             'financialPDFName' => $financialPDFName,
             'irsFilingName' => $irsFilingName,
-            'displayEOYTESTING' => ($display_testing && ! $display_live),
+            'displayEOYTESTING' => ($display_testing && !$display_live),
             'displayEOYLIVE' => ($display_live && $currentMonth >= 5 && $currentMonth <= 12),
             'displayBoardRptLIVE' => ($display_live && $currentMonth >= 5 && $currentMonth <= 9),
             'displayFinancialRptLIVE' => ($display_live && $currentMonth >= 6 && $currentMonth <= 12),

@@ -468,7 +468,9 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                             @if ($displayEOYTESTING == '1' || $displayEOYLIVE == '1' || $ITCondition)
+                             @if ($userTypeId == \App\Enums\UserTypeEnum::COORD
+                                ? ($displayEOYTESTING || $displayEOYLIVE || $ITCondition)
+                                : $displayEOYLIVE)
                             <div class="row">
                             <div class="col-md-6 mb-3">
 
@@ -477,10 +479,16 @@
                                             <label>Board Report:</label>
                                         </div>
                                         <div class="col-sm-8">
-                                            @if($chEOYDocuments->new_board_active != '1')
-                                                <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='{{ route('board-new.editboardreport', ['id' => $chDetails->id]) }}'">View Board Election Report</button>
+                                            @if ($userTypeId == \App\Enums\UserTypeEnum::COORD
+                                        ? ($displayEOYTESTING || $displayEOYLIVE || $ITCondition)
+                                        : $displayBoardRptLIVE)
+                                                @if($chEOYDocuments->new_board_active != '1')
+                                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='{{ route('board-new.editboardreport', ['id' => $chDetails->id]) }}'">View Board Election Report</button>
+                                                @else
+                                                    <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>Not available after Activation</button>
+                                                @endif
                                             @else
-                                                <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>Not available after Activation</button>
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>Board Report Not Available</button>
                                             @endif
                                         </div>
                                     </div>
@@ -490,8 +498,14 @@
                                             <label>Financial Report:</label>
                                         </div>
                                         <div class="col-sm-8">
-                                            <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='{{ route('board-new.editfinancialreport', ['id' => $chDetails->id]) }}'">View Financial Report</button>
-                                                @if (!empty($chEOYDocuments->$yearColumnName))
+                                            @if ($userTypeId == \App\Enums\UserTypeEnum::COORD
+                                        ? ($displayEOYTESTING || $displayEOYLIVE || $ITCondition)
+                                        : $displayFinancialRptLIVE)
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='{{ route('board-new.editfinancialreport', ['id' => $chDetails->id]) }}'">View Financial Report</button>
+                                            @else
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm" disabled>Financial Report Not Available</button>
+                                            @endif
+                                            @if (!empty($chEOYDocuments->$yearColumnName))
                                                 <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="openPdfViewer('{{ $chEOYDocuments->$yearColumnName }}')">View/Download Financial PDF</button>
                                             @endif
                                         </div>
@@ -532,9 +546,7 @@
                                                 @else
                                                     No awards applied for.
                                                 @endif
-                                        </tbody>
-                                    </table>
-                                </div>
+                                            </div>
                                 </div>
                             </div>
                               <div class="col-md-6 mb-3">
@@ -543,10 +555,23 @@
                                         <label>Chapter Roster File:</label>
                                     </div>
                                     <div class="col-sm-8">
-                                            @if (!empty($chEOYDocuments->roster_path))
+                                            {{-- @if (!empty($chEOYDocuments->roster_path))
                                                 <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-roster" onclick="openPdfViewer('{{ $chEOYDocuments->roster_path }}')">View Chapter Roster</button>
                                             @else
                                                 <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
+                                            @endif --}}
+                                            @if ($userTypeId == \App\Enums\UserTypeEnum::COORD
+                                        ? ($displayEOYTESTING || $displayEOYLIVE || $ITCondition)
+                                        : $displayBoardRptLIVE)
+                                                @if (!empty($chEOYDocuments->roster_path))
+                                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-roster" onclick="openPdfViewer('{{ $chEOYDocuments->roster_path }}')">View Chapter Roster</button>
+                                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showRosterUploadModal('{{ $chDetails->id }}')">Replace Roster File</button>
+                                                @else
+                                                    <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
+                                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showRosterUploadModal('{{ $chDetails->id }}')">Upload Roster File</button>
+                                                @endif
+                                            @else
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>Roster Upload Not Available</button>
                                             @endif
                                     </div>
                                 </div>
@@ -555,10 +580,23 @@
                                         <label>Primary Bank Statement:</label>
                                     </div>
                                     <div class="col-sm-8">
-                                        @if (!empty($chEOYDocuments->statement_1_path))
+                                        {{-- @if (!empty($chEOYDocuments->statement_1_path))
                                             <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-statement-1" onclick="openPdfViewer('{{ $chEOYDocuments->statement_1_path }}')">View Bank Statement</button>
                                         @else
                                             <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
+                                        @endif --}}
+                                        @if ($userTypeId == \App\Enums\UserTypeEnum::COORD
+                                        ? ($displayEOYTESTING || $displayEOYLIVE || $ITCondition)
+                                        : $displayBoardRptLIVE)
+                                            @if (!empty($chEOYDocuments->statement_1_path))
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-statement-1" onclick="openPdfViewer('{{ $chEOYDocuments->statement_1_path }}')">View Bank Statement</button>
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showStatement1UploadModal('{{ $chDetails->id }}')">Replace Bank Statement</button>
+                                            @else
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showStatement1UploadModal('{{ $chDetails->id }}')">Upload Bank Statement</button>
+                                            @endif
+                                        @else
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>Statement Upload Not Available</button>
                                         @endif
                                     </div>
                                 </div>
@@ -567,11 +605,24 @@
                                         <label>Additional Bank Statement:</label>
                                     </div>
                                     <div class="col-sm-8">
-                                            @if (!empty($chEOYDocuments->statement_2_path))
+                                            {{-- @if (!empty($chEOYDocuments->statement_2_path))
                                                 <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-statement-2" onclick="openPdfViewer('{{ $chEOYDocuments->statement_2_path }}')">View Additional Bank Statement</button>
                                             @else
                                                 <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
+                                            @endif --}}
+                                        @if ($userTypeId == \App\Enums\UserTypeEnum::COORD
+                                        ? ($displayEOYTESTING || $displayEOYLIVE || $ITCondition)
+                                        : $displayBoardRptLIVE)
+                                            @if (!empty($chEOYDocuments->statement_2_path))
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-statement-2" onclick="openPdfViewer('{{ $chEOYDocuments->statement_2_path }}')">View Additional Bank Statement</button>
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showStatement2UploadModal('{{ $chDetails->id }}')">Replace Additional Bank Statement</button>
+                                            @else
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showStatement2UploadModal('{{ $chDetails->id }}')">Upload Additional Bank Statement</button>
                                             @endif
+                                        @else
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>Statement Upload Not Available</button>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="row mb-2">
@@ -579,11 +630,23 @@
                                         <label>990N Submission:</label>
                                     </div>
                                     <div class="col-sm-8">
+                                        @if($userTypeId == \App\Enums\UserTypeEnum::COORD
+                                        ? ($displayEOYTESTING || $displayEOYLIVE || $ITCondition)
+                                        : $displayEINInstructionsLIVE)
+                                            @if (!empty($chEOYDocuments->irs_path))
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chEOYDocuments->irs_path }}')">View 990N Confirmation</button>
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="show990NUploadModal('{{ $chDetails->id }}')">Replace 990N Confirmation</button>
+                                            @else
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="show990NUploadModal('{{ $chDetails->id }}')">Upload 990N Confirmation</button>
+                                            {{-- @endif
+
                                             @if (!empty($chEOYDocuments->irs_path))
                                                 <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chEOYDocuments->irs_path }}')">View 990N Confirmation</button>
                                             @else
-                                                <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
-                                                    @if($displayEINInstructionsLIVE == true)
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button> --}}
+                                                    {{-- @if($displayEINInstructionsLIVE == true) --}}
+                                                    <div class="mt-1">
                                                         <a href="https://www.irs.gov/charities-non-profits/annual-electronic-filing-requirement-for-small-exempt-organizations-form-990-n-e-postcard" target="_blank"  class="btn btn-primary bg-gradient btn-sm">990N IRS Website Link to File</a></td>
                                                         @foreach($resources as $resourceItem)
                                                             @if ($resourceItem->name == '990N Filing Instructions')
@@ -596,8 +659,10 @@
                                                                 <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')" class="btn btn-primary bg-gradient btn-sm">990N Filing FAQs</a>
                                                             @endif
                                                         @endforeach
+                                                    </div>
                                                     @endif
-
+                                            @else
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>990N Submission Not Available</button>
                                             @endif
                                         </div>
                                     </div>
