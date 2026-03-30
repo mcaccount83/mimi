@@ -212,7 +212,9 @@ class PublicController extends Controller
             'boardReportName' => $boardReportName,
             'financialReportName' => $financialReportName,
             'financialPDFName' => $financialPDFName,
-            'irsFilingName' => $irsFilingName
+            'irsFilingName' => $irsFilingName,
+            'display_testing' => $display_testing,
+            'display_live' => $display_live,
             ];
 
         return view('public.resources')->with($data);
