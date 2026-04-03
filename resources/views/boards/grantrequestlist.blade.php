@@ -1,4 +1,4 @@
-@extends('layouts.board_theme')
+@extends('layouts.mimi_theme')
 
 @section('content')
     <div class="container">

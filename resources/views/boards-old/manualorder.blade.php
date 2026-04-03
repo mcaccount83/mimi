@@ -1,53 +1,62 @@
-@extends('layouts.mimi_theme')
+@extends('layouts.board_theme')
 
 @section('content')
     <div class="container">
         <div class="row">
-                <div class="col-md-12">
-                    <div class="card card-primary card-outline">
-              <div class="card-body">
-                <div class="card-header text-center bg-transparent">
-                    <h2 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h2>
-                    {{-- <p class="mb-0">{{ $conferenceDescription }} Conference, {{ $conferenceDescription }} Region --}}
-                        <br>
-                        <h3>Manual Order Form - Online</h3>
-                    </div>
-                        <!-- /.card-header -->
-                    <div class="card-body">
-                        <div class="row">
-                        <div class="col-md-12">
-                            <p class="text-center">
-                                    Submit an online order for an updated copy of the chapter manual<br>
-                                    or download/mail the PDF order form found in Resources->Chapter Resources.</p>
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card bg-primary">
+                        <div class="card-body text-center">
+                            <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" style="width: 115px; height: 115px;">
                         </div>
+                    </div>
+                        <div class="card-body">
+
+                            <div class="col-md-12"><br><br></div>
+                        <h2 class="text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h2>
+                        <h4 class="text-center">Manual Order Form</h4>
+
+                    </div>
+                    <div class="col-md-12">
+                        <p class="description"><center>
+                                Submit an online order for an updated copy of the chapter manual.  <br>
+                                <br>
+                                Or, download/mail the PDF order form to:<br>
+
+                                MOMS Club – Manuals<br>
+                                208 Hewitt Dr., Ste 103 #328<br>
+                                Waco, TX 76712<br>
+                        </center>  </p>
+
+                    </div>
                 </div>
 
 
 {{-- Start of Payment Form --}}
 <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header"><strong>Order Form</strong>
-                                    </div>
-                        <div class="card-body">
-                            @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                            @endif
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+    <div class="card card-primary card-outline">
+                            <div class="card-body box-profile">
+                    @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
 
                     <form method="POST" action="{{ route('process.manual') }}">
                         @csrf
                         <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
 
-                        <h4>Shipping Information</h4>
+                          <h3 class="profile-username">Shipping Information</h3>
+                    <!-- /.card-header -->
                     <div class="row">
                         <div class="col-md-12">
+                            <!-- /.form group -->
                             <div class="row mb-3">
                                 <label class="col-sm-2 mb-1 col-form-label">Name:</label>
                                 <div class="col-sm-5 mb-1">
@@ -84,7 +93,7 @@
 
                     <hr>
 
-                <h4>Payment Information</h4>
+                <h3 class="profile-username">Payment Information</h3>
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <label>Chapter Manual</label>
@@ -173,47 +182,60 @@
                                 DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center></div>
                             <br>
                                 <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>{{ __('Submit Order') }}</button>
+
+                            @if($chActiveId != \App\Enums\ChapterStatusEnum::ACTIVE)
+                                <a href="{{ route('board.editdisbandchecklist', $chDetails->id) }}" class="btn btn-primary bg-gradient mb-2" id="btn-back"><i class="bi bi-arrow-left-short"></i><i class="bi bi-list-check me-2"></i></i>Back to Checklist</a>
+                            @else
+                                @if ($userTypeId == \App\Enums\UserTypeEnum::COORD)
+                                    <button type="button" id="btn-back" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Profile</button>
+                                @else
+                                    <a href="{{ route('home') }}" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Profile</a>
+                                @endif
+                            @endif
                         </div>
                     </form>
-               </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
-                 <!-- /.payment-container- -->
-
-            <div class="col-md-12 mt-3" style="font-size: 0.8em">
-            <img src="{{ config('settings.base_url') }}images/authorize-net-seal.jpg" alt="authorize-net-seal" style="float: left; margin-right: 20px; width: 115px; height: 115px;">
-            <p>You can pay with confidence! We have partnered with <a href="http://www.authorize.net" target="blank">Authorize.Net</a>, a leading payment gateway since 1996,
-            to accept credit cards and electronic check payments safely and securely for our chapters.<br>
-            <br>
-            The Authorize.Net Payment Gateway manages the complex routing of sensitive customer information through the electronic check and credit card processing networks.
-            See an <a href="http://www.authorize.net/resources/howitworksdiagram/" target="blank">online payments diagram</a> to see how it works.</p>
-         </div>
-
-                </div>
+            </div>
         </div>
-        <!-- /.card-body -->
-        </div>
-        <!-- /.card -->
     </div>
-    <!-- /.col -->
-    </div>
-    </div>
-<!-- /.container- -->
+</div>
+<div class="col-md-12" style="font-size: 0.8em"></div>
+<div class="col-md-12" style="font-size: 0.8em">
+    <img src="{{ config('settings.base_url') }}images/authorize-net-seal.jpg" alt="authorize-net-seal" style="float: left; margin-right: 20px; width: 115px; height: 115px;">
+    <p>You can pay with confidence! We have partnered with <a href="http://www.authorize.net" target="blank">Authorize.Net</a>, a leading payment gateway since 1996,
+    to accept credit cards and electronic check payments safely and securely for our chapters.<br>
+    <br>
+    The Authorize.Net Payment Gateway manages the complex routing of sensitive customer information through the electronic check and credit card processing networks.
+    See an <a href="http://www.authorize.net/resources/howitworksdiagram/" target="blank">online payments diagram</a> to see how it works.</p>
+</div>
+
+</div>
+</div>
+</div>
 @endsection
 @section('customscript')
-@if($userTypeId == \App\Enums\UserTypeEnum::COORD)
-    @php $disableMode = 'disable-all'; @endphp
-    @include('layouts.scripts.disablefields')
-@endif
 
 <script>
-    function formatCurrency(input) {
-        let value = input.value.replace(/\D/g, '');
-        value = (value / 100).toFixed(2);
-        input.value = '$' + value;
-    }
+    /* Disable fields and buttons  */
+    $(document).ready(function () {
+            var userTypeId = @json($userTypeId);
+            var userAdmin = @json($userAdmin);
+
+           if (userTypeId == 1 && userAdmin != 1) {
+                $('button, input, select, textarea').not('#btn-back').prop('disabled', true);
+        }
+
+        });
+
+        document.querySelector('form').addEventListener('submit', function(){
+            document.querySelector('button[type="submit"]').setAttribute('disabled', 'disabled');
+        });
+
+        function formatCurrency(input) {
+            let value = input.value.replace(/\D/g, '');
+            value = (value / 100).toFixed(2);
+            input.value = '$' + value;
+        }
 
      // Function to calculate total due
     function calculateTotal() {

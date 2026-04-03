@@ -1,5 +1,4 @@
-
-@extends('layouts.mimi_theme')
+@extends('layouts.board_theme')
 
 <style>
 .form-switch .form-check-label {
@@ -42,7 +41,7 @@
         <div class="container-fluid">
                    <form id="grant_request" name="grant_request" role="form"
     enctype="multipart/form-data" method="POST"
-    action='{{ route("board-new.updatenewgrantrequest", ["id" => $chDetails->id]) }}'>
+    action='{{ route("board.updatenewgrantrequest", ["id" => $chDetails->id]) }}'>
     @csrf
 
             <div class="row">

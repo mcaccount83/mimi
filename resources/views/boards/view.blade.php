@@ -50,7 +50,7 @@
                                     <label class="me-2">Founded:</label>{{ $startMonthName }} {{ $chDetails->start_year }}<br>
                                 </div>
                                 <div class="col-4 mb-3">
-                                     @include('boards-new.partials.coordinatorlist')
+                                     @include('boards.partials.coordinatorlist')
                                 </div>
                             </div>
                         </div>
@@ -71,7 +71,7 @@
                                     <label class="me-2">President:</label>
                                 </div>
                                 <div class="col-12 col-md-9">
-                                    @include('boards-new.partials.presinfo')
+                                    @include('boards.partials.presinfo')
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -79,7 +79,7 @@
                                     <label class="me-2">AVP:</label>
                                 </div>
                                 <div class="col-12 col-md-9">
-                                    @include('boards-new.partials.avpinfo')
+                                    @include('boards.partials.avpinfo')
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -87,7 +87,7 @@
                                     <label class="me-2">MVP:</label>
                                 </div>
                                 <div class="col-12 col-md-9">
-                                    @include('boards-new.partials.mvpinfo')
+                                    @include('boards.partials.mvpinfo')
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -95,7 +95,7 @@
                                     <label class="me-2">Treasurer:</label>
                                 </div>
                                 <div class="col-12 col-md-9">
-                                    @include('boards-new.partials.trsinfo')
+                                    @include('boards.partials.trsinfo')
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -103,13 +103,13 @@
                                     <label class="me-2">Secretary:</label>
                                 </div>
                                 <div class="col-12 col-md-9">
-                                    @include('boards-new.partials.secinfo')
+                                    @include('boards.partials.secinfo')
                                 </div>
                             </div>
 
                             <div class="col-md-12">
                                 <div class="card-body text-center mt-3">
-                                    <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board-new.editboard', ['id' => $chDetails->id]) }}'"><i class="bi bi-people-fill me-2"></i>Edit Board Information</button>
+                                    <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board.editboard', ['id' => $chDetails->id]) }}'"><i class="bi bi-people-fill me-2"></i>Edit Board Information</button>
                                 </div>
                             </div>
 
@@ -148,7 +148,7 @@
 
                         <div class="col-md-12">
                             <div class="card-body text-center mt-3">
-                                <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board-new.editonline', ['id' => $chDetails->id]) }}'"><i class="bi bi-laptop me-2"></i>Edit Online Information</button>
+                                <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board.editonline', ['id' => $chDetails->id]) }}'"><i class="bi bi-laptop me-2"></i>Edit Online Information</button>
                             </div>
                         </div>
 
@@ -225,7 +225,7 @@
 
                             <div class="col-md-12">
                             <div class="card-body text-center mt-3">
-                                <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board-new.editreregpayment', ['id' => $chDetails->id]) }}'"><i class="bi bi-credit-card-fill me-2"></i>Make a Payment</button>
+                                <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board.editreregpayment', ['id' => $chDetails->id]) }}'"><i class="bi bi-credit-card-fill me-2"></i>Make a Payment</button>
                             </div>
                         </div>
 
@@ -322,7 +322,7 @@
 
                             <div class="col-md-12">
                             <div class="card-body text-center mt-3">
-                                <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board-new.editdonate', ['id' => $chDetails->id]) }}'"><i class="bi bi-currency-dollar me-2"></i>Make a Donation</button>
+                                <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board.editdonate', ['id' => $chDetails->id]) }}'"><i class="bi bi-currency-dollar me-2"></i>Make a Donation</button>
                             </div>
                         </div>
 
@@ -483,7 +483,7 @@
                                         ? ($displayEOYTESTING || $displayEOYLIVE || $ITCondition)
                                         : $displayBoardRptLIVE)
                                                 @if($chEOYDocuments->new_board_active != '1')
-                                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='{{ route('board-new.editboardreport', ['id' => $chDetails->id]) }}'">View Board Election Report</button>
+                                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='{{ route('board.editboardreport', ['id' => $chDetails->id]) }}'">View Board Election Report</button>
                                                 @else
                                                     <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>Not available after Activation</button>
                                                 @endif
@@ -501,7 +501,7 @@
                                             @if ($userTypeId == \App\Enums\UserTypeEnum::COORD
                                         ? ($displayEOYTESTING || $displayEOYLIVE || $ITCondition)
                                         : $displayFinancialRptLIVE)
-                                                <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='{{ route('board-new.editfinancialreport', ['id' => $chDetails->id]) }}'">View Financial Report</button>
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='{{ route('board.editfinancialreport', ['id' => $chDetails->id]) }}'">View Financial Report</button>
                                             @else
                                                 <button type="button" class="btn btn-primary bg-gradient btn-sm" disabled>Financial Report Not Available</button>
                                             @endif
@@ -691,7 +691,7 @@
 
                               <div class="col-md-12">
                             <div class="card-body text-center mt-3">
-                                <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board-new.viewendofyear', ['id' => $chDetails->id]) }}'"><i class="bi bi-file-earmark-bar-graph-fill me-2"></i>Filing Instructions & Information</button>
+                                <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board.viewendofyear', ['id' => $chDetails->id]) }}'"><i class="bi bi-file-earmark-bar-graph-fill me-2"></i>Filing Instructions & Information</button>
                             </div>
                         </div>
 

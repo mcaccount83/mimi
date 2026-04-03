@@ -83,7 +83,7 @@
                                         </td>
                                         <td>
                                             @if (\App\Enums\UserTypeEnum::label($bdTypeId) != 'N/A')
-                                            <a href="{{ route('board-new.chapterprofile', ['id' => $list->id]) }}" target="_blank" class="btn btn-primary bg-gradient btn-sm me-2">Chapter Profile</a>
+                                            <a href="{{ route('board.chapterprofile', ['id' => $list->id]) }}" target="_blank" class="btn btn-primary bg-gradient btn-sm me-2">Chapter Profile</a>
                                             @endif
                                         </td>
                                         <td>

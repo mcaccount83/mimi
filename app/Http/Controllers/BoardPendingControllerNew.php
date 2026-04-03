@@ -56,6 +56,6 @@ class BoardPendingControllerNew extends Controller implements HasMiddleware
         'allCountries' => $allCountries,  'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
         ];
 
-        return view('boards-new.pending.newchapterstatus')->with($data);
+        return view('boards.pending.newchapterstatus')->with($data);
     }
 }

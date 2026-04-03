@@ -10,7 +10,7 @@
         <div class="row">
         <div class="col-12">
 
-            <form id="financial_report" name="financial_report" role="form" data-bs-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("board-new.updatefinancialreport", $chDetails->id) }}'>
+            <form id="financial_report" name="financial_report" role="form" data-bs-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("board.updatefinancialreport", $chDetails->id) }}'>
                     @csrf
 
             <div class="col-md-12">
@@ -61,7 +61,7 @@
                     as this would be the information you would need if the IRS were to do an audit. The Financial Report and all required additional documents are due no later than July 15th.
                     <br><br>
 
-                    @include('boards-new.partials.financial_accordion', ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId,
+                    @include('boards.partials.financial_accordion', ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId,
                         'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chEOYDocuments' => $chEOYDocuments, 'stateShortName' => $stateShortName, 'chActiveId' => $chActiveId,
                         'reportYearStart' => $reportYearStart, 'reportYearEnd' => $reportYearEnd, 'irsFilingName' => $irsFilingName
                     ])

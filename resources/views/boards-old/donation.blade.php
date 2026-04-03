@@ -1,58 +1,49 @@
-@extends('layouts.mimi_theme')
-
-@section('page_title', 'MOMS Club of ' . $chDetails->name . ', ' . $stateShortName)
-@section('breadcrumb', 'Donations')
+@extends('layouts.board_theme')
 
 @section('content')
-     <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
+    <div class="container">
         <div class="row">
-        <div class="col-12">
+            <div class="col-md-12">
 
-              <form method="POST" action="{{ route('process.donation') }}">
-                @csrf
-
-                <div class="col-md-12">
-                    <div class="card card-primary card-outline">
-                    <div class="card-body">
-                        <div class="card-header bg-transparent border-0">
-                            <h3>Sustaining Chapter & Mother-to-Mother Fund Donation</h3>
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card bg-primary">
+                        <div class="card-body text-center">
+                            <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}images/logo-mimi.png" alt="MC" style="width: 115px; height: 115px;">
                         </div>
-                    <!-- /.card-header -->
+                    </div>
                     <div class="card-body">
-                          @if ($chDetails->active_status == \App\Enums\ChapterStatusEnum::ZAPPED)
-                        @if ($chDisbanded?->donate_funds == '1')
+                        <h2 class="text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h2>
+                        <h3 class="text-center">Sustaining Chapter & Mother-to-Mother Fund Donations</h3>
+                    </div>
+                </div>
+                <!-- /.card -->
+                </div>
+            </div>
+        </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                          <div class="card card-primary card-outline">
+                   <div class="card-body">
+                        <!-- /.card-header -->
+                    <div class="card-body">
                         <div class="row">
-                                <div class="col-md-12">
-                                    Thank You for handling the donation of your chapter's funds!  If you need to submit another donation, change your Disbanding Checklist answer to NO and the donation
-                                    form will be available.
-                                </div>
-                            </div>
-                            <br>
-                            @else
-                            <div class="row">
-                                <div class="col-md-12">
-                                    As part of officially closing your chapter, you'll need to donate your chapter's remaining funds to a registred 501(c)(3).
-                                    Donating to the Sustaing Chapter or Mother-to-Mother Fund is a great way to do that!<br><br>
-                                </div>
-                            </div>
-                            @endif
-                            @else
-                    <div class="row">
                         <div class="col-md-12">
+                        <p class="description">
                             Sustaining chapter donations benefits the International MOMS Club, which is a 501 (c)(3) public charity.
-                            Your donation will help us keep dues low and help new and existing chapters in the U.S. and around the world.<br>
-                            <br>
+                            Your donation will help us keep dues low and help new and existing chapters in the U.S. and around the world.
+                        </p>
+
+                        <p class="description">
                             The Mother-To-Mother Fund is our ONLY official MOMS Club charity and is supported only by donations from the local chapters.
                             Because of donations from chapters and volunteers in the past, we have been able to offer grants for emergency expenses to our MOMS Club mothers
-                            suffering from devastating financial and natural disasters.<br>
+                            suffering from devastating financial and natural disasters.
+                        </p>
                     </div>
                 </div>
                 <br>
-    @endif
 
-                @if ($chDisbanded?->donate_funds != '1')
         {{-- Start of Payment Form --}}
         <div class="container">
             <div class="row justify-content-center">
@@ -71,7 +62,8 @@
                             </div>
                             @endif
 
-
+                            <form method="POST" action="{{ route('process.donation') }}">
+                                @csrf
                                 <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
 
                                 <div class="row mb-3">
@@ -162,10 +154,20 @@
                                 </div>
 
                                 <div class="card-body text-center mt-3">
-                                    <div class="col-md-12" style="color: #dc3545;"><center>Page will automatically re-direct after payment submission with success or error message.<br>
+                                    <div class="col-md-12" style="color: red;"><center>Page will automatically re-direct after payment submission with success or error message.<br>
                                         DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center></div>
                                     <br>
                                         <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>{{ __('Submit Payment') }}</button>
+
+                                    @if($chActiveId != '1')
+                                        <a href="{{ route('board.editdisbandchecklist', $chDetails->id) }}" class="btn btn-primary bg-gradient mb-2" id="btn-back"><i class="bi bi-arrow-left-short"></i><i class="bi bi-list-check me-2"></i>Back to Checklist</a>
+                                    @else
+                                        @if ($userTypeId == \App\Enums\UserTypeEnum::COORD)
+                                            <button type="button" id="btn-back" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('board.editprofile', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Profile</button>
+                                        @else
+                                            <a href="{{ route('home') }}" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to Profile</a>
+                                        @endif
+                                    @endif
                                 </div>
                             </form>
                         </div>
@@ -184,29 +186,19 @@
                     See an <a href="http://www.authorize.net/resources/howitworksdiagram/" target="blank">online payments diagram</a> to see how it works.</p>
                 </div>
 
-                @endif
-
-              </div>
-            </div>
-            <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
+                </div>
         </div>
-        <!-- /.col -->
-
-    </form>
-
-            </div>
-            <!-- /.col -->
-       </div>
+        <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
     </div>
-    <!-- /.container- -->
+    <!-- /.col -->
+    </div>
+    </div>
+<!-- /.container- -->
 @endsection
 @section('customscript')
-@if($userTypeId == \App\Enums\UserTypeEnum::COORD)
-    @php $disableMode = 'disable-all'; @endphp
-    @include('layouts.scripts.disablefields')
-@endif
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
     // Define the sections we need to handle

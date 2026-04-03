@@ -33,7 +33,7 @@
                             @endif
                         </div>
                         <div class="col-md-12 mb-1">
-                                @include('boards-new.partials.coordinatorlist')
+                                @include('boards.partials.coordinatorlist')
                         </div>
                         <div class="col-md-12 mb-1">
                             @if ($chDetails->active_status == 2)

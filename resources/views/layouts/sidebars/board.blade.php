@@ -1,7 +1,7 @@
 
     <!-- Board Dashboard Menu Item -->
     <li class="nav-item">
-        <a href="{{ route('board-new.chapterprofile', ['id' => $chDetails->id]) }}" class="nav-link {{ Request::is('board-new/chapterprofile/*') ? 'active' : '' }}">
+        <a href="{{ route('board.chapterprofile', ['id' => $chDetails->id]) }}" class="nav-link {{ Request::is('board/chapterprofile/*') ? 'active' : '' }}">
             <i class="nav-icon bi bi-house-fill"></i>
             <p>Chapter Profile</p>
         </a>
@@ -10,10 +10,10 @@
     <!-- Board Menu Item -->
     @if(isset($chDetails))
     @php
-        $boardRoute = route('board-new.editboard', ['id' => $chDetails->id]);
+        $boardRoute = route('board.editboard', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
-            'board-new/board/*',
+            'board/board/*',
         ];
     @endphp
     @if (isset($boardRoute))
@@ -29,10 +29,10 @@
     <!-- Online Menu Item -->
     @if(isset($chDetails))
     @php
-        $boardRoute = route('board-new.editonline', ['id' => $chDetails->id]);
+        $boardRoute = route('board.editonline', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
-            'board-new/online/*',
+            'board/online/*',
         ];
     @endphp
     @if (isset($boardRoute))
@@ -48,11 +48,11 @@
     <!-- ReReg Menu Item -->
     @if(isset($chDetails))
     @php
-        $boardRoute = route('board-new.viewrereghistory', ['id' => $chDetails->id]);
+        $boardRoute = route('board.viewrereghistory', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
-            'board-new/rereghistory/*',
-            'board-new/reregpayment/*',
+            'board/rereghistory/*',
+            'board/reregpayment/*',
         ];
     @endphp
     @if (isset($boardRoute))
@@ -68,11 +68,11 @@
     <!-- Donations Menu Item -->
     @if(isset($chDetails))
     @php
-        $boardRoute = route('board-new.viewdonationhistory', ['id' => $chDetails->id]);
+        $boardRoute = route('board.viewdonationhistory', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
-            'board-new/donationhistory/*',
-            'board-new/donation/*',
+            'board/donationhistory/*',
+            'board/donation/*',
         ];
     @endphp
     @if (isset($boardRoute))
@@ -88,10 +88,10 @@
     <!-- Documents Menu Item -->
     @if(isset($chDetails))
     @php
-        $boardRoute = route('board-new.viewdocuments', ['id' => $chDetails->id]);
+        $boardRoute = route('board.viewdocuments', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
-            'board-new/documents/*',
+            'board/documents/*',
         ];
     @endphp
     @if (isset($boardRoute))
@@ -108,10 +108,10 @@
         <!-- Quarterly Submission Menu Item -->
         @if(isset($chDetails))
         @php
-            $boardRoute = route('board-new.editprobation', ['id' => $chDetails->id]);
+            $boardRoute = route('board.editprobation', ['id' => $chDetails->id]);
 
             $activeBoardRoutes = [
-                'board-new/probation/*',
+                'board/probation/*',
             ];
         @endphp
         @if (isset($boardRoute))
@@ -128,10 +128,10 @@
     <!-- End of Year Menu Item -->
     @if(isset($chDetails))
     @php
-        $boardRoute = route('board-new.viewendofyear', ['id' => $chDetails->id]);
+        $boardRoute = route('board.viewendofyear', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
-            'board-new/endofyear/*',
+            'board/endofyear/*',
         ];
     @endphp
     @if (isset($boardRoute))
@@ -147,10 +147,10 @@
     <!-- Resources Menu Item -->
     @if(isset($chDetails))
     @php
-        $boardRoute = route('board-new.viewresources', ['id' => $chDetails->id]);
+        $boardRoute = route('board.viewresources', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
-            'board-new/resources/*',
+            'board/resources/*',
         ];
     @endphp
     @if (isset($boardRoute))
@@ -166,10 +166,10 @@
     <!-- eLearning Menu Item -->
     @if(isset($chDetails))
     @php
-        $boardRoute = route('board-new.viewelearning', ['id' => $chDetails->id]);
+        $boardRoute = route('board.viewelearning', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
-            'board-new/elearning/*',
+            'board/elearning/*',
         ];
     @endphp
     @if (isset($boardRoute))
@@ -183,7 +183,7 @@
     @endif
 
     <!-- ForumList Menu Item -->
-    @php
+    {{-- @php
         $forumRoute = url(config('forum.frontend.router.prefix') . '/unread');
 
         $activeForumRoutes = [
@@ -207,7 +207,7 @@
                 </p>
             </a>
         </li>
-    @endif
+    @endif --}}
 
     <!-- Main MC Webstie -->
     <li class="nav-item">
@@ -238,7 +238,7 @@
     </li> --}}
 
     <li class="nav-item">
-        <a href="{{ route('board-new.profile', ['id' => $chDetails->id]) }}" class="nav-link {{ Request::is('board-new/profile/*') ? 'active' : '' }}">
+        <a href="{{ route('board.profile', ['id' => $chDetails->id]) }}" class="nav-link {{ Request::is('board/profile/*') ? 'active' : '' }}">
         <i class="nav-icon bi bi-person-circle"></i>
         <p>Update Profile<br>
             @if ($userTypeId == \App\Enums\UserTypeEnum::COORD && isset($bdTypeId) && $bdTypeId !== null)

@@ -10,7 +10,7 @@
         <div class="row">
         <div class="col-12">
 
-            <form id="checklist" name="checklist" role="form" data-bs-toggle="validator" method="POST" action='{{ route("board-new.updatedisbandchecklist", $chDetails->id) }}'>
+            <form id="checklist" name="checklist" role="form" data-bs-toggle="validator" method="POST" action='{{ route("board.updatedisbandchecklist", $chDetails->id) }}'>
                 @csrf
 
                  <div class="col-md-12">
@@ -40,7 +40,7 @@
                         If you believe this information is incorrect, then please contact your Primary Coordinator immediately<br>
                         <br>
                         <div class="col-md-12 mb-1">
-                                @include('boards-new.partials.coordinatorlist')
+                                @include('boards.partials.coordinatorlist')
                         </div>
                         <br>
                         <div class="col-md-12 mb-3">
@@ -88,7 +88,7 @@
                                             <label class="form-check-label" for="FinalPayment">YES</label>
                                         </div>
                                         {{-- @if ($chDisbanded?->final_payment != '1')
-                                                <button type="button" class="btn btn-primary bg-gradient btn-xs ms-3 mb-1" onclick="window.location.href='{{ route('board-new.editreregpayment', ['id' => $chDetails->id]) }}'">PAY HERE</button>
+                                                <button type="button" class="btn btn-primary bg-gradient btn-xs ms-3 mb-1" onclick="window.location.href='{{ route('board.editreregpayment', ['id' => $chDetails->id]) }}'">PAY HERE</button>
                                         @endif --}}
                                         <br>
                                     </div>
@@ -102,7 +102,7 @@
                                             <label class="form-check-label" for="DonateFunds">YES</label>
                                         </div>
                                         {{-- @if ($chDisbanded?->donate_funds != '1')
-                                                <button type="button" class="btn btn-primary bg-gradient btn-xs ms-3 mb-1" onclick="window.location.href='{{ route('board-new.editdonate', ['id' => $chDetails->id]) }}'">DONATE HERE</button>
+                                                <button type="button" class="btn btn-primary bg-gradient btn-xs ms-3 mb-1" onclick="window.location.href='{{ route('board.editdonate', ['id' => $chDetails->id]) }}'">DONATE HERE</button>
                                         @endif --}}
                                     </div>
                                 </div>
@@ -156,7 +156,7 @@
                                             <label class="form-check-label" for="FileFinancial">YES</label>
                                         </div>
                                           {{-- @if ($chDisbanded?->file_financial != '1')
-                                                <button type="button" class="btn btn-primary bg-gradient btn-xs ms-3 mb-1" onclick="window.location.href='{{ route('board-new.editfinancialreportfinal', ['id' => $chDetails->id]) }}'">FILE HERE</button>
+                                                <button type="button" class="btn btn-primary bg-gradient btn-xs ms-3 mb-1" onclick="window.location.href='{{ route('board.editfinancialreportfinal', ['id' => $chDetails->id]) }}'">FILE HERE</button>
                                         @endif --}}
                                     </div>
                                 </div>
@@ -164,13 +164,13 @@
 
                                 <div class="card-body text-center mt-3">
                                        @if ($chDisbanded?->final_payment != '1')
-                                                <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board-new.editreregpayment', ['id' => $chDetails->id]) }}'"><i class="bi bi-credit-card-fill me-2"></i>Pay ReRegistration</button>
+                                                <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board.editreregpayment', ['id' => $chDetails->id]) }}'"><i class="bi bi-credit-card-fill me-2"></i>Pay ReRegistration</button>
                                         @endif
                                           @if ($chDisbanded?->donate_funds != '1')
-                                                <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board-new.editdonate', ['id' => $chDetails->id]) }}'"><i class="bi bi-currency-dollar me-2"></i>Donate Chapter Funds</button>
+                                                <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('bboard.editdonate', ['id' => $chDetails->id]) }}'"><i class="bi bi-currency-dollar me-2"></i>Donate Chapter Funds</button>
                                         @endif
                                         @if ($chDisbanded?->file_financial != '1')
-                                                <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board-new.editfinancialreportfinal', ['id' => $chDetails->id]) }}'"><i class="bi bi-file-earmark-bar-graph me-2"></i>Submit Financial Report</button>
+                                                <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board.editfinancialreportfinal', ['id' => $chDetails->id]) }}'"><i class="bi bi-file-earmark-bar-graph me-2"></i>Submit Financial Report</button>
                                         @endif
                                         @if ($chDisbanded?->file_financial != '1')
                                             @if($displayEINInstructionsLIVE == true)

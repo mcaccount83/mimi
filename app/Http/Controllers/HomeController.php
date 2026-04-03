@@ -57,7 +57,7 @@ class HomeController extends Controller implements HasMiddleware
         }
 
         if ($userTypeId == UserTypeEnum::BOARD) {
-            return redirect()->to('board/profile/'.$user['chapterId']);
+            return redirect()->to('board/chapterprofile/'.$user['chapterId']);
         }
 
         if ($userTypeId == UserTypeEnum::OUTGOING) {

@@ -468,7 +468,7 @@
                                     <label class="me-2">President:</label>
                                 </div>
                                 <div class="col-12 col-md-9">
-                                    @include('boards-new.partials.presinfo')
+                                    @include('boards.partials.presinfo')
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -476,7 +476,7 @@
                                     <label class="me-2">AVP:</label>
                                 </div>
                                 <div class="col-12 col-md-9">
-                                    @include('boards-new.partials.avpinfo')
+                                    @include('boards.partials.avpinfo')
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -484,7 +484,7 @@
                                     <label class="me-2">MVP:</label>
                                 </div>
                                 <div class="col-12 col-md-9">
-                                    @include('boards-new.partials.mvpinfo')
+                                    @include('boards.partials.mvpinfo')
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -492,7 +492,7 @@
                                     <label class="me-2">Treasurer:</label>
                                 </div>
                                 <div class="col-12 col-md-9">
-                                    @include('boards-new.partials.trsinfo')
+                                    @include('boards.partials.trsinfo')
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -500,7 +500,7 @@
                                     <label class="me-2">Secretary:</label>
                                 </div>
                                 <div class="col-12 col-md-9">
-                                    @include('boards-new.partials.secinfo')
+                                    @include('boards.partials.secinfo')
                                 </div>
                             </div>
 

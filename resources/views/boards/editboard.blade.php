@@ -10,7 +10,7 @@
         <div class="row">
         <div class="col-12">
 
-                    <form method="POST" action='{{ route("board-new.updateboard", $chDetails->id) }}' autocomplete="off">
+                    <form method="POST" action='{{ route("board.updateboard", $chDetails->id) }}' autocomplete="off">
                         @csrf
 
                         <input type="hidden" id="ch_name" value="{{$chDetails->name}}">

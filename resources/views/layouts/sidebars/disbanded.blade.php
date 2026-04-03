@@ -1,16 +1,16 @@
     <!-- Disband Checklist Dashboard Menu Item -->
     <li class="nav-item">
-        <a href="{{ route('board-new.editdisbandchecklist', ['id' => $chDetails->id]) }}" class="nav-link {{ Request::is('board-new/disbandchecklist/*') ? 'active' : '' }}">
+        <a href="{{ route('board.editdisbandchecklist', ['id' => $chDetails->id]) }}" class="nav-link {{ Request::is('board/disbandchecklist/*') ? 'active' : '' }}">
             <i class="nav-icon bi bi-house-fill"></i>
             <p>Disband Checklist</p>
         </a>
     </li>
     {{-- @if(isset($chDetails))
      @php
-        $boardRoute = route('board-new.editdisbandchecklist', ['id' => $chDetails->id]);
+        $boardRoute = route('board.editdisbandchecklist', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
-            'board-new/disbandchecklist/*',
+            'board/disbandchecklist/*',
         ];
     @endphp
     @if (isset($boardRoute))
@@ -26,10 +26,10 @@
     <!-- ReReg Menu Item -->
     @if(isset($chDetails))
     @php
-        $boardRoute = route('board-new.editfinancialreportfinal', ['id' => $chDetails->id]);
+        $boardRoute = route('board.editfinancialreportfinal', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
-            'board-new/financialreportfinal/*',
+            'board/financialreportfinal/*',
         ];
     @endphp
     @if (isset($boardRoute))
@@ -45,10 +45,10 @@
      <!-- ReReg Menu Item -->
      @if(isset($chDetails))
     @php
-        $boardRoute = route('board-new.editreregpayment', ['id' => $chDetails->id]);
+        $boardRoute = route('board.editreregpayment', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
-            'board-new/reregpayment/*',
+            'board/reregpayment/*',
         ];
     @endphp
     @if (isset($boardRoute))
@@ -64,10 +64,10 @@
     <!-- Donations Menu Item -->
     @if(isset($chDetails))
     @php
-        $boardRoute = route('board-new.editdonate', ['id' => $chDetails->id]);
+        $boardRoute = route('board.editdonate', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
-            'board-new/donation/*',
+            'board/donation/*',
         ];
     @endphp
     @if (isset($boardRoute))
@@ -83,10 +83,10 @@
     <!-- Documents Menu Item -->
     @if(isset($chDetails))
     @php
-        $boardRoute = route('board-new.viewdocuments', ['id' => $chDetails->id]);
+        $boardRoute = route('board.viewdocuments', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
-            'board-new/documents/*',
+            'board/documents/*',
         ];
     @endphp
     @if (isset($boardRoute))

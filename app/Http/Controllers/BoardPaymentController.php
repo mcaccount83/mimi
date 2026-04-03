@@ -155,7 +155,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
             'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId
         ];
 
-        return view('boards-new.reregpayment')->with($data);
+        return view('boards.reregpayment')->with($data);
     }
 
     /**
@@ -185,7 +185,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
             'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId,  'chDisbanded' => $chDisbanded,
         ];
 
-        return view('boards-new.donation')->with($data);
+        return view('boards.donation')->with($data);
     }
 
     /**

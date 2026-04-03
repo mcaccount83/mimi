@@ -105,7 +105,7 @@ class FinancialReportControllerNew extends Controller implements HasMiddleware
             'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
         ];
 
-        return view('boards-new.editfinancialreport')->with($data);
+        return view('boards.editfinancialreport')->with($data);
 
     }
 
@@ -142,7 +142,7 @@ class FinancialReportControllerNew extends Controller implements HasMiddleware
             'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
         ];
 
-        return view('boards-new.disband.editfinancialreportfinal')->with($data);
+        return view('boards.disband.editfinancialreportfinal')->with($data);
 
     }
 
@@ -519,7 +519,7 @@ class FinancialReportControllerNew extends Controller implements HasMiddleware
             'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
         ];
 
-        return view('boards-new.disband.editdisbandchecklist')->with($data);
+        return view('boards.disband.editdisbandchecklist')->with($data);
 
     }
 

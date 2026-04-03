@@ -10,7 +10,7 @@
         <div class="row">
         <div class="col-12">
 
-            <form id="boardinfo" method="POST" action="{{ route('board-new.updateonline',$chDetails->id) }}">
+            <form id="boardinfo" method="POST" action="{{ route('board.updateonline',$chDetails->id) }}">
                         @csrf
 
              <div class="col-md-12">

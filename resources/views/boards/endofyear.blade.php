@@ -31,7 +31,7 @@
                                         ? ($displayEOYTESTING || $displayEOYLIVE || $ITCondition)
                                         : $displayBoardRptLIVE)
                                         @if($chEOYDocuments->new_board_active != '1')
-                                            <button type="button" class="btn btn-primary bg-gradient" onclick="window.location.href='{{ route('board-new.editboardreport', ['id' => $chDetails->id]) }}'">{{$boardReportName}}</button>
+                                            <button type="button" class="btn btn-primary bg-gradient" onclick="window.location.href='{{ route('board.editboardreport', ['id' => $chDetails->id]) }}'">{{$boardReportName}}</button>
                                         @else
                                             <button type="button" class="btn btn-primary bg-gradient disabled" disabled>{{$boardReportName}} Activated</button>
                                         @endif
@@ -41,7 +41,7 @@
                                     @if ($userTypeId == \App\Enums\UserTypeEnum::COORD
                                         ? ($displayEOYTESTING || $displayEOYLIVE || $ITCondition)
                                         : $displayFinancialRptLIVE)
-                                        <button type="button" class="btn btn-primary bg-gradient" onclick="window.location.href='{{ route('board-new.editfinancialreport', ['id' => $chDetails->id]) }}'">{{$financialReportName}}</button>
+                                        <button type="button" class="btn btn-primary bg-gradient" onclick="window.location.href='{{ route('board.editfinancialreport', ['id' => $chDetails->id]) }}'">{{$financialReportName}}</button>
                                     @else
                                         <button type="button" class="btn btn-primary bg-gradient" disabled>{{$financialReportName}} Not Available</button>
                                     @endif
