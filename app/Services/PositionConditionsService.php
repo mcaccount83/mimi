@@ -195,6 +195,7 @@ class PositionConditionsService
             'displayBoardRptLIVE' => ($display_live && $currentMonth >= 5 && $currentMonth <= 9),
             'displayFinancialRptLIVE' => ($display_live && $currentMonth >= 6 && $currentMonth <= 12),
             'displayEINInstructionsLIVE' => ($display_live && $currentMonth >= 7 && $currentMonth <= 12),
+            'disableBoardEdits' => ($currentMonth >= 4 && $currentMonth <= 9),
             'display_testing' => $display_testing,
             'display_live' => $display_live,
         ];

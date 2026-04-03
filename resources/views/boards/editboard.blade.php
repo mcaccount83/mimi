@@ -27,6 +27,11 @@
                     <div class="card-body">
                         <div class="card-header bg-transparent border-0">
                             <h3>Board Members</h3>
+                            @if ($disableBoardEdits)
+                                <div class="text-danger">Board member edits are currently locked until elections. If you have any board member changes not related to elections, please contact your Primary Coordinator to have
+                                    them updated. If your updates are due to elections, please submit via the Board Election Report in the End of Year section in MIMI.
+                                </div>
+                            @endif
                         </div>
                     <!-- /.card-header -->
                     <div class="card-body">

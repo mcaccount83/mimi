@@ -8,6 +8,7 @@
         var ITCondition = @json($ITCondition ?? false);
         var eoyTestCondition = @json($eoyTestCondition ?? false);
         var includeEoyConditions = @json($includeEoyConditions ?? false);
+        var disableBoardEdits = @json($disableBoardEdits ?? false);
         var chConfId = @json($chConfId ?? null);
         var confId = @json($confId ?? null);
         var chActiveId = @json($chActiveId ?? null);
@@ -43,7 +44,7 @@
         }
 
         if (disableEOYMode === 'disable-board') {
-            if (activated != '1' && !shouldEnable) {
+            if ((activated != '1' && !shouldEnable) || ( activated != '1' && disableBoardEdits)) {
                 disableButtons();
                 disableFields();
             }
