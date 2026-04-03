@@ -11,7 +11,7 @@
             {{ $chDetails->disband_reason }}
         @elseif ($chDetails->active_status == 0)
             <span class="badge bg-danger fs-7">Chapter is NOT ACTIVE</span><br>
-            Disband Date: <@formatDate($chDetails->zap_date)<br>
+            Disband Date: @formatDate($chDetails->zap_date)<br>
             {{ $chDetails->disband_reason }}
         @endif
         <br>
