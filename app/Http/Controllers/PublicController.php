@@ -1233,6 +1233,10 @@ if (!$recaptchaResult['success']) {
         $name = $result['filename'];
 
         $pdfPath = storage_path('app/pdf_reports/'.$name);
+
+        if (!file_exists(dirname($pdfPath))) {
+    mkdir(dirname($pdfPath), 0775, true);
+}
         $pdf->save($pdfPath);
         $filename = basename($pdfPath);
         $mimetype = 'application/pdf';
