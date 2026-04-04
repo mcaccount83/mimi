@@ -40,13 +40,23 @@ function startExport(exportType, exportName) {
                     xhrFields: {
                         responseType: 'blob'
                     },
-                    success: function(blob) {
-                        const url = window.URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.style.display = 'none';
-                        a.href = url;
-                        const filename = exportType + '-export.csv';
-                        a.download = filename;
+                    success: function(blob, status, xhr) {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+
+    // Try to get filename from Content-Disposition header
+    let filename = exportType + '-export.csv'; // fallback
+    const disposition = xhr.getResponseHeader('Content-Disposition');
+    if (disposition) {
+        const match = disposition.match(/filename[^;=\n]*=["']?([^"'\n]*)["']?/);
+        if (match && match[1]) {
+            filename = match[1].trim();
+        }
+    }
+
+    a.download = filename;
 
                         document.body.appendChild(a);
                         window._suppressPleaseWait = true;

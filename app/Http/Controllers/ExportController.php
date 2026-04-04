@@ -338,7 +338,7 @@ class ExportController extends Controller implements HasMiddleware
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentDateYmd = $dateOptions['currentDateYmd'];
 
-        $fileName = 'chapter_export_'.$currentDateYmd.'.csv';
+        $fileName = $currentDateYmd.'_chapter_export.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -409,7 +409,7 @@ class ExportController extends Controller implements HasMiddleware
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentDateYmd = $dateOptions['currentDateYmd'];
 
-        $fileName = 'chapter_zap_export_'.$currentDateYmd.'.csv';
+        $fileName = $currentDateYmd.'_chapter_zap_export.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -483,7 +483,7 @@ class ExportController extends Controller implements HasMiddleware
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentDateYmd = $dateOptions['currentDateYmd'];
 
-        $fileName = 'int_chapter_export_'.$currentDateYmd.'.csv';
+        $fileName = $currentDateYmd.'_int_chapter_export.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -560,7 +560,7 @@ class ExportController extends Controller implements HasMiddleware
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentDateYmd = $dateOptions['currentDateYmd'];
 
-        $fileName = 'int_chapter_zap_export_'.$currentDateYmd.'.csv';
+        $fileName = $currentDateYmd.'_int_chapter_zap_export.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -638,7 +638,7 @@ class ExportController extends Controller implements HasMiddleware
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentDateYmd = $dateOptions['currentDateYmd'];
 
-        $fileName = 'rereg_export_'.$currentDateYmd.'.csv';
+        $fileName = $currentDateYmd.'_rereg_export.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -719,7 +719,7 @@ class ExportController extends Controller implements HasMiddleware
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentDateYmd = $dateOptions['currentDateYmd'];
 
-        $fileName = 'rereg_export_'.$currentDateYmd.'.csv';
+        $fileName = $currentDateYmd.'_int_rereg_export.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -806,7 +806,7 @@ class ExportController extends Controller implements HasMiddleware
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentDateYmd = $dateOptions['currentDateYmd'];
 
-        $fileName = 'ein_status_'.$currentDateYmd.'.csv';
+        $fileName = $currentDateYmd.'_ein_status_export.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -871,7 +871,7 @@ class ExportController extends Controller implements HasMiddleware
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentDateYmd = $dateOptions['currentDateYmd'];
 
-        $fileName = 'ein_status_'.$currentDateYmd.'.csv';
+        $fileName = $currentDateYmd.'_int_ein_status_export.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -942,7 +942,7 @@ class ExportController extends Controller implements HasMiddleware
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentDateYmd = $dateOptions['currentDateYmd'];
 
-        $fileName = 'eoy_status_'.$currentDateYmd.'.csv';
+        $fileName = $currentDateYmd.'_eoy_status_export.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -1025,7 +1025,7 @@ class ExportController extends Controller implements HasMiddleware
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentDateYmd = $dateOptions['currentDateYmd'];
 
-        $fileName = 'int_eoy_status_'.$currentDateYmd.'.csv';
+        $fileName = $currentDateYmd.'_int_eoy_status_export.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -1345,7 +1345,7 @@ class ExportController extends Controller implements HasMiddleware
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentDateYmd = $dateOptions['currentDateYmd'];
 
-        $fileName = 'coordinator_export_'.$currentDateYmd.'.csv';
+        $fileName = $currentDateYmd.'_coord_export.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -1411,7 +1411,7 @@ class ExportController extends Controller implements HasMiddleware
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentDateYmd = $dateOptions['currentDateYmd'];
 
-        $fileName = 'coordinator_export_'.$currentDateYmd.'.csv';
+        $fileName = $currentDateYmd.'_int_coord_export.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -1481,7 +1481,7 @@ class ExportController extends Controller implements HasMiddleware
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentDateYmd = $dateOptions['currentDateYmd'];
 
-        $fileName = 'coordinator_export_'.$currentDateYmd.'.csv';
+        $fileName = $currentDateYmd.'_coord_retired_export.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -1548,7 +1548,7 @@ class ExportController extends Controller implements HasMiddleware
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentDateYmd = $dateOptions['currentDateYmd'];
 
-        $fileName = 'coordinator_export_'.$currentDateYmd.'.csv';
+        $fileName = $currentDateYmd.'_int_coord_retired_export.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -1621,7 +1621,7 @@ class ExportController extends Controller implements HasMiddleware
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentDateYmd = $dateOptions['currentDateYmd'];
 
-        $fileName = 'coordinator_appreciation_'.$currentDateYmd.'.csv';
+        $fileName = $currentDateYmd.'_coordinator_appreciation_export.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -1687,7 +1687,7 @@ class ExportController extends Controller implements HasMiddleware
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentDateYmd = $dateOptions['currentDateYmd'];
 
-        $fileName = 'chapter_coordinator_export_'.$currentDateYmd.'.csv';
+        $fileName = $currentDateYmd.'_chapter_coordinator_export.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -1793,7 +1793,7 @@ class ExportController extends Controller implements HasMiddleware
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentDateYmd = $dateOptions['currentDateYmd'];
 
-        $fileName = 'constant_contact_export_'.$currentDateYmd.'.csv';
+        $fileName = $currentDateYmd.'_constant_contact_export.csv';
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
