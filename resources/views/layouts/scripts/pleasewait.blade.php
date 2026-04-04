@@ -19,6 +19,7 @@ window.pleaseWait = (function () {
         if (window._suppressPleaseWait) return;
         const link = e.target.closest('a');
         if (!link) return;
+        if (!link.getAttribute('href')) return;
         if (link.target === '_blank') return;
         if (link.getAttribute('href') === '#') return;
         if (link.getAttribute('href')?.startsWith('javascript')) return;
