@@ -99,48 +99,50 @@ class MySentEmailsController extends Controller implements HasMiddleware
         }
 
         // Replace everything from "Build queries based on filter" down to the return
-    if ($filterEmails === null) {
-        $emails = SentEmail::with('attachments')
-            ->orderBy('id', 'desc')
-            ->applyFilters($request)
-            ->paginate(config('sentemails.perPage'));
-    } else {
-        $emails = SentEmail::with('attachments')
-            ->where(function ($query) use ($filterEmails) {
-                foreach ($filterEmails as $email) {
-                    $query->orWhere('from', 'LIKE', '%' . $email . '%')
-                        ->orWhere('to',   'LIKE', '%' . $email . '%')
-                        ->orWhere('cc',   'LIKE', '%' . $email . '%')
-                        ->orWhere('bcc',  'LIKE', '%' . $email . '%');
-                }
-            })
-            ->orderBy('id', 'desc')
-            ->applyFilters($request)
-            ->paginate(config('sentemails.perPage'));
-    }
+        if ($filterEmails === null) {
+            $emails = SentEmail::with('attachments')
+                ->orderBy('id', 'desc')
+                ->applyFilters($request)
+                ->paginate(config('sentemails.perPage'))
+                ->appends($request->only(['check5', 'check7', 'check57', 'check81']));
+        } else {
+            $emails = SentEmail::with('attachments')
+                ->where(function ($query) use ($filterEmails) {
+                    foreach ($filterEmails as $email) {
+                        $query->orWhere('from', 'LIKE', '%' . $email . '%')
+                            ->orWhere('to',   'LIKE', '%' . $email . '%')
+                            ->orWhere('cc',   'LIKE', '%' . $email . '%')
+                            ->orWhere('bcc',  'LIKE', '%' . $email . '%');
+                    }
+                })
+                ->orderBy('id', 'desc')
+                ->applyFilters($request)
+                ->paginate(config('sentemails.perPage'))
+                ->appends($request->only(['check5', 'check7', 'check57', 'check81']));
+        }
 
-    return view('sentemails::index', compact(
-        'emails',
-        'checkBox81Status', 'checkBox5Status', 'checkBox7Status', 'checkBox57Status',
+        return view('sentemails::index', compact(
+            'emails',
+            'checkBox81Status', 'checkBox5Status', 'checkBox7Status', 'checkBox57Status'
         ));
     }
 
-public function downloadAttachment(string $id)
-{
-    $attachment = \Dcblogdev\LaravelSentEmails\Models\SentEmailAttachment::findOrFail($id);
+    public function downloadAttachment(string $id)
+    {
+        $attachment = \Dcblogdev\LaravelSentEmails\Models\SentEmailAttachment::findOrFail($id);
 
-    $privatePath = storage_path('app/private/' . $attachment->path);
-    $legacyPath  = storage_path('app/' . $attachment->path);
+        $privatePath = storage_path('app/private/' . $attachment->path);
+        $legacyPath  = storage_path('app/' . $attachment->path);
 
-    if (file_exists($privatePath)) {
-        return response()->file($privatePath, ['Content-Type' => 'application/pdf']);
+        if (file_exists($privatePath)) {
+            return response()->file($privatePath, ['Content-Type' => 'application/pdf']);
+        }
+
+        if (file_exists($legacyPath)) {
+            return response()->file($legacyPath, ['Content-Type' => 'application/pdf']);
+        }
+
+        return redirect()->route('sentemails')
+            ->with('error', 'Attachment file not found.');
     }
-
-    if (file_exists($legacyPath)) {
-        return response()->file($legacyPath, ['Content-Type' => 'application/pdf']);
-    }
-
-    return redirect()->route('sentemails')
-        ->with('error', 'Attachment file not found.');
-}
 }
