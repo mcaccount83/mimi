@@ -914,7 +914,7 @@ public function sendChapterInquiryEmailModal(Request $request): JsonResponse
         $chapterId = $input['chapterId'];
         $inquiryId = $input['inquiryId'];
 
-        $inqDetails = InquiryApplication::with('state', 'region', 'conference', 'country')->find($inquiryId);
+        $inqDetails = InquiryApplication::with('state', 'country')->find($inquiryId);
         $regioniId = $inqDetails->region_id;
 
         $inqCoord = RegionInquiry::with('region')->find($regioniId);
@@ -978,7 +978,7 @@ public function sendChapterInquiryEmailModal(Request $request): JsonResponse
         $emailMessage = $input['message'];
         $inquiryId = $input['inquiryId'];
 
-        $inqDetails = InquiryApplication::with('state', 'region', 'conference', 'country')->find($inquiryId);
+        $inqDetails = InquiryApplication::with('state', 'country')->find($inquiryId);
         $regioniId = $inqDetails->region_id;
         $inquiryEmail = $inqDetails->inquiry_email;
 
