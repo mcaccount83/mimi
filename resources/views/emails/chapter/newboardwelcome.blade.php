@@ -44,14 +44,13 @@
 <br>
 <hr>
 <p><b>Chapter Resources</b></p>
-<p>Other resources including the Bylaws, Fact Sheets, Sample Files, Digital Logos, etc are available in MIMI.</p>
+<p>Other resources including the Bylaws, Fact Sheets, Sample Files, Digital Logos, etc.</p>
 <hr>
 <p><b>BoardList Forum</b></p>
 <p>The BoardList forum group will give you a chance to interact with other board members on chapter related topics. All board members are automatically added. BoardList is open from August through May.</p>
 <hr>
 <p><b>eLearning Portal</b></p>
-<p>Be sure to check out the MOMS Club eLearning site. We will continue to add more courses throughout the year.<br>
-    https://momsclub.org/elearning/chapter-training</p>
+<p>Courses on Board Positions and common topics are available for all board members.</p>
 
 <br>
 <p><strong>MCL</strong>,<br>

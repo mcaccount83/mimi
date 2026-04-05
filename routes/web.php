@@ -470,10 +470,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/board/onlineupdate/{id}', [BoardController::class, 'updateOnlineInfo'])->name('board.updateonline');
 
     Route::get('/board/rereghistory/{id}', [BoardController::class, 'viewReRegHistory'])->name('board.viewrereghistory');
-    Route::get('/board/reregpayment/{id}', [BoardController::class, 'editReregistrationPaymentFormNEW'])->name('board.editreregpayment');
+    Route::get('/board/reregpayment/{id}', [BoardPaymentController::class, 'editReregistrationPaymentFormNEW'])->name('board.editreregpayment');
+    Route::post('/process-payment', [BoardPaymentController::class, 'reRegistrationPayment'])->name('process.payment');
+    Route::post('/process-donation', [BoardPaymentController::class, 'm2mPayment'])->name('process.donation');
+    Route::post('/process-manual', [BoardPaymentController::class, 'manualPayment'])->name('process.manual');
 
     Route::get('/board/donationhistory/{id}', [BoardController::class, 'viewDonationHistory'])->name('board.viewdonationhistory');
-    Route::get('/board/donation/{id}', [BoardController::class, 'editDonationFormNEW'])->name('board.editdonate');
+    Route::get('/board/donation/{id}', [BoardPaymentController::class, 'editDonationFormNEW'])->name('board.editdonate');
 
     Route::get('/board/documents/{id}', [BoardController::class, 'viewDocuments'])->name('board.viewdocuments');
 
