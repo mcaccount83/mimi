@@ -11,12 +11,12 @@ class Resources extends Model
 
     public function resourceCategory(): BelongsTo
     {
-        return $this->belongsTo(ResourceCategory::class, 'category', 'id');  // 'category' in resrouces belongsTo 'id' in resource_category
+        return $this->belongsTo(ResourceCategory::class, 'resource_category', 'id');  // 'category' in resrouces belongsTo 'id' in resource_category
     }
 
     public function toolkitCategory(): BelongsTo
     {
-        return $this->belongsTo(ToolkitCategory::class, 'category', 'id');  // 'category' in resrouces belongsTo 'id' in toolkit_category
+        return $this->belongsTo(ToolkitCategory::class, 'toolkit_category', 'id');  // 'category' in resrouces belongsTo 'id' in toolkit_category
     }
 
     public function updatedBy(): BelongsTo
