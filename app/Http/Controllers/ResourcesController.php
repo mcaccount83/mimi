@@ -196,7 +196,7 @@ class ResourcesController extends Controller implements HasMiddleware
             ]);
 
             $file = new Resources;
-            $file->category = $validatedData['fileCategoryNew'];
+            $file->resource_category = $validatedData['fileCategoryNew'];
             $file->name = $validatedData['fileNameNew'];
             $file->description = $validatedData['fileDescriptionNew'];
             $file->file_type = $validatedData['fileTypeNew'];
@@ -320,7 +320,7 @@ class ResourcesController extends Controller implements HasMiddleware
             ]);
 
             $file = new Resources;
-            $file->category = $validatedData['fileCategoryNew'];
+            $file->toolkit_category = $validatedData['fileCategoryNew'];
             $file->name = $validatedData['fileNameNew'];
             $file->description = $validatedData['fileDescriptionNew'];
             $file->file_type = $validatedData['fileTypeNew'];
