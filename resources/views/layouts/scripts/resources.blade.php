@@ -661,14 +661,18 @@ function addAwardBadge() {
             }).then(() => { location.reload(); });
         },
         error: function(xhr) {
-            Swal.fire('Error!', 'File upload failed. Please try again.', 'error');
+            Swal.fire('Error!', 'Badge upload failed. Please try again.', 'error');
             console.error(xhr.responseText);
-        }
-    });
-},
+                }
+            });
+        },
         error: function(xhr, status, error) {
-            Swal.fire('Error!', 'Resource add failed. Please try again.', 'error');
-            console.error(xhr.responseText);
+            var message = 'Badge add failed. Please try again.';
+                if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.error) {
+                    message = xhr.responseJSON.error;
+                }
+                Swal.fire('Error!', message, 'error');
+                console.error(xhr.responseText);
         }
     });
 

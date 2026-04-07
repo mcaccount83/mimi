@@ -435,16 +435,23 @@ class ResourcesController extends Controller implements HasMiddleware
     public function addAwardBadge(Request $request): JsonResponse
 {
     try {
-        Log::info('addAwardBadge called', [
-            'input' => $request->all(),
-            'files' => $request->allFiles(),
-        ]);
-
         $validatedData = $request->validate([
             'reportYearNew' => 'required|exists:fiscal_year,id',
             'eoyAwardNew'   => 'required|exists:financial_report_awards,id',
             'fileNameNew'   => 'required|file|mimes:png|max:2048',
         ]);
+
+        // Check for existing badge for this year/award combination
+        $exists = FinancialReportAwardsBadges::where('report_year_id', $validatedData['reportYearNew'])
+            ->where('eoy_award_id', $validatedData['eoyAwardNew'])
+            ->exists();
+
+        if ($exists) {
+            return response()->json([
+                'success' => false,
+                'error' => 'A badge already exists for this award type and fiscal year. Use UPDATE instead.'
+            ], 422);
+        }
 
         $file = FinancialReportAwardsBadges::create([
             'report_year_id' => $validatedData['reportYearNew'],
@@ -456,10 +463,6 @@ class ResourcesController extends Controller implements HasMiddleware
     } catch (\Illuminate\Validation\ValidationException $e) {
         return response()->json(['success' => false, 'errors' => $e->errors()], 422);
     } catch (\Exception $e) {
-        Log::error('addAwardBadge error', [
-            'message' => $e->getMessage(),
-            'line' => $e->getLine(),
-        ]);
         return response()->json(['success' => false, 'error' => 'An error occurred while adding the badge.'], 500);
     }
 }
