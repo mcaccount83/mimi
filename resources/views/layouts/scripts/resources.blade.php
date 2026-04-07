@@ -584,6 +584,175 @@ bootstrap.Modal.getInstance(document.getElementById('editTaskModal' + id))?.hide
     return false;
 }
 
+function addAwardBadge() {
+    var reportYearNew = document.getElementById('reportYearNew').value;
+    var eoyAwardNew = document.getElementById('eoyAwardNew').value;
+    var fileNameNew = document.getElementById('fileNameNew').files[0];
+
+    let validationErrors = [];
+
+    if (reportYearNew == '') {
+        validationErrors.push('Fiscal Year is Required.');
+    }
+    if (eoyAwardNew == '') {
+        validationErrors.push('Award Type is Required.');
+    }
+    if (!fileNameNew) {
+        validationErrors.push('Award Badge image is Required.');
+    }
+
+    if (validationErrors.length > 0) {
+        Swal.fire({
+            title: 'Error!',
+            html: validationErrors.join('<br>'),
+            icon: 'error',
+            confirmButtonText: 'OK',
+            customClass: { confirmButton: 'btn btn-danger' }
+        });
+        return false;
+    }
+
+   // Get the CSRF token value from the meta tag
+    var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    // Initialize the FormData object
+    var formData = new FormData();
+    formData.append('reportYearNew', reportYearNew);
+    formData.append('eoyAwardNew', eoyAwardNew);
+    formData.append('fileNameNew', fileNameNew);
+
+    // Send an AJAX request to Laravel backend to create a new resource
+    $.ajax({
+        url: '{{ route('resources.addawards') }}',
+        method: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        headers: {
+            'X-CSRF-TOKEN': csrfToken
+        },
+        success: function(response) {
+    var id = response.id;
+
+    Swal.fire({
+        title: 'Processing...',
+        text: 'Please wait while we upload the badge.',
+        allowOutsideClick: false,
+        didOpen: () => { Swal.showLoading(); }
+    });
+
+    var driveFormData = new FormData();
+    driveFormData.append('file', fileNameNew);
+
+    $.ajax({
+        url: '{{ route('store.awardbadges', ':id') }}'.replace(':id', id),
+        method: 'POST',
+        data: driveFormData,
+        processData: false,
+        contentType: false,
+        headers: { 'X-CSRF-TOKEN': csrfToken },
+        success: function(response) {
+            Swal.fire({
+                title: 'Success!',
+                text: 'Award Badge added successfully.',
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1500
+            }).then(() => { location.reload(); });
+        },
+        error: function(xhr) {
+            Swal.fire('Error!', 'File upload failed. Please try again.', 'error');
+            console.error(xhr.responseText);
+        }
+    });
+},
+        error: function(xhr, status, error) {
+            Swal.fire('Error!', 'Resource add failed. Please try again.', 'error');
+            console.error(xhr.responseText);
+        }
+    });
+
+    // Close the modal
+    bootstrap.Modal.getInstance(document.getElementById('modal-add-badge'))?.hide();
+
+    return false;
+}
+
+function updateAwardBadge(id) {
+    var fileName = document.getElementById('fileName' + id).files[0];
+
+    let validationErrors = []; // <-- THIS IS MISSING
+
+    if (!fileName) {
+        validationErrors.push('Award Badge image is Required.');
+    }
+
+    if (validationErrors.length > 0) {
+        Swal.fire({
+            title: 'Error!',
+            html: validationErrors.join('<br>'),
+            icon: 'error',
+            confirmButtonText: 'OK',
+            customClass: { confirmButton: 'btn btn-danger' }
+        });
+        return false;
+    }
+
+    var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    var formData = new FormData();
+    formData.append('fileName', fileName);
+
+    Swal.fire({
+        title: 'Processing...',
+        text: 'Please wait while we update the badge.',
+        allowOutsideClick: false,
+        didOpen: () => { Swal.showLoading(); }
+    });
+
+    $.ajax({
+        url: '{{ route('resources.updateawards', ':id') }}'.replace(':id', id),
+        method: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        headers: { 'X-CSRF-TOKEN': csrfToken },
+        success: function(response) {
+            // Now upload to Google Drive
+            var driveFormData = new FormData();
+            driveFormData.append('file', fileName);
+
+            $.ajax({
+                url: '{{ route('store.awardbadges', ':id') }}'.replace(':id', id),
+                method: 'POST',
+                data: driveFormData,
+                processData: false,
+                contentType: false,
+                headers: { 'X-CSRF-TOKEN': csrfToken },
+                success: function(response) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Badge updated successfully.',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => { location.reload(); });
+                },
+                error: function(xhr) {
+                    Swal.fire('Error!', 'File upload failed. Please try again.', 'error');
+                    console.error(xhr.responseText);
+                }
+            });
+        },
+        error: function(xhr) {
+            Swal.fire('Error!', 'Badge update failed. Please try again.', 'error');
+            console.error(xhr.responseText);
+        }
+    });
+
+    bootstrap.Modal.getInstance(document.getElementById('editBadgeModal' + id))?.hide();
+    return false;
+}
+
  function addBugTask() {
     var taskNameNew = document.getElementById('taskNameNew').value;
     var taskDetailsNew = document.getElementById('taskDetailsNew').value;
@@ -712,5 +881,19 @@ bootstrap.Modal.getInstance(document.getElementById('editTaskModal' + id))?.hide
     return false;
 }
 
+function openImageViewer(fileId, title, fiscalYear = null) {
+    var imgUrl = 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w400';
+
+    Swal.fire({
+        title: fiscalYear ? fiscalYear + ' ' + title : title,
+        imageUrl: imgUrl,
+        imageAlt: title,
+        width: 500,
+        confirmButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn btn-danger'
+        }
+    });
+}
 
 </script>

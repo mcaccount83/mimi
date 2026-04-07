@@ -20,4 +20,9 @@ class ChapterAwardHistory extends Model
     {
         return $this->belongsTo(FinancialReportAwards::class, 'awards_type', 'id');  // 'awards_type' BelongsTo 'id' in FinancialReportAwards
     }
+
+    public function fiscalYear()
+    {
+        return $this->belongsTo(FiscalYear::class, 'report_year_id', 'id');
+    }
 }

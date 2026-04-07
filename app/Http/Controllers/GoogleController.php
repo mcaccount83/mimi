@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Chapters;
 use App\Models\Documents;
 use App\Models\DocumentsEOY;
+use App\Models\FinancialReportAwardsBadges;
 use App\Models\FolderRecord;
 use App\Models\GoogleDrive;
 use App\Models\GrantRequest;
@@ -396,6 +397,64 @@ public function storeToolkit(Request $request, $id): JsonResponse
     } catch (\Illuminate\Validation\ValidationException $e) {
         return response()->json(['status' => 'error', 'errors' => $e->errors()], 422);
     } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'An error occurred while uploading the file.',
+        ], 500);
+    }
+}
+
+/**
+ *  Save EOY Award Badges Items
+ */
+public function storeAwardBadges(Request $request, $id): JsonResponse
+{
+    try {
+        Log::info('storeAwardBadges called', ['id' => $id]);
+        $request->validate([
+            'file' => 'required|file',
+        ]);
+
+        $googleDrive = GoogleDrive::where('name', 'resources_uploads')->first();
+        $sharedDriveId = $googleDrive->folder_id;
+
+        Log::info('googleDrive', ['drive' => $googleDrive]);
+
+        $file = $request->file('file');
+        $name = Str::ascii($file->getClientOriginalName());
+        $filename = Str::ascii($name.'.'.$file->getClientOriginalExtension());
+        $mimetype = $file->getMimeType();
+        $filecontent = file_get_contents($file->getPathname());
+
+        if ($file_id = $this->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
+            $existingDocRecord = FinancialReportAwardsBadges::find($id);
+            if ($existingDocRecord) {
+                $existingDocRecord->file_path = $file_id;
+                $existingDocRecord->save();
+            } else {
+                // Log::error("Expected document record for chapter_id {$id} not found");
+                // $newDocData = ['chapter_id' => $id];
+                $newDocData['file_path'] = $file_id;
+                FinancialReportAwardsBadges::create($newDocData);
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'File uploaded successfully.',
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Failed to upload file.',
+        ], 500);
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json(['status' => 'error', 'errors' => $e->errors()], 422);
+    } catch (\Exception $e) {
+        Log::error('storeAwardBadges error', [
+            'message' => $e->getMessage(),
+            'line' => $e->getLine(),
+        ]);
         return response()->json([
             'status' => 'error',
             'message' => 'An error occurred while uploading the file.',

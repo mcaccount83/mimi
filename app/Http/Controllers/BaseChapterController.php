@@ -6,6 +6,7 @@ use App\Enums\BoardPosition;
 use App\Enums\CheckboxFilterEnum;
 use App\Models\ActiveStatus;
 use App\Models\Chapters;
+use App\Models\ChapterAwardHistory;
 use App\Models\Conference;
 use App\Models\Coordinators;
 use App\Models\Country;
@@ -338,6 +339,14 @@ class BaseChapterController extends Controller
         $dueDate = Carbon::create($renewalYear, $startMonthId, 1);
         $renewalDate = $dueDate->format('Y-m-d');
 
+        // Historical from the history table (exclude current year)
+        $chAwards = ChapterAwardHistory::with('awardtype', 'fiscalYear')
+            ->where('chapter_id', $chId)
+            ->orderBy('report_year_id', 'desc')
+            ->orderBy('awards_type')
+            ->get()
+            ->groupBy('report_year_id');
+
         return ['chDetails' => $chDetails, 'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'allActive' => $allActive,
             'conferenceDescription' => $conferenceDescription, 'chConfId' => $chConfId, 'chRegId' => $chRegId, 'chPcId' => $chPcId, 'chId' => $chId, 'chFinancialReportFinal' => $chFinancialReportFinal,
             'chDocuments' => $chDocuments, 'reviewComplete' => $reviewComplete, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards, 'chPayments' => $chPayments,
@@ -346,7 +355,7 @@ class BaseChapterController extends Controller
             'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC, 'emailPC' => $emailPC, 'cc_id' => $cc_id,
             'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink, 'pcName' => $pcName, 'probationReason' => $probationReason,
             'allMonths' => $allMonths, 'pcDetails' => $pcDetails, 'allProbation' => $allProbation, 'chFinancialReportReview' => $chFinancialReportReview,
-            'dueDate' => $dueDate, 'startDate' => $startDate, 'renewalDate' => $renewalDate,
+            'dueDate' => $dueDate, 'startDate' => $startDate, 'renewalDate' => $renewalDate, 'chAwards' => $chAwards
         ];
     }
 

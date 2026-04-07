@@ -225,6 +225,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/resources/toolkit', [ResourcesController::class, 'showToolkit'])->name('resources.toolkit');
     Route::post('/resources/addtoolkit', [ResourcesController::class, 'addToolkit'])->name('resources.addtoolkit');
     Route::post('/resources/updatetoolkit/{id}', [ResourcesController::class, 'updateToolkit'])->name('resources.updatetoolkit');
+    Route::get('/resources/awards', [ResourcesController::class, 'showAwards'])->name('resources.awards');
+Route::post('/resources/addawards', [ResourcesController::class, 'addAwardBadge'])->name('resources.addawards');
+Route::post('/resources/updateawards/{id}', [ResourcesController::class, 'updateAwardBadge'])->name('resources.updateawards');
     Route::get('/resources/elearning', [ResourcesController::class, 'showELearning'])->name('resources.elearning');
 });
 
@@ -489,6 +492,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/board/endofyear/boardreport/{id}', [BoardController::class, 'editBoardReport'])->name('board.editboardreport');
     Route::post('/board/endofyear/boardreportupatea/{id}', [BoardController::class, 'updateBoardReport'])->name('board.updateboardreport');
 
+    Route::get('/board/awardhistory/{id}', [BoardController::class, 'viewAwardHistory'])->name('board.viewawardhistory');
+
     Route::get('/board/resources/{id}', [BoardController::class, 'viewResources'])->name('board.viewresources');
     Route::get('/board/resources/manual/{id}', [BoardController::class, 'editManualOrderForm'])->name('board.editmanual');
     Route::get('/board/elearning/{id}', [BoardController::class, 'viewELearning'])->name('board.viewelearning');
@@ -542,6 +547,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/files/storeAward/{id}', [GoogleController::class, 'storeAward']);
     Route::post('/files/storeResources/{id}', [GoogleController::class, 'storeResources'])->name('store.resources');
     Route::post('/files/storeToolkit/{id}', [GoogleController::class, 'storeToolkit'])->name('store.toolkit');
+Route::post('/files/storeAwardBadges/{id}', [GoogleController::class, 'storeAwardBadges'])->name('store.awardbadges');
     Route::post('/files/storePhotos/{id}', [GoogleController::class, 'storePhotos']);
 });
 

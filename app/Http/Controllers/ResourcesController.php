@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Enums\CoordinatorPosition;
 use App\Mail\AdminNewMIMIBugWish;
 use App\Models\Bugs;
+use App\Models\FinancialReportAwards;
+use App\Models\FinancialReportAwardsBadges;
+use App\Models\FiscalYear;
 use App\Models\ResourceCategory;
 use App\Models\Resources;
 use App\Models\ToolkitCategory;
@@ -18,6 +21,7 @@ use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
@@ -403,6 +407,81 @@ class ResourcesController extends Controller implements HasMiddleware
             return response()->json(['success' => false, 'error' => 'An error occurred while updating the toolkit item.'], 500);
         }
     }
+
+    /**
+     * View Award Badges List
+     */
+    public function showAwards(Request $request): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
+        $canEditFiles = ($positionId == CoordinatorPosition::IT || in_array(CoordinatorPosition::IT, $secPositionId));
+
+        $awards = FinancialReportAwardsBadges::with('fiscalYear', 'eoyAward')->get();
+
+        $reportYears = FiscalYear::with(['awardBadges.eoyAward'])->orderByDesc('id')->get();
+
+        $eoyAwards = FinancialReportAwards::orderBy('award_type')->get();
+
+        $data = ['reportYears' => $reportYears, 'eoyAwards' => $eoyAwards, 'canEditFiles' => $canEditFiles,];
+
+        return view('coordinators.resources.awardbadges')->with($data);
+    }
+
+    /**
+     * Add New Files or Links to the Awards List
+     */
+    public function addAwardBadge(Request $request): JsonResponse
+{
+    try {
+        Log::info('addAwardBadge called', [
+            'input' => $request->all(),
+            'files' => $request->allFiles(),
+        ]);
+
+        $validatedData = $request->validate([
+            'reportYearNew' => 'required|exists:fiscal_year,id',
+            'eoyAwardNew'   => 'required|exists:financial_report_awards,id',
+            'fileNameNew'   => 'required|file|mimes:png|max:2048',
+        ]);
+
+        $file = FinancialReportAwardsBadges::create([
+            'report_year_id' => $validatedData['reportYearNew'],
+            'eoy_award_id'   => $validatedData['eoyAwardNew'],
+            'file_path'      => null, // storeAwardBadges will set this
+        ]);
+
+        return response()->json(['success' => true, 'id' => $file->id,]);
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json(['success' => false, 'errors' => $e->errors()], 422);
+    } catch (\Exception $e) {
+        Log::error('addAwardBadge error', [
+            'message' => $e->getMessage(),
+            'line' => $e->getLine(),
+        ]);
+        return response()->json(['success' => false, 'error' => 'An error occurred while adding the badge.'], 500);
+    }
+}
+
+    public function updateAwardBadge(Request $request, $id): JsonResponse
+{
+    try {
+        $request->validate([
+            'fileName' => 'required|file|mimes:png|max:2048',
+        ]);
+
+        // Just confirm the record exists — file_path gets updated by storeAwardBadges
+        FinancialReportAwardsBadges::findOrFail($id);
+
+        return response()->json(['success' => true]);
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json(['success' => false, 'errors' => $e->errors()], 422);
+    } catch (\Exception $e) {
+        Log::error('updateAwardBadge error', ['message' => $e->getMessage()]);
+        return response()->json(['success' => false, 'error' => 'An error occurred while updating the badge.'], 500);
+    }
+}
 
     /**
      * View eLearning Courses

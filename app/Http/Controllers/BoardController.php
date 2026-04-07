@@ -24,6 +24,7 @@ use App\Models\Chapters;
 use App\Models\DocumentsEOY;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportAwards;
+use App\Models\FinancialReportAwardsBadges;
 use App\Models\ForumCategorySubscription;
 use App\Models\GrantRequest;
 use App\Models\ProbationSubmission;
@@ -433,6 +434,47 @@ class BoardController extends Controller implements HasMiddleware
         ];
 
         return view('boards.donationhistory')->with($data);
+    }
+
+    public function viewAwardHistory(Request $request, $chId): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userTypeId = $user['userTypeId'];
+        $userAdmin = $user['userAdmin'];
+
+        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
+        $chDetails = $baseQuery['chDetails'];
+        $startMonthId = $baseQuery['startMonthId'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $regionLongName = $baseQuery['regionLongName'];
+        $conferenceDescription = $baseQuery['conferenceDescription'];
+
+        $currentApprovedAwards = $baseQuery['currentApprovedAwards'];
+        $chAwards = $baseQuery['chAwards'];
+
+        $awardBadges = FinancialReportAwardsBadges::with(['fiscalYear', 'eoyAward'])->get();
+        $badgeLookup = $awardBadges->keyBy(fn($b) => $b->report_year_id . '_' . $b->eoy_award_id);
+
+        $chapterStatus = $baseQuery['chapterStatus'];
+
+        $PresDetails = $baseQuery['PresDetails'];
+        $AVPDetails = $baseQuery['AVPDetails'];
+        $MVPDetails = $baseQuery['MVPDetails'];
+        $TRSDetails = $baseQuery['TRSDetails'];
+        $SECDetails = $baseQuery['SECDetails'];
+
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdPositionId = $bdData['bdPositionId'];
+        $borDetails = $bdData['bdDetails'];
+        $bdTypeId = $bdData['bdTypeId'];
+
+        $data = ['chDetails' => $chDetails,'stateShortName' => $stateShortName, 'chapterStatus' => $chapterStatus, 'badgeLookup' => $badgeLookup,
+            'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
+            'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin, 'startMonthId' => $startMonthId, 'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId,
+            'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'chAwards' => $chAwards, 'currentApprovedAwards' => $currentApprovedAwards
+        ];
+
+        return view('boards.awardhistory')->with($data);
     }
 
     public function editBoard(Request $request, $chId): View

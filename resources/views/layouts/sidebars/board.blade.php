@@ -104,6 +104,25 @@
     @endif
     @endif
 
+    <!-- Awards Menu Item -->
+    @if(isset($chDetails))
+    @php
+        $boardRoute = route('board.viewawardhistory', ['id' => $chDetails->id]);
+
+        $activeBoardRoutes = [
+            'board/awardhistory/*',
+        ];
+    @endphp
+    @if (isset($boardRoute))
+        <li class="nav-item">
+            <a href="{{ $boardRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardRoutes) }}">
+                <i class="nav-icon bi-award-fill"></i>
+                <p>Awards</p>
+            </a>
+        </li>
+    @endif
+    @endif
+
     {{-- @if($chDetails->probation_id == '3') --}}
         <!-- Quarterly Submission Menu Item -->
         @if(isset($chDetails))

@@ -14,6 +14,7 @@ use App\Models\DisbandedChecklist;
 use App\Models\DocumentsEOY;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportAwards;
+use App\Models\FinancialReportAwardsBadges;
 use App\Models\FinancialReportFinal;
 use App\Models\FinancialReportReview;
 use App\Models\State;
@@ -1246,16 +1247,19 @@ class EOYReportController extends Controller implements HasMiddleware
         $currentApprovedAwards = array_filter($currentAwards, fn($a) => !empty($a['awards_approved']));
 
         // Historical from the history table (exclude current year)
-        $chAwards = ChapterAwardHistory::with('awardtype')
+        $chAwards = ChapterAwardHistory::with('awardtype', 'fiscalYear')
             ->where('chapter_id', $id)
-            ->orderBy('award_year', 'desc')
+            ->orderBy('report_year_id', 'desc')
             ->orderBy('awards_type')
             ->get()
-            ->groupBy('award_year');
+            ->groupBy('report_year_id');
+
+        $awardBadges = FinancialReportAwardsBadges::with(['fiscalYear', 'eoyAward'])->get();
+        $badgeLookup = $awardBadges->keyBy(fn($b) => $b->report_year_id . '_' . $b->eoy_award_id);
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
                 'chAwards' => $chAwards, 'currentApprovedAwards' => $currentApprovedAwards, 'awardTypes' => $awardTypes, 'confId' => $confId, 'chConfId' => $chConfId,
-                'chapterStatus' => $chapterStatus
+                'chapterStatus' => $chapterStatus, 'badgeLookup' => $badgeLookup
             ];
 
         return view('coordinators.eoyreports.awardhistory')->with($data);

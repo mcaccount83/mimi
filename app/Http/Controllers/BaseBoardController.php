@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Enums\BoardPosition;
 use App\Models\ActiveStatus;
 use App\Models\Chapters;
+use App\Models\ChapterAwardHistory;
 use App\Models\Coordinators;
 use App\Models\Country;
+use App\Models\FinancialReport;
 use App\Models\FinancialReportAwards;
 use App\Models\Probation;
 use App\Models\State;
@@ -70,7 +72,21 @@ class BaseBoardController extends Controller
         $allStates = State::where('id', $chStateId)
             ->get();
         $allCountries = Country::all();
-        $allAwards = FinancialReportAwards::all();
+        // $allAwards = FinancialReportAwards::all();
+
+        // Current year from the blob
+        $financialReport = FinancialReport::find($id);
+        $currentAwards = $financialReport->chapter_awards
+            ? unserialize(base64_decode($financialReport->chapter_awards))
+            : [];
+        $currentApprovedAwards = array_filter($currentAwards, fn($a) => !empty($a['awards_approved']));
+        // Historical from the history table (exclude current year)
+        $chAwards = ChapterAwardHistory::with('awardtype', 'fiscalYear')
+            ->where('chapter_id', $chId)
+            ->orderBy('report_year_id', 'desc')
+            ->orderBy('awards_type')
+            ->get()
+            ->groupBy('report_year_id');
 
         // Chapter data
         $chPayments = $chDetails->payments;
@@ -119,10 +135,11 @@ class BaseBoardController extends Controller
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'cc_id' => $cc_id, 'chFinancialReportFinal' => $chFinancialReportFinal,
             'chFinancialReport' => $chFinancialReport, 'startMonthName' => $startMonthName, 'chDocuments' => $chDocuments, 'chPayments' => $chPayments, 'allActive' => $allActive,
             'chActiveId' => $chActiveId, 'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord,
-            'emailCC' => $emailCC, 'chActiveStatus' => $chActiveStatus, 'reviewerEmail' => $reviewerEmail, 'awards' => $chFinancialReport, 'allAwards' => $allAwards, 'pcEmail' => $pcEmail,
+            'emailCC' => $emailCC, 'chActiveStatus' => $chActiveStatus, 'reviewerEmail' => $reviewerEmail, 'awards' => $chFinancialReport, 'pcEmail' => $pcEmail,
             'allCountries' => $allCountries, 'pcDetails' => $pcDetails, 'chDisbanded' => $chDisbanded, 'allProbation' => $allProbation, 'chEOYDocuments' => $chEOYDocuments,
             'probationReason' => $probationReason, 'dueDate' => $dueDate, 'startMonthId' => $startMonthId, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink,
-            'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'startDate' => $startDate, 'renewalDate' => $renewalDate, 'financialReportPdfs' => $financialReportPdfs
+            'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'startDate' => $startDate, 'renewalDate' => $renewalDate, 'financialReportPdfs' => $financialReportPdfs,
+            'chAwards' => $chAwards, 'currentApprovedAwards' => $currentApprovedAwards,
         ], $boardDetails); // Add board member details from appropriate table
     }
 
