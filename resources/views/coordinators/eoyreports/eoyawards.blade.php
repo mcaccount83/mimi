@@ -59,6 +59,7 @@
     <thead>
         <tr>
             <th>Award<br>Details</th>
+            <th>Notification</th>
             <th>Conf/Reg</th>
             <th>State</th>
             <th>Name</th>
@@ -96,6 +97,12 @@
                             <a href="{{ url("/eoyreports/editawards/{$list->id}") }}"><i class="bi bi-award-fill"></i></a>
                         @endif
                     </td>
+                    <td>
+                        @if($list->financialReport->chapter_awards_notified == '1') YES
+                        @else
+                            <a onclick="showChapterAwardsEmailModal('{{ $list->name }}', {{ $list->id }})"><i class="bi bi-envelope text-primary"></i></a>
+                        @endif
+                    </tdh>
                     <td>
                         @if ($list->state->conference_id > 0)
                             {{ $list->state->conference->short_name }} / {{ $list->state->region->short_name }}

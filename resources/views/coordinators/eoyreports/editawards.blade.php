@@ -53,6 +53,12 @@
                 <div class="card-body">
                     <div class="card-header bg-transparent border-0">
                         <h3>{{ $reportYearRange }} Chapter Awards</h3>
+                            Chapter Notified: {{ is_null($chFinancialReport->chapter_awards_notified) ? 'NO' : ($chFinancialReport->chapter_awards_notified == 0 ? 'NO'
+                            : ($chFinancialReport->chapter_awards_notified == 1 ? 'YES' : 'NO')) }}
+                            @if($chFinancialReport->chapter_awards_notified != '1')
+                    <button type="button" id="AwardNotify" class="btn btn-primary bg-gradient btn-xs ms-1" onclick="showChapterAwardsEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }})"><i class="bi bi-envelope-fill me-2"></i>Send Award Notification</button>
+                        @endif
+                        <br>
                    </div>
                     <!-- /.card-header -->
                     <div class="card-body">
@@ -150,6 +156,9 @@
             <div class="card-body text-center mt-3">
                 @if ($coordinatorCondition)
                     <button type="submit" class="btn btn-primary bg-gradient mb-2" ><i class="bi bi-floppy-fill me-2"></i>Save Chapter Awards</button>
+                     {{-- @if($chFinancialReport->chapter_awards_notified != '1')
+                    <button type="button" id="AwardNotify" class="btn btn-primary bg-gradient mb-2" onclick="showChapterAwardsEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }})"><i class="bi bi-envelope-fill me-2"></i>Send Award Notification</button>
+                        @endif --}}
                     <button type="button" id="awards-history" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('eoyreports.awardhistory', ['id' => $chDetails->id]) }}'"><i class="bi bi-file-earmark-text me-2"></i>View Awards History</button>
                     <br>
                 @endif

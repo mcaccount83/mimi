@@ -890,7 +890,7 @@ class TechReportController extends Controller implements HasMiddleware
 
     private function copyAwardsToHistory(array $reportYearOptions, int $updatedId, string $updatedBy): void
     {
-        $reportYearRange = $reportYearOptions['reportYearRange'];
+        // $reportYearRange = $reportYearOptions['reportYearRange'];
         $reportYearId = $reportYearOptions['reportYearId'];
 
         $allChapters = FinancialReport::whereNotNull('chapter_awards')->get();
@@ -905,6 +905,7 @@ class TechReportController extends Controller implements HasMiddleware
                             'chapter_id'  => $report->chapter_id,
                             'awards_type' => $award['awards_type'],
                             'report_year_id'  => $reportYearId,
+                            'notified' => $report->chapter_awards_notified,
                         ],
                         [
                             'awards_desc' => $award['awards_desc'],

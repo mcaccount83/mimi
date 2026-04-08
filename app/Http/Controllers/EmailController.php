@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\ChapterEmail;
 use App\Mail\CoordEmail;
+use App\Mail\EOYChapterAwards;
 use App\Mail\EOYElectionReportReminder;
 use App\Mail\EOYFinancialReportReminder;
 use App\Mail\EOYLateReportReminder;
@@ -19,9 +20,13 @@ use App\Mail\PaymentsReRegLate;
 use App\Mail\PaymentsReRegReminder;
 use App\Models\Chapters;
 use App\Models\EmailFields;
+use App\Models\FinancialReport;
+use App\Models\FinancialReportAwards;
+use App\Models\FinancialReportAwardsBadges;
 use App\Models\InquiryApplication;
 use App\Models\RegionInquiry;
 use App\Models\Resources;
+use App\Services\PositionConditionsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -43,14 +48,21 @@ class EmailController extends Controller implements HasMiddleware
 
     protected $baseCoordinatorController;
 
+    protected $googleController;
+
+    protected $positionConditionsService;
+
     public function __construct(UserController $userController, PDFController $pdfController, BaseMailDataController $baseMailDataController,
-        BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController)
+        BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController, GoogleController $googleController,
+        PositionConditionsService $positionConditionsService)
     {
         $this->userController = $userController;
         $this->pdfController = $pdfController;
         $this->baseMailDataController = $baseMailDataController;
         $this->baseChapterController = $baseChapterController;
         $this->baseCoordinatorController = $baseCoordinatorController;
+        $this->googleController = $googleController;
+        $this->positionConditionsService = $positionConditionsService;
     }
 
     public static function middleware(): array
@@ -805,6 +817,128 @@ class EmailController extends Controller implements HasMiddleware
             Log::error($e);  // Log the error
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
+    }
+
+
+    public function sendEOYChapterAwards(Request $request): JsonResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+
+        $input = $request->all();
+        $chapterId = $input['chapterId'];
+
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
+        $chDetails = $baseQuery['chDetails'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $chFinancialReport = $baseQuery['chFinancialReport'];
+        $emailListChap = $baseQuery['emailListChap'];  // Full Board
+        $emailListCoord = $baseQuery['emailListCoord']; // Full Coord List
+
+        $dateOptions = $this->positionConditionsService->getReportYearOptions();
+        $reportYearId = $dateOptions['reportYearId'];
+
+        // Get all badges keyed by report_year_id_eoy_award_id for lookup
+        $awardBadges = FinancialReportAwardsBadges::with(['fiscalYear', 'eoyAward'])->get()
+            ->keyBy(fn($b) => $b->report_year_id . '_' . $b->eoy_award_id);
+
+        $awardTypes = FinancialReportAwards::all()->keyBy('id');
+
+        // Get approved awards from blob
+        $currentAwards = $chFinancialReport->chapter_awards
+            ? unserialize(base64_decode($chFinancialReport->chapter_awards))
+            : [];
+
+        $approvedAwards = array_filter($currentAwards, fn($a) => !empty($a['awards_approved']));
+
+        if (empty($approvedAwards)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No approved awards found for this chapter.',
+                'redirect' => route('chapters.view', ['id' => $chapterId]),
+            ]);
+        }
+
+        // Build badge attachments for this chapter
+        $badgeAttachments = [];
+        $awardList = [];
+
+        foreach ($approvedAwards as $award) {
+            $awardType = $awardTypes[$award['awards_type']] ?? null;
+            if (!$awardType) continue;
+
+            $awardList[] = [
+                'name' => $awardType->award_type,
+            ];
+
+            $badgeKey = $reportYearId . '_' . $award['awards_type'];
+            $badge = $awardBadges->get($badgeKey);
+
+            if ($badge) {
+                // Download from Google Drive and attach
+                try {
+                    $fileContent = $this->googleController->downloadFromGoogleDrive($badge->file_path);
+
+                    if ($fileContent) {
+                        $badgeAttachments[] = [
+    'content' => base64_encode($fileContent),
+    'name'    => $awardType->type_short_name . '.png',
+    'mime'    => 'image/png',
+];
+                    }
+                } catch (\Exception $e) {
+                }
+            }
+        }
+
+         $chFinancialReport = FinancialReport::find($chapterId);
+    try {
+        DB::beginTransaction();
+
+            $chFinancialReport->chapter_awards_notified = 1;
+            $chFinancialReport->save();
+
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+                $this->baseMailDataController->getUserData($user),
+                [
+                    'awardList'        => $awardList,
+                    'badgeAttachments' => $badgeAttachments,
+                ]
+            );
+
+            Mail::to($emailListChap)
+                ->cc($emailListCoord)
+                ->queue(new EOYChapterAwards($mailData));
+
+            // Commit the transaction
+            DB::commit();
+
+            $message = 'Email successfully sent';
+
+            // Return JSON response
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+                'redirect' => route('chapters.view', ['id' => $chapterId]),
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            $message = 'Something went wrong, Please try again.';
+
+            // Return JSON error response
+            return response()->json([
+                'status' => 'error',
+                'message' => $message,
+                'redirect' => route('chapters.view', ['id' => $chapterId]),
+            ]);
         } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();

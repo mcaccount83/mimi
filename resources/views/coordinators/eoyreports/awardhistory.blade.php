@@ -65,12 +65,20 @@
                     <div class="active tab-pane" id="awards-current">
                         <div class="card-header bg-transparent border-0">
                             <h3>{{ $reportYearRange }} Chapter Awards</h3>
+                            @if(count($currentApprovedAwards) > 0)
+                            Chapter Notified: {{ is_null($chFinancialReport->chapter_awards_notified) ? 'NO' : ($chFinancialReport->chapter_awards_notified == 0 ? 'NO'
+                            : ($chFinancialReport->chapter_awards_notified == 1 ? 'YES' : 'NO')) }}
+                            @if($chFinancialReport->chapter_awards_notified != '1')
+                    <button type="button" id="AwardNotify" class="btn btn-primary bg-gradient btn-xs ms-1" onclick="showChapterAwardsEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }})"><i class="bi bi-envelope-fill me-2"></i>Send Award Notification</button>
+                        @endif
+                        <br>
+                            @endif
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
                             @if(count($currentApprovedAwards) > 0)
                                 @foreach($currentApprovedAwards as $award)
-    @php $badge = $badgeLookup->get($financialReport->report_year_id . '_' . $award['awards_type']); @endphp
+    @php $badge = $badgeLookup->get($reportYearRange . '_' . $award['awards_type']); @endphp
     <div class="card mb-2">
         <div class="card-body d-flex align-items-center gap-3">
             <div style="width: 80px; flex-shrink: 0; text-align: center;">
@@ -102,6 +110,8 @@
                         <div class="tab-pane" id="awards-{{ $yearId  }}">
                             <div class="card-header bg-transparent border-0">
                                 <h3>{{ $awards->first()->fiscalYear->fiscal_year }} Chapter Awards</h3>
+                                Notification Email Sent: {{ is_null($awards->first()->notified) ? 'NO' : ($awards->first()->notified == 0 ? 'NO'
+                                    : ($awards->first()->notified == 1 ? 'YES' : 'NO')) }}<br>
                             </div>
                         <!-- /.card-header -->
                             <div class="card-body">

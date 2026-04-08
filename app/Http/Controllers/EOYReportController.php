@@ -1097,6 +1097,10 @@ class EOYReportController extends Controller implements HasMiddleware
         $positionId = $user['cdPositionId'];
         $secPositionId = $user['cdSecPositionId'];
         $updatedBy = $user['userName'];
+        $userName = $user['userName'];
+        $userPosition = $user['cdPosition'];
+        $userConfName = $user['confName'];
+        $userConfDesc = $user['confDesc'];
 
         $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
         $reportYearStart = $reportYearOptions['reportYearStart'];
@@ -1134,6 +1138,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $countList = count($chapterList);
         $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status, 'checkBox2Status' => $checkBox2Status,
             'allAwards' => $allAwards, 'maxAwards' => $maxAwards, 'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
+            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName'  => $userConfName, 'userConfDesc' => $userConfDesc
         ];
 
         return view('coordinators.eoyreports.eoyawards', $data);
@@ -1232,6 +1237,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $stateShortName = $baseQuery['stateShortName'];
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
+        $chFinancialReport = $baseQuery['chFinancialReport'];
         $chConfId = $baseQuery['chConfId'];
         $chPcId = $baseQuery['chPcId'];
 
@@ -1259,7 +1265,7 @@ class EOYReportController extends Controller implements HasMiddleware
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
                 'chAwards' => $chAwards, 'currentApprovedAwards' => $currentApprovedAwards, 'awardTypes' => $awardTypes, 'confId' => $confId, 'chConfId' => $chConfId,
-                'chapterStatus' => $chapterStatus, 'badgeLookup' => $badgeLookup
+                'chapterStatus' => $chapterStatus, 'badgeLookup' => $badgeLookup, 'chFinancialReport' => $chFinancialReport
             ];
 
         return view('coordinators.eoyreports.awardhistory')->with($data);

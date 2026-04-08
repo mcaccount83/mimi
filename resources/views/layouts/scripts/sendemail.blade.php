@@ -722,6 +722,89 @@
         });
     }
 
+    function showChapterAwardsEmailModal(chapterName, chapterId) {
+     Swal.fire({
+        title: 'Chapter Award Notification',
+        html: `
+            <p>This will send notification and award badges for all approved awards for <b>${chapterName}</b> to the full board and all coordinators.</p>
+            <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+
+            return {
+                chapter_id: chapterId,
+            };
+        }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const data = result.value;
+
+                Swal.fire({
+                    title: 'Processing...',
+                    text: 'Please wait while we process your request.',
+                    allowOutsideClick: false,
+                    customClass: {
+                        confirmButton: 'btn btn-sm btn-success',
+                        cancelButton: 'btn btn-sm btn-danger'
+                    },
+                    didOpen: () => {
+                        Swal.showLoading();
+
+                        $.ajax({
+                            url: '{{ route('eoyreports.eoychapterawards') }}',
+                            type: 'POST',
+                            data: {
+                                chapterId: data.chapter_id,
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                if (response.status === 'success') {
+                                    Swal.fire({
+                                        title: 'Success!',
+                                        text: response.message,
+                                        icon: 'success',
+                                        showConfirmButton: false,
+                                        timer: 1500,
+                                        customClass: { confirmButton: 'btn btn-sm btn-success' }
+                                    }).then(() => {
+                                        location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: response.message,
+                                        icon: 'error',
+                                        confirmButtonText: 'OK',
+                                        customClass: { confirmButton: 'btn btn-sm btn-success' }
+                                    });
+                                }
+                            },
+                            error: function(jqXHR, exception) {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Something went wrong, Please try again.',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK',
+                                    customClass: {
+                                        confirmButton: 'btn btn-sm btn-success'
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
 // Functions for Coordinator Email Modals
     function showCoordEmailModal(coordFName, coordLName, coordId, userName, userPosition, userConfName, userConfDesc, predefinedSubject = '', predefinedMessage = '') {
 

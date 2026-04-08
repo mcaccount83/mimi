@@ -98,6 +98,27 @@ class GoogleController extends Controller implements HasMiddleware
     }
 
     /**
+     * downloading from Google Drive
+     */
+    public function downloadFromGoogleDrive(string $fileId): ?string
+{
+    $accessToken = $this->token();
+
+    $response = Http::withToken($accessToken)
+        ->get("https://www.googleapis.com/drive/v3/files/{$fileId}", [
+            'alt' => 'media',
+            'supportsAllDrives' => true,
+        ]);
+
+    if ($response->successful()) {
+        return $response->body();
+    }
+
+    Log::error('Google Drive download failed', ['fileId' => $fileId, 'status' => $response->status()]);
+    return null;
+}
+
+    /**
      * Upload PDF to Google Drive
      */
     public function uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)
