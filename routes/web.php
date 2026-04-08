@@ -490,8 +490,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/board/probationupdate/{id}', [BoardController::class, 'updateProbationSubmission'])->name('board.updateprobation');
 
     Route::get('/board/endofyear/{id}', [BoardController::class, 'viewEndOfYear'])->name('board.viewendofyear');
-    Route::get('/board/endofyear/financialreport/{id}', [FinancialReportControllerNew::class, 'editFinancialReport'])->name('board.editfinancialreport');
-    Route::post('/board/endofyear/financialreportupdate/{id}', [FinancialReportControllerNew::class, 'updateFinancialReport'])->name('board.updatefinancialreport');
+    Route::get('/board/endofyear/financialreport/{id}', [FinancialReportController::class, 'editFinancialReport'])->name('board.editfinancialreport');
+    Route::post('/board/endofyear/financialreportupdate/{id}', [FinancialReportController::class, 'updateFinancialReport'])->name('board.updatefinancialreport');
     Route::get('/board/endofyear/boardreport/{id}', [BoardController::class, 'editBoardReport'])->name('board.editboardreport');
     Route::post('/board/endofyear/boardreportupatea/{id}', [BoardController::class, 'updateBoardReport'])->name('board.updateboardreport');
 
@@ -505,13 +505,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/board/profileupdate/{id}', [BoardController::class, 'updateBoardProfile'])->name('board.updateprofile');
 
 
-    Route::get('/board/newchapterstatus/{id}', [BoardPendingControllerNew::class, 'showNewChapterStatus'])->name('board.newchapterstatus');
+    Route::get('/board/newchapterstatus/{id}', [BoardPendingController::class, 'showNewChapterStatus'])->name('board.newchapterstatus');
 
-    Route::get('/board/disbandchecklist/{id}', [FinancialReportControllerNew::class, 'editDisbandChecklist'])->name('board.editdisbandchecklist');
-    Route::post('/board/disbandchecklistupdate/{id}', [FinancialReportControllerNew::class, 'updateDisbandChecklist'])->name('board.updatedisbandchecklist');
-    Route::get('/board/financialreportfinal/{id}', [FinancialReportControllerNew::class, 'editFinancialReportFinal'])->name('board.editfinancialreportfinal');
-    Route::post('/board/financialreportfinalupdate/{id}', [FinancialReportControllerNew::class, 'updateFinancialReportFinal'])->name('board.updatefinancialreportfinal');
-    Route::post('/board/disbandreportupdate/{id}', [FinancialReportControllerNew::class, 'updateDisbandReport'])->name('board.updatedisbandreport');
+    Route::get('/board/disbandchecklist/{id}', [FinancialReportController::class, 'editDisbandChecklist'])->name('board.editdisbandchecklist');
+    Route::post('/board/disbandchecklistupdate/{id}', [FinancialReportController::class, 'updateDisbandChecklist'])->name('board.updatedisbandchecklist');
+    Route::get('/board/financialreportfinal/{id}', [FinancialReportController::class, 'editFinancialReportFinal'])->name('board.editfinancialreportfinal');
+    Route::post('/board/financialreportfinalupdate/{id}', [FinancialReportController::class, 'updateFinancialReportFinal'])->name('board.updatefinancialreportfinal');
+    Route::post('/board/disbandreportupdate/{id}', [FinancialReportController::class, 'updateDisbandReport'])->name('board.updatedisbandreport');
 
     Route::get('/board/grantrequestlist/{id}', [BoardController::class, 'viewGrantRequestList'])->name('board.viewgrantrequestlist');
     Route::get('/board/newgrantrequest/{id}', [BoardController::class, 'showNewGrantRequest'])->name('board.newgrantrequest');

@@ -45,6 +45,7 @@ class BaseChapterController extends Controller
             CheckboxFilterEnum::REVIEWER => '',
             CheckboxFilterEnum::CONFERENCE_REGION => '',
             CheckboxFilterEnum::INTERNATIONAL => '',
+            CheckboxFilterEnum::INTERNATIONALEOY => '',
             CheckboxFilterEnum::INTERNATIONALREREG => '',
         ];
 
@@ -57,7 +58,7 @@ class BaseChapterController extends Controller
         // Checkbox2
         if (isset($_GET[CheckboxFilterEnum::REVIEWER]) && $_GET[CheckboxFilterEnum::REVIEWER] == 'yes') {
             $checkboxStatus[CheckboxFilterEnum::REVIEWER] = 'checked';
-            $baseQuery->whereHas('financialReport', function ($query) use ($coorId) {
+            $baseQuery->whereHas('financialReportReview', function ($query) use ($coorId) {
                 $query->where('reviewer_id', '=', $coorId);
             });
         }
@@ -78,6 +79,19 @@ class BaseChapterController extends Controller
         // Checkbox51
         if (isset($_GET[CheckboxFilterEnum::INTERNATIONAL]) && $_GET[CheckboxFilterEnum::INTERNATIONAL] == 'yes') {
             $checkboxStatus[CheckboxFilterEnum::INTERNATIONAL] = 'checked';
+            // Position conditions were skipped in buildChapterQuery
+            if ($conditions && (
+                ! $conditions['inquiriesInternationalCondition'] &&
+                ! $conditions['ITCondition'] &&
+                ! $conditions['einCondition'])) {
+                // User doesn't have international permissions, show nothing
+                $baseQuery->whereRaw('1 = 0');
+            }
+        }
+
+        // Checkbox52
+        if (isset($_GET[CheckboxFilterEnum::INTERNATIONALEOY]) && $_GET[CheckboxFilterEnum::INTERNATIONALEOY] == 'yes') {
+            $checkboxStatus[CheckboxFilterEnum::INTERNATIONALEOY] = 'checked';
             // Position conditions were skipped in buildChapterQuery
             if ($conditions && (
                 ! $conditions['inquiriesInternationalCondition'] &&
@@ -229,6 +243,7 @@ class BaseChapterController extends Controller
             CheckboxFilterEnum::REVIEWER => $checkboxStatus[CheckboxFilterEnum::REVIEWER] ?? '',
             CheckboxFilterEnum::CONFERENCE_REGION => $checkboxStatus[CheckboxFilterEnum::CONFERENCE_REGION] ?? '',
             CheckboxFilterEnum::INTERNATIONAL => $checkboxStatus[CheckboxFilterEnum::INTERNATIONAL] ?? '',
+            CheckboxFilterEnum::INTERNATIONALEOY => $checkboxStatus[CheckboxFilterEnum::INTERNATIONALEOY] ?? '',
             CheckboxFilterEnum::INTERNATIONALREREG => $checkboxStatus[CheckboxFilterEnum::INTERNATIONALREREG] ?? '',
         ];
     }

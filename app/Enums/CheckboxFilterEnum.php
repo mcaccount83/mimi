@@ -18,6 +18,7 @@ class CheckboxFilterEnum
 
     // Internatioal List Checkboxes
     const INTERNATIONAL = 'check51';
+    const INTERNATIONALEOY = 'check52';
     const INTERNATIONALREREG = 'check56';
     const INTERNATIONALINQUIRIES = 'check57';
     const INTERNATIONALM2M = 'check58';

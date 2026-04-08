@@ -43,7 +43,6 @@
                 </thead>
                 <tbody>
                 @foreach($chapterList as $list)
-                @if($list->boundary_issue_notes != '')
                   <tr>
 						<td class="text-center align-middle">
                             <a href="{{ url("/eoyreports/editboundaries/{$list->id}") }}"><i class="bi bi-pin-map-fill"></i></a></td>
@@ -62,13 +61,20 @@
                                 @endif
                             </td>
 						<td>{{ $list->name }}</td>
-                        <td>{{ $list->boundary_issue_notes}}</td>
+                        @if ($list->boundary_issue_notes != '')
+                            <td>{{ $list->boundary_issue_notes}}</td>
+                        @else
+                            <td>No issues reported</td>
+                        @endif
                         <td>{{ $list->territory}}</td>
-                        <td @if($list->boundary_issue_resolved == '1') style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->boundary_issue_resolved == '1') YES @else NO @endif
-                        </td>
+                        @if ($list->boundary_issue_notes != '')
+                            <td @if($list->boundary_issue_resolved == '1') style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                                @if($list->boundary_issue_resolved == '1') YES @else NO @endif
+                            </td>
+                        @else
+                            <td>N/A</td>
+                        @endif
 			        </tr>
-                  @endif
                   @endforeach
                   </tbody>
                 </table>
@@ -101,6 +107,12 @@
                     </div>
                 @endif
                 @if ($ITCondition)
+                    <div class="col-sm-12">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showIntlEOY" id="showIntlEOY" class="form-check-input" {{$checkBox52Status ? 'checked' : '' }} onchange="showIntlEOY()" />
+                            <label class="form-check-label" for="showIntlEOY">Show International Chapters with Boundary Issues</label>
+                        </div>
+                    </div>
                     <div class="col-sm-12">
                         <div class="form-check form-switch">
                             <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{$checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />

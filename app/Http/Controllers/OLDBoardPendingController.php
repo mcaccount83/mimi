@@ -2,25 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\PositionConditionsService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\View\View;
 
-class BoardPendingControllerNew extends Controller implements HasMiddleware
+class OLDBoardPendingController extends Controller implements HasMiddleware
 {
     protected $userController;
 
     protected $baseBoardController;
 
-    protected $positionConditionsService;
-
-    public function __construct(UserController $userController, BaseBoardController $baseBoardController, PositionConditionsService $positionConditionsService)
+    public function __construct(UserController $userController, BaseBoardController $baseBoardController)
     {
         $this->userController = $userController;
         $this->baseBoardController = $baseBoardController;
-        $this->positionConditionsService = $positionConditionsService;
     }
 
     public static function middleware(): array
@@ -46,16 +42,9 @@ class BoardPendingControllerNew extends Controller implements HasMiddleware
         $allStates = $baseQuery['allStates'];
         $allCountries = $baseQuery['allCountries'];
 
-        $PresDetails = $baseQuery['PresDetails'];
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId,  $PresDetails);
-        $bdPositionId = $bdData['bdPositionId'];
-        $borDetails = $bdData['bdDetails'];
-        $bdTypeId = $bdData['bdTypeId'];
-
-        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,
-        'allCountries' => $allCountries,  'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin, 'allCountries' => $allCountries,
         ];
 
-        return view('boards.pending.newchapterstatus')->with($data);
+        return view('boards.newchapterstatus')->with($data);
     }
 }

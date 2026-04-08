@@ -1016,8 +1016,18 @@ class EOYReportController extends Controller implements HasMiddleware
         $checkBox2Status = $baseQuery[CheckboxFilterEnum::REVIEWER];
         $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
         $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
+        $checkBox52Status = $baseQuery[CheckboxFilterEnum::INTERNATIONALEOY];
 
-        $data = ['chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status,
+        if ($checkBox3Status || $checkBox51Status) {
+            $chapterList = $baseQuery['query']
+                ->get();
+        } else {
+            $chapterList = $baseQuery['query']
+                ->where('boundary_issue_notes', '!=', null)
+                ->get();
+        }
+
+        $data = ['chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status, 'checkBox52Status' => $checkBox52Status,
             'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'checkBox2Status' => $checkBox2Status];
 
         return view('coordinators.eoyreports.eoyboundaries')->with($data);
@@ -1122,22 +1132,37 @@ class EOYReportController extends Controller implements HasMiddleware
         $checkBox2Status = $baseQuery[CheckboxFilterEnum::REVIEWER];
         $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
         $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
+        $checkBox52Status = $baseQuery[CheckboxFilterEnum::INTERNATIONALEOY];
 
         $allAwards = FinancialReportAwards::all();
 
-        $maxAwards = 0;
+        $hasAnyAwards = false;
+        $actualMaxAwards = 0;
+
         foreach ($chapterList as $list) {
             if (isset($list->financialReport->chapter_awards)) {
                 $awards = unserialize(base64_decode($list->financialReport->chapter_awards));
                 if ($awards) {
-                    $maxAwards = max($maxAwards, count($awards));
+                    $validAwards = collect($awards)->filter(fn($award) => !empty($award['awards_type']))->count();
+                    if ($validAwards > 0) {
+                        $hasAnyAwards = true;
+                        $actualMaxAwards = max($actualMaxAwards, $validAwards);
+                    }
                 }
             }
         }
 
+        if ($checkBox3Status || $checkBox51Status) {
+            $chapterList = $baseQuery['query']->get();
+        } else {
+            $chapterList = $baseQuery['query']
+                ->whereHas('financialReport', fn($q) => $q->whereNotNull('chapter_awards'))
+                ->get();
+        }
+
         $countList = count($chapterList);
         $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status, 'checkBox2Status' => $checkBox2Status,
-            'allAwards' => $allAwards, 'maxAwards' => $maxAwards, 'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
+            'allAwards' => $allAwards, 'hasAnyAwards' => $hasAnyAwards, 'actualMaxAwards' => $actualMaxAwards, 'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'checkBox52Status' => $checkBox52Status,
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName'  => $userConfName, 'userConfDesc' => $userConfDesc
         ];
 

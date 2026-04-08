@@ -92,6 +92,15 @@
         }
     }
 
+    function showIntlEOY() {
+        var base_url = window.location.origin + window.location.pathname;
+        if ($("#showIntlEOY").prop("checked") == true) {
+            window.location.href = base_url + '?{{ \App\Enums\CheckboxFilterEnum::INTERNATIONALEOY }}=yes';
+        } else {
+            window.location.href = base_url;
+        }
+    }
+
     function showIntlReReg() {
         var base_url = window.location.origin + window.location.pathname;
         if ($("#showIntlReReg").prop("checked") == true) {

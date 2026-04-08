@@ -29,31 +29,7 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                   @php
-    $hasAnyAwards = false;
-    $actualMaxAwards = 0;
 
-    // Check if any chapter has actual awards (not just blank entries)
-    foreach($chapterList as $list) {
-        if (isset($list->financialReport->chapter_awards)) {
-            $blobData = base64_decode($list->financialReport->chapter_awards);
-            $chapter_awards = unserialize($blobData);
-            if ($chapter_awards != false && !empty($chapter_awards)) {
-                // Count only awards that have an actual awards_type selected
-                $validAwards = 0;
-                foreach ($chapter_awards as $award) {
-                    if (!empty($award['awards_type'])) {
-                        $validAwards++;
-                    }
-                }
-                if ($validAwards > 0) {
-                    $hasAnyAwards = true;
-                    $actualMaxAwards = max($actualMaxAwards, $validAwards);
-                }
-            }
-        }
-    }
-@endphp
 
 <table id="chapterlist" class="table table-sm table-hover">
     <thead>
@@ -90,7 +66,7 @@
                     }
                 }
             @endphp
-            @if(!empty($validChapterAwards))
+            {{-- @if(!empty($validChapterAwards)) --}}
                 <tr>
                     <td class="text-center">
                         @if ($assistConferenceCoordinatorCondition)
@@ -98,9 +74,12 @@
                         @endif
                     </td>
                     <td>
-                        @if($list->financialReport->chapter_awards_notified == '1') YES
+                        @if(!empty($validChapterAwards))
+                            @if($list->financialReport->chapter_awards_notified == '1') YES
+                            @else
+                                <a onclick="showChapterAwardsEmailModal('{{ $list->name }}', {{ $list->id }})"><i class="bi bi-envelope text-primary"></i></a>
+                            @endif
                         @else
-                            <a onclick="showChapterAwardsEmailModal('{{ $list->name }}', {{ $list->id }})"><i class="bi bi-envelope text-primary"></i></a>
                         @endif
                     </tdh>
                     <td>
@@ -145,7 +124,7 @@
                         <a href="{{ url("/eoyreports/awardhistory/{$list->id}") }}"><i class="bi bi-file-earmark-text"></i></a>
                     </th>
                 </tr>
-            @endif
+            {{-- @endif --}}
         @endforeach
     </tbody>
 </table>
@@ -178,6 +157,12 @@
                     </div>
                 @endif
                 @if ($ITCondition)
+                    <div class="col-sm-12">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" name="showIntlEOY" id="showIntlEOY" class="form-check-input" {{$checkBox52Status ? 'checked' : '' }} onchange="showIntlEOY()" />
+                            <label class="form-check-label" for="showIntlEOY">Show International Chapters with Awards</label>
+                        </div>
+                    </div>
                     <div class="col-sm-12">
                         <div class="form-check form-switch">
                             <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{$checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />

@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
-class FinancialReportControllerNew extends Controller implements HasMiddleware
+class OLDFinancialReportController extends Controller implements HasMiddleware
 {
     protected $userController;
 
@@ -65,8 +65,6 @@ class FinancialReportControllerNew extends Controller implements HasMiddleware
     {
         return [
             new Middleware('auth', except: ['logout']),
-            \App\Http\Middleware\EnsureUserIsBoardOrDisbanded::class,
-            \App\Http\Middleware\SetViewAsSession::class,
         ];
     }
 
@@ -85,64 +83,21 @@ class FinancialReportControllerNew extends Controller implements HasMiddleware
         $chDetails = $baseQuery['chDetails'];
         $chActiveId = $baseQuery['chActiveId'];
         $stateShortName = $baseQuery['stateShortName'];
+        $chDocuments = $baseQuery['chDocuments'];
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $awards = $baseQuery['awards'];
         $allAwards = $baseQuery['allAwards'];
 
-        $PresDetails = $baseQuery['PresDetails'];
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
-        $bdPositionId = $bdData['bdPositionId'];
-        $borDetails = $bdData['bdDetails'];
-        $bdTypeId = $bdData['bdTypeId'];
-
         $resources = Resources::with('resourceCategory')->get();
         $resourceCategories = ResourceCategory::all();
 
-        $data = ['chActiveId' => $chActiveId, 'chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,
-            'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'stateShortName' => $stateShortName,
-            'awards' => $awards, 'allAwards' => $allAwards, 'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'chEOYDocuments' => $chEOYDocuments,
-            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
-        ];
-
-        return view('boards.editfinancialreport')->with($data);
-
-    }
-
-     public function editFinancialReportFinal(Request $request, $chId): View
-    {
-       $user = $this->userController->loadUserInformation($request);
-        $userTypeId = $user['userTypeId'];
-        $userName = $loggedInName = $user['userName'];
-        $userEmail = $user['userEmail'];
-        $userAdmin = $user['userAdmin'];
-
-        $baseQuery = $this->baseBoardController->getChapterDetails($chId);
-        $chDetails = $baseQuery['chDetails'];
-        $chActiveId = $baseQuery['chActiveId'];
-        $stateShortName = $baseQuery['stateShortName'];
-        $chDocuments = $baseQuery['chDocuments'];
-        $chEOYDocuments = $baseQuery['chEOYDocuments'];
-        $chFinancialReport = $baseQuery['chFinancialReportFinal'];
-
-        $resources = Resources::with('resourceCategory')->get();
-        $resourceCategories = ResourceCategory::all();
-
-        $chDisbanded = $baseQuery['chDisbanded'];
-
-        $PresDetails = $baseQuery['PresDetails'];
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
-        $bdPositionId = $bdData['bdPositionId'];
-        $borDetails = $bdData['bdDetails'];
-        $bdTypeId = $bdData['bdTypeId'];
-
-        $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId,
+        $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId, 'chEOYDocuments' => $chEOYDocuments,
             'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
-            'chDisbanded' => $chDisbanded, 'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin, 'chEOYDocuments' => $chEOYDocuments,
-            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
+            'awards' => $awards, 'allAwards' => $allAwards, 'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin,
         ];
 
-        return view('boards.disband.editfinancialreportfinal')->with($data);
+        return view('boards.financial')->with($data);
 
     }
 
@@ -151,13 +106,12 @@ class FinancialReportControllerNew extends Controller implements HasMiddleware
      */
     public function saveAccordionFields($financialReport, $input)
     {
-        // $financialReport->farthest_step_visited = $input['FurthestStep'];
+        $financialReport->farthest_step_visited = $input['FurthestStep'];
 
         // CHAPTER DUES
         $financialReport->changed_dues = $input['optChangeDues'] ?? null;
         $financialReport->different_dues = $input['optNewOldDifferent'] ?? null;
         $financialReport->not_all_full_dues = $input['optNoFullDues'] ?? null;
-        $financialReport->not_full_dues_array = $input['Dues'] ?? null;
         $financialReport->total_new_members = $input['TotalNewMembers'] ?? null;
         $financialReport->total_renewed_members = $input['TotalRenewedMembers'] ?? null;
         $financialReport->dues_per_member = $input['MemberDues'] ?? null;
@@ -381,15 +335,14 @@ class FinancialReportControllerNew extends Controller implements HasMiddleware
         $input = $request->all();
         $reportReceived = $input['submitted'] ?? null;
 
-        $chapter = Chapters::find($chapterId);
-        $documentsEOY = DocumentsEOY::find($chapterId);
         $financialReport = FinancialReport::find($chapterId);
-        $farthest_step_visited = max((int)$input['FurthestStep'], (int)$financialReport->farthest_step_visited_coord);
+        $documentsEOY = DocumentsEOY::find($chapterId);
+        $chapter = Chapters::find($chapterId);
 
         DB::beginTransaction();
         try {
             $this->saveAccordionFields($financialReport, $input);
-            $financialReport->farthest_step_visited = $farthest_step_visited;
+
             $financialReport->save();
 
             if ($reportReceived == 1) {
@@ -507,19 +460,12 @@ class FinancialReportControllerNew extends Controller implements HasMiddleware
 
         $chDisbanded = $baseQuery['chDisbanded'];
 
-        $PresDetails = $baseQuery['PresDetails'];
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
-        $bdPositionId = $bdData['bdPositionId'];
-        $borDetails = $bdData['bdDetails'];
-        $bdTypeId = $bdData['bdTypeId'];
-
         $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId,
             'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
             'chDisbanded' => $chDisbanded, 'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin, 'chEOYDocuments' => $chEOYDocuments,
-            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
         ];
 
-        return view('boards.disband.editdisbandchecklist')->with($data);
+        return view('boards.disband')->with($data);
 
     }
 
@@ -538,8 +484,6 @@ class FinancialReportControllerNew extends Controller implements HasMiddleware
         $reportReceived = $input['submitted'] ?? null;
 
         $financialReport = FinancialReportFinal::find($chapterId);
-        $farthest_step_visited = max((int)$input['FurthestStep'], (int)$financialReport->farthest_step_visited_coord);
-
         $documentsEOY = DocumentsEOY::find($chapterId);
         $chapter = Chapters::find($chapterId);
         $disbandChecklist = DisbandedChecklist::find($chapterId);
@@ -547,16 +491,19 @@ class FinancialReportControllerNew extends Controller implements HasMiddleware
         DB::beginTransaction();
         try {
             $this->saveAccordionFields($financialReport, $input);
-            $financialReport->farthest_step_visited = $farthest_step_visited;
+
             $financialReport->save();
 
             if ($reportReceived == 1) {
                 $financialReport->completed_name = $userName;
                 $financialReport->completed_email = $userEmail;
                 $financialReport->submitted = Carbon::now();
+
                 $financialReport->save();
 
                 $documentsEOY->final_report_received = 1;
+                // $documentsEOY->report_received = Carbon::now();
+                // $documentsEOY->report_extension = null;
                 $documentsEOY->save();
 
                 $disbandChecklist->file_financial = 1;
@@ -585,6 +532,7 @@ class FinancialReportControllerNew extends Controller implements HasMiddleware
             $cc_id = $baseQuery['cc_id'];
 
             $baseDsibandedBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($chapterId);
+            // $PresDetails = $baseDsibandedBoardQuery['PresDisbandedDetails'];
             $PresDetails = $baseDsibandedBoardQuery['PresDetails'];
 
             $mailData = array_merge(
