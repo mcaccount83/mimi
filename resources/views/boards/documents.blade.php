@@ -39,8 +39,8 @@
                                     <label>Final Financial Report:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    @if($chDisbanded?->file_financial == 1 && $chEOYDocuments->final_financial_pdf_path != null)
-                                        <button type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="final-pdf" onclick="openPdfViewer('{{ $chEOYDocuments->final_financial_pdf_path }}')">Final Financial PDF</button>
+                                    @if($chDisbanded?->file_financial == 1 && $chReportDocuments->final_financial_pdf_path != null)
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="final-pdf" onclick="openPdfViewer('{{ $chReportDocuments->final_financial_pdf_path }}')">Final Financial PDF</button>
                                     @else
                                         <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" type="button" disabled>Final PDF Not Available</button>
                                     @endif

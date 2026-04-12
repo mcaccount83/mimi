@@ -974,6 +974,8 @@ class ExportController extends Controller implements HasMiddleware
                 $chConfId = $baseQuery['chConfId'];
                 $pcName = $baseQuery['pcName'];
                 $chEOYDocuments = $baseQuery['chEOYDocuments'];
+                $chIRSDocuments = $baseQuery['chIRSDocuments'];
+        $chReportDocuments = $baseQuery['chReportDocuments'];
 
                 $rowData = [
                     'Conference' => $chConfId,
@@ -1063,6 +1065,8 @@ class ExportController extends Controller implements HasMiddleware
                 $chConfId = $baseQuery['chConfId'];
                 $pcName = $baseQuery['pcName'];
                 $chEOYDocuments = $baseQuery['chEOYDocuments'];
+                $chIRSDocuments = $baseQuery['chIRSDocuments'];
+                $chReportDocuments = $baseQuery['chReportDocuments'];
 
                 $rowData = [
                     'Conference' => $chConfId,

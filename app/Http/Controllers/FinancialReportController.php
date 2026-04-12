@@ -17,6 +17,8 @@ use App\Models\BoardsOutgoing;
 use App\Models\Chapters;
 use App\Models\DisbandedChecklist;
 use App\Models\DocumentsEOY;
+use App\Models\DocumentsIRS;
+use App\Models\DocumentsReport;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportFinal;
 use App\Models\ResourceCategory;
@@ -86,6 +88,8 @@ class FinancialReportController extends Controller implements HasMiddleware
         $chActiveId = $baseQuery['chActiveId'];
         $stateShortName = $baseQuery['stateShortName'];
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
+        $chIRSDocuments = $baseQuery['chIRSDocuments'];
+        $chReportDocuments = $baseQuery['chReportDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $awards = $baseQuery['awards'];
         $allAwards = $baseQuery['allAwards'];
@@ -102,7 +106,8 @@ class FinancialReportController extends Controller implements HasMiddleware
         $data = ['chActiveId' => $chActiveId, 'chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,
             'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'stateShortName' => $stateShortName,
             'awards' => $awards, 'allAwards' => $allAwards, 'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'chEOYDocuments' => $chEOYDocuments,
-            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
+            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails,
+            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
         ];
 
         return view('boards.editfinancialreport')->with($data);
@@ -123,6 +128,8 @@ class FinancialReportController extends Controller implements HasMiddleware
         $stateShortName = $baseQuery['stateShortName'];
         $chDocuments = $baseQuery['chDocuments'];
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
+        $chIRSDocuments = $baseQuery['chIRSDocuments'];
+        $chReportDocuments = $baseQuery['chReportDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReportFinal'];
 
         $resources = Resources::with('resourceCategory')->get();
@@ -139,7 +146,8 @@ class FinancialReportController extends Controller implements HasMiddleware
         $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId,
             'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
             'chDisbanded' => $chDisbanded, 'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin, 'chEOYDocuments' => $chEOYDocuments,
-            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
+            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails,
+            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
         ];
 
         return view('boards.disband.editfinancialreportfinal')->with($data);
@@ -413,6 +421,8 @@ class FinancialReportController extends Controller implements HasMiddleware
             $stateShortName = $baseQuery['stateShortName'];
             $chDocuments = $baseQuery['chDocuments'];
             $chEOYDocuments = $baseQuery['chEOYDocuments'];
+            $chIRSDocuments = $baseQuery['chIRSDocuments'];
+        $chReportDocuments = $baseQuery['chReportDocuments'];
             $chFinancialReport = $baseQuery['chFinancialReport'];
             $emailListChap = $baseQuery['emailListChap'];
             $emailListCoord = $baseQuery['emailListCoord'];
@@ -498,6 +508,8 @@ class FinancialReportController extends Controller implements HasMiddleware
         $stateShortName = $baseQuery['stateShortName'];
         $chDocuments = $baseQuery['chDocuments'];
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
+        $chIRSDocuments = $baseQuery['chIRSDocuments'];
+        $chReportDocuments = $baseQuery['chReportDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReportFinal'];
         $awards = $baseQuery['awards'];
         $allAwards = $baseQuery['allAwards'];
@@ -516,7 +528,8 @@ class FinancialReportController extends Controller implements HasMiddleware
         $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId,
             'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
             'chDisbanded' => $chDisbanded, 'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin, 'chEOYDocuments' => $chEOYDocuments,
-            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
+            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails,
+            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
         ];
 
         return view('boards.disband.editdisbandchecklist')->with($data);
@@ -577,6 +590,8 @@ class FinancialReportController extends Controller implements HasMiddleware
             $stateShortName = $baseQuery['stateShortName'];
             $chDocuments = $baseQuery['chDocuments'];
             $chEOYDocuments = $baseQuery['chEOYDocuments'];
+            $chIRSDocuments = $baseQuery['chIRSDocuments'];
+        $chReportDocuments = $baseQuery['chReportDocuments'];
             $chFinancialReport = $baseQuery['chFinancialReportFinal'];
             $emailListChap = $baseQuery['emailListChap'];
             $emailListCoord = $baseQuery['emailListCoord'];
@@ -673,6 +688,8 @@ class FinancialReportController extends Controller implements HasMiddleware
             $stateShortName = $baseQuery['stateShortName'];
             $chDocuments = $baseQuery['chDocuments'];
             $chEOYDocuments = $baseQuery['chEOYDocuments'];
+            $chIRSDocuments = $baseQuery['chIRSDocuments'];
+        $chReportDocuments = $baseQuery['chReportDocuments'];
             $chFinancialReport = $baseQuery['chFinancialReport'];
             $emailListChap = $baseQuery['emailListChap'];
             $emailListCoord = $baseQuery['emailListCoord'];

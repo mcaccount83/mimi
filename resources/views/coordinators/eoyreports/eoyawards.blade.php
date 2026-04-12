@@ -66,7 +66,6 @@
                     }
                 }
             @endphp
-            {{-- @if(!empty($validChapterAwards)) --}}
                 <tr>
                     <td class="text-center">
                         @if ($assistConferenceCoordinatorCondition)
@@ -124,7 +123,6 @@
                         <a href="{{ url("/eoyreports/awardhistory/{$list->id}") }}"><i class="bi bi-file-earmark-text"></i></a>
                     </th>
                 </tr>
-            {{-- @endif --}}
         @endforeach
     </tbody>
 </table>

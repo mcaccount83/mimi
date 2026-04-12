@@ -138,6 +138,16 @@ class Chapters extends Model
         return $this->hasOne(DocumentsEOY::class, 'chapter_id', 'id');  // 'chapter_id' in documentsEOY HasOne 'id' in chapters
     }
 
+    public function documentsIRS(): HasOne
+    {
+        return $this->hasOne(DocumentsIRS::class, 'chapter_id', 'id');  // 'chapter_id' in documentsIRS HasOne 'id' in chapters
+    }
+
+    public function documentsReport(): HasOne
+    {
+        return $this->hasOne(DocumentsReport::class, 'chapter_id', 'id');  // 'chapter_id' in documentsReport HasOne 'id' in chapters
+    }
+
     public function payments(): HasOne
     {
         return $this->hasOne(Payments::class, 'chapter_id', 'id');  // 'chapter_id' in documents HasOne 'id' in chapters

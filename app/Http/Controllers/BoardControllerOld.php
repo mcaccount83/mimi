@@ -22,6 +22,8 @@ use App\Models\BoardsIncoming;
 use App\Models\BoardsOutgoing;
 use App\Models\Chapters;
 use App\Models\DocumentsEOY;
+use App\Models\DocumentsIRS;
+use App\Models\DocumentsReport;
 use App\Models\FinancialReport;
 use App\Models\ForumCategorySubscription;
 use App\Models\GrantRequest;
@@ -166,6 +168,8 @@ class BoardController extends Controller implements HasMiddleware
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $chDocuments = $baseQuery['chDocuments'];
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
+        $chIRSDocuments = $baseQuery['chIRSDocuments'];
+        $chReportDocuments = $baseQuery['chReportDocuments'];
         $boardActive = $chEOYDocuments->new_board_active;
 
         $startMonthName = $baseQuery['startMonthName'];
@@ -201,6 +205,7 @@ class BoardController extends Controller implements HasMiddleware
             'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments, 'chEOYDocuments' => $chEOYDocuments, 'websiteLink' => $websiteLink,
             'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'boardActive' => $boardActive, 'startMonthId' => $startMonthId, 'chapterStatus' => $chapterStatus,
             'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'startDate' => $startDate, 'renewalDate' => $renewalDate,
+            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
         ];
 
         return view('boards.view')->with($data);
@@ -223,6 +228,8 @@ class BoardController extends Controller implements HasMiddleware
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $chDocuments = $baseQuery['chDocuments'];
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
+        $chIRSDocuments = $baseQuery['chIRSDocuments'];
+        $chReportDocuments = $baseQuery['chReportDocuments'];
         $boardActive = $chEOYDocuments->new_board_active;
         $probationReason = $baseQuery['probationReason'];
 
@@ -255,7 +262,8 @@ class BoardController extends Controller implements HasMiddleware
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'allCountries' => $allCountries,
             'startMonthName' => $startMonthName, 'dueDate' => $dueDate, 'userTypeId' => $userTypeId, 'allProbation' => $allProbation, 'userAdmin' => $userAdmin,
             'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments, 'chEOYDocuments' => $chEOYDocuments,
-            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'boardActive' => $boardActive, 'startMonthId' => $startMonthId
+            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'boardActive' => $boardActive, 'startMonthId' => $startMonthId,
+            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
         ];
 
         return view('boards.editprofile')->with($data);
@@ -967,6 +975,8 @@ class BoardController extends Controller implements HasMiddleware
         $stateShortName = $baseQuery['stateShortName'];
         // $chDocuments = $baseQuery['chDocuments'];
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
+        $chIRSDocuments = $baseQuery['chIRSDocuments'];
+        $chReportDocuments = $baseQuery['chReportDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $awards = $baseQuery['awards'];
         $allAwards = $baseQuery['allAwards'];
@@ -977,6 +987,7 @@ class BoardController extends Controller implements HasMiddleware
         $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,
             'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'stateShortName' => $stateShortName,
             'awards' => $awards, 'allAwards' => $allAwards, 'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'chEOYDocuments' => $chEOYDocuments,
+            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
         ];
 
         return view('boards.financial')->with($data);
@@ -1029,6 +1040,8 @@ class BoardController extends Controller implements HasMiddleware
             $stateShortName = $baseQuery['stateShortName'];
             $chDocuments = $baseQuery['chDocuments'];
             $chEOYDocuments = $baseQuery['chEOYDocuments'];
+            $chIRSDocuments = $baseQuery['chIRSDocuments'];
+        $chReportDocuments = $baseQuery['chReportDocuments'];
             $chFinancialReport = $baseQuery['chFinancialReport'];
             $emailListChap = $baseQuery['emailListChap'];
             $emailListCoord = $baseQuery['emailListCoord'];

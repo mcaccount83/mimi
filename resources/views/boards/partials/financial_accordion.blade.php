@@ -2258,22 +2258,22 @@
         <div id="collapseEleven" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited == '11' ? 'show' : '' }}" data-bs-parent="#accordion">
             <div class="accordion-body">
 <section>
-    @if (!is_null($chEOYDocuments->irs_path))
+    @if (!is_null($chIRSDocuments->irs_path))
         <div class="col-md-12">
-            <label>990N Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->irs_path }}">&nbsp; View 990N Confirmation</a><br>
+            <label>990N Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chIRSDocuments->irs_path }}">&nbsp; View 990N Confirmation</a><br>
         </div>
     @endif
 
     <div class="col-12" id="FileIRSBlock">
         <strong style="color: #dc3545;">Please Note</strong><br>
             This will refresh the screen - be sure to save all work before clicking button to Upload or Replace Bank Statement(s).<br>
-        @if (!is_null($chEOYDocuments->irs_path))
+        @if (!is_null($chIRSDocuments->irs_path))
             <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace 990N Confirmation</button>
         @else
             <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="show990NUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Upload 990N Confirmation</button>
         @endif
     </div>
-    <input type="hidden" name="IRSFiling" id="IRSFiling" value="{{ $chEOYDocuments->irs_path }}">
+    <input type="hidden" name="IRSFiling" id="IRSFiling" value="{{ $chIRSDocuments->irs_path }}">
     <div class="clearfix"></div>
     <div class="col-md-12"><br></div>
 

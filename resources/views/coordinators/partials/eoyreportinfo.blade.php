@@ -31,6 +31,6 @@
 <div class="row">
     <div class="col-auto fw-bold">990N Verifed on irs.gov:</div>
     <div class="col text-end">
-        {{ $chEOYDocuments->irs_verified == 1 ? 'YES' : 'NO' }}
+        {{ $chIRSDocuments->irs_verified == 1 ? 'YES' : 'NO' }}
     </div>
 </div>

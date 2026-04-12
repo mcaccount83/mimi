@@ -157,12 +157,12 @@
                                             <h4>Financial Report</h4>
                                         @else
                                             <h4>Financial Report has been submitted.</h4>
-                                             @if ($chEOYDocuments->final_financial_pdf_path == null)
+                                             @if ($chReportDocuments->final_financial_pdf_path == null)
                                              <button type="button" class="btn bg-primary" disabled>
                                                 <i class="bi bi-file-earmark-pdf-fill me-2"></i>Financial PDF Not Available
                                             </button>
                                             @else
-                                            <button type="button" id="btn-download-pdf" class="btn bg-primary" onclick="openPdfViewer('{{ $chEOYDocuments->final_financial_pdf_path }}')">
+                                            <button type="button" id="btn-download-pdf" class="btn bg-primary" onclick="openPdfViewer('{{ $chReportDocuments->final_financial_pdf_path }}')">
                                                 <i class="bi bi-file-earmark-pdf-fill me-2"></i>View/Download Financial Report
                                             </button>
                                         @endif

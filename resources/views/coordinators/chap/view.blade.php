@@ -191,8 +191,8 @@
                                     <label>Final Financial Report:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    @if($chDisbanded?->file_financial == 1 && $chEOYDocuments->final_financial_pdf_path != null)
-                                        <button type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="final-pdf" onclick="openPdfViewer('{{ $chEOYDocuments->final_financial_pdf_path }}')">Final Financial PDF</button>
+                                    @if($chDisbanded?->file_financial == 1 && $chReportDocuments->final_financial_pdf_path != null)
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="final-pdf" onclick="openPdfViewer('{{ $chReportDocuments->final_financial_pdf_path }}')">Final Financial PDF</button>
                                     @else
                                         <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" type="button" disabled>Final PDF Not Available</button>
                                     @endif
@@ -452,7 +452,7 @@
                                         'Roster' => $chEOYDocuments->roster_path ?? null,
                                         'Statement' => $chEOYDocuments->statement_1_path ?? null,
                                         'Additional Statement' => $chEOYDocuments->statement_2_path ?? null,
-                                        '990N Confirmation' => $chEOYDocuments->irs_path ?? null,
+                                        '990N Confirmation' => $chIRSDocuments->irs_path ?? null,
                                     ] : [];
 
                                     $included = array_keys(array_filter($attachments, fn($path) => $path != null));
@@ -504,7 +504,7 @@
                                 <div class="col-sm-3">
                                     <label>990N Filing:</label>
                                 </div>
-                                @if ($chEOYDocuments->irs_verified == 1)
+                                @if ($chIRSDocuments->irs_verified == 1)
                                     <div class="col-sm-9">
                                         990N Filing was verified on the IRS website.
                                     </div>

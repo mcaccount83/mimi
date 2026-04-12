@@ -12,6 +12,8 @@ use App\Mail\ProbationChapReleaseLetter;
 use App\Mail\ProbationChapWarningPartyLetter;
 use App\Models\Documents;
 use App\Models\DocumentsEOY;
+use App\Models\DocumentsIRS;
+use App\Models\DocumentsReport;
 use App\Models\GoogleDrive;
 use App\Models\GrantRequest;
 use App\Services\PositionConditionsService;
@@ -126,7 +128,7 @@ class PDFController extends Controller
         $filecontent = file_get_contents($pdfPath);
 
         if ($file_id = $this->googleController->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)) {
-            $existingDocRecord = DocumentsEOY::where('chapter_id', $chapterId)->first();
+            $existingDocRecord = DocumentsReport::where('chapter_id', $chapterId)->first();
             if ($existingDocRecord) {
                 $existingDocRecord->$yearColumnName = $file_id;
                 $existingDocRecord->save();
@@ -134,7 +136,7 @@ class PDFController extends Controller
                 Log::error("Expected document record for chapter_id {$chapterId} not found");
                 $newDocData = ['chapter_id' => $chapterId];
                 $newDocData[$yearColumnName] = $file_id;
-                DocumentsEOY::create($newDocData);
+                DocumentsReport::create($newDocData);
             }
 
             return $pdfPath;  // Return the full local stored path
@@ -185,7 +187,7 @@ class PDFController extends Controller
         $filecontent = file_get_contents($pdfPath);
 
         if ($file_id = $this->googleController->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
-            $existingDocRecord = DocumentsEOY::where('chapter_id', $chapterId)->first();
+            $existingDocRecord = DocumentsReport::where('chapter_id', $chapterId)->first();
             if ($existingDocRecord) {
                 $existingDocRecord->final_financial_pdf_path = $file_id;
                 $existingDocRecord->save();
@@ -193,7 +195,7 @@ class PDFController extends Controller
                 Log::error("Expected document record for chapter_id {$chapterId} not found");
                 $newDocData = ['chapter_id' => $chapterId];
                 $newDocData['final_financial_pdf_path'] = $file_id;
-                DocumentsEOY::create($newDocData);
+                DocumentsReport::create($newDocData);
             }
 
             return $pdfPath;  // Return the full local stored path
@@ -210,6 +212,8 @@ class PDFController extends Controller
         $stateShortName = $baseQuery['stateShortName'];
         $chDocuments = $baseQuery['chDocuments'];
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
+        $chIRSDocuments = $baseQuery['chIRSDocuments'];
+        $chReportDocuments = $baseQuery['chReportDocuments'];
         $chActiveId = $baseQuery['chActiveId'];
 
         if ($chActiveId == 1) {
@@ -1461,16 +1465,16 @@ class PDFController extends Controller
                 'pres_state.state_short_name as pres_state',
                 'bd_active.zip as pres_zip',
             ])
-            ->leftJoin('documents', 'chapters.id', '=', 'documents.chapter_id')
+            ->leftJoin('documents_eoy', 'chapters.id', '=', 'documents_eoy.chapter_id')
             ->leftJoin('boards as bd_active', function ($join) {
                 $join->on('chapters.id', '=', 'bd_active.chapter_id')
                     ->where('bd_active.board_position_id', '=', 1);
             })
             ->leftJoin('state as pres_state', 'bd_active.state_id', '=', 'pres_state.id')
-            ->where('documents.irs_wrongdate', 1)
+            ->where('documents_eoy.irs_wrongdate', 1)
             ->where(function ($query) {
-                $query->whereNull('documents.irs_notified')
-                    ->orWhere('documents.irs_notified', '!=', '1');
+                $query->whereNull('documents_eoy.irs_notified')
+                    ->orWhere('documents_eoy.irs_notified', '!=', '1');
             })
             ->get()
             ->sortBy('ein');
@@ -1493,16 +1497,16 @@ class PDFController extends Controller
                 'pres_state.state_short_name as pres_state',
                 'bd_active.zip as pres_zip',
             ])
-            ->leftJoin('documents', 'chapters.id', '=', 'documents.chapter_id')
+            ->leftJoin('documents_eoy', 'chapters.id', '=', 'documents_eoy.chapter_id')
             ->leftJoin('boards as bd_active', function ($join) {
                 $join->on('chapters.id', '=', 'bd_active.chapter_id')
                     ->where('bd_active.board_position_id', '=', 1);
             })
             ->leftJoin('state as pres_state', 'bd_active.state_id', '=', 'pres_state.id')
-            ->where('documents.irs_notfound', 1)
+            ->where('documents_eoy.irs_notfound', 1)
             ->where(function ($query) {
-                $query->whereNull('documents.irs_notified')
-                    ->orWhere('documents.irs_notified', '!=', '1');
+                $query->whereNull('documents_eoy.irs_notified')
+                    ->orWhere('documents_eoy.irs_notified', '!=', '1');
             })
             ->get()
             ->sortBy('ein');
@@ -1525,16 +1529,16 @@ class PDFController extends Controller
                 'pres_state.state_short_name as pres_state',
                 'bd_active.zip as pres_zip',
             ])
-            ->leftJoin('documents', 'chapters.id', '=', 'documents.chapter_id')
+            ->leftJoin('documents_eoy', 'chapters.id', '=', 'documents_eoy.chapter_id')
             ->leftJoin('boards as bd_active', function ($join) {
                 $join->on('chapters.id', '=', 'bd_active.chapter_id')
                     ->where('bd_active.board_position_id', '=', 1);
             })
             ->leftJoin('state as pres_state', 'bd_active.state_id', '=', 'pres_state.id')
-            ->where('documents.irs_filedwrong', 1)
+            ->where('documents_eoy.irs_filedwrong', 1)
             ->where(function ($query) {
-                $query->whereNull('documents.irs_notified')
-                    ->orWhere('documents.irs_notified', '!=', '1');
+                $query->whereNull('documents_eoy.irs_notified')
+                    ->orWhere('documents_eoy.irs_notified', '!=', '1');
             })
             ->get()
             ->sortBy('ein');

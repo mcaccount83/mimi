@@ -38,7 +38,7 @@ class BaseBoardController extends Controller
         // Load chapter with common relations
         $chDetails = Chapters::with([
             'country', 'state', 'startMonth', 'webLink', 'documents', 'financialReport', 'financialReportFinal', 'payments',
-            'reportReviewer', 'primaryCoordinator', 'probation', 'disbandCheck', 'activeStatus', 'documentsEOY',
+            'reportReviewer', 'primaryCoordinator', 'probation', 'disbandCheck', 'activeStatus', 'documentsEOY', 'documentsIRS', 'documentsReport'
         ])->find($id);
 
         $chId = $chDetails->id;
@@ -92,14 +92,16 @@ class BaseBoardController extends Controller
         $chPayments = $chDetails->payments;
         $chDocuments = $chDetails->documents;
         $chEOYDocuments = $chDetails->documentsEOY;
+        $chIRSDocuments = $chDetails->documentsIRS;
+        $chReportDocuments = $chDetails->documentsReort;
         $reviewerEmail = $chDetails->reportReviewer?->email;
         $chFinancialReport = $chDetails->financialReport;
         $chFinancialReportFinal = $chDetails->financialReportFinal;
         $chDisbanded = $chDetails->disbandCheck;
 
         $financialReportPdfs = [];
-        if ($chEOYDocuments) {
-            foreach ($chEOYDocuments->getAttributes() as $column => $value) {
+        if ($chReportDocuments) {
+            foreach ($chReportDocuments->getAttributes() as $column => $value) {
                 if (preg_match('/^(\d{4})_financial_pdf_path$/', $column, $matches) && !empty($value)) {
                     $year = $matches[1];
                     $financialReportPdfs[$year] = $value;
@@ -137,6 +139,7 @@ class BaseBoardController extends Controller
             'chActiveId' => $chActiveId, 'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord,
             'emailCC' => $emailCC, 'chActiveStatus' => $chActiveStatus, 'reviewerEmail' => $reviewerEmail, 'awards' => $chFinancialReport, 'pcEmail' => $pcEmail,
             'allCountries' => $allCountries, 'pcDetails' => $pcDetails, 'chDisbanded' => $chDisbanded, 'allProbation' => $allProbation, 'chEOYDocuments' => $chEOYDocuments,
+            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
             'probationReason' => $probationReason, 'dueDate' => $dueDate, 'startMonthId' => $startMonthId, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink,
             'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'startDate' => $startDate, 'renewalDate' => $renewalDate, 'financialReportPdfs' => $financialReportPdfs,
             'chAwards' => $chAwards, 'currentApprovedAwards' => $currentApprovedAwards,

@@ -284,7 +284,7 @@ class BaseChapterController extends Controller
     public function getChapterDetails($chId)
     {
         $chDetails = Chapters::with(['country', 'state', 'documents', 'financialReport', 'financialReportReview','startMonth', 'primaryCoordinator',
-            'payments', 'probation', 'financialReportFinal', 'documentsEOY'])->find($chId);
+            'payments', 'probation', 'financialReportFinal', 'documentsEOY', 'documentsIRS', 'documentsReport'])->find($chId);
         $chActiveId = $chDetails->active_status;
         $chActiveStatus = $chDetails->activeStatus->active_status;
 
@@ -310,6 +310,8 @@ class BaseChapterController extends Controller
         $chDocuments = $chDetails->documents;
         $chEOYDocuments = $chDetails->documentsEOY;
         $reviewComplete = $chDetails->documentsEOY?->review_complete ?? null;
+        $chIRSDocuments = $chDetails->documentsIRS;
+        $chReportDocuments = $chDetails->documentsReort;
         $chFinancialReport = $chDetails->financialReport;
         $chFinancialReportFinal = $chDetails->financialReportFinal;
         $chFinancialReportReview = $chDetails->financialReportReview;
@@ -365,7 +367,7 @@ class BaseChapterController extends Controller
         return ['chDetails' => $chDetails, 'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'allActive' => $allActive,
             'conferenceDescription' => $conferenceDescription, 'chConfId' => $chConfId, 'chRegId' => $chRegId, 'chPcId' => $chPcId, 'chId' => $chId, 'chFinancialReportFinal' => $chFinancialReportFinal,
             'chDocuments' => $chDocuments, 'reviewComplete' => $reviewComplete, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards, 'chPayments' => $chPayments,
-            'allRegions' => $allRegions, 'allCountries' => $allCountries, 'chEOYDocuments' => $chEOYDocuments,
+            'allRegions' => $allRegions, 'allCountries' => $allCountries, 'chEOYDocuments' => $chEOYDocuments, 'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
             'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'pcList' => $pcList, 'rrList' => $rrList, 'emailCCData' => $emailCCData, 'chActiveStatus' => $chActiveStatus,
             'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC, 'emailPC' => $emailPC, 'cc_id' => $cc_id,
             'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink, 'pcName' => $pcName, 'probationReason' => $probationReason,
@@ -478,6 +480,8 @@ class BaseChapterController extends Controller
             'documents',
             'payments',
             'documentsEOY',
+            'chIRSDocuments',
+            'chReportDocuments',
             'primaryCoordinator',
             'activeStatus',
             'status',
@@ -507,6 +511,8 @@ class BaseChapterController extends Controller
                 'chDocuments'    => $ch->documents,
                 'chPayments'     => $ch->payments,
                 'chEOYDocuments' => $ch->documentsEOY,
+                'chIRSDocuments' => $ch->documentsIRS,
+                'chReportDocuments' => $ch->documentsReport,
                 'stateShortName' => $stateShortName,
                 'regionLongName' => $ch->state->region->long_name,
                 'chConfId'       => $ch->state->conference_id,

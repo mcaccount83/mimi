@@ -21,12 +21,12 @@
                                 <h3>Final Financial Report</h3>
                             @else
                                 <h3>Financial Report has been submitted.</h3>
-                                    @if ($chEOYDocuments->final_financial_pdf_path == null)
+                                    @if ($chReportDocuments->final_financial_pdf_path == null)
                                     <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" disabled>
                                     <i class="bi bi-file-earmark-pdf-fill btn-smme-2"></i>Financial Report PDF Not Available
                                 </button>
                                 @else
-                                <button type="button" id="btn-download-pdf" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="openPdfViewer('{{ $chEOYDocuments->final_financial_pdf_path }}')">
+                                <button type="button" id="btn-download-pdf" class="btn btn-primary bg-gradient btn-sm mb-2" onclick="openPdfViewer('{{ $chReportDocuments->final_financial_pdf_path }}')">
                                     <i class="bi bi-file-earmark-pdf-fill me-2"></i>View/Download Financial Report
                                 </button>
                             @endif
@@ -46,7 +46,7 @@
                                     Your chapter's final Financial Report Review has been submitted.<br>
                                     Please save a copy of the PDF for your records.</span><br>
                                 <br>
-                                <button type="button" id="btn-download-pdf" class="btn btn-primary bg-gradient" onclick="openPdfViewer('{{ $chEOYDocuments->final_financial_pdf_path }}')">Financial Report PDF</button>
+                                <button type="button" id="btn-download-pdf" class="btn btn-primary bg-gradient" onclick="openPdfViewer('{{ $chReportDocuments->final_financial_pdf_path }}')">Financial Report PDF</button>
                             @endif
                         </div>
                 </div>

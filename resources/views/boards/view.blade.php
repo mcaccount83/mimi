@@ -364,8 +364,8 @@
                                     <label>Final Financial Report:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    @if($chDisbanded?->file_financial == 1 && $chEOYDocuments->final_financial_pdf_path != null)
-                                        <button type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="final-pdf" onclick="openPdfViewer('{{ $chEOYDocuments->final_financial_pdf_path }}')">Final Financial PDF</button>
+                                    @if($chDisbanded?->file_financial == 1 && $chReportDocuments->final_financial_pdf_path != null)
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="final-pdf" onclick="openPdfViewer('{{ $chReportDocuments->final_financial_pdf_path }}')">Final Financial PDF</button>
                                     @else
                                         <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" type="button" disabled>Final PDF Not Available</button>
                                     @endif
@@ -633,16 +633,16 @@
                                         @if($userTypeId == \App\Enums\UserTypeEnum::COORD
                                         ? ($displayEOYTESTING || $displayEOYLIVE || $ITCondition)
                                         : $displayEINInstructionsLIVE)
-                                            @if (!empty($chEOYDocuments->irs_path))
-                                                <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chEOYDocuments->irs_path }}')">View 990N Confirmation</button>
+                                            @if (!empty($chIRSDocuments->irs_path))
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chIRSDocuments->irs_path }}')">View 990N Confirmation</button>
                                                 <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="show990NUploadModal('{{ $chDetails->id }}')">Replace 990N Confirmation</button>
                                             @else
                                                 <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
                                                 <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="show990NUploadModal('{{ $chDetails->id }}')">Upload 990N Confirmation</button>
                                             {{-- @endif
 
-                                            @if (!empty($chEOYDocuments->irs_path))
-                                                <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chEOYDocuments->irs_path }}')">View 990N Confirmation</button>
+                                            @if (!empty($chIRSDocuments->irs_path))
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chIRSDocuments->irs_path }}')">View 990N Confirmation</button>
                                             @else
                                                 <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button> --}}
                                                     {{-- @if($displayEINInstructionsLIVE == true) --}}

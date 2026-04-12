@@ -52,10 +52,10 @@
                                                 <i class="bi bi-file-earmark-pdf-fill me-2"></i>View/Download Disband Letter</button>
                                         @endif
                                         <br>
-                                         @if ($chEOYDocuments->final_financial_pdf_path == null)
+                                         @if ($chReportDocuments->final_financial_pdf_path == null)
                                                 <button type="button" class="btn btn-primary bg-gradient btn-sm mb-2" disabled><i class="bi bi-file-earmark-pdf-fill me-2"></i>Financial Report PDF Not Available</button>
                                             @else
-                                            <button type="button" id="btn-download-pdf" class="btn btn-primary bg-gradient btn-sm mb-2 keep-enabled" onclick="openPdfViewer('{{ $chEOYDocuments->final_financial_pdf_path }}')">
+                                            <button type="button" id="btn-download-pdf" class="btn btn-primary bg-gradient btn-sm mb-2 keep-enabled" onclick="openPdfViewer('{{ $chReportDocuments->final_financial_pdf_path }}')">
                                                 <i class="bi bi-file-earmark-pdf-fill me-2"></i>View/Download Financial Report
                                             </button>
                                         @endif

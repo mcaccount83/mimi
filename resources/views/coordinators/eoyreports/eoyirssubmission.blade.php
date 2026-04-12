@@ -70,26 +70,26 @@
 						<td>{{ $list->name }}</td>
                         <td>{{ $list->ein }}</td>
                         </td>
-                        <td @if($list->documentsEOY?->irs_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->documentsEOY?->irs_path != null) YES @else NO @endif
+                        <td @if($list->documentsIRS?->irs_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documentsIRS?->irs_path != null) YES @else NO @endif
                         </td>
-                      <td @if($list->documentsEOY?->irs_verified) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                        @if($list->documentsEOY?->irs_verified) YES @else NO @endif
+                      <td @if($list->documentsIRS?->irs_verified) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                        @if($list->documentsIRS?->irs_verified) YES @else NO @endif
                         </td>
-                        <td @if(!$list->documentsEOY?->irs_issues) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->documentsEOY?->irs_issues) YES @else NO @endif
+                        <td @if(!$list->documentsIRS?->irs_issues) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documentsIRS?->irs_issues) YES @else NO @endif
                         </td>
-                        <td @if(!$list->documentsEOY?->irs_wrongdate && !$list->documentsEOY?->irs_notfound && !$list->documentsEOY?->irs_filedwrong) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->documentsEOY?->irs_wrongdate) WRONG DATES @endif
-                            @if($list->documentsEOY?->irs_notfound) NOT FOUND @endif
-                            @if($list->documentsEOY?->irs_filedwrong) FILED W/WRONG DATES @endif
+                        <td @if(!$list->documentsIRS?->irs_wrongdate && !$list->documentsIRS?->irs_notfound && !$list->documentsIRS?->irs_filedwrong) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documentsIRS?->irs_wrongdate) WRONG DATES @endif
+                            @if($list->documentsIRS?->irs_notfound) NOT FOUND @endif
+                            @if($list->documentsIRS?->irs_filedwrong) FILED W/WRONG DATES @endif
                         </td>
-                        <td @if(!$list->documentsEOY?->irs_notified && $list->documentsEOY?->irs_issues) style="background-color:#dc3545; color: #ffffff;"
-                            @elseif($list->documentsEOY?->irs_notified && $list->documentsEOY?->irs_issues) style="background-color:#28a745; color: #ffffff;"
+                        <td @if(!$list->documentsIRS?->irs_notified && $list->documentsIRS?->irs_issues) style="background-color:#dc3545; color: #ffffff;"
+                            @elseif($list->documentsIRS?->irs_notified && $list->documentsIRS?->irs_issues) style="background-color:#28a745; color: #ffffff;"
                             @else style="background-color: #transparent;" @endif>
-                            @if($list->documentsEOY?->irs_notified) YES @elseif(!$list->documentsEOY?->irs_notified && $list->documentsEOY?->irs_issues) NO @endif
+                            @if($list->documentsIRS?->irs_notified) YES @elseif(!$list->documentsIRS?->irs_notified && $list->documentsIRS?->irs_issues) NO @endif
                         </td>
-                        <td>{{ $list->documentsEOY?->irs_notes?? null }}</td>
+                        <td>{{ $list->documentsIRS?->irs_notes?? null }}</td>
                  </tr>
                   @endforeach
                   </tbody>

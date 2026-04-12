@@ -36,7 +36,7 @@
                     <li class="list-group-item">
                     <div class="row">
                             <label class="col-sm-6 col-form-label">EIN Notes:</label>
-                            <div class="col-sm-6"><input type="text" name="ein_notes" id="ein_notes" class="form-control float-end col-sm-8 mb-1 text-end" value="{{ $chEOYDocuments->ein_notes }}" placeholder="EIN Notes">
+                            <div class="col-sm-6"><input type="text" name="ein_notes" id="ein_notes" class="form-control float-end col-sm-8 mb-1 text-end" value="{{ $chDocuments->ein_notes }}" placeholder="EIN Notes">
                             </div>
                     </div>
                     </li>

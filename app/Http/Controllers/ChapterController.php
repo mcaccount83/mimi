@@ -35,6 +35,8 @@ use App\Models\Country;
 use App\Models\DisbandedChecklist;
 use App\Models\Documents;
 use App\Models\DocumentsEOY;
+use App\Models\DocumentsIRS;
+use App\Models\DocumentsReport;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportFinal;
 use App\Models\ForumCategorySubscription;
@@ -313,6 +315,8 @@ class ChapterController extends Controller implements HasMiddleware
         $chPayments = $baseQuery['chPayments'];
         $chDocuments = $baseQuery['chDocuments'];
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
+        $chIRSDocuments = $baseQuery['chIRSDocuments'];
+        $chReportDocuments = $baseQuery['chReportDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $reviewComplete = $baseQuery['reviewComplete'];
 
@@ -347,6 +351,7 @@ class ChapterController extends Controller implements HasMiddleware
             'chFinancialReport' => $chFinancialReport, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments,
             'conferenceDescription' => $conferenceDescription, 'chDisbanded' => $chDisbanded, 'chEOYDocuments' => $chEOYDocuments, 'dueDate' => $dueDate, 'renewalDate' =>$renewalDate,
             'resources' => $resources, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
+            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
         ];
 
         return view('coordinators.chap.view')->with($data);
@@ -943,6 +948,8 @@ class ChapterController extends Controller implements HasMiddleware
         $chActiveId = $baseQuery['chActiveId'];
         $chDocuments = $baseQuery['chDocuments'];
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
+        $chIRSDocuments = $baseQuery['chIRSDocuments'];
+        $chReportDocuments = $baseQuery['chReportDocuments'];
         $chPayments = $baseQuery['chPayments'];
 
         $stateShortName = $baseQuery['stateShortName'];
@@ -970,7 +977,8 @@ class ChapterController extends Controller implements HasMiddleware
             'startMonthName' => $startMonthName, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus, 'probationReason' => $probationReason,
             'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments,
             'conferenceDescription' => $conferenceDescription, 'allStatuses' => $allStatuses, 'allWebLinks' => $allWebLinks,
-            'pcList' => $pcList, 'confId' => $confId, 'chConfId' => $chConfId, 'startDate' => $startDate, 'dueDate' => $dueDate, 'renewalDate' => $renewalDate
+            'pcList' => $pcList, 'confId' => $confId, 'chConfId' => $chConfId, 'startDate' => $startDate, 'dueDate' => $dueDate, 'renewalDate' => $renewalDate,
+            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
         ];
 
         return view('coordinators.chap.edit')->with($data);

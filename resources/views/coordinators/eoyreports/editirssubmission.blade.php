@@ -62,8 +62,8 @@
                             <label>990N Filing:</label>
                         </div>
                         <div class="col-sm-9">
-                                @if (!empty($chEOYDocuments->irs_path))
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chEOYDocuments->irs_path }}')">View 990N Confirmation</button>
+                                @if (!empty($chIRSDocuments->irs_path))
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chIRSDocuments->irs_path }}')">View 990N Confirmation</button>
                                     <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="show990NUploadModal('{{ $chDetails->id }}')">Replace 990N Confirmation</button>
                                 @else
                                     <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
@@ -77,7 +77,7 @@
                         <div class="col-sm-9">
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="irs_verified" id="irs_verified" class="form-check-input"
-                                {{ $chEOYDocuments->irs_verified == 1 ? 'checked' : ''}}>
+                                {{ $chIRSDocuments->irs_verified == 1 ? 'checked' : ''}}>
                                 <label class="form-check-label" for="irs_verified"></label>
                             </div>
                         </div>
@@ -89,19 +89,19 @@
                         <div class="col-sm-3">
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="irs_issues" id="irs_issues" class="form-check-input"
-                                {{ $chEOYDocuments->irs_issues == 1 ? 'checked' : ''}}>
+                                {{ $chIRSDocuments->irs_issues == 1 ? 'checked' : ''}}>
                                 <label class="form-check-label" for="irs_issues"></label>
                             </div>
                         </div>
                     </div>
 
                     <!-- This row is hidden by default and shows when irs_issues is checked -->
-                    <div class="row mb-3 align-middle" id="irs_details_row" style="display: {{ $chEOYDocuments->irs_issues == 1 ? 'flex' : 'none' }};">
+                    <div class="row mb-3 align-middle" id="irs_details_row" style="display: {{ $chIRSDocuments->irs_issues == 1 ? 'flex' : 'none' }};">
                         <label class="col-sm-2 col-form-label">Wrong Dates Listed:</label>
                         <div class="col-sm-1">
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="irs_wrongdate" id="irs_wrongdate" class="form-check-input exclusive-toggle"
-                                {{ $chEOYDocuments->irs_wrongdate == 1 ? 'checked' : ''}}>
+                                {{ $chIRSDocuments->irs_wrongdate == 1 ? 'checked' : ''}}>
                                 <label class="form-check-label" for="irs_wrongdate"></label>
                             </div>
                         </div>
@@ -109,7 +109,7 @@
                         <div class="col-sm-1">
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="irs_notfound" id="irs_notfound" class="form-check-input exclusive-toggle"
-                                {{ $chEOYDocuments->irs_notfound == 1 ? 'checked' : ''}}>
+                                {{ $chIRSDocuments->irs_notfound == 1 ? 'checked' : ''}}>
                                 <label class="form-check-label" for="irs_notfound"></label>
                             </div>
                         </div>
@@ -117,7 +117,7 @@
                         <div class="col-sm-1">
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="irs_filedwrong" id="irs_filedwrong" class="form-check-input exclusive-toggle"
-                                {{ $chEOYDocuments->irs_filedwrong == 1 ? 'checked' : ''}}>
+                                {{ $chIRSDocuments->irs_filedwrong == 1 ? 'checked' : ''}}>
                                 <label class="form-check-label" for="irs_filedwrong"></label>
                             </div>
                         </div>
@@ -127,7 +127,7 @@
                             <div class="col-sm-1">
                                 <div class="form-check form-switch">
                                     <input type="checkbox" name="irs_notified" id="irs_notified" class="form-check-input"
-                                    {{ $chEOYDocuments->irs_notified == 1 ? 'checked' : ''}} >
+                                    {{ $chIRSDocuments->irs_notified == 1 ? 'checked' : ''}} >
                                     <label class="form-check-label" for="irs_notified"></label>
                                 </div>
                             </div>
@@ -136,9 +136,9 @@
                             <div class="col-sm-1">
                                 <div class="form-check form-switch">
                                     <input type="checkbox" name="irs_notified" id="irs_notified" class="form-check-input"
-                                    {{ $chEOYDocuments->irs_notified == 1 ? 'checked' : ''}} disabled>
+                                    {{ $chIRSDocuments->irs_notified == 1 ? 'checked' : ''}} disabled>
                                     <label class="form-check-label" for="irs_notified"></label>
-                                    <input type="hidden" name="irs_notified" value="{{ $chEOYDocuments->irs_notified }}">
+                                    <input type="hidden" name="irs_notified" value="{{ $chIRSDocuments->irs_notified }}">
                                 </div>
                             </div>
                         @endif
@@ -148,12 +148,116 @@
                       <div class="row mb-2">
                         <label class="col-sm-3 col-form-label">990 Submission Notes:</label>
                         <div class="col-sm-9">
-                        <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chEOYDocuments->irs_notes }}" >
+                        <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chIRSDocuments->irs_notes }}" >
                         </div>
                     </div>
 
                     </div>
                   </div>
+              <!-- /.card-body -->
+
+              {{-- <div class="card-body">
+                    <div class="card-header bg-transparent border-0">
+                <h3>Last Year's 990N Filing Details</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+
+                        <div class="row mb-2">
+                        <div class="col-sm-3">
+                            <label>990N Filing:</label>
+                        </div>
+                        <div class="col-sm-9">
+                                @if (!empty($chIRSDocuments->irs_path_previous))
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chIRSDocuments->irs_path }}')">View 990N Confirmation</button>
+                                @else
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
+                                @endif
+                        </div>
+                    </div>
+
+                    <div class="row mb-2 align-middle">
+                        <label class="col-sm-3 col-form-label">990N Verified on IRS Website:</label>
+                        <div class="col-sm-9">
+                            <div class="form-check form-switch">
+                                <input type="checkbox" name="irs_verified" id="irs_verified" class="form-check-input"
+                                {{ $chIRSDocuments->irs_verified_previous == 1 ? 'checked' : ''}} disabled>
+                                <label class="form-check-label" for="irs_verified"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3 align-middle">
+                        <label class="col-sm-3 col-form-label">990N Submission Issues:<br>
+                            <small>(Wrong Dates, Not Found, etc)</small></label>
+                        <div class="col-sm-3">
+                            <div class="form-check form-switch">
+                                <input type="checkbox" name="irs_issues" id="irs_issues" class="form-check-input"
+                                {{ $chIRSDocuments->irs_issues_previous == 1 ? 'checked' : ''}} disabled>
+                                <label class="form-check-label" for="irs_issues"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- This row is hidden by default and shows when irs_issues is checked -->
+                    <div class="row mb-3 align-middle" id="irs_details_row" style="display: {{ $chIRSDocuments->irs_issues == 1 ? 'flex' : 'none' }};">
+                        <label class="col-sm-2 col-form-label">Wrong Dates Listed:</label>
+                        <div class="col-sm-1">
+                            <div class="form-check form-switch">
+                                <input type="checkbox" name="irs_wrongdate" id="irs_wrongdate" class="form-check-input exclusive-toggle"
+                                {{ $chIRSDocuments->irs_wrongdate_previous == 1 ? 'checked' : ''}} disabled>
+                                <label class="form-check-label" for="irs_wrongdate"></label>
+                            </div>
+                        </div>
+                        <label class="col-sm-2 col-form-label">Chapter Not Found:</label>
+                        <div class="col-sm-1">
+                            <div class="form-check form-switch">
+                                <input type="checkbox" name="irs_notfound" id="irs_notfound" class="form-check-input exclusive-toggle"
+                                {{ $chIRSDocuments->irs_notfound_previous == 1 ? 'checked' : ''}} disabled>
+                                <label class="form-check-label" for="irs_notfound"></label>
+                            </div>
+                        </div>
+                        <label class="col-sm-2 col-form-label">FILED w/Wrong Dates</label>
+                        <div class="col-sm-1">
+                            <div class="form-check form-switch">
+                                <input type="checkbox" name="irs_filedwrong" id="irs_filedwrong" class="form-check-input exclusive-toggle"
+                                {{ $chIRSDocuments->irs_filedwrong_previous == 1 ? 'checked' : ''}} disabled>
+                                <label class="form-check-label" for="irs_filedwrong"></label>
+                            </div>
+                        </div>
+
+                        @if($ITCondition == 1 )
+                            <label class="col-sm-2 col-form-label">IRS Notified:</label>
+                            <div class="col-sm-1">
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" name="irs_notified" id="irs_notified" class="form-check-input"
+                                    {{ $chIRSDocuments->irs_notified_previous == 1 ? 'checked' : ''}} disabled>
+                                    <label class="form-check-label" for="irs_notified"></label>
+                                </div>
+                            </div>
+                        @else
+                            <label class="col-sm-2 col-form-label">IRS Notified:</label>
+                            <div class="col-sm-1">
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" name="irs_notified" id="irs_notified" class="form-check-input"
+                                    {{ $chIRSDocuments->irs_notified_previous == 1 ? 'checked' : ''}} disabled>
+                                    <label class="form-check-label" for="irs_notified"></label>
+                                    <input type="hidden" name="irs_notified" value="{{ $chIRSDocuments->irs_notified }}">
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+
+                         <!-- /.form group -->
+                      <div class="row mb-2">
+                        <label class="col-sm-3 col-form-label">990 Submission Notes:</label>
+                        <div class="col-sm-9">
+                        <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chIRSDocuments->irs_notes_previous }}" disabled>
+                        </div>
+                    </div>
+
+                    </div>
+                  </div> --}}
               <!-- /.card-body -->
             </div>
             <!-- /.card -->

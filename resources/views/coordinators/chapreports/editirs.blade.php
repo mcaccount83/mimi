@@ -128,7 +128,7 @@
                         <div class="row mb-3 row align-items-center  mb-3">
                             <label class="col-sm-2 col-form-label">990N Verifed with IRS:</label>
                             <div class="col-sm-10 form-check form-switch">
-                                <input type="checkbox" name="irs_verified" id="irs_verified" class="form-check-input" {{$chEOYDocuments->irs_verified == 1 ? 'checked' : ''}}>
+                                <input type="checkbox" name="irs_verified" id="irs_verified" class="form-check-input" {{$chEOYDchIRSDocumentsocuments->irs_verified == 1 ? 'checked' : ''}}>
                                 <label class="form-check-label" for="irs_verified"></label>
                             </div>
                         </div>
@@ -138,8 +138,8 @@
                                 <label>990N Submission:</label>
                             </div>
                             <div class="col-sm-10">
-                                @if($chEOYDocuments->irs_path != null)
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chEOYDocuments->irs_path }}')">View/Download 990N Submission</button>
+                                @if($chIRSDocuments->irs_path != null)
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chIRSDocuments->irs_path }}')">View/Download 990N Submission</button>
                                 @else
                                     <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No 990N Submission on File</button>
                                 @endif
@@ -149,7 +149,7 @@
                     <div class="row mb-3 row">
                         <label class="col-sm-2 col-form-label mb-1">990N Submission Notes:</label>
                         <div class="col-sm-10">
-                            <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chEOYDocuments->irs_notes }}" placeholder="990N Submission Notes">
+                            <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chIRSDocuments->irs_notes }}" placeholder="990N Submission Notes">
                         </div>
                     </div>
                 </div>

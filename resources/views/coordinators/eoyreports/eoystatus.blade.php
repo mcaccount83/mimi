@@ -52,7 +52,7 @@
                             'chapterState' => $list->state,
                             'boardElectionReportReceived' => $list->documentsEOY->new_board_submitted,
                             'financialReportReceived' => $list->documentsEOY->financial_report_received,
-                            '990NSubmissionReceived' => $list->documentsEOY->irs_path,
+                            '990NSubmissionReceived' => $list->documentsIRS->irs_path,
                             'einLetterCopyReceived' => $list->documentsEOY->ein_letter,
                         ];
 

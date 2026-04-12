@@ -7,6 +7,8 @@ use App\Enums\OperatingStatusEnum;
 use App\Models\Chapters;
 use App\Models\Documents;
 use App\Models\DocumentsEOY;
+use App\Models\DocumentsIRS;
+use App\Models\DocumentsReport;
 use App\Services\PositionConditionsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -112,10 +114,13 @@ class ChapterReportController extends Controller implements HasMiddleware
         $chPcId = $baseQuery['chPcId'];
         $chDocuments = $baseQuery['chDocuments'];
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
+        $chIRSDocuments = $baseQuery['chIRSDocuments'];
+        $chReportDocuments = $baseQuery['chReportDocuments'];
 
         $data = ['id' => $id, 'chActiveId' => $chActiveId, 'conferenceDescription' => $conferenceDescription, 'chEOYDocuments' => $chEOYDocuments,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'startMonthName' => $startMonthName,
-            'chPcId' => $chPcId, 'chDocuments' => $chDocuments, 'confId' => $confId, 'chConfId' => $chConfId, 'chapterStatus' => $chapterStatus
+            'chPcId' => $chPcId, 'chDocuments' => $chDocuments, 'confId' => $confId, 'chConfId' => $chConfId, 'chapterStatus' => $chapterStatus,
+            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
         ];
 
         return view('coordinators.chapreports.editirs')->with($data);
@@ -132,7 +137,7 @@ class ChapterReportController extends Controller implements HasMiddleware
 
         $chapter = Chapters::find($id);
         $documents = Documents::find($id);
-        $documentsEOY = DocumentsEOY::find($id);
+        $documentsIRS = DocumentsIRS::find($id);
 
         DB::beginTransaction();
         try {
@@ -145,9 +150,9 @@ class ChapterReportController extends Controller implements HasMiddleware
             $documents->ein_sent = $request->has('ein_sent') ? 1 : 0;
             $documents->save();
 
-            $documentsEOY->irs_verified = $request->has('irs_verified') ? 1 : 0;
-            $documentsEOY->irs_notes = $request->input('irs_notes');
-            $documentsEOY->save();
+            $documentsIRS->irs_verified = $request->has('irs_verified') ? 1 : 0;
+            $documentsIRS->irs_notes = $request->input('irs_notes');
+            $documentsIRS->save();
 
             DB::commit();
 

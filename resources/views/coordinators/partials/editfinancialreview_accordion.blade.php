@@ -1653,10 +1653,10 @@
                                 <div class="card-title">ANNUAL REPORT REVIEW <small>(click to open/close)</small></div>
                             </div>
                             <div class="card-body">
-                                @if (!is_null($chEOYDocuments->irs_path))
+                                @if (!is_null($chIRSDocuments->irs_path))
                                     <div class="col-12">
                                         <label>990N Filing Uploaded:</label>
-                                        <a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->irs_path }}">&nbsp; View 990N Confirmation</a><br>
+                                        <a href="https://drive.google.com/uc?export=download&id={{ $chIRSDocuments->irs_path }}">&nbsp; View 990N Confirmation</a><br>
                                     </div>
                                     <div class="col-12" id="990NBlock">
                                         <strong style="color: #dc3545;">Please Note</strong><br>
@@ -1674,7 +1674,7 @@
                                         </button>
                                     </div>
                                 @endif
-                                <input type="hidden" name="990NFiling" id="990NFiling" value="{{ $chEOYDocuments->irs_path }}">
+                                <input type="hidden" name="990NFiling" id="990NFiling" value="{{ $chIRSDocuments->irs_path }}">
                                 <br>
                                 <div class="row mb-3">
                                     <label>Did the chapter file their {{ $irsFilingName }} with the date range of <strong>7/1/{{ $reportYearStart }} - 6/30/{{ $reportYearEnd }}</strong>?<span class="field-required">*&nbsp;</span></label>

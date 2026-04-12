@@ -105,7 +105,7 @@
                     <div class="row mb-2">
                         <label class="col-sm-3 col-form-label">990 Submission Notes:</label>
                         <div class="col-sm-9">
-                        <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chEOYDocuments->irs_notes }}" >
+                        <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chIRSDocuments->irs_notes }}" >
                         </div>
                     </div>
 
@@ -114,8 +114,8 @@
                             <label></label>
                         </div>
                         <div class="col-sm-9">
-                                @if (!empty($chEOYDocuments->irs_path))
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chEOYDocuments->irs_path }}')">View 990N Confirmation</button>
+                                @if (!empty($chIRSDocuments->irs_path))
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chIRSDocuments->irs_path }}')">View 990N Confirmation</button>
                                     <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="show990NUploadModal('{{ $chDetails->id }}')">Replace 990N Confirmation</button>
                                 @else
                                     <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
@@ -129,7 +129,7 @@
                         <div class="col-sm-9">
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="irs_verified" id="irs_verified" class="form-check-input"
-                                {{ $chEOYDocuments->irs_verified == 1 ? 'checked' : ''}}>
+                                {{ $chIRSDocuments->irs_verified == 1 ? 'checked' : ''}}>
                                 <label class="form-check-label" for="irs_verified"></label>
                             </div>
                         </div>

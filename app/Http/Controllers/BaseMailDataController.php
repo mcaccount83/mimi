@@ -310,20 +310,20 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getFinancialDocumentsData($chEOYDocuments)
+    public function getFinancialDocumentsData($chDocuments, $chEOYDocuments, $chIRSDocuments, $chReportDocuments)
     {
         return [
+            'einLetterCopyReceived' => $chDocuments->ein_letter_path,
             'boardElectionReportReceived' => $chEOYDocuments->new_board_submitted,
             'financialReportReceived' => $chEOYDocuments->financial_report_received,
-            '990NSubmissionReceived' => $chEOYDocuments->irs_verified,
-            'einLetterCopyReceived' => $chEOYDocuments->ein_letter_path,
             'rosterPath' => $chEOYDocuments->roster_path,
-            'irsPath' => $chEOYDocuments->irs_path,
             'statement1Path' => $chEOYDocuments->statement_1_path,
             'statement2Path' => $chEOYDocuments->statement_2_path,
-            'financialPdfPath' => $chEOYDocuments->financial_pdf_path,
             'final_report_received' => $chEOYDocuments->final_report_received,
-            'financialFinalPdfPath' => $chEOYDocuments->final_financial_pdf_path,
+            'irsPath' => $chIRSDocuments->irs_path,
+            '990NSubmissionReceived' => $chIRSDocuments->irs_verified,
+            'financialPdfPath' => $chReportDocuments->financial_pdf_path,
+            'financialFinalPdfPath' => $chReportDocuments->final_financial_pdf_path,
         ];
     }
 

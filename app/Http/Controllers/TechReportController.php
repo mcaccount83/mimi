@@ -26,6 +26,8 @@ use App\Models\Coordinators;
 use App\Models\CoordinatorTree;
 use App\Models\Documents;
 use App\Models\DocumentsEOY;
+use App\Models\DocumentsIRS;
+use App\Models\DocumentsReport;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportReview;
 use App\Models\ForumCategorySubscription;
@@ -825,6 +827,7 @@ class TechReportController extends Controller implements HasMiddleware
             $this->resetFinancialReports($reportYearOptions);
             $this->resetChapterFlags();
             $this->resetDocumentsEOY();
+            $this->resetDocumentsIRS();
             $this->updateGoogleDriveYear($reportYearOptions);
             // $this->markAdminEOYComplete($EOYOptions, $updatedId);
 
@@ -950,12 +953,6 @@ class TechReportController extends Controller implements HasMiddleware
     private function resetDocumentsEOY(): void
     {
         DocumentsEoy::query()->update([
-            'irs_verified'              => null,
-            'irs_issues'                => null,
-            'irs_wrongdate'             => null,
-            'irs_notfound'              => null,
-            'irs_filedwrong'            => null,
-            'irs_notified'              => null,
             'new_board_submitted'       => null,
             'new_board_active'          => null,
             'financial_report_received' => null,
@@ -966,11 +963,33 @@ class TechReportController extends Controller implements HasMiddleware
             'report_extension'          => null,
             'extension_notes'           => null,
             'roster_path'               => null,
-            'irs_path'                  => null,
             'statement_1_path'          => null,
             'statement_2_path'          => null,
             'award_path'                => null,
         ]);
+    }
+
+    private function resetDocumentsIRS(): void
+    {
+        DB::statement('
+            UPDATE documents_eoy SET
+                irs_notes_previous     = irs_notes,
+                irs_verified_previous  = irs_verified,
+                irs_issues_previous    = irs_issues,
+                irs_wrongdate_previous = irs_wrongdate,
+                irs_notfound_previous  = irs_notfound,
+                irs_filedwrong_previous = irs_filedwrong,
+                irs_notified_previous  = irs_notified,
+                irs_path_previous      = irs_path,
+                irs_notes              = NULL,
+                irs_verified           = NULL,
+                irs_issues             = NULL,
+                irs_wrongdate          = NULL,
+                irs_notfound           = NULL,
+                irs_filedwrong         = NULL,
+                irs_notified           = NULL,
+                irs_path               = NULL
+        ');
     }
 
     private function updateGoogleDriveYear(array $EOYOptions): void
@@ -1090,14 +1109,44 @@ class TechReportController extends Controller implements HasMiddleware
             'report_notes' => null,
             'report_extension' => null,
             'extension_notes' => null,
-            $yearColumnName => null,
+            // $yearColumnName => null,
             'roster_path' => null,
-            'irs_path' => null,
+            // 'irs_path' => null,
             'statement_1_path' => null,
             'statement_2_path' => null,
             'award_path' => null,
         ]);
+
+        DB::table('documents_eoy')->update([
+            'irs_notes'      => null,
+            'irs_verified'   => null,
+            'irs_issues'     => null,
+            'irs_wrongdate'  => null,
+            'irs_notfound'   => null,
+            'irs_filedwrong' => null,
+            'irs_notified'   => null,
+            'irs_path'       => null,
+        ]);
+
+        DB::table('documents_report')->update([
+            $yearColumnName => null,
+        ]);
+
     }
+
+    // private function resetDocumentsIRSLIVE(): void
+    // {
+    //     DB::table('documents_eoy')->update([
+    //         'irs_notes'      => null,
+    //         'irs_verified'   => null,
+    //         'irs_issues'     => null,
+    //         'irs_wrongdate'  => null,
+    //         'irs_notfound'   => null,
+    //         'irs_filedwrong' => null,
+    //         'irs_notified'   => null,
+    //         'irs_path'       => null,
+    //     ]);
+    // }
 
     private function copyTablesFINAL(int $currentMonth, int $currentYear): void
     {

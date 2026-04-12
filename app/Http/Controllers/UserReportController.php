@@ -175,6 +175,8 @@ class UserReportController extends Controller implements HasMiddleware
         $chPayments = $baseQuery['chPayments'];
         $chDocuments = $baseQuery['chDocuments'];
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
+        $chIRSDocuments = $baseQuery['chIRSDocuments'];
+        $chReportDocuments = $baseQuery['chReportDocuments'];
 
         $startMonthName = $baseQuery['startMonthName'];
         $chapterStatus = $baseQuery['chapterStatus'];
@@ -185,7 +187,7 @@ class UserReportController extends Controller implements HasMiddleware
         $data = ['id' => $id, 'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'allCountries' => $allCountries, 'allStates' => $allStates,
             'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'chDetails' => $chDetails,
             'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chPayments' => $chPayments, 'chDocuments' => $chDocuments, 'chapterStatus' => $chapterStatus,
-            'startMonthName' => $startMonthName, 'chEOYDocuments' => $chEOYDocuments,
+            'startMonthName' => $startMonthName, 'chEOYDocuments' => $chEOYDocuments, 'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
         ];
 
         return view('coordinators.userreports.addnewboard')->with($data);

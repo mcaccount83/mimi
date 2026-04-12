@@ -8,7 +8,7 @@
             <button class="accordion-button collapsed"type="button"
                     data-bs-toggle="collapse" data-bs-target="#collapseReportOne"
                     aria-expanded="false" aria-controls="collapseReportOne">
-                #1 - Reset EOY/Report Year - JAN
+                #1 - Reset Report Year - JAN
             </button>
         </h2>
         <div id="collapseReportOne" class="accordion-collapse collapse" data-bs-parent="#accordionReport">

@@ -79,8 +79,8 @@
             <div class="row mb-1">
                     <div class="col-auto fw-bold">990N Filing:</div>
                     <div class="col text-end">
-                @if ($chEOYDocuments->irs_path != null)
-                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->irs_path }}">990N Confirmation</a>
+                @if ($chIRSDocuments->irs_path != null)
+                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $chIRSDocuments->irs_path }}">990N Confirmation</a>
                 @else
                     <span class="badge bg-secondary fs-7">No file attached</span>
                 @endif
