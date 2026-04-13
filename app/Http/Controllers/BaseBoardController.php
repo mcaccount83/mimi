@@ -76,10 +76,17 @@ class BaseBoardController extends Controller
 
         // Current year from the blob
         $financialReport = FinancialReport::find($id);
-        $currentAwards = $financialReport->chapter_awards
-            ? unserialize(base64_decode($financialReport->chapter_awards))
+
+        $chapterAwards = $financialReport?->chapter_awards;
+
+        $currentAwards = $chapterAwards
+            ? unserialize(base64_decode($chapterAwards))
             : [];
-        $currentApprovedAwards = array_filter($currentAwards, fn($a) => !empty($a['awards_approved']));
+
+        $currentApprovedAwards = array_filter(
+            $currentAwards,
+            fn($a) => !empty($a['awards_approved'])
+        );
         // Historical from the history table (exclude current year)
         $chAwards = ChapterAwardHistory::with('awardtype', 'fiscalYear')
             ->where('chapter_id', $chId)
