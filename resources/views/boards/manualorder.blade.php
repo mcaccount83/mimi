@@ -8,7 +8,6 @@
               <div class="card-body">
                 <div class="card-header text-center bg-transparent">
                     <h2 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h2>
-                    {{-- <p class="mb-0">{{ $conferenceDescription }} Conference, {{ $conferenceDescription }} Region --}}
                         <br>
                         <h3>Manual Order Form - Online</h3>
                     </div>

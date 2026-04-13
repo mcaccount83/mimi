@@ -40,7 +40,7 @@
                     @else
                         <h3 class="mb-0"> {{$stateShortName}}</h3>
                     @endif
-                    <p class="mb-0">{{ $conferenceDescription }} Conference, {{ $conferenceDescription }} Region
+                    <p class="mb-0">{{ $conferenceDescription }} Conference, {{ $regionLongName }} Region
                   </p>
                     </div>
 

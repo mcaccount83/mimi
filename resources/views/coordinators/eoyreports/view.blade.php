@@ -27,7 +27,7 @@
               <div class="card-body">
                     <div class="card-header text-center bg-transparent">
                     <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
-                    <p class="mb-0">{{ $conferenceDescription }} Conference, {{ $conferenceDescription }} Region
+                    <p class="mb-0">{{ $conferenceDescription }} Conference, {{ $regionLongName }} Region
                   </p>
                 </div>
 
