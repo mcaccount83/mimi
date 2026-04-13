@@ -35,6 +35,7 @@
                     <div class="card-header text-center bg-transparent">
                         <h3 class="mb-0">{{ $inqDetails->state->state_long_name}}</h3>
                         <p class="mb-0">{{ $inqDetails->state->conference->conference_description }} Conference, {{ $inqDetails->state->region->long_name }} Region
+                        </p>
                         <br>
                         @if ($inquiriesMapLink)
                             {{-- <a href="{{ $inquiriesMapLink }}" target="_blank" class="btn btn-primary bg-gradient btn-xs m-1">

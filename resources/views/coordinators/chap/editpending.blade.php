@@ -37,8 +37,23 @@
                 <div class="card-body">
                     <div class="card-header text-center bg-transparent">
                     <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
-                    <p class="mb-0">{{ $conferenceDescription }} Conference, {{ $conferenceDescription }} Region
+                    <p class="mb-0">{{ $conferenceDescription }} Conference, {{ $regionLongName }} Region
                   </p>
+                  @if ($inquiriesMapLink)
+                        {{-- <a href="{{ $inquiriesMapLink }}" target="_blank" class="btn btn-primary bg-gradient btn-xs m-1">
+                            <i class="bi bi-pin-map-fill me-2"></i>VIEW REGION MAP
+                        </a> --}}
+                        <a href="{{ $inquiriesMapLink }}"
+                            target="_blank"
+                            class="btn btn-primary bg-gradient btn-xs m-1"
+                            onclick="copyAddressAndOpen(event, this)">
+                                <i class="bi bi-pin-map-fill me-2"></i>VIEW REGION MAP
+                        </a>
+                    @else
+                        <button type="button" class="btn btn-primary bg-gradient btn-xs m-1" disabled>
+                            <i class="bi bi-pin-map-fill me-2"></i>VIEW REGION MAP
+                        </button>
+                    @endif
                 </div>
 
                   <ul class="list-group list-group-flush mb-3">
@@ -252,5 +267,43 @@
 @endsection
 @section('customscript')
     @include('layouts.scripts.disablefields')
+
+    <script>
+function copyAddressAndOpen(e, el) {
+    e.preventDefault();
+
+    const address = @json(
+        $chDetails->pendingPresident->street_address . ', ' .
+        $chDetails->pendingPresident->city . ', ' .
+        $PresDetails->state->state_short_name . ' ' .
+        $chDetails->pendingPresident->zip
+    );
+
+    const mapUrl = el.href;
+
+    // Synchronous clipboard copy using a temp textarea
+    const textarea = document.createElement('textarea');
+    textarea.value = address;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+
+    try {
+        document.execCommand('copy');
+        const original = el.innerHTML;
+        el.innerHTML = '<i class="bi bi-clipboard-check me-2"></i>ADDRESS COPIED!';
+        setTimeout(() => { el.innerHTML = original; }, 1500);
+    } catch (err) {
+        console.warn('Copy failed:', err);
+    }
+
+    document.body.removeChild(textarea);
+
+    // Open map — this is still within the user gesture so no popup block
+    window.open(mapUrl, '_blank');
+}
+</script>
 
 @endsection

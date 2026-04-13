@@ -41,7 +41,7 @@ use App\Models\FinancialReport;
 use App\Models\FinancialReportFinal;
 use App\Models\ForumCategorySubscription;
 use App\Models\Payments;
-use App\Models\PaymentHistory;
+use App\Models\RegionInquiry;
 use App\Models\ProbationSubmission;
 use App\Models\Region;
 use App\Models\Resources;
@@ -1832,6 +1832,7 @@ class ChapterController extends Controller implements HasMiddleware
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
         $chActiveId = $baseQuery['chActiveId'];
+        $chRegId = $baseQuery['chRegId'];
         $chConfId = $baseQuery['chConfId'];
         $chapterId = $id;
 
@@ -1889,8 +1890,11 @@ class ChapterController extends Controller implements HasMiddleware
 
         $pcDetails = $pcDetails->unique('cid');
 
+        $chRegionMap = RegionInquiry::with('region')->find($chRegId);
+        $inquiriesMapLink = $chRegionMap->inquiries_map_link;
+
         $data = ['id' => $id, 'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chapterId' => $chapterId,
-            'chDetails' => $chDetails, 'allActive' => $allActive, 'coorId' => $coorId,
+            'chDetails' => $chDetails, 'allActive' => $allActive, 'coorId' => $coorId, 'inquiriesMapLink' => $inquiriesMapLink,
             'startMonthName' => $startMonthName, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus,
             'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
             'conferenceDescription' => $conferenceDescription, 'allStates' => $allStates,
