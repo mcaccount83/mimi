@@ -4,6 +4,7 @@
     <a class="dropdown-item" href="{{ route('userreports.duplicateuser') }}">Duplicate Users</a>
     <a class="dropdown-item" href="{{ route('userreports.duplicateboardid') }}">Duplicate Board Details</a>
     <a class="dropdown-item" href="{{ route('userreports.nopresident') }}">Chapters with No President</a>
+    <a class="dropdown-item" href="{{ route('userreports.noinquiriesemail') }}">Chapters with No Inquiries Email</a>
     {{-- <a class="dropdown-item" href="{{ route('userreports.nopresidentinactive') }}">Inactive Chapters with No President</a> --}}
     <a class="dropdown-item" href="{{ route('userreports.noactiveboard') }}">Active Board Members with Inactive User</a>
     {{-- <a class="dropdown-item" href="{{ route('userreports.usernoactivecoord') }}">Active User with No Active Coordinator</a> --}}

@@ -200,6 +200,9 @@ Route::middleware('auth')->group(function () {
     // Route::get('/userreports/nopresidentinactive', [UserReportController::class, 'showNoPresidentInactive'])->name('userreports.nopresidentinactive');
     Route::get('/userreports/addnewboard/{id}', [UserReportController::class, 'addBoardNew'])->name('userreports.addnewboard');
     Route::post('/userreports/updatenewboard/{id}', [UserReportController::class, 'updateBoardNew'])->name('userreports.updatenewboard');
+       Route::get('/userreports/noinquiriesemail', [UserReportController::class, 'showNoInquiriesEmail'])->name('userreports.noinquiriesemail');
+    Route::get('/userreports/addinquiriesemail/{id}', [UserReportController::class, 'addInquiriesEmail'])->name('userreports.addinquiriesemail');
+    Route::post('/userreports/updateinquiriesemail/{id}', [UserReportController::class, 'updateInquiriesEmail'])->name('userreports.updateinquiriesemail');
     // Route::get('/userreports/noactivechapter', [UserReportController::class, 'showNoActiveChapter'])->name('userreports.noactivechapter');
     Route::get('/userreports/userdetailsmismatch', [UserReportController::class, 'showUserDetailsMismatch'])->name('userreports.userdetailsmismatch');
     // Route::get('/userreports/usernoactivecoord', [UserReportController::class, 'showUserNoActiveCoord'])->name('userreports.usernoactivecoord');

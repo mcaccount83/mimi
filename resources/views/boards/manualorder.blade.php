@@ -42,7 +42,7 @@
 
                     <form method="POST" action="{{ route('process.manual') }}">
                         @csrf
-                        <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
+                        {{-- <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response"> --}}
 
                         <h4>Shipping Information</h4>
                     <div class="row">

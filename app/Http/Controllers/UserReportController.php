@@ -242,6 +242,109 @@ class UserReportController extends Controller implements HasMiddleware
         }
     }
 
+     /**
+     * Active chaters with no inquiries email
+     */
+    public function showNoInquiriesEmail(): View
+    {
+        // $PresActiveId = DB::table('boards')
+        //     ->where('board_position_id', '1')
+        //     ->pluck('chapter_id');
+
+        // $PresDisbandId = DB::table('boards_disbanded')
+        //     ->where('board_position_id', '1')
+        //     ->pluck('chapter_id');
+
+        $chDetails = Chapters::with('state')
+            ->where('active_status', '1')
+            ->where('inquiries_contact', null)
+            ->get();
+
+        $data = ['ChapterPres' => $chDetails];
+
+        return view('coordinators.userreports.noinquiriesemail')->with($data);
+    }
+
+    public function addInquiriesEmail(Request $request, $id): View
+    {
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
+        $chDetails = $baseQuery['chDetails'];
+        $chConfId = $baseQuery['chConfId'];
+        $chActiveId = $baseQuery['chActiveId'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $regionLongName = $baseQuery['regionLongName'];
+        $conferenceDescription = $baseQuery['conferenceDescription'];
+        $chPcId = $baseQuery['chPcId'];
+        $chPayments = $baseQuery['chPayments'];
+        $chDocuments = $baseQuery['chDocuments'];
+        $chEOYDocuments = $baseQuery['chEOYDocuments'];
+        $chIRSDocuments = $baseQuery['chIRSDocuments'];
+        $chReportDocuments = $baseQuery['chReportDocuments'];
+
+        $startMonthName = $baseQuery['startMonthName'];
+        $chapterStatus = $baseQuery['chapterStatus'];
+
+        $allStates = $baseQuery['allStates'];
+        $allCountries = $baseQuery['allCountries'];
+
+        $data = ['id' => $id, 'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'allCountries' => $allCountries, 'allStates' => $allStates,
+            'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'chDetails' => $chDetails,
+            'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chPayments' => $chPayments, 'chDocuments' => $chDocuments, 'chapterStatus' => $chapterStatus,
+            'startMonthName' => $startMonthName, 'chEOYDocuments' => $chEOYDocuments, 'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
+        ];
+
+        return view('coordinators.userreports.addinquiriesemail')->with($data);
+    }
+
+    /**
+     *Save New Board
+     */
+    public function updateInquiriesEmail(Request $request, $id): RedirectResponse
+    {
+        $user = $this->baseUserController->loadUserInformation($request);
+        $updatedId = $user['userId'];
+        $updatedBy = $user['userName'];
+
+        $chapter = Chapters::find($id);
+        $relation = 'president';
+        $positionId = BoardPosition::PRES;
+        $prefix = 'ch_pre_';
+        $vacant_field = null; // President is never vacant
+        $chStatus = $chapter->active_status;
+
+        if ($chapter->active_status == ChapterStatusEnum::ACTIVE) {
+            $defaultCategories = $this->forumSubscriptionController->defaultCategories();
+            $defaultBoardCategories = $defaultCategories['boardCategories'];
+            // $status = '1';
+        } else {
+            $defaultBoardCategories = null;
+            // $status = '0';
+        }
+
+        DB::beginTransaction();
+        try {
+            $this->chapterController->createNewBoardMember($chapter, $relation, $positionId, $request, $prefix, $chStatus, $updatedBy, $updatedId, $defaultBoardCategories);
+
+            DB::commit();
+            if ($chapter->active_status == ChapterStatusEnum::ACTIVE) {
+                return redirect()->to('/userreports/nopresident')->with('success', 'Chapter created successfully');
+            } else {
+                return redirect()->to('/userreports/nopresidentinactive')->with('success', 'Chapter created successfully');
+            }
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+            if ($chapter->active_status == '1') {
+                return redirect()->to('/userreports/nopresident')->with('fail', 'Something went wrong, Please try again...');
+            } else {
+                return redirect()->to('/userreports/nopresidentinactive')->with('fail', 'Something went wrong, Please try again...');
+            }
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
+    }
+
    public function showUserDetailsMismatch(): View
     {
         $userList = User::where('is_active', UserStatusEnum::ACTIVE)

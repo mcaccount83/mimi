@@ -194,11 +194,11 @@ class BoardPaymentController extends Controller implements HasMiddleware
     public function reRegistrationPayment(Request $request): RedirectResponse
     {
         // Verify reCAPTCHA Enterprise
-        $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
+//         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
-if (!$recaptchaResult['success']) {
-    return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
-}
+// if (!$recaptchaResult['success']) {
+//     return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+// }
 
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -345,11 +345,11 @@ if (!$recaptchaResult['success']) {
     public function m2mPayment(Request $request): RedirectResponse
     {
         // Verify reCAPTCHA Enterprise
-        $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
+//         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
-if (!$recaptchaResult['success']) {
-    return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
-}
+// if (!$recaptchaResult['success']) {
+//     return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+// }
 
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -527,11 +527,11 @@ if (!$recaptchaResult['success']) {
     public function manualPayment(Request $request): RedirectResponse
     {
         // Verify reCAPTCHA Enterprise
-        $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
+//         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
-if (!$recaptchaResult['success']) {
-    return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
-}
+// if (!$recaptchaResult['success']) {
+//     return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+// }
         $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
         $chDetails = $baseQuery['chDetails'];
         $chId = $chDetails->id;
