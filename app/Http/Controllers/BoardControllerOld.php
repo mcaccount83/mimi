@@ -728,7 +728,7 @@ class BoardController extends Controller implements HasMiddleware
         $input = $request->all();
 
         $chapter = Chapters::find($chId);
-        $probation = ProbationSubmission::find($chId);
+        $probation = ProbationSubmission::firstOrNew(['chapter_id' => $chId]);
 
         DB::beginTransaction();
         try {
@@ -737,7 +737,7 @@ class BoardController extends Controller implements HasMiddleware
             $chapter->save();
 
             if ($probation) {
-                $probation->update([
+                $probation->fill([
                     'q1_dues' => $input['q1_dues'] ?? null,
                     'q1_benefit' => $input['q1_benefit'] ?? null,
                     'q2_dues' => $input['q2_dues'] ?? null,
@@ -746,7 +746,7 @@ class BoardController extends Controller implements HasMiddleware
                     'q3_benefit' => $input['q3_benefit'] ?? null,
                     'q4_dues' => $input['q4_dues'] ?? null,
                     'q4_benefit' => $input['q4_benefit'] ?? null,
-                ]);
+                ])->save();
             }
 
             $mailTable = $this->emailTableController->createProbationSubmissionTable($input);

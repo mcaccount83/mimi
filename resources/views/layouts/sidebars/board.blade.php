@@ -123,7 +123,7 @@
     @endif
     @endif
 
-    {{-- @if($chDetails->probation_id == '3') --}}
+    @if($chDetails->probation == '3')
         <!-- Quarterly Submission Menu Item -->
         @if(isset($chDetails))
         @php
@@ -142,7 +142,7 @@
             </li>
         @endif
         @endif
-    {{-- @endif --}}
+    @endif
 
     <!-- End of Year Menu Item -->
     @if(isset($chDetails))
