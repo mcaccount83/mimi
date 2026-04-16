@@ -129,9 +129,7 @@
                                         </ul>
                                     </div>
                                     @endif
-
-
-                                        {{-- <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response"> --}}
+<input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
 
                                         <div class="row mb-3">
                                             <div class="col-md-4">

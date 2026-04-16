@@ -15,6 +15,9 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+        <!-- Google Recaptcha -->
+    <script src="https://www.google.com/recaptcha/enterprise.js?render={{ config('services.recaptcha.site_key') }}"></script>
+
     {{-- Flash Messages as meta tags --}}
     @if ($message = Session::get('success'))
         <meta name="flash-success" content="{{ $message }}">
@@ -283,6 +286,7 @@
     @include('layouts.scripts.uploads')
     @include('layouts.scripts.useractions')
     @include('layouts.scripts.website')
+    @include('layouts.scripts.recaptcha')
 
     @yield('footer')
     @yield('customscript')
