@@ -47,7 +47,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
-class BoardController extends Controller implements HasMiddleware
+class OLDBoardController extends Controller implements HasMiddleware
 {
     protected $userController;
 

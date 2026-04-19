@@ -43,15 +43,6 @@ document.addEventListener('DOMContentLoaded', function() {
         form.setAttribute('autocomplete', 'off');
     });
 });
-
-    // window.onload = function () {
-    //     if (window.history && window.history.pushState) {
-    //         window.history.pushState('preventBack', null, '');
-    //         window.onpopstate = function () {
-    //             location.reload();
-    //         };
-    //     }
-    // };
 </script>
 
     @include('layouts.styles.buttonsicons')

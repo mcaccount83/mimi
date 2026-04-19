@@ -234,8 +234,11 @@ if (!$recaptchaResult['success']) {
         $paymentResponse = $this->processPayment($request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
             $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
+        // if (! $paymentResponse['success']) {
+        //     return redirect()->back()->with('fail', $paymentResponse['error']);
+        // }
         if (! $paymentResponse['success']) {
-            return redirect()->back()->with('fail', $paymentResponse['error']);
+            return redirect()->back()->withErrors(['payment' => $paymentResponse['error']])->withInput();
         }
 
         $paymentType = $paymentResponse['paymentType'];
@@ -333,7 +336,8 @@ if (!$recaptchaResult['success']) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
-            return redirect()->back()->with('fail', $paymentResponse['error']);
+            return redirect()->back()->withErrors(['payment' => $paymentResponse['error']])->withInput();
+            // return redirect()->back()->with('fail', $paymentResponse['error']);
         } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
