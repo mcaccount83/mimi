@@ -197,9 +197,9 @@ class BoardPaymentController extends Controller implements HasMiddleware
         // Verify reCAPTCHA Enterprise
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
-if (!$recaptchaResult['success']) {
-    return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
-}
+        if (!$recaptchaResult['success']) {
+            return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+        }
 
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -234,9 +234,6 @@ if (!$recaptchaResult['success']) {
         $paymentResponse = $this->processPayment($request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
             $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
-        // if (! $paymentResponse['success']) {
-        //     return redirect()->back()->with('fail', $paymentResponse['error']);
-        // }
         if (! $paymentResponse['success']) {
             return redirect()->back()->withErrors(['payment' => $paymentResponse['error']])->withInput();
         }
@@ -294,13 +291,6 @@ if (!$recaptchaResult['success']) {
                     ]);
                 }
 
-                // PaymentHistory::create([
-                //     'chapter_id' => $chId,
-                //     'payment_type' => 'sustaining',
-                //     'payment_amount' => $sustaining,
-                //     'payment_date' => $paymentDate,
-                // ]);
-
                 $payments->sustaining_donation = $sustaining;
                 $payments->sustaining_date = $paymentDate;
                 $payments->donation_invoice = $invoice;
@@ -352,9 +342,9 @@ if (!$recaptchaResult['success']) {
         // Verify reCAPTCHA Enterprise
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
-if (!$recaptchaResult['success']) {
-    return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
-}
+        if (!$recaptchaResult['success']) {
+            return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+        }
 
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -390,7 +380,7 @@ if (!$recaptchaResult['success']) {
             $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
-            return redirect()->back()->with('fail', $paymentResponse['error']);
+            return redirect()->back()->withErrors(['payment' => $paymentResponse['error']])->withInput();
         }
 
         $invoice = $paymentResponse['data']['invoiceNumber'];
@@ -443,13 +433,6 @@ if (!$recaptchaResult['success']) {
                     ]);
                 }
 
-                // PaymentHistory::create([
-                //     'chapter_id' => $chId,
-                //     'payment_type' => 'm2m',
-                //     'payment_amount' => $m2m,
-                //     'payment_date' => $paymentDate,
-                // ]);
-
                 $payments->m2m_donation = $m2m;
                 $payments->m2m_date = $paymentDate;
                 $payments->m2m_invoice = $invoice;
@@ -467,13 +450,6 @@ if (!$recaptchaResult['success']) {
                         'payment_date' => $payments->sustaining_date,
                     ]);
                 }
-
-                // PaymentHistory::create([
-                //     'chapter_id' => $chId,
-                //     'payment_type' => 'sustaining',
-                //     'payment_amount' => $sustaining,
-                //     'payment_date' => $paymentDate,
-                // ]);
 
                 $payments->sustaining_donation = $sustaining;
                 $payments->sustaining_date = $paymentDate;
@@ -519,7 +495,7 @@ if (!$recaptchaResult['success']) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
-            return redirect()->back()->with('fail', $paymentResponse['error']);
+            return redirect()->back()->withErrors(['payment' => $paymentResponse['error']])->withInput();
         } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
@@ -534,9 +510,9 @@ if (!$recaptchaResult['success']) {
         // Verify reCAPTCHA Enterprise
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
-if (!$recaptchaResult['success']) {
-    return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
-}
+        if (!$recaptchaResult['success']) {
+            return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+        }
 
         $baseQuery = $this->baseBoardController->getChapterDetails($request->user()->board->chapter_id);
         $chDetails = $baseQuery['chDetails'];
@@ -575,7 +551,7 @@ if (!$recaptchaResult['success']) {
             $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
-            return redirect()->to('/board/resources/manual')->with('fail', $paymentResponse['error']);
+            return redirect()->back()->withErrors(['payment' => $paymentResponse['error']])->withInput();
         }
 
         $paymentType = $paymentResponse['paymentType'];
@@ -606,13 +582,6 @@ if (!$recaptchaResult['success']) {
                         'payment_date' => $payments->manual_date,
                     ]);
                 }
-
-                // PaymentHistory::create([
-                //     'chapter_id' => $chId,
-                //     'payment_type' => 'manual',
-                //     'payment_amount' => $manual,
-                //     'payment_date' => $paymentDate,
-                // ]);
 
                 $payments->manual_order = $manual;
                 $payments->manual_date = $paymentDate;
@@ -645,7 +614,7 @@ if (!$recaptchaResult['success']) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
-            return redirect()->back()->with('fail', $paymentResponse['error']);
+            return redirect()->back()->withErrors(['payment' => $paymentResponse['error']])->withInput();
         } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
