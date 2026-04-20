@@ -1465,16 +1465,16 @@ class PDFController extends Controller
                 'pres_state.state_short_name as pres_state',
                 'bd_active.zip as pres_zip',
             ])
-            ->leftJoin('documents_eoy', 'chapters.id', '=', 'documents_eoy.chapter_id')
+            ->leftJoin('documents_irs', 'chapters.id', '=', 'documents_irs.chapter_id')
             ->leftJoin('boards as bd_active', function ($join) {
                 $join->on('chapters.id', '=', 'bd_active.chapter_id')
                     ->where('bd_active.board_position_id', '=', 1);
             })
             ->leftJoin('state as pres_state', 'bd_active.state_id', '=', 'pres_state.id')
-            ->where('documents_eoy.irs_wrongdate', 1)
+            ->where('documents_irs.irs_wrongdate', 1)
             ->where(function ($query) {
-                $query->whereNull('documents_eoy.irs_notified')
-                    ->orWhere('documents_eoy.irs_notified', '!=', '1');
+                $query->whereNull('documents_irs.irs_notified')
+                    ->orWhere('documents_irs.irs_notified', '!=', '1');
             })
             ->get()
             ->sortBy('ein');
@@ -1497,16 +1497,16 @@ class PDFController extends Controller
                 'pres_state.state_short_name as pres_state',
                 'bd_active.zip as pres_zip',
             ])
-            ->leftJoin('documents_eoy', 'chapters.id', '=', 'documents_eoy.chapter_id')
+            ->leftJoin('documents_irs', 'chapters.id', '=', 'documents_irs.chapter_id')
             ->leftJoin('boards as bd_active', function ($join) {
                 $join->on('chapters.id', '=', 'bd_active.chapter_id')
                     ->where('bd_active.board_position_id', '=', 1);
             })
             ->leftJoin('state as pres_state', 'bd_active.state_id', '=', 'pres_state.id')
-            ->where('documents_eoy.irs_notfound', 1)
+            ->where('documents_irs.irs_notfound', 1)
             ->where(function ($query) {
-                $query->whereNull('documents_eoy.irs_notified')
-                    ->orWhere('documents_eoy.irs_notified', '!=', '1');
+                $query->whereNull('documents_irs.irs_notified')
+                    ->orWhere('documents_irs.irs_notified', '!=', '1');
             })
             ->get()
             ->sortBy('ein');
@@ -1529,16 +1529,16 @@ class PDFController extends Controller
                 'pres_state.state_short_name as pres_state',
                 'bd_active.zip as pres_zip',
             ])
-            ->leftJoin('documents_eoy', 'chapters.id', '=', 'documents_eoy.chapter_id')
+            ->leftJoin('documents_irs', 'chapters.id', '=', 'documents_irs.chapter_id')
             ->leftJoin('boards as bd_active', function ($join) {
                 $join->on('chapters.id', '=', 'bd_active.chapter_id')
                     ->where('bd_active.board_position_id', '=', 1);
             })
             ->leftJoin('state as pres_state', 'bd_active.state_id', '=', 'pres_state.id')
-            ->where('documents_eoy.irs_filedwrong', 1)
+            ->where('documents_irs.irs_filedwrong', 1)
             ->where(function ($query) {
-                $query->whereNull('documents_eoy.irs_notified')
-                    ->orWhere('documents_eoy.irs_notified', '!=', '1');
+                $query->whereNull('documents_irs.irs_notified')
+                    ->orWhere('documents_irs.irs_notified', '!=', '1');
             })
             ->get()
             ->sortBy('ein');

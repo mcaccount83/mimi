@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller implements HasMiddleware
 {
@@ -33,12 +34,12 @@ class HomeController extends Controller implements HasMiddleware
      */
     public function index(Request $request): RedirectResponse
     {
+        // Carry all flash data through the redirect chain
+        Session::reflash();
+
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
         $userStatus = $user['userStatus'];
-
-        // Keep specific flash data for one more request (if needed)
-        // $request->session()->keep(['key1', 'key2']);
 
         if ($userStatus != 1) {
             Auth::logout();

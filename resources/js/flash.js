@@ -21,4 +21,12 @@ document.addEventListener('DOMContentLoaded', function() {
     if (flashErrors) {
         Swal.fire({ position: 'top-end', icon: 'error', title: 'There were some errors!', html: flashErrors, showConfirmButton: true });
     }
+
+    if (flashSuccess) {
+        Swal.fire({ position: 'top-end', icon: 'success', title: flashSuccess, showConfirmButton: false, timer: 1500 });
+        console.log('Success SweetAlert fired');
+        setTimeout(() => console.log('Swal state:', Swal.isVisible()), 100);
+        setTimeout(() => console.log('Swal state 500ms:', Swal.isVisible()), 500);
+    }
+
 });

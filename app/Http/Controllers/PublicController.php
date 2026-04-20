@@ -175,23 +175,6 @@ class PublicController extends Controller
         $currentDate = \Carbon\Carbon::now(); // Full Current Date
         $currentMonth = $currentDate->format('m');  // Current Month with leading zero
 
-        // $adminYear = AdminYear::latest('id')->firstOrFail();
-        // $fiscalYear = $adminYear->year_fiscal;  // "2025-2026"
-        // $admin = Admin::latest('id')->firstOrFail();
-        // $fiscalYearEOY = $admin->fiscal_year_eoy;  // "2024-2025"
-        // $years = explode('-', $fiscalYearEOY);  // Extract years from fiscal_year string
-        // $lastYearEOY = $years[0];  // "2024"
-        // $thisYearEOY = $years[1];  // "2025"
-        // $display_testing = ($admin->display_testing == 1);
-        // $display_live = ($admin->display_live == 1);
-        // $yearColumnName = $thisYearEOY.'_financial_pdf_path'; // "2025" name for Database Column for Financial Report
-        // $boardReportName = $fiscalYear.' Board Report';  // "2025-2026" Board Report Name
-        // $financialReportName = $fiscalYearEOY.' Financial Report';  // "2024-2025" Financial Report Name
-        // $financialPDFName = $fiscalYearEOY.' Financial PDF';  // "2024-2025" Financial Report Name
-        // $irsFilingName = $lastYearEOY.' 990N IRS Filing';  // "2024" IRS Filing Name
-        // $currentDate = \Carbon\Carbon::now(); // Full Current Date
-        // $currentMonth = $currentDate->format('m'); // Current Month with leading zero
-
         $displayEOYTESTING = ($display_testing && ! $display_live);
         $displayEOYLIVE = ($display_live && $currentMonth >= 5 && $currentMonth <= 12);
         $displayBoardRptLIVE = ($display_live && $currentMonth >= 5 && $currentMonth <= 9);
@@ -377,9 +360,9 @@ class PublicController extends Controller
         // Verify reCAPTCHA Enterprise
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
-if (!$recaptchaResult['success']) {
-    return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
-}
+        if (!$recaptchaResult['success']) {
+            return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+        }
 
         $input = $request->all();
         $description = 'New Chapter Application';
@@ -440,7 +423,8 @@ if (!$recaptchaResult['success']) {
                 $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
             if (! $paymentResponse['success']) {
-                return redirect()->to('/newchapter')->with('fail', $paymentResponse['error']);
+                return redirect()->to('/newchapter')->withErrors(['payment' => $paymentResponse['error']])->withInput();
+                // return redirect()->to('/newchapter')->with('fail', $paymentResponse['error']);
             }
 
             $invoice = $paymentResponse['data']['invoiceNumber'];
@@ -461,8 +445,6 @@ if (!$recaptchaResult['success']) {
                 'sanitized_name' => $sanitizedName,
                 'state_id' => $input['ch_state'],
                 'country_id' => $input['ch_country'] ?? '198',
-                // 'conference_id' => $confId,
-                // 'region_id' => $regId,
                 'status_id' => $statusId,
                 'territory' => $input['ch_boundariesterry'],
                 'inquiries_contact' => $input['ch_inqemailcontact'],
@@ -549,7 +531,8 @@ if (!$recaptchaResult['success']) {
             // For international applications, show a generic error since there's no payment error
             $errorMessage = $isInternational ? 'There was an error processing your application. Please try again.' : $paymentResponse['error'];
 
-            return redirect()->to('/newchapter')->with('fail', $errorMessage);
+            return redirect()->to('/newchapter')->withErrors(['payment' => $errorMessage])->withInput();
+            // return redirect()->to('/newchapter')->with('fail', $errorMessage);
 
         } finally {
             DB::disconnect();
@@ -590,9 +573,9 @@ if (!$recaptchaResult['success']) {
         // Verify reCAPTCHA Enterprise
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
-if (!$recaptchaResult['success']) {
-    return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
-}
+        if (!$recaptchaResult['success']) {
+            return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+        }
 
         $input = $request->all();
         $description = 'Sustaining Chapter & M2M Fund Donations';
@@ -625,7 +608,8 @@ if (!$recaptchaResult['success']) {
             $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
-            return redirect()->to('/donation')->with('fail', $paymentResponse['error']);
+        return redirect()->to('/donation')->withErrors(['payment' => $paymentResponse['error']])->withInput();
+            // return redirect()->to('/donation')->with('fail', $paymentResponse['error']);
         }
 
         $paymentType = $paymentResponse['paymentType'];
@@ -692,7 +676,8 @@ if (!$recaptchaResult['success']) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
-            return redirect()->to('/donation')->with('fail', $paymentResponse['error']);
+            return redirect()->to('/donation')->withErrors(['payment' => $paymentResponse['error']])->withInput();
+            // return redirect()->to('/donation')->with('fail', $paymentResponse['error']);
         } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
@@ -975,9 +960,10 @@ if (!$recaptchaResult['success']) {
         // Verify reCAPTCHA Enterprise
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
-if (!$recaptchaResult['success']) {
-    return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
-}
+        if (!$recaptchaResult['success']) {
+            return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+        }
+
         $input = $request->all();
 
         $stateId = $input['cd_state'];
@@ -1128,9 +1114,9 @@ if (!$recaptchaResult['success']) {
         // Verify reCAPTCHA Enterprise
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
-if (!$recaptchaResult['success']) {
-    return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
-}
+        if (!$recaptchaResult['success']) {
+            return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+        }
 
         $input = $request->all();
         $stateId = $input['ch_state'];
@@ -1193,37 +1179,37 @@ if (!$recaptchaResult['success']) {
     }
 
      public function viewGrantList(Request $request): View
-{
-    $grantList = GrantRequest::with('chapters', 'chapterstate')
-        ->where('grant_approved', '1')
-        ->orderBy('completed_at')
-        ->get();
+    {
+        $grantList = GrantRequest::with('chapters', 'chapterstate')
+            ->where('grant_approved', '1')
+            ->orderBy('completed_at')
+            ->get();
 
-        // Calculate total lifetime grants
-    $totalLifetimeGrants = $grantList->sum('amount_awarded');
+            // Calculate total lifetime grants
+        $totalLifetimeGrants = $grantList->sum('amount_awarded');
 
-    // Group grants by fiscal year
-    $grantsByFiscalYear = $grantList->groupBy(function($grant) {
-        $date = \Carbon\Carbon::parse($grant->completed_at);
-        // Fiscal year runs July 1 - June 30
-        // If month is July(6) or later, fiscal year starts this year
-        // If month is before July, fiscal year started last year
-        if ($date->month >= 7) {
-            return $date->year . '-' . ($date->year + 1);
-        } else {
-            return ($date->year - 1) . '-' . $date->year;
-        }
-    })->sortKeysDesc(); // Sort fiscal years descending (newest first)
-    // })->sortKeys(); // Sort fiscal years (oldest first)
+        // Group grants by fiscal year
+        $grantsByFiscalYear = $grantList->groupBy(function($grant) {
+            $date = \Carbon\Carbon::parse($grant->completed_at);
+            // Fiscal year runs July 1 - June 30
+            // If month is July(6) or later, fiscal year starts this year
+            // If month is before July, fiscal year started last year
+            if ($date->month >= 7) {
+                return $date->year . '-' . ($date->year + 1);
+            } else {
+                return ($date->year - 1) . '-' . $date->year;
+            }
+        })->sortKeysDesc(); // Sort fiscal years descending (newest first)
+        // })->sortKeys(); // Sort fiscal years (oldest first)
 
-    $data = [
-        'grantsByFiscalYear' => $grantsByFiscalYear, 'totalLifetimeGrants' => $totalLifetimeGrants,
-    ];
+        $data = [
+            'grantsByFiscalYear' => $grantsByFiscalYear, 'totalLifetimeGrants' => $totalLifetimeGrants,
+        ];
 
-    return view('public.grantlist')->with($data);
-}
+        return view('public.grantlist')->with($data);
+    }
 
-  public function saveGratList(Request $request)
+    public function saveGratList(Request $request)
     {
         // $googleDrive = GoogleDrive::where('name', 'grant_uploads')->first();
         // $sharedDriveId = $googleDrive->folder_id;
@@ -1235,24 +1221,12 @@ if (!$recaptchaResult['success']) {
         $pdfPath = storage_path('app/pdf_reports/'.$name);
 
         if (!file_exists(dirname($pdfPath))) {
-    mkdir(dirname($pdfPath), 0775, true);
-}
+        mkdir(dirname($pdfPath), 0775, true);
+    }
         $pdf->save($pdfPath);
         $filename = basename($pdfPath);
         $mimetype = 'application/pdf';
         $filecontent = file_get_contents($pdfPath);
-
-        // if ($file_id = $this->googleController->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
-        //     $existingDocRecord = GrantRequest::find($grantId);
-        //     if ($existingDocRecord) {
-        //         $existingDocRecord->grant_pdf_path = $file_id;
-        //         $existingDocRecord->save();
-        //     } else {
-        //         Log::error("Expected document record for grant id {$grantId} not found");
-        //         $newDocData = ['id' => $grantId];
-        //         $newDocData['file_path'] = $file_id;
-        //         GrantRequest::create($newDocData);
-        //     }
 
         return $pdfPath;  // Return the full local stored path
     }
@@ -1285,21 +1259,13 @@ if (!$recaptchaResult['success']) {
             'grantsByFiscalYear' => $grantsByFiscalYear, 'totalLifetimeGrants' => $totalLifetimeGrants,
         ];
 
-        // $pdf = Pdf::loadView('pdf.grantlist', compact('pdfData'));
-        // $pdf = Pdf::loadView('pdf.grantlist', compact('grantsByFiscalYear', 'totalLifetimeGrants'));
         $pdf = Pdf::loadView('pdf.grantlist', $pdfData);
 
         $filename = 'GrantList.pdf';
 
-
         // if ($streamResponse) {
             return $pdf->stream($filename, ['Attachment' => 0]);
         // }
-
-        // return [
-        //     'pdf' => $pdf,
-        //     'filename' => $filename,
-        // ];
     }
 
 }

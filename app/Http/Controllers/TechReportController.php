@@ -972,7 +972,7 @@ class TechReportController extends Controller implements HasMiddleware
     private function resetDocumentsIRS(): void
     {
         DB::statement('
-            UPDATE documents_eoy SET
+            UPDATE documents_irs SET
                 irs_notes_previous     = irs_notes,
                 irs_verified_previous  = irs_verified,
                 irs_issues_previous    = irs_issues,
@@ -1117,7 +1117,7 @@ class TechReportController extends Controller implements HasMiddleware
             'award_path' => null,
         ]);
 
-        DB::table('documents_eoy')->update([
+        DB::table('documents_irs')->update([
             'irs_notes'      => null,
             'irs_verified'   => null,
             'irs_issues'     => null,
@@ -1136,7 +1136,7 @@ class TechReportController extends Controller implements HasMiddleware
 
     // private function resetDocumentsIRSLIVE(): void
     // {
-    //     DB::table('documents_eoy')->update([
+    //     DB::table('documents_irs')->update([
     //         'irs_notes'      => null,
     //         'irs_verified'   => null,
     //         'irs_issues'     => null,
