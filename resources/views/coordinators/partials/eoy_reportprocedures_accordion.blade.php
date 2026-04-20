@@ -162,7 +162,7 @@
     <section>
         <div class="col-md-12">
             Complete in May, after testing, for live viewing.<br>
-            @if ($reportYear->update_user_tables == 1 && $reportYear->display_live != 1 && ( $currentMonth >= 3 && $currentMonth <= 6 ))
+            @if ($reportYear->reset_AFTER_testing == 1 && $reportYear->display_live != 1 && ( $currentMonth >= 3 && $currentMonth <= 6 ))
                 <button type="button" id="view-eoy-live" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-toggle-on me-2"></i>Display EOY LIVE Items</button>
             @else
                 <button type="button" id="view-eoy-live" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-toggle-on me-2"></i>Display EOY LIVE Items</button>
