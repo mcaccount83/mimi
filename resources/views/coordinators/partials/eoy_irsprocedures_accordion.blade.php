@@ -1,15 +1,54 @@
 <div class="container-fluid">
     <div class="accordion"  id="accordionIRS"  style="column-count: 2; column-gap: 1rem;">
 
-
 <!------Start Step 1 ------>
+<div style="break-inside: avoid; margin-bottom: 0.5rem;">
+<div class="accordion-item {{$irsYear->file_corrections == 1 ? 'step-complete' : '' }}">
+        <h2 class="accordion-header" id="header-user-tables">
+            <button class="accordion-button collapsed"type="button"
+                    data-bs-toggle="collapse" data-bs-target="#collapseIRSFive"
+                    aria-expanded="false" aria-controls="collapseIRSFive">
+                #1 - Submit 990N Filing Corrections - AUG
+            </button>
+        </h2>
+        <div id="collapseIRSFive" class="accordion-collapse collapse" data-bs-parent="#accordionIRS">
+            <div class="accordion-body">
+    <section>
+        <div class="col-md-12">
+            Submit 990N filing corrections to include Wrong Date Listed, Chapter Not Found or chapters who FILED with the wrong dates.<br>
+            @if ($irsYear->file_corrections != 1 && ( $currentMonth >= 7 && $currentMonth <= 9 ))
+                <button type="button" id="file-file_corrections" class="btn btn-primary bg-gradient mb-2" onclick="showIRSFilingCorrectionsModal()"><i class="bi bi-file-earmark-pdf-fill me-2"></i>Generate 990N Corrections</button>
+                <button type="button" id="update-eoy-file_corrections" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-envelope-paper me-2"></i>Record Corrections as Sent</button>
+            @else
+                <button type="button" id="file-file_corrections" class="btn btn-primary bg-gradient mb-2" disabled><i class="bi bi-file-earmark-pdf-fill me-2"></i>Generate 990N Corrections</button>
+                <button type="button" id="update-eoy-file_corrections" class="btn btn-primary bg-gradient mb-2" disabled><i class="bi bi-envelope-paper me-2"></i>Record Corrections as Sent</button>
+            @endif
+            <p style="font-weight: bold;">The following will be included in update:</p>
+                     @foreach($irsCorrectsionsListItems as $item)
+                                    <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                        @if($irsYear->file_june == 1)
+                                            <i class="fas fa-check mr-2 ml-2"></i>{{ $item }}
+                                        @else
+                                            <i class="far fa-square mr-2 ml-2"></i>{{ $item }}
+                                        @endif
+                                    </li>
+                                @endforeach
+        </div>
+</section>
+</div><!-- end of accordion body -->
+</div><!-- end of accordion item -->
+</div>
+</div>
+<!------End Step 1 ------>
+
+<!------Start Step 2 ------>
 <div style="break-inside: avoid; margin-bottom: 0.5rem;">
 <div class="accordion-item {{ $irsYear->file_sept == 1 ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-file_irs_sept">
             <button class="accordion-button collapsed"type="button"
                     data-bs-toggle="collapse" data-bs-target="#collapseIRSOne"
                     aria-expanded="false" aria-controls="collapseIRSOne">
-                #1 - Submit IRS Filing Updates - SEPT
+                #2 - Submit IRS Filing Updates - SEPT
             </button>
         </h2>
         <div id="collapseIRSOne" class="accordion-collapse collapse" data-bs-parent="#accordionIRS">
@@ -42,16 +81,56 @@
 </div><!-- end of accordion item -->
 </div>
 </div>
-<!------End Step 1 ------>
+<!------End Step 2 ------>
 
-<!------Start Step 2 ------>
+<!------Start Step 3 ------>
+<div style="break-inside: avoid; margin-bottom: 0.5rem;">
+<div class="accordion-item {{$irsYear->file_corrections_2 == 1 ? 'step-complete' : '' }}">
+        <h2 class="accordion-header" id="header-user-tables">
+            <button class="accordion-button collapsed"type="button"
+                    data-bs-toggle="collapse" data-bs-target="#collapseIRSSix"
+                    aria-expanded="false" aria-controls="collapseIRSSix">
+                #3 - Submit 990N Filing Corrections - OCT
+            </button>
+        </h2>
+        <div id="collapseIRSSix" class="accordion-collapse collapse" data-bs-parent="#accordionIRS">
+            <div class="accordion-body">
+    <section>
+        <div class="col-md-12">
+            Submit 990N filing corrections to include Wrong Date Listed, Chapter Not Found or chapters who FILED with the wrong dates since the last sent corrections.<br>
+            @if ($irsYear->file_corrections_2 != 1 && ( $currentMonth >= 8 && $currentMonth <= 10 ))
+                <button type="button" id="file-file_corrections_2" class="btn btn-primary bg-gradient mb-2" onclick="showIRSFilingCorrectionsModal()"><i class="bi bi-file-earmark-pdf-fill me-2"></i>Generate 990N Corrections</button>
+                <button type="button" id="update-eoy-file_corrections_2" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-envelope-paper me-2"></i>Record Corrections as Sent</button>
+            @else
+                <button type="button" id="file-file_corrections_2" class="btn btn-primary bg-gradient mb-2" disabled><i class="bi bi-file-earmark-pdf-fill me-2"></i>Generate 990N Corrections</button>
+                <button type="button" id="update-eoy-file_corrections_2" class="btn btn-primary bg-gradient mb-2" disabled><i class="bi bi-envelope-paper me-2"></i>Record Corrections as Sent</button>
+            @endif
+            <p style="font-weight: bold;">The following will be included in update:</p>
+                     @foreach($irsCorrectsionsListItems as $item)
+                                    <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                        @if($irsYear->file_june == 1)
+                                            <i class="fas fa-check mr-2 ml-2"></i>{{ $item }}
+                                        @else
+                                            <i class="far fa-square mr-2 ml-2"></i>{{ $item }}
+                                        @endif
+                                    </li>
+                                @endforeach
+        </div>
+</section>
+</div><!-- end of accordion body -->
+</div><!-- end of accordion item -->
+</div>
+</div>
+<!------End Step 3 ------>
+
+<!------Start Step 4 ------>
 <div style="break-inside: avoid; margin-bottom: 0.5rem;">
 <div class="accordion-item {{ $irsYear->file_dec == 1 ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-eoy-tables">
             <button class="accordion-button collapsed"type="button"
                     data-bs-toggle="collapse" data-bs-target="#collapseIRSTwo"
                     aria-expanded="false" aria-controls="collapseIRSTwo">
-                #2 - Submit IRS Filing Updates - DEC
+                #4 - Submit IRS Filing Updates - DEC
             </button>
         </h2>
         <div id="collapseIRSTwo" class="accordion-collapse collapse" data-bs-parent="#accordionIRS">
@@ -84,16 +163,16 @@
 </div><!-- end of accordion item -->
 </div>
 </div>
-<!------End Step 2 ------>
+<!------End Step 4 ------>
 
-<!------Start Step 3 ------>
+<!------Start Step 5 ------>
 <div style="break-inside: avoid; margin-bottom: 0.5rem;">
 <div class="accordion-item {{$irsYear->file_subordinate == 1 ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-reset-tables-after">
             <button class="accordion-button collapsed"type="button"
                     data-bs-toggle="collapse" data-bs-target="#collapseIRSThree"
                     aria-expanded="false" aria-controls="collapseIRSThree">
-                #3 - Submit IRS Subordinate Filing - MAR
+                #5 - Submit IRS Subordinate Filing - MAR
             </button>
         </h2>
         <div id="collapseIRSThree" class="accordion-collapse collapse" data-bs-parent="#accordionIRS">
@@ -125,16 +204,16 @@
 </div><!-- end of accordion item -->
 </div>
 </div>
-<!------End Step 3 ------>
+<!------End Step 5 ------>
 
-<!------Start Step 4 ------>
+<!------Start Step 6 ------>
 <div style="break-inside: avoid; margin-bottom: 0.5rem;">
 <div class="accordion-item {{$irsYear->file_june == 1 ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-user-tables">
             <button class="accordion-button collapsed"type="button"
                     data-bs-toggle="collapse" data-bs-target="#collapseIRSFour"
                     aria-expanded="false" aria-controls="collapseIRSFour">
-                #4 - Submit IRS Filing Updates - JUNE
+                #6 - Submit IRS Filing Updates - JUNE
             </button>
         </h2>
         <div id="collapseIRSFour" class="accordion-collapse collapse" data-bs-parent="#accordionIRS">
@@ -165,7 +244,7 @@
 </div><!-- end of accordion item -->
 </div>
 </div>
-<!------End Step 4 ------>
+<!------End Step 6 ------>
 
 </div><!-- end of accordion -->
 </div>

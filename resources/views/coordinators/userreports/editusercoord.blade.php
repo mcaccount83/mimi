@@ -23,7 +23,7 @@
             <div class="card card-primary card-outline">
               <div class="card-body">
                     <div class="card-header text-center bg-transparent">
-                        <h3 class="mb-0">{{ $cdDetails->first_name }}, {{ $cdDetails->last_name }}</h3>
+                        <h3 class="mb-0">{{ $cdDetails->first_name }} {{ $cdDetails->last_name }}</h3>
                         <p class="mb-0">{{ $conferenceDescription }} Conference
                             @if ($regionLongName != "None")
                                 , {{ $regionLongName }} Region

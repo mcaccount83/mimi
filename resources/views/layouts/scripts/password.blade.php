@@ -127,7 +127,7 @@
                 // Send the form data via AJAX to update the password
                 $.ajax({
                     url: '{{ route("updatepassword") }}',
-                    type: 'PUT',
+                    type: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}',
                         user_id: result.value.user_id,

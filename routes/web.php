@@ -151,6 +151,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/techreports/eoy/updateirssept', [TechReportController::class, 'updateFilingSept'])->name('techreports.updateirssept');
     Route::post('/techreports/eoy/updateirsdec', [TechReportController::class, 'updateFilingDec'])->name('techreports.updateirsdec');
     // Route::post('/techreports/eoy/updatetesteoy', [TechReportController::class, 'updateTestEOY'])->name('techreports.updatetesteoy');
+    Route::post('/techreports/eoy/updateirscorrections', [TechReportController::class, 'updateFilingCorrections'])->name('techreports.updateirscorrections');
+    Route::post('/techreports/eoy/updateirscorrections2', [TechReportController::class, 'updateFilingCorrections2'])->name('techreports.updateirscorrections2');
     Route::post('/techreports/eoy/updateirssubordinate', [TechReportController::class, 'updateSubordinateFiling'])->name('techreports.updateirssubordinate');
     Route::post('/techreports/eoy/updateirsjune', [TechReportController::class, 'updateFilingJune'])->name('techreports.updateirsjune');
     Route::post('/techreports/eoy/resetyeareoy', [TechReportController::class, 'resetYearEOY'])->name('techreports.resetyeareoy');

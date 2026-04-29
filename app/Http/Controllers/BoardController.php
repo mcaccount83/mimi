@@ -102,54 +102,54 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * Reset Password
      */
-    public function updatePassword(Request $request): JsonResponse
-    {
-        try {
-            $request->validate([
-                'current_password' => 'required',
-                'new_password' => 'required|string|min:8|confirmed',
-            ]);
+    // public function updatePassword(Request $request): JsonResponse
+    // {
+    //     try {
+    //         $request->validate([
+    //             'current_password' => 'required',
+    //             'new_password' => 'required|string|min:8|confirmed',
+    //         ]);
 
-            $user = $request->user();
+    //         $user = $request->user();
 
-            // Ensure the current password is correct
-            if (! Hash::check($request->current_password, $user->password)) {
-                return response()->json(['error' => 'Current password is incorrect'], 400);
-            }
+    //         // Ensure the current password is correct
+    //         if (! Hash::check($request->current_password, $user->password)) {
+    //             return response()->json(['error' => 'Current password is incorrect'], 400);
+    //         }
 
-            // Update the user's password
-            $user->password = Hash::make($request->new_password);
-            $user->remember_token = null; // Reset the remember token
-            $user->save();
+    //         // Update the user's password
+    //         $user->password = Hash::make($request->new_password);
+    //         $user->remember_token = null; // Reset the remember token
+    //         $user->save();
 
-            return response()->json(['message' => 'Password updated successfully']);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json(['success' => false, 'errors' => $e->errors()], 422);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'error' => 'An error occurred while updating the password.'], 500);
-        }
-    }
+    //         return response()->json(['message' => 'Password updated successfully']);
+    //     } catch (\Illuminate\Validation\ValidationException $e) {
+    //         return response()->json(['success' => false, 'errors' => $e->errors()], 422);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['success' => false, 'error' => 'An error occurred while updating the password.'], 500);
+    //     }
+    // }
 
     /**
      * Verify Current Passwor for Reset
      */
-    public function checkCurrentPassword(Request $request): JsonResponse
-    {
-        try {
-            $request->validate([
-                'current_password' => 'required',
-            ]);
+    // public function checkCurrentPassword(Request $request): JsonResponse
+    // {
+    //     try {
+    //         $request->validate([
+    //             'current_password' => 'required',
+    //         ]);
 
-            $user = $request->user();
-            $isValid = Hash::check($request->current_password, $user->password);
+    //         $user = $request->user();
+    //         $isValid = Hash::check($request->current_password, $user->password);
 
-            return response()->json(['isValid' => $isValid]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json(['success' => false, 'errors' => $e->errors()], 422);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'error' => 'An error occurred while checking the password.'], 500);
-        }
-    }
+    //         return response()->json(['isValid' => $isValid]);
+    //     } catch (\Illuminate\Validation\ValidationException $e) {
+    //         return response()->json(['success' => false, 'errors' => $e->errors()], 422);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['success' => false, 'error' => 'An error occurred while checking the password.'], 500);
+    //     }
+    // }
 
     /**
      * View Board Details Board Member Login

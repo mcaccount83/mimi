@@ -1,7 +1,7 @@
 @extends('layouts.mimi_theme')
 
 @section('page_title', 'IT Reports')
-@section('breadcrumb', 'EOY Procedures')
+@section('breadcrumb', 'Admin Procedures')
 
 <style>
 /* Completed accordion step - AdminLTE success */
@@ -47,7 +47,7 @@
                         <div class="card-header">
                           <div class="dropdown">
                               <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  End of Year Procedures
+                                  Admin Procedures
                               </h3>
                               @include('layouts.dropdown_menus.menu_reports_tech')
                           </div>
@@ -152,7 +152,9 @@ $(document).on('click', '#view-reportprocedures', function() {
 $(document).ready(function() {
     var fiscalYearBaseUrl = '{{ route("techreports.resetyear") }}';  // Route for reseting New Year
     var subscribeBaseUrl = '{{ route("techreports.updatesubscribelists") }}';  // Route for subscribing users to BoardList
+    var irsCoorrectionsBaseUrl = '{{ route("techreports.updateirscorrections") }}';
     var irsSeptBaseUrl = '{{ route("techreports.updateirssept") }}';
+    var irsCoorrections2BaseUrl = '{{ route("techreports.updateirscorrections2") }}';
     var irsDecBaseUrl = '{{ route("techreports.updateirsdec") }}';
     var irsSubordinateBaseUrl = '{{ route("techreports.updateirssubordinate") }}';
     var irsJuneBaseUrl = '{{ route("techreports.updateirsjune") }}';
@@ -204,8 +206,16 @@ $(document).ready(function() {
         handleAjaxRequest(subscribeBaseUrl);
     });
 
+    $("#update-eoy-file_corrections").click(function() {
+        handleAjaxRequest(irsCoorrectionsBaseUrl);
+    });
+
     $("#update-eoy-irssept").click(function() {
         handleAjaxRequest(irsSeptBaseUrl);
+    });
+
+    $("#update-eoy-file_corrections_2").click(function() {
+        handleAjaxRequest(irsCoorrections2BaseUrl);
     });
 
     $("#update-eoy-irsdec").click(function() {

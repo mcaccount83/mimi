@@ -338,6 +338,12 @@ class TechReportController extends Controller implements HasMiddleware
             'Subscribe Board Members to Public Announcements',
         ];
 
+        $irsCorrectsionsListItems = [
+          'Chapters with Wrong Fiscal Year Dates',
+          'Chapters Not Found in IRS Database',
+          'Chapters who FILED with the Wrong Fiscal Year Dates'
+        ];
+
         $irsSubordinateListItems = [
           'All Chapters Currently Active',
           'Chapters Added this Fiscal Year',
@@ -422,7 +428,7 @@ class TechReportController extends Controller implements HasMiddleware
             'Copy/Reset BoardList Forum Category',
         ];
 
-        $data = ['adminYear' => $adminYear, 'canEditFiles' => $canEditFiles, 'irsYear' => $irsYear, 'reportYear' => $reportYear,
+        $data = ['adminYear' => $adminYear, 'canEditFiles' => $canEditFiles, 'irsYear' => $irsYear, 'reportYear' => $reportYear, 'irsCorrectsionsListItems' => $irsCorrectsionsListItems,
             'resetEOYTableItems' => $resetEOYTableItems, 'displayCoorindatorMenuItems' => $displayCoorindatorMenuItems, 'displayChapterButtonItems' => $displayChapterButtonItems,
             'displayTestingItemsItems' => $displayTestingItemsItems, 'displayLiveItemsItems' => $displayLiveItemsItems, 'unSubscribeListItems' => $unSubscribeListItems,
             'resetAFTERtestingItems' => $resetAFTERtestingItems, 'updateUserTablesItems' => $updateUserTablesItems, 'subscribeListItems' => $subscribeListItems,
@@ -584,6 +590,57 @@ class TechReportController extends Controller implements HasMiddleware
             DB::commit(); // Commit transaction
 
             return response()->json(['success' => 'Successfully subscribed to lists.']);
+        } catch (\Exception $e) {
+            DB::rollback(); // Rollback Transaction
+            Log::error($e); // Log the error
+
+            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+        }
+    }
+
+    /**
+     * Record 990N Corrections Update  // Step 2
+     */
+     public function updateFilingCorrections(Request $request): JsonResponse
+    {
+        $fiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
+        $fiscalYearId = $fiscalYearOptions['fiscalYearId'];
+
+        DB::beginTransaction();
+        try {
+            $adminIRS = AdminIRS::where('fiscal_year_id', $fiscalYearId)->firstOrFail();
+            $adminIRS->update([
+                'file_corrections' => 1,
+                'file_corrections_date' => now(),
+            ]);
+
+            DB::commit(); // Commit transaction
+
+            return response()->json(['success' => 'Successfully recorded filing corrections.']);
+        } catch (\Exception $e) {
+            DB::rollback(); // Rollback Transaction
+            Log::error($e); // Log the error
+
+            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+        }
+    }
+
+    public function updateFilingCorrections2(Request $request): JsonResponse
+    {
+        $fiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
+        $fiscalYearId = $fiscalYearOptions['fiscalYearId'];
+
+        DB::beginTransaction();
+        try {
+            $adminIRS = AdminIRS::where('fiscal_year_id', $fiscalYearId)->firstOrFail();
+            $adminIRS->update([
+                'file_corrections_2' => 1,
+                'file_corrections_2_date' => now(),
+            ]);
+
+            DB::commit(); // Commit transaction
+
+            return response()->json(['success' => 'Successfully recorded filing corrections.']);
         } catch (\Exception $e) {
             DB::rollback(); // Rollback Transaction
             Log::error($e); // Log the error
