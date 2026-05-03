@@ -504,7 +504,7 @@
                                 <div class="col-sm-3">
                                     <label>990N Filing:</label>
                                 </div>
-                                @if ($chIRSDocuments->irs_verified == 1)
+                                @if ($chIRSDocuments?->irs_verified == 1)
                                     <div class="col-sm-9">
                                         990N Filing was verified on the IRS website.
                                     </div>
