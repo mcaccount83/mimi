@@ -504,6 +504,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/board/combinedirsfilingcorrections/pdf', [PDFController::class, 'generateCombinedIRSFilingCorrections'])->name('pdf.combinedirsfilingcorrections');
     Route::get('/board/grantrequest/pdf/{id}', [PDFController::class, 'generateFGrantRequest'])->name('pdf.grantrequest');
     Route::post('/grant-request-pdf', [PDFController::class, 'saveGrantRequest'])->name('pdf.generategrantrequest');
+    Route::get('/techreports/endofyear/pdf/{adminYear}', [PDFController::class, 'generateEndofYear'])->name('pdf.endofyear');
+    Route::post('/end-of-year-pdf', [PDFController::class, 'saveEndofYear'])->name('pdf.generateendofyear');
 });
 
 // Google Controller -- Uploading Files Routes...Used for Board & Coordinator Layouts

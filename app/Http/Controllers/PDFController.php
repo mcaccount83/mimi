@@ -11,7 +11,7 @@ use App\Mail\ProbationChapPartyLetter;
 use App\Mail\ProbationChapReleaseLetter;
 use App\Mail\ProbationChapWarningPartyLetter;
 use App\Models\Documents;
-use App\Models\DocumentsEOY;
+use App\Models\AdminYear;
 use App\Models\DocumentsIRS;
 use App\Models\DocumentsReport;
 use App\Models\GoogleDrive;
@@ -34,18 +34,21 @@ class PDFController extends Controller
 
     protected $baseChapterController;
 
+    protected $baseCoordinatorController;
+
     protected $googleController;
 
     protected $baseMailDataController;
 
     protected PositionConditionsService $positionConditionsService;
 
-    public function __construct(UserController $userController, BaseChapterController $baseChapterController,
+    public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController,
         BaseMailDataController $baseMailDataController, GoogleController $googleController, PositionConditionsService $positionConditionsService)
     {
         $this->userController = $userController;
         $this->googleController = $googleController;
         $this->baseChapterController = $baseChapterController;
+        $this->baseCoordinatorController = $baseCoordinatorController;
         $this->baseMailDataController = $baseMailDataController;
         $this->positionConditionsService = $positionConditionsService;
     }
@@ -120,8 +123,8 @@ class PDFController extends Controller
         $pdfPath = storage_path('app/pdf_reports/'.$name);
 
         if (!file_exists(dirname($pdfPath))) {
-    mkdir(dirname($pdfPath), 0775, true);
-}
+            mkdir(dirname($pdfPath), 0775, true);
+        }
         $pdf->save($pdfPath);
         $filename = basename($pdfPath);
         $mimetype = 'application/pdf';
@@ -179,8 +182,8 @@ class PDFController extends Controller
         $pdfPath = storage_path('app/pdf_reports/'.$name);
 
         if (!file_exists(dirname($pdfPath))) {
-    mkdir(dirname($pdfPath), 0775, true);
-}
+            mkdir(dirname($pdfPath), 0775, true);
+        }
         $pdf->save($pdfPath);
         $filename = basename($pdfPath);
         $mimetype = 'application/pdf';
@@ -346,8 +349,8 @@ class PDFController extends Controller
         $pdfPath = storage_path('app/pdf_reports/'.$name);
 
         if (!file_exists(dirname($pdfPath))) {
-    mkdir(dirname($pdfPath), 0775, true);
-}
+            mkdir(dirname($pdfPath), 0775, true);
+        }
         $pdf->save($pdfPath);
         $filename = basename($pdfPath);
         $mimetype = 'application/pdf';
@@ -1682,8 +1685,8 @@ class PDFController extends Controller
         $pdfPath = storage_path('app/pdf_reports/'.$name);
 
         if (!file_exists(dirname($pdfPath))) {
-    mkdir(dirname($pdfPath), 0775, true);
-}
+            mkdir(dirname($pdfPath), 0775, true);
+        }
         $pdf->save($pdfPath);
         $filename = basename($pdfPath);
         $mimetype = 'application/pdf';
@@ -1816,6 +1819,148 @@ class PDFController extends Controller
         //     'pdf' => $pdf,
         //     'filename' => $filename,
         // ];
+    }
+
+
+    /**
+     * Save & Send End of Year Report
+     */
+    public function saveEndofYear(Request $request, $adminYear)
+    {
+        // Prefer route parameters if provided, else fallback to request
+
+        $googleDrive = GoogleDrive::where('name', 'eoy_report_uploads')->first();
+        $sharedDriveId = $googleDrive->folder_id;
+
+        $result = $this->generateEndofYear($adminYear, false);
+        $pdf = $result['pdf'];
+        $name = $result['filename'];
+
+        $pdfPath = storage_path('app/pdf_reports/'.$name);
+
+        if (!file_exists(dirname($pdfPath))) {
+            mkdir(dirname($pdfPath), 0775, true);
+        }
+        $pdf->save($pdfPath);
+        $filename = basename($pdfPath);
+        $mimetype = 'application/pdf';
+        $filecontent = file_get_contents($pdfPath);
+
+        if ($file_id = $this->googleController->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
+            $existingDocRecord = AdminYear::find($adminYear);
+            if ($existingDocRecord) {
+                $existingDocRecord->eoy_report_path = $file_id;
+                $existingDocRecord->save();
+            } else {
+                Log::error("Expected document record for admin year {$adminYear} not found");
+                $newDocData = ['id' => $adminYear];
+                $newDocData['file_path'] = $file_id;
+                GrantRequest::create($newDocData);
+            }
+
+            return $pdfPath;  // Return the full local stored path
+        }
+    }
+
+    /**
+     * Generate End of Year Report
+     */
+    public function generateEndofYear(Request $request, $adminYear, $streamResponse = true)
+    {
+        $eoyDetails = AdminYear::find($adminYear);
+
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
+        $userName = $user['userName'];
+        $userPosition = $user['cdPosition'];
+        $userConfName = $user['confName'];
+        $userConfDesc = $user['confDesc'];
+
+        $adminyearOptions = $this->positionConditionsService->getFiscalYearOptions();
+        $fiscalYearRange = $adminyearOptions['fiscalYearRange'];
+        $fiscalYearStart = $adminyearOptions['fiscalYearStart'];
+        $fiscalMonthEnd = $adminyearOptions['fiscalMonthEnd'];
+        $fiscalMonthStart = $adminyearOptions['fiscalMonthStart'];
+        $fiscalYearStartDate = $adminyearOptions['fiscalYearStartDate'];
+
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentDate = $dateOptions['currentDate'];
+
+        // Simulate international to get full list
+        $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
+
+        $activeBaseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+        $activeChapterCount = $activeBaseQuery['query']
+            ->where(function ($query) use ($fiscalYearStart, $fiscalMonthStart) {
+                $query->where('start_year', '<', $fiscalYearStart)
+                    ->orWhere(function ($query) use ($fiscalYearStart, $fiscalMonthStart) {
+                        $query->where('start_year', '=', $fiscalYearStart)
+                                ->where('start_month_id', '<', $fiscalMonthStart);
+                    });
+            })
+            ->count();
+
+        $zappedBaseQuery = $this->baseChapterController->getBaseQuery(0, $coorId, $confId, $regId, $positionId, $secPositionId);
+        $zappedChapterCount = $zappedBaseQuery['query']
+            ->where('zap_date', '>', $fiscalYearStartDate)
+            ->count();
+
+        $totalChapterCount = $activeChapterCount + $zappedChapterCount;
+
+        $activeBaseCoordQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+        $activeCoordCount = $activeBaseCoordQuery['query']
+            ->where('coordinator_start_date', '<', $fiscalYearStartDate)
+            ->count();
+
+        $retiredBaseCoordQuery = $this->baseCoordinatorController->getBaseQuery(0, $coorId, $confId, $regId, $positionId, $secPositionId);
+        $retiredCoordCount = $retiredBaseCoordQuery['query']
+            ->where('zapped_date', '>', $fiscalYearStartDate)
+            ->count();
+
+        $totalCoordCount = $activeCoordCount + $retiredCoordCount;
+
+
+        $activeBaseQueryCurrent = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+        $activeChapterCountCurrent = $activeBaseQueryCurrent['query']
+            ->count();
+
+        $activeBaseCoordQueryCurrent = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+        $activeCoordCountCurrent = $activeBaseCoordQueryCurrent['query']
+            ->count();
+
+        // Clean up
+        unset($_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL]);
+
+        $pdfData = array_merge(
+            [
+                'fiscalYearStartDate' => $fiscalYearStartDate,
+                'totalChapterCount' => $totalChapterCount,
+                'totalCoordCount' => $totalCoordCount,
+                'currentDate' => $currentDate,
+                'activeChapterCountCurrent' => $activeChapterCountCurrent,
+                'activeCoordCountCurrent' => $activeCoordCountCurrent,
+            ]
+        );
+
+        $pdf = Pdf::loadView('pdf.endofyear', compact('pdfData'));
+
+        $adminyearOptions = $this->positionConditionsService->getFiscalYearOptions();
+        $fiscalYearRange = $adminyearOptions['fiscalYearRange'];
+
+        $filename = $fiscalYearRange.'_EndofYear.pdf';
+
+        if ($streamResponse) {
+            return $pdf->stream($filename, ['Attachment' => 0]);
+        }
+
+        return [
+            'pdf' => $pdf,
+            'filename' => $filename,
+        ];
     }
 
 }

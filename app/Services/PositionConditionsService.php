@@ -137,6 +137,9 @@ class PositionConditionsService
         $fiscalYearStart = $fiscalYear->fiscal_start;    // "2025"
         $fiscalYearEnd = $fiscalYear->fiscal_end;        // "2026"
         $fiscalYearStartDate = $fiscalYearStart . '-07-01';  // "2025-07-01"
+        $fiscalMonthStart = '7';
+        $fiscalMonthEnd = '6';
+        $fiscalYearEndDate = $fiscalYearEnd . '-06-30';
 
         return [
             'fiscalYear' => $fiscalYear,
@@ -147,6 +150,9 @@ class PositionConditionsService
             'fiscalYearStart' => $fiscalYearStart,
             'fiscalYearEnd' => $fiscalYearEnd,
             'fiscalYearStartDate' => $fiscalYearStartDate,
+            'fiscalMonthStart' => $fiscalMonthStart,
+            'fiscalMonthEnd' => $fiscalMonthEnd,
+            'fiscalYearEndDate' => $fiscalYearEndDate,
         ];
     }
 
