@@ -261,7 +261,7 @@
                         <select name="SelectChapter" id="SelectChapter" class="form-control" onChange="ActivateChapterButton(this)">
                             <option value=""></option>
                             @foreach($chDetails as $chapter)
-                                <option value="{{ $chapter->id}}" data-region-id="{{ $chapter->region_id }}">
+                                <option value="{{ $chapter->id}}" data-region-id="{{ $chapter->state->region_id }}">
                                     {{ $chapter->state->state_short_name }} - {{ $chapter->name }}
                                 </option>
                             @endforeach
