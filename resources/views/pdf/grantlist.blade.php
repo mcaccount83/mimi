@@ -37,7 +37,7 @@
             <h2 style="margin: 0;">International MOMS Club<sub style="font-size: 0.5em;">&reg;</sub><br>
             Mother-to-Mother Fund<sub style="font-size: 0.5em;">&reg;</sub> Grants<br>
             January 1994 - Present</h2>
-            <h2>Total Awarded:  ${{ number_format($totalLifetimeGrants, 2) }}</h2>
+            <h2>Total Awarded:  ${{ number_format($pdfData['totalLifetimeGrants'], 2) }}</h2>
         </td>
     </tr>
 </table>
@@ -60,7 +60,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach($grantsByFiscalYear as $fiscalYearRange => $grants)
+        @foreach($pdfData['grantsByFiscalYear'] as $pdfData['fiscalYearRange'] => $grants)
             @if($grants->count() > 0)
                 @foreach($grants as $list)
                     <tr style="border-bottom: 1px solid #555;">
@@ -71,12 +71,12 @@
                     </tr>
                 @endforeach
                 <tr style="border-top: 2px solid #333; border-bottom: 2px solid #333;font-weight: bold;">
-                    <td colspan="3" style="text-align: right; padding: 5px;">Total for Fiscal Year {{ $fiscalYearRange }}:</td>
+                    <td colspan="3" style="text-align: right; padding: 5px;">Total for Fiscal Year {{ $pdfData['fiscalYearRange'] }}:</td>
                     <td style="text-align: right; padding: 5px;">${{ number_format($grants->sum('amount_awarded'), 2) }}</td>
                 </tr>
             @else
                 <tr>
-                    <td colspan="4" style="padding: 5px; font-style: italic;">No grants for fiscal year {{ $fiscalYearRange }}</td>
+                    <td colspan="4" style="padding: 5px; font-style: italic;">No grants for fiscal year {{ $pdfData['fiscalYearRange'] }}</td>
                 </tr>
             @endif
         @endforeach

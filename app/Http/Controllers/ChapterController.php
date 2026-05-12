@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\ActiveStatusEnum;
+use App\Enums\ChapterStatusEnum;
+use App\Enums\CoordinatorStatusEnum;
 use App\Enums\BoardPosition;
 use App\Enums\CheckboxFilterEnum;
-use App\Enums\ChapterStatusEnum;
 use App\Enums\CoordinatorPosition;
 use App\Enums\OperatingStatusEnum;
 use App\Enums\UserStatusEnum;
@@ -699,7 +699,7 @@ class ChapterController extends Controller implements HasMiddleware
             ->where('conference_id', $chConfId)
             ->whereBetween('position_id', [CoordinatorPosition::BS, CoordinatorPosition::CC])
             // ->whereBetween('position_id', [1, 7])
-            ->where('active_status', ActiveStatusEnum::ACTIVE)
+            ->where('active_status', CoordinatorStatusEnum::ACTIVE)
             ->where('on_leave', '!=', '1')
             ->get();
 

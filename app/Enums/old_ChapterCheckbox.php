@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-class ChapterCheckbox
+class old_ChapterCheckbox
 {
     // Chapter List Checkboxes
     const PRIMARY_COORDINATOR = 'check';      // Only show chapters I am primary for

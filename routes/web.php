@@ -105,8 +105,8 @@ Route::post('/updatenewinquiry', [PublicController::class, 'updateNewInquiry'])-
 Route::get('/newinquirysuccess', [PublicController::class, 'viewNewInquiry'])->name('public.newinquirysuccess');
 Route::get('/grantlist', [PublicController::class, 'viewGrantList'])->name('public.grantlist');
 
-Route::get('/grantlist-pdf', [PublicController::class, 'generateGratList'])->name('pdf.grantlist');
-Route::post('/grant-list-pdf', [PublicController::class, 'saveGratList'])->name('pdf.generategrantlist');
+Route::get('/grantlist-pdf', [PDFController::class, 'generateGrantList'])->name('pdf.grantlist');
+Route::post('/grant-list-pdf', [PDFController::class, 'saveGrantList'])->name('pdf.generategrantlist');
 
 
 // In your routes/web.php or wherever you have routes

@@ -128,7 +128,7 @@
                         <div class="row mb-3 row align-items-center  mb-3">
                             <label class="col-sm-2 col-form-label">990N Verifed with IRS:</label>
                             <div class="col-sm-10 form-check form-switch">
-                                <input type="checkbox" name="irs_verified" id="irs_verified" class="form-check-input" {{$chEOYDchIRSDocumentsocuments->irs_verified == 1 ? 'checked' : ''}}>
+                                <input type="checkbox" name="irs_verified" id="irs_verified" class="form-check-input" {{$chIRSDocuments->irs_verified == 1 ? 'checked' : ''}}>
                                 <label class="form-check-label" for="irs_verified"></label>
                             </div>
                         </div>

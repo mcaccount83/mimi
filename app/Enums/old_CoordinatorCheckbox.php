@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-class CoordinatorCheckbox
+class old_CoordinatorCheckbox
 {
     // Coordinator List Checkboxes
     const DIRECT_REPORT = 'check';      // Only show coordinators I am directly supervisor for

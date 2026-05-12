@@ -12,7 +12,7 @@ use App\Mail\ProbationChapReleaseLetter;
 use App\Mail\ProbationChapWarningPartyLetter;
 use App\Models\Documents;
 use App\Models\AdminYear;
-use App\Models\DocumentsIRS;
+use App\Models\Resources;
 use App\Models\DocumentsReport;
 use App\Models\GoogleDrive;
 use App\Models\GrantRequest;
@@ -1742,41 +1742,37 @@ class PDFController extends Controller
         ];
     }
 
-    public function saveGratList(Request $request)
+
+    public function saveGrantList()
     {
         $googleDrive = GoogleDrive::where('name', 'grant_uploads')->first();
         $sharedDriveId = $googleDrive->folder_id;
 
-        $result = $this->generateGratList();
+        $result = $this->generateGrantList(false);
         $pdf = $result['pdf'];
         $name = $result['filename'];
 
         $pdfPath = storage_path('app/pdf_reports/'.$name);
 
         if (!file_exists(dirname($pdfPath))) {
-    mkdir(dirname($pdfPath), 0775, true);
-}
+            mkdir(dirname($pdfPath), 0775, true);
+        }
         $pdf->save($pdfPath);
         $filename = basename($pdfPath);
         $mimetype = 'application/pdf';
         $filecontent = file_get_contents($pdfPath);
+        $name = 'M2M History';
 
-        // if ($file_id = $this->googleController->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
-        //     $existingDocRecord = GrantRequest::find($grantId);
-        //     if ($existingDocRecord) {
-        //         $existingDocRecord->grant_pdf_path = $file_id;
-        //         $existingDocRecord->save();
-        //     } else {
-        //         Log::error("Expected document record for grant id {$grantId} not found");
-        //         $newDocData = ['id' => $grantId];
-        //         $newDocData['file_path'] = $file_id;
-        //         GrantRequest::create($newDocData);
-        //     }
+        if ($file_id = $this->googleController->uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)) {
+            $existingDocRecord = Resources::where('name', $name)->first();
+            $existingDocRecord->file_path = $file_id;
+            $existingDocRecord->save();
 
-        return $pdfPath;  // Return the full local stored path
+            return $pdfPath;  // Return the full local stored path
+        }
     }
 
-    public function generateGratList()
+    public function generateGrantList($streamResponse = true)
     {
         $grantList = GrantRequest::with('chapters', 'chapterstate')
             ->where('grant_approved', '1')
@@ -1797,28 +1793,26 @@ class PDFController extends Controller
             } else {
                 return ($date->year - 1) . '-' . $date->year;
             }
-        // })->sortKeysDesc(); // Sort fiscal years descending (newest first)
         })->sortKeys(); // Sort fiscal years (oldest first)
 
         $pdfData =[
             'grantsByFiscalYear' => $grantsByFiscalYear, 'totalLifetimeGrants' => $totalLifetimeGrants,
         ];
 
-        // $pdf = Pdf::loadView('pdf.grantlist', compact('pdfData'));
+        $pdf = Pdf::loadView('pdf.grantlist', compact('pdfData'));
         // $pdf = Pdf::loadView('pdf.grantlist', compact('grantsByFiscalYear', 'totalLifetimeGrants'));
-        $pdf = Pdf::loadView('pdf.grantlist', $pdfData);
+        // $pdf = Pdf::loadView('pdf.grantlist', $pdfData);
 
         $filename = 'GrantList.pdf';
 
-
-        // if ($streamResponse) {
+        if ($streamResponse) {
             return $pdf->stream($filename, ['Attachment' => 0]);
-        // }
+        }
 
-        // return [
-        //     'pdf' => $pdf,
-        //     'filename' => $filename,
-        // ];
+        return [
+            'pdf' => $pdf,
+            'filename' => $filename,
+        ];
     }
 
 
