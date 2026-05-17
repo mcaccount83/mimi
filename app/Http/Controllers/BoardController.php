@@ -1350,13 +1350,13 @@ class BoardController extends Controller implements HasMiddleware
                     ->queue(new EOYElectionReportThankYou($mailData));
             }
 
-            if ($displayEOYLIVE) {
-                $status = $this->financialReportController->activateSingleBoard($request, $chId);
+            // if ($displayEOYLIVE) {
+            //     $status = $this->financialReportController->activateSingleBoard($request, $chId);
 
-                if ($status == 'success') {
-                    $message = 'Board info has been submitted and activated successfully';
-                }
-            }
+            //     if ($status == 'success') {
+            //         $message = 'Board info has been submitted and activated successfully';
+            //     }
+            // }
 
             DB::commit();
 
