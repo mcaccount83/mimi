@@ -39,7 +39,7 @@
                   <tr>
                     <td class="text-center align-middle"><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="bi bi-house-fill"></i></a></td>
                     <td class="text-center align-middle">
-                        @if ($list->probation_id == '3')
+                        @if ($list->probation_id == \App\Enums\ProbationReasonEnum::EXCESSPARTY)
                             <a href="{{ url("/board/probation/{$list->id}") }}"><i class="bi bi-file-earmark-text"></i></a>
                         @else
                         @endif
@@ -93,7 +93,7 @@
                 <div class="card-body text-center mt-3">
                     @if ($ITCondition)
                         @if ($checkBox51Status)
-                            <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showResetProbationSubmisionModel()" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Quarterly Report Data</button>
+                            <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showResetProbationSubmisionModel()" ><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Quarterly Report Data</button>
                         @else
                             <button type="button" class="btn btn-primary bg-gradient mb-2 disabled" onclick="showResetProbationSubmisionModel()" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Quarterly Report Data</button>
                         @endif

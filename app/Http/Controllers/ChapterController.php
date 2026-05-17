@@ -8,6 +8,7 @@ use App\Enums\BoardPosition;
 use App\Enums\CheckboxFilterEnum;
 use App\Enums\CoordinatorPosition;
 use App\Enums\OperatingStatusEnum;
+use App\Enums\ProbationReasonEnum;
 use App\Enums\UserStatusEnum;
 use App\Enums\UserTypeEnum;
 use App\Mail\BorUpdateListNoitce;
@@ -1103,7 +1104,7 @@ class ChapterController extends Controller implements HasMiddleware
             $documents->ein_notes = $request->input('ein_notes');
             $documents->save();
 
-            if ($chapter->probation_id == 3 && ! $probation) {
+            if ($chapter->probation_id == ProbationReasonEnum::EXCESSPARTY && ! $probation) {
                 ProbationSubmission::create([
                     'chapter_id' => $id,
                 ]);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\CoordinatorPosition;
 use App\Enums\CheckboxFilterEnum;
+use App\Enums\ProbationReasonEnum;
 use App\Enums\UserStatusEnum;
 use App\Enums\UserTypeEnum;
 use App\Models\Admin;
@@ -294,7 +295,8 @@ class TechReportController extends Controller implements HasMiddleware
 
             $probationPartyChapters = Chapters::with('probation')
                 ->where('active_status', 1)
-                ->where('probation_id', 3)
+                ->where('probation_id', ProbationReasonEnum::EXCESSPARTY)
+                // ->where('probation_id', 3)
                 ->get();
             foreach ($probationPartyChapters as $chapter) {
                 ProbationSubmission::create([

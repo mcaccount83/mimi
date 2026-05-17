@@ -43,19 +43,11 @@
                         <div class="col-md-12">
                             <div class="col-md-4 float-start me-2 mb-1">
                                     <label for="q1_dues">Q1 Dues Income</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text">$</span>
-                                        <input type="text" class="form-control" name="q1_dues" id="q1_dues" value="{{ $chDetails->probationSubmit?->q1_dues }}"
-                                            data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
-                                </div>
+                                        @currencyInput('q1_dues', $chDetails->probationSubmit?->q1_dues)
                             </div>
                             <div class="col-md-4 float-start me-2 mb-1">
                                     <label for="q1_benefit">Q1 Member Benefit Expenses</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text">$</span>
-                                        <input type="text" class="form-control" name="q1_benefit" id="q1_benefit" value="{{ $chDetails->probationSubmit?->q1_benefit }}"
-                                            data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
-                                    </div>
+                                        @currencyInput('q1_benefit', $chDetails->probationSubmit?->q1_benefit)
                             </div>
 
                             </div>
@@ -65,19 +57,11 @@
                             <div class="col-md-12">
                             <div class="col-md-4 float-start me-2 mb-1">
                                         <label for="Q1Dues">Q2 Dues Income</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text">$</span>
-                                            <input type="text" class="form-control " name="q2_dues" id="q2_dues" value="{{ $chDetails->probationSubmit?->q2_dues }}"
-                                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
-                                            </div>
+                                            @currencyInput('q2_dues', $chDetails->probationSubmit?->q2_dues)
                                 </div>
                             <div class="col-md-4 float-start me-2 mb-1">
                                         <label for="Q1Benefit">Q2 Member Benefit Expenses</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text">$</span>
-                                            <input type="text" class="form-control " name="q2_benefit" id="q2_benefit" value="{{ $chDetails->probationSubmit?->q2_benefit }}"
-                                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
-                                            </div>
+                                            @currencyInput('q2_benefit', $chDetails->probationSubmit?->q2_benefit)
                                 </div>
 
                                 </div>
@@ -87,19 +71,11 @@
                                 <div class="col-md-12">
                             <div class="col-md-4 float-start me-2 mb-1">
                                             <label for="Q1Dues">Q3 Dues Income</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-text">$</span>
-                                                <input type="text" class="form-control " name="q3_dues" id="q3_dues" value="{{ $chDetails->probationSubmit?->q3_dues }}"
-                                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
-                                                </div>
+                                                @currencyInput('q3_dues', $chDetails->probationSubmit?->q3_dues)
                                     </div>
                             <div class="col-md-4 float-start me-2 mb-1">
                                             <label for="Q1Benefit">Q3 Member Benefit Expenses</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-text">$</span>
-                                                <input type="text" class="form-control " name="q3_benefit" id="q3_benefit" value="{{ $chDetails->probationSubmit?->q3_benefit }}"
-                                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
-                                                </div>
+                                                @currencyInput('q3_benefit', $chDetails->probationSubmit?->q3_benefit)
                                     </div>
                             <div class="col-md-4 float-start me-2 mb-1">
                                     </div>
@@ -110,19 +86,11 @@
                                     <div class="col-md-12">
                             <div class="col-md-4 float-start me-2 mb-1">
                                                 <label for="Q1Dues">Q4 Dues Income</label>
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">$</span>
-                                                    <input type="text" class="form-control " name="q4_dues" id="q4_dues" value="{{ $chDetails->probationSubmit?->q4_dues }}"
-                                                        data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
-                                                    </div>
+                                                    @currencyInput('q4_dues', $chDetails->probationSubmit?->q4_dues)
                                         </div>
                             <div class="col-md-4 float-start me-2 mb-1">
                                                 <label for="Q1Benefit">Q4 Member Benefit Expenses</label>
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">$</span>
-                                                    <input type="text" class="form-control " name="q4_benefit" id="q4_benefit" value="{{ $chDetails->probationSubmit?->q4_benefit }}"
-                                                        data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
-                                            </div>
+                                                    @currencyInput('q4_benefit', $chDetails->probationSubmit?->q4_benefit)
                                         </div>
 
                                         </div>
@@ -132,19 +100,11 @@
                                         <div class="col-md-12">
                             <div class="col-md-4 float-start me-2 mb-1">
                                                     <label for="Q1Dues">YTD Dues Income</label>
-                                                        <div class="input-group">
-                                                            <span class="input-group-text">$</span>
-                                                        <input type="text" class="form-control " name="TotalDues" id="TotalDues" readonly
-                                                            data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
-                                                        </div>
+                                                    @currencyInput('TotalDues', '', true)
                                             </div>
                             <div class="col-md-4 float-start me-2 mb-1">
                                                     <label for="Q1Benefit">YTD Benefit Expenses</label>
-                                                        <div class="input-group">
-                                                            <span class="input-group-text">$</span>
-                                                        <input type="text" class="form-control " name="TotalBenefit" id="TotalBenefit" readonly
-                                                            data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
-                                                </div>
+                                                    @currencyInput('TotalBenefit', '', true)
                                             </div>
 
                                              </div>
@@ -153,11 +113,11 @@
                                     <div class="row">
                                         <div class="col-md-12">
                             <div class="col-md-4 float-start me-2 mb-1">
-                                                    <label for="Q1Percentage">YTD Benefit %</label>
-                                                        <div class="input-group">
-                                                           <input type="text" class="form-control" name="TotalPercentage" id="TotalPercentage" value="0%" readonly>
-                                                        </div>
+                                        <label for="Q1Percentage">YTD Benefit %</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="TotalPercentage" id="TotalPercentage" value="0%" readonly>
                                             </div>
+                                        </div>
                                 </div>
                             </div>
                         </div>
@@ -194,9 +154,6 @@
 <script>
 
 document.addEventListener("DOMContentLoaded", function() {
-    // Set up Inputmask
-    Inputmask().mask(document.querySelectorAll('[data-inputmask]'));
-
     // Correctly get the input elements for all quarters
     var q1DuesInput = document.getElementById("q1_dues");
     var q1BenefitInput = document.getElementById("q1_benefit");

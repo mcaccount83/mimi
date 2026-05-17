@@ -539,7 +539,7 @@
                             @if($chDocuments->probation_release_path != null)
                                 <button type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="openPdfViewer('{{ $chDocuments->probation_release_path }}')">Probation Release Letter</button><br>
                             @endif
-                            @if($chDetails->probation_id == '3')
+                            @if($chDetails->probation_id == \App\Enums\ProbationReasonEnum::EXCESSPARTY)
                                 <button type="button" class="btn btn-primary bg-gradient bg-gradient btn-sm mb-1" onclick="window.location.href='{{ route('board.editprobation', ['id' => $chDetails->id]) }}'">Quarterly Financial Submission</button>
                             @endif
                         </div>

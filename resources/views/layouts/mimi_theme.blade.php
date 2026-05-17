@@ -264,7 +264,8 @@
     </div>
     <!--end::App Wrapper-->
 
-    {{-- @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/flash.js']) --}}
+    @initMasks
+
 
     @include('layouts.scripts.pleasewait')
     @include('layouts.scripts.alert')
@@ -274,12 +275,12 @@
     @include('layouts.scripts.checkboxes')
     @include('layouts.scripts.coordinatorlist')
     @include('layouts.scripts.datatable')
-    @include('layouts.scripts.datamask')
+    {{-- @include('layouts.scripts.datamask') --}}
     @include('layouts.scripts.email')
     @include('layouts.scripts.export')
     @include('layouts.scripts.information')
     @include('layouts.scripts.irs')
-    @include('layouts.scripts.masks')
+    {{-- @include('layouts.scripts.masks') --}}
     @include('layouts.scripts.menu')
     @include('layouts.scripts.password')
     @include('layouts.scripts.pdfviewer')

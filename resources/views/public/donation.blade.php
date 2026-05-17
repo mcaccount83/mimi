@@ -77,7 +77,7 @@
                                 <input type="text" name="ship_email" id="ship_email" class="form-control" placeholder="Email Address" required >
                                 </div>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ship_phone" id="ship_phone" class="form-control"  data-inputmask='"mask": "(999) 999-9999"' data-mask placeholder="Phone Number" required >
+                                    @phoneInput('ship_phone')
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label">Address:</label>
                                 <div class="col-sm-10 mb-1">

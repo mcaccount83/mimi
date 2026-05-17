@@ -48,7 +48,7 @@
                                 <input type="text" name="cd_email" id="cd_email" class="form-control" required placeholder="Email Address" >
                                 </div>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="cd_phone" id="cd_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask required placeholder="Phone Number" >
+                                    @phoneInput('cd_phone')
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label">Address:</label>
                                 <div class="col-sm-10 mb-1">

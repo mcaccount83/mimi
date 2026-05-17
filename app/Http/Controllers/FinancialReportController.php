@@ -511,8 +511,6 @@ class FinancialReportController extends Controller implements HasMiddleware
         $chIRSDocuments = $baseQuery['chIRSDocuments'];
         $chReportDocuments = $baseQuery['chReportDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReportFinal'];
-        $awards = $baseQuery['awards'];
-        $allAwards = $baseQuery['allAwards'];
 
         $resources = Resources::with('resourceCategory')->get();
         $resourceCategories = ResourceCategory::all();

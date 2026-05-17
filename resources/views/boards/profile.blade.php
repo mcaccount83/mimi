@@ -36,7 +36,7 @@
                             <input type="text" name="ch_bor_email" id="ch_bor_email" class="form-control" value="{{ $borDetails->email }}" required placeholder="Email Address" >
                             </div>
                             <div class="col-sm-5 mb-1">
-                            <input type="text" name="ch_bor_phone" id="ch_bor_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{ $borDetails->phone }}" required placeholder="Phone Number" >
+                                @phoneInput('ch_bor_phone', $borDetails->phone)
                             </div>
                             <label class="col-sm-2 mb-1 col-form-label"></label>
                             <div class="col-sm-10 mb-1">

@@ -123,7 +123,9 @@
     @endif
     @endif
 
-    @if($chDetails->probation == '3')
+    @if ($probationParty)
+     {{-- @if($chDetails->status_id == \App\Enums\OperatingStatusEnum::PROBATION ); --}}
+    {{-- @if($chDetails->probation == '5') --}}
         <!-- Quarterly Submission Menu Item -->
         @if(isset($chDetails))
         @php

@@ -34,18 +34,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // applyDateMask();
-    applyPhoneMask();
-    applyHttpMask();
+    // // applyDateMask();
+    // applyPhoneMask();
+    // applyHttpMask();
 
-    chapterTable.on('draw', function() {
-        // applyDateMask();
-        applyPhoneMask();
-        applyHttpMask();
-    });
+    // chapterTable.on('draw', function() {
+    //     // applyDateMask();
+    //     applyPhoneMask();
+    //     applyHttpMask();
+    // });
 
-    coordinatorTable.on('draw', function() {
-        // applyDateMask();
-    });
+    // coordinatorTable.on('draw', function() {
+    //     // applyDateMask();
+    // });
 });
 </script>

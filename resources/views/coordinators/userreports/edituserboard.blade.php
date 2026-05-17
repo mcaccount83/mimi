@@ -125,7 +125,7 @@
 
                         </div>
                             <div class="col-sm-5 mb-3">
-                                <input type="text" name="phone" id="phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask required placeholder="Phone Number" value="{{ $bdDetails->phone }}">
+                                @phoneInput('phone', $bdDetails->phone)
                            </div>
                             <label class="col-sm-2 mb-3 col-form-label">Address:</label>
                             <div class="col-sm-10 mb-3">

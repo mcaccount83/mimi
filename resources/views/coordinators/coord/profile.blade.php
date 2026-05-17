@@ -99,10 +99,10 @@
                                 <div class="row mb-3">
                                     <label class="col-sm-2 col-form-label">Phone/Alternate:</label>
                                     <div class="col-sm-5">
-                                    <input type="text" name="cord_phone" id="cord_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{ $cdDetails->phone }}"  required >
+                                        @phoneInput('cord_phone', $cdDetails->phone)
                                     </div>
                                     <div class="col-sm-5">
-                                    <input type="text" name="cord_altphone" id="cord_altphone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{ $cdDetails->alt_phone }}"  placeholder="Alternate Phone" >
+                                        @phoneInput('cord_altphone', $cdDetails->alt_phone)
                                     </div>
                                 </div>
                                 <!-- /.form group -->

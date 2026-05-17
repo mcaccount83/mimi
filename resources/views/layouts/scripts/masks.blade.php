@@ -16,11 +16,11 @@
 //         Inputmask({"mask": "99/99/9999"}).mask(".date-mask");
 //     }
 
-  function applyPhoneMask() {
-        Inputmask({"mask": "(999) 999-9999"}).mask(".phone-mask");
-    }
+//   function applyPhoneMask() {
+//         Inputmask({"mask": "(999) 999-9999"}).mask(".phone-mask");
+//     }
 
-    function applyHttpMask() {
-        Inputmask({"mask": "http://*{1,250}"}).mask(".http-mask");
-    }
+//     function applyHttpMask() {
+//         Inputmask({"mask": "http://*{1,250}"}).mask(".http-mask");
+//     }
 </script>
