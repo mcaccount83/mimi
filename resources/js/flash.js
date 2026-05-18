@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const flashErrors = document.querySelector('meta[name="flash-errors"]')?.content;
 
     if (flashSuccess) {
-        Swal.fire({ position: 'top-end', icon: 'success', title: flashSuccess, showConfirmButton: false, timer: 2500, timerProgressBar: true });
+        Swal.fire({ position: 'top-end', icon: 'success', title: flashSuccess, showConfirmButton: false, timer: 1500, timerProgressBar: true });
     }
     if (flashInfo) {
         Swal.fire({ position: 'top-end', icon: 'info', title: flashInfo, showConfirmButton: false, timer: 2500, timerProgressBar: true });

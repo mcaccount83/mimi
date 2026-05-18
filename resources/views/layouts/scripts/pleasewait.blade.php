@@ -5,7 +5,7 @@ window.pleaseWait = (function () {
     let overlayActive = false;
 
     function showOverlay() {
-    if (typeof Swal === 'undefined') return;
+        if (typeof Swal === 'undefined') return;
         overlayActive = true;
         Swal.fire({
             title: 'Please Wait',
@@ -46,10 +46,21 @@ window.pleaseWait = (function () {
         overlayTimer = null;
     });
 
+    // Exposed navigate function for window.location.href buttons
+    window.navigateTo = function(url) {
+        if (window._suppressPleaseWait) {
+            window.location.href = url;
+            return;
+        }
+        overlayTimer = setTimeout(showOverlay, THRESHOLD_MS);
+        window.location.href = url;
+    };
+
     return {
         cancel: function () {
             if (overlayTimer) clearTimeout(overlayTimer);
             overlayTimer = null;
+            overlayActive = false;
             if (typeof Swal !== 'undefined') Swal.close();
         }
     };

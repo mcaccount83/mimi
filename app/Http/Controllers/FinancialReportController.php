@@ -964,7 +964,7 @@ class FinancialReportController extends Controller implements HasMiddleware
                 // $emailPC = $baseQuery['emailPC'];  // PC Email
 
                 $adminyearOptions = $this->positionConditionsService->getFiscalYearOptions();
-                $fiscalYearRange = $adminyearOptions['fiscalYearRange'];
+                $boardReportRange = $adminyearOptions['boardReportRange'];
 
                 $mailData = array_merge(
                     $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
@@ -973,7 +973,7 @@ class FinancialReportController extends Controller implements HasMiddleware
                     // $this->baseMailDataController->getUserData($user),
                     [
                         'reportYearRange' => $reportYearRange,
-                        'fiscalYearRange' => $fiscalYearRange,
+                        'boardReportRange' => $boardReportRange,
                     ]
                 );
 

@@ -1,6 +1,6 @@
 @component('mail::message')
 <h1><center>MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}</center></h1>
-<b><center>Welcome to the {{$mailData['fiscalYearRange']}} Executive Board!</center></b><br>
+<b><center>Welcome to the {{$mailData['boardReportRange']}} Executive Board!</center></b><br>
 <br>
 <p>Welcome, {{$mailData['chapterName']}}, {{$mailData['chapterState']}} board members! Congratulations on being elected to the executive board for your chapter. We hope you have a fantastic year in store. Read on for some tips and information that will help you have a successful year. We look forward to working with you!</p>
 <hr>
