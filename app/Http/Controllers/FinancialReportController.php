@@ -963,7 +963,7 @@ class FinancialReportController extends Controller implements HasMiddleware
                 $emailCCData = $this->userController->loadConferenceCoord($chPcId);
                 // $emailPC = $baseQuery['emailPC'];  // PC Email
 
-                $adminyearOptions = $this->positionConditionsService->getFiscalYearOptions();
+                $adminyearOptions = $this->positionConditionsService->getReportYearOptions();
                 $boardReportRange = $adminyearOptions['boardReportRange'];
 
                 $mailData = array_merge(
