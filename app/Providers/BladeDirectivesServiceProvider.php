@@ -47,12 +47,13 @@ class BladeDirectivesServiceProvider extends ServiceProvider
             return "<?php echo !empty($expression) ? preg_replace('/(\d{3})(\d{3})(\d{4})/', '($1) $2-$3', preg_replace('/[^0-9]/', '', $expression)) : ''; ?>";
         });
 
-        // Phone Input field with Mask: @phoneInput('ch_avp_phone', $AVPDetails->phone)
+        // Phone Input field with Mask: @phoneInput('ch_avp_phone', $AVPDetails->phone, false)
         Blade::directive('phoneInput', function ($expression) {
-            $parts = array_map('trim', explode(',', $expression, 2));
+            $parts = array_map('trim', explode(',', $expression, 3));
             $name = trim($parts[0], "'\"");
             $value = isset($parts[1]) ? $parts[1] : "''";
-            return "<?php echo '<input type=\"text\" name=\"{$name}\" id=\"{$name}\" class=\"form-control\" data-inputmask=\'\"mask\": \"(999) 999-9999\"\' data-mask value=\"' . htmlspecialchars({$value} ?? '') . '\" placeholder=\"Phone Number\" required>'; ?>";
+            $required = isset($parts[2]) && trim($parts[2]) === 'false' ? '' : 'required';
+            return "<?php echo '<input type=\"text\" name=\"{$name}\" id=\"{$name}\" class=\"form-control\" data-inputmask=\'\"mask\": \"(999) 999-9999\"\' data-mask value=\"' . htmlspecialchars({$value} ?? '') . '\" placeholder=\"Phone Number\" {$required}>'; ?>";
         });
 
         // Date Display: @formatDate($chPayments->rereg_date)

@@ -110,7 +110,7 @@
                                         @phoneInput('cord_phone')
                                     </div>
                                     <div class="col-sm-5">
-                                        @phoneInput('cord_altphone')
+                                        @phoneInput('cord_altphone', '', false)
                                     </div>
                                 </div>
                                 <!-- /.form group -->

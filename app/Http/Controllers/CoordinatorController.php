@@ -1496,12 +1496,12 @@ class CoordinatorController extends Controller implements HasMiddleware
 
             DB::commit();
 
-            return redirect()->to('/profile/coordprofile')->with('success', 'Coordinator profile updated successfully');
+            return redirect()->to('/profile/profile')->with('success', 'Coordinator profile updated successfully');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
 
-            return redirect()->to('/profile/coordprofile')->with('fail', 'Something went wrong, Please try again.');
+            return redirect()->to('/profile/profile')->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();

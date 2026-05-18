@@ -102,7 +102,7 @@
                                         @phoneInput('cord_phone', $cdDetails->phone)
                                     </div>
                                     <div class="col-sm-5">
-                                        @phoneInput('cord_altphone', $cdDetails->alt_phone)
+                                        @phoneInput('cord_altphone', $cdDetails->alt_phone, false)
                                     </div>
                                 </div>
                                 <!-- /.form group -->
