@@ -2,9 +2,11 @@
 window.pleaseWait = (function () {
     const THRESHOLD_MS = 1500;
     let overlayTimer = null;
+    let overlayActive = false;
 
     function showOverlay() {
-        if (typeof Swal === 'undefined') return;
+    if (typeof Swal === 'undefined') return;
+        overlayActive = true;
         Swal.fire({
             title: 'Please Wait',
             text: 'Page is taking a moment to load...',
@@ -39,7 +41,9 @@ window.pleaseWait = (function () {
 
     window.addEventListener('pageshow', function () {
         if (overlayTimer) clearTimeout(overlayTimer);
-        if (typeof Swal !== 'undefined') Swal.close();
+        if (typeof Swal !== 'undefined' && overlayActive) Swal.close();
+        overlayActive = false;
+        overlayTimer = null;
     });
 
     return {
