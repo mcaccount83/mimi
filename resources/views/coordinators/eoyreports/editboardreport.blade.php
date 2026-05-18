@@ -565,17 +565,22 @@ $(document).ready(function() {
 });
 
 function ShowBoundaryError() {
-        var selectedRadio = document.querySelector('input[name="BoundaryStatus"]:checked');
-        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 4 */
+    var divBoundaryIssue = document.getElementById("divBoundaryIssue");
 
-        if (selectedValue == "1") {
-            $('#divBoundaryIssue').addClass('tx-cls');
-            document.getElementById("divBoundaryIssue").style.display = 'block'; // If "Yes" is selected
-        } else {
-            $('#divBoundaryIssue').removeClass('tx-cls');
-            document.getElementById("divBoundaryIssue").style.display = 'none'; // If "No" is selected
-        }
+    // Exit early if the element doesn't exist (e.g. board is activated, form is hidden)
+    if (!divBoundaryIssue) return;
+
+    var selectedRadio = document.querySelector('input[name="BoundaryStatus"]:checked');
+    var selectedValue = selectedRadio ? selectedRadio.value : null;
+
+    if (selectedValue == "1") {
+        $('#divBoundaryIssue').addClass('tx-cls');
+        divBoundaryIssue.style.display = 'block';
+    } else {
+        $('#divBoundaryIssue').removeClass('tx-cls');
+        divBoundaryIssue.style.display = 'none';
     }
+}
 </script>
 @endsection
 
