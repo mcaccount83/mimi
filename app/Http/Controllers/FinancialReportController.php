@@ -778,6 +778,77 @@ class FinancialReportController extends Controller implements HasMiddleware
         ];
     }
 
+    public function activateSingleBoardStandalone(Request $request, $id)
+    {
+        try {
+            $status = $this->activateSingleBoard($request, $id);
+
+            if ($status == 'success') {
+                return redirect()->back()->with('success', 'Board activation successful');
+            } else {
+                return redirect()->back()->with('fail', 'Board activation failed');
+            }
+        } catch (\Exception $e) {
+            Log::error('Board activation failed: ' . $e->getMessage());
+            return redirect()->back()->with('fail', 'Board activation failed');
+        }
+    }
+
+    public function activateAllBoardsStandalone(Request $request)
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
+
+        $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
+        $reportYearStart = $reportYearOptions['reportYearStart'];
+
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+        $chapterList = $baseQuery['query']
+            ->where(function ($query) use ($reportYearStart) {
+                $query->where(function ($q) use ($reportYearStart) {
+                    $q->where('start_year', '<', $reportYearStart)
+                        ->orWhere(function ($q) use ($reportYearStart) {
+                            $q->where('start_year', '=', $reportYearStart)
+                                ->where('start_month_id', '<', 7);
+                        });
+                });
+            })
+            ->get();
+
+        $activationStatuses = [];
+
+        foreach ($chapterList as $chapter) {
+            $hasIncoming = BoardsIncoming::where('chapter_id', $chapter->id)->exists();
+
+            if ($hasIncoming) {
+                try {
+                    $result = $this->activateSingleBoard($request, $chapter->id);
+                    $activationStatuses[$chapter->id] = $result == 'success' ? 'success' : 'fail';
+                } catch (\Exception $e) {
+                    $activationStatuses[$chapter->id] = 'fail';
+                    Log::error("Board activation unsuccessful for chapter {$chapter->id}: " . $e->getMessage());
+                }
+            }
+        }
+
+        $successCount = count(array_filter($activationStatuses, fn($s) => $s == 'success'));
+        $totalCount = count($activationStatuses);
+
+        if ($totalCount == 0) {
+            return redirect()->to('/eoyreports/boardreport')->with('info', 'No Incoming Board Members for Activation');
+        } elseif ($successCount == $totalCount) {
+            return redirect()->to('/eoyreports/boardreport')->with('success', 'All Board Info has been successfully activated');
+        } elseif ($successCount > 0) {
+            return redirect()->to('/eoyreports/boardreport')->with('warning', "Board activation completed: {$successCount}/{$totalCount} successful");
+        } else {
+            return redirect()->to('/eoyreports/boardreport')->with('fail', 'Board activation failed for all chapters');
+        }
+    }
+
     // Unified method that handles both single and batch activations
     public function activateSingleBoard(Request $request, $id)
     {
@@ -793,13 +864,13 @@ class FinancialReportController extends Controller implements HasMiddleware
         $resources = Resources::with('resourceCategory')->get();
         $instructionsName = 'Officer Packet';
         $matchingInstructions = $resources->where('name', $instructionsName)->first();
-        $pdfPath = 'https://drive.google.com/uc?export=download&id='.$matchingInstructions->file_path;
+        $pdfPath = $matchingInstructions? 'https://drive.google.com/uc?export=download&id='.$matchingInstructions->file_path : null;
 
         $status = 'fail';
         $BoardsIncomingDetails = BoardsIncoming::where('chapter_id', $id)->get();
 
         if ($BoardsIncomingDetails && count($BoardsIncomingDetails) > 0) {
-            // DB::beginTransaction();
+            DB::beginTransaction();
             try {
                 $boardDetails = Boards::where('chapter_id', $id)->get();
 
@@ -910,14 +981,13 @@ class FinancialReportController extends Controller implements HasMiddleware
                     ->cc($emailListCoord)
                     ->queue(new NewBoardWelcome($mailData, $pdfPath));
 
-                // DB::commit();
-                $status = 'success'; // Set status to success if everything goes well
+                DB::commit();
+                return 'success';
             } catch (\Exception $e) {
-                // DB::rollback();  // Rollback Transaction
-                // $status = 'fail'; // Set status to fail if an exception occurs
-                Log::error('Error in activateSingleBoard: '.$e->getMessage());
-                throw $e; // Re-throw so calling function can handle it
+                DB::rollback();
+                throw $e; // always re-throws, caller decides what to do
             }
+
         }
 
         return $status;

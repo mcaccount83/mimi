@@ -181,18 +181,16 @@
                                 <label>Board Report:</label>
                             </div>
                             <div class="col-sm-9">
-                                {{-- @if($chEOYDocuments->new_board_active != '1') --}}
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='{{ route('eoyreports.editboardreport', ['id' => $chDetails->id]) }}'">View Board Election Report</button>
-                                    @if($chEOYDocuments->new_board_active != '1')
-                                        @if($chEOYDocuments->new_board_submitted == '1')
-                                            <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="return PreSaveValidate(false)" >Activate Board</button>
-                                        @else
-                                            <button type="button" class="btn btn-primary bg-gradient btn-sm" disabled >Report Not Submitted</button>
-                                        @endif
+                                <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='{{ route('eoyreports.editboardreport', ['id' => $chDetails->id]) }}'">View Board Election Report</button>
+                                @if($chEOYDocuments->new_board_active != '1')
+                                    @if($chEOYDocuments->new_board_submitted == '1')
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="confirmActivateSingleBoard()">
+                                        <i class="bi bi-play-fill me-2"></i>Activate Board
+                                    </button>
+                                    @else
+                                        <button type="button" class="btn btn-primary bg-gradient btn-sm" disabled >Report Not Submitted</button>
                                     @endif
-                                {{-- @else
-                                    Board Report is no longer available after activation.
-                                @endif --}}
+                                @endif
                             </div>
                         </div>
                     @else
@@ -374,7 +372,12 @@
         </div>
         <!-- /.row -->
       </div>
+    </form>
       <!-- /.container-fluid -->
+        <form id="activateSingleBoardForm" action="{{ route('eoyreports.activateboardreport', ['id' => $chDetails->id]) }}" method="POST">
+            @csrf
+            <input type="hidden" name="board" value="active">
+        </form>
     </section>
     <!-- /.content -->
 @endsection
@@ -471,50 +474,5 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     }
-
- //submit validation function
- function PreSaveValidate(show_submit_message){
-    var errMessage="";
-          if($("#ch_pre_email").val() != ""){
-            if($("#ch_pre_email").val() == $("#ch_avp_email").val() || $("#ch_pre_email").val() == $("#ch_mvp_email").val() || $("#ch_pre_email").val() == $("#ch_trs_email").val() || $("#ch_pre_email").val() == $("#ch_sec_email").val()) {
-              errMessage = "The e-mail address provided for the Chapter President was also provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
-            }
-          }
-          if($("#ch_avp_email").val() != ""){
-            if($("#ch_avp_email").val() == $("#ch_mvp_email").val() || $("#ch_avp_email").val() == $("#ch_trs_email").val() || $("#ch_avp_email").val() == $("#ch_sec_email").val()) {
-              errMessage = "The e-mail address provided for the Chapter AVP was provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
-            }
-          }
-          if($("#ch_mvp_email").val() != ""){
-            if($("#ch_mvp_email").val() == $("#ch_trs_email").val() || $("#ch_mvp_email").val() == $("#ch_sec_email").val()) {
-              errMessage = "The e-mail address provided for the Chapter MVP was provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
-            }
-          }
-          if($("#ch_trs_email").val() != ""){
-            if($("#ch_trs_email").val() == $("#ch_sec_email").val()) {
-              errMessage = "The e-mail address provided for the Chapter Treasurer was provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
-            }
-          }
-
-          if(errMessage.length > 0){
-            alert (errMessage);
-            return false;
-          }
-          if(show_submit_message){
-                    //Okay, all validation passed, save the records to the database
-                    alert ("Thank you for submitting the board information for this chapter.  The new board will not be able to login until the new board has been activated.");
-                }
-                else{
-                    $("#submit_type").val('activate_board');
-                    var result=confirm("Are you sure want to Activate Boards?");
-                    if(result)
-                        $("#board-info").submit();
-                    else
-                        return false;
-                }
-
-            return true;
-    }
-
 </script>
 @endsection

@@ -220,6 +220,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $documentsEOY = DocumentsEOY::find($id);
         $documentsIRS = DocumentsIRS::find($id);
         $financialReport = FinancialReport::find($id);
+        $financialReportReview = FinancialReportReview::find($id);
 
         DB::beginTransaction();
         try {
@@ -239,17 +240,18 @@ class EOYReportController extends Controller implements HasMiddleware
             $documentsIRS->irs_notes = $irs_notes;
             $documentsIRS->save();
 
-            $financialReport->reviewer_id = $reviewer_id;
-
             // Only set timestamp if it doesn't already exist AND the status is not null
             $financialReport->submitted = $financial_report_received != null && $financialReport->submitted === null ? Carbon::now() : $financialReport->submitted;
+            $financialReport->save();
+
+            $financialReportReview->reviewer_id = $reviewer_id;
 
             if ($financial_report_received != null) {
-                $financialReport->reviewer_id = $financialReport->reviewer_id ?? $coorId;
+                $financialReportReview->reviewer_id = $financialReport->reviewer_id ?? $coorId;
             }
 
-            $financialReport->review_complete = $financial_review_complete != null && $financialReport->review_complete === null ? Carbon::now() : $financialReport->review_complete;
-            $financialReport->save();
+            $financialReportReview->review_complete = $financial_review_complete != null && $financialReportReview->review_complete === null ? Carbon::now() : $financialReportReview->review_complete;
+            $financialReportReview->save();
 
             $chapter->updated_by = $updatedBy;
             $chapter->updated_id = $updatedId;
@@ -307,56 +309,42 @@ class EOYReportController extends Controller implements HasMiddleware
         $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
         $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
-        $activationStatuses = [];
+        // $activationStatuses = [];
 
         // Check if the board activation button was clicked
-        if ($request->has('board') && $request->input('board') == 'active') {
-            foreach ($chapterList as $chapter) {
-                // Check if chapter has incoming board members before attempting activation
-                $BoardsIncomingDetails = BoardsIncoming::where('chapter_id', $chapter->id)->get();
+        // if ($request->has('board') && $request->input('board') == 'active') {
+        //     foreach ($chapterList as $chapter) {
+        //         $BoardsIncomingDetails = BoardsIncoming::where('chapter_id', $chapter->id)->get();
 
-                if ($BoardsIncomingDetails && count($BoardsIncomingDetails) > 0) {
-                    // Each chapter gets its own transaction
-                    DB::beginTransaction();
-                    try {
-                        $activationResult = $this->financialReportController->activateSingleBoard($request, $chapter->id);
+        //         if ($BoardsIncomingDetails && count($BoardsIncomingDetails) > 0) {
+        //             try {
+        //                 $activationResult = $this->financialReportController->activateSingleBoard($request, $chapter->id);
+        //                 $activationStatuses[$chapter->id] = $activationResult == 'success' ? 'success' : 'fail';
+        //             } catch (\Exception $e) {
+        //                 $activationStatuses[$chapter->id] = 'fail';
+        //                 Log::error("Board activation unsuccessful for chapter {$chapter->id}: " . $e->getMessage());
+        //             }
+        //         }
+        //     }
 
-                        if ($activationResult == 'success') {
-                            DB::commit();
-                            $activationStatuses[$chapter->id] = 'success';
-                        } else {
-                            DB::rollback();
-                            $activationStatuses[$chapter->id] = 'fail';
-                        }
-                    } catch (\Exception $e) {
-                        DB::rollback();
-                        $activationStatuses[$chapter->id] = 'fail';
-                        Log::error("Board activation unnsucessful for chapter {$chapter->id}: ".$e->getMessage());
-                    } finally {
-                        // This ensures DB connections are released even if exceptions occur
-                        DB::disconnect();
-                    }
-                }
-            }
+        //     // Process results after all activations are attempted
+        //     $successfulActivations = array_filter($activationStatuses, function ($status) {
+        //         return $status == 'success';
+        //     });
 
-            // Process results after all activations are attempted
-            $successfulActivations = array_filter($activationStatuses, function ($status) {
-                return $status == 'success';
-            });
+        //     if (count($activationStatuses) == 0) {
+        //         return redirect()->to('/eoyreports/boardreport')->with('info', 'No Incoming Board Members for Activation');
+        //     } elseif (count($successfulActivations) == count($activationStatuses)) {
+        //         return redirect()->to('/eoyreports/boardreport')->with('success', 'All Board Info has been successfully activated');
+        //     } elseif (count($successfulActivations) > 0) {
+        //         $successCount = count($successfulActivations);
+        //         $totalCount = count($activationStatuses);
 
-            if (count($activationStatuses) == 0) {
-                return redirect()->to('/eoyreports/boardreport')->with('info', 'No Incoming Board Members for Activation');
-            } elseif (count($successfulActivations) == count($activationStatuses)) {
-                return redirect()->to('/eoyreports/boardreport')->with('success', 'All Board Info has been successfully activated');
-            } elseif (count($successfulActivations) > 0) {
-                $successCount = count($successfulActivations);
-                $totalCount = count($activationStatuses);
-
-                return redirect()->to('/eoyreports/boardreport')->with('warning', "Board activation completed: {$successCount}/{$totalCount} successful");
-            } else {
-                return redirect()->to('/eoyreports/boardreport')->with('fail', 'Board activation failed for all chapters');
-            }
-        }
+        //         return redirect()->to('/eoyreports/boardreport')->with('warning', "Board activation completed: {$successCount}/{$totalCount} successful");
+        //     } else {
+        //         return redirect()->to('/eoyreports/boardreport')->with('fail', 'Board activation failed for all chapters');
+        //     }
+        // }
 
         $countList = count($chapterList);
         $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status, 'checkBox2Status' => $checkBox2Status,
@@ -411,30 +399,20 @@ class EOYReportController extends Controller implements HasMiddleware
         $allCountries = $baseQuery['allCountries'];
 
         // Check if the board activation button was clicked
-        if ($request->has('board') && $request->input('board') == 'active') {
-            DB::beginTransaction();
-            try {
-                $status = $this->financialReportController->activateSingleBoard($request, $id);
+        // if ($request->has('board') && $request->input('board') == 'active') {
+        //     try {
+        //         $status = $this->financialReportController->activateSingleBoard($request, $id);
 
-                if ($status == 'success') {
-                    DB::commit();
-
-                    return redirect()->back()->with('success', 'Board activation successful');
-                } else {
-                    DB::rollback();
-
-                    return redirect()->back()->with('fail', 'Board activation failed');
-                }
-            } catch (\Exception $e) {
-                DB::rollback();
-                Log::error('Board activation error: '.$e->getMessage());
-
-                return redirect()->back()->with('fail', 'Board activation failed');
-            } finally {
-                // This ensures DB connections are released even if exceptions occur
-                DB::disconnect();
-            }
-        }
+        //         if ($status == 'success') {
+        //             return redirect()->back()->with('success', 'Board activation successful');
+        //         } else {
+        //             return redirect()->back()->with('fail', 'Board activation failed');
+        //         }
+        //     } catch (\Exception $e) {
+        //         Log::error('Board activation error: ' . $e->getMessage());
+        //         return redirect()->back()->with('fail', 'Board activation failed');
+        //     }
+        // }
 
         $data = [
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,

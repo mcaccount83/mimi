@@ -1337,26 +1337,24 @@ class BoardController extends Controller implements HasMiddleware
             );
 
             $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
-            $displayEOYLIVE = $reportYearOptions['displayEOYLIVE'];  // Months 5-12 Live Activation
-            $displayBoardRptLIVE = $reportYearOptions['displayBoardRptLIVE'];  // Months 5-9 Live Activation
+            $activateBoard = $reportYearOptions['activateBoard'];
 
-            if ($displayBoardRptLIVE) {
-                $message = 'Board info has been Submitted';
+            $message = 'Board info has been Submitted'; // default fallback
 
-                Mail::to($emailCC)
-                    ->queue(new EOYElectionReportSubmitted($mailData));
-
-                Mail::to($emailListChap)
-                    ->queue(new EOYElectionReportThankYou($mailData));
+            if ($activateBoard) {
+                try {
+                    $status = $this->financialReportController->activateSingleBoard($request, $chId);
+                    $message = $status == 'success'
+                        ? 'Board info has been submitted and activated successfully'
+                        : 'Board info submitted, but activation encountered an issue.';
+                } catch (\Exception $e) {
+                    Log::error('Board activation failed: ' . $e->getMessage());
+                    $message = 'Board info submitted, but activation encountered an issue.';
+                }
             }
 
-            // if ($displayEOYLIVE) {
-            //     $status = $this->financialReportController->activateSingleBoard($request, $chId);
-
-            //     if ($status == 'success') {
-            //         $message = 'Board info has been submitted and activated successfully';
-            //     }
-            // }
+            Mail::to($emailCC)->queue(new EOYElectionReportSubmitted($mailData));
+            Mail::to($emailListChap)->queue(new EOYElectionReportThankYou($mailData));
 
             DB::commit();
 

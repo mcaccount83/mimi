@@ -140,10 +140,10 @@
                     </a>
                 @endif
                 @if ($assistConferenceCoordinatorCondition)
-                    <form id="activateAllBoardsForm" action="{{ route('eoyreports.eoyboardreport') }}" method="GET">
-                        <input type="hidden" name="board" value="active">
-                        <button type="button" class="btn btn-primary bg-gradient ms-1" onclick="confirmActivateAllBoards()">
-                            <i class="bi bi-play-fill me-2"></i>Make Received Boards Active
+                    <form id="activateAllBoardsForm" action="{{ route('eoyreports.activateallboards') }}" method="POST">
+                        @csrf
+                        <button type="button" class="btn btn-primary bg-gradient mb-2 ms-1" onclick="confirmActivateAllBoards()">
+                            <i class="bi bi-play-fill me-2"></i>Activate All Boards
                         </button>
                     </form>
                 @endif

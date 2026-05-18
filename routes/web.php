@@ -408,7 +408,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/eoyreports/updatestatus/{id}', [EOYReportController::class, 'updateEOYDetails'])->name('eoyreports.update');
     Route::get('/eoyreports/boardreport', [EOYReportController::class, 'showEOYBoardReport'])->name('eoyreports.eoyboardreport');
     Route::get('/eoyreports/editboardreport/{id}', [EOYReportController::class, 'editBoardReport'])->name('eoyreports.editboardreport');
-    Route::post('/eoyreports/editboardreport/{id}', [EOYReportController::class, 'editBoardReport'])->name('eoyreports.activateboardreport');
     Route::post('eoyreports/updateboardreport/{id}', [EOYReportController::class, 'updateEOYBoardReport'])->name('eoyreports.updateboardreport');
     Route::get('/eoyreports/financialreport', [EOYReportController::class, 'showEOYFinancialReport'])->name('eoyreports.eoyfinancialreport');
     Route::get('/eoyreports/editfinancialreview/{id}', [EOYReportController::class, 'editFinancialReview'])->name('eoyreports.editfinancialreview');
@@ -429,7 +428,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/eoyreports/irssubmission', [EOYReportController::class, 'showIRSSubmission'])->name('eoyreports.eoyirssubmission');
     Route::get('/eoyreports/editirssubmission/{id}', [EOYReportController::class, 'editIRSSubmission'])->name('eoyreports.editirssubmission');
     Route::post('/eoyreports/updateirssubmission/{id}', [EOYReportController::class, 'updateIRSSubmission'])->name('eoyreports.updateirssubmission');
+    Route::post('/eoyreports/editboardreport/{id}', [FinancialReportController::class, 'activateSingleBoardStandalone'])->name('eoyreports.activateboardreport');
+    Route::post('/eoyreports/boardreport/activateall', [FinancialReportController::class, 'activateAllBoardsStandalone'])->name('eoyreports.activateallboards');
 });
+
+
 
 // Board Controller Routes...Board Login Required
 Route::middleware('auth')->group(function () {
