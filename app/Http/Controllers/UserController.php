@@ -401,12 +401,12 @@ class UserController extends Controller implements HasMiddleware
                 $displayPosition = $cor->displayPosition ? $cor->displayPosition->short_title : '';
                 $secondaryTitles = '';
 
-                if (!empty($cor->secondaryPosition) && $cor->secondaryPosition->count() > 0) {
+                if (! empty($cor->secondaryPosition) && $cor->secondaryPosition->count() > 0) {
                     $secondaryTitles = $cor->secondaryPosition->pluck('short_title')->implode('/');
                 }
 
                 $combinedTitle = $displayPosition;
-                if (!empty($secondaryTitles)) {
+                if (! empty($secondaryTitles)) {
                     $combinedTitle .= '/'.$secondaryTitles;
                 }
 
@@ -749,7 +749,7 @@ class UserController extends Controller implements HasMiddleware
         }
     }
 
-     /**
+    /**
      * Load Grant Reviewer Dropdown List
      */
     // Remove the reportReviewer relationship entirely and just query coordinators directly
@@ -765,10 +765,10 @@ class UserController extends Controller implements HasMiddleware
                     CoordinatorPosition::FOUNDER,
                 ])
                 // OR CC only for this conference
-                ->orWhere(function ($q) use ($chConfId) {
-                    $q->where('position_id', CoordinatorPosition::CC)
-                    ->where('conference_id', $chConfId);
-                });
+                    ->orWhere(function ($q) use ($chConfId) {
+                        $q->where('position_id', CoordinatorPosition::CC)
+                            ->where('conference_id', $chConfId);
+                    });
             })
             ->get();
 

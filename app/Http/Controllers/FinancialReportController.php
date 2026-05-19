@@ -17,8 +17,6 @@ use App\Models\BoardsOutgoing;
 use App\Models\Chapters;
 use App\Models\DisbandedChecklist;
 use App\Models\DocumentsEOY;
-use App\Models\DocumentsIRS;
-use App\Models\DocumentsReport;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportFinal;
 use App\Models\ResourceCategory;
@@ -100,9 +98,9 @@ class FinancialReportController extends Controller implements HasMiddleware
 
     }
 
-     public function editFinancialReportFinal(Request $request, int $chId): View
+    public function editFinancialReportFinal(Request $request, int $chId): View
     {
-       $user = $this->userController->loadUserInformation($request);
+        $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
         $userName = $loggedInName = $user['userName'];
         $userEmail = $user['userEmail'];
@@ -378,7 +376,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         $chapter = Chapters::find($chapterId);
         $documentsEOY = DocumentsEOY::find($chapterId);
         $financialReport = FinancialReport::find($chapterId);
-        $farthest_step_visited = max((int)$input['FurthestStep'], (int)$financialReport->farthest_step_visited_coord);
+        $farthest_step_visited = max((int) $input['FurthestStep'], (int) $financialReport->farthest_step_visited_coord);
 
         DB::beginTransaction();
         try {
@@ -408,7 +406,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             $chDocuments = $baseQuery['chDocuments'];
             $chEOYDocuments = $baseQuery['chEOYDocuments'];
             $chIRSDocuments = $baseQuery['chIRSDocuments'];
-        $chReportDocuments = $baseQuery['chReportDocuments'];
+            $chReportDocuments = $baseQuery['chReportDocuments'];
             $chFinancialReport = $baseQuery['chFinancialReport'];
             $emailListChap = $baseQuery['emailListChap'];
             $emailListCoord = $baseQuery['emailListCoord'];
@@ -535,7 +533,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         $reportReceived = $input['submitted'] ?? null;
 
         $financialReport = FinancialReportFinal::find($chapterId);
-        $farthest_step_visited = max((int)$input['FurthestStep'], (int)$financialReport->farthest_step_visited_coord);
+        $farthest_step_visited = max((int) $input['FurthestStep'], (int) $financialReport->farthest_step_visited_coord);
 
         $documentsEOY = DocumentsEOY::find($chapterId);
         $chapter = Chapters::find($chapterId);
@@ -575,7 +573,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             $chDocuments = $baseQuery['chDocuments'];
             $chEOYDocuments = $baseQuery['chEOYDocuments'];
             $chIRSDocuments = $baseQuery['chIRSDocuments'];
-        $chReportDocuments = $baseQuery['chReportDocuments'];
+            $chReportDocuments = $baseQuery['chReportDocuments'];
             $chFinancialReport = $baseQuery['chFinancialReportFinal'];
             $emailListChap = $baseQuery['emailListChap'];
             $emailListCoord = $baseQuery['emailListCoord'];
@@ -673,7 +671,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             $chDocuments = $baseQuery['chDocuments'];
             $chEOYDocuments = $baseQuery['chEOYDocuments'];
             $chIRSDocuments = $baseQuery['chIRSDocuments'];
-        $chReportDocuments = $baseQuery['chReportDocuments'];
+            $chReportDocuments = $baseQuery['chReportDocuments'];
             $chFinancialReport = $baseQuery['chFinancialReport'];
             $emailListChap = $baseQuery['emailListChap'];
             $emailListCoord = $baseQuery['emailListCoord'];
@@ -776,6 +774,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             }
         } catch (\Exception $e) {
             Log::error('Board activation failed: '.$e->getMessage());
+
             return redirect()->back()->with('fail', 'Board activation failed');
         }
     }
@@ -821,7 +820,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             }
         }
 
-        $successCount = count(array_filter($activationStatuses, fn($s) => $s == 'success'));
+        $successCount = count(array_filter($activationStatuses, fn ($s) => $s == 'success'));
         $totalCount = count($activationStatuses);
 
         if ($totalCount == 0) {
@@ -850,7 +849,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         $resources = Resources::with('resourceCategory')->get();
         $instructionsName = 'Officer Packet';
         $matchingInstructions = $resources->where('name', $instructionsName)->first();
-        $pdfPath = $matchingInstructions? 'https://drive.google.com/uc?export=download&id='.$matchingInstructions->file_path : null;
+        $pdfPath = $matchingInstructions ? 'https://drive.google.com/uc?export=download&id='.$matchingInstructions->file_path : null;
 
         $status = 'fail';
         $BoardsIncomingDetails = BoardsIncoming::where('chapter_id', $id)->get();
@@ -968,6 +967,7 @@ class FinancialReportController extends Controller implements HasMiddleware
                     ->queue(new NewBoardWelcome($mailData, $pdfPath));
 
                 DB::commit();
+
                 return 'success';
             } catch (\Exception $e) {
                 DB::rollback();

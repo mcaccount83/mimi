@@ -10,12 +10,12 @@ use App\Mail\ProbationChapNoRptLetter;
 use App\Mail\ProbationChapPartyLetter;
 use App\Mail\ProbationChapReleaseLetter;
 use App\Mail\ProbationChapWarningPartyLetter;
-use App\Models\Documents;
 use App\Models\AdminYear;
-use App\Models\Resources;
+use App\Models\Documents;
 use App\Models\DocumentsReport;
 use App\Models\GoogleDrive;
 use App\Models\GrantRequest;
+use App\Models\Resources;
 use App\Services\PositionConditionsService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Client;
@@ -62,7 +62,7 @@ class PDFController extends Controller
     /**
      * Save & Send Fianncial Reprot
      */
-    public function saveFinancialReport(Request $request, int $chapterId = null, $PresDetails = null)
+    public function saveFinancialReport(Request $request, ?int $chapterId = null, $PresDetails = null)
     {
         // Prefer route parameters if provided, else fallback to request
         $chapterId = $chapterId ?? $request->chapterId;
@@ -93,7 +93,7 @@ class PDFController extends Controller
         $year = $eoyDrive->version;
 
         // Build dynamic column name for the year
-        $yearColumnName = $year . '_financial_pdf_path';
+        $yearColumnName = $year.'_financial_pdf_path';
 
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
@@ -108,7 +108,7 @@ class PDFController extends Controller
 
         $pdfPath = storage_path('app/pdf_reports/'.$name);
 
-        if (!file_exists(dirname($pdfPath))) {
+        if (! file_exists(dirname($pdfPath))) {
             mkdir(dirname($pdfPath), 0775, true);
         }
         $pdf->save($pdfPath);
@@ -135,7 +135,7 @@ class PDFController extends Controller
     /**
      * Save & Send Fianncial Reprot
      */
-    public function saveFinalFinancialReport(Request $request, int $chapterId = null, $PresDetails = null)
+    public function saveFinalFinancialReport(Request $request, ?int $chapterId = null, $PresDetails = null)
     {
         // Prefer route parameters if provided, else fallback to request
         $chapterId = $chapterId ?? $request->chapterId;
@@ -167,7 +167,7 @@ class PDFController extends Controller
 
         $pdfPath = storage_path('app/pdf_reports/'.$name);
 
-        if (!file_exists(dirname($pdfPath))) {
+        if (! file_exists(dirname($pdfPath))) {
             mkdir(dirname($pdfPath), 0775, true);
         }
         $pdf->save($pdfPath);
@@ -334,7 +334,7 @@ class PDFController extends Controller
 
         $pdfPath = storage_path('app/pdf_reports/'.$name);
 
-        if (!file_exists(dirname($pdfPath))) {
+        if (! file_exists(dirname($pdfPath))) {
             mkdir(dirname($pdfPath), 0775, true);
         }
         $pdf->save($pdfPath);
@@ -447,9 +447,9 @@ class PDFController extends Controller
 
         $pdfPath = storage_path('app/pdf_reports/'.$name);
 
-        if (!file_exists(dirname($pdfPath))) {
-    mkdir(dirname($pdfPath), 0775, true);
-}
+        if (! file_exists(dirname($pdfPath))) {
+            mkdir(dirname($pdfPath), 0775, true);
+        }
         $pdf->save($pdfPath);
 
         $filename = basename($pdfPath);
@@ -617,9 +617,9 @@ class PDFController extends Controller
 
         $pdfPath = storage_path('app/pdf_reports/'.$name);
 
-        if (!file_exists(dirname($pdfPath))) {
-    mkdir(dirname($pdfPath), 0775, true);
-}
+        if (! file_exists(dirname($pdfPath))) {
+            mkdir(dirname($pdfPath), 0775, true);
+        }
         $pdf->save($pdfPath);
 
         $filename = basename($pdfPath);
@@ -1241,7 +1241,7 @@ class PDFController extends Controller
     /**
      * Generate IRS list of Added Chapters
      */
-    private function generateIRSAddList(int $coorId, int $confId, int $regId, int $positionId, array $secPositionId, Carbon  $date)
+    private function generateIRSAddList(int $coorId, int $confId, int $regId, int $positionId, array $secPositionId, Carbon $date)
     {
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
 
@@ -1676,7 +1676,7 @@ class PDFController extends Controller
 
         $pdfPath = storage_path('app/pdf_reports/'.$name);
 
-        if (!file_exists(dirname($pdfPath))) {
+        if (! file_exists(dirname($pdfPath))) {
             mkdir(dirname($pdfPath), 0775, true);
         }
         $pdf->save($pdfPath);
@@ -1716,8 +1716,8 @@ class PDFController extends Controller
         $stateShortName = $baseQuery['stateShortName'];
 
         $pdfData = array_merge(
-                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                $this->baseMailDataController->getNewGrantData($grantDetails),
+            $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+            $this->baseMailDataController->getNewGrantData($grantDetails),
         );
 
         $pdf = Pdf::loadView('pdf.grantrequest', compact('pdfData'));
@@ -1734,7 +1734,6 @@ class PDFController extends Controller
         ];
     }
 
-
     public function saveGrantList()
     {
         $googleDrive = GoogleDrive::where('name', 'grant_uploads')->first();
@@ -1746,7 +1745,7 @@ class PDFController extends Controller
 
         $pdfPath = storage_path('app/pdf_reports/'.$name);
 
-        if (!file_exists(dirname($pdfPath))) {
+        if (! file_exists(dirname($pdfPath))) {
             mkdir(dirname($pdfPath), 0775, true);
         }
         $pdf->save($pdfPath);
@@ -1771,23 +1770,23 @@ class PDFController extends Controller
             ->orderBy('completed_at')
             ->get();
 
-            // Calculate total lifetime grants
+        // Calculate total lifetime grants
         $totalLifetimeGrants = $grantList->sum('amount_awarded');
 
         // Group grants by fiscal year
-        $grantsByFiscalYear = $grantList->groupBy(function($grant) {
+        $grantsByFiscalYear = $grantList->groupBy(function ($grant) {
             $date = \Carbon\Carbon::parse($grant->completed_at);
             // Fiscal year runs July 1 - June 30
             // If month is July(6) or later, fiscal year starts this year
             // If month is before July, fiscal year started last year
             if ($date->month >= 7) {
-                return $date->year . '-' . ($date->year + 1);
+                return $date->year.'-'.($date->year + 1);
             } else {
-                return ($date->year - 1) . '-' . $date->year;
+                return ($date->year - 1).'-'.$date->year;
             }
         })->sortKeys(); // Sort fiscal years (oldest first)
 
-        $pdfData =[
+        $pdfData = [
             'grantsByFiscalYear' => $grantsByFiscalYear, 'totalLifetimeGrants' => $totalLifetimeGrants,
         ];
 
@@ -1808,7 +1807,6 @@ class PDFController extends Controller
         ];
     }
 
-
     /**
      * Save & Send End of Year Report
      */
@@ -1825,7 +1823,7 @@ class PDFController extends Controller
 
         $pdfPath = storage_path('app/pdf_reports/'.$name);
 
-        if (!file_exists(dirname($pdfPath))) {
+        if (! file_exists(dirname($pdfPath))) {
             mkdir(dirname($pdfPath), 0775, true);
         }
         $pdf->save($pdfPath);
@@ -1886,7 +1884,7 @@ class PDFController extends Controller
                 $query->where('start_year', '<', $fiscalYearStart)
                     ->orWhere(function ($query) use ($fiscalYearStart, $fiscalMonthStart) {
                         $query->where('start_year', '=', $fiscalYearStart)
-                                ->where('start_month_id', '<', $fiscalMonthStart);
+                            ->where('start_month_id', '<', $fiscalMonthStart);
                     });
             })
             ->count();
@@ -1909,7 +1907,6 @@ class PDFController extends Controller
             ->count();
 
         $totalCoordCount = $activeCoordCount + $retiredCoordCount;
-
 
         $activeBaseQueryCurrent = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $activeChapterCountCurrent = $activeBaseQueryCurrent['query']
@@ -1950,5 +1947,4 @@ class PDFController extends Controller
             'filename' => $filename,
         ];
     }
-
 }

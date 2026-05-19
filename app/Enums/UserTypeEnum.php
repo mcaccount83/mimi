@@ -19,9 +19,11 @@ class UserTypeEnum
 
     public static function label(?int $typeId): string
     {
-        if ($typeId === null) return 'N/A';
+        if ($typeId === null) {
+            return 'N/A';
+        }
 
-        return match($typeId) {
+        return match ($typeId) {
             self::DISBANDED => 'Disbanded',
             self::COORD => 'Coordinator',
             self::BOARD => 'Board',

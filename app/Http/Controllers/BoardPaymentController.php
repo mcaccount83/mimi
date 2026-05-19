@@ -865,5 +865,4 @@ class BoardPaymentController extends Controller implements HasMiddleware
             'error' => $error_message,
         ];
     }
-
 }

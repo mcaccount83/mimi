@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\CheckboxFilterEnum;
-use App\Enums\OperatingStatusEnum;
 use App\Models\Chapters;
 use App\Models\InquiryApplication;
-use App\Models\Region;
 use App\Models\RegionInquiry;
 use App\Services\PositionConditionsService;
 use Illuminate\Http\RedirectResponse;
@@ -60,7 +57,7 @@ class InquiriesController extends Controller implements HasMiddleware
                 ->select('inquiry_application.*')  // Add this to be explicit about which columns
                 ->join('state', 'inquiry_application.state_id', '=', 'state.id')  // Also be explicit in join
                 ->where('state.conference_id', $confId)
-                ->where(function($query) {
+                ->where(function ($query) {
                     $query->where('response', '!=', 1)
                         ->orWhereNull('response');
                 })
@@ -68,7 +65,7 @@ class InquiriesController extends Controller implements HasMiddleware
                 ->get();
         } elseif ($checkBox57Status) {
             $inquiryList = InquiryApplication::with('state', 'country')
-                ->where(function($query) {
+                ->where(function ($query) {
                     $query->where('response', '!=', 1)
                         ->orWhereNull('response');
                 })
@@ -113,8 +110,7 @@ class InquiriesController extends Controller implements HasMiddleware
 
         $chDetails = Chapters::find($chapterId);
 
-        $stateChapters = Chapters::
-            where('active_status', '1')
+        $stateChapters = Chapters::where('active_status', '1')
             ->where('state_id', $stateId)
             ->get();
 
@@ -155,7 +151,7 @@ class InquiriesController extends Controller implements HasMiddleware
         }
     }
 
-     public function updateInquiryResponse(Request $request, int $id): RedirectResponse
+    public function updateInquiryResponse(Request $request, int $id): RedirectResponse
     {
         $inquiry = InquiryApplication::find($id);
 
@@ -198,6 +194,4 @@ class InquiriesController extends Controller implements HasMiddleware
             DB::disconnect();
         }
     }
-
-
 }

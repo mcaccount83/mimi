@@ -347,7 +347,9 @@ class BaseCoordinatorController extends Controller
         $result = [];
         foreach ($coordIds as $id) {
             $cd = $coordinators->get($id);
-            if (! $cd) continue;
+            if (! $cd) {
+                continue;
+            }
 
             $stateShortName = $cd->state_id < 52
                 ? $cd->state->state_short_name
@@ -360,7 +362,7 @@ class BaseCoordinatorController extends Controller
             }
 
             $cdUser = $cd->user;
-            $cdAdminRole = $cdUser?->adminRole ?? (object)['admin_role' => ''];
+            $cdAdminRole = $cdUser?->adminRole ?? (object) ['admin_role' => ''];
 
             $result[$id] = [
                 'cdDetails' => $cd,

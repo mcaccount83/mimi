@@ -19,5 +19,4 @@ class PaymentHistory extends Model
     {
         return $this->belongsTo(Chapters::class, 'chapter_id', 'id');  // 'chapter_id' in boards BelongsTo 'id' in chapters
     }
-
 }

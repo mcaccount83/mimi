@@ -92,12 +92,12 @@ return [
     'content_approval' => [
         'threads' => [
             'enable_globally' => false,
-            'rejection_should_soft_delete' => false
+            'rejection_should_soft_delete' => false,
         ],
         'posts' => [
             'enable_globally' => false,
-            'rejection_should_soft_delete' => false
-        ]
-    ]
+            'rejection_should_soft_delete' => false,
+        ],
+    ],
 
 ];

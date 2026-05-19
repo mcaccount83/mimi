@@ -869,8 +869,8 @@ class EmailController extends Controller implements HasMiddleware
                     if ($fileContent) {
                         $badgeAttachments[] = [
                             'content' => base64_encode($fileContent),
-                            'name'    => $awardType->type_short_name . '.png',
-                            'mime'    => 'image/png',
+                            'name' => $awardType->type_short_name.'.png',
+                            'mime' => 'image/png',
                         ];
                     }
                 } catch (\Exception $e) {
@@ -878,7 +878,7 @@ class EmailController extends Controller implements HasMiddleware
             }
         }
 
-         $chFinancialReport = FinancialReport::find($chapterId);
+        $chFinancialReport = FinancialReport::find($chapterId);
         try {
             DB::beginTransaction();
             $chFinancialReport->chapter_awards_notified = 1;

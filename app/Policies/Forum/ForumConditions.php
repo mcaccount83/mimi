@@ -3,8 +3,8 @@
 namespace App\Policies\Forum;
 
 use App\Enums\AdminStatusEnum;
-use App\Enums\UserTypeEnum;
 use App\Enums\ForumCategoryEnum;
+use App\Enums\UserTypeEnum;
 use App\Models\Coordinators;
 use App\Services\PositionConditionsService;
 use Illuminate\Foundation\Auth\User;

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\CheckboxFilterEnum;
 use App\Enums\ChapterStatusEnum;
+use App\Enums\CheckboxFilterEnum;
 use App\Mail\PaymentsM2MChapterThankYou;
 use App\Mail\PaymentsReRegChapterThankYou;
 use App\Mail\PaymentsReRegLate;
@@ -11,8 +11,8 @@ use App\Mail\PaymentsReRegReminder;
 use App\Mail\PaymentsSustainingChapterThankYou;
 use App\Models\Chapters;
 use App\Models\GrantRequest;
-use App\Models\Payments;
 use App\Models\PaymentHistory;
+use App\Models\Payments;
 use App\Services\PositionConditionsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -106,14 +106,14 @@ class PaymentController extends Controller implements HasMiddleware
         $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
 
         try {
-               $chapters = Chapters::with(['state.conference'])
-                    ->whereHas('state.conference', function($q) use ($confId) {
-                        $q->where('conference.id', $confId);
-                    })
-                    ->where('start_month_id', $currentMonth)
-                    ->where('next_renewal_year', $currentYear)
-                    ->where('active_status', 1)
-                    ->get();
+            $chapters = Chapters::with(['state.conference'])
+                ->whereHas('state.conference', function ($q) use ($confId) {
+                    $q->where('conference.id', $confId);
+                })
+                ->where('start_month_id', $currentMonth)
+                ->where('next_renewal_year', $currentYear)
+                ->where('active_status', 1)
+                ->get();
 
             if ($chapters->isEmpty()) {
                 return redirect()->back()->with('info', 'There are no Chapters with Registrations Due.');
@@ -199,7 +199,7 @@ class PaymentController extends Controller implements HasMiddleware
 
         try {
             $chapters = Chapters::with(['state.conference'])
-                ->whereHas('state.conference', function($q) use ($confId) {
+                ->whereHas('state.conference', function ($q) use ($confId) {
                     $q->where('conference.id', $confId);
                 })
                 ->where('start_month_id', $lastMonth)
@@ -317,7 +317,7 @@ class PaymentController extends Controller implements HasMiddleware
 
         $data = ['id' => $id, 'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'startMonthName' => $startMonthName, 'chPayments' => $chPayments,
             'chDetails' => $chDetails, 'chapterStatus' => $chapterStatus, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
-            'coorId' => $coorId, 'confId' => $confId, 'chConfId' => $chConfId, 'startDate' => $startDate, 'dueDate' => $dueDate, 'renewalDate' => $renewalDate
+            'coorId' => $coorId, 'confId' => $confId, 'chConfId' => $chConfId, 'startDate' => $startDate, 'dueDate' => $dueDate, 'renewalDate' => $renewalDate,
         ];
 
         return view('coordinators.payment.editpayment')->with($data);
@@ -364,9 +364,9 @@ class PaymentController extends Controller implements HasMiddleware
                 $chapter->next_renewal_year = $nextRenewalYear + 1;
                 $chapter->save();
 
-               // Archive current re-registration payment to history (if exists)
+                // Archive current re-registration payment to history (if exists)
                 if ($payments->rereg_date) {
-                        PaymentHistory::create([
+                    PaymentHistory::create([
                         'chapter_id' => $id,
                         'payment_type' => 'rereg',
                         'payment_amount' => $payments->rereg_payment,
@@ -500,34 +500,34 @@ class PaymentController extends Controller implements HasMiddleware
 
         // Get all rereg payment history for a chapter
         $reregHistory = PaymentHistory::where('chapter_id', $id)
-        ->where('payment_type', 'rereg')
-        ->orderByDesc('payment_date')
-        ->get();
+            ->where('payment_type', 'rereg')
+            ->orderByDesc('payment_date')
+            ->get();
 
         $m2mHistory = PaymentHistory::where('chapter_id', $id)
-        ->where('payment_type', 'm2m')
-        ->orderByDesc('payment_date')
-        ->get();
+            ->where('payment_type', 'm2m')
+            ->orderByDesc('payment_date')
+            ->get();
 
         $sustainingHistory = PaymentHistory::where('chapter_id', $id)
-        ->where('payment_type', 'sustaining')
-        ->orderByDesc('payment_date')
-        ->get();
+            ->where('payment_type', 'sustaining')
+            ->orderByDesc('payment_date')
+            ->get();
 
         $grantRequests = GrantRequest::where('chapter_id', $id)
-        ->orderByDesc('submitted_at')
-        ->get();
+            ->orderByDesc('submitted_at')
+            ->get();
 
         $data = ['id' => $id, 'chActiveId' => $chActiveId, 'chDetails' => $chDetails, 'conferenceDescription' => $conferenceDescription, 'chDisbanded' => $chDisbanded,
             'startMonthName' => $startMonthName, 'confId' => $confId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus,
             'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments, 'grantRequests' => $grantRequests,
-            'reregHistory' => $reregHistory, 'm2mHistory' => $m2mHistory, 'sustainingHistory' => $sustainingHistory, 'startDate' => $startDate, 'dueDate' => $dueDate, 'renewalDate' => $renewalDate
+            'reregHistory' => $reregHistory, 'm2mHistory' => $m2mHistory, 'sustainingHistory' => $sustainingHistory, 'startDate' => $startDate, 'dueDate' => $dueDate, 'renewalDate' => $renewalDate,
         ];
 
         return view('coordinators.payment.paymenthistory')->with($data);
     }
 
-      public function showGrantList(Request $request): View
+    public function showGrantList(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -535,7 +535,7 @@ class PaymentController extends Controller implements HasMiddleware
 
         $checkBox51Status = $request->has(\App\Enums\CheckboxFilterEnum::INTERNATIONAL);
 
-         // Use the appropriate query based on checkbox status
+        // Use the appropriate query based on checkbox status
         if ($checkBox51Status) {
             $grantList = GrantRequest::with('chapters', 'chapterstate')
                 ->orderByDesc('submitted_at')
@@ -548,7 +548,7 @@ class PaymentController extends Controller implements HasMiddleware
                 })
                 ->orderByDesc('submitted_at')
                 ->get();
-            }
+        }
 
         $data = ['grantList' => $grantList, 'checkBox51Status' => $checkBox51Status];
 
@@ -558,36 +558,36 @@ class PaymentController extends Controller implements HasMiddleware
     public function editGrantDetails(Request $request, int $grantId): View
     {
         $user = $this->userController->loadUserInformation($request);
-    $coorId = $user['cdId'];
-    $confId = $user['confId'];
-            $loggedInName = $user['userName'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $loggedInName = $user['userName'];
 
-    $grantDetails = GrantRequest::with('chapters', 'chapterstate', 'state', 'country')
-        ->find($grantId);
-    $chapterId = $grantDetails->chapter_id;
+        $grantDetails = GrantRequest::with('chapters', 'chapterstate', 'state', 'country')
+            ->find($grantId);
+        $chapterId = $grantDetails->chapter_id;
 
-    // Only get chapter details if chapter_id is not null
-    if ($chapterId) {
-        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
-        $chDetails = $baseQuery['chDetails'];
-        $chConfId = $baseQuery['chConfId'];
-        $stateShortName = $baseQuery['stateShortName'];
-        $regionLongName = $baseQuery['regionLongName'];
-        $conferenceDescription = $baseQuery['conferenceDescription'];
-    } else {
-        // Set defaults when there's no chapter
-        $chDetails = null;
-        $chConfId = $grantDetails->chapterstate->conference_id;
-        $stateShortName = $grantDetails->chapterstate->state_long_name;
-        $regionLongName = $grantDetails->chapterstate->region->long_name;
-        $conferenceDescription = $grantDetails->chapterstate->conference->description;
-    }
+        // Only get chapter details if chapter_id is not null
+        if ($chapterId) {
+            $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
+            $chDetails = $baseQuery['chDetails'];
+            $chConfId = $baseQuery['chConfId'];
+            $stateShortName = $baseQuery['stateShortName'];
+            $regionLongName = $baseQuery['regionLongName'];
+            $conferenceDescription = $baseQuery['conferenceDescription'];
+        } else {
+            // Set defaults when there's no chapter
+            $chDetails = null;
+            $chConfId = $grantDetails->chapterstate->conference_id;
+            $stateShortName = $grantDetails->chapterstate->state_long_name;
+            $regionLongName = $grantDetails->chapterstate->region->long_name;
+            $conferenceDescription = $grantDetails->chapterstate->conference->description;
+        }
 
-    // $stateName = $grantDetails->chapterstate->state_long_name;
-    // $regionName = $grantDetails->chapterstate->region->long_name;
-    // $conferenceName = $grantDetails->chapterstate->conference->description;
+        // $stateName = $grantDetails->chapterstate->state_long_name;
+        // $regionName = $grantDetails->chapterstate->region->long_name;
+        // $conferenceName = $grantDetails->chapterstate->conference->description;
 
-    $grList = $chConfId ? $this->userController->loadGrantReviewerList($chConfId) : null;
+        $grList = $chConfId ? $this->userController->loadGrantReviewerList($chConfId) : null;
 
         $data = ['id' => $grantId, 'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
             'conferenceDescription' => $conferenceDescription, 'confId' => $confId, 'chConfId' => $chConfId, 'grantDetails' => $grantDetails,
@@ -612,7 +612,7 @@ class PaymentController extends Controller implements HasMiddleware
         try {
             $grantRequest->reviewer_id = $reviewer_id ?? $coorId;
             // $grantRequest->review_notes = $input['review_notes'] ?? null;
-                    $grantRequest->review_notes = $input['Review_Log'] ?? null;  // Changed to Review_Log
+            $grantRequest->review_notes = $input['Review_Log'] ?? null;  // Changed to Review_Log
 
             $grantRequest->review_description = $input['review_description'] ?? null;
             $grantRequest->amount_awarded = $input['amount_awarded'] ?? null;
@@ -685,5 +685,4 @@ class PaymentController extends Controller implements HasMiddleware
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
     }
-
 }

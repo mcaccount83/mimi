@@ -3,9 +3,9 @@
 namespace App\Providers;
 
 use App\Enums\AdminStatusEnum;
-use App\Enums\UserTypeEnum;
 use App\Enums\OperatingStatusEnum;
 use App\Enums\ProbationReasonEnum;
+use App\Enums\UserTypeEnum;
 use App\Models\Chapters;
 use App\Services\ForumConditionsService;
 use App\Services\PendingConditionsService;
@@ -81,7 +81,7 @@ class ViewServiceProvider extends ServiceProvider
             $pendingNewCoordCount = ($confId) ? $PendingConditionsService->getpendingNewCoordCount($confId) : 0;
             $dateOptions = $positionConditionsService->getDateOptions();
 
-            $probationParty = ($chDetails?->status_id == OperatingStatusEnum::PROBATION && $chDetails->probation_id == ProbationReasonEnum::EXCESSPARTY );
+            $probationParty = ($chDetails?->status_id == OperatingStatusEnum::PROBATION && $chDetails->probation_id == ProbationReasonEnum::EXCESSPARTY);
 
             // Merge all variables
             $viewVariables = array_merge([
