@@ -243,5 +243,4 @@ class PositionConditionsService
             'bdTypeId' => $presTypeId,
         ];
     }
-
 }

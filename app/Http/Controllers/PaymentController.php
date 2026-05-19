@@ -594,7 +594,7 @@ class PaymentController extends Controller implements HasMiddleware
         try {
             $grantRequest->reviewer_id = $reviewer_id ?? $coorId;
             // $grantRequest->review_notes = $input['review_notes'] ?? null;
-                    $grantRequest->review_notes = $input['Review_Log'] ?? null;  // Changed to Review_Log
+            $grantRequest->review_notes = $input['Review_Log'] ?? null;  // Changed to Review_Log
 
             $grantRequest->review_description = $input['review_description'] ?? null;
             $grantRequest->amount_awarded = $input['amount_awarded'] ?? null;

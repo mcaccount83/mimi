@@ -671,7 +671,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             $chDocuments = $baseQuery['chDocuments'];
             $chEOYDocuments = $baseQuery['chEOYDocuments'];
             $chIRSDocuments = $baseQuery['chIRSDocuments'];
-        $chReportDocuments = $baseQuery['chReportDocuments'];
+            $chReportDocuments = $baseQuery['chReportDocuments'];
             $chFinancialReport = $baseQuery['chFinancialReport'];
             $emailListChap = $baseQuery['emailListChap'];
             $emailListCoord = $baseQuery['emailListCoord'];

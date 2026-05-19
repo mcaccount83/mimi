@@ -105,7 +105,6 @@ Route::get('/grantlist', [PublicController::class, 'viewGrantList'])->name('publ
 Route::get('/grantlist-pdf', [PDFController::class, 'generateGrantList'])->name('pdf.grantlist');
 Route::post('/grant-list-pdf', [PDFController::class, 'saveGrantList'])->name('pdf.generategrantlist');
 
-
 // In your routes/web.php or wherever you have routes
 Route::get(config('sentemails.routepath'), [MySentEmailsController::class, 'index'])
     ->middleware(config('sentemails.middleware'))
@@ -199,7 +198,7 @@ Route::middleware('auth')->group(function () {
     // Route::get('/userreports/nopresidentinactive', [UserReportController::class, 'showNoPresidentInactive'])->name('userreports.nopresidentinactive');
     Route::get('/userreports/addnewboard/{id}', [UserReportController::class, 'addBoardNew'])->name('userreports.addnewboard');
     Route::post('/userreports/updatenewboard/{id}', [UserReportController::class, 'updateBoardNew'])->name('userreports.updatenewboard');
-       Route::get('/userreports/noinquiriesemail', [UserReportController::class, 'showNoInquiriesEmail'])->name('userreports.noinquiriesemail');
+    Route::get('/userreports/noinquiriesemail', [UserReportController::class, 'showNoInquiriesEmail'])->name('userreports.noinquiriesemail');
     Route::get('/userreports/addinquiriesemail/{id}', [UserReportController::class, 'addInquiriesEmail'])->name('userreports.addinquiriesemail');
     Route::post('/userreports/updateinquiriesemail/{id}', [UserReportController::class, 'updateInquiriesEmail'])->name('userreports.updateinquiriesemail');
     // Route::get('/userreports/noactivechapter', [UserReportController::class, 'showNoActiveChapter'])->name('userreports.noactivechapter');
@@ -497,7 +496,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/files/storeAward/{id}', [GoogleController::class, 'storeAward']);
     Route::post('/files/storeResources/{id}', [GoogleController::class, 'storeResources'])->name('store.resources');
     Route::post('/files/storeToolkit/{id}', [GoogleController::class, 'storeToolkit'])->name('store.toolkit');
-Route::post('/files/storeAwardBadges/{id}', [GoogleController::class, 'storeAwardBadges'])->name('store.awardbadges');
+    Route::post('/files/storeAwardBadges/{id}', [GoogleController::class, 'storeAwardBadges'])->name('store.awardbadges');
     Route::post('/files/storePhotos/{id}', [GoogleController::class, 'storePhotos']);
 });
 

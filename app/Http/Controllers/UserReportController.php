@@ -357,11 +357,21 @@ class UserReportController extends Controller implements HasMiddleware
         };
 
         $wrongTables = [];
-        if ($user->type_id !== UserTypeEnum::COORD && $user->coordinator()->exists()) $wrongTables[] = 'Coordinators';
-        if ($user->type_id !== UserTypeEnum::BOARD && $user->board()->exists()) $wrongTables[] = 'Boards';
-        if ($user->type_id !== UserTypeEnum::DISBANDED && $user->boardDisbanded()->exists()) $wrongTables[] = 'Boards Disbanded';
-        if ($user->type_id !== UserTypeEnum::OUTGOING && $user->boardOutgoing()->exists()) $wrongTables[] = 'Boards Outgoing';
-        if ($user->type_id !== UserTypeEnum::PENDING && $user->boardPending()->exists()) $wrongTables[] = 'Boards Pending';
+        if ($user->type_id !== UserTypeEnum::COORD && $user->coordinator()->exists()) {
+            $wrongTables[] = 'Coordinators';
+        }
+        if ($user->type_id !== UserTypeEnum::BOARD && $user->board()->exists()) {
+            $wrongTables[] = 'Boards';
+        }
+        if ($user->type_id !== UserTypeEnum::DISBANDED && $user->boardDisbanded()->exists()) {
+            $wrongTables[] = 'Boards Disbanded';
+        }
+        if ($user->type_id !== UserTypeEnum::OUTGOING && $user->boardOutgoing()->exists()) {
+            $wrongTables[] = 'Boards Outgoing';
+        }
+        if ($user->type_id !== UserTypeEnum::PENDING && $user->boardPending()->exists()) {
+            $wrongTables[] = 'Boards Pending';
+        }
 
         $user->wrong_tables = $wrongTables;
 

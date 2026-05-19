@@ -217,7 +217,7 @@ class PublicController extends Controller
         if (str_starts_with($fileId, 'sent-emails/') || str_starts_with($fileId, 'storage/')) {
             $disposition = $request->query('download') ? 'attachment' : 'inline';
             $privatePath = storage_path('app/private/'.$fileId);
-            $legacyPath  = storage_path('app/'.$fileId);
+            $legacyPath = storage_path('app/'.$fileId);
 
             if (file_exists($privatePath)) {
                 $path = $privatePath;

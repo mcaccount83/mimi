@@ -443,7 +443,7 @@ class ResourcesController extends Controller implements HasMiddleware
             if ($exists) {
                 return response()->json([
                     'success' => false,
-                    'error' => 'A badge already exists for this award type and fiscal year. Use UPDATE instead.'
+                    'error' => 'A badge already exists for this award type and fiscal year. Use UPDATE instead.',
                 ], 422);
             }
 
@@ -453,7 +453,7 @@ class ResourcesController extends Controller implements HasMiddleware
                 'file_path' => null, // storeAwardBadges will set this
             ]);
 
-            return response()->json(['success' => true, 'id' => $file->id,]);
+            return response()->json(['success' => true, 'id' => $file->id]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json(['success' => false, 'errors' => $e->errors()], 422);
         } catch (\Exception $e) {

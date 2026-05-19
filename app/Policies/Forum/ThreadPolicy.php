@@ -2,8 +2,8 @@
 
 namespace App\Policies\Forum;
 
-use Illuminate\Foundation\Auth\User;
 use App\Enums\ForumCategoryEnum;
+use Illuminate\Foundation\Auth\User;
 use TeamTeaTime\Forum\Models\Thread;
 use TeamTeaTime\Forum\Policies\ThreadPolicy as ForumThreadPolicy;
 
@@ -36,7 +36,7 @@ class ThreadPolicy extends ForumThreadPolicy
         }
 
         return $this->forumConditions->canManageLists($user)
-        || ($this->forumConditions->canAccessList($user, $thread->category) && !$thread->locked);
+        || ($this->forumConditions->canAccessList($user, $thread->category) && ! $thread->locked);
     }
 
     public function delete(User $user, Thread $thread): bool
@@ -61,12 +61,12 @@ class ThreadPolicy extends ForumThreadPolicy
     public function deletePosts(User $user, Thread $thread): bool
     {
         return $this->forumConditions->canManageLists($user);
-            // || $this->forumConditions->canManageThreads($user, $thread);
+        // || $this->forumConditions->canManageThreads($user, $thread);
     }
 
     public function restorePosts(User $user, Thread $thread): bool
     {
         return $this->forumConditions->canManageLists($user);
-            // || $this->forumConditions->canManageThreads($user, $thread);
+        // || $this->forumConditions->canManageThreads($user, $thread);
     }
 }

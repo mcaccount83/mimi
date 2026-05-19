@@ -40,7 +40,7 @@ class EOYChapterAwards extends BaseMailable
 
         foreach ($this->mailData['badgeAttachments'] ?? [] as $badge) {
             $attachments[] = Attachment::fromData(
-                fn() => base64_decode($badge['content']),
+                fn () => base64_decode($badge['content']),
                 $badge['name']
             )->withMime($badge['mime']);
         }

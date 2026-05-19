@@ -11,7 +11,6 @@ use App\Models\Payments;
 use App\Models\Region;
 use App\Models\RegionInquiry;
 use App\Services\PositionConditionsService;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -357,7 +356,7 @@ class AdminReportController extends Controller implements HasMiddleware
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed.',
-                'errors' => $e->errors()
+                'errors' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
             Log::error('Inquiries update error: '.$e->getMessage());

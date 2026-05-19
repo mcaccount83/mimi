@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Auth;
-
 class PendingConditionsService
 {
     public function getPendingInquiryCount(?int $confId = null): int
