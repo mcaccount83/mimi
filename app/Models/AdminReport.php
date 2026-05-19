@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 
 class AdminReport extends Model
@@ -12,7 +13,7 @@ class AdminReport extends Model
 
     protected $guarded = []; // ALL columns are mass-assignable
 
-    public function fiscalYear()
+    public function fiscalYear(): BelongsTo
     {
         return $this->belongsTo(FiscalYear::class, 'report_year_id', 'id');
     }

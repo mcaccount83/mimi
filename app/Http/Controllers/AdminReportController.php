@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use App\Enums\CheckboxFilterEnum;
 use App\Models\Chapters;
 use App\Models\Conference;
@@ -264,7 +265,7 @@ class AdminReportController extends Controller implements HasMiddleware
         return view('coordinators.adminreports.inquiriesnotify')->with($data);
     }
 
-    public function updateInquiriesEmail(Request $request, int $id)
+    public function updateInquiriesEmail(Request $request, int $id): JsonResponse
     {
         try {
 
@@ -333,7 +334,7 @@ class AdminReportController extends Controller implements HasMiddleware
         return view('coordinators.adminreports.inquiriesmap')->with($data);
     }
 
-    public function updateInquiriesMap(Request $request, int $id)
+    public function updateInquiriesMap(Request $request, int $id): JsonResponse
     {
         try {
 

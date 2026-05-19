@@ -227,7 +227,7 @@ class EOYReportController extends Controller implements HasMiddleware
     /**
      * View the Board Info Received list
      */
-    public function showEOYBoardReport(Request $request)
+    public function showEOYBoardReport(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -274,7 +274,7 @@ class EOYReportController extends Controller implements HasMiddleware
     /**
      * Board Info Report Details
      */
-    public function editBoardReport(Request $request, int $id)
+    public function editBoardReport(Request $request, int $id): View
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
