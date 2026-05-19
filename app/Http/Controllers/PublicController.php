@@ -343,7 +343,7 @@ class PublicController extends Controller
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
         if (! $recaptchaResult['success']) {
-            // return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+            // return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
             return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
         }
 
@@ -559,7 +559,7 @@ class PublicController extends Controller
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
         if (! $recaptchaResult['success']) {
-            // return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+            // return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
             return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
         }
 
@@ -945,7 +945,7 @@ class PublicController extends Controller
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
         if (! $recaptchaResult['success']) {
-            // return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+            // return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
             return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
         }
 
@@ -1100,7 +1100,7 @@ class PublicController extends Controller
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
         if (! $recaptchaResult['success']) {
-            // return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+            // return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
             return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
         }
 
