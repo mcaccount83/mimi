@@ -7,9 +7,9 @@ use Illuminate\Mail\Mailables\Envelope;
 
 class PaymentsNewChapOnline extends BaseMailable
 {
-    public $mailData;
+    public array $mailData;
 
-    public function __construct($mailData)
+    public function __construct(array $mailData)
     {
         $this->mailData = $mailData;
     }

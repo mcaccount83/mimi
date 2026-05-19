@@ -10,18 +10,11 @@ use Illuminate\View\View;
 
 class BoardPendingController extends Controller implements HasMiddleware
 {
-    protected $userController;
-
-    protected $baseBoardController;
-
-    protected $positionConditionsService;
-
-    public function __construct(UserController $userController, BaseBoardController $baseBoardController, PositionConditionsService $positionConditionsService)
-    {
-        $this->userController = $userController;
-        $this->baseBoardController = $baseBoardController;
-        $this->positionConditionsService = $positionConditionsService;
-    }
+    public function __construct(
+        protected UserController $userController,
+        protected BaseBoardController $baseBoardController,
+        protected PositionConditionsService $positionConditionsService,
+    ) {}
 
     public static function middleware(): array
     {
@@ -33,7 +26,7 @@ class BoardPendingController extends Controller implements HasMiddleware
     /**
      * View New Application Status for Pending Board Members
      */
-    public function showNewChapterStatus(Request $request, $chId): View
+    public function showNewChapterStatus(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];

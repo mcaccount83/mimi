@@ -42,38 +42,17 @@ use Illuminate\View\View;
 
 class CoordinatorController extends Controller implements HasMiddleware
 {
-    protected $userController;
-
-    protected $positionConditionsService;
-
-    protected $baseChapterController;
-
-    protected $baseCoordinatorController;
-
-    protected $forumSubscriptionController;
-
-    protected $baseMailDataController;
-
-    protected $emailTableController;
-
-    protected $emailController;
-
-    protected $learnDashService;
-
-    public function __construct(UserController $userController, BaseCoordinatorController $baseCoordinatorController, ForumSubscriptionController $forumSubscriptionController,
-        PositionConditionsService $positionConditionsService, BaseMailDataController $baseMailDataController, EmailController $emailController,
-        EmailTableController $emailTableController, BaseChapterController $baseChapterController, LearnDashService $learnDashService)
-    {
-        $this->userController = $userController;
-        $this->baseChapterController = $baseChapterController;
-        $this->baseCoordinatorController = $baseCoordinatorController;
-        $this->forumSubscriptionController = $forumSubscriptionController;
-        $this->positionConditionsService = $positionConditionsService;
-        $this->baseMailDataController = $baseMailDataController;
-        $this->emailTableController = $emailTableController;
-        $this->emailController = $emailController;
-        $this->learnDashService = $learnDashService;
-    }
+    public function __construct(
+        protected UserController $userController,
+        protected PositionConditionsService $positionConditionsService,
+        protected BaseChapterController $baseChapterController,
+        protected BaseCoordinatorController $baseCoordinatorController,
+        protected ForumSubscriptionController $forumSubscriptionController,
+        protected BaseMailDataController $baseMailDataController,
+        protected EmailTableController $emailTableController,
+        protected EmailController $emailController,
+        protected LearnDashService $learnDashService,
+    ) {}
 
     public static function middleware(): array
     {
@@ -318,7 +297,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     /**
      * View Coordiantor Detais
      */
-    public function viewCoordDetails(Request $request, $id): View
+    public function viewCoordDetails(Request $request, int $id): View
     {
         $user = $this->userController->loadUserInformation($request);
         $confId = $user['confId'];
@@ -749,7 +728,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     /**
      * Edit Coordiantor Role
      */
-    public function editCoordRole(Request $request, $id): View
+    public function editCoordRole(Request $request, int $id): View
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;
@@ -841,7 +820,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     /**
      * Reassign Chapter
      */
-    public function ReassignChapter(Request $request, $chapter_id, $coordinator_id, $changed = false)
+    public function ReassignChapter(Request $request, int $chapter_id, int $coordinator_id, $changed = false)
     {
         $user = User::find($request->user()->id);
         $updatedId = $user->id;
@@ -927,7 +906,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     /**
      * Reassign Coordinator
      */
-    public function ReassignCoordinator(Request $request, $coordinator_id, $new_coordinator_id, $changed = false)
+    public function ReassignCoordinator(Request $request, int $coordinator_id, int $new_coordinator_id, $changed = false)
     {
         $user = User::find($request->user()->id);
         $updatedId = $user->id;
@@ -1031,7 +1010,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     /**
      * Update Role, Chapters and Coordinators
      */
-    public function updateCoordRole(Request $request, $id): RedirectResponse
+    public function updateCoordRole(Request $request, int $id): RedirectResponse
     {
         $admin = $this->userController->loadUserInformation($request);
         $userAdmin = $admin['userAdmin'];
@@ -1133,7 +1112,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     /**
      * Edit Coordiantor Details
      */
-    public function editCoordDetails(Request $request, $id): View
+    public function editCoordDetails(Request $request, int $id): View
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;
@@ -1175,7 +1154,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     /**
      * Save Coordiantor Details
      */
-    public function updateCoordDetails(Request $request, $id): RedirectResponse
+    public function updateCoordDetails(Request $request, int $id): RedirectResponse
     {
         $user = User::find($request->user()->id);
         $updatedId = $user->id;
@@ -1233,7 +1212,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     /**
      * Edit Coordiantor Details
      */
-    public function editCoordRecognition(Request $request, $id): View
+    public function editCoordRecognition(Request $request, int $id): View
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;
@@ -1273,7 +1252,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     /**
      * Save Coordiantor Details
      */
-    public function updateCoordRecognition(Request $request, $id): RedirectResponse
+    public function updateCoordRecognition(Request $request, int $id): RedirectResponse
     {
         $user = User::find($request->user()->id);
         $updatedId = $user->id;
@@ -1333,7 +1312,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         }
     }
 
-       public function viewCoordELearning(Request $request, $id): View
+       public function viewCoordELearning(Request $request, int $id): View
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;
@@ -1511,7 +1490,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     /**
      * View Coordiantor Application
      */
-    public function viewCoordApplication(Request $request, $id): View
+    public function viewCoordApplication(Request $request, int $id): View
     {
         $user = $this->userController->loadUserInformation($request);
         $confId = $user['confId'];
@@ -1555,7 +1534,7 @@ class CoordinatorController extends Controller implements HasMiddleware
     /**
      *Update Pending New Coordinator Applicaiton
      */
-    public function updatePendingCoordinatorDetails(Request $request, $id): RedirectResponse
+    public function updatePendingCoordinatorDetails(Request $request, int $id): RedirectResponse
     {
         $admin = $this->userController->loadUserInformation($request);
         $userAdmin = $admin['userAdmin'];

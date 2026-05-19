@@ -30,28 +30,14 @@ use setasign\Fpdi\Fpdi;
 
 class PDFController extends Controller
 {
-    protected $userController;
-
-    protected $baseChapterController;
-
-    protected $baseCoordinatorController;
-
-    protected $googleController;
-
-    protected $baseMailDataController;
-
-    protected PositionConditionsService $positionConditionsService;
-
-    public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController,
-        BaseMailDataController $baseMailDataController, GoogleController $googleController, PositionConditionsService $positionConditionsService)
-    {
-        $this->userController = $userController;
-        $this->googleController = $googleController;
-        $this->baseChapterController = $baseChapterController;
-        $this->baseCoordinatorController = $baseCoordinatorController;
-        $this->baseMailDataController = $baseMailDataController;
-        $this->positionConditionsService = $positionConditionsService;
-    }
+    public function __construct(
+        protected UserController $userController,
+        protected BaseChapterController $baseChapterController,
+        protected BaseMailDataController $baseMailDataController,
+        protected PositionConditionsService $positionConditionsService,
+        protected BaseCoordinatorController $baseCoordinatorController,
+        protected GoogleController $googleController,
+    ) {}
 
     public $pdfData = [];
 
@@ -76,7 +62,7 @@ class PDFController extends Controller
     /**
      * Save & Send Fianncial Reprot
      */
-    public function saveFinancialReport(Request $request, $chapterId = null, $PresDetails = null)
+    public function saveFinancialReport(Request $request, int $chapterId = null, $PresDetails = null)
     {
         // Prefer route parameters if provided, else fallback to request
         $chapterId = $chapterId ?? $request->chapterId;
@@ -109,7 +95,7 @@ class PDFController extends Controller
         // Build dynamic column name for the year
         $yearColumnName = $year . '_financial_pdf_path';
 
-        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId, $userId);
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
         $chDocuments = $baseQuery['chDocuments'];
         $conf = $chDetails->conference_id;
@@ -149,7 +135,7 @@ class PDFController extends Controller
     /**
      * Save & Send Fianncial Reprot
      */
-    public function saveFinalFinancialReport(Request $request, $chapterId = null, $PresDetails = null)
+    public function saveFinalFinancialReport(Request $request, int $chapterId = null, $PresDetails = null)
     {
         // Prefer route parameters if provided, else fallback to request
         $chapterId = $chapterId ?? $request->chapterId;
@@ -208,7 +194,7 @@ class PDFController extends Controller
     /**
      * Generate Financial Report
      */
-    public function generateFinancialReport($chapterId, $PresDetails)
+    public function generateFinancialReport(int $chapterId, object $PresDetails)
     {
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
@@ -229,7 +215,7 @@ class PDFController extends Controller
         $pdfData = array_merge(
             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
             $this->baseMailDataController->getPresData($PresDetails),
-            $this->baseMailDataController->getFinancialReportData($chEOYDocuments, $chFinancialReport, $reviewer_email_message = null),
+            $this->baseMailDataController->getFinancialReportData($chFinancialReport),
             [
                 'changed_dues' => $chFinancialReport->changed_dues,
                 'different_dues' => $chFinancialReport->different_dues,
@@ -333,7 +319,7 @@ class PDFController extends Controller
     /**
      * Save & Send Good Standing Letter
      */
-    public function saveGoodStandingLetter($chapterId)
+    public function saveGoodStandingLetter(int $chapterId)
     {
         // $googleDrive = GoogleDrive::first();
         // $goodStandingDrive = $googleDrive->good_standing_letter;
@@ -375,7 +361,7 @@ class PDFController extends Controller
     /**
      * Generate Chaper in Good Standing PDF All Board Members
      */
-    public function generateGoodStanding($chapterId, $streamResponse = true)
+    public function generateGoodStanding(int $chapterId, $streamResponse = true)
     {
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
@@ -405,7 +391,8 @@ class PDFController extends Controller
         $filename = $pdfData['chapterState'].'_'.$pdfData['chapterNameSanitized'].'_ChapterInGoodStanding.pdf';
 
         if ($streamResponse) {
-            return $pdf->stream($filename, ['Attachment' => 0]);
+            // return $pdf->stream($filename, ['Attachment' => 0]);
+            return $pdf->stream($filename);
         }
 
         return [
@@ -417,12 +404,12 @@ class PDFController extends Controller
     /**
      * Save & Send Disband Letter
      */
-    public function saveDisbandLetter(Request $request, $chapterId, $type): JsonResponse
+    public function saveDisbandLetter(Request $request, int $chapterId, string $type): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];
 
-        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId, $userId);
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $emailListChap = $baseQuery['emailListChap'];
@@ -533,9 +520,9 @@ class PDFController extends Controller
     /**
      * Generate Disband Letter
      */
-    public function generateDisbandLetter(Request $request, $chapterId, $type)
+    public function generateDisbandLetter(Request $request, int $chapterId, string $type)
     {
-        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId, $request);
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
         $chId = $baseQuery['chId'];
         $stateShortName = $baseQuery['stateShortName'];
@@ -593,7 +580,7 @@ class PDFController extends Controller
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];
 
-        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId, $userId);
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
         $emailListChap = $baseQuery['emailListChap'];
@@ -712,7 +699,7 @@ class PDFController extends Controller
     /**
      * Generate Probation Letter
      */
-    public function generateProbationLetter(Request $request, $chapterId, $type)
+    public function generateProbationLetter(Request $request, int $chapterId, string $type)
     {
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
@@ -763,7 +750,7 @@ class PDFController extends Controller
     /**
      * Save & Send IRS Name Change Letter
      */
-    public function saveNameChangeLetter(Request $request, $chapterId, $chNamePrev): JsonResponse
+    public function saveNameChangeLetter(Request $request, int $chapterId, string $chNamePrev): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];
@@ -826,7 +813,7 @@ class PDFController extends Controller
     /**
      * Generate Combined Name Change Letter (Cover Sheet & Report)
      */
-    public function generateCombinedNameChangeLetter($chapterId, $chNamePrev, $streamResponse = false)
+    public function generateCombinedNameChangeLetter(int $chapterId, string $chNamePrev, $streamResponse = false)
     {
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
@@ -882,7 +869,7 @@ class PDFController extends Controller
     /**
      * Generate IRS Name Change Letter
      */
-    public function generateNameChangeLetter($chapterId, $chNamePrev)
+    public function generateNameChangeLetter(int $chapterId, string $chNamePrev)
     {
         $baseQueryUpd = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetailsUpd = $baseQueryUpd['chDetails'];
@@ -924,7 +911,7 @@ class PDFController extends Controller
     /**
      * Generate New Chapter IRS Fax Coversheet
      */
-    public function generateNewChapterFaxCover($chapterId, $streamResponse = true)
+    public function generateNewChapterFaxCover(int $chapterId, $streamResponse = true)
     {
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
@@ -953,7 +940,8 @@ class PDFController extends Controller
         $filename = $pdfData['chapterState'].'_'.$pdfData['chapterNameSanitized'].'_NewChapterFaxCover.pdf';
 
         if ($streamResponse) {
-            return $pdf->stream($filename, ['Attachment' => 0]);
+            // return $pdf->stream($filename, ['Attachment' => 0]);
+            return $pdf->stream($filename);
         }
 
         return [
@@ -1083,7 +1071,8 @@ class PDFController extends Controller
         $filename = $currentYear.'_IRSSubordinateFiling.pdf';
 
         if ($streamResponse) {
-            return $pdf->stream($filename, ['Attachment' => 0]);
+            // return $pdf->stream($filename, ['Attachment' => 0]);
+            return $pdf->stream($filename);
         }
 
         return [
@@ -1203,7 +1192,8 @@ class PDFController extends Controller
         $filename = $currentDate.'_IRSUpdates.pdf';
 
         if ($streamResponse) {
-            return $pdf->stream($filename, ['Attachment' => 0]);
+            // return $pdf->stream($filename, ['Attachment' => 0]);
+            return $pdf->stream($filename);
         }
 
         return [
@@ -1215,7 +1205,7 @@ class PDFController extends Controller
     /**
      * Generate IRS list of Updated Chapters
      */
-    private function generateIRSUpdateList($coorId, $confId, $regId, $positionId, $secPositionId, $date)
+    private function generateIRSUpdateList(int $coorId, int $confId, int $regId, int $positionId, array $secPositionId, Carbon $date)
     {
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
 
@@ -1251,7 +1241,7 @@ class PDFController extends Controller
     /**
      * Generate IRS list of Added Chapters
      */
-    private function generateIRSAddList($coorId, $confId, $regId, $positionId, $secPositionId, $date)
+    private function generateIRSAddList(int $coorId, int $confId, int $regId, int $positionId, array $secPositionId, Carbon  $date)
     {
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
 
@@ -1287,7 +1277,7 @@ class PDFController extends Controller
     /**
      * Generate IRS list of Added Chapters that have not been reported
      */
-    private function generateIRSAddList2($coorId, $confId, $regId, $positionId, $secPositionId, $date)
+    private function generateIRSAddList2(int $coorId, int $confId, int $regId, int $positionId, array $secPositionId, $date)
     {
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
 
@@ -1321,7 +1311,7 @@ class PDFController extends Controller
     /**
      * Generate IRS list of Zapped Chapters
      */
-    private function generateIRSZapList($coorId, $confId, $regId, $positionId, $secPositionId, $date)
+    private function generateIRSZapList(int $coorId, int $confId, int $regId, int $positionId, array $secPositionId, Carbon $date)
     {
         $baseQuery = $this->baseChapterController->getBaseQuery(0, $coorId, $confId, $regId, $positionId, $secPositionId);
 
@@ -1442,7 +1432,8 @@ class PDFController extends Controller
         $filename = $currentDate.'_IRSFilingCorrections.pdf';
 
         if ($streamResponse) {
-            return $pdf->stream($filename, ['Attachment' => 0]);
+            // return $pdf->stream($filename, ['Attachment' => 0]);
+            return $pdf->stream($filename);
         }
 
         return [
@@ -1454,7 +1445,7 @@ class PDFController extends Controller
     /**
      * Generate IRS list of 990N Filing Corrections with the Wrong Dates
      */
-    private function generateIRSWrongDateList($coorId, $confId, $regId, $positionId, $secPositionId)
+    private function generateIRSWrongDateList(int $coorId, int $confId, int $regId, int $positionId, array $secPositionId)
     {
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
 
@@ -1486,7 +1477,7 @@ class PDFController extends Controller
     /**
      * Generate IRS list of 990N Filing Corrections where chapter was not found
      */
-    private function generateIRSNotFoundList($coorId, $confId, $regId, $positionId, $secPositionId)
+    private function generateIRSNotFoundList(int $coorId, int $confId, int $regId, int $positionId, array $secPositionId)
     {
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
 
@@ -1518,7 +1509,7 @@ class PDFController extends Controller
     /**
      * Generate IRS list of 990N Filing Corrections where chapter FILED with the wrong date
      */
-    private function generateIRSFiledWrongList($coorId, $confId, $regId, $positionId, $secPositionId)
+    private function generateIRSFiledWrongList(int $coorId, int $confId, int $regId, int $positionId, array $secPositionId)
     {
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
 
@@ -1581,7 +1572,8 @@ class PDFController extends Controller
         $filename = $currentDate.'_IRSEODeptFaxCover.pdf';
 
         if ($streamResponse) {
-            return $pdf->stream($filename, ['Attachment' => 0]);
+            // return $pdf->stream($filename, ['Attachment' => 0]);
+            return $pdf->stream($filename);
         }
 
         return [
@@ -1593,7 +1585,7 @@ class PDFController extends Controller
     /**
      * Upload PDF to Google Drive
      */
-    private function uploadToGoogleDrive($pdfPath, &$pdfFileId, $sharedDriveId)
+    private function uploadToGoogleDrive(string $pdfPath, string &$pdfFileId, string $sharedDriveId)
     {
         $googleClient = new Client;
         $accessToken = $this->token();
@@ -1630,7 +1622,7 @@ class PDFController extends Controller
     /**
      * Upload to EOY Google Drive -- To create folder/sub folder system.
      */
-    private function uploadToEOYGoogleDrive($pdfPath, &$pdfFileId, $sharedDriveId, $year, $conf, $state, $chapterName)
+    private function uploadToEOYGoogleDrive(string $pdfPath, string &$pdfFileId, string $sharedDriveId, string $year, string $conf, string $state, string $chapterName)
     {
         $googleClient = new Client;
         $accessToken = $this->token();
@@ -1711,7 +1703,7 @@ class PDFController extends Controller
     /**
      * Generate Grant Request
      */
-    public function generateGrantRequest($grantId)
+    public function generateGrantRequest(int $grantId)
     {
         $grantDetails = GrantRequest::with('chapters', 'state', 'country')
             ->find($grantId);
@@ -1806,7 +1798,8 @@ class PDFController extends Controller
         $filename = 'GrantList.pdf';
 
         if ($streamResponse) {
-            return $pdf->stream($filename, ['Attachment' => 0]);
+            // return $pdf->stream($filename, ['Attachment' => 0]);
+            return $pdf->stream($filename);
         }
 
         return [
@@ -1819,14 +1812,14 @@ class PDFController extends Controller
     /**
      * Save & Send End of Year Report
      */
-    public function saveEndofYear(Request $request, $adminYear)
+    public function saveEndofYear(Request $request, string $adminYear)
     {
         // Prefer route parameters if provided, else fallback to request
 
         $googleDrive = GoogleDrive::where('name', 'eoy_report_uploads')->first();
         $sharedDriveId = $googleDrive->folder_id;
 
-        $result = $this->generateEndofYear($adminYear, false);
+        $result = $this->generateEndofYear($request, $adminYear, false);
         $pdf = $result['pdf'];
         $name = $result['filename'];
 
@@ -1859,7 +1852,7 @@ class PDFController extends Controller
     /**
      * Generate End of Year Report
      */
-    public function generateEndofYear(Request $request, $adminYear, $streamResponse = true)
+    public function generateEndofYear(Request $request, string $adminYear, bool $streamResponse = true)
     {
         $eoyDetails = AdminYear::find($adminYear);
 
@@ -1948,7 +1941,8 @@ class PDFController extends Controller
         $filename = $fiscalYearRange.'_EndofYear.pdf';
 
         if ($streamResponse) {
-            return $pdf->stream($filename, ['Attachment' => 0]);
+            // return $pdf->stream($filename, ['Attachment' => 0]);
+            return $pdf->stream($filename);
         }
 
         return [

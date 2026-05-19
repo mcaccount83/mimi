@@ -3,23 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Services\PositionConditionsService;
+use Illuminate\Database\Eloquent\Builder;
 
 class BaseConditionsController extends Controller
 {
-    protected $positionConditionsService;
-
-    protected $userController;
-
-    public function __construct(PositionConditionsService $positionConditionsService, UserController $userController)
-    {
-        $this->positionConditionsService = $positionConditionsService;
-        $this->userController = $userController;
-    }
+    public function __construct(
+        protected PositionConditionsService $positionConditionsService,
+        protected UserController $userController,
+    ) {}
 
     /**
      * Get conditions and reporting tree data based on coordinator position
      */
-    public function getConditions($cdId, $cdPositionid, $cdSecPositionid)
+    public function getConditions(int $cdId, int $cdPositionid, array $cdSecPositionid)
     {
         $conditions = $this->positionConditionsService->getConditionsForUser($cdPositionid, $cdSecPositionid, $cdId);
         $inQryArr = [];
@@ -35,7 +31,7 @@ class BaseConditionsController extends Controller
     /**
      * Apply position-based conditions to the chapter query
      */
-    public function applyPositionConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArr)
+    public function applyPositionConditions(Builder $baseQuery, array $conditions, int $cdConfId, int $cdRegId, array $inQryArr): Builder
     {
         if ($conditions['founderCondition']) {
             // View Full International List - no filter
@@ -56,7 +52,7 @@ class BaseConditionsController extends Controller
         return $baseQuery;
     }
 
-    public function applyCordPositionConditions($baseQuery, $conditions, $cdConfId, $cdRegId, $inQryArr)
+    public function applyCordPositionConditions(Builder $baseQuery, array $conditions, int $cdConfId, int $cdRegId, array $inQryArr): Builder
     {
         if ($conditions['founderCondition']) {
             // View Full International List - no filter

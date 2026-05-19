@@ -7,24 +7,14 @@ use Illuminate\Support\Carbon;
 
 class BaseMailDataController extends Controller
 {
-    protected $userController;
+    public function __construct(
+        protected UserController $userController,
+        protected BaseChapterController $baseChapterController,
+        protected BaseCoordinatorController $baseCoordinatorController,
+        protected PositionConditionsService $positionConditionsService,
+    ) {}
 
-    protected $baseChapterController;
-
-    protected $baseCoordinatorController;
-
-    protected $positionConditionsService;
-
-    public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController,
-        PositionConditionsService $positionConditionsService)
-    {
-        $this->userController = $userController;
-        $this->baseChapterController = $baseChapterController;
-        $this->baseCoordinatorController = $baseCoordinatorController;
-        $this->positionConditionsService = $positionConditionsService;
-    }
-
-    public function getUserData($user)
+    public function getUserData(array $user): array
     {
         return [
             'userName' => $user['userName'],
@@ -35,7 +25,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getMessageData($input)
+    public function getMessageData(array $input): array
     {
         return [
             'founderEmail' => $input['founderEmail'] ?? null,
@@ -48,7 +38,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getInquiryData($inqDetails)
+    public function getInquiryData(object $inqDetails)
     {
         return [
             'inquiryFirstName' => $inqDetails->inquiry_first_name,
@@ -73,7 +63,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getChapterData($chDetails, $stateShortName)
+    public function getChapterData(object $chDetails, string $stateShortName): array
     {
         return [
             'chapterName' => $chDetails->name,
@@ -101,7 +91,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getPresData($PresDetails)
+    public function getPresData(object $PresDetails)
     {
         return [
             'presFirstName' => $PresDetails->first_name,
@@ -117,7 +107,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getBoardData($borDetails)
+    public function getBoardData(object $borDetails)
     {
         return [
             'boardName' => $borDetails->first_name.' '.$borDetails->last_name,
@@ -132,7 +122,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getBoardEmail($PresDetails, $AVPDetails, $MVPDetails, $TRSDetails, $SECDetails)
+    public function getBoardEmail(object $PresDetails, object $AVPDetails, object $MVPDetails, object $TRSDetails, object $SECDetails)
     {
         return [
             'presName' => $PresDetails->first_name.' '.$PresDetails->last_name,
@@ -148,7 +138,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getBoardUpdEmail($PresDetailsUpd, $AVPDetailsUpd, $MVPDetailsUpd, $TRSDetailsUpd, $SECDetailsUpd)
+    public function getBoardUpdEmail(object $PresDetailsUpd, object $AVPDetailsUpd, object $MVPDetailsUpd, object $TRSDetailsUpd, object $SECDetailsUpd)
     {
         return [
             'presNameUpd' => $PresDetailsUpd->first_name.' '.$PresDetailsUpd->last_name,
@@ -164,7 +154,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getCoordDetailsData($cdDetails)
+    public function getCoordDetailsData(object $cdDetails)
     {
         return [
             'cdName' => $cdDetails->first_name.' '.$cdDetails->last_name,
@@ -173,7 +163,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getCoordChapterData($conferenceDescription, $regionLongName, $chList)
+    public function getCoordChapterData(string $conferenceDescription, string $regionLongName, object $chList): array
     {
         return [
             'cdConf' => $conferenceDescription,
@@ -182,7 +172,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getCoordReportToData($RptFName, $RptLName, $ReportTo, $ReportEmail, $ReportPhone)
+    public function getCoordReportToData(string $RptFName, string $RptLName, string $ReportTo, string $ReportEmail, string $ReportPhone): array
     {
         return [
             'cdReportFName' => $RptFName,
@@ -193,7 +183,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getPCData($pcDetails)
+    public function getPCData(object $pcDetails)
     {
         return [
             'pcEmail' => $pcDetails->email,
@@ -201,7 +191,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getRCData($rcDetails)
+    public function getRCData(object $rcDetails)
     {
         return [
             'rcEmail' => $rcDetails->email,
@@ -210,7 +200,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getCDData($cdDetails)
+    public function getCDData(object $cdDetails)
     {
         return [
             'cdEmail' => $cdDetails->email,
@@ -219,7 +209,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getCCData($emailCCData)
+    public function getCCData(array $emailCCData): array
     {
         return [
             'ccEmail' => $emailCCData['cc_email'],
@@ -231,7 +221,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getEINCoorData($emailEINCoorData)
+    public function getEINCoorData(array $emailEINCoorData): array
     {
         return [
             'einEmail' => $emailEINCoorData['ein_email'],
@@ -240,7 +230,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getChapterUpdatedData($chDetailsUpd, $pcDetailsUpd)
+    public function getChapterUpdatedData(object $chDetailsUpd, object $pcDetailsUpd)
     {
         return [
             'chapterNameUpd' => $chDetailsUpd->name,
@@ -263,7 +253,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getPresUpdatedData($PresDetailsUpd)
+    public function getPresUpdatedData(object $PresDetailsUpd)
     {
         return [
             'presNameUpd' => $PresDetailsUpd->first_name.' '.$PresDetailsUpd->last_name,
@@ -278,7 +268,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getBoardUpdatedData($borDetailsUpd)
+    public function getBoardUpdatedData(object $borDetailsUpd)
     {
         return [
             'borPosition' => $borDetailsUpd->position->position,
@@ -294,7 +284,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getPCUpdatedData($pcDetailsUpd)
+    public function getPCUpdatedData(object $pcDetailsUpd)
     {
         return [
             'pcEmailUpd' => $pcDetailsUpd->email,
@@ -302,7 +292,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getFinancialReportData($chFinancialReport)
+    public function getFinancialReportData(object $chFinancialReport)
     {
         return [
             'completedName' => $chFinancialReport->completed_name ?? null,
@@ -310,7 +300,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getFinancialDocumentsData($chDocuments, $chEOYDocuments, $chIRSDocuments, $chReportDocuments)
+    public function getFinancialDocumentsData(object $chDocuments, object $chEOYDocuments, object $chIRSDocuments, object $chReportDocuments): array
     {
         return [
             'einLetterCopyReceived' => $chDocuments->ein_letter_path,
@@ -327,7 +317,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getFinancialReportReviewData($reviewer_email_message)
+    public function getFinancialReportReviewData(?string $reviewer_email_message): array
     {
         return [
             'reviewerEmailMessage' => $reviewer_email_message,
@@ -335,7 +325,7 @@ class BaseMailDataController extends Controller
     }
 
 
-    public function getPaymentData($chPayments, $input, $paymentType)
+    public function getPaymentData(object $chPayments, array $input, string $paymentType): array
     {
         return [
             'chapterId' => $chPayments->chapter_id,
@@ -359,7 +349,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getShippingData($input, $shippingCountry, $shippingState)
+    public function getShippingData(array $input, string $shippingCountry, string $shippingState): array
     {
         return [
             'ship_fname' => $input['ship_fname'] ?? null,
@@ -375,7 +365,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getPublicPaymentData($input, $invoice, $paymentType)
+    public function getPublicPaymentData(array $input, string $invoice, string $paymentType): array
     {
         return [
             'invoice' => $invoice,
@@ -391,7 +381,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getReRegData($startMonthId)
+    public function getReRegData(int $startMonthId): array
     {
         $startDate = Carbon::createFromDate(null, $startMonthId, 1);
         $year = $startDate->year;
@@ -414,7 +404,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getProbationData($input)
+    public function getProbationData(array $input): array
     {
         return [
             'q1_dues' => $input['q1_dues'] ?? null,
@@ -437,7 +427,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getNewChapterAppData($input, $sisteredWords)
+    public function getNewChapterAppData(array $input, string $sisteredWords): array
     {
         return [
             'hear_about' => $input['ch_hearabout'] ?? null,
@@ -446,7 +436,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getNewChapterData($chDetails)
+    public function getNewChapterData(object $chDetails)
     {
         return [
             'chapterName' => $chDetails->name,
@@ -469,7 +459,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getNewCoordinatorData($cdDetails)
+    public function getNewCoordinatorData(object $cdDetails)
     {
         return [
             'conference_id' => $cdDetails->conference_id,
@@ -492,7 +482,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getNewCoordinatorAppData($input)
+    public function getNewCoordinatorAppData(array $input): array
     {
         return [
             'home_chapter' => $input['home_chapter'].', '.$input['home_state'],
@@ -508,7 +498,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-    public function getNewGrantData($grantDetails)
+    public function getNewGrantData(object $grantDetails)
     {
         return [
             'understood' => $grantDetails->understood,
@@ -548,7 +538,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-     public function getGrantReviewData($grantDetails)
+     public function getGrantReviewData(object $grantDetails)
     {
         return [
             'reviewer_name' => $grantDetails->review_notes,

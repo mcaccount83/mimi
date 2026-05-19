@@ -9,10 +9,10 @@ use Illuminate\Mail\Mailables\Envelope;
 
 class InquiriesYesToChapter extends BaseMailable
 {
-    public $mailData;
+    public array $mailData;
 
 
-    public function __construct($mailData)
+    public function __construct(array $mailData)
     {
         $this->mailData = $mailData;
     }

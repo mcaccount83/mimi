@@ -19,21 +19,16 @@ use Illuminate\Support\Carbon;
 
 class BaseBoardController extends Controller
 {
-    protected $positionConditionsService;
-
-    protected $userController;
-
-    public function __construct(PositionConditionsService $positionConditionsService, UserController $userController)
-    {
-        $this->positionConditionsService = $positionConditionsService;
-        $this->userController = $userController;
-    }
+    public function __construct(
+        protected PositionConditionsService $positionConditionsService,
+        protected UserController $userController,
+    ) {}
 
     /**
      * Get chapter details with appropriate board members based on active status
      * Simplified version for board member access (no lists, filters, or sorting needed)
      */
-    public function getChapterDetails($id)
+    public function getChapterDetails(int $id)
     {
         // Load chapter with common relations
         $chDetails = Chapters::with([
@@ -156,7 +151,7 @@ class BaseBoardController extends Controller
     /**
      * Route to correct board details table based on active status
      */
-    private function getBoardDetailsByStatus($chId, $activeStatus)
+    private function getBoardDetailsByStatus(int $chId, int $activeStatus)
     {
         switch ($activeStatus) {
             case 0: // Zapped/Disbanded
@@ -178,7 +173,7 @@ class BaseBoardController extends Controller
     /**
      * Board Details Base Query for all active chapters
      */
-    public function getActiveBoardDetails($chId)
+    public function getActiveBoardDetails(int $chId)
     {
         $chDetails = Chapters::with(['boards'])->find($chId);
 
@@ -200,7 +195,7 @@ class BaseBoardController extends Controller
     /**
      * Board Details Base Query for all disbanded chapters
      */
-    public function getDisbandedBoardDetails($chId)
+    public function getDisbandedBoardDetails(int $chId)
     {
         $chDetails = Chapters::with(['disbandCheck', 'boardsDisbanded'])->find($chId);
 
@@ -223,7 +218,7 @@ class BaseBoardController extends Controller
     /**
      * Board Details Base Query for all incoming chapters
      */
-    public function getIncomingBoardDetails($chId)
+    public function getIncomingBoardDetails(int $chId)
     {
         $chDetails = Chapters::with(['boardsIncoming'])->find($chId);
 
@@ -246,7 +241,7 @@ class BaseBoardController extends Controller
     /**
      * Board Details Base Query for all pending chapters
      */
-    public function getPendingBoardDetails($chId)
+    public function getPendingBoardDetails(int $chId)
     {
         $chDetails = Chapters::with(['boardsPending'])->find($chId);
 

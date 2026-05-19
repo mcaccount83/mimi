@@ -26,23 +26,12 @@ use Illuminate\View\View;
 
 class PaymentController extends Controller implements HasMiddleware
 {
-    protected $userController;
-
-    protected $baseChapterController;
-
-    protected $baseMailDataController;
-
-    protected PositionConditionsService $positionConditionsService;
-
-    public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseMailDataController $baseMailDataController,
-        PositionConditionsService $positionConditionsService)
-    {
-
-        $this->userController = $userController;
-        $this->baseChapterController = $baseChapterController;
-        $this->baseMailDataController = $baseMailDataController;
-        $this->positionConditionsService = $positionConditionsService;
-    }
+    public function __construct(
+        protected UserController $userController,
+        protected BaseChapterController $baseChapterController,
+        protected BaseMailDataController $baseMailDataController,
+        protected PositionConditionsService $positionConditionsService,
+    ) {}
 
     public static function middleware(): array
     {
@@ -306,7 +295,7 @@ class PaymentController extends Controller implements HasMiddleware
     /**
      *Edit Chapter Information
      */
-    public function editChapterPayment(Request $request, $id): View
+    public function editChapterPayment(Request $request, int $id): View
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -337,7 +326,7 @@ class PaymentController extends Controller implements HasMiddleware
     /**
      *Update Chapter Information
      */
-    public function updateChapterPayment(Request $request, $id): RedirectResponse
+    public function updateChapterPayment(Request $request, int $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
@@ -478,7 +467,7 @@ class PaymentController extends Controller implements HasMiddleware
         }
     }
 
-    public function viewPaymentHistory(Request $request, $id): View
+    public function viewPaymentHistory(Request $request, int $id): View
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -566,7 +555,7 @@ class PaymentController extends Controller implements HasMiddleware
         return view('coordinators.payment.grantlist')->with($data);
     }
 
-    public function editGrantDetails(Request $request, $grantId): View
+    public function editGrantDetails(Request $request, int $grantId): View
     {
         $user = $this->userController->loadUserInformation($request);
     $coorId = $user['cdId'];
@@ -608,7 +597,7 @@ class PaymentController extends Controller implements HasMiddleware
         return view('coordinators.payment.editgrantdetails')->with($data);
     }
 
-    public function updateGrantDetails(Request $request, $grantId): RedirectResponse
+    public function updateGrantDetails(Request $request, int $grantId): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -655,7 +644,7 @@ class PaymentController extends Controller implements HasMiddleware
         }
     }
 
-    public function updateUnsubmitGrantRequest(Request $request, $grantId): RedirectResponse
+    public function updateUnsubmitGrantRequest(Request $request, int $grantId): RedirectResponse
     {
         $grantRequest = GrantRequest::find($grantId);
 
@@ -676,7 +665,7 @@ class PaymentController extends Controller implements HasMiddleware
         }
     }
 
-    public function updateClearGrantReview(Request $request, $grantId): RedirectResponse
+    public function updateClearGrantReview(Request $request, int $grantId): RedirectResponse
     {
         $grantRequest = GrantRequest::find($grantId);
 

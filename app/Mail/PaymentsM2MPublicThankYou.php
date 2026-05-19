@@ -8,9 +8,9 @@ use Illuminate\Mail\Mailables\Envelope;
 
 class PaymentsM2MPublicThankYou extends BaseMailable
 {
-    public $mailData;
+    public array $mailData;
 
-    public function __construct($mailData)
+    public function __construct(array $mailData)
     {
         $this->mailData = $mailData;
     }

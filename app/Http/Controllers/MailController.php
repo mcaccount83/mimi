@@ -17,13 +17,9 @@ use romanzipp\QueueMonitor\Services\QueueMonitor;
 
 class MailController extends Controller implements HasMiddleware
 {
-    protected $userController;
-
-    public function __construct(UserController $userController)
-    {
-
-        $this->userController = $userController;
-    }
+    public function __construct(
+        protected UserController $userController,
+    ) {}
 
     public static function middleware(): array
     {

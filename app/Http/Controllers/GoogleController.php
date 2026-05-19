@@ -33,7 +33,7 @@ class GoogleController extends Controller implements HasMiddleware
         ];
     }
 
-   public function verifyRecaptcha($token, $userIpAddress): array
+   public function verifyRecaptcha(string $token, string $userIpAddress): array
     {
         $projectId = config('services.recaptcha.project_id');
         $siteKey = config('services.recaptcha.site_key');
@@ -123,7 +123,7 @@ class GoogleController extends Controller implements HasMiddleware
     /**
      * Upload PDF to Google Drive
      */
-    public function uploadToGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId)
+    public function uploadToGoogleDrive(string $filename, string $mimetype, string $filecontent, string $sharedDriveId)
     {
         $client = new Client;
         $accessToken = $this->token();
@@ -163,7 +163,7 @@ class GoogleController extends Controller implements HasMiddleware
     /**
      * Upload to EOY Google Drive -- To create folder/sub folder system.
      */
-    public function uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $conf, $state, $chapterName)
+    public function uploadToEOYGoogleDrive(string $filename, string $mimetype, string $filecontent, string $sharedDriveId, string $year, string $conf, string $state, string $chapterName)
     {
         $client = new Client;
         $accessToken = $this->token();
@@ -202,7 +202,7 @@ class GoogleController extends Controller implements HasMiddleware
         return null; // Return null if upload fails
     }
 
-    public function storeEIN(Request $request, $id): JsonResponse
+    public function storeEIN(Request $request, int $id): JsonResponse
 {
     try {
         $request->validate([
@@ -265,7 +265,7 @@ class GoogleController extends Controller implements HasMiddleware
 /**
  *  Save Chapter Resource Items
  */
-public function storeResources(Request $request, $id): JsonResponse
+public function storeResources(Request $request, int $id): JsonResponse
 {
     try {
         $request->validate([
@@ -316,7 +316,7 @@ public function storeResources(Request $request, $id): JsonResponse
 /**
  *  Save Coordinator Toolkit Items
  */
-public function storeToolkit(Request $request, $id): JsonResponse
+public function storeToolkit(Request $request, int $id): JsonResponse
 {
     try {
         $request->validate([
@@ -367,7 +367,7 @@ public function storeToolkit(Request $request, $id): JsonResponse
 /**
  *  Save EOY Award Badges Items
  */
-public function storeAwardBadges(Request $request, $id): JsonResponse
+public function storeAwardBadges(Request $request, int $id): JsonResponse
 {
     try {
         Log::info('storeAwardBadges called', ['id' => $id]);
@@ -422,7 +422,7 @@ public function storeAwardBadges(Request $request, $id): JsonResponse
     }
 }
 
-public function storePhotos(Request $request, $id): JsonResponse
+public function storePhotos(Request $request, int $id): JsonResponse
 {
     try {
         $request->validate([
@@ -478,7 +478,7 @@ public function storePhotos(Request $request, $id): JsonResponse
 /**
  *  Save Roster for EOY Report Attachments
  */
-public function storeRoster(Request $request, $id): JsonResponse
+public function storeRoster(Request $request, int $id): JsonResponse
 {
     try {
         $request->validate([
@@ -535,7 +535,7 @@ public function storeRoster(Request $request, $id): JsonResponse
 /**
  *  Save 990N Confirmation for EOY Report Attachments
  */
-public function store990N(Request $request, $id): JsonResponse
+public function store990N(Request $request, int $id): JsonResponse
 {
     try {
         $request->validate([
@@ -592,7 +592,7 @@ public function store990N(Request $request, $id): JsonResponse
 /**
  *  Save BankStatement for EOY Report Attachments
  */
-public function storeStatement1(Request $request, $id): JsonResponse
+public function storeStatement1(Request $request, int $id): JsonResponse
 {
     try {
         $request->validate([
@@ -649,7 +649,7 @@ public function storeStatement1(Request $request, $id): JsonResponse
 /**
  *  Save Additional Bank Statement for EOY Report Attachments
  */
-public function storeStatement2(Request $request, $id): JsonResponse
+public function storeStatement2(Request $request, int $id): JsonResponse
 {
     try {
         $request->validate([
@@ -703,7 +703,7 @@ public function storeStatement2(Request $request, $id): JsonResponse
     }
 }
 
-public function storeAward(Request $request, $id): JsonResponse
+public function storeAward(Request $request, int $id): JsonResponse
 {
     try {
         $request->validate([
@@ -760,7 +760,7 @@ public function storeAward(Request $request, $id): JsonResponse
     /**
      *  Create Folder Structure for EOY Report Attachments
      */
-    public function createFolderIfNotExists($year, $conf, $state, $chapterName, $accessToken, $sharedDriveId)
+    public function createFolderIfNotExists(string $year, string $conf, string $state, string $chapterName, string $accessToken, string $sharedDriveId)
     {
         // Check if the year folder exists, create it if not
         $yearFolderId = $this->getOrCreateYearFolder($year, $accessToken, $sharedDriveId);
@@ -777,7 +777,7 @@ public function storeAward(Request $request, $id): JsonResponse
         return $chapterFolderId;
     }
 
-    private function getOrCreateYearFolder($year, $accessToken, $sharedDriveId)
+    private function getOrCreateYearFolder(string $year, string $accessToken, string $sharedDriveId)
     {
         // Check if the year folder exists in the records
         $yearRecord = FolderRecord::where('year', $year)->first();
@@ -816,7 +816,7 @@ public function storeAward(Request $request, $id): JsonResponse
         }
     }
 
-    private function getOrCreateConfFolder($year, $conf, $yearFolderId, $accessToken, $sharedDriveId)
+    private function getOrCreateConfFolder(string $year, string $conf, string $yearFolderId, string $accessToken, string $sharedDriveId)
     {
         // Check if the conference folder exists in the records
         $confRecord = FolderRecord::where('conf', $conf)
@@ -858,7 +858,7 @@ public function storeAward(Request $request, $id): JsonResponse
         }
     }
 
-    private function getOrCreateStateFolder($year, $conf, $state, $confFolderId, $accessToken, $sharedDriveId)
+    private function getOrCreateStateFolder(string $year, string $conf, string $state, string $confFolderId, string $accessToken, string $sharedDriveId)
     {
         // Check if the state folder exists for the given year and conference
         $stateRecord = FolderRecord::where('state', $state)
@@ -902,7 +902,7 @@ public function storeAward(Request $request, $id): JsonResponse
         }
     }
 
-    private function getOrCreateChapterFolder($year, $conf, $state, $chapterName, $stateFolderId, $accessToken, $sharedDriveId)
+    private function getOrCreateChapterFolder(string $year, string $conf, string $state, string $chapterName, string $stateFolderId, string $accessToken, string $sharedDriveId)
     {
         // Check if the chapter folder exists for the given year, conference, and state
         $chapterRecord = FolderRecord::where('chapter_name', $chapterName)

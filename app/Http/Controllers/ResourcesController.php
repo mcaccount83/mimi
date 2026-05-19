@@ -27,19 +27,11 @@ use Illuminate\View\View;
 
 class ResourcesController extends Controller implements HasMiddleware
 {
-    protected $userController;
-
-    protected $positionConditionsService;
-
-    protected $learndashService;
-
-    public function __construct(UserController $userController, PositionConditionsService $positionConditionsService, LearnDashService $learndashService)
-    {
-        $this->userController = $userController;
-        $this->positionConditionsService = $positionConditionsService;
-        $this->learndashService = $learndashService;
-
-    }
+    public function __construct(
+        protected UserController $userController,
+        protected PositionConditionsService $positionConditionsService,
+        protected LearnDashService $learndashService,
+    ) {}
 
     public static function middleware(): array
     {
@@ -126,7 +118,7 @@ class ResourcesController extends Controller implements HasMiddleware
     /**
      * Update Task on Bugs & Enhancements List
      */
-    public function updateBugs(Request $request, $id): JsonResponse
+    public function updateBugs(Request $request, int $id): JsonResponse
     {
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentDate = $dateOptions['currentDate'];
@@ -234,7 +226,7 @@ class ResourcesController extends Controller implements HasMiddleware
         }
     }
 
-    public function updateResources(Request $request, $id): JsonResponse
+    public function updateResources(Request $request, int $id): JsonResponse
     {
         try {
             $user = $this->userController->loadUserInformation($request);
@@ -361,7 +353,7 @@ class ResourcesController extends Controller implements HasMiddleware
     /**
      * Update Files or Links on the Toolkit List
      */
-    public function updateToolkit(Request $request, $id): JsonResponse
+    public function updateToolkit(Request $request, int $id): JsonResponse
     {
         try {
             $user = $this->userController->loadUserInformation($request);
@@ -467,7 +459,7 @@ class ResourcesController extends Controller implements HasMiddleware
     }
 }
 
-    public function updateAwardBadge(Request $request, $id): JsonResponse
+    public function updateAwardBadge(Request $request, int $id): JsonResponse
 {
     try {
         $request->validate([

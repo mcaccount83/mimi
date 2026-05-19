@@ -4,21 +4,16 @@ namespace App\Http\Controllers;
 
 class EmailTableController extends Controller
 {
-    protected $baseMailDataController;
-
-    protected $emailTableRowController;
-
-    public function __construct(BaseMailDataController $baseMailDataController, EmailTableRowController $emailTableRowController)
-    {
-        $this->baseMailDataController = $baseMailDataController;
-        $this->emailTableRowController = $emailTableRowController;
-    }
+    public function __construct(
+        protected BaseMailDataController $baseMailDataController,
+        protected EmailTableRowController $emailTableRowController,
+    ) {}
 
     /**
      * List Admin Notification -- Founder Information
      * When new chapter is moved from Pending to Active by Coordinator
      */
-    public function createNewChapterTable($mailData)
+    public function createNewChapterTable(array $mailData)
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
@@ -34,7 +29,7 @@ class EmailTableController extends Controller
         return $tableHtml;
     }
 
-    public function createNewChapterApprovedTable($mailData)
+    public function createNewChapterApprovedTable(array $mailData)
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
@@ -50,7 +45,7 @@ class EmailTableController extends Controller
         return $tableHtml;
     }
 
-    public function createNewChapterEmailTable($mailData)
+    public function createNewChapterEmailTable(array $mailData)
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
@@ -66,7 +61,7 @@ class EmailTableController extends Controller
         return $tableHtml;
     }
 
-    public function createPresidentEmailTable($mailData)
+    public function createPresidentEmailTable(array $mailData)
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
@@ -82,7 +77,7 @@ class EmailTableController extends Controller
         return $tableHtml;
     }
 
-    public function createPrimaryCoordEmailTable($mailData)
+    public function createPrimaryCoordEmailTable(array $mailData)
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
@@ -98,7 +93,7 @@ class EmailTableController extends Controller
         return $tableHtml;
     }
 
-    public function createMentoringCoordEmailTable($mailData)
+    public function createMentoringCoordEmailTable(array $mailData)
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
@@ -114,7 +109,7 @@ class EmailTableController extends Controller
         return $tableHtml;
     }
 
-    public function createCoordEmailTable($mailData)
+    public function createCoordEmailTable(array $mailData)
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
@@ -130,7 +125,7 @@ class EmailTableController extends Controller
         return $tableHtml;
     }
 
-    public function createNewCoordinatorApprovedTable($mailData)
+    public function createNewCoordinatorApprovedTable(array $mailData)
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
@@ -149,7 +144,7 @@ class EmailTableController extends Controller
     /**
      * List Admin Notification -- Full Board Update
      */
-    public function createListAdminBoardTable($mailData)
+    public function createListAdminBoardTable(array $mailData)
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
@@ -169,7 +164,7 @@ class EmailTableController extends Controller
      * List Admin Notification -- Full Board Update
      * When saved by Coordinator or President
      */
-    public function createListAdminUpdateBoardTable($mailData)
+    public function createListAdminUpdateBoardTable(array $mailData)
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
@@ -189,7 +184,7 @@ class EmailTableController extends Controller
      * List Admin Notification -- Board Member Board Update
      * When saved by Board Member AVP/MVP/Tres/Sec
      */
-    public function createListAdminUpdateMemberTable($mailData)
+    public function createListAdminUpdateMemberTable(array $mailData)
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
@@ -209,7 +204,7 @@ class EmailTableController extends Controller
      * Primary Coordinator Notification -- Chapter Information Update
      * When saved by Coordinator
      */
-    public function createPrimaryUpdateChapterInfoTable($mailData)
+    public function createPrimaryUpdateChapterInfoTable(array $mailData)
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
@@ -231,7 +226,7 @@ class EmailTableController extends Controller
      * Primary Coordinator Notification -- Online/Website Update
      * When saved by Coordinator
      */
-    public function createPrimaryUpdateWebsiteTable($mailData)
+    public function createPrimaryUpdateWebsiteTable(array $mailData)
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
@@ -251,7 +246,7 @@ class EmailTableController extends Controller
      * Primary Coordinator Notification -- Board Information Update
      * When saved by Coordinator
      */
-    public function createPrimaryUpdateBoardInfoTable($mailData)
+    public function createPrimaryUpdateBoardInfoTable(array $mailData)
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
@@ -271,7 +266,7 @@ class EmailTableController extends Controller
      * Primary Coordinator Notification -- Chapter & Full Board Information Update
      * When saved by President
      */
-    public function createPrimaryUpdateBoardTable($mailData)
+    public function createPrimaryUpdateBoardTable(array $mailData)
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
@@ -295,7 +290,7 @@ class EmailTableController extends Controller
      * Primary Coordinator Notification -- Chapter & Board Member Information Update
      * When saved by Board Member AVP/MVP/Treas/Sec
      */
-    public function createPrimaryUpdateMemberTable($mailData)
+    public function createPrimaryUpdateMemberTable(array $mailData)
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
@@ -318,7 +313,7 @@ class EmailTableController extends Controller
     /**
      * Create Table for New Coordinators
      */
-    public function createNewCoordinatorTable($mailData)
+    public function createNewCoordinatorTable(array $mailData)
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
@@ -334,7 +329,7 @@ class EmailTableController extends Controller
         return $tableHtml;
     }
 
-      public function createNewGrantTable($mailData)
+      public function createNewGrantTable(array $mailData)
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
@@ -354,7 +349,7 @@ class EmailTableController extends Controller
     /**
      * Create Rows for Founder
      */
-    public function createFounderRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+    public function createFounderRows(array $mailData, string $cellStyle, string $cellLeftStyle, string $headerStyle, string $tableHtml)
     {
         $tableHtml .= '<tr>
             <td style="'.$headerStyle.'"></td>
@@ -375,7 +370,7 @@ class EmailTableController extends Controller
     /**
      * Create Rows for Full Board
      */
-    public function createBoardRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+    public function createBoardRows(array $mailData, string $cellStyle, string $cellLeftStyle, string $headerStyle, string $tableHtml)
     {
         $tableHtml .= '<tr>
             <td style="'.$headerStyle.'"></td>
@@ -418,7 +413,7 @@ class EmailTableController extends Controller
     /**
      * Create Rows for Full Board Updates
      */
-    public function createBoardUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+    public function createBoardUpdateRows(array $mailData, string $cellStyle, string $cellLeftStyle, string $headerStyle, string $tableHtml)
     {
         $tableHtml .= '<tr>
             <td style="'.$headerStyle.'"></td>
@@ -536,7 +531,7 @@ class EmailTableController extends Controller
     /**
      * Create Rows for Board Member Updates
      */
-    public function createMemberUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+    public function createMemberUpdateRows(array $mailData, string $cellStyle, string $cellLeftStyle, string $headerStyle, string $tableHtml)
     {
         $tableHtml .= '<tr>
             <td style="'.$headerStyle.'"></td>
@@ -566,7 +561,7 @@ class EmailTableController extends Controller
     /**
      * Create Rows for General Chapter Updates
      */
-    public function createchapterUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+    public function createchapterUpdateRows(array $mailData, string $cellStyle, string $cellLeftStyle, string $headerStyle, string $tableHtml)
     {
         $tableHtml .= '<tr>
             <td style="'.$headerStyle.'"></td>
@@ -620,7 +615,7 @@ class EmailTableController extends Controller
     /**
      * Create Rows for Online/Website Updates
      */
-    public function createWebstieUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+    public function createWebstieUpdateRows(array $mailData, string $cellStyle, string $cellLeftStyle, string $headerStyle, string $tableHtml)
     {
         $tableHtml .= '<tr>
             <td style="'.$headerStyle.'"></td>
@@ -674,7 +669,7 @@ class EmailTableController extends Controller
     /**
      * Probation Quarterly Financial Submission Notification
      */
-    public function createProbationSubmissionTable($input)
+    public function createProbationSubmissionTable(array $input)
     {
         $mailData = array_merge(
             $this->baseMailDataController->getProbationData($input),
@@ -761,7 +756,7 @@ class EmailTableController extends Controller
     /**
      * Create Rows for New Chapter Application
      */
-    public function createNewCoordinatorRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+    public function createNewCoordinatorRows(array $mailData, string $cellStyle, string $cellLeftStyle, string $headerStyle, string $tableHtml)
     {
         $tableHtml .= '<tr>
             <td colspan="2" style="'.$headerStyle.'">Application Information</td>

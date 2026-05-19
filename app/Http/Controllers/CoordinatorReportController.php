@@ -12,25 +12,13 @@ use Illuminate\View\View;
 
 class CoordinatorReportController extends Controller implements HasMiddleware
 {
-    protected $userController;
-
-    protected $baseChapterController;
-
-    protected $baseCoordinatorController;
-
-    protected $reportingService;
-
-    protected $learnDashService;
-
-    public function __construct(UserController $userController, BaseCoordinatorController $baseCoordinatorController, BaseChapterController $baseChapterController,
-        ReportingService $reportingService, LearnDashService $learnDashService)
-    {
-        $this->userController = $userController;
-        $this->baseChapterController = $baseChapterController;
-        $this->baseCoordinatorController = $baseCoordinatorController;
-        $this->reportingService = $reportingService;
-        $this->learnDashService = $learnDashService;
-    }
+    public function __construct(
+        protected UserController $userController,
+        protected BaseChapterController $baseChapterController,
+        protected BaseCoordinatorController $baseCoordinatorController,
+        protected ReportingService $reportingService,
+        protected LearnDashService $learnDashService,
+    ) {}
 
     public static function middleware(): array
     {

@@ -12,15 +12,10 @@ use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller implements HasMiddleware
 {
-    protected $userController;
-
-    protected $baseBoardController;
-
-    public function __construct(UserController $userController, BaseBoardController $baseBoardController)
-    {
-        $this->userController = $userController;
-        $this->baseBoardController = $baseBoardController;
-    }
+    public function __construct(
+        protected UserController $userController,
+        protected BaseBoardController $baseBoardController,
+    ) {}
 
     public static function middleware(): array
     {

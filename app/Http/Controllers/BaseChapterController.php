@@ -18,27 +18,21 @@ use App\Models\State;
 use App\Models\Status;
 use App\Models\Website;
 use App\Services\PositionConditionsService;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 
 class BaseChapterController extends Controller
 {
-    protected $positionConditionsService;
-
-    protected $userController;
-
-    protected $baseConditionsController;
-
-    public function __construct(PositionConditionsService $positionConditionsService, UserController $userController, BaseConditionsController $baseConditionsController)
-    {
-        $this->positionConditionsService = $positionConditionsService;
-        $this->userController = $userController;
-        $this->baseConditionsController = $baseConditionsController;
-    }
+    public function __construct(
+        protected PositionConditionsService $positionConditionsService,
+        protected UserController $userController,
+        protected BaseConditionsController $baseConditionsController,
+    ) {}
 
     /**
      * Apply checkbox filters to the query
      */
-    private function applyCheckboxFilters($baseQuery, $coorId, $conditions = null, $confId = null, $regId = null)
+    private function applyCheckboxFilters(Builder $baseQuery, int $coorId, $conditions = null, $confId = null, $regId = null)
     {
         $checkboxStatus = [
             CheckboxFilterEnum::PC_DIRECT => '',
@@ -121,7 +115,7 @@ class BaseChapterController extends Controller
     /**
      * Get base query with common relations
      */
-    private function getBaseQueryWithRelations($activeStatus)
+    private function getBaseQueryWithRelations(int $activeStatus)
     {
         $query = Chapters::query()->where('active_status', $activeStatus);
 
@@ -145,7 +139,7 @@ class BaseChapterController extends Controller
     /**
      * Apply sorting based on query type and page
      */
-    private function applySorting($baseQuery)
+    private function applySorting(Builder $baseQuery): array
     {
         $isPendingPage = request()->route()->getName() == 'chapters.chappending';
         $isNotApprovedPage = request()->route()->getName() == 'chapters.chapnotapproved';
@@ -194,7 +188,7 @@ class BaseChapterController extends Controller
     /**
      * Build chapter query based on type and parameters
      */
-    private function buildChapterQuery($params)
+    private function buildChapterQuery(array $params): array
     {
         $baseQuery = $this->getBaseQueryWithRelations($params['activeStatus']);
         $checkboxStatus = [];
@@ -251,7 +245,7 @@ class BaseChapterController extends Controller
     /**
      * Get base query for chapters with any active status
      */
-    public function getBaseQuery($activeStatus, $coorId, $confId, $regId, $positionId, $secPositionId)
+    public function getBaseQuery(int $activeStatus, int $coorId, int $confId, int $regId, int $positionId, array $secPositionId): array
     {
         return $this->buildChapterQuery([
             'activeStatus' => $activeStatus,
@@ -267,7 +261,7 @@ class BaseChapterController extends Controller
     /**
      * Helper to determine query type from active status
      */
-    private function getQueryType($activeStatus)
+    private function getQueryType(int $activeStatus)
     {
         return match ($activeStatus) {
             0 => 'zapped',
@@ -281,7 +275,7 @@ class BaseChapterController extends Controller
     /**
      * Chapter Details Base Query for all chapters
      */
-    public function getChapterDetails($chId)
+    public function getChapterDetails(int $chId)
     {
         $chDetails = Chapters::with(['country', 'state', 'documents', 'financialReport', 'financialReportReview','startMonth', 'primaryCoordinator',
             'payments', 'probation', 'financialReportFinal', 'documentsEOY', 'documentsIRS', 'documentsReport'])->find($chId);
@@ -379,7 +373,7 @@ class BaseChapterController extends Controller
     /**
      * Board Details Base Query for all active chapters
      */
-    public function getActiveBoardDetails($chId)
+    public function getActiveBoardDetails(int $chId)
     {
         $chDetails = Chapters::with(['boards'])->find($chId);
 
@@ -401,7 +395,7 @@ class BaseChapterController extends Controller
     /**
      * Board Details Base Query for all disbanded chapters
      */
-    public function getDisbandedBoardDetails($chId)
+    public function getDisbandedBoardDetails(int $chId)
     {
         $chDetails = Chapters::with(['disbandCheck', 'boardsDisbanded'])->find($chId);
 
@@ -424,7 +418,7 @@ class BaseChapterController extends Controller
     /**
      * Board Details Base Query for all incoming chapters
      */
-    public function getIncomingBoardDetails($chId)
+    public function getIncomingBoardDetails(int $chId)
     {
         $chDetails = Chapters::with(['boardsIncoming'])->find($chId);
 
@@ -446,7 +440,7 @@ class BaseChapterController extends Controller
     /**
      * Board Details Base Query for all pending chapters
      */
-    public function getPendingBoardDetails($chId)
+    public function getPendingBoardDetails(int $chId)
     {
         $chDetails = Chapters::with(['boardsPending'])->find($chId);
 

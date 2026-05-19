@@ -3,14 +3,12 @@
 namespace App\Mail;
 
 use Illuminate\Mail\Mailables\Address;
-use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
-class InquiriesNoChapter extends BaseMailable
+class EOYElectionReportThankYouActive extends BaseMailable
 {
     public array $mailData;
-
 
     public function __construct(array $mailData)
     {
@@ -20,22 +18,22 @@ class InquiriesNoChapter extends BaseMailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address($this->mailData['inquiriesCoordEmail'], 'MOMS Club Inquiries'),
+            from: new Address('support@momsclub.org', 'MOMS Club'),
             replyTo: [
-                new Address($this->mailData['inquiriesCoordEmail'], 'MOMS Club Inquiries'),
+                new Address('support@momsclub.org', 'MOMS Club'),
             ],
-            subject: "MOMS Club Chapter Information",
+            subject: 'Election Report Submitted & Activated',
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.inquiries.nochapter',
+            markdown: 'emails.endofyear.electionreportthankyouactive',
         );
     }
 
-     public function attachments(): array
+    public function attachments(): array
     {
         return [];
     }

@@ -32,7 +32,7 @@ class UserController extends Controller implements HasMiddleware
     /**
      * Check Email duplication for Board Member or Coordinator when Adding or Updating
      */
-    public function checkEmail($email): JsonResponse
+    public function checkEmail(string $email): JsonResponse
     {
         $isExists = User::where('email', $email)->first();
 
@@ -180,7 +180,7 @@ class UserController extends Controller implements HasMiddleware
     /**
      * Get Reporting Tree -- for chapter display based on chapters reporting to logged in PC and coordinators under them
      */
-    public function loadReportingTree($cdId)
+    public function loadReportingTree(int $cdId)
     {
         $cdDetails = Coordinators::find($cdId);
         $cdLayerId = $cdDetails->layer_id;
@@ -197,7 +197,7 @@ class UserController extends Controller implements HasMiddleware
     /**
      * load Email Details -- Mail for full Board AND full Coordinator Downline
      */
-    public function loadEmailDetails($chId)
+    public function loadEmailDetails(int $chId)
     {
         $chDetails = Chapters::with(['state', 'documents', 'boards', 'coordinatorTree', 'boardsDisbanded', 'documentsEOY'])->find($chId);
         $chActiveId = $chDetails->active_status;
@@ -245,7 +245,7 @@ class UserController extends Controller implements HasMiddleware
     /**
      * load Email Details -- Mail for Coordinator Downline bassed on CoordId
      */
-    public function loadCoordEmailDetails($cdId)
+    public function loadCoordEmailDetails(int $cdId)
     {
         $cdDetails = Coordinators::with(['coordTree'])->find($cdId);
         $coordinators = $cdDetails->coordTree()->get();
@@ -307,7 +307,7 @@ class UserController extends Controller implements HasMiddleware
         ];
     }
 
-    public function loadCoordEmailDownlineDetails($cdId)
+    public function loadCoordEmailDownlineDetails(int $cdId)
     {
         // Find all coordinators whose coordTree contains $cdId in any layer
         $downlineCoordinators = Coordinators::with(['coordTree'])
@@ -365,7 +365,7 @@ class UserController extends Controller implements HasMiddleware
     /**
      * load Coordinator List for a PC selected and their downline
      */
-    public function loadCoordinatorList($chPcId): JsonResponse
+    public function loadCoordinatorList(int $chPcId): JsonResponse
     {
         $coordiantors = CoordinatorTree::with('coordinator')
             ->where('coordinator_id', $chPcId)
@@ -387,6 +387,7 @@ class UserController extends Controller implements HasMiddleware
 
         $str = '';   // Prepare the empty string for coordinator details
         $i = 0;
+        $coordinatorData = [];
         if (! empty($coordinatorList)) {
             $coordinators = Coordinators::with(['displayPosition', 'secondaryPosition'])->whereIn('id', $coordinatorList)
                 // ->where('active_status', 1)
@@ -394,7 +395,6 @@ class UserController extends Controller implements HasMiddleware
                 ->get();
 
             // Iterate over coordinators in the reversed order
-            $coordinatorData = [];
             foreach ($coordinators as $cor) {
                 $name = $cor->first_name.' '.$cor->last_name;
                 $email = $cor->email;
@@ -431,53 +431,7 @@ class UserController extends Controller implements HasMiddleware
         return response()->json($coordinatorData);
     }
 
-        //     foreach ($coordinators as $cor) {
-        //         $name = $cor->first_name.' '.$cor->last_name;
-        //         $email = $cor->email;
-        //         $displayPosition = $cor->displayPosition ? $cor->displayPosition->short_title : '';
-        //         $secondaryTitles = '';
-
-        //         // Handle secondary positions
-        //         if (! empty($cor->secondaryPosition) && $cor->secondaryPosition->count() > 0) {
-        //             $secondaryTitles = $cor->secondaryPosition->pluck('short_title')->implode('/');
-        //         }
-
-        //         // Combine primary and secondary positions
-        //         $position = '';
-        //         if ($displayPosition) {
-        //             $position = "({$displayPosition}";
-
-        //             if (! empty($secondaryTitles)) {
-        //                 $position .= '/'.$secondaryTitles;
-        //             }
-
-        //             $position .= ')';
-        //         }
-
-        //         // Set the title based on the iteration index
-        //         $title = match ($i) {
-        //             0 => 'Primary Coordinator:',
-        //             1 => 'Secondary Coordinator:',
-        //             2 => 'Additional Coordinator:',
-        //             default => ''
-        //         };
-
-        //         // Build name with or without mailto link based on active status
-        //         $nameDisplay = $cor->active_status == 1
-        //             ? "<a href='mailto:{$email}' target='_top'>{$name}</a>"
-        //             : $name.'/Retired';
-
-        //         // Build the final string
-        //         $str .= "<b>{$title}</b><span class='float-end'>{$nameDisplay} {$position}</span><br>";
-        //         $i++;
-
-        //     }
-        // }
-
-        // return response()->json($str);
-
-
-    public function loadReportToCoord($cdId)
+    public function loadReportToCoord(int $cdId)
     {
         $rcDetails = Coordinators::with(['displayPosition', 'secondaryPosition', 'reportsTo'])
             ->where('id', '=', $cdId)
@@ -496,7 +450,7 @@ class UserController extends Controller implements HasMiddleware
     /**
      * Load Conference Coordinator Information for each Conference based on the PC selected - used for emails and pdfs
      */
-    public function loadConferenceCoord($chPcid)
+    public function loadConferenceCoord(int $chPcid)
     {
         $layer1 = CoordinatorTree::where('coordinator_id', $chPcid)
             ->value('layer1'); // Fetch only the value of the 'layer1' column
@@ -517,15 +471,14 @@ class UserController extends Controller implements HasMiddleware
         $cc_pos = $ccDetails?->displayPosition->long_title;
 
         return ['cc_id' => $cc_id, 'cc_fname' => $cc_fname, 'cc_lname' => $cc_lname, 'cc_pos' => $cc_pos, 'cc_email' => $cc_email,
-            'cc_conf_name' => $cc_conf_name, 'cc_conf_desc' => $cc_conf_desc, 'cc_id' => $cc_id, 'cc_phone' => $cc_phone,
-            'cc_layer_id' => $cc_layer_id,
+            'cc_conf_name' => $cc_conf_name, 'cc_conf_desc' => $cc_conf_desc, 'cc_phone' => $cc_phone, 'cc_layer_id' => $cc_layer_id,
         ];
     }
 
     /**
      * Load Conference Coordinator Information for each Conference based on the Conference selected - used for emails and pdfs
      */
-    public function loadConferenceCoordConf($cdConfId)
+    public function loadConferenceCoordConf(int $cdConfId)
     {
         $ccDetails = Coordinators::with(['displayPosition', 'secondaryPosition'])
             ->where('conference_id', $cdConfId)
@@ -546,8 +499,7 @@ class UserController extends Controller implements HasMiddleware
         $cc_pos = $ccDetails?->displayPosition->long_title;
 
         return ['cc_id' => $cc_id, 'cc_fname' => $cc_fname, 'cc_lname' => $cc_lname, 'cc_pos' => $cc_pos, 'cc_email' => $cc_email,
-            'cc_conf_name' => $cc_conf_name, 'cc_conf_desc' => $cc_conf_desc, 'cc_id' => $cc_id, 'cc_phone' => $cc_phone,
-            'cc_layer_id' => $cc_layer_id,
+            'cc_conf_name' => $cc_conf_name, 'cc_conf_desc' => $cc_conf_desc, 'cc_phone' => $cc_phone, 'cc_layer_id' => $cc_layer_id,
         ];
     }
 
@@ -586,7 +538,7 @@ class UserController extends Controller implements HasMiddleware
     /**
      * Load Primkary Dropdown List
      */
-    public function loadPrimaryList($chRegId, $chConfId)
+    public function loadPrimaryList(int $chRegId, int $chConfId)
     {
         $chList = Chapters::with([
             'primaryCoordinator' => function ($query) use ($chRegId, $chConfId) {
@@ -639,7 +591,7 @@ class UserController extends Controller implements HasMiddleware
      * Load Reviewer Dropdown List
      */
     // Remove the reportReviewer relationship entirely and just query coordinators directly
-    public function loadReviewerList($chRegId, $chConfId)
+    public function loadReviewerList(int $chRegId, int $chConfId)
     {
         $rrList = Coordinators::with(['displayPosition', 'secondaryPosition'])
             ->where(function ($q) use ($chRegId, $chConfId) {
@@ -683,7 +635,7 @@ class UserController extends Controller implements HasMiddleware
     /**
      * Load Reports To Dropdown List
      */
-    public function loadReportsToList($cdId, $cdConfId, $cdPositionid)
+    public function loadReportsToList(int $cdId, int $cdConfId, int $cdPositionid)
     {
         if ($cdConfId == 0 || $cdPositionid == CoordinatorPosition::CC) {
             $rcList = Coordinators::with(['displayPosition', 'secondaryPosition'])
@@ -738,7 +690,7 @@ class UserController extends Controller implements HasMiddleware
     /**
      * Update User to Outgoing when replaced on board
      */
-    public function updateUserToOutgoing($userId, $updatedBy)
+    public function updateUserToOutgoing(int $userId, array $updatedBy)
     {
         $boardDetails = Boards::where('user_id', $userId)->get();
 
@@ -801,7 +753,7 @@ class UserController extends Controller implements HasMiddleware
      * Load Grant Reviewer Dropdown List
      */
     // Remove the reportReviewer relationship entirely and just query coordinators directly
-    public function loadGrantReviewerList($chConfId)
+    public function loadGrantReviewerList(int $chConfId)
     {
         $grList = Coordinators::with(['displayPosition', 'secondaryPosition'])
             ->where('active_status', 1)

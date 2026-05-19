@@ -35,7 +35,7 @@ class PositionConditionsService
     /**
      * Get all position-based conditions for a user  // Loaded automatically for blades in ViewServiceProvider
      */
-    public function getConditionsForUser($positionId, $secPositionId = [], $coorId = null)
+    public function getConditionsForUser(int $positionId, $secPositionId = [], $coorId = null)
     {
         // Handle null values gracefully
         $positionId = (int) ($positionId ?? 0);
@@ -225,7 +225,7 @@ class PositionConditionsService
         ];
     }
 
-    public function getViewAs(int $userTypeId, $PresDetails): array
+    public function getViewAs(int $userTypeId, object $PresDetails): array
     {
         $viewingAs = session('viewing_as', 'board');
         $presTypeId = $PresDetails?->user?->type_id ?? null;

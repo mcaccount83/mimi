@@ -8,11 +8,11 @@ use Illuminate\Mail\Mailables\Envelope;
 
 class NameChangeEINNotice extends BaseMailable
 {
-    public $mailData;
+    public array $mailData;
 
-    protected $pdfPath;
+    protected string $pdfPath;
 
-    public function __construct($mailData, $pdfPath)
+    public function __construct(array $mailData, string $pdfPath)
     {
         $this->mailData = $mailData;
         $this->pdfPath = $pdfPath;

@@ -34,25 +34,13 @@ use Illuminate\View\View;
 
 class EOYReportController extends Controller implements HasMiddleware
 {
-    protected $positionConditionsService;
-
-    protected $userController;
-
-    protected $baseChapterController;
-
-    protected $baseMailDataController;
-
-    protected $financialReportController;
-
-    public function __construct(PositionConditionsService $positionConditionsService, UserController $userController, BaseChapterController $baseChapterController, BaseMailDataController $baseMailDataController,
-        FinancialReportController $financialReportController)
-    {
-        $this->positionConditionsService = $positionConditionsService;
-        $this->userController = $userController;
-        $this->baseChapterController = $baseChapterController;
-        $this->baseMailDataController = $baseMailDataController;
-        $this->financialReportController = $financialReportController;
-    }
+    public function __construct(
+        protected UserController $userController,
+        protected BaseChapterController $baseChapterController,
+        protected BaseMailDataController $baseMailDataController,
+        protected FinancialReportController $financialReportController,
+        protected PositionConditionsService $positionConditionsService,
+    ) {}
 
     public static function middleware(): array
     {
@@ -61,42 +49,6 @@ class EOYReportController extends Controller implements HasMiddleware
             \App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class,
         ];
     }
-
-    // /**
-    //  * View the EOY Report Title
-    //  */
-    // public function getPageTitle(Request $request)
-    // {
-    //     $user = $this->userController->loadUserInformation($request);
-    //     $positionId = $user['cdPositionId'];
-    //     $secPositionId = $user['cdSecPositionId'];
-    //     $userAdmin = $user['userAdmin'];
-    //     $admin = ($userAdmin == '1' || $userAdmin == '2');
-
-    //     $conditions = $this->positionConditionsService->getConditionsForUser($positionId, $secPositionId);
-    //     $eoyTestCondition = $conditions['eoyTestCondition'];
-
-    //     $EOYOptions = $this->positionConditionsService->getEOYOptions();
-    //     $displayEOYTESTING = $EOYOptions['displayEOYTESTING'];
-    //     $displayEOYLIVE = $EOYOptions['displayEOYLIVE'];
-
-    //     $titles = [
-    //         'eoy_reports' => 'End of Year Reports',
-    //         'eoy_details' => 'EOY Details',
-    //     ];
-
-    //     if ($admin && ! $displayEOYTESTING && ! $displayEOYLIVE) {
-    //         $titles['eoy_reports'] .= ' *ADMIN*';
-    //         $titles['eoy_details'] .= ' *ADMIN*';
-    //     }
-
-    //     if ($eoyTestCondition && $displayEOYTESTING) {
-    //         $titles['eoy_reports'] .= ' *TESTING*';
-    //         $titles['eoy_details'] .= ' *TESTING*';
-    //     }
-
-    //     return $titles;
-    // }
 
     /**
      * View the EOY Status list
@@ -147,7 +99,7 @@ class EOYReportController extends Controller implements HasMiddleware
     /**
      * Edit the EOY Status Details
      */
-    public function editEOYDetails(Request $request, $id): View
+    public function editEOYDetails(Request $request, int $id): View
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -179,6 +131,8 @@ class EOYReportController extends Controller implements HasMiddleware
             $baseBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
         } elseif ($chActiveId == ChapterStatusEnum::ZAPPED) {
             $baseBoardQuery = $this->baseChapterController->getDisbandedBoardDetails($id);
+        } else {
+            throw new \RuntimeException("Unexpected chapter status: {$chActiveId}");
         }
 
         $PresDetails = $baseBoardQuery['PresDetails'];
@@ -198,7 +152,7 @@ class EOYReportController extends Controller implements HasMiddleware
     /**
      * Update the EOY Status Details
      */
-    public function updateEOYDetails(Request $request, $id): RedirectResponse
+    public function updateEOYDetails(Request $request, int $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -309,43 +263,6 @@ class EOYReportController extends Controller implements HasMiddleware
         $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
         $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
-        // $activationStatuses = [];
-
-        // Check if the board activation button was clicked
-        // if ($request->has('board') && $request->input('board') == 'active') {
-        //     foreach ($chapterList as $chapter) {
-        //         $BoardsIncomingDetails = BoardsIncoming::where('chapter_id', $chapter->id)->get();
-
-        //         if ($BoardsIncomingDetails && count($BoardsIncomingDetails) > 0) {
-        //             try {
-        //                 $activationResult = $this->financialReportController->activateSingleBoard($request, $chapter->id);
-        //                 $activationStatuses[$chapter->id] = $activationResult == 'success' ? 'success' : 'fail';
-        //             } catch (\Exception $e) {
-        //                 $activationStatuses[$chapter->id] = 'fail';
-        //                 Log::error("Board activation unsuccessful for chapter {$chapter->id}: " . $e->getMessage());
-        //             }
-        //         }
-        //     }
-
-        //     // Process results after all activations are attempted
-        //     $successfulActivations = array_filter($activationStatuses, function ($status) {
-        //         return $status == 'success';
-        //     });
-
-        //     if (count($activationStatuses) == 0) {
-        //         return redirect()->to('/eoyreports/boardreport')->with('info', 'No Incoming Board Members for Activation');
-        //     } elseif (count($successfulActivations) == count($activationStatuses)) {
-        //         return redirect()->to('/eoyreports/boardreport')->with('success', 'All Board Info has been successfully activated');
-        //     } elseif (count($successfulActivations) > 0) {
-        //         $successCount = count($successfulActivations);
-        //         $totalCount = count($activationStatuses);
-
-        //         return redirect()->to('/eoyreports/boardreport')->with('warning', "Board activation completed: {$successCount}/{$totalCount} successful");
-        //     } else {
-        //         return redirect()->to('/eoyreports/boardreport')->with('fail', 'Board activation failed for all chapters');
-        //     }
-        // }
-
         $countList = count($chapterList);
         $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status, 'checkBox2Status' => $checkBox2Status,
             'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
@@ -358,7 +275,7 @@ class EOYReportController extends Controller implements HasMiddleware
     /**
      * Board Info Report Details
      */
-    public function editBoardReport(Request $request, $id)
+    public function editBoardReport(Request $request, int $id)
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -398,22 +315,6 @@ class EOYReportController extends Controller implements HasMiddleware
         $allStates = State::all();  // Full List for Dropdown Menu
         $allCountries = $baseQuery['allCountries'];
 
-        // Check if the board activation button was clicked
-        // if ($request->has('board') && $request->input('board') == 'active') {
-        //     try {
-        //         $status = $this->financialReportController->activateSingleBoard($request, $id);
-
-        //         if ($status == 'success') {
-        //             return redirect()->back()->with('success', 'Board activation successful');
-        //         } else {
-        //             return redirect()->back()->with('fail', 'Board activation failed');
-        //         }
-        //     } catch (\Exception $e) {
-        //         Log::error('Board activation error: ' . $e->getMessage());
-        //         return redirect()->back()->with('fail', 'Board activation failed');
-        //     }
-        // }
-
         $data = [
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
@@ -424,7 +325,7 @@ class EOYReportController extends Controller implements HasMiddleware
         return view('coordinators.eoyreports.editboardreport')->with($data);
     }
 
-    public function updateEOYBoardReport(Request $request, $chapter_id): RedirectResponse
+    public function updateEOYBoardReport(Request $request, int $chapter_id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];
@@ -562,7 +463,7 @@ class EOYReportController extends Controller implements HasMiddleware
     /**
      * Financial Report for Coordinator side for Reviewing of Chapters
      */
-    public function editFinancialReview(Request $request, $id): View
+    public function editFinancialReview(Request $request, int $id): View
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -599,7 +500,7 @@ class EOYReportController extends Controller implements HasMiddleware
         return view('coordinators.eoyreports.editfinancialreview')->with($data);
     }
 
-    public function saveAccordionFields($financialReportReview, $input)
+    public function saveAccordionFields(FinancialReportReview $financialReportReview, array $input)
     {
         // CHAPTER DUES
         $financialReportReview->roster_attached = $input['checkRosterAttached'] ?? null;
@@ -658,7 +559,7 @@ class EOYReportController extends Controller implements HasMiddleware
     /**
      * Save Financial Report Review
      */
-    public function updateEOYFinancialReport(Request $request, $id): RedirectResponse
+    public function updateEOYFinancialReport(Request $request, int $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -747,7 +648,7 @@ class EOYReportController extends Controller implements HasMiddleware
     /**
      * Unsubmit Report
      */
-    public function updateUnsubmit(Request $request, $id): RedirectResponse
+    public function updateUnsubmit(Request $request, int $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
@@ -788,7 +689,7 @@ class EOYReportController extends Controller implements HasMiddleware
     /**
      * Unsubmit Final Report
      */
-    public function updateUnsubmitFinal(Request $request, $id): RedirectResponse
+    public function updateUnsubmitFinal(Request $request, int $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
@@ -833,7 +734,7 @@ class EOYReportController extends Controller implements HasMiddleware
     /**
      * Clear Report Review
      */
-    public function updateClearReview(Request $request, $id): RedirectResponse
+    public function updateClearReview(Request $request, int $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
@@ -914,7 +815,7 @@ class EOYReportController extends Controller implements HasMiddleware
     /**
      * View the Attachments Details
      */
-    public function editEOYAttachments(Request $request, $id): View
+    public function editEOYAttachments(Request $request, int $id): View
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -946,7 +847,7 @@ class EOYReportController extends Controller implements HasMiddleware
     /**
      * Update the Attachments Details
      */
-    public function updateEOYAttachments(Request $request, $id): RedirectResponse
+    public function updateEOYAttachments(Request $request, int $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
@@ -1031,7 +932,7 @@ class EOYReportController extends Controller implements HasMiddleware
     /**
      * View the EOY Boundary Details
      */
-    public function editEOYBoundaries(Request $request, $id): View
+    public function editEOYBoundaries(Request $request, int $id): View
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -1063,7 +964,7 @@ class EOYReportController extends Controller implements HasMiddleware
     /**
      * Update the EOY Boundary Details
      */
-    public function updateEOYBoundaries(Request $request, $id): RedirectResponse
+    public function updateEOYBoundaries(Request $request, int $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
@@ -1170,7 +1071,7 @@ class EOYReportController extends Controller implements HasMiddleware
     /**
      * View the EOY Award Details
      */
-    public function editEOYAwards(Request $request, $id): View
+    public function editEOYAwards(Request $request, int $id): View
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -1203,7 +1104,7 @@ class EOYReportController extends Controller implements HasMiddleware
     /**
      * Update the EOY Award Details
      */
-    public function updateEOYAwards(Request $request, $id): RedirectResponse
+    public function updateEOYAwards(Request $request, int $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
@@ -1250,7 +1151,7 @@ class EOYReportController extends Controller implements HasMiddleware
     /**
      * View chapter award history
      */
-    public function viewEOYAwardsHistory(Request $request, $id): View
+    public function viewEOYAwardsHistory(Request $request, int $id): View
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -1341,7 +1242,7 @@ class EOYReportController extends Controller implements HasMiddleware
     /**
      * View the 990N Filing Details
      */
-    public function editIRSSubmission(Request $request, $id): View
+    public function editIRSSubmission(Request $request, int $id): View
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -1371,7 +1272,7 @@ class EOYReportController extends Controller implements HasMiddleware
     /**
      * Update the 990N Filing Details
      */
-    public function updateIRSSubmission(Request $request, $id): RedirectResponse
+    public function updateIRSSubmission(Request $request, int $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];

@@ -9,9 +9,9 @@ use Illuminate\Mail\Mailables\Attachment;
 
 class EOYChapterAwards extends BaseMailable
 {
-    public $mailData;
+    public array $mailData;
 
-    public function __construct($mailData)
+    public function __construct(array $mailData)
     {
         $this->mailData = $mailData;
     }

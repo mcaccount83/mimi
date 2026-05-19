@@ -9,13 +9,13 @@ use Illuminate\Mail\Mailables\Envelope;
 
 class EOYFinancialReportThankYou extends BaseMailable
 {
-    public $mailData;
+    public array $mailData;
 
-    protected $pdfPath;
+    protected string $pdfPath;
 
-    protected $reportYearRange;
+    protected string $reportYearRange;
 
-    public function __construct($mailData, $pdfPath, $reportYearRange)
+    public function __construct(array $mailData, string $pdfPath, string $reportYearRange)
     {
         $this->mailData = $mailData;
         $this->pdfPath = $pdfPath;

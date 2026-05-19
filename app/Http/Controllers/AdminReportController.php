@@ -27,22 +27,12 @@ use Dcblogdev\LaravelSentEmails\Models\SentEmail;
 
 class AdminReportController extends Controller implements HasMiddleware
 {
-    protected $userController;
-
-    protected $baseChapterController;
-
-    protected $baseCoordinatorController;
-
-    protected $positionConditionsService;
-
-    public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController,
-             PositionConditionsService $positionConditionsService)
-    {
-        $this->userController = $userController;
-        $this->baseChapterController = $baseChapterController;
-        $this->baseCoordinatorController = $baseCoordinatorController;
-        $this->positionConditionsService = $positionConditionsService;
-    }
+    public function __construct(
+        protected UserController $userController,
+        protected BaseChapterController $baseChapterController,
+        protected BaseCoordinatorController $baseCoordinatorController,
+        protected PositionConditionsService $positionConditionsService,
+    ) {}
 
     public static function middleware(): array
     {
@@ -96,7 +86,7 @@ class AdminReportController extends Controller implements HasMiddleware
     /**
      * View Payment Log Transaction Details
      */
-    public function showPaymentDetails($id): View
+    public function showPaymentDetails(int $id): View
     {
         $log = PaymentLog::findOrFail($id);
 
@@ -174,7 +164,7 @@ class AdminReportController extends Controller implements HasMiddleware
         return view('coordinators.adminreports.rereg')->with($data);
     }
 
-    public function editReReg(Request $request, $id): View
+    public function editReReg(Request $request, int $id): View
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -207,7 +197,7 @@ class AdminReportController extends Controller implements HasMiddleware
         return view('coordinators.adminreports.editrereg')->with($data);
     }
 
-    public function updateReReg(Request $request, $id): RedirectResponse
+    public function updateReReg(Request $request, int $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
@@ -280,7 +270,7 @@ class AdminReportController extends Controller implements HasMiddleware
         return view('coordinators.adminreports.inquiriesnotify')->with($data);
     }
 
-   public function updateInquiriesEmail(Request $request, $id)
+   public function updateInquiriesEmail(Request $request, int $id)
 {
     try {
 
@@ -349,7 +339,7 @@ public function inquiriesMap(Request $request): View
         return view('coordinators.adminreports.inquiriesmap')->with($data);
     }
 
-   public function updateInquiriesMap(Request $request, $id)
+   public function updateInquiriesMap(Request $request, int $id)
 {
     try {
 

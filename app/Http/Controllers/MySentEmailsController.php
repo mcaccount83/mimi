@@ -16,15 +16,11 @@ use App\Services\PositionConditionsService;
 // class MySentEmailsController extends SentEmailsController implements HasMiddleware
 class MySentEmailsController extends Controller implements HasMiddleware
 {
-    protected $userController;
+    public function __construct(
+        protected UserController $userController,
+        protected PositionConditionsService $positionConditionsService,
+    ) {}
 
-    protected $positionConditionsService;
-
-    public function __construct(UserController $userController, PositionConditionsService $positionConditionsService)
-    {
-        $this->userController = $userController;
-        $this->positionConditionsService = $positionConditionsService;
-    }
 
     public static function middleware(): array
     {
@@ -62,6 +58,7 @@ class MySentEmailsController extends Controller implements HasMiddleware
 
         // Determine which emails to filter by
         $filterEmails = [];
+        $regions = [];
 
         if ($checkBox81Status) {
             // Show ALL emails - no filter needed

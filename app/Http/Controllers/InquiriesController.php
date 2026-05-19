@@ -19,18 +19,11 @@ use Illuminate\View\View;
 
 class InquiriesController extends Controller implements HasMiddleware
 {
-    protected $userController;
-
-    protected $baseChapterController;
-
-    protected PositionConditionsService $positionConditionsService;
-
-    public function __construct(UserController $userController, BaseChapterController $baseChapterController, PositionConditionsService $positionConditionsService)
-    {
-        $this->userController = $userController;
-        $this->baseChapterController = $baseChapterController;
-        $this->positionConditionsService = $positionConditionsService;
-    }
+    public function __construct(
+        protected UserController $userController,
+        protected BaseChapterController $baseChapterController,
+        protected PositionConditionsService $positionConditionsService,
+    ) {}
 
     public static function middleware(): array
     {
@@ -101,7 +94,7 @@ class InquiriesController extends Controller implements HasMiddleware
     /**
      *Edit Chapter EIN Notes
      */
-    public function editInquiryApplication(Request $request, $id): View
+    public function editInquiryApplication(Request $request, int $id): View
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -139,7 +132,7 @@ class InquiriesController extends Controller implements HasMiddleware
     /**
      *Update Chapter EIN Notes
      */
-    public function updateInquiryApplication(Request $request, $id): RedirectResponse
+    public function updateInquiryApplication(Request $request, int $id): RedirectResponse
     {
         $inquiry = InquiryApplication::find($id);
 
@@ -162,7 +155,7 @@ class InquiriesController extends Controller implements HasMiddleware
         }
     }
 
-     public function updateInquiryResponse(Request $request, $id): RedirectResponse
+     public function updateInquiryResponse(Request $request, int $id): RedirectResponse
     {
         $inquiry = InquiryApplication::find($id);
 
@@ -184,7 +177,7 @@ class InquiriesController extends Controller implements HasMiddleware
         }
     }
 
-    public function clearInquiryResponse(Request $request, $id): RedirectResponse
+    public function clearInquiryResponse(Request $request, int $id): RedirectResponse
     {
         $inquiry = InquiryApplication::find($id);
 

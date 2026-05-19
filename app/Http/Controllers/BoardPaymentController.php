@@ -32,28 +32,14 @@ use ReCaptcha\ReCaptcha;
 
 class BoardPaymentController extends Controller implements HasMiddleware
 {
-    protected $userController;
-
-    protected $baseBoardController;
-
-    protected $baseChapterController;
-
-    protected $baseMailDataController;
-
-    protected $positionConditionsService;
-
-    protected $googleController;
-
-    public function __construct(UserController $userController, BaseBoardController $baseBoardController, BaseMailDataController $baseMailDataController,
-    PositionConditionsService $positionConditionsService, GoogleController $googleController, BaseChapterController $baseChapterController)
-    {
-        $this->userController = $userController;
-        $this->baseBoardController = $baseBoardController;
-        $this->baseChapterController = $baseChapterController;
-        $this->baseMailDataController = $baseMailDataController;
-        $this->positionConditionsService = $positionConditionsService;
-        $this->googleController = $googleController;
-    }
+    public function __construct(
+        protected UserController $userController,
+        protected BaseBoardController $baseBoardController,
+        protected BaseMailDataController $baseMailDataController,
+        protected PositionConditionsService $positionConditionsService,
+        protected GoogleController $googleController,
+        protected BaseChapterController $baseChapterController,
+    ) {}
 
     public static function middleware(): array
     {
@@ -66,7 +52,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
     /**
      * Show Re-Registrstion Payment Form All Board Members
      */
-    public function editReregistrationPaymentForm(Request $request, $chId): View
+    public function editReregistrationPaymentForm(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -100,7 +86,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
     /**
      * Show M2M Donation Form All Board Members
      */
-    public function editDonationForm(Request $request, $chId): View
+    public function editDonationForm(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -121,7 +107,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
         return view('boards.donation')->with($data);
     }
 
-     public function editReregistrationPaymentFormNEW(Request $request, $chId): View
+     public function editReregistrationPaymentFormNEW(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -162,7 +148,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
     /**
      * Show M2M Donation Form All Board Members
      */
-    public function editDonationFormNEW(Request $request, $chId): View
+    public function editDonationFormNEW(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -624,8 +610,8 @@ class BoardPaymentController extends Controller implements HasMiddleware
     /**
      * Process payments with Authorize.net
      */
-    public function processPayment(Request $request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
-        $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip)
+    public function processPayment(Request $request, string $name, string $description, string $shortDescription, string $transactionType, int $confId, string $shippingCountry,
+        string $shippingFirst, string $shippingLast, string $shippingCompany, string $shippingAddress, string $shippingCity, int $shippingState, int $shippingZip)
     {
         if (app()->environment('local')) {
             $transactionTypeDetail = 'authOnlyTransaction';  // Auth Only for testing Purposes
@@ -633,12 +619,10 @@ class BoardPaymentController extends Controller implements HasMiddleware
             $transactionTypeDetail = $transactionType;  // Live Traansactions based on type of transaction set from request
         }
 
-        if ($transactionTypeDetail == 'authCaptureTransaction') {
-            $shortTransactionType = 'Processed';
-        }
-        if ($transactionTypeDetail == 'authOnlyTransaction') {
-            $shortTransactionType = 'AuthOnly';
-        }
+        $shortTransactionType = match($transactionTypeDetail) {
+            'authCaptureTransaction' => 'Processed',
+            'authOnlyTransaction' => 'AuthOnly',
+        };
 
         $members = $request->input('members');
         $late = $request->input('late');

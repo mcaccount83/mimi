@@ -20,19 +20,11 @@ use TeamTeaTime\Forum\Models\Category as ForumCategory;
 
 class ForumSubscriptionController extends Controller implements HasMiddleware
 {
-    protected $userController;
-
-    protected $baseChapterController;
-
-    protected $baseCoordinatorController;
-
-    public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController)
-    {
-
-        $this->userController = $userController;
-        $this->baseChapterController = $baseChapterController;
-        $this->baseCoordinatorController = $baseCoordinatorController;
-    }
+    public function __construct(
+        protected UserController $userController,
+        protected BaseChapterController $baseChapterController,
+        protected BaseCoordinatorController $baseCoordinatorController,
+    ) {}
 
     public static function middleware(): array
     {

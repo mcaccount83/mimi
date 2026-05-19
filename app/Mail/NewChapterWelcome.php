@@ -9,13 +9,13 @@ use Illuminate\Mail\Mailables\Envelope;
 
 class NewChapterWelcome extends BaseMailable
 {
-    public $mailData;
+    public array $mailData;
 
-    protected $pdfPath;
+    protected string $pdfPath;
 
-    protected $pdfPath2;
+    protected string $pdfPath2;
 
-    public function __construct($mailData, $pdfPath, $pdfPath2)
+    public function __construct(array $mailData, string $pdfPath, string $pdfPath2)
     {
         $this->mailData = $mailData;
         $this->pdfPath = $pdfPath;

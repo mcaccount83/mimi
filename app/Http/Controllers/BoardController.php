@@ -9,6 +9,8 @@ use App\Mail\BorUpdateListNoitce;
 use App\Mail\ChapProfileUpdatePCNotice;
 use App\Mail\EOYElectionReportSubmitted;
 use App\Mail\EOYElectionReportThankYou;
+use App\Mail\EOYElectionReportSubmittedActive;
+use App\Mail\EOYElectionReportThankYouActive;
 use App\Mail\EOYFinancialReportThankYou;
 use App\Mail\EOYFinancialSubmitted;
 use App\Mail\GrantRequestThankYou;
@@ -51,44 +53,19 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class BoardController extends Controller implements HasMiddleware
 {
-    protected $userController;
-
-    protected $positionConditionsService;
-
-    protected $baseBoardController;
-
-    protected $baseChapterController;
-
-    protected $forumSubscriptionController;
-
-    protected $pdfController;
-
-    protected $baseMailDataController;
-
-    protected $emailTableController;
-
-    protected $financialReportController;
-
-    protected $learndashService;
-
-    protected $googleController;
-
-    public function __construct(UserController $userController, BaseBoardController $baseBoardController, PDFController $pdfController, PositionConditionsService $positionConditionsService,
-        ForumSubscriptionController $forumSubscriptionController, BaseMailDataController $baseMailDataController, FinancialReportController $financialReportController,
-        EmailTableController $emailTableController, GoogleController $googleController, BaseChapterController $baseChapterController, LearnDashService $learndashService)
-    {
-        $this->userController = $userController;
-        $this->pdfController = $pdfController;
-        $this->baseBoardController = $baseBoardController;
-        $this->baseChapterController = $baseChapterController;
-        $this->forumSubscriptionController = $forumSubscriptionController;
-        $this->positionConditionsService = $positionConditionsService;
-        $this->baseMailDataController = $baseMailDataController;
-        $this->emailTableController = $emailTableController;
-        $this->financialReportController = $financialReportController;
-        $this->learndashService = $learndashService;
-        $this->googleController = $googleController;
-    }
+    public function __construct(
+        protected UserController $userController,
+        protected BaseBoardController $baseBoardController,
+        protected PDFController $pdfController,
+        protected PositionConditionsService $positionConditionsService,
+        protected ForumSubscriptionController $forumSubscriptionController,
+        protected BaseMailDataController $baseMailDataController,
+        protected FinancialReportController $financialReportController,
+        protected EmailTableController $emailTableController,
+        protected GoogleController $googleController,
+        protected BaseChapterController $baseChapterController,
+        protected LearnDashService $learndashService,
+    ) {}
 
     public static function middleware(): array
     {
@@ -100,61 +77,9 @@ class BoardController extends Controller implements HasMiddleware
     }
 
     /**
-     * Reset Password
-     */
-    // public function updatePassword(Request $request): JsonResponse
-    // {
-    //     try {
-    //         $request->validate([
-    //             'current_password' => 'required',
-    //             'new_password' => 'required|string|min:8|confirmed',
-    //         ]);
-
-    //         $user = $request->user();
-
-    //         // Ensure the current password is correct
-    //         if (! Hash::check($request->current_password, $user->password)) {
-    //             return response()->json(['error' => 'Current password is incorrect'], 400);
-    //         }
-
-    //         // Update the user's password
-    //         $user->password = Hash::make($request->new_password);
-    //         $user->remember_token = null; // Reset the remember token
-    //         $user->save();
-
-    //         return response()->json(['message' => 'Password updated successfully']);
-    //     } catch (\Illuminate\Validation\ValidationException $e) {
-    //         return response()->json(['success' => false, 'errors' => $e->errors()], 422);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['success' => false, 'error' => 'An error occurred while updating the password.'], 500);
-    //     }
-    // }
-
-    /**
-     * Verify Current Passwor for Reset
-     */
-    // public function checkCurrentPassword(Request $request): JsonResponse
-    // {
-    //     try {
-    //         $request->validate([
-    //             'current_password' => 'required',
-    //         ]);
-
-    //         $user = $request->user();
-    //         $isValid = Hash::check($request->current_password, $user->password);
-
-    //         return response()->json(['isValid' => $isValid]);
-    //     } catch (\Illuminate\Validation\ValidationException $e) {
-    //         return response()->json(['success' => false, 'errors' => $e->errors()], 422);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['success' => false, 'error' => 'An error occurred while checking the password.'], 500);
-    //     }
-    // }
-
-    /**
      * View Board Details Board Member Login
      */
-    public function chapterProfile(Request $request, $chId): View
+    public function chapterProfile(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -235,7 +160,7 @@ class BoardController extends Controller implements HasMiddleware
         return view('boards.view')->with($data);
     }
 
-    public function viewDocuments(Request $request, $chId): View
+    public function viewDocuments(Request $request, int $chId): View
     {
     $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -287,7 +212,7 @@ class BoardController extends Controller implements HasMiddleware
         return view('boards.documents')->with($data);
     }
 
-    public function viewReRegHistory(Request $request, $chId): View
+    public function viewReRegHistory(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -368,7 +293,7 @@ class BoardController extends Controller implements HasMiddleware
         return view('boards.rereghistory')->with($data);
     }
 
-    public function viewDonationHistory(Request $request, $chId): View
+    public function viewDonationHistory(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -449,7 +374,7 @@ class BoardController extends Controller implements HasMiddleware
         return view('boards.donationhistory')->with($data);
     }
 
-    public function viewAwardHistory(Request $request, $chId): View
+    public function viewAwardHistory(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -490,7 +415,7 @@ class BoardController extends Controller implements HasMiddleware
         return view('boards.awardhistory')->with($data);
     }
 
-    public function editBoard(Request $request, $chId): View
+    public function editBoard(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -543,7 +468,7 @@ class BoardController extends Controller implements HasMiddleware
     /**
      *Update Chapter Board Information
      */
-    private function updateBoardMember($chapter, $position, $requestData, $updatedBy, $updatedId, $defaultBoardCategories)
+    private function updateBoardMember(object $chapter, int $position, object $requestData, array $updatedBy, int $updatedId, array $defaultBoardCategories)
     {
         $positionConfig = [
             'president' => [
@@ -634,7 +559,7 @@ class BoardController extends Controller implements HasMiddleware
         }
     }
 
-    private function updateUserToOutgoing($user)
+    private function updateUserToOutgoing(object $user)
     {
         User::where('id', $user->id)->update([
             'type_id' => UserTypeEnum::OUTGOING,
@@ -642,7 +567,7 @@ class BoardController extends Controller implements HasMiddleware
         ]);
     }
 
-    private function createOutgoingBoardMember($user, $bdDetails, $updatedBy, $updatedId)
+    private function createOutgoingBoardMember(object $user, object $bdDetails, array $updatedBy, int $updatedId)
     {
         BoardsOutgoing::updateOrCreate(
             [
@@ -665,13 +590,13 @@ class BoardController extends Controller implements HasMiddleware
         );
     }
 
-    private function removeActiveBoardMember($user)
+    private function removeActiveBoardMember(object $user)
     {
         Boards::where('user_id', $user->id)->delete();
         ForumCategorySubscription::where('user_id', $user->id)->delete();
     }
 
-    private function updateExistingBoardMember($user, $boardMember, $requestData, $prefix, $updatedBy, $updatedId, $defaultBoardCategories)
+    private function updateExistingBoardMember(object $user, object $boardMember, object $requestData, string $prefix, array $updatedBy, int $updatedId, array $defaultBoardCategories)
     {
         $firstName = $requestData->input($prefix.'fname');
         $lastName = $requestData->input($prefix.'lname');
@@ -713,7 +638,7 @@ class BoardController extends Controller implements HasMiddleware
         }
     }
 
-    private function createNewBoardMember($chapter, $relation, $positionId, $requestData, $prefix, $updatedBy, $updatedId, $defaultBoardCategories)
+    private function createNewBoardMember(object $chapter, int $relation, int $positionId, object $requestData, string $prefix, array $updatedBy, int $updatedId, array $defaultBoardCategories)
     {
         $firstName = $requestData->input($prefix.'fname');
         $lastName = $requestData->input($prefix.'lname');
@@ -773,7 +698,7 @@ class BoardController extends Controller implements HasMiddleware
         }
     }
 
-    public function updateBoard(Request $request, $id): RedirectResponse
+    public function updateBoard(Request $request, int $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
@@ -882,7 +807,7 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * Show Manual Order Form All Board Members
      */
-    public function editManualOrderForm(Request $request, $chId): View
+    public function editManualOrderForm(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -911,7 +836,7 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * Show Probation Submission Form All Board Members
      */
-    public function editProbationSubmission(Request $request, $chId): View
+    public function editProbationSubmission(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -951,7 +876,7 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * Update Probation Submission Form All Board Members
      */
-    public function updateProbationSubmission(Request $request, $chId): RedirectResponse
+    public function updateProbationSubmission(Request $request, int $chId): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
@@ -1018,7 +943,7 @@ class BoardController extends Controller implements HasMiddleware
         }
     }
 
-     public function editOnlineInfo(Request $request, $chId): View
+     public function editOnlineInfo(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -1053,7 +978,7 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * Update Probation Submission Form All Board Members
      */
-    public function updateOnlineInfo(Request $request, $chId): RedirectResponse
+    public function updateOnlineInfo(Request $request, int $chId): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
@@ -1123,7 +1048,7 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * Show Chater Resources
      */
-    public function viewResources(Request $request, $chId): View
+    public function viewResources(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -1153,7 +1078,7 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * Show EOY BoardInfo All Board Members
      */
-     public function viewEndOfYear(Request $request, $chId): View
+     public function viewEndOfYear(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -1194,7 +1119,7 @@ class BoardController extends Controller implements HasMiddleware
         return view('boards.endofyear')->with($data);
     }
 
-        public function editBoardReport(Request $request, $chId): View
+        public function editBoardReport(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -1250,7 +1175,7 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * Update EOY BoardInfo All Board Members
      */
-    public function updateBoardReport(Request $request, $chId): RedirectResponse
+    public function updateBoardReport(Request $request, int $chId): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];
@@ -1317,20 +1242,20 @@ class BoardController extends Controller implements HasMiddleware
 
                 if (count($PREDetails) != 0) {
                     BoardsIncoming::where('id', $presId)
-                        ->update($this->financialReportController->getBoardMemberData($request, 'ch_pre_', $updatedBy, $updatedId, $userId));
+                        ->update($this->financialReportController->getBoardMemberData($request, 'ch_pre_', $updatedBy, $userId));
                 } else {
                     BoardsIncoming::create(array_merge(
                         ['chapter_id' => $chId, 'board_position_id' => BoardPosition::PRES],
-                        $this->financialReportController->getBoardMemberData($request, 'ch_pre_', $updatedBy, $updatedId, $userId)
+                        $this->financialReportController->getBoardMemberData($request, 'ch_pre_', $updatedBy, $userId)
                     ));
                 }
             }
 
             // Handle other board positions
-            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::AVP, 'ch_avp_', 'AVPVacant', 'avpID', $request, $updatedBy, $updatedId, $userId);
-            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::MVP, 'ch_mvp_', 'MVPVacant', 'mvpID', $request, $updatedBy, $updatedId, $userId);
-            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::TRS, 'ch_trs_', 'TreasVacant', 'trsID', $request, $updatedBy, $updatedId, $userId);
-            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::SEC, 'ch_sec_', 'SecVacant', 'secID', $request, $updatedBy, $updatedId, $userId);
+            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::AVP, 'ch_avp_', 'AVPVacant', 'avpID', $request, $updatedBy, $userId);
+            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::MVP, 'ch_mvp_', 'MVPVacant', 'mvpID', $request, $updatedBy, $userId);
+            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::TRS, 'ch_trs_', 'TreasVacant', 'trsID', $request, $updatedBy, $userId);
+            $this->financialReportController->updateIncomingBoardMember($chId, BoardPosition::SEC, 'ch_sec_', 'SecVacant', 'secID', $request, $updatedBy, $userId);
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
@@ -1356,6 +1281,9 @@ class BoardController extends Controller implements HasMiddleware
             Mail::to($emailCC)->queue(new EOYElectionReportSubmitted($mailData));
             Mail::to($emailListChap)->queue(new EOYElectionReportThankYou($mailData));
 
+            Mail::to($emailCC)->queue(new EOYElectionReportSubmittedActive($mailData));
+            Mail::to($emailListChap)->queue(new EOYElectionReportThankYouActive($mailData));
+
             DB::commit();
 
             return redirect()->back()->with('success', $message);
@@ -1370,48 +1298,9 @@ class BoardController extends Controller implements HasMiddleware
     }
 
     /**
-     * Show EOY Financial Report All Board Members
-     */
-    // public function editFinancialReport(Request $request, $chId): View
-    // {
-    //     $user = $this->userController->loadUserInformation($request);
-    //     $userTypeId = $user['userTypeId'];
-    //     $userName = $loggedInName = $user['userName'];
-    //     $userEmail = $user['userEmail'];
-    //     $userAdmin = $user['userAdmin'];
-
-    //     $baseQuery = $this->baseBoardController->getChapterDetails($chId);
-    //     $chDetails = $baseQuery['chDetails'];
-    //     $chActiveId = $baseQuery['chActiveId'];
-    //     $stateShortName = $baseQuery['stateShortName'];
-    //     $chEOYDocuments = $baseQuery['chEOYDocuments'];
-    //     $chFinancialReport = $baseQuery['chFinancialReport'];
-    //     $awards = $baseQuery['awards'];
-    //     $allAwards = $baseQuery['allAwards'];
-
-    //     $PresDetails = $baseQuery['PresDetails'];
-    //     $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
-    //     $bdPositionId = $bdData['bdPositionId'];
-    //     $borDetails = $bdData['bdDetails'];
-    //     $bdTypeId = $bdData['bdTypeId'];
-
-    //     $resources = Resources::with('resourceCategory')->get();
-    //     $resourceCategories = ResourceCategory::all();
-
-    //     $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,
-    //         'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'stateShortName' => $stateShortName,
-    //         'awards' => $awards, 'allAwards' => $allAwards, 'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'chEOYDocuments' => $chEOYDocuments,
-    //         'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
-    //     ];
-
-    //     return view('boards.editfinancialreport')->with($data);
-
-    // }
-
-    /**
      * Save EOY Financial Report All Board Members
      */
-    public function updateFinancialReport(Request $request, $chId): RedirectResponse
+    public function updateFinancialReport(Request $request, int $chId): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $userName = $user['userName'];
@@ -1471,7 +1360,7 @@ class BoardController extends Controller implements HasMiddleware
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getPCData($pcDetails),
                 $this->baseMailDataController->getPresData($PresDetails),
-                $this->baseMailDataController->getFinancialReportData($chEOYDocuments, $chFinancialReport, $reviewer_email_message = null),
+                $this->baseMailDataController->getFinancialReportData($chFinancialReport),
             );
 
             $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
@@ -1526,7 +1415,7 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * View eLearning Courses
      */
-    public function viewELearning(Request $request, $chId): View
+    public function viewELearning(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -1583,7 +1472,7 @@ class BoardController extends Controller implements HasMiddleware
         return redirect()->to($wpAutoLoginUrl);
     }
 
-    public function viewGrantRequestList(Request $request, $chId): View
+    public function viewGrantRequestList(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -1616,7 +1505,7 @@ class BoardController extends Controller implements HasMiddleware
 
     }
 
-    public function viewGrantDetails(Request $request, $grantId): View
+    public function viewGrantDetails(Request $request, int $grantId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -1643,7 +1532,7 @@ class BoardController extends Controller implements HasMiddleware
 
     }
 
-    public function updateGrantRequest(Request $request, $grantId): RedirectResponse
+    public function updateGrantRequest(Request $request, int $grantId): RedirectResponse
     {
         $input = $request->all();
         $grantReceived = $input['submitted'] ?? null;
@@ -1740,7 +1629,7 @@ class BoardController extends Controller implements HasMiddleware
         }
     }
 
-     public function showNewGrantRequest(Request $request, $chId): View
+     public function showNewGrantRequest(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -1770,14 +1659,14 @@ class BoardController extends Controller implements HasMiddleware
         $data = ['stateShortName' => $stateShortName, 'chDetails' => $chDetails,
             'PresDetails' => $PresDetails, 'stateName' => $stateName,
             'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,
-            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
+            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId
         ];
 
         return view('boards.grantrequest')->with($data);
 
     }
 
-   public function updateNewGrantRequest(Request $request, $chId): RedirectResponse
+   public function updateNewGrantRequest(Request $request, int $chId): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -1821,7 +1710,7 @@ class BoardController extends Controller implements HasMiddleware
         }
     }
 
-     public function editBoardProfile(Request $request, $chId): View
+     public function editBoardProfile(Request $request, int $chId): View
     {
         // $user = User::find($request->user()->id);
         // $userId = $user->id;
@@ -1857,7 +1746,7 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * Save Coordiantor Profile
      */
-    public function updateBoardProfile(Request $request, $chId): RedirectResponse
+    public function updateBoardProfile(Request $request, int $chId): RedirectResponse
     {
         $user = User::find($request->user()->id);
         $updatedId = $user->id;

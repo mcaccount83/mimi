@@ -38,32 +38,15 @@ use Illuminate\Support\Facades\Mail;
 
 class EmailController extends Controller implements HasMiddleware
 {
-    protected $userController;
-
-    protected $pdfController;
-
-    protected $baseMailDataController;
-
-    protected $baseChapterController;
-
-    protected $baseCoordinatorController;
-
-    protected $googleController;
-
-    protected $positionConditionsService;
-
-    public function __construct(UserController $userController, PDFController $pdfController, BaseMailDataController $baseMailDataController,
-        BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController, GoogleController $googleController,
-        PositionConditionsService $positionConditionsService)
-    {
-        $this->userController = $userController;
-        $this->pdfController = $pdfController;
-        $this->baseMailDataController = $baseMailDataController;
-        $this->baseChapterController = $baseChapterController;
-        $this->baseCoordinatorController = $baseCoordinatorController;
-        $this->googleController = $googleController;
-        $this->positionConditionsService = $positionConditionsService;
-    }
+    public function __construct(
+        protected UserController $userController,
+        protected PDFController $pdfController,
+        protected BaseChapterController $baseChapterController,
+        protected BaseCoordinatorController $baseCoordinatorController,
+        protected BaseMailDataController $baseMailDataController,
+        protected GoogleController $googleController,
+        protected PositionConditionsService $positionConditionsService,
+    ) {}
 
     public static function middleware(): array
     {
@@ -152,7 +135,7 @@ class EmailController extends Controller implements HasMiddleware
     /**
      * Send Chapter EIN Number Notification Email
      */
-    public function sendChapterEIN(Request $request, $chapterid): JsonResponse
+    public function sendChapterEIN(Request $request, int $chapterid): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
 
@@ -633,7 +616,7 @@ class EmailController extends Controller implements HasMiddleware
 
             $mailData[$chDetails->name] = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                $this->baseMailDataController->getFinancialReportData($chEOYDocuments, $chFinancialReport, $reviewer_email_message = null)
+                $this->baseMailDataController->getFinancialReportData($chFinancialReport)
             );
 
         }
@@ -713,7 +696,7 @@ class EmailController extends Controller implements HasMiddleware
 
             $mailData[$chDetails->name] = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                $this->baseMailDataController->getFinancialReportData($chEOYDocuments, $chFinancialReport, $reviewer_email_message = null)
+                $this->baseMailDataController->getFinancialReportData($chFinancialReport)
             );
 
         }
@@ -794,7 +777,7 @@ class EmailController extends Controller implements HasMiddleware
 
             $mailData[$chDetails->name] = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                $this->baseMailDataController->getFinancialReportData($chEOYDocuments, $chFinancialReport, $reviewer_email_message = null)
+                $this->baseMailDataController->getFinancialReportData($chFinancialReport)
             );
 
         }

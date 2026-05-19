@@ -5,7 +5,7 @@ namespace App\Mail;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
-class ProbationRptSubmittedCCNotice extends BaseMailable
+class EOYElectionReportSubmittedActive extends BaseMailable
 {
     public array $mailData;
 
@@ -17,14 +17,14 @@ class ProbationRptSubmittedCCNotice extends BaseMailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "Quarterly Financial Report Submitted | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
+            subject: "Election Report Submitted & Activated | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.chapter.probationrptsubmittedccnotice',
+            markdown: 'emails.endofyear.electionreportsubmittedactive',
         );
     }
 

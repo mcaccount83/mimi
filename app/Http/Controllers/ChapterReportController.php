@@ -20,19 +20,11 @@ use Illuminate\View\View;
 
 class ChapterReportController extends Controller implements HasMiddleware
 {
-    protected $userController;
-
-    protected $baseChapterController;
-
-    protected PositionConditionsService $positionConditionsService;
-
-    public function __construct(UserController $userController, BaseChapterController $baseChapterController, PositionConditionsService $positionConditionsService)
-    {
-
-        $this->userController = $userController;
-        $this->baseChapterController = $baseChapterController;
-        $this->positionConditionsService = $positionConditionsService;
-    }
+    public function __construct(
+        protected UserController $userController,
+        protected PositionConditionsService $positionConditionsService,
+        protected BaseChapterController $baseChapterController,
+    ) {}
 
     public static function middleware(): array
     {
@@ -96,7 +88,7 @@ class ChapterReportController extends Controller implements HasMiddleware
     /**
      *Edit Chapter EIN Notes
      */
-    public function editChapterIRS(Request $request, $id): View
+    public function editChapterIRS(Request $request, int $id): View
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -129,7 +121,7 @@ class ChapterReportController extends Controller implements HasMiddleware
     /**
      *Update Chapter EIN Notes
      */
-    public function updateChapterIRS(Request $request, $id): RedirectResponse
+    public function updateChapterIRS(Request $request, int $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];

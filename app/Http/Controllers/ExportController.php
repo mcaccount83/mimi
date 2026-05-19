@@ -14,25 +14,13 @@ use Illuminate\Support\Facades\Response;
 
 class ExportController extends Controller implements HasMiddleware
 {
-    protected $userController;
-
-    protected $baseUserController;
-
-    protected $baseChapterController;
-
-    protected $baseCoordinatorController;
-
-    protected $positionConditionsService;
-
-    public function __construct(UserController $userController, BaseUserController $baseUserController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController, PositionConditionsService $positionConditionsService)
-    {
-
-        $this->userController = $userController;
-        $this->baseUserController = $baseUserController;
-        $this->baseChapterController = $baseChapterController;
-        $this->baseCoordinatorController = $baseCoordinatorController;
-        $this->positionConditionsService = $positionConditionsService;
-    }
+    public function __construct(
+        protected UserController $userController,
+        protected BaseChapterController $baseChapterController,
+        protected BaseCoordinatorController $baseCoordinatorController,
+        protected BaseUserController $baseUserController,
+        protected PositionConditionsService $positionConditionsService,
+    ) {}
 
     public static function middleware(): array
     {
@@ -45,7 +33,7 @@ class ExportController extends Controller implements HasMiddleware
     /**
      * Format Chapter Information in Gropus
      */
-    private function formatChapterEINInfo($chapterData)
+    private function formatChapterEINInfo(array $chapterData)
     {
         $chDetails = $chapterData['chDetails'];
         $chDocuments = $chapterData['chDocuments'] ?? null;
@@ -57,7 +45,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
     }
 
-    private function formatChapterLocationInfo($chapterData)
+    private function formatChapterLocationInfo(array $chapterData)
     {
         $stateShortName = $chapterData['stateShortName'];
         $regionLongName = $chapterData['regionLongName'];
@@ -70,7 +58,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
     }
 
-    private function formatChapterNameInfo($chapterData)
+    private function formatChapterNameInfo(array $chapterData)
     {
         $chDetails = $chapterData['chDetails'];
 
@@ -79,7 +67,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
     }
 
-    private function formatChapterStatusInfo($chapterData)
+    private function formatChapterStatusInfo(array $chapterData)
     {
         $chDetails = $chapterData['chDetails'];
         $chapterStatus = $chapterData['chapterStatus'] ?? '';
@@ -91,7 +79,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
     }
 
-    private function formatChapterPCInfo($chapterData)
+    private function formatChapterPCInfo(array $chapterData)
     {
         $pcName = $chapterData['pcName'] ?? '';
 
@@ -100,7 +88,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
     }
 
-    private function formatChapterContactInfo($chapterData)
+    private function formatChapterContactInfo(array $chapterData)
     {
         $chDetails = $chapterData['chDetails'];
 
@@ -112,7 +100,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
     }
 
-    private function formatWebsiteInfo($chapterData)
+    private function formatWebsiteInfo(array $chapterData)
     {
         $chDetails = $chapterData['chDetails'];
         $websiteLink = $chapterData['websiteLink'] ?? '';
@@ -125,7 +113,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
     }
 
-    private function formatPaymentInfo($chapterData)
+    private function formatPaymentInfo(array $chapterData)
     {
         $chDetails = $chapterData['chDetails'];
         $chPayments = $chapterData['chPayments'] ?? null;
@@ -138,7 +126,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
     }
 
-    private function formatChapterStartInfo($chapterData)
+    private function formatChapterStartInfo(array $chapterData)
     {
         $chDetails = $chapterData['chDetails'];
         $startMonthName = $chapterData['startMonthName'] ?? '';
@@ -149,7 +137,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
     }
 
-    private function formatChapterHistoryInfo($chapterData)
+    private function formatChapterHistoryInfo(array $chapterData)
     {
         $chDetails = $chapterData['chDetails'];
 
@@ -160,7 +148,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
     }
 
-    private function formatEOYInfo($chapterData)
+    private function formatEOYInfo(array $chapterData)
     {
         $chEOYDocuments = $chapterData['chEOYDocuments'];
 
@@ -175,7 +163,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
     }
 
-    private function formatPresidentInfo($chapterData)
+    private function formatPresidentInfo(array $chapterData)
     {
         $PresDetails = $chapterData['PresDetails'];
 
@@ -190,7 +178,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
     }
 
-    private function formatDisbandedInfo($chapterData)
+    private function formatDisbandedInfo(array $chapterData)
     {
         $chDetails = $chapterData['chDetails'];
 
@@ -200,7 +188,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
     }
 
-    private function formatBoardMemberInfo($chapterData)
+    private function formatBoardMemberInfo(array $chapterData)
     {
         $PresDetails = $chapterData['PresDetails'];
         $AVPDetails = $chapterData['AVPDetails'];
@@ -227,18 +215,13 @@ class ExportController extends Controller implements HasMiddleware
         ];
     }
 
-    private function formatDisbandedBoardMemberInfo($chapterData)
+    private function formatDisbandedBoardMemberInfo(array $chapterData)
     {
         $PresDetails = $chapterData['PresDetails'];
         $AVPDetails = $chapterData['AVPDetails'];
         $MVPDetails = $chapterData['MVPDetails'];
         $TRSDetails = $chapterData['TRSDetails'];
         $SECDetails = $chapterData['SECDetails'];
-        // $PresDetails = $chapterData['PresDisbandedDetails'];
-        // $AVPDetails = $chapterData['AVPDisbandedDetails'];
-        // $MVPDetails = $chapterData['MVPDisbandedDetails'];
-        // $TRSDetails = $chapterData['TRSDisbandedDetails'];
-        // $SECDetails = $chapterData['SECDisbandedDetails'];
 
         return [
             'President Name' => ($PresDetails && $PresDetails->first_name) ? $PresDetails->first_name.' '.$PresDetails->last_name : '',
@@ -262,7 +245,7 @@ class ExportController extends Controller implements HasMiddleware
     /**
      * Format row data for full chapter & international chapter export
      */
-    private function formatFullChapterRow($chapterData)
+    private function formatFullChapterRow(array $chapterData)
     {
         return array_merge(
             $this->formatChapterEINInfo($chapterData),
@@ -282,7 +265,7 @@ class ExportController extends Controller implements HasMiddleware
     /**
      * Format row data for zapped & internaitonal zapped chapter export
      */
-    private function formatZappedChapterRow($chapterData)
+    private function formatZappedChapterRow(array $chapterData)
     {
         return array_merge(
             $this->formatChapterEINInfo($chapterData),
@@ -303,7 +286,7 @@ class ExportController extends Controller implements HasMiddleware
     /**
      * Format row data for re-registration & international re-registration export
      */
-    private function formatReRegRow($chapterData)
+    private function formatReRegRow(array $chapterData)
     {
         return array_merge(
             $this->formatChapterLocationInfo($chapterData),
@@ -316,7 +299,7 @@ class ExportController extends Controller implements HasMiddleware
     /**
      * Format row data for EIN status & international EIN status export
      */
-    private function formatEINStatusRow($chapterData)
+    private function formatEINStatusRow(array $chapterData)
     {
         return array_merge(
             $this->formatChapterLocationInfo($chapterData),
@@ -1109,7 +1092,7 @@ class ExportController extends Controller implements HasMiddleware
     /**
      * Helper method to write a single chapter row
      */
-    private function writeChapterRow($file, $chapter, $isActive, $previousYear)
+    private function writeChapterRow(string $file, object $chapter, int $isActive, object $previousYear)
     {
         // Determine delete column value
         $deleteColumn = null;
@@ -1142,7 +1125,7 @@ class ExportController extends Controller implements HasMiddleware
     /**
      * Format Coordinator Information in Gropus
      */
-    private function formatCoordinatorLocationInfo($coordData)
+    private function formatCoordinatorLocationInfo(array $coordData)
     {
         $cdDetails = $coordData['cdDetails'];
         $regionLongName = $coordData['regionLongName'];
@@ -1156,7 +1139,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
     }
 
-    private function formatCoordinatorPositionInfo($coordData)
+    private function formatCoordinatorPositionInfo(array $coordData)
     {
         $displayPosition = $coordData['displayPosition'];
         $secondaryPosition = $coordData['secondaryPosition'];
@@ -1191,7 +1174,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
     }
 
-    private function formatCoordinatorPositionExtraInfo($coordData)
+    private function formatCoordinatorPositionExtraInfo(array $coordData)
     {
         $RptFName = $coordData['RptFName'];
         $RptLName = $coordData['RptLName'];
@@ -1204,7 +1187,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
     }
 
-    private function formatCoordinatorContactInfo($coordData)
+    private function formatCoordinatorContactInfo(array $coordData)
     {
         $cdDetails = $coordData['cdDetails'];
 
@@ -1216,7 +1199,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
     }
 
-    private function formatCoordinatorAddressInfo($coordData)
+    private function formatCoordinatorAddressInfo(array $coordData)
     {
         $cdDetails = $coordData['cdDetails'];
 
@@ -1228,7 +1211,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
     }
 
-    private function formatCoordinatorBirthdayInfo($coordData)
+    private function formatCoordinatorBirthdayInfo(array $coordData)
     {
         $cdDetails = $coordData['cdDetails'];
 
@@ -1238,7 +1221,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
     }
 
-    private function formatCoordinatorStartInfo($coordData)
+    private function formatCoordinatorStartInfo(array $coordData)
     {
         $cdDetails = $coordData['cdDetails'];
 
@@ -1247,7 +1230,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
     }
 
-    private function formatCoordinatorHistoryInfo($coordData)
+    private function formatCoordinatorHistoryInfo(array $coordData)
     {
         $cdDetails = $coordData['cdDetails'];
 
@@ -1258,7 +1241,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
     }
 
-    private function formatCoordinatorAppreciationInfo($coordData)
+    private function formatCoordinatorAppreciationInfo(array $coordData)
     {
         $cdDetails = $coordData['cdDetails'];
         $necklace = $cdDetails->recognition->recognition_necklace;
@@ -1279,7 +1262,7 @@ class ExportController extends Controller implements HasMiddleware
         ];
     }
 
-    private function formatCoordinatorRetireInfo($coordData)
+    private function formatCoordinatorRetireInfo(array $coordData)
     {
         $cdDetails = $coordData['cdDetails'];
 
@@ -1292,7 +1275,7 @@ class ExportController extends Controller implements HasMiddleware
     /**
      * Format row data for full coordinator & international coordinator export
      */
-    private function formatFullCoordinatorRow($coordData)
+    private function formatFullCoordinatorRow(array $coordData)
     {
         return array_merge(
             $this->formatCoordinatorLocationInfo($coordData),
@@ -1309,7 +1292,7 @@ class ExportController extends Controller implements HasMiddleware
     /**
      * Format row data for full retired coordinator & international retired coordinator export
      */
-    private function formatRetiredCoordinatorRow($coordData)
+    private function formatRetiredCoordinatorRow(array $coordData)
     {
         return array_merge(
             $this->formatCoordinatorLocationInfo($coordData),
@@ -1327,7 +1310,7 @@ class ExportController extends Controller implements HasMiddleware
     /**
      * Format row data for coordinator appreciation export
      */
-    private function formatCoordinatorAppreciationRow($coordData)
+    private function formatCoordinatorAppreciationRow(array $coordData)
     {
         return array_merge(
             $this->formatCoordinatorLocationInfo($coordData),

@@ -54,35 +54,16 @@ use ReCaptcha\ReCaptcha;
 
 class PublicController extends Controller
 {
-    protected $userController;
-
-    protected $positionConditionsService;
-
-    protected $baseBoardController;
-
-    protected $baseChapterController;
-
-    protected $baseCoordinatorController;
-
-    protected $baseMailDataController;
-
-    protected $emailTableController;
-
-    protected $googleController;
-
-    public function __construct(UserController $userController, PositionConditionsService $positionConditionsService, BaseBoardController $baseBoardController,
-        BaseMailDataController $baseMailDataController, EmailTableController $emailTableController, BaseChapterController $baseChapterController,
-        BaseCoordinatorController $baseCoordinatorController, GoogleController $googleController)
-    {
-        $this->userController = $userController;
-        $this->positionConditionsService = $positionConditionsService;
-        $this->baseBoardController = $baseBoardController;
-        $this->baseChapterController = $baseChapterController;
-        $this->baseMailDataController = $baseMailDataController;
-        $this->emailTableController = $emailTableController;
-        $this->baseCoordinatorController = $baseCoordinatorController;
-        $this->googleController = $googleController;
-    }
+    public function __construct(
+        protected UserController $userController,
+        protected BaseChapterController $baseChapterController,
+        protected BaseBoardController $baseBoardController,
+        protected BaseMailDataController $baseMailDataController,
+        protected PositionConditionsService $positionConditionsService,
+        protected BaseCoordinatorController $baseCoordinatorController,
+        protected GoogleController $googleController,
+        protected EmailTableController $emailTableController,
+    ) {}
 
     private function token()
     {
@@ -417,6 +398,8 @@ class PublicController extends Controller
         $invoice = null;
         $paymentType = 'No Payment Required';
 
+        $paymentResponse = [];
+
         // Only process payment for USA-based chapters
         if (! $isInternational) {
             $paymentResponse = $this->processPublicPayment($request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
@@ -687,8 +670,8 @@ class PublicController extends Controller
     /**
      * Process payments with Authorize.net
      */
-    public function processPublicPayment(Request $request, $name, $description, $shortDescription, $transactionType, $confId, $shippingCountry,
-        $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip)
+    public function processPublicPayment(Request $request, string $name, string $description, string $shortDescription, string $transactionType, int $confId, string $shippingCountry,
+        string $shippingFirst, string $shippingLast, string $shippingCompany, string $shippingAddress, string $shippingCity, int $shippingState, int $shippingZip)
     {
         if (app()->environment('local')) {
             $transactionTypeDetail = 'authOnlyTransaction';  // Auth Only for testing Purposes
@@ -696,12 +679,10 @@ class PublicController extends Controller
             $transactionTypeDetail = $transactionType;  // Live Traansactions based on type of transaction set from request
         }
 
-        if ($transactionTypeDetail == 'authCaptureTransaction') {
-            $shortTransactionType = 'Processed';
-        }
-        if ($transactionTypeDetail == 'authOnlyTransaction') {
-            $shortTransactionType = 'AuthOnly';
-        }
+        $shortTransactionType = match($transactionTypeDetail) {
+            'authCaptureTransaction' => 'Processed',
+            'authOnlyTransaction' => 'AuthOnly',
+        };
 
         $newchap = $request->input('newchap');
         $donation = $request->input('sustaining');

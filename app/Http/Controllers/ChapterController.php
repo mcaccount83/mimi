@@ -65,36 +65,16 @@ use Illuminate\View\View;
 
 class ChapterController extends Controller implements HasMiddleware
 {
-    protected $userController;
-
-    protected $positionConditionsService;
-
-    protected $pdfController;
-
-    protected $baseChapterController;
-
-    protected $forumSubscriptionController;
-
-    protected $baseMailDataController;
-
-    protected $emailTableController;
-
-    protected $emailController;
-
-    public function __construct(UserController $userController, PDFController $pdfController, BaseChapterController $baseChapterController,
-        ForumSubscriptionController $forumSubscriptionController, BaseMailDataController $baseMailDataController, EmailController $emailController,
-        EmailTableController $emailTableController, PositionConditionsService $positionConditionsService, )
-    {
-        $this->userController = $userController;
-        $this->pdfController = $pdfController;
-        $this->baseChapterController = $baseChapterController;
-        $this->forumSubscriptionController = $forumSubscriptionController;
-        $this->baseMailDataController = $baseMailDataController;
-        $this->emailTableController = $emailTableController;
-        $this->emailController = $emailController;
-        $this->positionConditionsService = $positionConditionsService;
-
-    }
+    public function __construct(
+        protected UserController $userController,
+        protected PositionConditionsService $positionConditionsService,
+        protected PDFController $pdfController,
+        protected BaseChapterController $baseChapterController,
+        protected ForumSubscriptionController $forumSubscriptionController,
+        protected BaseMailDataController $baseMailDataController,
+        protected EmailTableController $emailTableController,
+        protected EmailController $emailController,
+    ) {}
 
     public static function middleware(): array
     {
@@ -294,7 +274,7 @@ class ChapterController extends Controller implements HasMiddleware
     /**
      * Display the Chapter Details for ALL lists - Active, Zapped, Inquiries, International
      */
-    public function viewChapterDetails(Request $request, $id): View
+    public function viewChapterDetails(Request $request, int $id): View
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -330,6 +310,7 @@ class ChapterController extends Controller implements HasMiddleware
         $websiteLink = $baseQuery['websiteLink'];
 
         $chDisbanded = null;
+        $baseBoardQuery = null;
 
         if ($chActiveId == ChapterStatusEnum::ACTIVE) {
             $baseBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
@@ -937,7 +918,7 @@ class ChapterController extends Controller implements HasMiddleware
     /**
      *Edit Chapter Information
      */
-    public function editChapterDetails(Request $request, $id): View
+    public function editChapterDetails(Request $request, int $id): View
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -1042,7 +1023,7 @@ class ChapterController extends Controller implements HasMiddleware
     /**
      *Update Chapter Information
      */
-    public function updateChapterDetails(Request $request, $id): RedirectResponse
+    public function updateChapterDetails(Request $request, int $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
@@ -1200,7 +1181,7 @@ class ChapterController extends Controller implements HasMiddleware
     /**
      *Edit Chapter Board Information
      */
-    public function editChapterBoard(Request $request, $id): View
+    public function editChapterBoard(Request $request, int $id): View
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -1238,7 +1219,7 @@ class ChapterController extends Controller implements HasMiddleware
     /**
      *Update Chapter Board Information
      */
-    private function updateBoardMember($chapter, $position, $requestData, $updatedBy, $updatedId, $defaultBoardCategories)
+    private function updateBoardMember(object $chapter, int $position, object $requestData, string $updatedBy, int $updatedId, array $defaultBoardCategories)
     {
         $positionConfig = [
             'president' => [
@@ -1335,7 +1316,7 @@ class ChapterController extends Controller implements HasMiddleware
         }
     }
 
-    private function updateUserToOutgoing($user)
+    private function updateUserToOutgoing(object $user)
     {
         User::where('id', $user->id)->update([
             'type_id' => UserTypeEnum::OUTGOING,
@@ -1343,7 +1324,7 @@ class ChapterController extends Controller implements HasMiddleware
         ]);
     }
 
-    private function createOutgoingBoardMember($user, $bdDetails, $updatedBy, $updatedId)
+    private function createOutgoingBoardMember(object $user, object $bdDetails, string $updatedBy, int $updatedId)
     {
         BoardsOutgoing::updateOrCreate(
             [
@@ -1366,13 +1347,13 @@ class ChapterController extends Controller implements HasMiddleware
         );
     }
 
-    private function removeActiveBoardMember($user)
+    private function removeActiveBoardMember(object $user)
     {
         Boards::where('user_id', $user->id)->delete();
         ForumCategorySubscription::where('user_id', $user->id)->delete();
     }
 
-    private function updateExistingBoardMember($user, $boardMember, $requestData, $prefix, $chStatus, $updatedBy, $updatedId, $defaultBoardCategories)
+    private function updateExistingBoardMember(object $user, object $boardMember, object $requestData, string $prefix, int $chStatus, string $updatedBy, int $updatedId, array $defaultBoardCategories)
     {
         $firstName = $requestData->input($prefix.'fname');
         $lastName = $requestData->input($prefix.'lname');
@@ -1380,10 +1361,12 @@ class ChapterController extends Controller implements HasMiddleware
         $stateId = $requestData->input($prefix.'state');
         $countryId = $requestData->input($prefix.'country') ?? '198';
 
-        if ($chStatus == ChapterStatusEnum::ACTIVE || ChapterStatusEnum::PENDING) {
+        if ($chStatus == ChapterStatusEnum::ACTIVE || $chStatus == ChapterStatusEnum::PENDING) {
             $isActive = UserStatusEnum::ACTIVE;
-        } elseif ($chStatus == ChapterStatusEnum::ZAPPED || ChapterStatusEnum::NOTAPPROVED) {
+        } elseif ($chStatus == ChapterStatusEnum::ZAPPED || $chStatus == ChapterStatusEnum::NOTAPPROVED) {
             $isActive = UserStatusEnum::INACTIVE;
+        } else {
+            throw new \RuntimeException("Unexpected chapter status: {$chStatus}");
         }
 
         $user->update([
@@ -1420,7 +1403,7 @@ class ChapterController extends Controller implements HasMiddleware
         }
     }
 
-    public function createNewBoardMember($chapter, $relation, $positionId, $requestData, $prefix, $chStatus, $updatedBy, $updatedId, $defaultBoardCategories)
+    public function createNewBoardMember(object $chapter, int $relation, int $positionId, object $requestData, string $prefix, int $chStatus, string $updatedBy, int $updatedId, array $defaultBoardCategories)
     {
         $firstName = $requestData->input($prefix.'fname');
         $lastName = $requestData->input($prefix.'lname');
@@ -1429,10 +1412,12 @@ class ChapterController extends Controller implements HasMiddleware
         $countryId = $requestData->input($prefix.'country') ?? '198';
         $chapterId = $chapter->id;
 
-        if ($chStatus == ChapterStatusEnum::ACTIVE || ChapterStatusEnum::PENDING) {
+        if ($chStatus == ChapterStatusEnum::ACTIVE || $chStatus == ChapterStatusEnum::PENDING) {
             $isActive = UserStatusEnum::ACTIVE;
-        } elseif ($chStatus == ChapterStatusEnum::ZAPPED || ChapterStatusEnum::NOTAPPROVED) {
+        } elseif ($chStatus == ChapterStatusEnum::ZAPPED || $chStatus == ChapterStatusEnum::NOTAPPROVED) {
             $isActive = UserStatusEnum::INACTIVE;
+        } else {
+            throw new \RuntimeException("Unexpected chapter status: {$chStatus}");
         }
 
         // Check if user with this email already exists and is not on another active board
@@ -1526,7 +1511,7 @@ class ChapterController extends Controller implements HasMiddleware
     }
 
     // Updated main method with better error handling:
-    public function updateChapterBoard(Request $request, $id)
+    public function updateChapterBoard(Request $request, int $id)
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
@@ -1683,7 +1668,7 @@ class ChapterController extends Controller implements HasMiddleware
     /**
      *Edit Website & Social Information
      */
-    public function editChapterWebsite(Request $request, $id): View
+    public function editChapterWebsite(Request $request, int $id): View
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -1716,7 +1701,7 @@ class ChapterController extends Controller implements HasMiddleware
     /**
      *Update Website & Social Media Information
      */
-    public function updateChapterWebsite(Request $request, $id): RedirectResponse
+    public function updateChapterWebsite(Request $request, int $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedBy = $user['userName'];
@@ -1818,7 +1803,7 @@ class ChapterController extends Controller implements HasMiddleware
     /**
      *Edit Pending New Chapter Information
      */
-    public function editPendingChapterDetails(Request $request, $id): View
+    public function editPendingChapterDetails(Request $request, int $id): View
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -1911,7 +1896,7 @@ class ChapterController extends Controller implements HasMiddleware
     /**
      *Update Pending New Chapter Information
      */
-    public function updatePendingChapterDetails(Request $request, $id): RedirectResponse
+    public function updatePendingChapterDetails(Request $request, int $id): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedBy = $user['userName'];

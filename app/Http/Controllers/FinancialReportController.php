@@ -40,28 +40,14 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class FinancialReportController extends Controller implements HasMiddleware
 {
-    protected $userController;
-
-    protected $baseBoardController;
-
-    protected $baseChapterController;
-
-    protected $pdfController;
-
-    protected $baseMailDataController;
-
-    protected $positionConditionsService;
-
-    public function __construct(UserController $userController, BaseBoardController $baseBoardController, PDFController $pdfController,
-        BaseMailDataController $baseMailDataController, BaseChapterController $baseChapterController, PositionConditionsService $positionConditionsService)
-    {
-        $this->userController = $userController;
-        $this->pdfController = $pdfController;
-        $this->baseBoardController = $baseBoardController;
-        $this->baseChapterController = $baseChapterController;
-        $this->baseMailDataController = $baseMailDataController;
-        $this->positionConditionsService = $positionConditionsService;
-    }
+    public function __construct(
+        protected UserController $userController,
+        protected BaseChapterController $baseChapterController,
+        protected BaseBoardController $baseBoardController,
+        protected PDFController $pdfController,
+        protected BaseMailDataController $baseMailDataController,
+        protected PositionConditionsService $positionConditionsService,
+    ) {}
 
     public static function middleware(): array
     {
@@ -75,7 +61,7 @@ class FinancialReportController extends Controller implements HasMiddleware
     /**
      * Show EOY Financial Report All Board Members
      */
-    public function editFinancialReport(Request $request, $chId): View
+    public function editFinancialReport(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -105,7 +91,7 @@ class FinancialReportController extends Controller implements HasMiddleware
 
         $data = ['chActiveId' => $chActiveId, 'chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,
             'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'stateShortName' => $stateShortName,
-            'awards' => $awards, 'allAwards' => $allAwards, 'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'chEOYDocuments' => $chEOYDocuments,
+            'awards' => $awards, 'allAwards' => $allAwards, 'resourceCategories' => $resourceCategories, 'chEOYDocuments' => $chEOYDocuments,
             'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails,
             'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
         ];
@@ -114,7 +100,7 @@ class FinancialReportController extends Controller implements HasMiddleware
 
     }
 
-     public function editFinancialReportFinal(Request $request, $chId): View
+     public function editFinancialReportFinal(Request $request, int $chId): View
     {
        $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -157,7 +143,7 @@ class FinancialReportController extends Controller implements HasMiddleware
     /**
      * Save EOY Financial Report Accordion
      */
-    public function saveAccordionFields($financialReport, $input)
+    public function saveAccordionFields(FinancialReport $financialReport, array $input): void
     {
         // $financialReport->farthest_step_visited = $input['FurthestStep'];
 
@@ -378,7 +364,7 @@ class FinancialReportController extends Controller implements HasMiddleware
     /**
      * Save EOY Financial Report All Board Members
      */
-    public function updateFinancialReport(Request $request, $chapterId): RedirectResponse
+    public function updateFinancialReport(Request $request, int $chapterId): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $userName = $user['userName'];
@@ -438,7 +424,7 @@ class FinancialReportController extends Controller implements HasMiddleware
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getPCData($pcDetails),
                 $this->baseMailDataController->getPresData($PresDetails),
-                $this->baseMailDataController->getFinancialReportData($chEOYDocuments, $chFinancialReport, $reviewer_email_message = null),
+                $this->baseMailDataController->getFinancialReportData($chFinancialReport),
             );
 
             $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
@@ -494,7 +480,7 @@ class FinancialReportController extends Controller implements HasMiddleware
     /**
      * Show Disband Checklist andEOY Financial Report for Disbanded Chapters
      */
-    public function editDisbandChecklist(Request $request, $chId): View
+    public function editDisbandChecklist(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -537,7 +523,7 @@ class FinancialReportController extends Controller implements HasMiddleware
     /**
      * Save Financial Report for Disbanded Chapters
      */
-    public function updateDisbandReport(Request $request, $chapterId): RedirectResponse
+    public function updateDisbandReport(Request $request, int $chapterId): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $userName = $user['userName'];
@@ -603,7 +589,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getPCData($pcDetails),
-                $this->baseMailDataController->getFinancialReportData($chEOYDocuments, $chFinancialReport, $reviewer_email_message = null),
+                $this->baseMailDataController->getFinancialReportData($chFinancialReport),
                 $this->baseMailDataController->getPresData($PresDetails),
             );
 
@@ -650,7 +636,7 @@ class FinancialReportController extends Controller implements HasMiddleware
     /**
      * Save Disbanded Checklsit Questions
      */
-    public function updateDisbandChecklist(Request $request, $chapterId): RedirectResponse
+    public function updateDisbandChecklist(Request $request, int $chapterId): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $userEmail = $user['userEmail'];
@@ -697,7 +683,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getPCData($pcDetails),
-                $this->baseMailDataController->getFinancialReportData($chEOYDocuments, $chFinancialReport, $reviewer_email_message = null),
+                $this->baseMailDataController->getFinancialReportData($chFinancialReport),
             );
 
             if ($documentsEOY->final_financial_report_received == '1' && $checklistComplete) {
@@ -726,7 +712,7 @@ class FinancialReportController extends Controller implements HasMiddleware
     /**
      * Update or create incoming board member
      */
-    public function updateIncomingBoardMember($chapterId, $positionId, $positionPrefix, $vacantField, $idField, $request, $updatedBy, $userId)
+    public function updateIncomingBoardMember(int $chapterId, int $positionId, string $positionPrefix, string $vacantField, int $idField, Request $request, string $updatedBy, int $userId)
     {
         $boardDetails = BoardsIncoming::where('chapter_id', $chapterId)
             ->where('board_position_id', $positionId)
@@ -761,7 +747,7 @@ class FinancialReportController extends Controller implements HasMiddleware
     /**
      * Get board member data from request
      */
-    public function getBoardMemberData($request, $prefix, $updatedBy, $updatedId)
+    public function getBoardMemberData(Request $request, string $prefix, string $updatedBy, int $updatedId): array
     {
         return [
             'first_name' => $request->input($prefix.'fname'),
@@ -778,7 +764,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         ];
     }
 
-    public function activateSingleBoardStandalone(Request $request, $id)
+    public function activateSingleBoardStandalone(Request $request, int $id)
     {
         try {
             $status = $this->activateSingleBoard($request, $id);
@@ -850,7 +836,7 @@ class FinancialReportController extends Controller implements HasMiddleware
     }
 
     // Unified method that handles both single and batch activations
-    public function activateSingleBoard(Request $request, $id)
+    public function activateSingleBoard(Request $request, int $id)
     {
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];

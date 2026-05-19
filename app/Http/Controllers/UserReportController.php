@@ -26,25 +26,13 @@ use Illuminate\View\View;
 
 class UserReportController extends Controller implements HasMiddleware
 {
-    protected $baseChapterController;
-
-    protected $baseCoordinatorController;
-
-    protected $chapterController;
-
-    protected $forumSubscriptionController;
-
-    protected $baseUserController;
-
-    public function __construct(BaseChapterController $baseChapterController, ChapterController $chapterController,
-        ForumSubscriptionController $forumSubscriptionController, BaseUserController $baseUserController, BaseCoordinatorController $baseCoordinatorController)
-    {
-        $this->baseChapterController = $baseChapterController;
-        $this->baseCoordinatorController = $baseCoordinatorController;
-        $this->chapterController = $chapterController;
-        $this->forumSubscriptionController = $forumSubscriptionController;
-        $this->baseUserController = $baseUserController;
-    }
+    public function __construct(
+        protected BaseChapterController $baseChapterController,
+        protected ChapterController $chapterController,
+        protected ForumSubscriptionController $forumSubscriptionController,
+        protected BaseUserController $baseUserController,
+        protected BaseCoordinatorController $baseCoordinatorController,
+    ) {}
 
     public static function middleware(): array
     {
@@ -162,7 +150,7 @@ class UserReportController extends Controller implements HasMiddleware
     /**
      *Add New Board
      */
-    public function addBoardNew(Request $request, $id): View
+    public function addBoardNew(Request $request, int $id): View
     {
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -196,7 +184,7 @@ class UserReportController extends Controller implements HasMiddleware
     /**
      *Save New Board
      */
-    public function updateBoardNew(Request $request, $id): RedirectResponse
+    public function updateBoardNew(Request $request, int $id): RedirectResponse
     {
         $user = $this->baseUserController->loadUserInformation($request);
         $updatedId = $user['userId'];
@@ -265,7 +253,7 @@ class UserReportController extends Controller implements HasMiddleware
         return view('coordinators.userreports.noinquiriesemail')->with($data);
     }
 
-    public function addInquiriesEmail(Request $request, $id): View
+    public function addInquiriesEmail(Request $request, int $id): View
     {
         $baseQuery = $this->baseChapterController->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -299,7 +287,7 @@ class UserReportController extends Controller implements HasMiddleware
     /**
      *Save New Board
      */
-    public function updateInquiriesEmail(Request $request, $id): RedirectResponse
+    public function updateInquiriesEmail(Request $request, int $id): RedirectResponse
     {
         $user = $this->baseUserController->loadUserInformation($request);
         $updatedId = $user['userId'];
@@ -393,7 +381,7 @@ class UserReportController extends Controller implements HasMiddleware
     /**
      *Edit User Information
      */
-    public function editUserInformation(Request $request, $id): View
+    public function editUserInformation(Request $request, int $id): View
     {
         $userDetails = $this->checkUserTableStatus(User::find($id));
 
@@ -411,7 +399,7 @@ class UserReportController extends Controller implements HasMiddleware
     /**
      *Save User Information
      */
-    public function updateUserInformation(Request $request, $id): RedirectResponse
+    public function updateUserInformation(Request $request, int $id): RedirectResponse
     {
         $input = $request->all();
 
@@ -462,7 +450,7 @@ class UserReportController extends Controller implements HasMiddleware
     /**
      *Edit User Information
      */
-    public function editUserBoardInformation(Request $request, $id): View
+    public function editUserBoardInformation(Request $request, int $id): View
     {
         $baseUserQuery = $this->baseUserController->getUserDetailsById($id);
         $userDetails = $baseUserQuery['userDetails'];
@@ -492,11 +480,10 @@ class UserReportController extends Controller implements HasMiddleware
 
         $data = [
             'id' => $id, 'userDetails' => $userDetails, 'allStates' => $allStates, 'allCountries' => $allCountries, 'chDetails' => $chDetails,
-            'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'allCountries' => $allCountries, 'bdDetails' => $bdDetails,
-            'chPcId' => $chPcId, 'allStates' => $allStates, 'chConfId' => $chConfId, 'chPayments' => $chPayments, 'chEOYDocuments' =>$chEOYDocuments,
+            'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'bdDetails' => $bdDetails, 'chapterStatus' => $chapterStatus,
+            'chPcId' => $chPcId, 'chConfId' => $chConfId, 'chPayments' => $chPayments, 'chEOYDocuments' =>$chEOYDocuments,
             'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'bdPosition' => $bdPosition,
-            'startMonthName' => $startMonthName, 'AllUserStatus' => $AllUserStatus, 'AllUserType' => $AllUserType, 'AllAdminRole' => $AllAdminRole,
-            'chapterStatus' => $chapterStatus
+            'startMonthName' => $startMonthName, 'AllUserStatus' => $AllUserStatus, 'AllUserType' => $AllUserType, 'AllAdminRole' => $AllAdminRole
         ];
 
         return view('coordinators.userreports.edituserboard')->with($data);
@@ -505,7 +492,7 @@ class UserReportController extends Controller implements HasMiddleware
     /**
      *Save User Information
      */
-    public function updateUserBoardInformation(Request $request, $id): RedirectResponse
+    public function updateUserBoardInformation(Request $request, int $id): RedirectResponse
     {
         $user = $this->baseUserController->loadUserInformation($request);
         $updatedId = $user['userId'];
@@ -575,7 +562,7 @@ class UserReportController extends Controller implements HasMiddleware
     /**
      *Edit User Information
      */
-    public function editUserCoordInformation(Request $request, $id): View
+    public function editUserCoordInformation(Request $request, int $id): View
     {
         $baseUserQuery = $this->baseUserController->getUserDetailsById($id);
         $userDetails = $baseUserQuery['userDetails'];
@@ -609,8 +596,7 @@ class UserReportController extends Controller implements HasMiddleware
 
         $data = [
             'id' => $id, 'userDetails' => $userDetails, 'allStates' => $allStates, 'allCountries' => $allCountries, 'cdDetails' => $cdDetails,
-            'cdActiveId' => $cdActiveId, 'allCountries' => $allCountries, 'bdDetails' => $bdDetails, 'allMonths' => $allMonths,
-            'ReportTo' => $ReportTo, 'allStates' => $allStates, 'cdConfId' => $cdConfId,
+            'cdActiveId' => $cdActiveId, 'bdDetails' => $bdDetails, 'allMonths' => $allMonths, 'ReportTo' => $ReportTo, 'cdConfId' => $cdConfId,
             'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'bdPosition' => $bdPosition,
             'displayPosition' => $displayPosition, 'secondaryPosition' => $secondaryPosition, 'cdLeave' => $cdLeave,
             'AllUserStatus' => $AllUserStatus, 'AllUserType' => $AllUserType, 'AllAdminRole' => $AllAdminRole,
@@ -622,7 +608,7 @@ class UserReportController extends Controller implements HasMiddleware
     /**
      *Save User Information
      */
-    public function updateUserCoordInformation(Request $request, $id): RedirectResponse
+    public function updateUserCoordInformation(Request $request, int $id): RedirectResponse
     {
         $user = $this->baseUserController->loadUserInformation($request);
         $updatedId = $user['userId'];

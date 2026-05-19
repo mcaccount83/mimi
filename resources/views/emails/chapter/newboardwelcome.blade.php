@@ -24,7 +24,7 @@
 <p>MIMI is the database system for International MOMS Club. To access MIMI go to the following link:<br>
 <center><a href="https://momsclub.org/mimi/login">https://momsclub.org/mimi/login</a></center></p>
 <br>
-<p>You can log on with the e-mail address we have on file for you. If you are a new board member, your default password is: TempPass4You</p>
+<p>You can log on with the e-mail address we have on file for you. If you are a new board member, your default password is: <b>TempPass4You</b></p>
 <p>The chapter president will have access to all chapter information, including all board members. Other board members will have access to chapter information as well as their own details. (All board members have access to MIMI!).</p>
 <p>Things to check the first time you log in:</p>
 <ul>
@@ -36,21 +36,22 @@
     <li>Note the contact information listed for your chapter’s volunteers. If you ever have trouble reaching your Primary Coordinator, you can click on the name of your Secondary Coordinator to email them.</li>
     <li>You can log on to MIMI anytime. if you receive error messages or if you have any questions at all, please let your Primary Coordinator know!</li>
 </ul>
+<br>
+<p>Other Resources available through your MIMI account:</p>
+<ul>
+    <li>Chapter Resources<br>
+    Other resources including the Bylaws, Fact Sheets, Sample Files, Digital Logos, etc.</li>
+    <li>BoardList Forum<br>
+    The BoardList forum group will give you a chance to interact with other board members on chapter related topics. All board members are automatically added. BoardList is open from August through May.</li>
+    <li>eLearning Portal<br>
+    Courses on Board Positions and common topics are available for all board members.</li>
+</ul>
 <hr>
 <p><b>Coordinator Team</b></p>
-<p>All MOMS Club chapters have an International Coordinator assigned to help them. She is there for anything that you need! Any questions you have or good news you want to share -- talk to her, she loves to hear from you!<br>
+<p>All MOMS Club chapters have an International Coordinator assigned to help them.<br>
 <center>{{ $mailData['pcName'] }}<br>
-                @mailto($mailData['pcEmail'])</center></p>
-<br>
-<hr>
-<p><b>Chapter Resources</b></p>
-<p>Other resources including the Bylaws, Fact Sheets, Sample Files, Digital Logos, etc.</p>
-<hr>
-<p><b>BoardList Forum</b></p>
-<p>The BoardList forum group will give you a chance to interact with other board members on chapter related topics. All board members are automatically added. BoardList is open from August through May.</p>
-<hr>
-<p><b>eLearning Portal</b></p>
-<p>Courses on Board Positions and common topics are available for all board members.</p>
+                @mailto($mailData['pcEmail'])</center><br>
+She is there for anything that you need! Any questions you have or good news you want to share -- talk to her, she loves to hear from you!</p>
 
 <br>
 <p><strong>MCL</strong>,<br>

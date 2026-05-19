@@ -4,17 +4,14 @@ namespace App\Http\Controllers;
 
 class EmailTableRowController extends Controller
 {
-    protected $baseMailDataController;
-
-    public function __construct(BaseMailDataController $baseMailDataController)
-    {
-        $this->baseMailDataController = $baseMailDataController;
-    }
+    public function __construct(
+        protected BaseMailDataController $baseMailDataController,
+    ) {}
 
     /**
      * Create Rows for Founder Email
      */
-    public function createFounderRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+    public function createFounderRows(array $mailData, string $cellStyle, string $cellLeftStyle, string $headerStyle, string $tableHtml)
     {
         $tableHtml .= '<tr>
             <td style="'.$headerStyle.'"></td>
@@ -35,7 +32,7 @@ class EmailTableRowController extends Controller
     /**
      * Create Rows for Primary Coord Email
      */
-    public function createPrimaryCoordEmailRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+    public function createPrimaryCoordEmailRows(array $mailData, string $cellStyle, string $cellLeftStyle, string $headerStyle, string $tableHtml)
     {
         $tableHtml .= '<tr>
             <td colspan="2" style="'.$headerStyle.'">Primary Coordinator</td>
@@ -55,7 +52,7 @@ class EmailTableRowController extends Controller
     /**
      * Create Rows for Mentoring Coord Email
      */
-    public function createMentoringCoordEmailRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+    public function createMentoringCoordEmailRows(array $mailData, string $cellStyle, string $cellLeftStyle, string $headerStyle, string $tableHtml)
     {
         $tableHtml .= '<tr>
             <td colspan="2" style="'.$headerStyle.'">Mentoring Coordinator</td>
@@ -75,7 +72,7 @@ class EmailTableRowController extends Controller
        /**
      * Create Rows for Mentoring Coord Email
      */
-    public function createCoordEmailRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+    public function createCoordEmailRows(array $mailData, string $cellStyle, string $cellLeftStyle, string $headerStyle, string $tableHtml)
     {
         $tableHtml .= '<tr>
             <td colspan="2" style="'.$headerStyle.'">Coordinator Details</td>
@@ -95,7 +92,7 @@ class EmailTableRowController extends Controller
     /**
      * Create Rows for President Email
      */
-    public function createPresidentEmailRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+    public function createPresidentEmailRows(array $mailData, string $cellStyle, string $cellLeftStyle, string $headerStyle, string $tableHtml)
     {
         $tableHtml .= '<tr>
             <td colspan="2" style="'.$headerStyle.'">President Information</td>
@@ -115,7 +112,7 @@ class EmailTableRowController extends Controller
     /**
      * Create Rows for Founder Details
      */
-    public function createFounderDetailRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+    public function createFounderDetailRows(array $mailData, string $cellStyle, string $cellLeftStyle, string $headerStyle, string $tableHtml)
     {
         $tableHtml .= '<tr>
             <td colspan="2" style="'.$headerStyle.'">Chapter & Founder Information</td>
@@ -155,7 +152,7 @@ class EmailTableRowController extends Controller
     /**
      * Create Rows for Chapter Email
      */
-    public function createNewChapterEmailRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+    public function createNewChapterEmailRows(array $mailData, string $cellStyle, string $cellLeftStyle, string $headerStyle, string $tableHtml)
     {
         $tableHtml .= '<tr>
             <td colspan="2" style="'.$headerStyle.'">Chapter Information</td>
@@ -179,7 +176,7 @@ class EmailTableRowController extends Controller
     /**
      * Create Rows for Coordinator Application
      */
-    public function createNewCoordAppRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+    public function createNewCoordAppRows(array $mailData, string $cellStyle, string $cellLeftStyle, string $headerStyle, string $tableHtml)
     {
         $tableHtml .= '<tr>
             <td colspan="2" style="'.$headerStyle.'">Application Information</td>
@@ -243,7 +240,7 @@ class EmailTableRowController extends Controller
     /**
      * Create Rows for Coordinator Details
      */
-    public function createNewCoordinatorDetailRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+    public function createNewCoordinatorDetailRows(array $mailData, string $cellStyle, string $cellLeftStyle, string $headerStyle, string $tableHtml)
     {
         $tableHtml .= '<tr>
             <td colspan="2" style="'.$headerStyle.'">Coordinator Information</td>
@@ -275,7 +272,7 @@ class EmailTableRowController extends Controller
     /**
      * Create Rows for Full Board
      */
-    public function createBoardEmailRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+    public function createBoardEmailRows(array $mailData, string $cellStyle, string $cellLeftStyle, string $headerStyle, string $tableHtml)
     {
         $tableHtml .= '<tr>
             <td style="'.$headerStyle.'"></td>
@@ -334,7 +331,7 @@ class EmailTableRowController extends Controller
     /**
      * Create Rows for Board Member Updates
      */
-    public function createMemberUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+    public function createMemberUpdateRows(array $mailData, string $cellStyle, string $cellLeftStyle, string $headerStyle, string $tableHtml)
     {
         $tableHtml .= '<tr>
             <td style="'.$headerStyle.'"></td>
@@ -364,7 +361,7 @@ class EmailTableRowController extends Controller
     /**
      * Create Rows for Full Board Updates
      */
-    public function createBoardUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+    public function createBoardUpdateRows(array $mailData, string $cellStyle, string $cellLeftStyle, string $headerStyle, string $tableHtml)
     {
         $tableHtml .= '<tr>
             <td style="'.$headerStyle.'"></td>
@@ -482,7 +479,7 @@ class EmailTableRowController extends Controller
     /**
      * Create Rows for General Chapter Updates
      */
-    public function createChapterUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+    public function createChapterUpdateRows(array $mailData, string $cellStyle, string $cellLeftStyle, string $headerStyle, string $tableHtml)
     {
         $tableHtml .= '<tr>
             <td style="'.$headerStyle.'"></td>
@@ -536,7 +533,7 @@ class EmailTableRowController extends Controller
     /**
      * Create Rows for Online/Website Updates
      */
-    public function createWebsiteUpdateRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+    public function createWebsiteUpdateRows(array $mailData, string $cellStyle, string $cellLeftStyle, string $headerStyle, string $tableHtml)
     {
         $tableHtml .= '<tr>
             <td style="'.$headerStyle.'"></td>
@@ -587,7 +584,7 @@ class EmailTableRowController extends Controller
         return $tableHtml;
     }
 
-      public function createNewGrantRows($mailData, $cellStyle, $cellLeftStyle, $headerStyle, $tableHtml)
+      public function createNewGrantRows(array $mailData, string $cellStyle, string $cellLeftStyle, string $headerStyle, string $tableHtml)
     {
         $tableHtml .= '<tr>
             <td colspan="2" style="'.$headerStyle.'">Grant Information</td>

@@ -31,7 +31,7 @@ class BaseUserController extends Controller implements HasMiddleware
     /**
      * Load ANY user by ID
      */
-    public function getUserDetailsById($id)  // Fixed typo: Deteails -> Details
+    public function getUserDetailsById(int $id)
     {
         $userDetails = User::with(['board', 'boardPending', 'boardDisbanded', 'boardOutgoing',
             'board.position', 'boardPending.position', 'boardDisbanded.position', 'boardOutgoing.position'])->find($id);

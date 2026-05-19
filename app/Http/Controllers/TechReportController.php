@@ -51,28 +51,14 @@ use TeamTeaTime\Forum\Models\Category as ForumCategory;
 
 class TechReportController extends Controller implements HasMiddleware
 {
-    protected $userController;
-
-    protected $baseChapterController;
-
-    protected $baseBoardController;
-
-    protected $baseCoordinatorController;
-
-    protected $positionConditionsService;
-
-    protected $forumSubscriptionController;
-
-    public function __construct(UserController $userController, BaseChapterController $baseChapterController, BaseCoordinatorController $baseCoordinatorController,
-        PositionConditionsService $positionConditionsService, BaseBoardController $baseBoardController, ForumSubscriptionController $forumSubscriptionController)
-    {
-        $this->userController = $userController;
-        $this->baseChapterController = $baseChapterController;
-        $this->baseCoordinatorController = $baseCoordinatorController;
-        $this->positionConditionsService = $positionConditionsService;
-        $this->baseBoardController = $baseBoardController;
-        $this->forumSubscriptionController = $forumSubscriptionController;
-    }
+    public function __construct(
+        protected UserController $userController,
+        protected PositionConditionsService $positionConditionsService,
+        protected BaseChapterController $baseChapterController,
+        protected BaseCoordinatorController $baseCoordinatorController,
+        protected BaseBoardController $baseBoardController,
+        protected ForumSubscriptionController $forumSubscriptionController,
+    ) {}
 
     public static function middleware(): array
     {
@@ -950,7 +936,7 @@ class TechReportController extends Controller implements HasMiddleware
         }
     }
 
-    private function copyAwardsToHistory(array $reportYearOptions, int $updatedId, string $updatedBy): void
+    private function copyAwardsToHistory(array $reportYearOptions, int $updatedId, array $updatedBy): void
     {
         // $reportYearRange = $reportYearOptions['reportYearRange'];
         $reportYearId = $reportYearOptions['reportYearId'];
@@ -1353,7 +1339,7 @@ class TechReportController extends Controller implements HasMiddleware
         }
     }
 
-    public function updateGoogleDrive(Request $request, $id)
+    public function updateGoogleDrive(Request $request, int $id)
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -1447,7 +1433,7 @@ class TechReportController extends Controller implements HasMiddleware
     }
 }
 
-   public function updateAdminEmail(Request $request, $id)
+   public function updateAdminEmail(Request $request, int $id)
 {
     $request->validate([
         'name' => 'required|string|max:255',
@@ -1639,7 +1625,7 @@ public function conferenceList(Request $request): View
         return view('coordinators.techreports.regionlist')->with($data);
     }
 
-    public function updateRegion(Request $request, $id)
+    public function updateRegion(Request $request, int $id)
     {
         try {
             $region = Region::findOrFail($id);
@@ -1682,7 +1668,7 @@ public function conferenceList(Request $request): View
         return view('coordinators.techreports.statelist')->with($data);
     }
 
-    public function updateState(Request $request, $id)
+    public function updateState(Request $request, int $id)
     {
         try {
             $state = State::findOrFail($id);

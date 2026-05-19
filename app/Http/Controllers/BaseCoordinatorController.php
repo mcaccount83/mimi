@@ -14,27 +14,21 @@ use App\Models\Region;
 use App\Models\State;
 use App\Models\User;
 use App\Services\LearnDashService;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
 class BaseCoordinatorController extends Controller
 {
-    protected $userController;
-
-    protected $baseConditionsController;
-
-    protected $learnDashService;
-
-    public function __construct(UserController $userController, BaseConditionsController $baseConditionsController, LearnDashService $learnDashService)
-    {
-        $this->userController = $userController;
-        $this->baseConditionsController = $baseConditionsController;
-        $this->learnDashService = $learnDashService;
-    }
+    public function __construct(
+        protected UserController $userController,
+        protected BaseConditionsController $baseConditionsController,
+        protected LearnDashService $learnDashService,
+    ) {}
 
     /**
      * Apply checkbox filters to the query
      */
-    private function applyCheckboxFilters($baseQuery, $coorId, $conditions = null, $confId = null, $regId = null)
+    private function applyCheckboxFilters(Builder $baseQuery, int $coorId, ?array $conditions = null, ?int $confId = null, ?int $regId = null): array
     {
         $checkboxStatus = [
             CheckboxFilterEnum::PC_DIRECT => '',
@@ -73,7 +67,7 @@ class BaseCoordinatorController extends Controller
     /**
      * Get base query with common relations
      */
-    private function getBaseQueryWithRelations($activeStatus)
+    private function getBaseQueryWithRelations(int $activeStatus)
     {
         $query = Coordinators::query()->where('active_status', $activeStatus);
 
@@ -96,7 +90,7 @@ class BaseCoordinatorController extends Controller
     /**
      * Apply sorting based on query type and page
      */
-    private function applySorting($baseQuery)
+    private function applySorting(Builder $baseQuery): array
     {
         $isPendingPage = request()->route()->getName() == 'coordinators.coordpending';
         $isNotApprovedPage = request()->route()->getName() == 'chapters.coordrejected';
@@ -148,13 +142,13 @@ class BaseCoordinatorController extends Controller
     /**
      * Build coordinator query based on type and parameters
      */
-    private function buildCoordinatorQuery($params)
+    private function buildCoordinatorQuery(array $params): array
     {
         $baseQuery = $this->getBaseQueryWithRelations($params['activeStatus']);
         $checkboxStatus = [];
 
         if (isset($params['coorId'])) {
-            $secPositionId = is_array($params['secPositionId']) ? array_map('intval', $params['secPositionId']) : [intval($params['secPositionId'])];
+            $secPositionId = is_array($params['secPositionId']) ? array_map('intval', $params['secPositionId']) : ($params['secPositionId'] !== null ? [intval($params['secPositionId'])] : []);
 
             $conditionsData = $this->baseConditionsController->getConditions(
                 $params['coorId'],
@@ -199,7 +193,7 @@ class BaseCoordinatorController extends Controller
     /**
      * Public methods for different query types
      */
-    public function getBaseQuery($activeStatus, $coorId, $confId, $regId, $positionId, $secPositionId)
+public function getBaseQuery(int $activeStatus, int $coorId, int $confId, int $regId, int $positionId, ?array $secPositionId): array
     {
         return $this->buildCoordinatorQuery([
             'activeStatus' => $activeStatus,
@@ -215,7 +209,7 @@ class BaseCoordinatorController extends Controller
     /**
      * Helper to determine query type from active status
      */
-    private function getQueryType($activeStatus)
+    private function getQueryType(int $activeStatus)
     {
         return match ($activeStatus) {
             0 => 'zapped',
@@ -229,7 +223,7 @@ class BaseCoordinatorController extends Controller
     /**
      * Active Coordinator Details Base Query
      */
-    public function getCoordinatorDetails($cdId)
+    public function getCoordinatorDetails(int $cdId)
     {
         $cdDetails = Coordinators::with(['country', 'state', 'conference', 'region', 'displayPosition', 'mimiPosition', 'secondaryPosition', 'birthdayMonth',
             'reportsTo', 'recognition', 'application'])->find($cdId);
