@@ -18,19 +18,19 @@
             <form method="POST" id="forgot-pswd" action="{{ route('password.email') }}">
                 @csrf
 
-            @if (session('status'))
+            @session('status')
                 <div class="alert alert-success" role="alert">
-                    {{ session('status') }}
+                    {{ $value }}
                 </div>
-            @endif
+            @endsession
 
             <div class="input-group mb-3">
             <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required placeholder="Email">
-                @if ($errors->has('email'))
+                @error('email')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $errors->first('email') }}</strong>
                     </span>
-                @endif
+                @enderror
                 <div class="input-group-text">
                 <span class="bi bi-envelope-fill"></span>
                 </div>

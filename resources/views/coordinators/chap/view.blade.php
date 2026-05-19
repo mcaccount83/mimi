@@ -70,9 +70,9 @@
                     @if (!isset($chDisbanded))
                         <li class="nav-item"><a class="nav-link" href="#eoy" data-bs-toggle="tab">End of Year</a></li>
                     @endif
-                    @if (isset($chDisbanded))
+                    @isset($chDisbanded)
                         <li class="nav-item"><a class="nav-link" href="#disband" data-bs-toggle="tab">Disband Checklist</a></li>
-                    @endif
+                    @endisset
                     <li class="nav-item"><a class="nav-link" href="#pre" data-bs-toggle="tab">President</a></li>
                     <li class="nav-item"><a class="nav-link" href="#avp" data-bs-toggle="tab">Administrative VP</a></li>
                     <li class="nav-item"><a class="nav-link" href="#mvp" data-bs-toggle="tab">Membership VP</a></li>

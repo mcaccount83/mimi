@@ -23,14 +23,14 @@
             'chapter/*',
         ];
     @endphp
-    @if (isset($chaptersRoute))
+    @isset($chaptersRoute)
         <li class="nav-item">
             <a href="{{ $chaptersRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeChapterRoutes) }}">
                 <i class="nav-icon bi bi-house-fill"></i>
                 <p>Chapters</p>
             </a>
         </li>
-    @endif
+    @endisset
 
     <!-- Coordinaros Menu Item -->
     @php
@@ -43,14 +43,14 @@
             'coordinator/*',
         ];
     @endphp
-    @if (isset($coordinatorsRoute))
+    @isset($coordinatorsRoute)
         <li class="nav-item">
             <a href="{{ $coordinatorsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeCoordinatorsRoutes) }}">
                 <i class="nav-icon bi bi-people-fill"></i>
                 <p>Coordinators</p>
             </a>
         </li>
-    @endif
+    @endisset
 
     <!-- Payments/Donations Menu Item -->
     @php
@@ -63,14 +63,14 @@
             'payment/*'
         ];
     @endphp
-    @if (isset($paymentsRoute))
+    @isset($paymentsRoute)
         <li class="nav-item">
             <a href="{{ $paymentsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activePaymentsRoutes) }}">
                 <i class="nav-icon bi bi-credit-card-fill"></i>
                 <p>Payments/Donations</p>
             </a>
         </li>
-    @endif
+    @endisset
 
     <!-- Website Review Menu Item -->
     @php
@@ -85,14 +85,14 @@
             'online/*'
         ];
     @endphp
-    @if (isset($websiteRoute))
+    @isset($websiteRoute)
         <li class="nav-item">
             <a href="{{ $websiteRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeWebsiteRoutes) }}">
                 <i class="nav-icon bi bi-laptop"></i>
                 <p>Website/Social Media</p>
             </a>
         </li>
-    @endif
+    @endisset
 
     <!-- New Menu Item -->
     @php
@@ -105,7 +105,7 @@
             'inquiries/*',
         ];
     @endphp
-    @if (isset($inquiriesRoute))
+    @isset($inquiriesRoute)
         <li class="nav-item">
             <a href="{{ $inquiriesRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeInquiriesRoutes) }}">
                 <i class="nav-icon bi bi-pin-map-fill"></i>
@@ -118,7 +118,7 @@
                 </p>
             </a>
         </li>
-    @endif
+    @endisset
 
         <!-- New Menu Item -->
         @php
@@ -131,7 +131,7 @@
             'application/*',
         ];
     @endphp
-    @if (isset($newChaptersRoute))
+    @isset($newChaptersRoute)
         <li class="nav-item">
             <a href="{{ $newChaptersRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeNewChapterRoutes) }}">
                 <i class="nav-icon bi bi-asterisk"></i>
@@ -144,7 +144,7 @@
                 </p>
             </a>
         </li>
-    @endif
+    @endisset
 
         <!-- ListAdmin Menu Item -->
         @php
@@ -158,7 +158,7 @@
                 'listadmin/*',
             ];
         @endphp
-        @if (isset($listSubscriptionRoute))
+        @isset($listSubscriptionRoute)
             <li class="nav-item">
                 <a href="{{ $listSubscriptionRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeChapterRoutes) }}">
                     <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em;">
@@ -174,7 +174,7 @@
                     </p>
                 </a>
             </li>
-        @endif
+        @endisset
 
     <!-- BoardList Email Menu Item -->
     {{-- @php
@@ -185,14 +185,14 @@
             'listadmin/boardlist'
         ];
     @endphp
-    @if (isset($boardlistRoute))
+    @isset($boardlistRoute)
         <li class="nav-item">
             <a href="{{ $boardlistRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardlistRoutes) }}">
                 <i class="nav-icon bi bi-card-list"></i>
                 <p>BoardList Emails - OLD</p>
             </a>
         </li>
-    @endif --}}
+    @endisset --}}
 
     <!-- Chapter Reports Menu Item -->
     @php
@@ -207,14 +207,14 @@
             'chapterreports/*'
         ];
     @endphp
-    @if (isset($chapterReportsRoute))
+    @isset($chapterReportsRoute)
         <li class="nav-item">
             <a href="{{ $chapterReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeChapterReportsRoutes) }}">
                 <i class="nav-icon bi bi-house-gear-fill"></i>
                 <p>Chapter Reports</p>
             </a>
         </li>
-    @endif
+    @endisset
 
     <!-- Coordinator Reports Menu Item -->
     @php
@@ -229,7 +229,7 @@
             'coordreports/*'
         ];
     @endphp
-    @if (isset($coordReportsRoute))
+    @isset($coordReportsRoute)
         <li class="nav-item">
             <a href="{{ $coordReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeCoordReportsRoutes) }}">
                     <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em;">
@@ -239,7 +239,7 @@
                 <p>Coordinator Reports</p>
             </a>
         </li>
-    @endif
+    @endisset
 
     <!-- End of Year Reports Menu Item-->
         @php
@@ -254,7 +254,7 @@
                 'eoyreports/*',
             ];
         @endphp
-        @if (isset($eoyReportsRoute))
+        @isset($eoyReportsRoute)
             <li class="nav-item">
                 <a href="{{ $eoyReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeEOYReportsRoutes) }}">
                     <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em;">
@@ -267,7 +267,7 @@
                     </p>
                 </a>
             </li>
-        @endif
+        @endisset
 
     <!-- Admin Reports Menu Item -->
     @php
@@ -278,7 +278,7 @@
             'adminreports/*'
         ];
     @endphp
-    @if (isset($adminReportsRoute))
+    @isset($adminReportsRoute)
         <li class="nav-item">
             <a href="{{ $adminReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeAdminReportsRoutes) }}">
             <span class="nav-icon d-inline-flex align-items-center justify-content-center position-relative" style="width: 1em; height: 1em;">
@@ -288,7 +288,7 @@
                 <p>Admin Reports</p>
             </a>
         </li>
-    @endif
+    @endisset
 
     <!-- User Reports Menu Item -->
     @php
@@ -299,14 +299,14 @@
             'userreports/*'
         ];
     @endphp
-    @if (isset($userReportsRoute))
+    @isset($userReportsRoute)
         <li class="nav-item">
             <a href="{{ $userReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeUserReportsRoutes) }}">
                     <i class="nav-icon bi bi-person-fill-gear"></i>
                 <p>User Reports</p>
             </a>
         </li>
-    @endif
+    @endisset
 
         <!-- Tech Reports Menu Item -->
     @php
@@ -317,14 +317,14 @@
             'techreports/*'
         ];
     @endphp
-    @if (isset($techReportsRoute))
+    @isset($techReportsRoute)
         <li class="nav-item">
             <a href="{{ $techReportsRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeTechReportsRoutes) }}">
                     <i class="nav-icon bi bi-database-fill-gear"></i>
                 <p>IT Reports</p>
             </a>
         </li>
-    @endif
+    @endisset
 
     <!-- Resources Reports Menu Item -->
     @php
@@ -335,14 +335,14 @@
             'resources/*'
         ];
     @endphp
-    @if (isset($resourcesRoute))
+    @isset($resourcesRoute)
         <li class="nav-item">
             <a href="{{ $resourcesRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeResourcesRoutes) }}">
                 <i class="nav-icon bi bi-briefcase-fill"></i>
                 <p>Resources</p>
             </a>
         </li>
-    @endif
+    @endisset
 
         <!-- ForumList Menu Item -->
         @php
@@ -352,7 +352,7 @@
             'forum/*',
         ];
         @endphp
-        @if (isset($forumRoute))
+        @isset($forumRoute)
             <li class="nav-item">
                 <a href="{{ $forumRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeForumRoutes) }}">
                     <i class="nav-icon bi bi-chat-quote-fill"></i>
@@ -365,7 +365,7 @@
                     </p>
                 </a>
             </li>
-        @endif
+        @endisset
 
     <li class="nav-item">
         <a href="{{ route('coordinators.profile') }}" class="nav-link {{ Request::is('coordprofile') ? 'active' : '' }}">

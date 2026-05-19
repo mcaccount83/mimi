@@ -8,7 +8,7 @@
     </li>
 
     <!-- Board Menu Item -->
-    @if(isset($chDetails))
+    @isset($chDetails)
     @php
         $boardRoute = route('board.editboard', ['id' => $chDetails->id]);
 
@@ -16,18 +16,18 @@
             'board/board/*',
         ];
     @endphp
-    @if (isset($boardRoute))
+    @isset($boardRoute)
         <li class="nav-item">
             <a href="{{ $boardRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardRoutes) }}">
                 <i class="nav-icon bi bi-people-fill"></i>
                 <p>Executive Board</p>
             </a>
         </li>
-    @endif
-    @endif
+    @endisset
+    @endisset
 
     <!-- Online Menu Item -->
-    @if(isset($chDetails))
+    @isset($chDetails)
     @php
         $boardRoute = route('board.editonline', ['id' => $chDetails->id]);
 
@@ -35,18 +35,18 @@
             'board/online/*',
         ];
     @endphp
-    @if (isset($boardRoute))
+    @isset($boardRoute)
         <li class="nav-item">
             <a href="{{ $boardRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardRoutes) }}">
                 <i class="nav-icon bi bi-laptop"></i>
                 <p>Online Accounts</p>
             </a>
         </li>
-    @endif
-    @endif
+    @endisset
+    @endisset
 
     <!-- ReReg Menu Item -->
-    @if(isset($chDetails))
+    @isset($chDetails)
     @php
         $boardRoute = route('board.viewrereghistory', ['id' => $chDetails->id]);
 
@@ -55,18 +55,18 @@
             'board/reregpayment/*',
         ];
     @endphp
-    @if (isset($boardRoute))
+    @isset($boardRoute)
         <li class="nav-item">
             <a href="{{ $boardRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardRoutes) }}">
                 <i class="nav-icon bi bi-credit-card-fill"></i>
                 <p>Re-Registration</p>
             </a>
         </li>
-    @endif
-    @endif
+    @endisset
+    @endisset
 
     <!-- Donations Menu Item -->
-    @if(isset($chDetails))
+    @isset($chDetails)
     @php
         $boardRoute = route('board.viewdonationhistory', ['id' => $chDetails->id]);
 
@@ -75,18 +75,18 @@
             'board/donation/*',
         ];
     @endphp
-    @if (isset($boardRoute))
+    @isset($boardRoute)
         <li class="nav-item">
             <a href="{{ $boardRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardRoutes) }}">
                 <i class="nav-icon bi bi-currency-dollar"></i>
                 <p>Donations</p>
             </a>
         </li>
-    @endif
-    @endif
+    @endisset
+    @endisset
 
     <!-- Documents Menu Item -->
-    @if(isset($chDetails))
+    @isset($chDetails)
     @php
         $boardRoute = route('board.viewdocuments', ['id' => $chDetails->id]);
 
@@ -94,18 +94,18 @@
             'board/documents/*',
         ];
     @endphp
-    @if (isset($boardRoute))
+    @isset($boardRoute)
         <li class="nav-item">
             <a href="{{ $boardRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardRoutes) }}">
                 <i class="nav-icon bi bi-files"></i>
                 <p>Documents</p>
             </a>
         </li>
-    @endif
-    @endif
+    @endisset
+    @endisset
 
     <!-- Awards Menu Item -->
-    @if(isset($chDetails))
+    @isset($chDetails)
     @php
         $boardRoute = route('board.viewawardhistory', ['id' => $chDetails->id]);
 
@@ -113,21 +113,21 @@
             'board/awardhistory/*',
         ];
     @endphp
-    @if (isset($boardRoute))
+    @isset($boardRoute)
         <li class="nav-item">
             <a href="{{ $boardRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardRoutes) }}">
                 <i class="nav-icon bi-award-fill"></i>
                 <p>Awards</p>
             </a>
         </li>
-    @endif
-    @endif
+    @endisset
+    @endisset
 
     @if ($probationParty)
      {{-- @if($chDetails->status_id == \App\Enums\OperatingStatusEnum::PROBATION ); --}}
     {{-- @if($chDetails->probation == '5') --}}
         <!-- Quarterly Submission Menu Item -->
-        @if(isset($chDetails))
+        @isset($chDetails)
         @php
             $boardRoute = route('board.editprobation', ['id' => $chDetails->id]);
 
@@ -135,19 +135,19 @@
                 'board/probation/*',
             ];
         @endphp
-        @if (isset($boardRoute))
+        @isset($boardRoute)
             <li class="nav-item">
                 <a href="{{ $boardRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardRoutes) }}">
                     <i class="nav-icon bi bi-pie-chart-fill"></i>
                     <p>Quarterly Submision</p>
                 </a>
             </li>
-        @endif
-        @endif
+        @endisset
+        @endisset
     @endif
 
     <!-- End of Year Menu Item -->
-    @if(isset($chDetails))
+    @isset($chDetails)
     @php
         $boardRoute = route('board.viewendofyear', ['id' => $chDetails->id]);
 
@@ -155,18 +155,18 @@
             'board/endofyear/*',
         ];
     @endphp
-    @if (isset($boardRoute))
+    @isset($boardRoute)
         <li class="nav-item">
             <a href="{{ $boardRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardRoutes) }}">
                 <i class="nav-icon bi bi-file-earmark-bar-graph-fill"></i>
                 <p>End of Year</p>
             </a>
         </li>
-    @endif
-    @endif
+    @endisset
+    @endisset
 
     <!-- Resources Menu Item -->
-    @if(isset($chDetails))
+    @isset($chDetails)
     @php
         $boardRoute = route('board.viewresources', ['id' => $chDetails->id]);
 
@@ -174,18 +174,18 @@
             'board/resources/*',
         ];
     @endphp
-    @if (isset($boardRoute))
+    @isset($boardRoute)
         <li class="nav-item">
             <a href="{{ $boardRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardRoutes) }}">
                 <i class="nav-icon bi bi-briefcase-fill"></i>
                 <p>Resources</p>
             </a>
         </li>
-    @endif
-    @endif
+    @endisset
+    @endisset
 
     <!-- eLearning Menu Item -->
-    @if(isset($chDetails))
+    @isset($chDetails)
     @php
         $boardRoute = route('board.viewelearning', ['id' => $chDetails->id]);
 
@@ -193,15 +193,15 @@
             'board/elearning/*',
         ];
     @endphp
-    @if (isset($boardRoute))
+    @isset($boardRoute)
         <li class="nav-item">
             <a href="{{ $boardRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardRoutes) }}">
                 <i class="nav-icon bi bi-mortarboard-fill"></i>
                 <p>eLearning</p>
             </a>
         </li>
-    @endif
-    @endif
+    @endisset
+    @endisset
 
     <!-- ForumList Menu Item -->
     {{-- @php
@@ -211,7 +211,7 @@
             'forum/*',
         ];
     @endphp
-    @if (isset($forumRoute))
+    @isset($forumRoute)
         <li class="nav-item">
              @if ($userTypeId == \App\Enums\UserTypeEnum::COORD && isset($bdTypeId) && $bdTypeId !== null)
         <a href="#" target="_blank" class="nav-link" style="cursor: default; pointer-events: none; background-color: transparent !important; color: #c2c7d0 !important;">
@@ -228,7 +228,7 @@
                 </p>
             </a>
         </li>
-    @endif --}}
+    @endisset --}}
 
     <!-- Main MC Webstie -->
     <li class="nav-item">
