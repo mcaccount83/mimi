@@ -146,11 +146,11 @@
 
                     <div class="input-group mb-3">
                         <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus placeholder="Email">
-                        @if ($errors->has('email'))
+                        @error('email')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $errors->first('email') }}</strong>
                             </span>
-                        @endif
+                        @enderror
                             <div class="input-group-text">
                                 <span class="bi bi-envelope-fill"></span>
                             </div>
@@ -158,11 +158,11 @@
 
                     <div class="input-group mb-3">
                         <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required placeholder="Password">
-                        @if ($errors->has('password'))
+                        @error('password')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $errors->first('password') }}</strong>
                             </span>
-                        @endif
+                        @enderror
                             <div class="input-group-text">
                                 <span class="bi bi-lock-fill"></span>
                             </div>

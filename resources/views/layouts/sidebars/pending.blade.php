@@ -6,7 +6,7 @@
         </a>
     </li>
 {{--
- @if(isset($chDetails))
+ @isset($chDetails)
      @php
         $boardRoute = route('board.newchapterstatus', ['id' => $chDetails->id]);
 
@@ -14,12 +14,12 @@
             'board/newchapterstatus/*',
         ];
     @endphp
-    @if (isset($boardRoute))
+    @isset($boardRoute)
         <li class="nav-item">
             <a href="{{ $boardRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardRoutes) }}">
                 <i class="nav-icon bi bi-house-fill"></i>
                 <p>Chapter Status</p>
             </a>
         </li>
-    @endif
-@endif --}}
+    @endisset
+@endisset --}}

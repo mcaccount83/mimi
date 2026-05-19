@@ -7,7 +7,7 @@
     </li>
 
     <!-- ReReg Menu Item -->
-    @if(isset($chDetails))
+    @isset($chDetails)
     @php
         $boardRoute = route('board.editfinancialreportfinal', ['id' => $chDetails->id]);
 
@@ -15,18 +15,18 @@
             'board/financialreportfinal/*',
         ];
     @endphp
-    @if (isset($boardRoute))
+    @isset($boardRoute)
         <li class="nav-item">
             <a href="{{ $boardRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardRoutes) }}">
                 <i class="nav-icon bi bi-file-earmark-bar-graph"></i>
                 <p>Financial Report</p>
             </a>
         </li>
-    @endif
-    @endif
+    @endisset
+    @endisset
 
      <!-- ReReg Menu Item -->
-     @if(isset($chDetails))
+     @isset($chDetails)
     @php
         $boardRoute = route('board.editreregpayment', ['id' => $chDetails->id]);
 
@@ -34,18 +34,18 @@
             'board/reregpayment/*',
         ];
     @endphp
-    @if (isset($boardRoute))
+    @isset($boardRoute)
         <li class="nav-item">
             <a href="{{ $boardRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardRoutes) }}">
                 <i class="nav-icon bi bi-credit-card-fill"></i>
                 <p>Re-Registration</p>
             </a>
         </li>
-    @endif
-    @endif
+    @endisset
+    @endisset
 
     <!-- Donations Menu Item -->
-    @if(isset($chDetails))
+    @isset($chDetails)
     @php
         $boardRoute = route('board.editdonate', ['id' => $chDetails->id]);
 
@@ -53,18 +53,18 @@
             'board/donation/*',
         ];
     @endphp
-    @if (isset($boardRoute))
+    @isset($boardRoute)
         <li class="nav-item">
             <a href="{{ $boardRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardRoutes) }}">
                 <i class="nav-icon bi bi-currency-dollar"></i>
                 <p>Donations</p>
             </a>
         </li>
-    @endif
-    @endif
+    @endisset
+    @endisset
 
     <!-- Documents Menu Item -->
-    @if(isset($chDetails))
+    @isset($chDetails)
     @php
         $boardRoute = route('board.editprofile', ['id' => $chDetails->id]);
 
@@ -72,12 +72,12 @@
             'board/profile/*',
         ];
     @endphp
-    @if (isset($boardRoute))
+    @isset($boardRoute)
         <li class="nav-item">
             <a href="{{ $boardRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardRoutes) }}">
                 <i class="nav-icon bi bi-files"></i>
                 <p>Documents</p>
             </a>
         </li>
-    @endif
-    @endif
+    @endisset
+    @endisset

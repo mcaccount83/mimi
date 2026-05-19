@@ -98,7 +98,7 @@
                     <td>{{ $list->name }}</td>
                     @for ($i = 0; $i < $actualMaxAwards; $i++)
                         <td>
-                            @if (isset($validChapterAwards[$i]))
+                            @isset($validChapterAwards[$i])
                                 @php
                                     $awardType = "Unknown";
                                     foreach ($allAwards as $allAward) {
@@ -116,7 +116,7 @@
                                 @endif
                             @else
                                 &nbsp;
-                            @endif
+                            @endisset
                         </td>
                     @endfor
                     <th>
