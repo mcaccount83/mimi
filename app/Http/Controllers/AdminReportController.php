@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
 use App\Enums\CheckboxFilterEnum;
 use App\Models\Chapters;
 use App\Models\Conference;
@@ -12,6 +11,7 @@ use App\Models\Payments;
 use App\Models\Region;
 use App\Models\RegionInquiry;
 use App\Services\PositionConditionsService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
