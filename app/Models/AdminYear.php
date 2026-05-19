@@ -16,5 +16,4 @@ class AdminYear extends Model
     {
         return $this->belongsTo(FiscalYear::class, 'fiscal_year_id', 'id');
     }
-
 }

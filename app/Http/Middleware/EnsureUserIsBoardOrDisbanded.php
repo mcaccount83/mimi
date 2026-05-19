@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use App\Enums\AdminStatusEnum;
-use App\Enums\UserStatusEnum;
 use App\Enums\UserTypeEnum;
 use Closure;
 use Illuminate\Http\Request;

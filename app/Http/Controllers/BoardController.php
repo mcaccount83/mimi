@@ -8,36 +8,32 @@ use App\Enums\UserTypeEnum;
 use App\Mail\BorUpdateListNoitce;
 use App\Mail\ChapProfileUpdatePCNotice;
 use App\Mail\EOYElectionReportSubmitted;
-use App\Mail\EOYElectionReportThankYou;
 use App\Mail\EOYElectionReportSubmittedActive;
+use App\Mail\EOYElectionReportThankYou;
 use App\Mail\EOYElectionReportThankYouActive;
 use App\Mail\EOYFinancialReportThankYou;
 use App\Mail\EOYFinancialSubmitted;
-use App\Mail\GrantRequestThankYou;
 use App\Mail\GrantRequestNotice;
-use App\Mail\NewWebsiteReviewNotice;
+use App\Mail\GrantRequestThankYou;
 use App\Mail\ProbationRptSubmittedCCNotice;
 use App\Mail\ProbationRptThankYou;
-use App\Models\PaymentHistory;
 use App\Models\Boards;
 use App\Models\BoardsIncoming;
 use App\Models\BoardsOutgoing;
 use App\Models\Chapters;
 use App\Models\DocumentsEOY;
-use App\Models\DocumentsIRS;
-use App\Models\DocumentsReport;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportAwards;
 use App\Models\FinancialReportAwardsBadges;
 use App\Models\ForumCategorySubscription;
 use App\Models\GrantRequest;
+use App\Models\PaymentHistory;
 use App\Models\ProbationSubmission;
 use App\Models\ResourceCategory;
 use App\Models\Resources;
 use App\Models\User;
 use App\Services\LearnDashService;
 use App\Services\PositionConditionsService;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -120,24 +116,24 @@ class BoardController extends Controller implements HasMiddleware
         $TRSDetails = $baseQuery['TRSDetails'];
         $SECDetails = $baseQuery['SECDetails'];
 
-         $reregHistory = PaymentHistory::where('chapter_id', $chId)
-        ->where('payment_type', 'rereg')
-        ->orderBy('payment_date', 'desc')
-        ->get();
+        $reregHistory = PaymentHistory::where('chapter_id', $chId)
+            ->where('payment_type', 'rereg')
+            ->orderBy('payment_date', 'desc')
+            ->get();
 
         $m2mHistory = PaymentHistory::where('chapter_id', $chId)
-        ->where('payment_type', 'm2m')
-        ->orderBy('payment_date', 'desc')
-        ->get();
+            ->where('payment_type', 'm2m')
+            ->orderBy('payment_date', 'desc')
+            ->get();
 
         $sustainingHistory = PaymentHistory::where('chapter_id', $chId)
-        ->where('payment_type', 'sustaining')
-        ->orderBy('payment_date', 'desc')
-        ->get();
+            ->where('payment_type', 'sustaining')
+            ->orderBy('payment_date', 'desc')
+            ->get();
 
         $grantRequests = GrantRequest::where('chapter_id', $chId)
-        ->orderBy('submitted_at', 'desc')
-        ->get();
+            ->orderBy('submitted_at', 'desc')
+            ->get();
 
         $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
         $bdPositionId = $bdData['bdPositionId'];
@@ -147,7 +143,7 @@ class BoardController extends Controller implements HasMiddleware
         $resources = Resources::with('resourceCategory')->get();
         $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
 
-        $data = ['chDetails' => $chDetails,'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
+        $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'allCountries' => $allCountries,
             'startMonthName' => $startMonthName, 'dueDate' => $dueDate, 'userTypeId' => $userTypeId, 'allProbation' => $allProbation, 'userAdmin' => $userAdmin, 'financialReportPdfs' => $financialReportPdfs,
             'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments, 'chEOYDocuments' => $chEOYDocuments, 'websiteLink' => $websiteLink,
@@ -162,7 +158,7 @@ class BoardController extends Controller implements HasMiddleware
 
     public function viewDocuments(Request $request, int $chId): View
     {
-    $user = $this->userController->loadUserInformation($request);
+        $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
@@ -193,7 +189,7 @@ class BoardController extends Controller implements HasMiddleware
         $allProbation = $baseQuery['allProbation'];
 
         $PresDetails = $baseQuery['PresDetails'];
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId,  $PresDetails);
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
         $bdPositionId = $bdData['bdPositionId'];
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];
@@ -253,24 +249,24 @@ class BoardController extends Controller implements HasMiddleware
         $TRSDetails = $baseQuery['TRSDetails'];
         $SECDetails = $baseQuery['SECDetails'];
 
-         $reregHistory = PaymentHistory::where('chapter_id', $chId)
-        ->where('payment_type', 'rereg')
-        ->orderBy('payment_date', 'desc')
-        ->get();
+        $reregHistory = PaymentHistory::where('chapter_id', $chId)
+            ->where('payment_type', 'rereg')
+            ->orderBy('payment_date', 'desc')
+            ->get();
 
         $m2mHistory = PaymentHistory::where('chapter_id', $chId)
-        ->where('payment_type', 'm2m')
-        ->orderBy('payment_date', 'desc')
-        ->get();
+            ->where('payment_type', 'm2m')
+            ->orderBy('payment_date', 'desc')
+            ->get();
 
         $sustainingHistory = PaymentHistory::where('chapter_id', $chId)
-        ->where('payment_type', 'sustaining')
-        ->orderBy('payment_date', 'desc')
-        ->get();
+            ->where('payment_type', 'sustaining')
+            ->orderBy('payment_date', 'desc')
+            ->get();
 
         $grantRequests = GrantRequest::where('chapter_id', $chId)
-        ->orderBy('submitted_at', 'desc')
-        ->get();
+            ->orderBy('submitted_at', 'desc')
+            ->get();
 
         $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
         $bdPositionId = $bdData['bdPositionId'];
@@ -280,7 +276,7 @@ class BoardController extends Controller implements HasMiddleware
         $resources = Resources::with('resourceCategory')->get();
         $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
 
-        $data = ['chDetails' => $chDetails,'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
+        $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'allCountries' => $allCountries,
             'startMonthName' => $startMonthName, 'dueDate' => $dueDate, 'userTypeId' => $userTypeId, 'allProbation' => $allProbation, 'userAdmin' => $userAdmin, 'financialReportPdfs' => $financialReportPdfs,
             'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments, 'chEOYDocuments' => $chEOYDocuments, 'websiteLink' => $websiteLink,
@@ -334,24 +330,24 @@ class BoardController extends Controller implements HasMiddleware
         $TRSDetails = $baseQuery['TRSDetails'];
         $SECDetails = $baseQuery['SECDetails'];
 
-         $reregHistory = PaymentHistory::where('chapter_id', $chId)
-        ->where('payment_type', 'rereg')
-        ->orderBy('payment_date', 'desc')
-        ->get();
+        $reregHistory = PaymentHistory::where('chapter_id', $chId)
+            ->where('payment_type', 'rereg')
+            ->orderBy('payment_date', 'desc')
+            ->get();
 
         $m2mHistory = PaymentHistory::where('chapter_id', $chId)
-        ->where('payment_type', 'm2m')
-        ->orderBy('payment_date', 'desc')
-        ->get();
+            ->where('payment_type', 'm2m')
+            ->orderBy('payment_date', 'desc')
+            ->get();
 
         $sustainingHistory = PaymentHistory::where('chapter_id', $chId)
-        ->where('payment_type', 'sustaining')
-        ->orderBy('payment_date', 'desc')
-        ->get();
+            ->where('payment_type', 'sustaining')
+            ->orderBy('payment_date', 'desc')
+            ->get();
 
         $grantRequests = GrantRequest::where('chapter_id', $chId)
-        ->orderBy('submitted_at', 'desc')
-        ->get();
+            ->orderBy('submitted_at', 'desc')
+            ->get();
 
         $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
         $bdPositionId = $bdData['bdPositionId'];
@@ -361,7 +357,7 @@ class BoardController extends Controller implements HasMiddleware
         $resources = Resources::with('resourceCategory')->get();
         $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
 
-        $data = ['chDetails' => $chDetails,'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
+        $data = ['chDetails' => $chDetails, 'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'allCountries' => $allCountries,
             'startMonthName' => $startMonthName, 'dueDate' => $dueDate, 'userTypeId' => $userTypeId, 'allProbation' => $allProbation, 'userAdmin' => $userAdmin, 'financialReportPdfs' => $financialReportPdfs,
             'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments, 'chEOYDocuments' => $chEOYDocuments, 'websiteLink' => $websiteLink,
@@ -391,7 +387,7 @@ class BoardController extends Controller implements HasMiddleware
         $chAwards = $baseQuery['chAwards'];
 
         $awardBadges = FinancialReportAwardsBadges::with(['fiscalYear', 'eoyAward'])->get();
-        $badgeLookup = $awardBadges->keyBy(fn($b) => $b->report_year_id . '_' . $b->eoy_award_id);
+        $badgeLookup = $awardBadges->keyBy(fn ($b) => $b->report_year_id.'_'.$b->eoy_award_id);
 
         $chapterStatus = $baseQuery['chapterStatus'];
 
@@ -406,10 +402,10 @@ class BoardController extends Controller implements HasMiddleware
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];
 
-        $data = ['chDetails' => $chDetails,'stateShortName' => $stateShortName, 'chapterStatus' => $chapterStatus, 'badgeLookup' => $badgeLookup,
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'chapterStatus' => $chapterStatus, 'badgeLookup' => $badgeLookup,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
             'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin, 'startMonthId' => $startMonthId, 'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId,
-            'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'chAwards' => $chAwards, 'currentApprovedAwards' => $currentApprovedAwards
+            'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'chAwards' => $chAwards, 'currentApprovedAwards' => $currentApprovedAwards,
         ];
 
         return view('boards.awardhistory')->with($data);
@@ -463,7 +459,6 @@ class BoardController extends Controller implements HasMiddleware
 
         return view('boards.editboard')->with($data);
     }
-
 
     /**
      *Update Chapter Board Information
@@ -827,7 +822,7 @@ class BoardController extends Controller implements HasMiddleware
         $bdTypeId = $bdData['bdTypeId'];
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin, 'chActiveId' => $chActiveId,
-            'allStates' => $allStates, 'allCountries' => $allCountries, 'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
+            'allStates' => $allStates, 'allCountries' => $allCountries, 'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails,
         ];
 
         return view('boards.manualorder')->with($data);
@@ -867,7 +862,7 @@ class BoardController extends Controller implements HasMiddleware
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userAdmin' => $userAdmin,
             'startMonthName' => $startMonthName, 'endRange' => $rangeEndDateFormatted, 'startRange' => $rangeStartDateFormatted,
             'thisMonth' => $currentMonth, 'due_date' => $due_date, 'userTypeId' => $userTypeId, 'bdPositionId' => $bdPositionId,
-            'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
+            'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails,
         ];
 
         return view('boards.probation')->with($data);
@@ -943,7 +938,7 @@ class BoardController extends Controller implements HasMiddleware
         }
     }
 
-     public function editOnlineInfo(Request $request, int $chId): View
+    public function editOnlineInfo(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -1069,7 +1064,7 @@ class BoardController extends Controller implements HasMiddleware
 
         $data = ['stateShortName' => $stateShortName, 'chDetails' => $chDetails, 'resources' => $resources, 'resourceCategories' => $resourceCategories,
             'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,  'bdPositionId' => $bdPositionId,
-            'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
+            'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails,
         ];
 
         return view('boards.resources')->with($data);
@@ -1078,7 +1073,7 @@ class BoardController extends Controller implements HasMiddleware
     /**
      * Show EOY BoardInfo All Board Members
      */
-     public function viewEndOfYear(Request $request, int $chId): View
+    public function viewEndOfYear(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -1113,13 +1108,13 @@ class BoardController extends Controller implements HasMiddleware
             'chDocuments' => $chDocuments, 'probationReason' => $probationReason, 'chPayments' => $chPayments, 'chEOYDocuments' => $chEOYDocuments,
             'boardActive' => $boardActive, 'startMonthId' => $startMonthId, 'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId,
             'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
-            'allAwards' => $allAwards, 'resources' => $resources
+            'allAwards' => $allAwards, 'resources' => $resources,
         ];
 
         return view('boards.endofyear')->with($data);
     }
 
-        public function editBoardReport(Request $request, int $chId): View
+    public function editBoardReport(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -1145,16 +1140,16 @@ class BoardController extends Controller implements HasMiddleware
         if ($chEOYDocuments->new_board_active != '1') {
             $baseIncomingBoardQuery = $this->baseChapterController->getIncomingBoardDetails($chId);
             $PresDetails = $baseIncomingBoardQuery['PresDetails'];
-            $AVPDetails  = $baseIncomingBoardQuery['AVPDetails'];
-            $MVPDetails  = $baseIncomingBoardQuery['MVPDetails'];
-            $TRSDetails  = $baseIncomingBoardQuery['TRSDetails'];
-            $SECDetails  = $baseIncomingBoardQuery['SECDetails'];
+            $AVPDetails = $baseIncomingBoardQuery['AVPDetails'];
+            $MVPDetails = $baseIncomingBoardQuery['MVPDetails'];
+            $TRSDetails = $baseIncomingBoardQuery['TRSDetails'];
+            $SECDetails = $baseIncomingBoardQuery['SECDetails'];
         } else {
             $PresDetails = $baseActiveBoardQuery['PresDetails'];
-            $AVPDetails  = $baseActiveBoardQuery['AVPDetails'];
-            $MVPDetails  = $baseActiveBoardQuery['MVPDetails'];
-            $TRSDetails  = $baseActiveBoardQuery['TRSDetails'];
-            $SECDetails  = $baseActiveBoardQuery['SECDetails'];
+            $AVPDetails = $baseActiveBoardQuery['AVPDetails'];
+            $MVPDetails = $baseActiveBoardQuery['MVPDetails'];
+            $TRSDetails = $baseActiveBoardQuery['TRSDetails'];
+            $SECDetails = $baseActiveBoardQuery['SECDetails'];
         }
 
         $bdData = $this->positionConditionsService->getViewAs($userTypeId, $activePresDetails);
@@ -1166,7 +1161,7 @@ class BoardController extends Controller implements HasMiddleware
             'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId,
             'allWebLinks' => $allWebLinks, 'allCountries' => $allCountries,  'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId,
             'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
-            'chEOYDocuments' => $chEOYDocuments
+            'chEOYDocuments' => $chEOYDocuments,
         ];
 
         return view('boards.editboardreport')->with($data);
@@ -1273,7 +1268,7 @@ class BoardController extends Controller implements HasMiddleware
                         ? 'Board info has been submitted and activated successfully'
                         : 'Board info submitted, but activation encountered an issue.';
                 } catch (\Exception $e) {
-                    Log::error('Board activation failed: ' . $e->getMessage());
+                    Log::error('Board activation failed: '.$e->getMessage());
                     $message = 'Board info submitted, but activation encountered an issue.';
                 }
             }
@@ -1344,7 +1339,7 @@ class BoardController extends Controller implements HasMiddleware
             $chDocuments = $baseQuery['chDocuments'];
             $chEOYDocuments = $baseQuery['chEOYDocuments'];
             $chIRSDocuments = $baseQuery['chIRSDocuments'];
-        $chReportDocuments = $baseQuery['chReportDocuments'];
+            $chReportDocuments = $baseQuery['chReportDocuments'];
             $chFinancialReport = $baseQuery['chFinancialReport'];
             $emailListChap = $baseQuery['emailListChap'];
             $emailListCoord = $baseQuery['emailListCoord'];
@@ -1451,7 +1446,7 @@ class BoardController extends Controller implements HasMiddleware
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'userTypeId' => $userTypeId, 'boardCourses' => $boardCourses,
             'boardCoursesByCategory' => $boardCoursesByCategory, 'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails,
-            'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
+            'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails,
         ];
 
         return view('boards.elearning')->with($data);
@@ -1498,7 +1493,7 @@ class BoardController extends Controller implements HasMiddleware
 
         $data = ['chDetails' => $chDetails, 'grantList' => $grantList, 'stateShortName' => $stateShortName,
             'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,  'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails,
-            'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
+            'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails,
         ];
 
         return view('boards.grantrequestlist')->with($data);
@@ -1603,7 +1598,7 @@ class BoardController extends Controller implements HasMiddleware
                 'mailTable' => $mailTable,
             ]);
 
-              if ($grantReceived == 1) {
+            if ($grantReceived == 1) {
                 $pdfPath = $this->pdfController->saveGrantRequest($request, $grantId);   // Generate and Send the PDF
                 Mail::to($submitEmail)
                     // ->cc($emailCC)
@@ -1621,15 +1616,15 @@ class BoardController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error('Grant Request Update Error: ' . $e->getMessage());
+            Log::error('Grant Request Update Error: '.$e->getMessage());
 
             return redirect()->back()
-                ->withErrors(['error' => 'Something went wrong: ' . $e->getMessage()])
+                ->withErrors(['error' => 'Something went wrong: '.$e->getMessage()])
                 ->withInput();
         }
     }
 
-     public function showNewGrantRequest(Request $request, int $chId): View
+    public function showNewGrantRequest(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -1659,14 +1654,14 @@ class BoardController extends Controller implements HasMiddleware
         $data = ['stateShortName' => $stateShortName, 'chDetails' => $chDetails,
             'PresDetails' => $PresDetails, 'stateName' => $stateName,
             'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,
-            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId
+            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId,
         ];
 
         return view('boards.grantrequest')->with($data);
 
     }
 
-   public function updateNewGrantRequest(Request $request, int $chId): RedirectResponse
+    public function updateNewGrantRequest(Request $request, int $chId): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -1684,7 +1679,7 @@ class BoardController extends Controller implements HasMiddleware
         try {
             $grantRequest = GrantRequest::create([
                 'chapter_id' => $chId,
-                'board_name' => $borDetails->first_name . ' ' . $borDetails->last_name,
+                'board_name' => $borDetails->first_name.' '.$borDetails->last_name,
                 'board_position' => $borDetails->position->position,
                 'board_phone' => $borDetails->phone,
                 'board_email' => $borDetails->email,
@@ -1702,15 +1697,15 @@ class BoardController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error('New Grant Request Error: ' . $e->getMessage());
+            Log::error('New Grant Request Error: '.$e->getMessage());
 
             return redirect()->back()
-                ->withErrors(['error' => 'Something went wrong: ' . $e->getMessage()])
+                ->withErrors(['error' => 'Something went wrong: '.$e->getMessage()])
                 ->withInput();
         }
     }
 
-     public function editBoardProfile(Request $request, int $chId): View
+    public function editBoardProfile(Request $request, int $chId): View
     {
         // $user = User::find($request->user()->id);
         // $userId = $user->id;
@@ -1737,7 +1732,7 @@ class BoardController extends Controller implements HasMiddleware
 
         $data = ['chDetails' => $chDetails, 'allStates' => $allStates, 'allCountries' => $allCountries,
             'stateShortName' => $stateShortName, 'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails,
-            'bdTypeId' => $bdTypeId, 'userId' => $userId
+            'bdTypeId' => $bdTypeId, 'userId' => $userId,
         ];
 
         return view('boards.profile')->with($data);
@@ -1757,11 +1752,11 @@ class BoardController extends Controller implements HasMiddleware
         $board = Boards::find($bdId);
 
         try {
-            $user ->first_name = $request->input('ch_bor_fname');
-            $user ->last_name = $request->input('ch_bor_lname');
-            $user ->email = $request->input('ch_bor_email');
+            $user->first_name = $request->input('ch_bor_fname');
+            $user->last_name = $request->input('ch_bor_lname');
+            $user->email = $request->input('ch_bor_email');
 
-            $user ->save();
+            $user->save();
 
             $board->first_name = $request->input('ch_bor_fname');
             $board->last_name = $request->input('ch_bor_lname');
@@ -1790,5 +1785,4 @@ class BoardController extends Controller implements HasMiddleware
             DB::disconnect();
         }
     }
-
 }

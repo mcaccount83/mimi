@@ -2,24 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\CoordinatorPosition;
 use App\Enums\CheckboxFilterEnum;
+use App\Enums\CoordinatorPosition;
 use App\Enums\ProbationReasonEnum;
 use App\Enums\UserStatusEnum;
 use App\Enums\UserTypeEnum;
 use App\Models\Admin;
 use App\Models\AdminEmail;
 use App\Models\AdminIRS;
-use App\Models\AdminYear;
 use App\Models\AdminReport;
-use App\Models\FiscalYear;
+use App\Models\AdminYear;
 use App\Models\Boards;
 use App\Models\BoardsDisbanded;
 use App\Models\BoardsIncoming;
 use App\Models\BoardsOutgoing;
 use App\Models\BoardsPending;
-use App\Models\Chapters;
 use App\Models\ChapterAwardHistory;
+use App\Models\Chapters;
 use App\Models\Conference;
 use App\Models\CoordinatorApplication;
 use App\Models\CoordinatorRecognition;
@@ -27,10 +26,9 @@ use App\Models\Coordinators;
 use App\Models\CoordinatorTree;
 use App\Models\Documents;
 use App\Models\DocumentsEOY;
-use App\Models\DocumentsIRS;
-use App\Models\DocumentsReport;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportReview;
+use App\Models\FiscalYear;
 use App\Models\ForumCategorySubscription;
 use App\Models\GoogleDrive;
 use App\Models\ProbationSubmission;
@@ -47,7 +45,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
-use TeamTeaTime\Forum\Models\Category as ForumCategory;
 
 class TechReportController extends Controller implements HasMiddleware
 {
@@ -65,7 +62,7 @@ class TechReportController extends Controller implements HasMiddleware
         return [
             new Middleware('auth', except: ['logout']),
             \App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class,
-                        \App\Http\Middleware\SetViewAsSession::class,
+            \App\Http\Middleware\SetViewAsSession::class,
 
         ];
     }
@@ -116,24 +113,26 @@ class TechReportController extends Controller implements HasMiddleware
 
         $chapterBdData = [];
         foreach ($chapterList as $chapter) {
-        $chDetails = $this->baseBoardController->getChapterDetails($chapter->id);
-        $PresDetails = $chDetails['PresDetails'] ?? null;
+            $chDetails = $this->baseBoardController->getChapterDetails($chapter->id);
+            $PresDetails = $chDetails['PresDetails'] ?? null;
 
-        if ($PresDetails === null) {
-            $chapterBdData[$chapter->id] = null; // or some default
-            continue;
+            if ($PresDetails === null) {
+                $chapterBdData[$chapter->id] = null; // or some default
+
+                continue;
+            }
+
+            $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+            $chapterBdData[$chapter->id] = $bdData;
         }
 
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
-        $chapterBdData[$chapter->id] = $bdData;
-    }
+        $countList = $chapterList->count();
+        $data = ['countList' => $countList, 'chapterList' => $chapterList,
+            'checkBox51Status' => $checkBox51Status, 'chapterBdData' => $chapterBdData, 'userTypeId' => $userTypeId,
+        ];
 
-    $countList = $chapterList->count();
-    $data = ['countList' => $countList, 'chapterList' => $chapterList,
-        'checkBox51Status' => $checkBox51Status, 'chapterBdData' => $chapterBdData, 'userTypeId' => $userTypeId,
-    ];
+        $countList = $chapterList->count();
 
-    $countList = $chapterList->count();
         return view('coordinators.techreports.viewasactivechapter')->with($data);
     }
 
@@ -155,29 +154,31 @@ class TechReportController extends Controller implements HasMiddleware
 
         $chapterBdData = [];
         foreach ($chapterList as $chapter) {
-        $chDetails = $this->baseBoardController->getChapterDetails($chapter->id);
-        $PresDetails = $chDetails['PresDetails'] ?? null;
+            $chDetails = $this->baseBoardController->getChapterDetails($chapter->id);
+            $PresDetails = $chDetails['PresDetails'] ?? null;
 
-        if ($PresDetails === null) {
-            $chapterBdData[$chapter->id] = null; // or some default
-            continue;
+            if ($PresDetails === null) {
+                $chapterBdData[$chapter->id] = null; // or some default
+
+                continue;
+            }
+
+            $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+            $chapterBdData[$chapter->id] = $bdData;
         }
 
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
-        $chapterBdData[$chapter->id] = $bdData;
-    }
+        $countList = $chapterList->count();
+        $data = ['countList' => $countList, 'chapterList' => $chapterList,
+            'checkBox51Status' => $checkBox51Status, 'chapterBdData' => $chapterBdData, 'userTypeId' => $userTypeId,
+        ];
 
-    $countList = $chapterList->count();
-    $data = ['countList' => $countList, 'chapterList' => $chapterList,
-        'checkBox51Status' => $checkBox51Status, 'chapterBdData' => $chapterBdData, 'userTypeId' => $userTypeId,
-    ];
+        $countList = $chapterList->count();
 
-    $countList = $chapterList->count();
         return view('coordinators.techreports.viewasdisbandedchapter')->with($data);
     }
 
-   public function viewAsPendingChapter(Request $request): View
- {
+    public function viewAsPendingChapter(Request $request): View
+    {
         $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);
@@ -194,24 +195,26 @@ class TechReportController extends Controller implements HasMiddleware
 
         $chapterBdData = [];
         foreach ($chapterList as $chapter) {
-        $chDetails = $this->baseBoardController->getChapterDetails($chapter->id);
-        $PresDetails = $chDetails['PresDetails'] ?? null;
+            $chDetails = $this->baseBoardController->getChapterDetails($chapter->id);
+            $PresDetails = $chDetails['PresDetails'] ?? null;
 
-        if ($PresDetails === null) {
-            $chapterBdData[$chapter->id] = null; // or some default
-            continue;
+            if ($PresDetails === null) {
+                $chapterBdData[$chapter->id] = null; // or some default
+
+                continue;
+            }
+
+            $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+            $chapterBdData[$chapter->id] = $bdData;
         }
 
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
-        $chapterBdData[$chapter->id] = $bdData;
-    }
+        $countList = $chapterList->count();
+        $data = ['countList' => $countList, 'chapterList' => $chapterList,
+            'checkBox51Status' => $checkBox51Status, 'chapterBdData' => $chapterBdData, 'userTypeId' => $userTypeId,
+        ];
 
-    $countList = $chapterList->count();
-    $data = ['countList' => $countList, 'chapterList' => $chapterList,
-        'checkBox51Status' => $checkBox51Status, 'chapterBdData' => $chapterBdData, 'userTypeId' => $userTypeId,
-    ];
+        $countList = $chapterList->count();
 
-    $countList = $chapterList->count();
         return view('coordinators.techreports.viewaspendingchapter')->with($data);
     }
 
@@ -327,25 +330,25 @@ class TechReportController extends Controller implements HasMiddleware
         ];
 
         $irsCorrectsionsListItems = [
-          'Chapters with Wrong Fiscal Year Dates',
-          'Chapters Not Found in IRS Database',
-          'Chapters who FILED with the Wrong Fiscal Year Dates'
+            'Chapters with Wrong Fiscal Year Dates',
+            'Chapters Not Found in IRS Database',
+            'Chapters who FILED with the Wrong Fiscal Year Dates',
         ];
 
         $irsSubordinateListItems = [
-          'All Chapters Currently Active',
-          'Chapters Added this Fiscal Year',
-          'Chapters Removed this Fiscal Year'
+            'All Chapters Currently Active',
+            'Chapters Added this Fiscal Year',
+            'Chapters Removed this Fiscal Year',
         ];
 
         $irsUpdateListItems1 = [
-          'Chapters Added since Subordinate Filing',
-          'Chapters Removed since Subordinate Filing'
+            'Chapters Added since Subordinate Filing',
+            'Chapters Removed since Subordinate Filing',
         ];
 
         $irsUpdateListItems2 = [
-          'Chapters Added since Last Update',
-          'Chapters Removed since Last Update'
+            'Chapters Added since Last Update',
+            'Chapters Removed since Last Update',
         ];
 
         $unSubscribeListItems = [
@@ -420,7 +423,7 @@ class TechReportController extends Controller implements HasMiddleware
             'resetEOYTableItems' => $resetEOYTableItems, 'displayCoorindatorMenuItems' => $displayCoorindatorMenuItems, 'displayChapterButtonItems' => $displayChapterButtonItems,
             'displayTestingItemsItems' => $displayTestingItemsItems, 'displayLiveItemsItems' => $displayLiveItemsItems, 'unSubscribeListItems' => $unSubscribeListItems,
             'resetAFTERtestingItems' => $resetAFTERtestingItems, 'updateUserTablesItems' => $updateUserTablesItems, 'subscribeListItems' => $subscribeListItems,
-            'irsUpdateListItems1' => $irsUpdateListItems1, 'irsUpdateListItems2' => $irsUpdateListItems2, 'irsSubordinateListItems' => $irsSubordinateListItems
+            'irsUpdateListItems1' => $irsUpdateListItems1, 'irsUpdateListItems2' => $irsUpdateListItems2, 'irsSubordinateListItems' => $irsSubordinateListItems,
         ];
 
         return view('coordinators.techreports.eoy')->with($data);
@@ -560,7 +563,7 @@ class TechReportController extends Controller implements HasMiddleware
     /**
      * Subscribe Users to ForumLists  // Step 2
      */
-     public function updateSubscribeLists(Request $request): JsonResponse
+    public function updateSubscribeLists(Request $request): JsonResponse
     {
         $fiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
         $fiscalYearId = $fiscalYearOptions['fiscalYearId'];
@@ -589,7 +592,7 @@ class TechReportController extends Controller implements HasMiddleware
     /**
      * Record 990N Corrections Update  // Step 2
      */
-     public function updateFilingCorrections(Request $request): JsonResponse
+    public function updateFilingCorrections(Request $request): JsonResponse
     {
         $fiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
         $fiscalYearId = $fiscalYearOptions['fiscalYearId'];
@@ -640,7 +643,7 @@ class TechReportController extends Controller implements HasMiddleware
     /**
      * Record IRS September Update  // Step 2
      */
-     public function updateFilingSept(Request $request): JsonResponse
+    public function updateFilingSept(Request $request): JsonResponse
     {
         $fiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
         $fiscalYearId = $fiscalYearOptions['fiscalYearId'];
@@ -667,7 +670,7 @@ class TechReportController extends Controller implements HasMiddleware
     /**
      * Record IRS December Update  // Step 2
      */
-     public function updateFilingDec(Request $request): JsonResponse
+    public function updateFilingDec(Request $request): JsonResponse
     {
         $fiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
         $fiscalYearId = $fiscalYearOptions['fiscalYearId'];
@@ -694,7 +697,7 @@ class TechReportController extends Controller implements HasMiddleware
     /**
      * Record IRS Subordinate Filing  // Step 2
      */
-     public function updateSubordinateFiling(Request $request): JsonResponse
+    public function updateSubordinateFiling(Request $request): JsonResponse
     {
         $fiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
         $fiscalYearId = $fiscalYearOptions['fiscalYearId'];
@@ -756,7 +759,7 @@ class TechReportController extends Controller implements HasMiddleware
     /**
      * Record IRS June Update  // Step 2
      */
-     public function updateFilingJune(Request $request): JsonResponse
+    public function updateFilingJune(Request $request): JsonResponse
     {
         $fiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
         $fiscalYearId = $fiscalYearOptions['fiscalYearId'];
@@ -780,7 +783,7 @@ class TechReportController extends Controller implements HasMiddleware
         }
     }
 
-     /**
+    /**
      * Unsubscribe Users from ForumLists  // Step 8
      */
     public function updateUnsubscribeLists(Request $request): JsonResponse
@@ -808,7 +811,6 @@ class TechReportController extends Controller implements HasMiddleware
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
         }
     }
-
 
     /**
      * Reset Fiscal Year EOY Files/Docs/Etc  // Step 3
@@ -894,15 +896,15 @@ class TechReportController extends Controller implements HasMiddleware
 
     private function addFinancialPdfColumn(array $getFiscalYearOptions): void
     {
-        $newColumnName   = $getFiscalYearOptions['fiscalYearEnd'] . '_financial_pdf_path';
-        $afterColumnName = $getFiscalYearOptions['fiscalYearStart'] . '_financial_pdf_path';
+        $newColumnName = $getFiscalYearOptions['fiscalYearEnd'].'_financial_pdf_path';
+        $afterColumnName = $getFiscalYearOptions['fiscalYearStart'].'_financial_pdf_path';
 
         Schema::table('documents_eoy', function (Blueprint $table) use ($newColumnName, $afterColumnName) {
             $table->string($newColumnName, 255)->nullable()->after($afterColumnName);
         });
     }
 
-     private function archiveFinancialTables(array $getFiscalYearOptions): void
+    private function archiveFinancialTables(array $getFiscalYearOptions): void
     {
         $fiscalYearStart = $getFiscalYearOptions['fiscalYearStart'];
 
@@ -915,8 +917,8 @@ class TechReportController extends Controller implements HasMiddleware
     private function deactivateOutgoingUsers(): void
     {
         User::where('type_id', UserTypeEnum::OUTGOING)
-        ->where('is_active', UserStatusEnum::ACTIVE)
-        ->update(['is_active' => UserStatusEnum::INACTIVE]);
+            ->where('is_active', UserStatusEnum::ACTIVE)
+            ->update(['is_active' => UserStatusEnum::INACTIVE]);
     }
 
     private function clearBoardTables(): void
@@ -944,15 +946,17 @@ class TechReportController extends Controller implements HasMiddleware
         $allChapters = FinancialReport::whereNotNull('chapter_awards')->get();
         foreach ($allChapters as $report) {
             $awards = unserialize(base64_decode($report->chapter_awards));
-            if (!is_array($awards)) continue;
+            if (! is_array($awards)) {
+                continue;
+            }
 
             foreach ($awards as $award) {
-                if (!empty($award['awards_approved'])) {
+                if (! empty($award['awards_approved'])) {
                     ChapterAwardHistory::firstOrCreate(
                         [
-                            'chapter_id'  => $report->chapter_id,
+                            'chapter_id' => $report->chapter_id,
                             'awards_type' => $award['awards_type'],
-                            'report_year_id'  => $reportYearId,
+                            'report_year_id' => $reportYearId,
                             'notified' => $report->chapter_awards_notified,
                         ],
                         [
@@ -975,12 +979,12 @@ class TechReportController extends Controller implements HasMiddleware
         $activeChapters = Chapters::with('documentsEOY')->where('active_status', 1)->get();
         foreach ($activeChapters as $chapter) {
             FinancialReport::create([
-                'chapter_id'                         => $chapter->id,
-                'pre_balance'                        => $chapter->documentsEOY->pre_balance,
+                'chapter_id' => $chapter->id,
+                'pre_balance' => $chapter->documentsEOY->pre_balance,
                 'amount_reserved_from_previous_year' => $chapter->documentsEOY->pre_balance,
             ]);
             FinancialReportReview::create([
-                'chapter_id'  => $chapter->id,
+                'chapter_id' => $chapter->id,
                 'pre_balance' => $chapter->documentsEOY->pre_balance,
             ]);
         }
@@ -989,8 +993,8 @@ class TechReportController extends Controller implements HasMiddleware
     private function resetChapterFlags(): void
     {
         Chapters::query()->update([
-            'boundary_issues'         => null,
-            'boundary_issue_notes'    => null,
+            'boundary_issues' => null,
+            'boundary_issue_notes' => null,
             'boundary_issue_resolved' => null,
         ]);
     }
@@ -998,19 +1002,19 @@ class TechReportController extends Controller implements HasMiddleware
     private function resetDocumentsEOY(): void
     {
         DocumentsEoy::query()->update([
-            'new_board_submitted'       => null,
-            'new_board_active'          => null,
+            'new_board_submitted' => null,
+            'new_board_active' => null,
             'financial_report_received' => null,
-            'report_received'           => null,
+            'report_received' => null,
             'financial_review_complete' => null,
-            'review_complete'           => null,
-            'report_notes'              => null,
-            'report_extension'          => null,
-            'extension_notes'           => null,
-            'roster_path'               => null,
-            'statement_1_path'          => null,
-            'statement_2_path'          => null,
-            'award_path'                => null,
+            'review_complete' => null,
+            'report_notes' => null,
+            'report_extension' => null,
+            'extension_notes' => null,
+            'roster_path' => null,
+            'statement_1_path' => null,
+            'statement_2_path' => null,
+            'award_path' => null,
         ]);
     }
 
@@ -1085,7 +1089,7 @@ class TechReportController extends Controller implements HasMiddleware
             $this->updateChapterPreBalancesLIVE();
             $this->resetDocumentsEOYLIVE($yearColumnName);
 
-         $adminReport = AdminReport::where('report_year_id', $reportYearId)->firstOrFail();
+            $adminReport = AdminReport::where('report_year_id', $reportYearId)->firstOrFail();
             $adminReport->update([
                 'reset_AFTER_testing' => 1,
             ]);
@@ -1163,14 +1167,14 @@ class TechReportController extends Controller implements HasMiddleware
         ]);
 
         DB::table('documents_irs')->update([
-            'irs_notes'      => null,
-            'irs_verified'   => null,
-            'irs_issues'     => null,
-            'irs_wrongdate'  => null,
-            'irs_notfound'   => null,
+            'irs_notes' => null,
+            'irs_verified' => null,
+            'irs_issues' => null,
+            'irs_wrongdate' => null,
+            'irs_notfound' => null,
             'irs_filedwrong' => null,
-            'irs_notified'   => null,
-            'irs_path'       => null,
+            'irs_notified' => null,
+            'irs_path' => null,
         ]);
 
         DB::table('documents_report')->update([
@@ -1212,7 +1216,7 @@ class TechReportController extends Controller implements HasMiddleware
         DB::statement("INSERT INTO zzz_users_{$currentMonth}_{$currentYear} SELECT * FROM users");
     }
 
-      private function resetBoardList(int $currentYear): void
+    private function resetBoardList(int $currentYear): void
     {
         // Archive forum category 2 threads to a new year-labeled category
         $lastYear = $currentYear - 1;
@@ -1223,23 +1227,23 @@ class TechReportController extends Controller implements HasMiddleware
         $maxRgt = DB::table('forum_categories')->max('_rgt');
 
         $newCategoryId = DB::table('forum_categories')->insertGetId([
-            'title'                    => "{$lastYear}-{$currentYear} BoardList",
-            'description'              => $category2->description,
-            'accepts_threads'          => $category2->accepts_threads,
-            'newest_thread_id'         => null,
-            'latest_active_thread_id'  => null,
-            'thread_count'             => $category2->thread_count,
-            'post_count'               => $category2->post_count,
-            'is_private'               => $category2->is_private,
-            'thread_approval_enabled'  => $category2->thread_approval_enabled,
-            'post_approval_enabled'    => $category2->post_approval_enabled,
-            'created_at'               => now(),
-            'updated_at'               => now(),
-            '_lft'                     => $maxRgt + 1,
-            '_rgt'                     => $maxRgt + 2,
-            'parent_id'                => $category2->parent_id,
-            'color_light_mode'         => $category2->color_light_mode,
-            'color_dark_mode'          => $category2->color_dark_mode,
+            'title' => "{$lastYear}-{$currentYear} BoardList",
+            'description' => $category2->description,
+            'accepts_threads' => $category2->accepts_threads,
+            'newest_thread_id' => null,
+            'latest_active_thread_id' => null,
+            'thread_count' => $category2->thread_count,
+            'post_count' => $category2->post_count,
+            'is_private' => $category2->is_private,
+            'thread_approval_enabled' => $category2->thread_approval_enabled,
+            'post_approval_enabled' => $category2->post_approval_enabled,
+            'created_at' => now(),
+            'updated_at' => now(),
+            '_lft' => $maxRgt + 1,
+            '_rgt' => $maxRgt + 2,
+            'parent_id' => $category2->parent_id,
+            'color_light_mode' => $category2->color_light_mode,
+            'color_dark_mode' => $category2->color_dark_mode,
         ]);
 
         // Move all threads from category 2 to the new archived category
@@ -1251,11 +1255,11 @@ class TechReportController extends Controller implements HasMiddleware
         DB::table('forum_categories')
             ->where('id', 2)
             ->update([
-                'newest_thread_id'        => null,
+                'newest_thread_id' => null,
                 'latest_active_thread_id' => null,
-                'thread_count'            => 0,
-                'post_count'              => 0,
-                'updated_at'              => now(),
+                'thread_count' => 0,
+                'post_count' => 0,
+                'updated_at' => now(),
             ]);
     }
 
@@ -1314,11 +1318,11 @@ class TechReportController extends Controller implements HasMiddleware
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'version' => 'nullable|string|max:50',
-            'folder_id' => 'required|string|max:255'
+            'folder_id' => 'required|string|max:255',
         ]);
 
         try {
-            $drive = new GoogleDrive();
+            $drive = new GoogleDrive;
             $drive->name = $request->name;
             $drive->description = $request->description;
             $drive->version = $request->version;
@@ -1327,14 +1331,14 @@ class TechReportController extends Controller implements HasMiddleware
 
             return response()->json([
                 'success' => true,
-                'message' => 'Google Drive folder added successfully!'
+                'message' => 'Google Drive folder added successfully!',
             ]);
         } catch (\Exception $e) {
-            Log::error('Google Drive folder creation error: ' . $e->getMessage());
+            Log::error('Google Drive folder creation error: '.$e->getMessage());
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error adding folder. Please try again.'
+                'message' => 'Error adding folder. Please try again.',
             ], 500);
         }
     }
@@ -1345,7 +1349,7 @@ class TechReportController extends Controller implements HasMiddleware
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'version' => 'nullable|string|max:50',
-            'folder_id' => 'required|string|max:255'
+            'folder_id' => 'required|string|max:255',
         ]);
 
         try {
@@ -1358,14 +1362,14 @@ class TechReportController extends Controller implements HasMiddleware
 
             return response()->json([
                 'success' => true,
-                'message' => 'Google Drive folder updated successfully!'
+                'message' => 'Google Drive folder updated successfully!',
             ]);
         } catch (\Exception $e) {
-            Log::error('Google Drive folder update error: ' . $e->getMessage());
+            Log::error('Google Drive folder update error: '.$e->getMessage());
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error updating folder. Please try again.'
+                'message' => 'Error updating folder. Please try again.',
             ], 500);
         }
     }
@@ -1404,63 +1408,63 @@ class TechReportController extends Controller implements HasMiddleware
 
     }
 
-  public function addAdminEmail(Request $request)
-{
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'description' => 'required|string|max:255',
-        'email' => 'required|string|max:255' // Fixed: emial -> email
-    ]);
-
-    try {
-        $admin = new AdminEmail();
-        $admin->name = $request->name;
-        $admin->description = $request->description;
-        $admin->email = $request->email;
-        $admin->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'System email added successfully!'
+    public function addAdminEmail(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'email' => 'required|string|max:255', // Fixed: emial -> email
         ]);
-    } catch (\Exception $e) {
-        Log::error('System email creation error: ' . $e->getMessage());
 
-        return response()->json([
-            'success' => false,
-            'message' => 'Error adding email. Please try again.' // Fixed message
-        ], 500);
+        try {
+            $admin = new AdminEmail;
+            $admin->name = $request->name;
+            $admin->description = $request->description;
+            $admin->email = $request->email;
+            $admin->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'System email added successfully!',
+            ]);
+        } catch (\Exception $e) {
+            Log::error('System email creation error: '.$e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error adding email. Please try again.', // Fixed message
+            ], 500);
+        }
     }
-}
 
-   public function updateAdminEmail(Request $request, int $id)
-{
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'description' => 'required|string|max:255',
-        'email' => 'required|string|max:255' // Fixed: emial -> email
-    ]);
-
-    try {
-        $admin = AdminEmail::findOrFail($id);
-        $admin->name = $request->name;
-        $admin->description = $request->description;
-        $admin->email = $request->email;
-        $admin->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'System email updated successfully!'
+    public function updateAdminEmail(Request $request, int $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'email' => 'required|string|max:255', // Fixed: emial -> email
         ]);
-    } catch (\Exception $e) {
-        Log::error('System email update error: ' . $e->getMessage());
 
-        return response()->json([
-            'success' => false,
-            'message' => 'Error updating email. Please try again.' // Fixed message
-        ], 500);
+        try {
+            $admin = AdminEmail::findOrFail($id);
+            $admin->name = $request->name;
+            $admin->description = $request->description;
+            $admin->email = $request->email;
+            $admin->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'System email updated successfully!',
+            ]);
+        } catch (\Exception $e) {
+            Log::error('System email update error: '.$e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error updating email. Please try again.', // Fixed message
+            ], 500);
+        }
     }
-}
 
     public function deleteAdminEmail(Request $request): JsonResponse
     {
@@ -1582,16 +1586,16 @@ class TechReportController extends Controller implements HasMiddleware
         }
     }
 
-public function conferenceList(Request $request): View
+    public function conferenceList(Request $request): View
     {
         $confList = Conference::with([
-                'regions' => function ($query) {
-                    $query->orderBy('long_name');
-                },
-                'states' => function ($query) {
-                    $query->orderBy('state_short_name');
-                }
-            ])
+            'regions' => function ($query) {
+                $query->orderBy('long_name');
+            },
+            'states' => function ($query) {
+                $query->orderBy('state_short_name');
+            },
+        ])
             ->orderBy('short_name')
             ->get();
 
@@ -1603,11 +1607,11 @@ public function conferenceList(Request $request): View
     public function regionList(Request $request): View
     {
         $regList = Region::with([
-                'conference',
-                'states' => function ($query) {
-                    $query->orderBy('state_short_name');
-                }
-            ])
+            'conference',
+            'states' => function ($query) {
+                $query->orderBy('state_short_name');
+            },
+        ])
             ->join('conference', 'region.conference_id', '=', 'conference.id')
             ->orderBy('conference.short_name')
             ->orderBy('region.long_name')
@@ -1619,7 +1623,7 @@ public function conferenceList(Request $request): View
 
         $data = [
             'regList' => $regList,
-            'conferenceList' => $conferenceList
+            'conferenceList' => $conferenceList,
         ];
 
         return view('coordinators.techreports.regionlist')->with($data);
@@ -1637,14 +1641,14 @@ public function conferenceList(Request $request): View
             return response()->json([
                 'success' => true,
                 'message' => 'Region conference updated successfully!',
-                'conference_name' => $conference->short_name
+                'conference_name' => $conference->short_name,
             ]);
         } catch (\Exception $e) {
-                Log::error('Region conference update error: ' . $e->getMessage());
+            Log::error('Region conference update error: '.$e->getMessage());
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error updating region conference. Please try again.'
+                'message' => 'Error updating region conference. Please try again.',
             ], 500);
         }
     }
@@ -1662,7 +1666,7 @@ public function conferenceList(Request $request): View
         $data = [
             'stateList' => $stateList,
             'conferenceList' => $conferenceList,
-            'regionList' => $regionList
+            'regionList' => $regionList,
         ];
 
         return view('coordinators.techreports.statelist')->with($data);
@@ -1678,10 +1682,10 @@ public function conferenceList(Request $request): View
                 ->where('conference_id', $request->conference_id)
                 ->first();
 
-            if (!$region) {
+            if (! $region) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Selected region does not belong to the selected conference.'
+                    'message' => 'Selected region does not belong to the selected conference.',
                 ], 400);
             }
 
@@ -1693,16 +1697,15 @@ public function conferenceList(Request $request): View
                 'success' => true,
                 'message' => 'State assignment updated successfully!',
                 'conference_name' => $region->conference->short_name,
-                'region_name' => $region->long_name
+                'region_name' => $region->long_name,
             ]);
         } catch (\Exception $e) {
-                Log::error('State assignment update error: ' . $e->getMessage());
+            Log::error('State assignment update error: '.$e->getMessage());
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error: ' . $e->getMessage()  // Return actual error for debugging
+                'message' => 'Error: '.$e->getMessage(),  // Return actual error for debugging
             ], 500);
         }
     }
-
 }

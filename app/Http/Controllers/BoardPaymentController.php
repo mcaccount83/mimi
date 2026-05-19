@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\UserTypeEnum;
 use App\Mail\PaymentsDonationOnline;
 use App\Mail\PaymentsM2MChapterThankYou;
 use App\Mail\PaymentsManualOnline;
@@ -107,7 +106,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
         return view('boards.donation')->with($data);
     }
 
-     public function editReregistrationPaymentFormNEW(Request $request, int $chId): View
+    public function editReregistrationPaymentFormNEW(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -139,7 +138,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
             'startMonthName' => $startMonthName, 'endRange' => $rangeEndDateFormatted, 'startRange' => $rangeStartDateFormatted,
             'thisMonth' => $currentMonth, 'dueDate' => $dueDate, 'userTypeId' => $userTypeId,
             'startDate' => $startDate, 'renewalDate' => $renewalDate,
-            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId
+            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId,
         ];
 
         return view('boards.reregpayment')->with($data);
@@ -183,7 +182,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
         // Verify reCAPTCHA Enterprise
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
-        if (!$recaptchaResult['success']) {
+        if (! $recaptchaResult['success']) {
             return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
         }
 
@@ -248,9 +247,9 @@ class BoardPaymentController extends Controller implements HasMiddleware
             $chapter->next_renewal_year = $chapter->next_renewal_year + 1;
             $chapter->save();
 
-           // Archive current re-registration payment to history (if exists)
+            // Archive current re-registration payment to history (if exists)
             if ($payments->rereg_date) {
-                    PaymentHistory::create([
+                PaymentHistory::create([
                     'chapter_id' => $chId,
                     'payment_type' => 'rereg',
                     'payment_amount' => $payments->rereg_payment,
@@ -267,7 +266,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
             $payments->save();
 
             if ($donation && $sustaining > 0) {
-                   // Archive current sustaining donation to history (if exists)
+                // Archive current sustaining donation to history (if exists)
                 if ($payments->sustaining_date) {
                     PaymentHistory::create([
                         'chapter_id' => $chId,
@@ -328,7 +327,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
         // Verify reCAPTCHA Enterprise
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
-        if (!$recaptchaResult['success']) {
+        if (! $recaptchaResult['success']) {
             return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
         }
 
@@ -496,7 +495,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
         // Verify reCAPTCHA Enterprise
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
-        if (!$recaptchaResult['success']) {
+        if (! $recaptchaResult['success']) {
             return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
         }
 
@@ -559,7 +558,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
         DB::beginTransaction();
         try {
             if ($manualOrder && $manual > 0) {
-                 // Archive current manual order to history (if exists)
+                // Archive current manual order to history (if exists)
                 if ($payments->manual_date) {
                     PaymentHistory::create([
                         'chapter_id' => $chId,
@@ -619,7 +618,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
             $transactionTypeDetail = $transactionType;  // Live Traansactions based on type of transaction set from request
         }
 
-        $shortTransactionType = match($transactionTypeDetail) {
+        $shortTransactionType = match ($transactionTypeDetail) {
             'authCaptureTransaction' => 'Processed',
             'authOnlyTransaction' => 'AuthOnly',
         };
@@ -864,5 +863,4 @@ class BoardPaymentController extends Controller implements HasMiddleware
             'error' => $error_message,
         ];
     }
-
 }

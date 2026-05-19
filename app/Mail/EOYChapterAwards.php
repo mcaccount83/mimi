@@ -3,9 +3,9 @@
 namespace App\Mail;
 
 use Illuminate\Mail\Mailables\Address;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Mail\Mailables\Attachment;
 
 class EOYChapterAwards extends BaseMailable
 {
@@ -35,16 +35,16 @@ class EOYChapterAwards extends BaseMailable
     }
 
     public function attachments(): array
-{
-    $attachments = [];
+    {
+        $attachments = [];
 
-    foreach ($this->mailData['badgeAttachments'] ?? [] as $badge) {
-        $attachments[] = Attachment::fromData(
-            fn() => base64_decode($badge['content']),
-            $badge['name']
-        )->withMime($badge['mime']);
+        foreach ($this->mailData['badgeAttachments'] ?? [] as $badge) {
+            $attachments[] = Attachment::fromData(
+                fn () => base64_decode($badge['content']),
+                $badge['name']
+            )->withMime($badge['mime']);
+        }
+
+        return $attachments;
     }
-
-    return $attachments;
-}
 }

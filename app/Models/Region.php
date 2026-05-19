@@ -27,5 +27,4 @@ class Region extends Model
     {
         return $this->hasOne(RegionInquiry::class, 'region_id', 'id');
     }
-
 }

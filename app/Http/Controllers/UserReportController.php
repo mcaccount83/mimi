@@ -65,7 +65,7 @@ class UserReportController extends Controller implements HasMiddleware
         $invalidEmailList = User::where('is_active', UserStatusEnum::ACTIVE)
             ->where(function ($query) {
                 $query->whereRaw("email NOT REGEXP '^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$'")
-                    ->orWhereRaw("email != TRIM(email)")
+                    ->orWhereRaw('email != TRIM(email)')
                     ->orWhereNull('email')
                     ->orWhereRaw("email = ''");
             })
@@ -74,7 +74,7 @@ class UserReportController extends Controller implements HasMiddleware
         $invalidEmailCount = $invalidEmailList->count();
 
         $data = [
-            'invalidEmailList'    => $invalidEmailList,
+            'invalidEmailList' => $invalidEmailList,
             'invalidEmailCount' => $invalidEmailCount,
         ];
 
@@ -132,11 +132,11 @@ class UserReportController extends Controller implements HasMiddleware
             ->pluck('chapter_id');
 
         $ChapterPres = Chapters::with('state')
-            ->where(function ($query) use ($PresActiveId, $PresDisbandId) {
+            ->where(function ($query) use ($PresActiveId) {
                 $query->where('active_status', '1')
                     ->whereNotIn('id', $PresActiveId);
             })
-            ->orWhere(function ($query) use ($PresActiveId, $PresDisbandId) {
+            ->orWhere(function ($query) use ($PresDisbandId) {
                 $query->where('active_status', '0')
                     ->whereNotIn('id', $PresDisbandId);
             })
@@ -230,7 +230,7 @@ class UserReportController extends Controller implements HasMiddleware
         }
     }
 
-     /**
+    /**
      * Active chaters with no inquiries email
      */
     public function showNoInquiriesEmail(): View
@@ -333,7 +333,7 @@ class UserReportController extends Controller implements HasMiddleware
         }
     }
 
-   public function showUserDetailsMismatch(): View
+    public function showUserDetailsMismatch(): View
     {
         $userList = User::where('is_active', UserStatusEnum::ACTIVE)
             ->whereIn('type_id', [
@@ -344,12 +344,12 @@ class UserReportController extends Controller implements HasMiddleware
                 UserTypeEnum::PENDING,
             ])
             ->get()
-            ->map(fn($user) => $this->checkUserTableStatus($user))
-            ->filter(fn($user) => $user->missing_from !== null || count($user->wrong_tables) > 0);
+            ->map(fn ($user) => $this->checkUserTableStatus($user))
+            ->filter(fn ($user) => $user->missing_from !== null || count($user->wrong_tables) > 0);
 
         $data = [
             'countList' => $userList->count(),
-            'userList'  => $userList,
+            'userList' => $userList,
         ];
 
         return view('coordinators.userreports.userdetailsmismatch')->with($data);
@@ -357,21 +357,31 @@ class UserReportController extends Controller implements HasMiddleware
 
     private function checkUserTableStatus(User $user): User
     {
-        $user->missing_from = match($user->type_id) {
-            UserTypeEnum::COORD     => !$user->coordinator()->exists()       ? 'Coordinators'     : null,
-            UserTypeEnum::BOARD     => !$user->board()->exists()             ? 'Boards'           : null,
-            UserTypeEnum::DISBANDED => !$user->boardDisbanded()->exists()    ? 'Boards Disbanded' : null,
-            UserTypeEnum::OUTGOING  => !$user->boardOutgoing()->exists()     ? 'Boards Outgoing'  : null,
-            UserTypeEnum::PENDING   => !$user->boardPending()->exists()      ? 'Boards Pending'   : null,
+        $user->missing_from = match ($user->type_id) {
+            UserTypeEnum::COORD => ! $user->coordinator()->exists() ? 'Coordinators' : null,
+            UserTypeEnum::BOARD => ! $user->board()->exists() ? 'Boards' : null,
+            UserTypeEnum::DISBANDED => ! $user->boardDisbanded()->exists() ? 'Boards Disbanded' : null,
+            UserTypeEnum::OUTGOING => ! $user->boardOutgoing()->exists() ? 'Boards Outgoing' : null,
+            UserTypeEnum::PENDING => ! $user->boardPending()->exists() ? 'Boards Pending' : null,
             default => null,
         };
 
         $wrongTables = [];
-        if ($user->type_id !== UserTypeEnum::COORD     && $user->coordinator()->exists())    $wrongTables[] = 'Coordinators';
-        if ($user->type_id !== UserTypeEnum::BOARD     && $user->board()->exists())          $wrongTables[] = 'Boards';
-        if ($user->type_id !== UserTypeEnum::DISBANDED && $user->boardDisbanded()->exists()) $wrongTables[] = 'Boards Disbanded';
-        if ($user->type_id !== UserTypeEnum::OUTGOING  && $user->boardOutgoing()->exists())  $wrongTables[] = 'Boards Outgoing';
-        if ($user->type_id !== UserTypeEnum::PENDING   && $user->boardPending()->exists())   $wrongTables[] = 'Boards Pending';
+        if ($user->type_id !== UserTypeEnum::COORD && $user->coordinator()->exists()) {
+            $wrongTables[] = 'Coordinators';
+        }
+        if ($user->type_id !== UserTypeEnum::BOARD && $user->board()->exists()) {
+            $wrongTables[] = 'Boards';
+        }
+        if ($user->type_id !== UserTypeEnum::DISBANDED && $user->boardDisbanded()->exists()) {
+            $wrongTables[] = 'Boards Disbanded';
+        }
+        if ($user->type_id !== UserTypeEnum::OUTGOING && $user->boardOutgoing()->exists()) {
+            $wrongTables[] = 'Boards Outgoing';
+        }
+        if ($user->type_id !== UserTypeEnum::PENDING && $user->boardPending()->exists()) {
+            $wrongTables[] = 'Boards Pending';
+        }
 
         $user->wrong_tables = $wrongTables;
 
@@ -386,11 +396,11 @@ class UserReportController extends Controller implements HasMiddleware
         $userDetails = $this->checkUserTableStatus(User::find($id));
 
         $data = [
-            'id'            => $id,
-            'userDetails'   => $userDetails,
+            'id' => $id,
+            'userDetails' => $userDetails,
             'AllUserStatus' => UserStatus::all(),
-            'AllUserType'   => UserType::all(),
-            'AllAdminRole'  => AdminRole::all(),
+            'AllUserType' => UserType::all(),
+            'AllAdminRole' => AdminRole::all(),
         ];
 
         return view('coordinators.userreports.edituser')->with($data);
@@ -481,9 +491,9 @@ class UserReportController extends Controller implements HasMiddleware
         $data = [
             'id' => $id, 'userDetails' => $userDetails, 'allStates' => $allStates, 'allCountries' => $allCountries, 'chDetails' => $chDetails,
             'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'bdDetails' => $bdDetails, 'chapterStatus' => $chapterStatus,
-            'chPcId' => $chPcId, 'chConfId' => $chConfId, 'chPayments' => $chPayments, 'chEOYDocuments' =>$chEOYDocuments,
+            'chPcId' => $chPcId, 'chConfId' => $chConfId, 'chPayments' => $chPayments, 'chEOYDocuments' => $chEOYDocuments,
             'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'bdPosition' => $bdPosition,
-            'startMonthName' => $startMonthName, 'AllUserStatus' => $AllUserStatus, 'AllUserType' => $AllUserType, 'AllAdminRole' => $AllAdminRole
+            'startMonthName' => $startMonthName, 'AllUserStatus' => $AllUserStatus, 'AllUserType' => $AllUserType, 'AllAdminRole' => $AllAdminRole,
         ];
 
         return view('coordinators.userreports.edituserboard')->with($data);

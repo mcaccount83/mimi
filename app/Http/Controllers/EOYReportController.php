@@ -3,17 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Enums\BoardPosition;
-use App\Enums\CheckboxFilterEnum;
 use App\Enums\ChapterStatusEnum;
+use App\Enums\CheckboxFilterEnum;
 use App\Mail\EOYReviewrAssigned;
 use App\Models\BoardsIncoming;
-use App\Models\Chapters;
 use App\Models\ChapterAwardHistory;
+use App\Models\Chapters;
 use App\Models\Coordinators;
 use App\Models\DisbandedChecklist;
 use App\Models\DocumentsEOY;
 use App\Models\DocumentsIRS;
-use App\Models\DocumentsReport;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportAwards;
 use App\Models\FinancialReportAwardsBadges;
@@ -297,18 +296,18 @@ class EOYReportController extends Controller implements HasMiddleware
         if ($chEOYDocuments->new_board_active != '1') {
             $baseIncomingBoardQuery = $this->baseChapterController->getIncomingBoardDetails($id);
             $PresDetails = $baseIncomingBoardQuery['PresDetails'];
-            $AVPDetails  = $baseIncomingBoardQuery['AVPDetails'];
-            $MVPDetails  = $baseIncomingBoardQuery['MVPDetails'];
-            $TRSDetails  = $baseIncomingBoardQuery['TRSDetails'];
-            $SECDetails  = $baseIncomingBoardQuery['SECDetails'];
+            $AVPDetails = $baseIncomingBoardQuery['AVPDetails'];
+            $MVPDetails = $baseIncomingBoardQuery['MVPDetails'];
+            $TRSDetails = $baseIncomingBoardQuery['TRSDetails'];
+            $SECDetails = $baseIncomingBoardQuery['SECDetails'];
         }
         if ($chEOYDocuments->new_board_active == '1') {
             $baseActiveBoardQuery = $this->baseChapterController->getActiveBoardDetails($id);
             $PresDetails = $baseActiveBoardQuery['PresDetails'];
-            $AVPDetails  = $baseActiveBoardQuery['AVPDetails'];
-            $MVPDetails  = $baseActiveBoardQuery['MVPDetails'];
-            $TRSDetails  = $baseActiveBoardQuery['TRSDetails'];
-            $SECDetails  = $baseActiveBoardQuery['SECDetails'];
+            $AVPDetails = $baseActiveBoardQuery['AVPDetails'];
+            $MVPDetails = $baseActiveBoardQuery['MVPDetails'];
+            $TRSDetails = $baseActiveBoardQuery['TRSDetails'];
+            $SECDetails = $baseActiveBoardQuery['SECDetails'];
         }
 
         $allWebLinks = Website::all();  // Full List for Dropdown Menu
@@ -586,7 +585,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $chapter = Chapters::find($id);
         $documentsEOY = DocumentsEOY::find($id);
         $financialReportReview = FinancialReportReview::find($id);
-        $farthest_step_visited_coord = max((int)$input['FurthestStep'], (int)$financialReportReview->farthest_step_visited_coord);
+        $farthest_step_visited_coord = max((int) $input['FurthestStep'], (int) $financialReportReview->farthest_step_visited_coord);
 
         DB::beginTransaction();
         try {
@@ -598,7 +597,7 @@ class EOYReportController extends Controller implements HasMiddleware
                 $financialReportReview->review_complete = Carbon::now();
             }
 
-             $mailData = array_merge(
+            $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getUserData($user),
                 $this->baseMailDataController->getFinancialReportData($chFinancialReport),
@@ -1042,7 +1041,7 @@ class EOYReportController extends Controller implements HasMiddleware
             if (isset($list->financialReport->chapter_awards)) {
                 $awards = unserialize(base64_decode($list->financialReport->chapter_awards));
                 if ($awards) {
-                    $validAwards = collect($awards)->filter(fn($award) => !empty($award['awards_type']))->count();
+                    $validAwards = collect($awards)->filter(fn ($award) => ! empty($award['awards_type']))->count();
                     if ($validAwards > 0) {
                         $hasAnyAwards = true;
                         $actualMaxAwards = max($actualMaxAwards, $validAwards);
@@ -1055,14 +1054,14 @@ class EOYReportController extends Controller implements HasMiddleware
             $chapterList = $baseQuery['query']->get();
         } else {
             $chapterList = $baseQuery['query']
-                ->whereHas('financialReport', fn($q) => $q->whereNotNull('chapter_awards'))
+                ->whereHas('financialReport', fn ($q) => $q->whereNotNull('chapter_awards'))
                 ->get();
         }
 
         $countList = count($chapterList);
         $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status, 'checkBox2Status' => $checkBox2Status,
             'allAwards' => $allAwards, 'hasAnyAwards' => $hasAnyAwards, 'actualMaxAwards' => $actualMaxAwards, 'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'checkBox52Status' => $checkBox52Status,
-            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName'  => $userConfName, 'userConfDesc' => $userConfDesc
+            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
         return view('coordinators.eoyreports.eoyawards', $data);
@@ -1115,8 +1114,8 @@ class EOYReportController extends Controller implements HasMiddleware
         $FieldCount = $input['ChapterAwardsRowCount'];
 
         for ($i = 0; $i < $FieldCount; $i++) {
-            $ChapterAwards[$i]['awards_type']     = $input['ChapterAwardsType'.$i] ?? null;
-            $ChapterAwards[$i]['awards_desc']     = $input['ChapterAwardsDesc'.$i] ?? null;
+            $ChapterAwards[$i]['awards_type'] = $input['ChapterAwardsType'.$i] ?? null;
+            $ChapterAwards[$i]['awards_desc'] = $input['ChapterAwardsDesc'.$i] ?? null;
             $ChapterAwards[$i]['awards_approved'] = $input['ChapterAwardsApproved'.$i] ?? null;
         }
 
@@ -1177,7 +1176,7 @@ class EOYReportController extends Controller implements HasMiddleware
             : [];
 
         // Filter to only approved ones for display
-        $currentApprovedAwards = array_filter($currentAwards, fn($a) => !empty($a['awards_approved']));
+        $currentApprovedAwards = array_filter($currentAwards, fn ($a) => ! empty($a['awards_approved']));
 
         // Historical from the history table (exclude current year)
         $chAwards = ChapterAwardHistory::with('awardtype', 'fiscalYear')
@@ -1188,12 +1187,12 @@ class EOYReportController extends Controller implements HasMiddleware
             ->groupBy('report_year_id');
 
         $awardBadges = FinancialReportAwardsBadges::with(['fiscalYear', 'eoyAward'])->get();
-        $badgeLookup = $awardBadges->keyBy(fn($b) => $b->report_year_id . '_' . $b->eoy_award_id);
+        $badgeLookup = $awardBadges->keyBy(fn ($b) => $b->report_year_id.'_'.$b->eoy_award_id);
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
-                'chAwards' => $chAwards, 'currentApprovedAwards' => $currentApprovedAwards, 'awardTypes' => $awardTypes, 'confId' => $confId, 'chConfId' => $chConfId,
-                'chapterStatus' => $chapterStatus, 'badgeLookup' => $badgeLookup, 'chFinancialReport' => $chFinancialReport
-            ];
+            'chAwards' => $chAwards, 'currentApprovedAwards' => $currentApprovedAwards, 'awardTypes' => $awardTypes, 'confId' => $confId, 'chConfId' => $chConfId,
+            'chapterStatus' => $chapterStatus, 'badgeLookup' => $badgeLookup, 'chFinancialReport' => $chFinancialReport,
+        ];
 
         return view('coordinators.eoyreports.awardhistory')->with($data);
     }
@@ -1263,7 +1262,7 @@ class EOYReportController extends Controller implements HasMiddleware
 
         $data = ['coorId' => $coorId, 'confId' => $confId, 'chapterStatus' => $chapterStatus, 'chEOYDocuments' => $chEOYDocuments,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
-            'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport, 'chIRSDocuments' => $chIRSDocuments
+            'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport, 'chIRSDocuments' => $chIRSDocuments,
         ];
 
         return view('coordinators.eoyreports.editirssubmission')->with($data);

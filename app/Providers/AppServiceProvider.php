@@ -4,8 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
-use Illuminate\Mail\Events\MessageSending;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
@@ -31,8 +29,8 @@ class AppServiceProvider extends ServiceProvider
 
         // Fix https mixed content issue on live for vite
         if (config('app.env') === 'production') {
-                URL::forceScheme('https');
-            }
+            URL::forceScheme('https');
+        }
 
         // Register mail markdown views namespace
         $this->loadViewsFrom(resource_path('views/vendor/mail/html'), 'mail');

@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\AdminStatusEnum;
 use App\Models\Region;
 // use Dcblogdev\LaravelSentEmails\Controllers\SentEmailsController;
+use App\Services\PositionConditionsService;
 use Dcblogdev\LaravelSentEmails\Models\SentEmail;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use App\Services\PositionConditionsService;
 
 // class MySentEmailsController extends SentEmailsController implements HasMiddleware
 class MySentEmailsController extends Controller implements HasMiddleware
@@ -21,7 +19,6 @@ class MySentEmailsController extends Controller implements HasMiddleware
         protected PositionConditionsService $positionConditionsService,
     ) {}
 
-
     public static function middleware(): array
     {
         return [
@@ -30,7 +27,7 @@ class MySentEmailsController extends Controller implements HasMiddleware
         ];
     }
 
-      public function index(Request $request): View
+    public function index(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
         $confId = $user['confId'];
@@ -106,10 +103,10 @@ class MySentEmailsController extends Controller implements HasMiddleware
             $emails = SentEmail::with('attachments')
                 ->where(function ($query) use ($filterEmails) {
                     foreach ($filterEmails as $email) {
-                        $query->orWhere('from', 'LIKE', '%' . $email . '%')
-                            ->orWhere('to',   'LIKE', '%' . $email . '%')
-                            ->orWhere('cc',   'LIKE', '%' . $email . '%')
-                            ->orWhere('bcc',  'LIKE', '%' . $email . '%');
+                        $query->orWhere('from', 'LIKE', '%'.$email.'%')
+                            ->orWhere('to', 'LIKE', '%'.$email.'%')
+                            ->orWhere('cc', 'LIKE', '%'.$email.'%')
+                            ->orWhere('bcc', 'LIKE', '%'.$email.'%');
                     }
                 })
                 ->orderBy('id', 'desc')
@@ -128,8 +125,8 @@ class MySentEmailsController extends Controller implements HasMiddleware
     {
         $attachment = \Dcblogdev\LaravelSentEmails\Models\SentEmailAttachment::findOrFail($id);
 
-        $privatePath = storage_path('app/private/' . $attachment->path);
-        $legacyPath  = storage_path('app/' . $attachment->path);
+        $privatePath = storage_path('app/private/'.$attachment->path);
+        $legacyPath = storage_path('app/'.$attachment->path);
 
         if (file_exists($privatePath)) {
             return response()->file($privatePath, ['Content-Type' => 'application/pdf']);

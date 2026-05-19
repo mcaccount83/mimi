@@ -324,7 +324,6 @@ class BaseMailDataController extends Controller
         ];
     }
 
-
     public function getPaymentData(object $chPayments, array $input, string $paymentType): array
     {
         return [
@@ -538,7 +537,7 @@ class BaseMailDataController extends Controller
         ];
     }
 
-     public function getGrantReviewData(object $grantDetails)
+    public function getGrantReviewData(object $grantDetails)
     {
         return [
             'reviewer_name' => $grantDetails->review_notes,

@@ -806,7 +806,6 @@ class EmailController extends Controller implements HasMiddleware
         }
     }
 
-
     public function sendEOYChapterAwards(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
@@ -826,7 +825,7 @@ class EmailController extends Controller implements HasMiddleware
 
         // Get all badges keyed by report_year_id_eoy_award_id for lookup
         $awardBadges = FinancialReportAwardsBadges::with(['fiscalYear', 'eoyAward'])->get()
-            ->keyBy(fn($b) => $b->report_year_id . '_' . $b->eoy_award_id);
+            ->keyBy(fn ($b) => $b->report_year_id.'_'.$b->eoy_award_id);
 
         $awardTypes = FinancialReportAwards::all()->keyBy('id');
 
@@ -835,7 +834,7 @@ class EmailController extends Controller implements HasMiddleware
             ? unserialize(base64_decode($chFinancialReport->chapter_awards))
             : [];
 
-        $approvedAwards = array_filter($currentAwards, fn($a) => !empty($a['awards_approved']));
+        $approvedAwards = array_filter($currentAwards, fn ($a) => ! empty($a['awards_approved']));
 
         if (empty($approvedAwards)) {
             return response()->json([
@@ -851,13 +850,15 @@ class EmailController extends Controller implements HasMiddleware
 
         foreach ($approvedAwards as $award) {
             $awardType = $awardTypes[$award['awards_type']] ?? null;
-            if (!$awardType) continue;
+            if (! $awardType) {
+                continue;
+            }
 
             $awardList[] = [
                 'name' => $awardType->award_type,
             ];
 
-            $badgeKey = $reportYearId . '_' . $award['awards_type'];
+            $badgeKey = $reportYearId.'_'.$award['awards_type'];
             $badge = $awardBadges->get($badgeKey);
 
             if ($badge) {
@@ -867,29 +868,28 @@ class EmailController extends Controller implements HasMiddleware
 
                     if ($fileContent) {
                         $badgeAttachments[] = [
-    'content' => base64_encode($fileContent),
-    'name'    => $awardType->type_short_name . '.png',
-    'mime'    => 'image/png',
-];
+                            'content' => base64_encode($fileContent),
+                            'name' => $awardType->type_short_name.'.png',
+                            'mime' => 'image/png',
+                        ];
                     }
                 } catch (\Exception $e) {
                 }
             }
         }
 
-         $chFinancialReport = FinancialReport::find($chapterId);
-    try {
-        DB::beginTransaction();
+        $chFinancialReport = FinancialReport::find($chapterId);
+        try {
+            DB::beginTransaction();
 
             $chFinancialReport->chapter_awards_notified = 1;
             $chFinancialReport->save();
-
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getUserData($user),
                 [
-                    'awardList'        => $awardList,
+                    'awardList' => $awardList,
                     'badgeAttachments' => $badgeAttachments,
                 ]
             );
@@ -959,7 +959,7 @@ class EmailController extends Controller implements HasMiddleware
 
             DB::commit();
 
-             return redirect()->to('/inquiries/inquiryapplication')->with('success', 'Email successfully sent');
+            return redirect()->to('/inquiries/inquiryapplication')->with('success', 'Email successfully sent');
 
         } catch (\Exception $e) {
             DB::rollback();
@@ -972,43 +972,43 @@ class EmailController extends Controller implements HasMiddleware
     }
 
     public function sendYesChapterInquiries(Request $request): RedirectResponse
-{
-    $user = $this->userController->loadUserInformation($request);
-    $userId = $user['userId'];
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
 
-    $input = $request->all();
-    $inquiryId = $input['inquiryId'];
-    $chapterId = $input['chapterId'];
+        $input = $request->all();
+        $inquiryId = $input['inquiryId'];
+        $chapterId = $input['chapterId'];
 
-    $inqDetails = InquiryApplication::with('state', 'country')->find($inquiryId);
-    $inquiryEmail = $inqDetails->inquiry_email;
+        $inqDetails = InquiryApplication::with('state', 'country')->find($inquiryId);
+        $inquiryEmail = $inqDetails->inquiry_email;
 
-    $chDetails = Chapters::find($chapterId);
-    $stateShortName = $chDetails->state->state_short_name;
-    $chInquiriesEmail = $chDetails->inquiries_contact;
+        $chDetails = Chapters::find($chapterId);
+        $stateShortName = $chDetails->state->state_short_name;
+        $chInquiriesEmail = $chDetails->inquiries_contact;
 
-    try {
-        DB::beginTransaction();
+        try {
+            DB::beginTransaction();
 
-        $inqDetails->available = 1;
-        $inqDetails->response = 1;
-        $inqDetails->save();
+            $inqDetails->available = 1;
+            $inqDetails->response = 1;
+            $inqDetails->save();
 
-        $mailData = array_merge(
-            $this->baseMailDataController->getInquiryData($inqDetails),
-            $this->baseMailDataController->getUserData($user),
-            $this->baseMailDataController->getChapterData($chDetails, $stateShortName)
-        );
+            $mailData = array_merge(
+                $this->baseMailDataController->getInquiryData($inqDetails),
+                $this->baseMailDataController->getUserData($user),
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName)
+            );
 
-        Mail::to($inquiryEmail)
-            ->queue(new InquiriesYesChapter($mailData));
+            Mail::to($inquiryEmail)
+                ->queue(new InquiriesYesChapter($mailData));
 
-        Mail::to($chInquiriesEmail)
-            ->queue(new InquiriesYesToChapter($mailData));
+            Mail::to($chInquiriesEmail)
+                ->queue(new InquiriesYesToChapter($mailData));
 
-        DB::commit();
+            DB::commit();
 
-             return redirect()->to('/inquiries/inquiryapplication')->with('success', 'Email successfully sent');
+            return redirect()->to('/inquiries/inquiryapplication')->with('success', 'Email successfully sent');
 
         } catch (\Exception $e) {
             DB::rollback();
@@ -1018,9 +1018,9 @@ class EmailController extends Controller implements HasMiddleware
         } finally {
             DB::disconnect();
         }
-}
+    }
 
-public function sendChapterInquiryEmailModal(Request $request): JsonResponse
+    public function sendChapterInquiryEmailModal(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $userId = $user['userId'];
@@ -1144,6 +1144,4 @@ public function sendChapterInquiryEmailModal(Request $request): JsonResponse
             DB::disconnect();
         }
     }
-
-
 }

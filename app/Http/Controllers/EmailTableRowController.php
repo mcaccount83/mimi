@@ -69,7 +69,7 @@ class EmailTableRowController extends Controller
         return $tableHtml;
     }
 
-       /**
+    /**
      * Create Rows for Mentoring Coord Email
      */
     public function createCoordEmailRows(array $mailData, string $cellStyle, string $cellLeftStyle, string $headerStyle, string $tableHtml)
@@ -584,7 +584,7 @@ class EmailTableRowController extends Controller
         return $tableHtml;
     }
 
-      public function createNewGrantRows(array $mailData, string $cellStyle, string $cellLeftStyle, string $headerStyle, string $tableHtml)
+    public function createNewGrantRows(array $mailData, string $cellStyle, string $cellLeftStyle, string $headerStyle, string $tableHtml)
     {
         $tableHtml .= '<tr>
             <td colspan="2" style="'.$headerStyle.'">Grant Information</td>
@@ -592,10 +592,10 @@ class EmailTableRowController extends Controller
         $tableHtml .= '<tr>
             <td colspan="2" style="'.$cellLeftStyle.'"><strong>I have read this section and understand the limits of the fund:</strong><br>'.($mailData['understood'] == '1' ? 'YES' : 'NO').'</td>
         </tr>';
-         $tableHtml .= '<tr>
+        $tableHtml .= '<tr>
             <td colspan="2" style="'.$cellLeftStyle.'"><strong>The mother has been asked if she wants you to submit this grant on her behalf.</strong><br>'.($mailData['member_agree'] == '1' ? 'YES' : 'NO').'</td>
         </tr>';
-         $tableHtml .= '<tr>
+        $tableHtml .= '<tr>
             <td colspan="2" style="'.$cellLeftStyle.'"><strong>The mother has agreed to accept a grant request if one is given.</strong><br>'.($mailData['member_accept'] == '1' ? 'YES' : 'NO').'</td>
         </tr>';
         $tableHtml .= '<tr>
@@ -631,7 +631,7 @@ class EmailTableRowController extends Controller
         $tableHtml .= '<tr>
             <td style="'.$cellLeftStyle.'"><strong>Is there anything else the family needs?</strong><br>'.$mailData['other_needs'].'</td>
         </tr>';
-         $tableHtml .= '<tr>
+        $tableHtml .= '<tr>
             <td colspan="2" style="'.$headerStyle.'">GRANT REQUEST DETAILS</td>
         </tr>';
         $tableHtml .= '<tr>
@@ -643,16 +643,16 @@ class EmailTableRowController extends Controller
         $tableHtml .= '<tr>
             <td style="'.$cellLeftStyle.'"><strong>Is there anything else we should know?</strong><br>'.$mailData['additional_info'].'</td>
         </tr>';
-         $tableHtml .= '<tr>
+        $tableHtml .= '<tr>
             <td colspan="2" style="'.$headerStyle.'">CHAPTER BACKING AND AFFIRMATION</td>
         </tr>';
-         $tableHtml .= '<tr>
+        $tableHtml .= '<tr>
             <td colspan="2" style="'.$cellLeftStyle.'"><strong>Has the chapter ever asked for a grant for this mother or family in the past?</strong><br>'.($mailData['previous_grant'] == '1' ? 'YES' : 'NO').'</td>
         </tr>';
-         $tableHtml .= '<tr>
+        $tableHtml .= '<tr>
             <td colspan="2" style="'.$cellLeftStyle.'"><strong>Does the chapter stand behind this request?</strong><br>'.($mailData['chapter_backing'] == '1' ? 'YES' : 'NO').'</td>
         </tr>';
-         $tableHtml .= '<tr>
+        $tableHtml .= '<tr>
             <td colspan="2" style="'.$cellLeftStyle.'"><strong>Has the chapter donated to the Mother-to-Mother Fund?</strong><br>'.($mailData['m2m_donation'] == '1' ? 'YES' : 'NO').'</td>
         </tr>';
         $tableHtml .= '<tr>

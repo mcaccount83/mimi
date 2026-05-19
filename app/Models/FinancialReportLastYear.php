@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
-
 
 class FinancialReportLastYear extends Model
 {
@@ -25,6 +23,6 @@ class FinancialReportLastYear extends Model
 
         $reportYearStart = $reportYearOptions['reportYearStart'];
 
-        return 'zzz_financial_report_12_' . $reportYearStart;
+        return 'zzz_financial_report_12_'.$reportYearStart;
     }
 }

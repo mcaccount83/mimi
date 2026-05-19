@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class FinancialReportAwardsBadges extends Model
 {
@@ -23,5 +22,3 @@ class FinancialReportAwardsBadges extends Model
         return $this->belongsTo(FinancialReportAwards::class, 'eoy_award_id', 'id');
     }
 }
-
-

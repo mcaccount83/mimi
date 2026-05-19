@@ -2,9 +2,8 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
-use Carbon\Carbon;
+use Illuminate\Support\ServiceProvider;
 
 class BladeDirectivesServiceProvider extends ServiceProvider
 {
@@ -34,6 +33,7 @@ class BladeDirectivesServiceProvider extends ServiceProvider
         // URL Input field with Mask: @urlInput('ch_website', $chDetails->website_url)
         Blade::directive('urlInput', function ($expression) {
             [$name, $value] = array_map('trim', explode(',', $expression, 2));
+
             return "<?php echo '<input type=\"text\" name=\"' . $name . '\" id=\"' . $name . '\" class=\"form-control http-mask\" value=\"' . (' . $value . ' ?? \'\') . '\" placeholder=\"http://\">'; ?>";
         });
 
@@ -53,11 +53,12 @@ class BladeDirectivesServiceProvider extends ServiceProvider
             $name = trim($parts[0], "'\"");
             $value = isset($parts[1]) ? $parts[1] : "''";
             $required = isset($parts[2]) && trim($parts[2]) === 'false' ? '' : 'required';
+
             return "<?php echo '<input type=\"text\" name=\"{$name}\" id=\"{$name}\" class=\"form-control\" data-inputmask=\'\"mask\": \"(999) 999-9999\"\' data-mask value=\"' . htmlspecialchars({$value} ?? '') . '\" placeholder=\"Phone Number\" {$required}>'; ?>";
         });
 
         // Date Display: @formatDate($chPayments->rereg_date)
-       Blade::directive('formatDate', function ($expression) {
+        Blade::directive('formatDate', function ($expression) {
             return "<?php echo $expression ? \\Carbon\\Carbon::parse($expression)->format('m/d/Y') : ''; ?>";
         });
 
@@ -66,6 +67,7 @@ class BladeDirectivesServiceProvider extends ServiceProvider
             $parts = array_map('trim', explode(',', $expression, 2));
             $name = trim($parts[0], "'\"");
             $value = isset($parts[1]) ? $parts[1] : "''";
+
             return "<?php
                 \$_d = {$value} ?? '';
                 \$_formatted = \$_d ? \\Carbon\\Carbon::parse(\$_d)->format('m/d/Y') : '';
@@ -84,6 +86,7 @@ class BladeDirectivesServiceProvider extends ServiceProvider
             $name = trim($parts[0], "'\"");
             $value = isset($parts[1]) ? $parts[1] : "''";
             $readonly = isset($parts[2]) && trim($parts[2]) === 'true' ? 'readonly' : '';
+
             return "<?php echo '<div class=\"input-group\"><span class=\"input-group-text\">$</span><input type=\"text\" name=\"{$name}\" id=\"{$name}\" class=\"form-control\" {$readonly} data-inputmask=\'\"alias\": \"currency\", \"rightAlign\": false, \"groupSeparator\": \",\", \"digits\": 2, \"digitsOptional\": false, \"placeholder\": \"0\"\' data-mask value=\"' . htmlspecialchars({$value} ?? '') . '\"></div>'; ?>";
         });
 

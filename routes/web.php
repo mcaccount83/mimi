@@ -8,7 +8,6 @@ use App\Http\Controllers\BoardController;
 // use App\Http\Controllers\BoardControllerNew;
 use App\Http\Controllers\BoardPaymentController;
 use App\Http\Controllers\BoardPendingController;
-use App\Http\Controllers\BoardPendingControllerNew;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\ChapterReportController;
 use App\Http\Controllers\CoordinatorController;
@@ -17,11 +16,11 @@ use App\Http\Controllers\EmailController;
 use App\Http\Controllers\EOYReportController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\FinancialReportController;
-use App\Http\Controllers\FinancialReportControllerNew;
 use App\Http\Controllers\ForumSubscriptionController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InquiriesController;
+use App\Http\Controllers\MySentEmailsController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\PublicController;
@@ -30,8 +29,6 @@ use App\Http\Controllers\TechReportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserReportController;
 use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\MySentEmailsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -108,13 +105,12 @@ Route::get('/grantlist', [PublicController::class, 'viewGrantList'])->name('publ
 Route::get('/grantlist-pdf', [PDFController::class, 'generateGrantList'])->name('pdf.grantlist');
 Route::post('/grant-list-pdf', [PDFController::class, 'saveGrantList'])->name('pdf.generategrantlist');
 
-
 // In your routes/web.php or wherever you have routes
 Route::get(config('sentemails.routepath'), [MySentEmailsController::class, 'index'])
     ->middleware(config('sentemails.middleware'))
     ->name('sentemails');
 
-    Route::get('adminreports/sentemails/attachment-{id}', [MySentEmailsController::class, 'downloadAttachment'])
+Route::get('adminreports/sentemails/attachment-{id}', [MySentEmailsController::class, 'downloadAttachment'])
     ->middleware(['web', 'auth'])
     ->name('sentemails.downloadAttachment');
 
@@ -202,7 +198,7 @@ Route::middleware('auth')->group(function () {
     // Route::get('/userreports/nopresidentinactive', [UserReportController::class, 'showNoPresidentInactive'])->name('userreports.nopresidentinactive');
     Route::get('/userreports/addnewboard/{id}', [UserReportController::class, 'addBoardNew'])->name('userreports.addnewboard');
     Route::post('/userreports/updatenewboard/{id}', [UserReportController::class, 'updateBoardNew'])->name('userreports.updatenewboard');
-       Route::get('/userreports/noinquiriesemail', [UserReportController::class, 'showNoInquiriesEmail'])->name('userreports.noinquiriesemail');
+    Route::get('/userreports/noinquiriesemail', [UserReportController::class, 'showNoInquiriesEmail'])->name('userreports.noinquiriesemail');
     Route::get('/userreports/addinquiriesemail/{id}', [UserReportController::class, 'addInquiriesEmail'])->name('userreports.addinquiriesemail');
     Route::post('/userreports/updateinquiriesemail/{id}', [UserReportController::class, 'updateInquiriesEmail'])->name('userreports.updateinquiriesemail');
     // Route::get('/userreports/noactivechapter', [UserReportController::class, 'showNoActiveChapter'])->name('userreports.noactivechapter');
@@ -231,8 +227,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/resources/addtoolkit', [ResourcesController::class, 'addToolkit'])->name('resources.addtoolkit');
     Route::post('/resources/updatetoolkit/{id}', [ResourcesController::class, 'updateToolkit'])->name('resources.updatetoolkit');
     Route::get('/resources/awards', [ResourcesController::class, 'showAwards'])->name('resources.awards');
-Route::post('/resources/addawards', [ResourcesController::class, 'addAwardBadge'])->name('resources.addawards');
-Route::post('/resources/updateawards/{id}', [ResourcesController::class, 'updateAwardBadge'])->name('resources.updateawards');
+    Route::post('/resources/addawards', [ResourcesController::class, 'addAwardBadge'])->name('resources.addawards');
+    Route::post('/resources/updateawards/{id}', [ResourcesController::class, 'updateAwardBadge'])->name('resources.updateawards');
     Route::get('/resources/elearning', [ResourcesController::class, 'showELearning'])->name('resources.elearning');
 });
 
@@ -279,7 +275,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/chapter/details/{id}', [ChapterController::class, 'viewChapterDetails'])->name('chapters.view');
     Route::get('/chapters/checkein', [ChapterController::class, 'checkEIN'])->name('chapters.checkein');
     Route::post('/chapter/details/updateein', [ChapterController::class, 'updateEIN'])->name('chapters.updateein');
-     Route::post('/chapter/details/updatename', [ChapterController::class, 'updateName'])->name('chapters.updatename');
+    Route::post('/chapter/details/updatename', [ChapterController::class, 'updateName'])->name('chapters.updatename');
     Route::post('/chapter/updatedisband', [ChapterController::class, 'updateChapterDisband'])->name('chapters.updatechapdisband');
     Route::post('/chapter/unzap', [ChapterController::class, 'updateChapterUnZap'])->name('chapters.updatechapterunzap');
     Route::get('/chapter/detailsedit/{id}', [ChapterController::class, 'editChapterDetails'])->name('chapters.edit');
@@ -432,8 +428,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/eoyreports/boardreport/activateall', [FinancialReportController::class, 'activateAllBoardsStandalone'])->name('eoyreports.activateallboards');
 });
 
-
-
 // Board Controller Routes...Board Login Required
 Route::middleware('auth')->group(function () {
     Route::get('/board/chapterprofile/{id}', [BoardController::class, 'chapterProfile'])->name('board.chapterprofile');
@@ -473,7 +467,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/board/profile/{id}', [BoardController::class, 'editBoardProfile'])->name('board.profile');
     Route::post('/board/profileupdate/{id}', [BoardController::class, 'updateBoardProfile'])->name('board.updateprofile');
 
-
     Route::get('/board/newchapterstatus/{id}', [BoardPendingController::class, 'showNewChapterStatus'])->name('board.newchapterstatus');
 
     Route::get('/board/disbandchecklist/{id}', [FinancialReportController::class, 'editDisbandChecklist'])->name('board.editdisbandchecklist');
@@ -489,9 +482,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/board/updategrantrequest/{id}', [BoardController::class, 'updateGrantRequest'])->name('board.updategrantrequest');
 
 });
-
-
-
 
 // PDF Controller Routes...Used for Board & Coordinator Layouts
 Route::middleware('auth')->group(function () {
@@ -521,7 +511,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/files/storeAward/{id}', [GoogleController::class, 'storeAward']);
     Route::post('/files/storeResources/{id}', [GoogleController::class, 'storeResources'])->name('store.resources');
     Route::post('/files/storeToolkit/{id}', [GoogleController::class, 'storeToolkit'])->name('store.toolkit');
-Route::post('/files/storeAwardBadges/{id}', [GoogleController::class, 'storeAwardBadges'])->name('store.awardbadges');
+    Route::post('/files/storeAwardBadges/{id}', [GoogleController::class, 'storeAwardBadges'])->name('store.awardbadges');
     Route::post('/files/storePhotos/{id}', [GoogleController::class, 'storePhotos']);
 });
 

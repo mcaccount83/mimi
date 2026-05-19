@@ -40,13 +40,13 @@ class BoardPendingController extends Controller implements HasMiddleware
         $allCountries = $baseQuery['allCountries'];
 
         $PresDetails = $baseQuery['PresDetails'];
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId,  $PresDetails);
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
         $bdPositionId = $bdData['bdPositionId'];
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,
-        'allCountries' => $allCountries,  'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails
+            'allCountries' => $allCountries,  'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails,
         ];
 
         return view('boards.pending.newchapterstatus')->with($data);

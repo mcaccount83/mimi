@@ -38,18 +38,26 @@ class ForumConditionsService
 
     public function getPendingThreadsCount(): int
     {
-        if (!Auth::check()) return 0;
+        if (! Auth::check()) {
+            return 0;
+        }
         $user = Auth::user();
-        if (!$this->canManageLists($user)) return 0;
+        if (! $this->canManageLists($user)) {
+            return 0;
+        }
 
         return Thread::pendingApproval()->count();
     }
 
     public function getPendingPostsCount(): int
     {
-        if (!Auth::check()) return 0;
+        if (! Auth::check()) {
+            return 0;
+        }
         $user = Auth::user();
-        if (!$this->canManageLists($user)) return 0;
+        if (! $this->canManageLists($user)) {
+            return 0;
+        }
 
         return \TeamTeaTime\Forum\Models\Post::pendingApproval()
             ->notFirstInThread()

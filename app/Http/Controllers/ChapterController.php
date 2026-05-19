@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\ChapterStatusEnum;
-use App\Enums\CoordinatorStatusEnum;
 use App\Enums\BoardPosition;
+use App\Enums\ChapterStatusEnum;
 use App\Enums\CheckboxFilterEnum;
 use App\Enums\CoordinatorPosition;
+use App\Enums\CoordinatorStatusEnum;
 use App\Enums\OperatingStatusEnum;
 use App\Enums\ProbationReasonEnum;
 use App\Enums\UserStatusEnum;
@@ -36,15 +36,13 @@ use App\Models\Country;
 use App\Models\DisbandedChecklist;
 use App\Models\Documents;
 use App\Models\DocumentsEOY;
-use App\Models\DocumentsIRS;
-use App\Models\DocumentsReport;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportFinal;
 use App\Models\ForumCategorySubscription;
 use App\Models\Payments;
-use App\Models\RegionInquiry;
 use App\Models\ProbationSubmission;
 use App\Models\Region;
+use App\Models\RegionInquiry;
 use App\Models\Resources;
 use App\Models\State;
 use App\Models\Status;
@@ -331,7 +329,7 @@ class ChapterController extends Controller implements HasMiddleware
             'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chDetails' => $chDetails, 'websiteLink' => $websiteLink,
             'startMonthName' => $startMonthName, 'confId' => $confId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus, 'startDate' => $startDate, 'probationReason' => $probationReason,
             'chFinancialReport' => $chFinancialReport, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments,
-            'conferenceDescription' => $conferenceDescription, 'chDisbanded' => $chDisbanded, 'chEOYDocuments' => $chEOYDocuments, 'dueDate' => $dueDate, 'renewalDate' =>$renewalDate,
+            'conferenceDescription' => $conferenceDescription, 'chDisbanded' => $chDisbanded, 'chEOYDocuments' => $chEOYDocuments, 'dueDate' => $dueDate, 'renewalDate' => $renewalDate,
             'resources' => $resources, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
             'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
         ];
@@ -966,7 +964,7 @@ class ChapterController extends Controller implements HasMiddleware
         return view('coordinators.chap.edit')->with($data);
     }
 
-     /**
+    /**
      * Update Chapter Name
      */
     public function updateName(Request $request): JsonResponse
@@ -985,30 +983,30 @@ class ChapterController extends Controller implements HasMiddleware
 
         // $chapterName = $input['name'];
         $chapter = Chapters::find($chapterId);
-            DB::beginTransaction();
+        DB::beginTransaction();
         try {
-                $chapterName = $request->filled('name') ? $request->input('name') : $chNamePrev;
-                $chapter->name = $chapterName;
-                $chapter->sanitized_name = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|', '.', ' '], '-', $chapterName);
-                $chapter->former_name = $request->filled('ch_preknown') ? $request->input('ch_preknown') : $request->input('ch_hid_preknown');
-                $chapter->updated_by = $updatedBy;
-                $chapter->updated_id = $updatedId;
-                $chapter->save();
+            $chapterName = $request->filled('name') ? $request->input('name') : $chNamePrev;
+            $chapter->name = $chapterName;
+            $chapter->sanitized_name = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|', '.', ' '], '-', $chapterName);
+            $chapter->former_name = $request->filled('ch_preknown') ? $request->input('ch_preknown') : $request->input('ch_hid_preknown');
+            $chapter->updated_by = $updatedBy;
+            $chapter->updated_id = $updatedId;
+            $chapter->save();
 
-                if ($irsNotify == 1) {
-                    $pdfPath = $this->pdfController->saveNameChangeLetter($request, $chapterId, $chNamePrev);
-                }
+            if ($irsNotify == 1) {
+                $pdfPath = $this->pdfController->saveNameChangeLetter($request, $chapterId, $chNamePrev);
+            }
 
-                DB::commit();
+            DB::commit();
 
-                return response()->json([
-                    'status' => 'success', 'message' => 'Chapter Name successfully updated',
-                    'redirect' => route('chapters.edit', ['id' => $chapterId]),
-                ]);
+            return response()->json([
+                'status' => 'success', 'message' => 'Chapter Name successfully updated',
+                'redirect' => route('chapters.edit', ['id' => $chapterId]),
+            ]);
 
-            } catch (\Exception $e) {
-                DB::rollback();  // Rollback Transaction
-                Log::error($e);  // Log the error
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             return response()->json([
                 'status' => 'error', 'message' => 'Something went wrong, Please try again.',
@@ -1210,7 +1208,7 @@ class ChapterController extends Controller implements HasMiddleware
         $data = ['id' => $id, 'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'allCountries' => $allCountries,
             'chDetails' => $chDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
             'chPcId' => $chPcId, 'allStates' => $allStates, 'PresDetails' => $PresDetails, 'confId' => $confId, 'chConfId' => $chConfId,
-            'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'chapterStatus' => $chapterStatus
+            'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'chapterStatus' => $chapterStatus,
         ];
 
         return view('coordinators.chap.editboard')->with($data);
@@ -1692,7 +1690,7 @@ class ChapterController extends Controller implements HasMiddleware
 
         $data = ['id' => $id, 'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'conferenceDescription' => $conferenceDescription,
             'chDetails' => $chDetails, 'allWebLinks' => $allWebLinks, 'chPcId' => $chPcId, 'regionLongName' => $regionLongName, 'confId' => $confId, 'chConfId' => $chConfId,
-            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc, 'chapterStatus' => $chapterStatus
+            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc, 'chapterStatus' => $chapterStatus,
         ];
 
         return view('coordinators.chap.editwebsite')->with($data);

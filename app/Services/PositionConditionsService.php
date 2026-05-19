@@ -3,13 +3,12 @@
 namespace App\Services;
 
 use App\Enums\CoordinatorPosition;
-use App\Enums\ChapterStatusEnum;
 use App\Enums\UserTypeEnum;
-use App\Models\FiscalYear;
 use App\Models\AdminEmail;
-use App\Models\AdminYear;
 use App\Models\AdminIRS;
 use App\Models\AdminReport;
+use App\Models\AdminYear;
+use App\Models\FiscalYear;
 use Illuminate\Support\Facades\Request;
 
 class PositionConditionsService
@@ -123,23 +122,23 @@ class PositionConditionsService
     public function getFiscalYearOptions(): array
     {
         $fiscalYear = FiscalYear::orderBy('created_at', 'desc') // newest created row first
-                        ->first();
+            ->first();
         $adminYear = AdminYear::with('fiscalYear')
-                        ->orderBy('created_at', 'desc') // newest created row first
-                        ->first();
+            ->orderBy('created_at', 'desc') // newest created row first
+            ->first();
         $irsYear = AdminIRS::with('fiscalYear')
-                        ->orderBy('created_at', 'desc') // newest created row first
-                        ->first();
+            ->orderBy('created_at', 'desc') // newest created row first
+            ->first();
 
         // Fiscal year values directly from table
         $fiscalYearId = $fiscalYear->id;
         $fiscalYearRange = $fiscalYear->fiscal_year;      // "2025-2026"
         $fiscalYearStart = $fiscalYear->fiscal_start;    // "2025"
         $fiscalYearEnd = $fiscalYear->fiscal_end;        // "2026"
-        $fiscalYearStartDate = $fiscalYearStart . '-07-01';  // "2025-07-01"
+        $fiscalYearStartDate = $fiscalYearStart.'-07-01';  // "2025-07-01"
         $fiscalMonthStart = '7';
         $fiscalMonthEnd = '6';
-        $fiscalYearEndDate = $fiscalYearEnd . '-06-30';
+        $fiscalYearEndDate = $fiscalYearEnd.'-06-30';
 
         return [
             'fiscalYear' => $fiscalYear,
@@ -159,8 +158,8 @@ class PositionConditionsService
     public function getReportYearOptions(): array
     {
         $reportYear = AdminReport::with('fiscalYear')
-                        ->orderBy('created_at', 'desc') // newest created row first
-                        ->first();
+            ->orderBy('created_at', 'desc') // newest created row first
+            ->first();
 
         $reportYearId = $reportYear->fiscalYear->id;
         $reportYearRange = $reportYear->fiscalYear->report_year; // "2024-2025"
@@ -168,7 +167,7 @@ class PositionConditionsService
         $reportYearEnd = $reportYear->fiscalYear->report_end;        // "2025"
 
         $boardReportStart = $reportYearEnd; // "2025"
-        $boardReportEnd = (int)$reportYearEnd + 1; // 2026
+        $boardReportEnd = (int) $reportYearEnd + 1; // 2026
         $boardReportRange = $boardReportStart.'-'.$boardReportEnd;
 
         // Optional display names
@@ -195,7 +194,7 @@ class PositionConditionsService
             'financialReportName' => $financialReportName,
             'financialPDFName' => $financialPDFName,
             'irsFilingName' => $irsFilingName,
-            'displayEOYTESTING' => ($display_testing && !$display_live),
+            'displayEOYTESTING' => ($display_testing && ! $display_live),
             'displayEOYLIVE' => ($display_live && $currentMonth >= 5 && $currentMonth <= 12),
             'displayBoardRptLIVE' => ($display_live && $currentMonth >= 5 && $currentMonth <= 9),
             'displayFinancialRptLIVE' => ($display_live && $currentMonth >= 6 && $currentMonth <= 12),
@@ -233,16 +232,15 @@ class PositionConditionsService
         if ($userTypeId == UserTypeEnum::COORD && $viewingAs == 'coord') {
             return [
                 'bdPositionId' => '1',
-                'bdDetails'    => $PresDetails,
-                'bdTypeId'     => $presTypeId,
+                'bdDetails' => $PresDetails,
+                'bdTypeId' => $presTypeId,
             ];
         }
 
         return [
             'bdPositionId' => $PresDetails?->position_id ?? null,
-            'bdDetails'    => $PresDetails,
-            'bdTypeId'     => $presTypeId,
+            'bdDetails' => $PresDetails,
+            'bdTypeId' => $presTypeId,
         ];
     }
-
 }

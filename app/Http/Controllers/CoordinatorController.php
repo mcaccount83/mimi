@@ -339,7 +339,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         $data = ['cdDetails' => $cdDetails, 'cdConfId' => $cdConfId, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
             'cdActiveId' => $cdActiveId, 'confId' => $confId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
             'drList' => $drList, 'chList' => $chList, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'startDate' => $startDate,
-            'secondaryPosition' => $secondaryPosition, 'cdPositionid' => $cdPositionid, 'cdAdminRole' => $cdAdminRole, 'coursesByCategory' => $coursesByCategory
+            'secondaryPosition' => $secondaryPosition, 'cdPositionid' => $cdPositionid, 'cdAdminRole' => $cdAdminRole, 'coursesByCategory' => $coursesByCategory,
         ];
 
         return view('coordinators.coord.view')->with($data);
@@ -811,7 +811,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             'chList' => $chList, 'drList' => $drList, 'cdActiveId' => $cdActiveId, 'cdConfIdUser' => $cdConfIdUser, 'userId' => $userId, 'cdLeave' => $cdLeave,
             'pcOptions' => $pcOptions, 'cdId' => $cdId, 'allPositions' => $allPositions, 'chDetails' => $chDetails, 'drDetails' => $drDetails, 'cdUserAdmin' => $cdUserAdmin,
             'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName, 'pcRowCount' => $pcRowCount, 'drRowCount' => $drRowCount,
-            'allAdminRoles' => $allAdminRoles, 'cdAdminRole' => $cdAdminRole
+            'allAdminRoles' => $allAdminRoles, 'cdAdminRole' => $cdAdminRole,
         ];
 
         return view('coordinators.coord.editrole')->with($data);
@@ -1312,7 +1312,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         }
     }
 
-       public function viewCoordELearning(Request $request, int $id): View
+    public function viewCoordELearning(Request $request, int $id): View
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;

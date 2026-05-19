@@ -416,7 +416,7 @@ class ResourcesController extends Controller implements HasMiddleware
 
         $eoyAwards = FinancialReportAwards::orderBy('award_type')->get();
 
-        $data = ['reportYears' => $reportYears, 'eoyAwards' => $eoyAwards, 'canEditFiles' => $canEditFiles,];
+        $data = ['reportYears' => $reportYears, 'eoyAwards' => $eoyAwards, 'canEditFiles' => $canEditFiles];
 
         return view('coordinators.resources.awardbadges')->with($data);
     }
@@ -425,58 +425,59 @@ class ResourcesController extends Controller implements HasMiddleware
      * Add New Files or Links to the Awards List
      */
     public function addAwardBadge(Request $request): JsonResponse
-{
-    try {
-        $validatedData = $request->validate([
-            'reportYearNew' => 'required|exists:fiscal_year,id',
-            'eoyAwardNew'   => 'required|exists:financial_report_awards,id',
-            'fileNameNew'   => 'required|file|mimes:png|max:2048',
-        ]);
+    {
+        try {
+            $validatedData = $request->validate([
+                'reportYearNew' => 'required|exists:fiscal_year,id',
+                'eoyAwardNew' => 'required|exists:financial_report_awards,id',
+                'fileNameNew' => 'required|file|mimes:png|max:2048',
+            ]);
 
-        // Check for existing badge for this year/award combination
-        $exists = FinancialReportAwardsBadges::where('report_year_id', $validatedData['reportYearNew'])
-            ->where('eoy_award_id', $validatedData['eoyAwardNew'])
-            ->exists();
+            // Check for existing badge for this year/award combination
+            $exists = FinancialReportAwardsBadges::where('report_year_id', $validatedData['reportYearNew'])
+                ->where('eoy_award_id', $validatedData['eoyAwardNew'])
+                ->exists();
 
-        if ($exists) {
-            return response()->json([
-                'success' => false,
-                'error' => 'A badge already exists for this award type and fiscal year. Use UPDATE instead.'
-            ], 422);
+            if ($exists) {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'A badge already exists for this award type and fiscal year. Use UPDATE instead.',
+                ], 422);
+            }
+
+            $file = FinancialReportAwardsBadges::create([
+                'report_year_id' => $validatedData['reportYearNew'],
+                'eoy_award_id' => $validatedData['eoyAwardNew'],
+                'file_path' => null, // storeAwardBadges will set this
+            ]);
+
+            return response()->json(['success' => true, 'id' => $file->id]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['success' => false, 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => 'An error occurred while adding the badge.'], 500);
         }
-
-        $file = FinancialReportAwardsBadges::create([
-            'report_year_id' => $validatedData['reportYearNew'],
-            'eoy_award_id'   => $validatedData['eoyAwardNew'],
-            'file_path'      => null, // storeAwardBadges will set this
-        ]);
-
-        return response()->json(['success' => true, 'id' => $file->id,]);
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        return response()->json(['success' => false, 'errors' => $e->errors()], 422);
-    } catch (\Exception $e) {
-        return response()->json(['success' => false, 'error' => 'An error occurred while adding the badge.'], 500);
     }
-}
 
     public function updateAwardBadge(Request $request, int $id): JsonResponse
-{
-    try {
-        $request->validate([
-            'fileName' => 'required|file|mimes:png|max:2048',
-        ]);
+    {
+        try {
+            $request->validate([
+                'fileName' => 'required|file|mimes:png|max:2048',
+            ]);
 
-        // Just confirm the record exists — file_path gets updated by storeAwardBadges
-        FinancialReportAwardsBadges::findOrFail($id);
+            // Just confirm the record exists — file_path gets updated by storeAwardBadges
+            FinancialReportAwardsBadges::findOrFail($id);
 
-        return response()->json(['success' => true]);
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        return response()->json(['success' => false, 'errors' => $e->errors()], 422);
-    } catch (\Exception $e) {
-        Log::error('updateAwardBadge error', ['message' => $e->getMessage()]);
-        return response()->json(['success' => false, 'error' => 'An error occurred while updating the badge.'], 500);
+            return response()->json(['success' => true]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['success' => false, 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            Log::error('updateAwardBadge error', ['message' => $e->getMessage()]);
+
+            return response()->json(['success' => false, 'error' => 'An error occurred while updating the badge.'], 500);
+        }
     }
-}
 
     /**
      * View eLearning Courses
@@ -486,7 +487,7 @@ class ResourcesController extends Controller implements HasMiddleware
         $user = User::find($request->user()->id);
 
         $coordinatorCourses = $this->learndashService->getCoursesForUserType('coordinator');
-        $boardCourses       = $this->learndashService->getCoursesForUserType('board');
+        $boardCourses = $this->learndashService->getCoursesForUserType('board');
 
         // Fetch progress keyed by course ID
         $userProgress = $this->learndashService->getUserProgress($user->email);
@@ -494,12 +495,12 @@ class ResourcesController extends Controller implements HasMiddleware
         // Merge progress + auto-login URLs
         foreach ($coordinatorCourses as &$course) {
             $course['auto_login_url'] = $this->learndashService->getAutoLoginUrl($course, $user);
-            $course['progress']       = $userProgress[$course['id']] ?? null;
+            $course['progress'] = $userProgress[$course['id']] ?? null;
         }
 
         foreach ($boardCourses as &$course) {
             $course['auto_login_url'] = $this->learndashService->getAutoLoginUrl($course, $user);
-            $course['progress']       = $userProgress[$course['id']] ?? null;
+            $course['progress'] = $userProgress[$course['id']] ?? null;
         }
 
         // Group by category - store both name and slug

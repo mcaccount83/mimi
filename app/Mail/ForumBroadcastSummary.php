@@ -5,7 +5,7 @@ namespace App\Mail;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
-    class ForumBroadcastSummary extends BaseMailable
+class ForumBroadcastSummary extends BaseMailable
 {
     public function __construct(
         public string $broadcastSubject,

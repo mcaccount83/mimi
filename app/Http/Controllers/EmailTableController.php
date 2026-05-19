@@ -329,7 +329,7 @@ class EmailTableController extends Controller
         return $tableHtml;
     }
 
-      public function createNewGrantTable(array $mailData)
+    public function createNewGrantTable(array $mailData)
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
@@ -344,7 +344,6 @@ class EmailTableController extends Controller
 
         return $tableHtml;
     }
-
 
     /**
      * Create Rows for Founder
@@ -816,5 +815,4 @@ class EmailTableController extends Controller
 
         return $tableHtml;
     }
-
 }

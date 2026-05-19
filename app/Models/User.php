@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Enums\AdminStatusEnum;
-use App\Enums\UserTypeEnum;
 use App\Enums\ForumCategoryEnum;
+use App\Enums\UserTypeEnum;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;

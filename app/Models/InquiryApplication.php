@@ -33,7 +33,7 @@ class InquiryApplication extends Model
         return $this->belongsTo(Country::class, 'country_id', 'id');  // 'country_id' in chapters BelongsTo 'id' in country
     }
 
-     public function inquirystate(): BelongsTo
+    public function inquirystate(): BelongsTo
     {
         return $this->belongsTo(State::class, 'inquiry_state', 'id');  // 'state' in chapters BelongsTo 'id' in state
     }
@@ -54,5 +54,4 @@ class InquiryApplication extends Model
             'region_id'               // Local key on states table (the region_id column)
         );
     }
-
 }

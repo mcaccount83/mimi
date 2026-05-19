@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Enums\BoardPosition;
 use App\Enums\CheckboxFilterEnum;
 use App\Models\ActiveStatus;
-use App\Models\Chapters;
 use App\Models\ChapterAwardHistory;
+use App\Models\Chapters;
 use App\Models\Conference;
 use App\Models\Coordinators;
 use App\Models\Country;
@@ -159,7 +159,7 @@ class BaseChapterController extends Controller
             return ['query' => $baseQuery];
         }
 
-        if ($isReregPage && !((isset($_GET['check3']) && $_GET['check3'] == 'yes') || (isset($_GET['check5']) && $_GET['check5'] == 'yes'))) {
+        if ($isReregPage && ! ((isset($_GET['check3']) && $_GET['check3'] == 'yes') || (isset($_GET['check5']) && $_GET['check5'] == 'yes'))) {
             $baseQuery->select('chapters.*')
                 ->join('state', 'chapters.state_id', '=', 'state.id')
                 ->orderByDesc('next_renewal_year')
@@ -181,7 +181,7 @@ class BaseChapterController extends Controller
             ->orderBy(Region::select('short_name')
                 ->whereColumn('region.id', 'state.region_id'))
             ->orderBy('state.state_short_name', 'asc')
-            ->orderBy('chapters.name')
+            ->orderBy('chapters.name'),
         ];
     }
 
@@ -277,7 +277,7 @@ class BaseChapterController extends Controller
      */
     public function getChapterDetails(int $chId)
     {
-        $chDetails = Chapters::with(['country', 'state', 'documents', 'financialReport', 'financialReportReview','startMonth', 'primaryCoordinator',
+        $chDetails = Chapters::with(['country', 'state', 'documents', 'financialReport', 'financialReportReview', 'startMonth', 'primaryCoordinator',
             'payments', 'probation', 'financialReportFinal', 'documentsEOY', 'documentsIRS', 'documentsReport'])->find($chId);
         $chActiveId = $chDetails->active_status;
         $chActiveStatus = $chDetails->activeStatus->active_status;
@@ -366,7 +366,7 @@ class BaseChapterController extends Controller
             'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC, 'emailPC' => $emailPC, 'cc_id' => $cc_id,
             'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink, 'pcName' => $pcName, 'probationReason' => $probationReason,
             'allMonths' => $allMonths, 'pcDetails' => $pcDetails, 'allProbation' => $allProbation, 'chFinancialReportReview' => $chFinancialReportReview,
-            'dueDate' => $dueDate, 'startDate' => $startDate, 'renewalDate' => $renewalDate, 'chAwards' => $chAwards
+            'dueDate' => $dueDate, 'startDate' => $startDate, 'renewalDate' => $renewalDate, 'chAwards' => $chAwards,
         ];
     }
 
@@ -492,7 +492,9 @@ class BaseChapterController extends Controller
 
         foreach ($chapterIds as $id) {
             $ch = $chapters->get($id);
-            if (! $ch) continue;
+            if (! $ch) {
+                continue;
+            }
 
             $stateShortName = $ch->state_id < 52
                 ? $ch->state->state_short_name
@@ -501,20 +503,20 @@ class BaseChapterController extends Controller
             $pc = $ch->primaryCoordinator;
 
             $result[$id] = [
-                'chDetails'      => $ch,
-                'chDocuments'    => $ch->documents,
-                'chPayments'     => $ch->payments,
+                'chDetails' => $ch,
+                'chDocuments' => $ch->documents,
+                'chPayments' => $ch->payments,
                 'chEOYDocuments' => $ch->documentsEOY,
                 'chIRSDocuments' => $ch->documentsIRS,
                 'chReportDocuments' => $ch->documentsReport,
                 'stateShortName' => $stateShortName,
                 'regionLongName' => $ch->state->region->long_name,
-                'chConfId'       => $ch->state->conference_id,
+                'chConfId' => $ch->state->conference_id,
                 'startMonthName' => $ch->startMonth?->month_long_name ?? '',
-                'chapterStatus'  => $ch->status?->chapter_status ?? '',
-                'websiteLink'    => $ch->webLink?->link_status ?? null,
-                'pcName'         => $pc ? $pc->first_name.' '.$pc->last_name : '',
-                'probationReason'=> $ch->probation?->probation_reason ?? '',
+                'chapterStatus' => $ch->status?->chapter_status ?? '',
+                'websiteLink' => $ch->webLink?->link_status ?? null,
+                'pcName' => $pc ? $pc->first_name.' '.$pc->last_name : '',
+                'probationReason' => $ch->probation?->probation_reason ?? '',
             ];
         }
 
@@ -549,10 +551,10 @@ class BaseChapterController extends Controller
 
             $result[$id] = [
                 'PresDetails' => $bdDetails->get(BoardPosition::PRES, collect([$default]))->first(),
-                'AVPDetails'  => $bdDetails->get(BoardPosition::AVP,  collect([$default]))->first(),
-                'MVPDetails'  => $bdDetails->get(BoardPosition::MVP,  collect([$default]))->first(),
-                'TRSDetails'  => $bdDetails->get(BoardPosition::TRS,  collect([$default]))->first(),
-                'SECDetails'  => $bdDetails->get(BoardPosition::SEC,  collect([$default]))->first(),
+                'AVPDetails' => $bdDetails->get(BoardPosition::AVP, collect([$default]))->first(),
+                'MVPDetails' => $bdDetails->get(BoardPosition::MVP, collect([$default]))->first(),
+                'TRSDetails' => $bdDetails->get(BoardPosition::TRS, collect([$default]))->first(),
+                'SECDetails' => $bdDetails->get(BoardPosition::SEC, collect([$default]))->first(),
             ];
         }
 
@@ -585,10 +587,10 @@ class BaseChapterController extends Controller
 
             $result[$id] = [
                 'PresDetails' => $bdDetails->get(BoardPosition::PRES, collect([$default]))->first(),
-                'AVPDetails'  => $bdDetails->get(BoardPosition::AVP,  collect([$default]))->first(),
-                'MVPDetails'  => $bdDetails->get(BoardPosition::MVP,  collect([$default]))->first(),
-                'TRSDetails'  => $bdDetails->get(BoardPosition::TRS,  collect([$default]))->first(),
-                'SECDetails'  => $bdDetails->get(BoardPosition::SEC,  collect([$default]))->first(),
+                'AVPDetails' => $bdDetails->get(BoardPosition::AVP, collect([$default]))->first(),
+                'MVPDetails' => $bdDetails->get(BoardPosition::MVP, collect([$default]))->first(),
+                'TRSDetails' => $bdDetails->get(BoardPosition::TRS, collect([$default]))->first(),
+                'SECDetails' => $bdDetails->get(BoardPosition::SEC, collect([$default]))->first(),
             ];
         }
 
