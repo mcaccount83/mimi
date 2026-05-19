@@ -501,21 +501,21 @@ class PaymentController extends Controller implements HasMiddleware
         // Get all rereg payment history for a chapter
         $reregHistory = PaymentHistory::where('chapter_id', $id)
             ->where('payment_type', 'rereg')
-            ->orderBy('payment_date', 'desc')
+            ->orderByDesc('payment_date')
             ->get();
 
         $m2mHistory = PaymentHistory::where('chapter_id', $id)
             ->where('payment_type', 'm2m')
-            ->orderBy('payment_date', 'desc')
+            ->orderByDesc('payment_date')
             ->get();
 
         $sustainingHistory = PaymentHistory::where('chapter_id', $id)
             ->where('payment_type', 'sustaining')
-            ->orderBy('payment_date', 'desc')
+            ->orderByDesc('payment_date')
             ->get();
 
         $grantRequests = GrantRequest::where('chapter_id', $id)
-            ->orderBy('submitted_at', 'desc')
+            ->orderByDesc('submitted_at')
             ->get();
 
         $data = ['id' => $id, 'chActiveId' => $chActiveId, 'chDetails' => $chDetails, 'conferenceDescription' => $conferenceDescription, 'chDisbanded' => $chDisbanded,
@@ -538,7 +538,7 @@ class PaymentController extends Controller implements HasMiddleware
         // Use the appropriate query based on checkbox status
         if ($checkBox51Status) {
             $grantList = GrantRequest::with('chapters', 'chapterstate')
-                ->orderBy('submitted_at', 'desc')
+                ->orderByDesc('submitted_at')
                 ->get();
 
         } else {
@@ -546,7 +546,7 @@ class PaymentController extends Controller implements HasMiddleware
                 ->whereHas('chapterstate', function ($query) use ($confId) {
                     $query->where('conference_id', $confId);
                 })
-                ->orderBy('submitted_at', 'desc')
+                ->orderByDesc('submitted_at')
                 ->get();
         }
 

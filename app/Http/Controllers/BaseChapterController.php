@@ -168,7 +168,7 @@ class BaseChapterController extends Controller
                     ->whereColumn('conference.id', 'state.conference_id'))
                 ->orderBy(Region::select('short_name')
                     ->whereColumn('region.id', 'state.region_id'))
-                ->orderBy('state.state_short_name', 'asc')
+                ->orderBy('state.state_short_name')
                 ->orderBy('chapters.name');
 
             return ['query' => $baseQuery];
@@ -180,7 +180,7 @@ class BaseChapterController extends Controller
                 ->whereColumn('conference.id', 'state.conference_id'))
             ->orderBy(Region::select('short_name')
                 ->whereColumn('region.id', 'state.region_id'))
-            ->orderBy('state.state_short_name', 'asc')
+            ->orderBy('state.state_short_name')
             ->orderBy('chapters.name'),
         ];
     }
@@ -353,7 +353,7 @@ class BaseChapterController extends Controller
         // Historical from the history table (exclude current year)
         $chAwards = ChapterAwardHistory::with('awardtype', 'fiscalYear')
             ->where('chapter_id', $chId)
-            ->orderBy('report_year_id', 'desc')
+            ->orderByDesc('report_year_id')
             ->orderBy('awards_type')
             ->get()
             ->groupBy('report_year_id');

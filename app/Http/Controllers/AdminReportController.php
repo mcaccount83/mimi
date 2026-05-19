@@ -125,7 +125,7 @@ class AdminReportController extends Controller implements HasMiddleware
         }
         // If checkBox51Status OR checkBox10Status is true, show all conferences (international)
 
-        $donationsList = $query->orderBy('payment_history.payment_date', 'desc')->get();
+        $donationsList = $query->orderByDesc('payment_history.payment_date')->get();
 
         $data = [
             'donationsList' => $donationsList,

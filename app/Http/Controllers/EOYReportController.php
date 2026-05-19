@@ -1181,7 +1181,7 @@ class EOYReportController extends Controller implements HasMiddleware
         // Historical from the history table (exclude current year)
         $chAwards = ChapterAwardHistory::with('awardtype', 'fiscalYear')
             ->where('chapter_id', $id)
-            ->orderBy('report_year_id', 'desc')
+            ->orderByDesc('report_year_id')
             ->orderBy('awards_type')
             ->get()
             ->groupBy('report_year_id');

@@ -118,21 +118,21 @@ class BoardController extends Controller implements HasMiddleware
 
         $reregHistory = PaymentHistory::where('chapter_id', $chId)
             ->where('payment_type', 'rereg')
-            ->orderBy('payment_date', 'desc')
+            ->orderByDesc('payment_date')
             ->get();
 
         $m2mHistory = PaymentHistory::where('chapter_id', $chId)
             ->where('payment_type', 'm2m')
-            ->orderBy('payment_date', 'desc')
+            ->orderByDesc('payment_date')
             ->get();
 
         $sustainingHistory = PaymentHistory::where('chapter_id', $chId)
             ->where('payment_type', 'sustaining')
-            ->orderBy('payment_date', 'desc')
+            ->orderByDesc('payment_date')
             ->get();
 
         $grantRequests = GrantRequest::where('chapter_id', $chId)
-            ->orderBy('submitted_at', 'desc')
+            ->orderByDesc('submitted_at')
             ->get();
 
         $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
@@ -251,21 +251,21 @@ class BoardController extends Controller implements HasMiddleware
 
         $reregHistory = PaymentHistory::where('chapter_id', $chId)
             ->where('payment_type', 'rereg')
-            ->orderBy('payment_date', 'desc')
+            ->orderByDesc('payment_date')
             ->get();
 
         $m2mHistory = PaymentHistory::where('chapter_id', $chId)
             ->where('payment_type', 'm2m')
-            ->orderBy('payment_date', 'desc')
+            ->orderByDesc('payment_date')
             ->get();
 
         $sustainingHistory = PaymentHistory::where('chapter_id', $chId)
             ->where('payment_type', 'sustaining')
-            ->orderBy('payment_date', 'desc')
+            ->orderByDesc('payment_date')
             ->get();
 
         $grantRequests = GrantRequest::where('chapter_id', $chId)
-            ->orderBy('submitted_at', 'desc')
+            ->orderByDesc('submitted_at')
             ->get();
 
         $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
@@ -332,21 +332,21 @@ class BoardController extends Controller implements HasMiddleware
 
         $reregHistory = PaymentHistory::where('chapter_id', $chId)
             ->where('payment_type', 'rereg')
-            ->orderBy('payment_date', 'desc')
+            ->orderByDesc('payment_date')
             ->get();
 
         $m2mHistory = PaymentHistory::where('chapter_id', $chId)
             ->where('payment_type', 'm2m')
-            ->orderBy('payment_date', 'desc')
+            ->orderByDesc('payment_date')
             ->get();
 
         $sustainingHistory = PaymentHistory::where('chapter_id', $chId)
             ->where('payment_type', 'sustaining')
-            ->orderBy('payment_date', 'desc')
+            ->orderByDesc('payment_date')
             ->get();
 
         $grantRequests = GrantRequest::where('chapter_id', $chId)
-            ->orderBy('submitted_at', 'desc')
+            ->orderByDesc('submitted_at')
             ->get();
 
         $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
@@ -1479,7 +1479,7 @@ class BoardController extends Controller implements HasMiddleware
 
         $grantList = GrantRequest::with('chapters', 'state', 'country')
             ->where('chapter_id', $chId)
-            ->orderBy('submitted_at', 'desc')
+            ->orderByDesc('submitted_at')
             ->get();
 
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
