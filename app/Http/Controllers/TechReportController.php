@@ -1299,14 +1299,8 @@ class TechReportController extends Controller implements HasMiddleware
 
     }
 
-    public function addGoogleDrive(Request $request)
+    public function addGoogleDrive(AddGoogleDriveTechReportRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'version' => 'nullable|string|max:50',
-            'folder_id' => 'required|string|max:255',
-        ]);
 
         try {
             $drive = new GoogleDrive;
@@ -1330,14 +1324,8 @@ class TechReportController extends Controller implements HasMiddleware
         }
     }
 
-    public function updateGoogleDrive(Request $request, int $id)
+    public function updateGoogleDrive(UpdateGoogleDriveTechReportRequest $request, int $id)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'version' => 'nullable|string|max:50',
-            'folder_id' => 'required|string|max:255',
-        ]);
 
         try {
             $drive = GoogleDrive::findOrFail($id);
@@ -1395,13 +1383,8 @@ class TechReportController extends Controller implements HasMiddleware
 
     }
 
-    public function addAdminEmail(Request $request)
+    public function addAdminEmail(AddAdminEmailTechReportRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'email' => 'required|string|max:255', // Fixed: emial -> email
-        ]);
 
         try {
             $admin = new AdminEmail;
@@ -1424,13 +1407,8 @@ class TechReportController extends Controller implements HasMiddleware
         }
     }
 
-    public function updateAdminEmail(Request $request, int $id)
+    public function updateAdminEmail(UpdateAdminEmailTechReportRequest $request, int $id)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'email' => 'required|string|max:255', // Fixed: emial -> email
-        ]);
 
         try {
             $admin = AdminEmail::findOrFail($id);
