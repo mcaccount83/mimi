@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class FinancialReportAwardsBadges extends Model
 {
-    protected $table = 'financial_report_awards_badges';
 
     protected $primaryKey = 'id';
 
