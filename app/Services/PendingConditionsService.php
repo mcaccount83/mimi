@@ -8,7 +8,9 @@ class PendingConditionsService
 {
     public function getPendingInquiryCount(?int $confId = null): int
     {
-        if (!$confId) return 0;
+        if (! $confId) {
+            return 0;
+        }
 
         return \App\Models\InquiryApplication::join('state', 'inquiry_application.state_id', '=', 'state.id')
             ->where('state.conference_id', $confId)
@@ -21,7 +23,9 @@ class PendingConditionsService
 
     public function getPendingNewChapterCount(?int $confId = null): int
     {
-        if (!$confId) return 0;
+        if (! $confId) {
+            return 0;
+        }
 
         return \App\Models\Chapters::join('state', 'chapters.state_id', '=', 'state.id')
             ->where('state.conference_id', $confId)
@@ -33,7 +37,9 @@ class PendingConditionsService
 
     public function getPendingNewCoordCount(?int $confId = null): int
     {
-        if (!$confId) return 0;
+        if (! $confId) {
+            return 0;
+        }
 
         return \App\Models\Coordinators::join('state', 'coordinators.state_id', '=', 'state.id')
             ->where('state.conference_id', $confId)

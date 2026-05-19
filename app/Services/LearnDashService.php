@@ -3,15 +3,14 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class LearnDashService
 {
-    protected $baseUrl;
+    protected string $baseUrl;
 
-    protected $username;
+    protected string $username;
 
-    protected $password;
+    protected string $password;
 
     public function __construct()
     {
@@ -33,14 +32,13 @@ class LearnDashService
 
         $token = base64_encode(json_encode($payload));
 
-    return route($routeName, [
-        'course_id' => $course['id'],
-    ]).'?token='.urlencode($token).'&course_url='.urlencode($course['link']);
-
+        return route($routeName, [
+            'course_id' => $course['id'],
+        ]).'?token='.urlencode($token).'&course_url='.urlencode($course['link']);
     }
 
     // Get courses for a specific user type - user_type=group -- board=board, coordinator=coordinator
-    public function getCoursesForUserType($userTypeId)
+    public function getCoursesForUserType(string $userTypeId)
     {
         $response = Http::withHeaders([
             'Cache-Control' => 'no-cache, no-store, must-revalidate',
@@ -62,12 +60,13 @@ class LearnDashService
         $response = Http::withHeaders([
             'Cache-Control' => 'no-cache, no-store, must-revalidate',
         ])->get($url, [
-            'email'   => $email,
+            'email' => $email,
             'nocache' => time(),
         ]);
 
         if ($response->successful()) {
             $data = $response->json();
+
             return collect($data['courses'] ?? [])
                 ->keyBy('course_id')
                 ->toArray();
@@ -85,7 +84,7 @@ class LearnDashService
         $response = Http::withHeaders([
             'Cache-Control' => 'no-cache, no-store, must-revalidate',
         ])->get('https://momsclub.org/elearning/wp-json/public/v1/users-progress', [
-            'emails'  => $emails,
+            'emails' => $emails,
             'nocache' => time(),
         ]);
 

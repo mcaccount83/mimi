@@ -13,15 +13,13 @@ class FinancialReportAwardsBadges extends Model
 
     protected $guarded = []; // ALL columns are mass-assignable
 
-    public function fiscalYear()
+    public function fiscalYear(): BelongsTo
     {
         return $this->belongsTo(FiscalYear::class, 'report_year_id', 'id');
     }
 
-    public function eoyAward()
+    public function eoyAward(): BelongsTo
     {
         return $this->belongsTo(FinancialReportAwards::class, 'eoy_award_id', 'id');
     }
 }
-
-

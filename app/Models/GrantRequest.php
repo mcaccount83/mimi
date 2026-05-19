@@ -33,7 +33,7 @@ class GrantRequest extends Model
         return $this->belongsTo(Country::class, 'country_id', 'id');  // 'country_id' in grant_requests BelongsTo 'id' in country
     }
 
-     public function boards(): BelongsTo
+    public function boards(): BelongsTo
     {
         return $this->belongsTo(Boards::class, 'submitted_bdId', 'id'); // 'country_id' in grant_requests BelongsTo 'id' in Boards
     }
@@ -47,5 +47,4 @@ class GrantRequest extends Model
     {
         return $this->belongsTo(BoardsOutgoing::class, 'submitted_bdId', 'id');  // 'country_id' in grant_requests BelongsTo 'id' in BoardsOutgoing
     }
-
 }

@@ -11,21 +11,19 @@ class SentEmailsServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
+        Event::forget(MessageSending::class);
 
-    Event::forget(MessageSending::class);
+        Event::listen(MessageSending::class, [EmailLogger::class, 'handle']);
 
-    Event::listen(MessageSending::class, [EmailLogger::class, 'handle']);
-
-    Event::listen(MessageSending::class, function ($event) {
-        $bccAddress = config('mail.bcc.address');
-        if ($bccAddress) {
-            $event->message->bcc($bccAddress);
-        }
-    });
-
+        Event::listen(MessageSending::class, function ($event) {
+            $bccAddress = config('mail.bcc.address');
+            if ($bccAddress) {
+                $event->message->bcc($bccAddress);
+            }
+        });
 
         $viewsPath = resource_path('views/vendor/sentemails');
-        if (!is_dir($viewsPath)) {
+        if (! is_dir($viewsPath)) {
             $viewsPath = base_path('vendor/dcblogdev/laravel-sent-emails/src/resources/views');
         }
         $this->loadViewsFrom($viewsPath, 'sentemails');

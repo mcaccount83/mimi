@@ -3,8 +3,8 @@
 namespace App\Policies\Forum;
 
 use App\Enums\AdminStatusEnum;
-use App\Enums\UserTypeEnum;
 use App\Enums\ForumCategoryEnum;
+use App\Enums\UserTypeEnum;
 use App\Models\Coordinators;
 use App\Services\PositionConditionsService;
 use Illuminate\Foundation\Auth\User;
@@ -13,12 +13,9 @@ use TeamTeaTime\Forum\Models\Thread;
 
 class ForumConditions
 {
-    protected $positionService;
-
-    public function __construct(PositionConditionsService $positionService)
-    {
-        $this->positionService = $positionService;
-    }
+    public function __construct(
+        protected PositionConditionsService $positionConditions,
+    ) {}
 
     /**
      * Who can view Lists

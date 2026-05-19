@@ -9,7 +9,7 @@ use TeamTeaTime\Forum\Policies\CategoryPolicy as ForumCategoryPolicy;
 
 class CategoryPolicy extends ForumCategoryPolicy
 {
-    protected $forumConditions;
+    protected ForumConditions $forumConditions;
 
     public function __construct()
     {

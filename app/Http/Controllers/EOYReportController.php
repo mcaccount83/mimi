@@ -1061,7 +1061,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $countList = count($chapterList);
         $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status, 'checkBox2Status' => $checkBox2Status,
             'allAwards' => $allAwards, 'hasAnyAwards' => $hasAnyAwards, 'actualMaxAwards' => $actualMaxAwards, 'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'checkBox52Status' => $checkBox52Status,
-            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName'  => $userConfName, 'userConfDesc' => $userConfDesc,
+            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
         return view('coordinators.eoyreports.eoyawards', $data);
@@ -1190,9 +1190,9 @@ class EOYReportController extends Controller implements HasMiddleware
         $badgeLookup = $awardBadges->keyBy(fn ($b) => $b->report_year_id.'_'.$b->eoy_award_id);
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
-                'chAwards' => $chAwards, 'currentApprovedAwards' => $currentApprovedAwards, 'awardTypes' => $awardTypes, 'confId' => $confId, 'chConfId' => $chConfId,
-                'chapterStatus' => $chapterStatus, 'badgeLookup' => $badgeLookup, 'chFinancialReport' => $chFinancialReport,
-            ];
+            'chAwards' => $chAwards, 'currentApprovedAwards' => $currentApprovedAwards, 'awardTypes' => $awardTypes, 'confId' => $confId, 'chConfId' => $chConfId,
+            'chapterStatus' => $chapterStatus, 'badgeLookup' => $badgeLookup, 'chFinancialReport' => $chFinancialReport,
+        ];
 
         return view('coordinators.eoyreports.awardhistory')->with($data);
     }

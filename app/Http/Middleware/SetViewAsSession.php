@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Enums\ChapterStatusEnum;
 use App\Enums\UserTypeEnum;
 use Closure;
 use Illuminate\Http\Request;

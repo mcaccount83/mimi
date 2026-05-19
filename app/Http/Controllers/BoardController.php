@@ -15,7 +15,6 @@ use App\Mail\EOYFinancialReportThankYou;
 use App\Mail\EOYFinancialSubmitted;
 use App\Mail\GrantRequestNotice;
 use App\Mail\GrantRequestThankYou;
-use App\Models\PaymentHistory;
 use App\Mail\ProbationRptSubmittedCCNotice;
 use App\Mail\ProbationRptThankYou;
 use App\Models\Boards;
@@ -28,6 +27,7 @@ use App\Models\FinancialReportAwards;
 use App\Models\FinancialReportAwardsBadges;
 use App\Models\ForumCategorySubscription;
 use App\Models\GrantRequest;
+use App\Models\PaymentHistory;
 use App\Models\ProbationSubmission;
 use App\Models\ResourceCategory;
 use App\Models\Resources;
@@ -459,7 +459,6 @@ class BoardController extends Controller implements HasMiddleware
 
         return view('boards.editboard')->with($data);
     }
-
 
     /**
      *Update Chapter Board Information
@@ -1652,17 +1651,15 @@ class BoardController extends Controller implements HasMiddleware
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];
 
-        $data = ['stateShortName' => $stateShortName, 'chDetails' => $chDetails,
-            'PresDetails' => $PresDetails, 'stateName' => $stateName,
-            'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin,
-            'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId
+        $data = ['stateShortName' => $stateShortName, 'chDetails' => $chDetails, 'PresDetails' => $PresDetails, 'stateName' => $stateName,
+            'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin, 'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId,
         ];
 
         return view('boards.grantrequest')->with($data);
 
     }
 
-   public function updateNewGrantRequest(Request $request, int $chId): RedirectResponse
+    public function updateNewGrantRequest(Request $request, int $chId): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];
@@ -1786,5 +1783,4 @@ class BoardController extends Controller implements HasMiddleware
             DB::disconnect();
         }
     }
-
 }

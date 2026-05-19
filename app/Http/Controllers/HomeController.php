@@ -31,6 +31,7 @@ class HomeController extends Controller implements HasMiddleware
     {
         // Carry all flash data through the redirect chain
         Session::reflash();
+        // $request->session()->reflash();
 
         $user = $this->userController->loadUserInformation($request);
         $userTypeId = $user['userTypeId'];

@@ -16,7 +16,6 @@ use App\Models\Website;
 use App\Services\PositionConditionsService;
 use Illuminate\Support\Carbon;
 
-
 class BaseBoardController extends Controller
 {
     public function __construct(
@@ -32,9 +31,9 @@ class BaseBoardController extends Controller
     {
         // Load chapter with common relations
         $chDetails = Chapters::with([
-                'country', 'state', 'startMonth', 'webLink', 'documents', 'financialReport', 'financialReportFinal', 'payments',
-                'reportReviewer', 'primaryCoordinator', 'probation', 'disbandCheck', 'activeStatus', 'documentsEOY', 'documentsIRS', 'documentsReport'
-            ])->find($id);
+            'country', 'state', 'startMonth', 'webLink', 'documents', 'financialReport', 'financialReportFinal', 'payments',
+            'reportReviewer', 'primaryCoordinator', 'probation', 'disbandCheck', 'activeStatus', 'documentsEOY', 'documentsIRS', 'documentsReport',
+        ])->find($id);
 
         $chId = $chDetails->id;
         $chActiveId = $chDetails->active_status;

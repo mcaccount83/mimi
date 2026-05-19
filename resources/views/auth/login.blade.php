@@ -26,12 +26,12 @@
 
                         @csrf
 
-                        @if (session('status'))
-                            <div class="alert alert-success">{{ session('status') }}</div>
-                        @endif
-                        @if (session('error'))
-                            <div class="alert alert-danger">{{ session('error') }}</div>
-                        @endif
+                        @session('status')
+                            <div class="alert alert-success">{{ $value }}</div>
+                        @endsession
+                        @session('error')
+                            <div class="alert alert-danger">{{ $value }}</div>
+                        @endsession
 
                         <div class="input-group mb-3">
                             <input id="email" type="email"
@@ -39,11 +39,11 @@
                                 name="email" value="{{ old('email') }}"
                                 required autofocus placeholder="Email">
                             <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
-                            @if ($errors->has('email'))
+                            @error('email')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('email') }}</strong>
                                 </span>
-                            @endif
+                            @enderror
                         </div>
 
                         <div class="input-group mb-3">
@@ -51,11 +51,11 @@
                                 class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}"
                                 name="password" required placeholder="Password">
                             <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                            @if ($errors->has('password'))
+                            @error('password')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('password') }}</strong>
                                 </span>
-                            @endif
+                            @enderror
                         </div>
 
                         <div class="row align-items-center mb-3">

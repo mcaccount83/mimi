@@ -113,14 +113,14 @@ class AdminReportController extends Controller implements HasMiddleware
             $query->where('payment_history.payment_type', 'm2m');
         } else {
             // Show both M2M and sustaining (default)
-            $query->where(function($q) {
+            $query->where(function ($q) {
                 $q->where('payment_history.payment_type', 'm2m')
-                ->orWhere('payment_history.payment_type', 'sustaining');
+                    ->orWhere('payment_history.payment_type', 'sustaining');
             });
         }
 
         // Add conference filter
-        if (!$checkBox51Status && !$checkBox58Status) {
+        if (! $checkBox51Status && ! $checkBox58Status) {
             // Not showing international - filter by conference
             $query->where('chapters.conference_id', $confId);
         }
@@ -186,7 +186,7 @@ class AdminReportController extends Controller implements HasMiddleware
 
         $data = ['id' => $id, 'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'chPayments' => $chPayments, 'allMonths' => $allMonths,
             'confId' => $confId, 'chConfId' => $chConfId, 'conferenceDescription' => $conferenceDescription,  'regionLongName' => $regionLongName,
-            'startDate' => $startDate, 'dueDate' => $dueDate, 'renewalDate' => $renewalDate,  'chapterStatus' => $chapterStatus, 'startMonthName' => $startMonthName
+            'startDate' => $startDate, 'dueDate' => $dueDate, 'renewalDate' => $renewalDate,  'chapterStatus' => $chapterStatus, 'startMonthName' => $startMonthName,
         ];
 
         return view('coordinators.adminreports.editrereg')->with($data);
@@ -245,12 +245,12 @@ class AdminReportController extends Controller implements HasMiddleware
             'conference',
             'states' => function ($query) {
                 $query->orderBy('state_short_name');
-            }
+            },
         ])
             ->join('conference', 'region.conference_id', '=', 'conference.id');
 
         // Add conference filter if not showing international
-        if (!$checkBox51Status) {
+        if (! $checkBox51Status) {
             $query->where('region.conference_id', $confId);
         }
 
@@ -265,7 +265,7 @@ class AdminReportController extends Controller implements HasMiddleware
         return view('coordinators.adminreports.inquiriesnotify')->with($data);
     }
 
-   public function updateInquiriesEmail(Request $request, int $id)
+    public function updateInquiriesEmail(Request $request, int $id)
     {
         try {
 
@@ -283,12 +283,12 @@ class AdminReportController extends Controller implements HasMiddleware
                 'email' => $request->inquiries_email,
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
-            Log::error('Inquiries validation error: ' . json_encode($e->errors()));
+            Log::error('Inquiries validation error: '.json_encode($e->errors()));
 
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed.',
-                'errors' => $e->errors()
+                'errors' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
             Log::error('Inquiries update error: '.$e->getMessage());
@@ -296,7 +296,7 @@ class AdminReportController extends Controller implements HasMiddleware
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error: '.$e->getMessage()
+                'message' => 'Error: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -314,12 +314,12 @@ class AdminReportController extends Controller implements HasMiddleware
             'conference',
             'states' => function ($query) {
                 $query->orderBy('state_short_name');
-            }
+            },
         ])
             ->join('conference', 'region.conference_id', '=', 'conference.id');
 
         // Add conference filter if not showing international
-        if (!$checkBox51Status) {
+        if (! $checkBox51Status) {
             $query->where('region.conference_id', $confId);
         }
 
@@ -334,7 +334,7 @@ class AdminReportController extends Controller implements HasMiddleware
         return view('coordinators.adminreports.inquiriesmap')->with($data);
     }
 
-   public function updateInquiriesMap(Request $request, int $id)
+    public function updateInquiriesMap(Request $request, int $id)
     {
         try {
 
@@ -347,12 +347,12 @@ class AdminReportController extends Controller implements HasMiddleware
             $inquiries->save();
 
             return response()->json([
-            'success' => true,
-            'message' => 'Inquiries information updated successfully!',
-            'link' => $request->inquiries_link,
-        ]);
+                'success' => true,
+                'message' => 'Inquiries information updated successfully!',
+                'link' => $request->inquiries_link,
+            ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
-            Log::error('Inquiries validation error: ' . json_encode($e->errors()));
+            Log::error('Inquiries validation error: '.json_encode($e->errors()));
 
             return response()->json([
                 'success' => false,
@@ -365,7 +365,7 @@ class AdminReportController extends Controller implements HasMiddleware
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error: '.$e->getMessage()
+                'message' => 'Error: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -380,5 +380,4 @@ class AdminReportController extends Controller implements HasMiddleware
 
         return view('coordinators.adminreports.downloads')->with($data);
     }
-
 }

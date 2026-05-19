@@ -18,15 +18,15 @@ use App\Mail\PaymentsNewChapOnline;
 use App\Mail\PaymentsPublicDonationOnline;
 use App\Mail\PaymentsSustainingPublicThankYou;
 use App\Models\AdminReport;
-use App\Models\FiscalYear;
 use App\Models\BoardsPending;
 use App\Models\ChapterApplication;
 use App\Models\Chapters;
-use App\Models\InquiryApplication;
 use App\Models\CoordinatorApplication;
 use App\Models\Coordinators;
 use App\Models\Country;
+use App\Models\FiscalYear;
 use App\Models\GrantRequest;
+use App\Models\InquiryApplication;
 use App\Models\Month;
 use App\Models\PaymentLog;
 use App\Models\RegionInquiry;
@@ -39,8 +39,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Client;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
@@ -131,16 +131,16 @@ class PublicController extends Controller
         $resourceCategories = ResourceCategory::all();
 
         $fiscalYear = FiscalYear::orderByDesc('created_at') // newest created row first
-                        ->first();
+            ->first();
         $fiscalYearId = $fiscalYear->id;
         $fiscalYearRange = $fiscalYear->fiscal_year;
 
         $reportYear = AdminReport::with('fiscalYear')
-                        ->orderByDesc('created_at') // newest created row first
-                        ->first();
+            ->orderByDesc('created_at') // newest created row first
+            ->first();
         $reportYearId = $reportYear->fiscalYear->id;
         $reportYearRange = $reportYear->fiscalYear->report_year; // "2024-2025"
-        $reportYearStart = $reportYear->fiscalYear->report_start;    // "2024"
+        $reportYearStart = $reportYear->fiscalYear->report_start; // "2024"
         $reportYearEnd = $reportYear->fiscalYear->report_end;
 
         // Optional display names
@@ -148,13 +148,13 @@ class PublicController extends Controller
         $boardReportName = $fiscalYearRange.' Board Report';
         $financialReportName = $reportYearRange.' Financial Report';
         $financialPDFName = $reportYearEnd.' Financial PDF';
-        $irsFilingName = $reportYearStart.' 990N IRS Filing';// "2025"
+        $irsFilingName = $reportYearStart.' 990N IRS Filing'; // "2025"
 
         // Display Options
         $display_testing = ($reportYear->display_testing == 1);
         $display_live = ($reportYear->display_live == 1);
         $currentDate = \Carbon\Carbon::now(); // Full Current Date
-        $currentMonth = $currentDate->format('m');  // Current Month with leading zero
+        $currentMonth = $currentDate->format('m'); // Current Month with leading zero
 
         $displayEOYTESTING = ($display_testing && ! $display_live);
         $displayEOYLIVE = ($display_live && $currentMonth >= 5 && $currentMonth <= 12);
@@ -179,7 +179,7 @@ class PublicController extends Controller
             'irsFilingName' => $irsFilingName,
             'display_testing' => $display_testing,
             'display_live' => $display_live,
-            ];
+        ];
 
         return view('public.resources')->with($data);
 
@@ -216,8 +216,8 @@ class PublicController extends Controller
         // If it's a local file path (starts with 'sent-emails/' or 'storage/')
         if (str_starts_with($fileId, 'sent-emails/') || str_starts_with($fileId, 'storage/')) {
             $disposition = $request->query('download') ? 'attachment' : 'inline';
-            $privatePath = storage_path('app/private/' . $fileId);
-            $legacyPath  = storage_path('app/' . $fileId);
+            $privatePath = storage_path('app/private/'.$fileId);
+            $legacyPath  = storage_path('app/'.$fileId);
 
             if (file_exists($privatePath)) {
                 $path = $privatePath;
@@ -228,26 +228,27 @@ class PublicController extends Controller
             }
 
             return response()->file($path, [
-                'Content-Type'        => 'application/pdf',
-                'Content-Disposition' => $disposition . '; filename="' . basename($fileId) . '"',
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => $disposition.'; filename="'.basename($fileId).'"',
             ]);
         }
 
         // If it's a full internal URL (generated PDF route)
         if (str_starts_with($fileId, 'http')) {
-        $disposition = $request->query('download') ? 'attachment' : 'inline';
+            $disposition = $request->query('download') ? 'attachment' : 'inline';
 
-        $urlPath = parse_url($fileId, PHP_URL_PATH);
+            $urlPath = parse_url($fileId, PHP_URL_PATH);
 
-        // Strip subdirectory prefix (e.g. /mimi) on live
-        $basePath = $request->getBasePath(); // returns '/mimi' on live, '' on dev
-        if ($basePath && str_starts_with($urlPath, $basePath)) {
-            $urlPath = substr($urlPath, strlen($basePath));
-        }
+            // Strip subdirectory prefix (e.g. /mimi) on live
+            $basePath = $request->getBasePath(); // returns '/mimi' on live, '' on dev
+            if ($basePath && str_starts_with($urlPath, $basePath)) {
+                $urlPath = substr($urlPath, strlen($basePath));
+            }
 
-        $internalRequest = Request::create($urlPath, 'GET', [], $request->cookies->all());
-        $internalRequest->setLaravelSession($request->session());
-        $response = app()->handle($internalRequest);
+            // $internalRequest = Request::create($urlPath, 'GET', [], $request->cookies->all());
+            $internalRequest = $request->create($urlPath, 'GET', [], $request->cookies->all());
+            $internalRequest->setLaravelSession($request->session());
+            $response = app()->handle($internalRequest);
 
             return response()->stream(
                 function () use ($response) {
@@ -255,9 +256,9 @@ class PublicController extends Controller
                 },
                 200,
                 [
-                    'Content-Type'        => 'application/pdf',
-                    'Content-Disposition' => $disposition . '; filename="' . basename($fileId) . '"',
-                    'Cache-Control'       => 'no-cache',
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => $disposition.'; filename="'.basename($fileId).'"',
+                    'Cache-Control' => 'no-cache',
                 ]
             );
         }
@@ -270,7 +271,7 @@ class PublicController extends Controller
                 'headers' => [
                     'Authorization' => 'Bearer '.$accessToken,
                 ],
-                'stream'  => true,
+                'stream' => true,
                 'timeout' => 30,
             ]);
 
@@ -280,16 +281,16 @@ class PublicController extends Controller
             return response()->stream(
                 function () use ($response) {
                     $body = $response->getBody();
-                    while (!$body->eof()) {
+                    while (! $body->eof()) {
                         echo $body->read(1024);
                     }
                 },
                 200,
                 [
-                    'Content-Type'        => $contentType ?: 'application/pdf',
+                    'Content-Type' => $contentType ?: 'application/pdf',
                     // 'Content-Disposition' => 'inline; filename="document.pdf"',
-                    'Content-Disposition' => $disposition . '; filename="' . basename($fileId) . '"',
-                    'Cache-Control'       => 'no-cache',
+                    'Content-Disposition' => $disposition.'; filename="'.basename($fileId).'"',
+                    'Cache-Control' => 'no-cache',
                 ]
             );
 
@@ -300,7 +301,7 @@ class PublicController extends Controller
             ]);
 
             return response()->json([
-                'error'   => 'Failed to fetch file from Google Drive',
+                'error' => 'Failed to fetch file from Google Drive',
                 'message' => $e->getMessage(),
             ], 500);
         }
@@ -341,8 +342,9 @@ class PublicController extends Controller
         // Verify reCAPTCHA Enterprise
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
-        if (!$recaptchaResult['success']) {
-            return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+        if (! $recaptchaResult['success']) {
+            // return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+            return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
         }
 
         $input = $request->all();
@@ -556,8 +558,9 @@ class PublicController extends Controller
         // Verify reCAPTCHA Enterprise
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
-        if (!$recaptchaResult['success']) {
-            return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+        if (! $recaptchaResult['success']) {
+            // return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+            return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
         }
 
         $input = $request->all();
@@ -591,8 +594,8 @@ class PublicController extends Controller
             $shippingFirst, $shippingLast, $shippingCompany, $shippingAddress, $shippingCity, $shippingState, $shippingZip);
 
         if (! $paymentResponse['success']) {
-        return redirect()->to('/donation')->withErrors(['payment' => $paymentResponse['error']])->withInput();
             // return redirect()->to('/donation')->with('fail', $paymentResponse['error']);
+            return redirect()->to('/donation')->withErrors(['payment' => $paymentResponse['error']])->withInput();
         }
 
         $paymentType = $paymentResponse['paymentType'];
@@ -679,7 +682,7 @@ class PublicController extends Controller
             $transactionTypeDetail = $transactionType;  // Live Traansactions based on type of transaction set from request
         }
 
-        $shortTransactionType = match($transactionTypeDetail) {
+        $shortTransactionType = match ($transactionTypeDetail) {
             'authCaptureTransaction' => 'Processed',
             'authOnlyTransaction' => 'AuthOnly',
         };
@@ -941,8 +944,9 @@ class PublicController extends Controller
         // Verify reCAPTCHA Enterprise
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
-        if (!$recaptchaResult['success']) {
-            return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+        if (! $recaptchaResult['success']) {
+            // return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+            return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
         }
 
         $input = $request->all();
@@ -1060,7 +1064,7 @@ class PublicController extends Controller
         }
     }
 
-     /**
+    /**
      * Show New Chapter Inquiry
      */
     public function editNewInquiry(Request $request): View
@@ -1095,8 +1099,9 @@ class PublicController extends Controller
         // Verify reCAPTCHA Enterprise
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
-        if (!$recaptchaResult['success']) {
-            return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+        if (! $recaptchaResult['success']) {
+            // return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+            return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
         }
 
         $input = $request->all();
@@ -1107,26 +1112,24 @@ class PublicController extends Controller
 
         DB::beginTransaction();
         try {
-                $inquiryId = InquiryApplication::create([
-                    'state_id' => $input['ch_state'],
-                    'country_id' => $input['ch_country'] ?? '198',
-                    // 'conference_id' => $confId,
-                    // 'region_id' => $regId,
-                    'inquiry_first_name' => $input['inquiryFirstName'],
-                    'inquiry_last_name' => $input['inquiryLastName'],
-                    'inquiry_email' => $input['inquiryEmail'],
-                    'inquiry_phone' => $input['inquiryPhone'],
-                    'inquiry_address' => $input['inquiryAddress'],
-                    'inquiry_city' => $input['inquiryCity'],
-                    'inquiry_state' => $input['inquiryState'],
-                    'inquiry_zip' => $input['inquiryZip'],
-                    'inquiry_country' => $input['inquiryCountry'] ?? '198',
-                    'inquiry_county' => $input['inquiryCounty'],
-                    'inquiry_township' => $input['inquiryTownship'] ?? null,
-                    'inquiry_area' => $input['inquiryArea'] ?? null,
-                    'inquiry_school' => $input['inquirySchool'] ?? null,
-                    'inquiry_comments' => $input['inquiryComments'] ?? null,
-                ])->id;
+            $inquiryId = InquiryApplication::create([
+                'state_id' => $input['ch_state'],
+                'country_id' => $input['ch_country'] ?? '198',
+                'inquiry_first_name' => $input['inquiryFirstName'],
+                'inquiry_last_name' => $input['inquiryLastName'],
+                'inquiry_email' => $input['inquiryEmail'],
+                'inquiry_phone' => $input['inquiryPhone'],
+                'inquiry_address' => $input['inquiryAddress'],
+                'inquiry_city' => $input['inquiryCity'],
+                'inquiry_state' => $input['inquiryState'],
+                'inquiry_zip' => $input['inquiryZip'],
+                'inquiry_country' => $input['inquiryCountry'] ?? '198',
+                'inquiry_county' => $input['inquiryCounty'],
+                'inquiry_township' => $input['inquiryTownship'] ?? null,
+                'inquiry_area' => $input['inquiryArea'] ?? null,
+                'inquiry_school' => $input['inquirySchool'] ?? null,
+                'inquiry_comments' => $input['inquiryComments'] ?? null,
+            ])->id;
 
             $inqDetails = InquiryApplication::with('chapter', 'state', 'country')->find($inquiryId);
 
@@ -1152,33 +1155,33 @@ class PublicController extends Controller
             DB::rollback();
             Log::error($e);
 
-            return redirect()->to('/newinquiry')->with('fail','There was an error processing your inquiry. Please try again.');
+            return redirect()->to('/newinquiry')->with('fail', 'There was an error processing your inquiry. Please try again.');
 
         } finally {
             DB::disconnect();
         }
     }
 
-     public function viewGrantList(Request $request): View
+    public function viewGrantList(Request $request): View
     {
         $grantList = GrantRequest::with('chapters', 'chapterstate')
             ->where('grant_approved', '1')
             ->orderBy('completed_at')
             ->get();
 
-            // Calculate total lifetime grants
+        // Calculate total lifetime grants
         $totalLifetimeGrants = $grantList->sum('amount_awarded');
 
         // Group grants by fiscal year
-        $grantsByFiscalYear = $grantList->groupBy(function($grant) {
+        $grantsByFiscalYear = $grantList->groupBy(function ($grant) {
             $date = \Carbon\Carbon::parse($grant->completed_at);
             // Fiscal year runs July 1 - June 30
             // If month is July(6) or later, fiscal year starts this year
             // If month is before July, fiscal year started last year
             if ($date->month >= 7) {
-                return $date->year . '-' . ($date->year + 1);
+                return $date->year.'-'.($date->year + 1);
             } else {
-                return ($date->year - 1) . '-' . $date->year;
+                return ($date->year - 1).'-'.$date->year;
             }
         })->sortKeysDesc(); // Sort fiscal years descending (newest first)
         // })->sortKeys(); // Sort fiscal years (oldest first)

@@ -2,32 +2,33 @@
 
 namespace App\Policies\Forum;
 
+use Illuminate\Foundation\Auth\User;
 use App\Enums\ForumCategoryEnum;
 use TeamTeaTime\Forum\Models\Thread;
 use TeamTeaTime\Forum\Policies\ThreadPolicy as ForumThreadPolicy;
 
 class ThreadPolicy extends ForumThreadPolicy
 {
-    protected $forumConditions;
+    protected ForumConditions $forumConditions;
 
     public function __construct()
     {
         $this->forumConditions = app(ForumConditions::class);
     }
 
-    public function view($user, Thread $thread): bool
+    public function view(User $user, Thread $thread): bool
     {
         return $this->forumConditions->canAccessList($user, $thread->category);
     }
 
-    public function rename($user, Thread $thread): bool
+    public function rename(User $user, Thread $thread): bool
     {
         return $this->forumConditions->canManageLists($user)
             // || $this->forumConditions->canManageThreads($user, $thread)
             || $user->getKey() == $thread->author_id;
     }
 
-    public function reply($user, Thread $thread): bool
+    public function reply(User $user, Thread $thread): bool
     {
         if ($thread->category->id == ForumCategoryEnum::BOARDLIST) {
             return $this->forumConditions->canPostToBoardList($user)
@@ -38,32 +39,32 @@ class ThreadPolicy extends ForumThreadPolicy
         || ($this->forumConditions->canAccessList($user, $thread->category) && !$thread->locked);
     }
 
-    public function delete($user, Thread $thread): bool
+    public function delete(User $user, Thread $thread): bool
     {
         return $this->forumConditions->canManageLists($user)
             // || $this->forumConditions->canManageThreads($user, $thread)
             || $user->getKey() == $thread->author_id;
     }
 
-    public function restore($user, Thread $thread): bool
+    public function restore(User $user, Thread $thread): bool
     {
         return $this->forumConditions->canManageLists($user)
             // || $this->forumConditions->canManageThreads($user, $thread)
             || $user->getKey() == $thread->author_id;
     }
 
-    public function approvePosts($user, Thread $thread): bool
+    public function approvePosts(User $user, Thread $thread): bool
     {
         return $this->forumConditions->canManageLists($user);
     }
 
-    public function deletePosts($user, Thread $thread): bool
+    public function deletePosts(User $user, Thread $thread): bool
     {
         return $this->forumConditions->canManageLists($user);
             // || $this->forumConditions->canManageThreads($user, $thread);
     }
 
-    public function restorePosts($user, Thread $thread): bool
+    public function restorePosts(User $user, Thread $thread): bool
     {
         return $this->forumConditions->canManageLists($user);
             // || $this->forumConditions->canManageThreads($user, $thread);

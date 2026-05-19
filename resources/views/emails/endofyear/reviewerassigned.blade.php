@@ -13,30 +13,30 @@ Submitted by: {{$mailData['completedName']}}, @mailto($mailData['completedEmail'
 Downloads Available:
 <ul>
     <li>
-        @if (isset($mailData['rosterPath']))
+        @isset($mailData['rosterPath'])
             <a href="https://drive.google.com/uc?export=download&id={{ $mailData['rosterPath'] }}">Chapter Roster</a>
         @else
             No Roster Attached
-        @endif
+        @endisset
     </li>
     <li>
-        @if (isset($mailData['statement1Path']))
+        @isset($mailData['statement1Path'])
             <a href="https://drive.google.com/uc?export=download&id={{ $mailData['statement1Path'] }}">Primary Bank Statement</a>
         @else
             No Statement Attached
-        @endif
+        @endisset
     </li>
-    @if (isset($mailData['statement2Path']))
-        <li>
-            <a href="https://drive.google.com/uc?export=download&id={{ $mailData['statement2Path'] }}">Additional Bank Statement</a>
-        </li>
-    @endif
+        @isset($mailData['statement2Path'])
+            <li>
+                <a href="https://drive.google.com/uc?export=download&id={{ $mailData['statement2Path'] }}">Additional Bank Statement</a>
+            </li>
+        @endisset
     <li>
-        @if (isset($mailData['irsPath']))
+        @isset($mailData['irsPath'])
             <a href="https://drive.google.com/uc?export=download&id={{ $mailData['irsPath'] }}">990N Confirmation File</a>
         @else
             No 990N File Attached
-        @endif
+        @endisset
     </li>
 </ul>
 <br>

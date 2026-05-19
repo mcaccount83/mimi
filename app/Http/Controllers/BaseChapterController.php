@@ -551,10 +551,10 @@ class BaseChapterController extends Controller
 
             $result[$id] = [
                 'PresDetails' => $bdDetails->get(BoardPosition::PRES, collect([$default]))->first(),
-                'AVPDetails' => $bdDetails->get(BoardPosition::AVP,  collect([$default]))->first(),
-                'MVPDetails' => $bdDetails->get(BoardPosition::MVP,  collect([$default]))->first(),
-                'TRSDetails' => $bdDetails->get(BoardPosition::TRS,  collect([$default]))->first(),
-                'SECDetails' => $bdDetails->get(BoardPosition::SEC,  collect([$default]))->first(),
+                'AVPDetails' => $bdDetails->get(BoardPosition::AVP, collect([$default]))->first(),
+                'MVPDetails' => $bdDetails->get(BoardPosition::MVP, collect([$default]))->first(),
+                'TRSDetails' => $bdDetails->get(BoardPosition::TRS, collect([$default]))->first(),
+                'SECDetails' => $bdDetails->get(BoardPosition::SEC, collect([$default]))->first(),
             ];
         }
 
@@ -587,10 +587,10 @@ class BaseChapterController extends Controller
 
             $result[$id] = [
                 'PresDetails' => $bdDetails->get(BoardPosition::PRES, collect([$default]))->first(),
-                'AVPDetails' => $bdDetails->get(BoardPosition::AVP,  collect([$default]))->first(),
-                'MVPDetails' => $bdDetails->get(BoardPosition::MVP,  collect([$default]))->first(),
-                'TRSDetails' => $bdDetails->get(BoardPosition::TRS,  collect([$default]))->first(),
-                'SECDetails' => $bdDetails->get(BoardPosition::SEC,  collect([$default]))->first(),
+                'AVPDetails' => $bdDetails->get(BoardPosition::AVP, collect([$default]))->first(),
+                'MVPDetails' => $bdDetails->get(BoardPosition::MVP, collect([$default]))->first(),
+                'TRSDetails' => $bdDetails->get(BoardPosition::TRS, collect([$default]))->first(),
+                'SECDetails' => $bdDetails->get(BoardPosition::SEC, collect([$default]))->first(),
             ];
         }
 

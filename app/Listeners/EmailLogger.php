@@ -25,13 +25,13 @@ class EmailLogger
         $body = $message->getHtmlBody() ?: $message->getTextBody() ?: '';
 
         $email = SentEmail::create([
-            'date'    => date('Y-m-d H:i:s'),
-            'from'    => $this->formatAddressField($message->getFrom()),
-            'to'      => $this->formatAddressField($message->getTo()),
-            'cc'      => $this->formatAddressField($message->getCc()),
-            'bcc'     => $this->formatAddressField($message->getBcc()),
+            'date' => date('Y-m-d H:i:s'),
+            'from' => $this->formatAddressField($message->getFrom()),
+            'to' => $this->formatAddressField($message->getTo()),
+            'cc' => $this->formatAddressField($message->getCc()),
+            'bcc' => $this->formatAddressField($message->getBcc()),
             'subject' => $message->getSubject(),
-            'body'    => $body,
+            'body' => $body,
         ]);
 
         if (config('sentemails.storeAttachments')) {
@@ -41,8 +41,8 @@ class EmailLogger
 
                 SentEmailAttachment::create([
                     'sent_email_id' => $email->id,
-                    'filename'      => $attachment->getFilename(),
-                    'path'          => $path,
+                    'filename' => $attachment->getFilename(),
+                    'path' => $path,
                 ]);
             }
         }
@@ -53,12 +53,13 @@ class EmailLogger
         $strings = [];
         foreach ($field as $row) {
             $email = $row->getAddress();
-            $name  = $row->getName();
+            $name = $row->getName();
             if ($name != '') {
                 $email = $name.' <'.$email.'>';
             }
             $strings[] = $email;
         }
+
         return implode(', ', $strings);
     }
 }

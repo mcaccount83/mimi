@@ -5,25 +5,22 @@ namespace App\Listeners;
 use App\Enums\UserStatusEnum;
 use App\Mail\ForumBroadcastSummary;
 use App\Mail\NewForumPost;
-use App\Mail\NewForumThread;
 use App\Models\User;
+use App\Services\PositionConditionsService;
 use Dcblogdev\LaravelSentEmails\Models\SentEmail;
 use Illuminate\Support\Facades\Mail;
-use TeamTeaTime\Forum\Events\UserCreatedPost;
-use TeamTeaTime\Forum\Events\UserCreatedThread;
 use TeamTeaTime\Forum\Events\UserApprovedThread;
 use TeamTeaTime\Forum\Events\UserBulkApprovedPosts;
 use TeamTeaTime\Forum\Events\UserBulkApprovedThreads;
-use App\Services\PositionConditionsService;
+use TeamTeaTime\Forum\Events\UserCreatedPost;
+use TeamTeaTime\Forum\Events\UserCreatedThread;
+
 
 class ForumEventSubscriber
 {
-    protected $positionConditionsService;
-
-    public function __construct(PositionConditionsService $positionConditionsService)
-    {
-        $this->positionConditionsService = $positionConditionsService;
-    }
+    public function __construct(
+        protected PositionConditionsService $positionConditionsService,
+    ) {}
 
     public function handleApprovedPost(UserBulkApprovedPosts $event)
     {
@@ -31,19 +28,19 @@ class ForumEventSubscriber
             $thread = $post->thread;
             $category = $thread->category;
             $author = $post->author;
-$authorNameWithPosition = $author ? $author->authorNameForDisplay($category->id) : 'Unknown Author';
+            $authorNameWithPosition = $author ? $author->authorNameForDisplay($category->id) : 'Unknown Author';
             $usersToNotify = $this->getUsersToNotify($thread);
 
             $this->sendForumBroadcast(
-    $usersToNotify,
-    fn($user) => new NewForumPost($post, $thread, $category, $authorNameWithPosition),
-    "{$category->title} | RE:{$thread->title}",
-    $usersToNotify->count(),
-    $post,
-    $thread,
-    $category,
-    $authorNameWithPosition
-);
+                $usersToNotify,
+                fn ($user) => new NewForumPost($post, $thread, $category, $authorNameWithPosition),
+                "{$category->title} | RE:{$thread->title}",
+                $usersToNotify->count(),
+                $post,
+                $thread,
+                $category,
+                $authorNameWithPosition
+            );
         }
     }
 
@@ -53,19 +50,19 @@ $authorNameWithPosition = $author ? $author->authorNameForDisplay($category->id)
             $post = $thread->firstPost;
             $category = $thread->category;
             $author = $thread->author;
-$authorNameWithPosition = $author ? $author->authorNameForDisplay($category->id) : 'Unknown Author';
+            $authorNameWithPosition = $author ? $author->authorNameForDisplay($category->id) : 'Unknown Author';
             $usersToNotify = $this->getUsersToNotify($thread);
 
             $this->sendForumBroadcast(
-    $usersToNotify,
-    fn($user) => new NewForumPost($post, $thread, $category, $authorNameWithPosition),
-    "{$category->title} | RE:{$thread->title}",
-    $usersToNotify->count(),
-    $post,
-    $thread,
-    $category,
-    $authorNameWithPosition
-);
+                $usersToNotify,
+                fn ($user) => new NewForumPost($post, $thread, $category, $authorNameWithPosition),
+                "{$category->title} | RE:{$thread->title}",
+                $usersToNotify->count(),
+                $post,
+                $thread,
+                $category,
+                $authorNameWithPosition
+            );
         }
     }
 
@@ -75,19 +72,19 @@ $authorNameWithPosition = $author ? $author->authorNameForDisplay($category->id)
         $post = $thread->firstPost;
         $category = $thread->category;
         $author = $thread->author;
-$authorNameWithPosition = $author ? $author->authorNameForDisplay($category->id) : 'Unknown Author';
+        $authorNameWithPosition = $author ? $author->authorNameForDisplay($category->id) : 'Unknown Author';
         $usersToNotify = $this->getUsersToNotify($thread);
 
         $this->sendForumBroadcast(
-    $usersToNotify,
-    fn($user) => new NewForumPost($post, $thread, $category, $authorNameWithPosition),
-    "{$category->title} | RE:{$thread->title}",
-    $usersToNotify->count(),
-    $post,
-    $thread,
-    $category,
-    $authorNameWithPosition
-);
+            $usersToNotify,
+            fn ($user) => new NewForumPost($post, $thread, $category, $authorNameWithPosition),
+            "{$category->title} | RE:{$thread->title}",
+            $usersToNotify->count(),
+            $post,
+            $thread,
+            $category,
+            $authorNameWithPosition
+        );
     }
 
     public function handleNewPost(UserCreatedPost $event)
@@ -98,19 +95,19 @@ $authorNameWithPosition = $author ? $author->authorNameForDisplay($category->id)
         $thread = $post->thread;
         $category = $thread->category;
         $author = $post->author;
-$authorNameWithPosition = $author ? $author->authorNameForDisplay($category->id) : 'Unknown Author';
+        $authorNameWithPosition = $author ? $author->authorNameForDisplay($category->id) : 'Unknown Author';
         $usersToNotify = $this->getUsersToNotify($thread);
 
         $this->sendForumBroadcast(
-    $usersToNotify,
-    fn($user) => new NewForumPost($post, $thread, $category, $authorNameWithPosition),
-    "{$category->title} | RE:{$thread->title}",
-    $usersToNotify->count(),
-    $post,
-    $thread,
-    $category,
-    $authorNameWithPosition
-);
+            $usersToNotify,
+            fn ($user) => new NewForumPost($post, $thread, $category, $authorNameWithPosition),
+            "{$category->title} | RE:{$thread->title}",
+            $usersToNotify->count(),
+            $post,
+            $thread,
+            $category,
+            $authorNameWithPosition
+        );
     }
 
     public function handleNewThread(UserCreatedThread $event)
@@ -121,19 +118,19 @@ $authorNameWithPosition = $author ? $author->authorNameForDisplay($category->id)
         $post = $thread->firstPost;
         $category = $thread->category;
         $author = $thread->author;
-$authorNameWithPosition = $author ? $author->authorNameForDisplay($category->id) : 'Unknown Author';
+        $authorNameWithPosition = $author ? $author->authorNameForDisplay($category->id) : 'Unknown Author';
         $usersToNotify = $this->getUsersToNotify($thread);
 
         $this->sendForumBroadcast(
-    $usersToNotify,
-    fn($user) => new NewForumPost($post, $thread, $category, $authorNameWithPosition),
-    "{$category->title} | RE:{$thread->title}",
-    $usersToNotify->count(),
-    $post,
-    $thread,
-    $category,
-    $authorNameWithPosition
-);
+            $usersToNotify,
+            fn ($user) => new NewForumPost($post, $thread, $category, $authorNameWithPosition),
+            "{$category->title} | RE:{$thread->title}",
+            $usersToNotify->count(),
+            $post,
+            $thread,
+            $category,
+            $authorNameWithPosition
+        );
     }
 
     /**
@@ -163,13 +160,13 @@ $authorNameWithPosition = $author ? $author->authorNameForDisplay($category->id)
 
         } else {
             SentEmail::create([
-                'date'    => date('Y-m-d H:i:s'),
-                'from'    => config('mail.from.address'),
-                'to'      => "{$recipientCount} forum subscribers",
-                'cc'      => $listAdmin ?: null,
-                'bcc'     => null,
+                'date' => date('Y-m-d H:i:s'),
+                'from' => config('mail.from.address'),
+                'to' => "{$recipientCount} forum subscribers",
+                'cc' => $listAdmin ?: null,
+                'bcc' => null,
                 'subject' => "[Forum Broadcast] {$subject}",
-                'body'    => "Notification queued for {$recipientCount} subscribers.",
+                'body' => "Notification queued for {$recipientCount} subscribers.",
             ]);
         }
     }
@@ -194,11 +191,11 @@ $authorNameWithPosition = $author ? $author->authorNameForDisplay($category->id)
     public function subscribe($events)
     {
         return [
-            UserCreatedPost::class          => 'handleNewPost',
-            UserCreatedThread::class        => 'handleNewThread',
-            UserBulkApprovedPosts::class    => 'handleApprovedPost',
-            UserBulkApprovedThreads::class  => 'handleApprovedThread',
-            UserApprovedThread::class       => 'handleApprovedSingleThread',
+            UserCreatedPost::class => 'handleNewPost',
+            UserCreatedThread::class => 'handleNewThread',
+            UserBulkApprovedPosts::class => 'handleApprovedPost',
+            UserBulkApprovedThreads::class => 'handleApprovedThread',
+            UserApprovedThread::class => 'handleApprovedSingleThread',
         ];
     }
 }
