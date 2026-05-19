@@ -14,10 +14,26 @@ class UpdateGoogleDriveTechReportRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'version' => 'nullable|string|max:50',
-            'folder_id' => 'required|string|max:255',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+            'description' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+            'version' => [
+                'nullable',
+                'string',
+                'max:50',
+            ],
+            'folder_id' => [
+                'required',
+                'string',
+                'max:255',
+            ],
         ];
     }
 }
