@@ -5,25 +5,20 @@ namespace App\Http\Controllers;
 use App\Enums\CheckboxFilterEnum;
 use App\Models\Chapters;
 use App\Models\Conference;
-use App\Models\GrantRequest;
-use App\Models\PaymentLog;
 use App\Models\PaymentHistory;
+use App\Models\PaymentLog;
 use App\Models\Payments;
 use App\Models\Region;
 use App\Models\RegionInquiry;
-use App\Models\State;
+use App\Services\PositionConditionsService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
-
-use App\Services\PositionConditionsService;
-use Dcblogdev\LaravelSentEmails\Models\SentEmail;
-
 
 class AdminReportController extends Controller implements HasMiddleware
 {
@@ -42,7 +37,7 @@ class AdminReportController extends Controller implements HasMiddleware
         ];
     }
 
-     /**
+    /**
      * View Payment Log List
      */
     public function showPaymentLog(Request $request): View
@@ -95,53 +90,53 @@ class AdminReportController extends Controller implements HasMiddleware
         return view('coordinators.adminreports.paymentdetails')->with($data);
     }
 
-  public function showDonationLog(Request $request): View
-{
-    $user = $this->userController->loadUserInformation($request);
-    $confId = $user['confId'];
+    public function showDonationLog(Request $request): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $confId = $user['confId'];
 
-    $checkBox51Status = $request->has(\App\Enums\CheckboxFilterEnum::INTERNATIONAL);
-    $checkBox8Status = $request->has(\App\Enums\CheckboxFilterEnum::M2M);
-    $checkBox58Status = $request->has(\App\Enums\CheckboxFilterEnum::INTERNATIONALM2M);
+        $checkBox51Status = $request->has(\App\Enums\CheckboxFilterEnum::INTERNATIONAL);
+        $checkBox8Status = $request->has(\App\Enums\CheckboxFilterEnum::M2M);
+        $checkBox58Status = $request->has(\App\Enums\CheckboxFilterEnum::INTERNATIONALM2M);
 
-    // Base query
-    $query = PaymentHistory::with('chapter')
-        ->join('chapters', 'payment_history.chapter_id', '=', 'chapters.id')
-        ->where('chapters.active_status', '1');
+        // Base query
+        $query = PaymentHistory::with('chapter')
+            ->join('chapters', 'payment_history.chapter_id', '=', 'chapters.id')
+            ->where('chapters.active_status', '1');
 
-    // Add payment type filter based on checkboxes
-    if ($checkBox8Status) {
-        // Show only M2M donations
-        $query->where('payment_history.payment_type', 'm2m');
-    } elseif ($checkBox58Status) {
-        // Show international M2M donations
-        $query->where('payment_history.payment_type', 'm2m');
-    } else {
-        // Show both M2M and sustaining (default)
-        $query->where(function($q) {
-            $q->where('payment_history.payment_type', 'm2m')
-              ->orWhere('payment_history.payment_type', 'sustaining');
-        });
+        // Add payment type filter based on checkboxes
+        if ($checkBox8Status) {
+            // Show only M2M donations
+            $query->where('payment_history.payment_type', 'm2m');
+        } elseif ($checkBox58Status) {
+            // Show international M2M donations
+            $query->where('payment_history.payment_type', 'm2m');
+        } else {
+            // Show both M2M and sustaining (default)
+            $query->where(function($q) {
+                $q->where('payment_history.payment_type', 'm2m')
+                ->orWhere('payment_history.payment_type', 'sustaining');
+            });
+        }
+
+        // Add conference filter
+        if (!$checkBox51Status && !$checkBox58Status) {
+            // Not showing international - filter by conference
+            $query->where('chapters.conference_id', $confId);
+        }
+        // If checkBox51Status OR checkBox10Status is true, show all conferences (international)
+
+        $donationsList = $query->orderByDesc('payment_history.payment_date')->get();
+
+        $data = [
+            'donationsList' => $donationsList,
+            'checkBox51Status' => $checkBox51Status ? 'checked' : '',
+            'checkBox8Status' => $checkBox8Status ? 'checked' : '',
+            'checkBox58Status' => $checkBox58Status ? 'checked' : '',
+        ];
+
+        return view('coordinators.adminreports.donationlog')->with($data);
     }
-
-    // Add conference filter
-    if (!$checkBox51Status && !$checkBox58Status) {
-        // Not showing international - filter by conference
-        $query->where('chapters.conference_id', $confId);
-    }
-    // If checkBox51Status OR checkBox10Status is true, show all conferences (international)
-
-    $donationsList = $query->orderBy('payment_history.payment_date', 'desc')->get();
-
-    $data = [
-        'donationsList' => $donationsList,
-        'checkBox51Status' => $checkBox51Status ? 'checked' : '',
-        'checkBox8Status' => $checkBox8Status ? 'checked' : '',
-        'checkBox58Status' => $checkBox58Status ? 'checked' : '',
-    ];
-
-    return view('coordinators.adminreports.donationlog')->with($data);
-}
 
     /**
      * View List of ReReg Payments if Dates Need to be Udpated
@@ -237,7 +232,7 @@ class AdminReportController extends Controller implements HasMiddleware
         }
     }
 
- public function inquiriesNotify(Request $request): View
+    public function inquiriesNotify(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
         $confId = $user['confId'];
@@ -252,7 +247,7 @@ class AdminReportController extends Controller implements HasMiddleware
                 $query->orderBy('state_short_name');
             }
         ])
-        ->join('conference', 'region.conference_id', '=', 'conference.id');
+            ->join('conference', 'region.conference_id', '=', 'conference.id');
 
         // Add conference filter if not showing international
         if (!$checkBox51Status) {
@@ -271,42 +266,42 @@ class AdminReportController extends Controller implements HasMiddleware
     }
 
    public function updateInquiriesEmail(Request $request, int $id)
-{
-    try {
+    {
+        try {
 
-        $region = Region::findOrFail($id);
+            $region = Region::findOrFail($id);
 
-        // Find or create the RegionInquiry record
-        $inquiries = RegionInquiry::firstOrNew(['region_id' => $region->id]);
+            // Find or create the RegionInquiry record
+            $inquiries = RegionInquiry::firstOrNew(['region_id' => $region->id]);
 
-        $inquiries->inquiries_email = $request->inquiries_email;
-        $inquiries->save();
+            $inquiries->inquiries_email = $request->inquiries_email;
+            $inquiries->save();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Inquiries information updated successfully!',
-            'email' => $request->inquiries_email,
-        ]);
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        Log::error('Inquiries validation error: ' . json_encode($e->errors()));
+            return response()->json([
+                'success' => true,
+                'message' => 'Inquiries information updated successfully!',
+                'email' => $request->inquiries_email,
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Inquiries validation error: ' . json_encode($e->errors()));
 
-        return response()->json([
-            'success' => false,
-            'message' => 'Validation failed.',
-            'errors' => $e->errors()
-        ], 422);
-    } catch (\Exception $e) {
-        Log::error('Inquiries update error: ' . $e->getMessage());
-        Log::error('Stack trace: ' . $e->getTraceAsString());
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed.',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('Inquiries update error: '.$e->getMessage());
+            Log::error('Stack trace: '.$e->getTraceAsString());
 
-        return response()->json([
-            'success' => false,
-            'message' => 'Error: ' . $e->getMessage()
-        ], 500);
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: '.$e->getMessage()
+            ], 500);
+        }
     }
-}
 
-public function inquiriesMap(Request $request): View
+    public function inquiriesMap(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
         $confId = $user['confId'];
@@ -321,7 +316,7 @@ public function inquiriesMap(Request $request): View
                 $query->orderBy('state_short_name');
             }
         ])
-        ->join('conference', 'region.conference_id', '=', 'conference.id');
+            ->join('conference', 'region.conference_id', '=', 'conference.id');
 
         // Add conference filter if not showing international
         if (!$checkBox51Status) {
@@ -340,42 +335,42 @@ public function inquiriesMap(Request $request): View
     }
 
    public function updateInquiriesMap(Request $request, int $id)
-{
-    try {
+    {
+        try {
 
-        $region = Region::findOrFail($id);
+            $region = Region::findOrFail($id);
 
-        // Find or create the RegionInquiry record
-        $inquiries = RegionInquiry::firstOrNew(['region_id' => $region->id]);
+            // Find or create the RegionInquiry record
+            $inquiries = RegionInquiry::firstOrNew(['region_id' => $region->id]);
 
-        $inquiries->inquiries_map_link = $request->inquiries_link;
-        $inquiries->save();
+            $inquiries->inquiries_map_link = $request->inquiries_link;
+            $inquiries->save();
 
-        return response()->json([
-        'success' => true,
-        'message' => 'Inquiries information updated successfully!',
-        'link' => $request->inquiries_link,
-    ]);
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        Log::error('Inquiries validation error: ' . json_encode($e->errors()));
+            return response()->json([
+            'success' => true,
+            'message' => 'Inquiries information updated successfully!',
+            'link' => $request->inquiries_link,
+        ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Inquiries validation error: ' . json_encode($e->errors()));
 
-        return response()->json([
-            'success' => false,
-            'message' => 'Validation failed.',
-            'errors' => $e->errors()
-        ], 422);
-    } catch (\Exception $e) {
-        Log::error('Inquiries update error: ' . $e->getMessage());
-        Log::error('Stack trace: ' . $e->getTraceAsString());
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed.',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('Inquiries update error: '.$e->getMessage());
+            Log::error('Stack trace: '.$e->getTraceAsString());
 
-        return response()->json([
-            'success' => false,
-            'message' => 'Error: ' . $e->getMessage()
-        ], 500);
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: '.$e->getMessage()
+            ], 500);
+        }
     }
-}
 
- /**
+    /**
      * View the Downloads List
      */
     public function showDownloads(Request $request): View

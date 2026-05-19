@@ -775,7 +775,7 @@ class FinancialReportController extends Controller implements HasMiddleware
                 return redirect()->back()->with('fail', 'Board activation failed');
             }
         } catch (\Exception $e) {
-            Log::error('Board activation failed: ' . $e->getMessage());
+            Log::error('Board activation failed: '.$e->getMessage());
             return redirect()->back()->with('fail', 'Board activation failed');
         }
     }
@@ -816,7 +816,7 @@ class FinancialReportController extends Controller implements HasMiddleware
                     $activationStatuses[$chapter->id] = $result == 'success' ? 'success' : 'fail';
                 } catch (\Exception $e) {
                     $activationStatuses[$chapter->id] = 'fail';
-                    Log::error("Board activation unsuccessful for chapter {$chapter->id}: " . $e->getMessage());
+                    Log::error("Board activation unsuccessful for chapter {$chapter->id}: ".$e->getMessage());
                 }
             }
         }

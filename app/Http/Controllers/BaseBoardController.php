@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Enums\BoardPosition;
 use App\Models\ActiveStatus;
-use App\Models\Chapters;
 use App\Models\ChapterAwardHistory;
+use App\Models\Chapters;
 use App\Models\Coordinators;
 use App\Models\Country;
 use App\Models\FinancialReport;
@@ -32,9 +32,9 @@ class BaseBoardController extends Controller
     {
         // Load chapter with common relations
         $chDetails = Chapters::with([
-            'country', 'state', 'startMonth', 'webLink', 'documents', 'financialReport', 'financialReportFinal', 'payments',
-            'reportReviewer', 'primaryCoordinator', 'probation', 'disbandCheck', 'activeStatus', 'documentsEOY', 'documentsIRS', 'documentsReport'
-        ])->find($id);
+                'country', 'state', 'startMonth', 'webLink', 'documents', 'financialReport', 'financialReportFinal', 'payments',
+                'reportReviewer', 'primaryCoordinator', 'probation', 'disbandCheck', 'activeStatus', 'documentsEOY', 'documentsIRS', 'documentsReport'
+            ])->find($id);
 
         $chId = $chDetails->id;
         $chActiveId = $chDetails->active_status;
@@ -80,12 +80,12 @@ class BaseBoardController extends Controller
 
         $currentApprovedAwards = array_filter(
             $currentAwards,
-            fn($a) => !empty($a['awards_approved'])
+            fn ($a) => ! empty($a['awards_approved'])
         );
         // Historical from the history table (exclude current year)
         $chAwards = ChapterAwardHistory::with('awardtype', 'fiscalYear')
             ->where('chapter_id', $chId)
-            ->orderBy('report_year_id', 'desc')
+            ->orderByDesc('report_year_id')
             ->orderBy('awards_type')
             ->get()
             ->groupBy('report_year_id');
@@ -104,7 +104,7 @@ class BaseBoardController extends Controller
         $financialReportPdfs = [];
         if ($chReportDocuments) {
             foreach ($chReportDocuments->getAttributes() as $column => $value) {
-                if (preg_match('/^(\d{4})_financial_pdf_path$/', $column, $matches) && !empty($value)) {
+                if (preg_match('/^(\d{4})_financial_pdf_path$/', $column, $matches) && ! empty($value)) {
                     $year = $matches[1];
                     $financialReportPdfs[$year] = $value;
                 }

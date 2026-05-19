@@ -98,7 +98,7 @@ class MySentEmailsController extends Controller implements HasMiddleware
         // Replace everything from "Build queries based on filter" down to the return
         if ($filterEmails === null) {
             $emails = SentEmail::with('attachments')
-                ->orderBy('id', 'desc')
+                ->orderByDesc('id')
                 ->applyFilters($request)
                 ->paginate(config('sentemails.perPage'))
                 ->appends($request->only(['check5', 'check7', 'check57', 'check81']));
@@ -112,7 +112,7 @@ class MySentEmailsController extends Controller implements HasMiddleware
                             ->orWhere('bcc',  'LIKE', '%' . $email . '%');
                     }
                 })
-                ->orderBy('id', 'desc')
+                ->orderByDesc('id')
                 ->applyFilters($request)
                 ->paginate(config('sentemails.perPage'))
                 ->appends($request->only(['check5', 'check7', 'check57', 'check81']));

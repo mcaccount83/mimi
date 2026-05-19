@@ -1330,7 +1330,7 @@ class TechReportController extends Controller implements HasMiddleware
                 'message' => 'Google Drive folder added successfully!'
             ]);
         } catch (\Exception $e) {
-            Log::error('Google Drive folder creation error: ' . $e->getMessage());
+            Log::error('Google Drive folder creation error: '.$e->getMessage());
 
             return response()->json([
                 'success' => false,
@@ -1361,7 +1361,7 @@ class TechReportController extends Controller implements HasMiddleware
                 'message' => 'Google Drive folder updated successfully!'
             ]);
         } catch (\Exception $e) {
-            Log::error('Google Drive folder update error: ' . $e->getMessage());
+            Log::error('Google Drive folder update error: '.$e->getMessage());
 
             return response()->json([
                 'success' => false,
@@ -1424,7 +1424,7 @@ class TechReportController extends Controller implements HasMiddleware
             'message' => 'System email added successfully!'
         ]);
     } catch (\Exception $e) {
-        Log::error('System email creation error: ' . $e->getMessage());
+        Log::error('System email creation error: '.$e->getMessage());
 
         return response()->json([
             'success' => false,
@@ -1453,7 +1453,7 @@ class TechReportController extends Controller implements HasMiddleware
             'message' => 'System email updated successfully!'
         ]);
     } catch (\Exception $e) {
-        Log::error('System email update error: ' . $e->getMessage());
+        Log::error('System email update error: '.$e->getMessage());
 
         return response()->json([
             'success' => false,
@@ -1640,7 +1640,7 @@ public function conferenceList(Request $request): View
                 'conference_name' => $conference->short_name
             ]);
         } catch (\Exception $e) {
-                Log::error('Region conference update error: ' . $e->getMessage());
+                Log::error('Region conference update error: '.$e->getMessage());
 
             return response()->json([
                 'success' => false,
@@ -1696,11 +1696,11 @@ public function conferenceList(Request $request): View
                 'region_name' => $region->long_name
             ]);
         } catch (\Exception $e) {
-                Log::error('State assignment update error: ' . $e->getMessage());
+                Log::error('State assignment update error: '.$e->getMessage());
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error: ' . $e->getMessage()  // Return actual error for debugging
+                'message' => 'Error: '.$e->getMessage()  // Return actual error for debugging
             ], 500);
         }
     }

@@ -360,15 +360,19 @@ class ExportController extends Controller implements HasMiddleware
 
             foreach (array_chunk($chapterIds, 200) as $chunk) {
                 $chapterCache = $this->baseChapterController->getChapterDetailsForExport($chunk);
-                $boardCache   = $this->baseChapterController->getActiveBoardDetailsForExport($chunk);
+                $boardCache = $this->baseChapterController->getActiveBoardDetailsForExport($chunk);
 
                 foreach ($chunk as $chId) {
-                    if (! isset($chapterCache[$chId])) continue;
+                    if (! isset($chapterCache[$chId])) {
+                        continue;
+                    }
                     $combinedData = array_merge($chapterCache[$chId], $boardCache[$chId] ?? []);
                     fputcsv($file, $this->formatFullChapterRow($combinedData));
                 }
 
-                if (ob_get_level()) { ob_flush(); }
+                if (ob_get_level()) {
+                    ob_flush();
+                }
                 flush();
                 unset($chapterCache, $boardCache);
                 gc_collect_cycles();
@@ -432,17 +436,21 @@ class ExportController extends Controller implements HasMiddleware
                 'Disband Date', 'Disband Reason',
             ]);
 
-             foreach (array_chunk($chapterIds, 200) as $chunk) {
+            foreach (array_chunk($chapterIds, 200) as $chunk) {
                 $chapterCache = $this->baseChapterController->getChapterDetailsForExport($chunk);
-                $boardCache   = $this->baseChapterController->getDisbandedBoardDetailsForExport($chunk);
+                $boardCache = $this->baseChapterController->getDisbandedBoardDetailsForExport($chunk);
 
                 foreach ($chunk as $chId) {
-                    if (! isset($chapterCache[$chId])) continue;
+                    if (! isset($chapterCache[$chId])) {
+                        continue;
+                    }
                     $combinedData = array_merge($chapterCache[$chId], $boardCache[$chId] ?? []);
                     fputcsv($file, $this->formatZappedChapterRow($combinedData));
                 }
 
-                if (ob_get_level()) { ob_flush(); }
+                if (ob_get_level()) {
+                    ob_flush();
+                }
                 flush();
                 unset($chapterCache, $boardCache);
                 gc_collect_cycles();
@@ -511,15 +519,19 @@ class ExportController extends Controller implements HasMiddleware
 
             foreach (array_chunk($chapterIds, 200) as $chunk) {
                 $chapterCache = $this->baseChapterController->getChapterDetailsForExport($chunk);
-                $boardCache   = $this->baseChapterController->getActiveBoardDetailsForExport($chunk);
+                $boardCache = $this->baseChapterController->getActiveBoardDetailsForExport($chunk);
 
                 foreach ($chunk as $chId) {
-                    if (! isset($chapterCache[$chId])) continue;
+                    if (! isset($chapterCache[$chId])) {
+                        continue;
+                    }
                     $combinedData = array_merge($chapterCache[$chId], $boardCache[$chId] ?? []);
                     fputcsv($file, $this->formatFullChapterRow($combinedData));
                 }
 
-                if (ob_get_level()) { ob_flush(); }
+                if (ob_get_level()) {
+                    ob_flush();
+                }
                 flush();
                 unset($chapterCache, $boardCache);
                 gc_collect_cycles();
@@ -589,15 +601,19 @@ class ExportController extends Controller implements HasMiddleware
 
             foreach (array_chunk($chapterIds, 200) as $chunk) {
                 $chapterCache = $this->baseChapterController->getChapterDetailsForExport($chunk);
-                $boardCache   = $this->baseChapterController->getDisbandedBoardDetailsForExport($chunk);
+                $boardCache = $this->baseChapterController->getDisbandedBoardDetailsForExport($chunk);
 
                 foreach ($chunk as $chId) {
-                    if (! isset($chapterCache[$chId])) continue;
+                    if (! isset($chapterCache[$chId])) {
+                        continue;
+                    }
                     $combinedData = array_merge($chapterCache[$chId], $boardCache[$chId] ?? []);
                     fputcsv($file, $this->formatZappedChapterRow($combinedData));
                 }
 
-                if (ob_get_level()) { ob_flush(); }
+                if (ob_get_level()) {
+                    ob_flush();
+                }
                 flush();
                 unset($chapterCache, $boardCache);
                 gc_collect_cycles();
@@ -667,18 +683,22 @@ class ExportController extends Controller implements HasMiddleware
                 'Conference', 'Region', 'State', 'Name',
                 'Start Month', 'Start Year', 'Next Renewal Year', 'Dues Last Paid',
                 'Members paid for', 'Re-Reg Notes',
-             ]);
+            ]);
 
             foreach (array_chunk($reChapterIds, 200) as $chunk) {
                 $chapterCache = $this->baseChapterController->getChapterDetailsForExport($chunk);
 
                 foreach ($chunk as $chId) {
-                    if (! isset($chapterCache[$chId])) continue;
+                    if (! isset($chapterCache[$chId])) {
+                        continue;
+                    }
                     $combinedData = array_merge($chapterCache[$chId], $boardCache[$chId] ?? []);
                     fputcsv($file, $this->formatReRegRow($combinedData));
                 }
 
-                if (ob_get_level()) { ob_flush(); }
+                if (ob_get_level()) {
+                    ob_flush();
+                }
                 flush();
                 unset($chapterCache, $boardCache);
                 gc_collect_cycles();
@@ -760,12 +780,16 @@ class ExportController extends Controller implements HasMiddleware
                 $chapterCache = $this->baseChapterController->getChapterDetailsForExport($chunk);
 
                 foreach ($chunk as $chId) {
-                    if (! isset($chapterCache[$chId])) continue;
+                    if (! isset($chapterCache[$chId])) {
+                        continue;
+                    }
                     $combinedData = array_merge($chapterCache[$chId], $boardCache[$chId] ?? []);
                     fputcsv($file, $this->formatReRegRow($combinedData));
                 }
 
-                if (ob_get_level()) { ob_flush(); }
+                if (ob_get_level()) {
+                    ob_flush();
+                }
                 flush();
                 unset($chapterCache, $boardCache);
                 gc_collect_cycles();
@@ -822,15 +846,19 @@ class ExportController extends Controller implements HasMiddleware
 
             foreach (array_chunk($chapterIds, 200) as $chunk) {
                 $chapterCache = $this->baseChapterController->getChapterDetailsForExport($chunk);
-                $boardCache   = $this->baseChapterController->getActiveBoardDetailsForExport($chunk);
+                $boardCache = $this->baseChapterController->getActiveBoardDetailsForExport($chunk);
 
                 foreach ($chunk as $chId) {
-                    if (! isset($chapterCache[$chId])) continue;
+                    if (! isset($chapterCache[$chId])) {
+                        continue;
+                    }
                     $combinedData = array_merge($chapterCache[$chId], $boardCache[$chId] ?? []);
                     fputcsv($file, $this->formatEINStatusRow($combinedData));
                 }
 
-                if (ob_get_level()) { ob_flush(); }
+                if (ob_get_level()) {
+                    ob_flush();
+                }
                 flush();
                 unset($chapterCache, $boardCache);
                 gc_collect_cycles();
@@ -893,15 +921,19 @@ class ExportController extends Controller implements HasMiddleware
 
             foreach (array_chunk($chapterIds, 200) as $chunk) {
                 $chapterCache = $this->baseChapterController->getChapterDetailsForExport($chunk);
-                $boardCache   = $this->baseChapterController->getActiveBoardDetailsForExport($chunk);
+                $boardCache = $this->baseChapterController->getActiveBoardDetailsForExport($chunk);
 
                 foreach ($chunk as $chId) {
-                    if (! isset($chapterCache[$chId])) continue;
+                    if (! isset($chapterCache[$chId])) {
+                        continue;
+                    }
                     $combinedData = array_merge($chapterCache[$chId], $boardCache[$chId] ?? []);
                     fputcsv($file, $this->formatEINStatusRow($combinedData));
                 }
 
-                if (ob_get_level()) { ob_flush(); }
+                if (ob_get_level()) {
+                    ob_flush();
+                }
                 flush();
                 unset($chapterCache, $boardCache);
                 gc_collect_cycles();
@@ -958,7 +990,7 @@ class ExportController extends Controller implements HasMiddleware
                 $pcName = $baseQuery['pcName'];
                 $chEOYDocuments = $baseQuery['chEOYDocuments'];
                 $chIRSDocuments = $baseQuery['chIRSDocuments'];
-        $chReportDocuments = $baseQuery['chReportDocuments'];
+                $chReportDocuments = $baseQuery['chReportDocuments'];
 
                 $rowData = [
                     'Conference' => $chConfId,
@@ -1367,14 +1399,18 @@ class ExportController extends Controller implements HasMiddleware
             ]);
 
             foreach (array_chunk($coordIds, 200) as $chunk) {
-                $coordCache  = $this->baseCoordinatorController->getCoordinatorDetailsForExport($chunk);
+                $coordCache = $this->baseCoordinatorController->getCoordinatorDetailsForExport($chunk);
 
                 foreach ($chunk as $cdId) {
-                    if (! isset($coordCache[$cdId])) continue;
+                    if (! isset($coordCache[$cdId])) {
+                        continue;
+                    }
                     fputcsv($file, $this->formatFullCoordinatorRow($coordCache[$cdId]));
                 }
 
-                if (ob_get_level()) { ob_flush(); }
+                if (ob_get_level()) {
+                    ob_flush();
+                }
                 flush();
                 unset($chapterCache, $boardCache);
                 gc_collect_cycles();
@@ -1437,14 +1473,18 @@ class ExportController extends Controller implements HasMiddleware
             ]);
 
             foreach (array_chunk($coordIds, 200) as $chunk) {
-                $coordCache  = $this->baseCoordinatorController->getCoordinatorDetailsForExport($chunk);
+                $coordCache = $this->baseCoordinatorController->getCoordinatorDetailsForExport($chunk);
 
                 foreach ($chunk as $cdId) {
-                    if (! isset($coordCache[$cdId])) continue;
+                    if (! isset($coordCache[$cdId])) {
+                        continue;
+                    }
                     fputcsv($file, $this->formatFullCoordinatorRow($coordCache[$cdId]));
                 }
 
-                if (ob_get_level()) { ob_flush(); }
+                if (ob_get_level()) {
+                    ob_flush();
+                }
                 flush();
                 unset($chapterCache, $boardCache);
                 gc_collect_cycles();
@@ -1501,17 +1541,21 @@ class ExportController extends Controller implements HasMiddleware
                 'Report To', 'Email', 'Email2', 'Phone', 'Phone2', 'Address', 'City', 'State', 'Zip',
                 'Birthday', 'Coordinator Start', 'Last Promoted', 'Leave of Absense', 'Leave Date',
                 'Retire Date', 'Retire Reason',
-             ]);
+            ]);
 
             foreach (array_chunk($coordIds, 200) as $chunk) {
-                $coordCache  = $this->baseCoordinatorController->getCoordinatorDetailsForExport($chunk);
+                $coordCache = $this->baseCoordinatorController->getCoordinatorDetailsForExport($chunk);
 
                 foreach ($chunk as $cdId) {
-                    if (! isset($coordCache[$cdId])) continue;
+                    if (! isset($coordCache[$cdId])) {
+                        continue;
+                    }
                     fputcsv($file, $this->formatRetiredCoordinatorRow($coordCache[$cdId]));
                 }
 
-                if (ob_get_level()) { ob_flush(); }
+                if (ob_get_level()) {
+                    ob_flush();
+                }
                 flush();
                 unset($chapterCache, $boardCache);
                 gc_collect_cycles();
@@ -1577,14 +1621,18 @@ class ExportController extends Controller implements HasMiddleware
             ]);
 
             foreach (array_chunk($coordIds, 200) as $chunk) {
-                $coordCache  = $this->baseCoordinatorController->getCoordinatorDetailsForExport($chunk);
+                $coordCache = $this->baseCoordinatorController->getCoordinatorDetailsForExport($chunk);
 
                 foreach ($chunk as $cdId) {
-                    if (! isset($coordCache[$cdId])) continue;
+                    if (! isset($coordCache[$cdId])) {
+                        continue;
+                    }
                     fputcsv($file, $this->formatRetiredCoordinatorRow($coordCache[$cdId]));
                 }
 
-                if (ob_get_level()) { ob_flush(); }
+                if (ob_get_level()) {
+                    ob_flush();
+                }
                 flush();
                 unset($chapterCache, $boardCache);
                 gc_collect_cycles();
@@ -1643,14 +1691,18 @@ class ExportController extends Controller implements HasMiddleware
             ]);
 
             foreach (array_chunk($coordIds, 200) as $chunk) {
-                $coordCache  = $this->baseCoordinatorController->getCoordinatorDetailsForExport($chunk);
+                $coordCache = $this->baseCoordinatorController->getCoordinatorDetailsForExport($chunk);
 
                 foreach ($chunk as $cdId) {
-                    if (! isset($coordCache[$cdId])) continue;
+                    if (! isset($coordCache[$cdId])) {
+                        continue;
+                    }
                     fputcsv($file, $this->formatCoordinatorAppreciationRow($coordCache[$cdId]));
                 }
 
-                if (ob_get_level()) { ob_flush(); }
+                if (ob_get_level()) {
+                    ob_flush();
+                }
                 flush();
                 unset($chapterCache, $boardCache);
                 gc_collect_cycles();

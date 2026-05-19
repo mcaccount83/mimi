@@ -193,7 +193,7 @@ class BaseCoordinatorController extends Controller
     /**
      * Public methods for different query types
      */
-public function getBaseQuery(int $activeStatus, int $coorId, int $confId, int $regId, int $positionId, ?array $secPositionId): array
+    public function getBaseQuery(int $activeStatus, int $coorId, int $confId, int $regId, int $positionId, ?array $secPositionId): array
     {
         return $this->buildCoordinatorQuery([
             'activeStatus' => $activeStatus,
@@ -295,14 +295,14 @@ public function getBaseQuery(int $activeStatus, int $coorId, int $confId, int $r
         $userProgress = $this->learnDashService->getUserProgress($cdDetails->user->email);
 
         foreach ($coordinatorCourses as &$course) {
-            $course['progress'] = $userProgress[(int)$course['id']] ?? null;
+            $course['progress'] = $userProgress[(int) $course['id']] ?? null;
         }
 
         $coursesByCategory = collect($coordinatorCourses)->groupBy(function ($course) {
             return $course['categories'][0]['slug'] ?? 'uncategorized';
         })->map(function ($courses, $slug) {
             return [
-                'name'    => $courses->first()['categories'][0]['name'] ?? ucfirst(str_replace('-', ' ', $slug)),
+                'name' => $courses->first()['categories'][0]['name'] ?? ucfirst(str_replace('-', ' ', $slug)),
                 'courses' => $courses,
             ];
         });
@@ -318,66 +318,66 @@ public function getBaseQuery(int $activeStatus, int $coorId, int $confId, int $r
     }
 
     /**
- * Bulk coordinator details for export - skips all dropdown/email/course data
- * Returns [ coordinator_id => $coordData ] matching format function keys
- */
-public function getCoordinatorDetailsForExport(array $coordIds): array
-{
-    $coordinators = Coordinators::with([
-        'country',
-        'state',
-        'conference',
-        'region',
-        'displayPosition',
-        'secondaryPosition',
-        'recognition.recognitionGift0',
-        'recognition.recognitionGift1',
-        'recognition.recognitionGift2',
-        'recognition.recognitionGift3',
-        'recognition.recognitionGift4',
-        'recognition.recognitionGift5',
-        'recognition.recognitionGift6',
-        'recognition.recognitionGift7',
-        'recognition.recognitionGift8',
-        'recognition.recognitionGift9',
-        'reportsTo',
-        'user.adminRole',
-    ])->whereIn('id', $coordIds)->get()->keyBy('id');
+     * Bulk coordinator details for export - skips all dropdown/email/course data
+     * Returns [ coordinator_id => $coordData ] matching format function keys
+     */
+    public function getCoordinatorDetailsForExport(array $coordIds): array
+    {
+        $coordinators = Coordinators::with([
+            'country',
+            'state',
+            'conference',
+            'region',
+            'displayPosition',
+            'secondaryPosition',
+            'recognition.recognitionGift0',
+            'recognition.recognitionGift1',
+            'recognition.recognitionGift2',
+            'recognition.recognitionGift3',
+            'recognition.recognitionGift4',
+            'recognition.recognitionGift5',
+            'recognition.recognitionGift6',
+            'recognition.recognitionGift7',
+            'recognition.recognitionGift8',
+            'recognition.recognitionGift9',
+            'reportsTo',
+            'user.adminRole',
+        ])->whereIn('id', $coordIds)->get()->keyBy('id');
 
-    $result = [];
-    foreach ($coordIds as $id) {
-        $cd = $coordinators->get($id);
-        if (! $cd) continue;
+        $result = [];
+        foreach ($coordIds as $id) {
+            $cd = $coordinators->get($id);
+            if (! $cd) continue;
 
-        $stateShortName = $cd->state_id < 52
-            ? $cd->state->state_short_name
-            : $cd->country->short_name;
+            $stateShortName = $cd->state_id < 52
+                ? $cd->state->state_short_name
+                : $cd->country->short_name;
 
-        // Secondary position — same logic as getCoordinatorDetails()
-        $secondaryPosition = [];
-        if ($cd->secondaryPosition && $cd->secondaryPosition->count() > 0) {
-            $secondaryPosition = $cd->secondaryPosition;
+            // Secondary position — same logic as getCoordinatorDetails()
+            $secondaryPosition = [];
+            if ($cd->secondaryPosition && $cd->secondaryPosition->count() > 0) {
+                $secondaryPosition = $cd->secondaryPosition;
+            }
+
+            $cdUser = $cd->user;
+            $cdAdminRole = $cdUser?->adminRole ?? (object)['admin_role' => ''];
+
+            $result[$id] = [
+                'cdDetails' => $cd,
+                'cdConfId' => $cd->conference_id,
+                'cdRegId' => $cd->region_id,
+                'regionLongName' => $cd->region?->long_name ?? '',
+                'cdstateShortName' => $stateShortName,
+                'displayPosition' => $cd->displayPosition,
+                'secondaryPosition' => $cd->secondaryPosition && $cd->secondaryPosition->count() > 0
+        ? $cd->secondaryPosition->pluck('long_title')->toArray()
+        : [],
+                'cdAdminRole' => $cdAdminRole,
+                'RptFName' => $cd->reportsTo?->first_name ?? '',
+                'RptLName' => $cd->reportsTo?->last_name ?? '',
+            ];
         }
 
-        $cdUser = $cd->user;
-        $cdAdminRole = $cdUser?->adminRole ?? (object)['admin_role' => ''];
-
-        $result[$id] = [
-            'cdDetails'        => $cd,
-            'cdConfId'         => $cd->conference_id,
-            'cdRegId'          => $cd->region_id,
-            'regionLongName'   => $cd->region?->long_name ?? '',
-            'cdstateShortName' => $stateShortName,
-            'displayPosition'  => $cd->displayPosition,
-            'secondaryPosition' => $cd->secondaryPosition && $cd->secondaryPosition->count() > 0
-    ? $cd->secondaryPosition->pluck('long_title')->toArray()
-    : [],
-            'cdAdminRole'      => $cdAdminRole,
-            'RptFName'         => $cd->reportsTo?->first_name ?? '',
-            'RptLName'         => $cd->reportsTo?->last_name ?? '',
-        ];
+        return $result;
     }
-
-    return $result;
-}
 }

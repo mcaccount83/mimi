@@ -73,7 +73,7 @@ class GoogleController extends Controller implements HasMiddleware
             return ['success' => true];
 
         } catch (\Exception $e) {
-            Log::error('reCAPTCHA verification failed: ' . $e->getMessage());
+            Log::error('reCAPTCHA verification failed: '.$e->getMessage());
             return [
                 'success' => false,
                 'error' => 'Security verification error. Please try again later.'

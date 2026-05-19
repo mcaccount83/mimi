@@ -122,13 +122,13 @@ class PositionConditionsService
      */
     public function getFiscalYearOptions(): array
     {
-        $fiscalYear = FiscalYear::orderBy('created_at', 'desc') // newest created row first
+        $fiscalYear = FiscalYear::orderByDesc('created_at') // newest created row first
                         ->first();
         $adminYear = AdminYear::with('fiscalYear')
-                        ->orderBy('created_at', 'desc') // newest created row first
+                        ->orderByDesc('created_at') // newest created row first
                         ->first();
         $irsYear = AdminIRS::with('fiscalYear')
-                        ->orderBy('created_at', 'desc') // newest created row first
+                        ->orderByDesc('created_at') // newest created row first
                         ->first();
 
         // Fiscal year values directly from table
@@ -159,7 +159,7 @@ class PositionConditionsService
     public function getReportYearOptions(): array
     {
         $reportYear = AdminReport::with('fiscalYear')
-                        ->orderBy('created_at', 'desc') // newest created row first
+                        ->orderByDesc('created_at') // newest created row first
                         ->first();
 
         $reportYearId = $reportYear->fiscalYear->id;

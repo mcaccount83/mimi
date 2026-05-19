@@ -130,13 +130,13 @@ class PublicController extends Controller
         $resources = Resources::with('resourceCategory')->get();
         $resourceCategories = ResourceCategory::all();
 
-        $fiscalYear = FiscalYear::orderBy('created_at', 'desc') // newest created row first
+        $fiscalYear = FiscalYear::orderByDesc('created_at') // newest created row first
                         ->first();
         $fiscalYearId = $fiscalYear->id;
         $fiscalYearRange = $fiscalYear->fiscal_year;
 
         $reportYear = AdminReport::with('fiscalYear')
-                        ->orderBy('created_at', 'desc') // newest created row first
+                        ->orderByDesc('created_at') // newest created row first
                         ->first();
         $reportYearId = $reportYear->fiscalYear->id;
         $reportYearRange = $reportYear->fiscalYear->report_year; // "2024-2025"

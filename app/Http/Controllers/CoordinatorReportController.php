@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Enums\CheckboxFilterEnum;
-use App\Services\ReportingService;
 use App\Services\LearnDashService;
+use App\Services\ReportingService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;

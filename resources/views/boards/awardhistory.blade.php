@@ -39,7 +39,7 @@
                         <div class="card-body">
                             @if(count($currentApprovedAwards) > 0)
                                 @foreach($currentApprovedAwards as $award)
-    @php $badge = $badgeLookup->get($financialReport->report_year_id . '_' . $award['awards_type']); @endphp
+    @php $badge = $badgeLookup->get($financialReport->report_year_id.'_'.$award['awards_type']); @endphp
     <div class="card mb-2">
         <div class="card-body d-flex align-items-center gap-3">
             <div style="width: 80px; flex-shrink: 0; text-align: center;">
@@ -75,7 +75,7 @@
                         <!-- /.card-header -->
                             <div class="card-body">
                                 @foreach($awards as $award)
-    @php $badge = $badgeLookup->get($award->report_year_id . '_' . $award->awards_type); @endphp
+    @php $badge = $badgeLookup->get($award->report_year_id.'_'.$award->awards_type); @endphp
     <div class="card mb-2">
         <div class="card-body d-flex align-items-center gap-3">
             <div style="width: 80px; flex-shrink: 0; text-align: center;">
