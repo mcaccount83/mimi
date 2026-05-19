@@ -1316,7 +1316,7 @@ class TechReportController extends Controller implements HasMiddleware
 
     }
 
-    public function addGoogleDrive(AddGoogleDriveTechReportRequest $request)
+    public function addGoogleDrive(AddGoogleDriveTechReportRequest $request): JsonResponse
     {
 
         try {
@@ -1341,7 +1341,7 @@ class TechReportController extends Controller implements HasMiddleware
         }
     }
 
-    public function updateGoogleDrive(UpdateGoogleDriveTechReportRequest $request, int $id)
+    public function updateGoogleDrive(UpdateGoogleDriveTechReportRequest $request, int $id): JsonResponse
     {
 
         try {
@@ -1400,7 +1400,7 @@ class TechReportController extends Controller implements HasMiddleware
 
     }
 
-    public function addAdminEmail(AddAdminEmailTechReportRequest $request)
+    public function addAdminEmail(AddAdminEmailTechReportRequest $request): JsonResponse
     {
 
         try {
@@ -1424,7 +1424,7 @@ class TechReportController extends Controller implements HasMiddleware
         }
     }
 
-    public function updateAdminEmail(UpdateAdminEmailTechReportRequest $request, int $id)
+    public function updateAdminEmail(UpdateAdminEmailTechReportRequest $request, int $id): JsonResponse
     {
 
         try {
@@ -1611,7 +1611,7 @@ class TechReportController extends Controller implements HasMiddleware
         return view('coordinators.techreports.regionlist')->with($data);
     }
 
-    public function updateRegion(Request $request, int $id)
+    public function updateRegion(Request $request, int $id): JsonResponse
     {
         try {
             $region = Region::findOrFail($id);
@@ -1654,7 +1654,7 @@ class TechReportController extends Controller implements HasMiddleware
         return view('coordinators.techreports.statelist')->with($data);
     }
 
-    public function updateState(Request $request, int $id)
+    public function updateState(Request $request, int $id): JsonResponse
     {
         try {
             $state = State::findOrFail($id);

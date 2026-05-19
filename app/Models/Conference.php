@@ -17,7 +17,7 @@ class Conference extends Model
         return $this->hasMany(Region::class, 'conference_id', 'id');
     }
 
-    public function states()
+    public function states(): HasMany
     {
         return $this->hasMany(State::class, 'conference_id', 'id');
     }

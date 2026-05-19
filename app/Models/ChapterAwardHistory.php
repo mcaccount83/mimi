@@ -11,7 +11,7 @@ class ChapterAwardHistory extends Model
 
     protected $guarded = []; // ALL columns are mass-assignable
 
-    public function chapter()
+    public function chapter(): BelongsTo
     {
         return $this->belongsTo(Chapters::class, 'chapter_id', 'id');  // 'chapter_id' BelongsTo 'id' in chapters
     }
@@ -21,7 +21,7 @@ class ChapterAwardHistory extends Model
         return $this->belongsTo(FinancialReportAwards::class, 'awards_type', 'id');  // 'awards_type' BelongsTo 'id' in FinancialReportAwards
     }
 
-    public function fiscalYear()
+    public function fiscalYear(): BelongsTo
     {
         return $this->belongsTo(FiscalYear::class, 'report_year_id', 'id');
     }

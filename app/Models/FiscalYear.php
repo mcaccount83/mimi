@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
 
 class FiscalYear extends Model
@@ -11,22 +13,22 @@ class FiscalYear extends Model
     protected $guarded = [];
 
     // Relationships
-    public function adminYear()
+    public function adminYear(): HasOne
     {
         return $this->hasOne(AdminYear::class);
     }
 
-    public function irsYear()
+    public function irsYear(): HasOne
     {
         return $this->hasOne(AdminIRS::class);
     }
 
-    public function reportYear()
+    public function reportYear(): HasOne
     {
         return $this->hasOne(AdminReport::class, 'report_year_id');
     }
 
-    public function awardBadges()
+    public function awardBadges(): HasMany
     {
         return $this->hasMany(FinancialReportAwardsBadges::class, 'report_year_id', 'id');
     }

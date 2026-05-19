@@ -762,7 +762,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         ];
     }
 
-    public function activateSingleBoardStandalone(Request $request, int $id)
+    public function activateSingleBoardStandalone(Request $request, int $id): RedirectResponse
     {
         try {
             $status = $this->activateSingleBoard($request, $id);
@@ -779,7 +779,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         }
     }
 
-    public function activateAllBoardsStandalone(Request $request)
+    public function activateAllBoardsStandalone(Request $request): RedirectResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];

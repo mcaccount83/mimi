@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 
 class PaymentHistory extends Model
@@ -15,7 +16,7 @@ class PaymentHistory extends Model
         'payment_amount' => 'decimal:2',
     ];
 
-    public function chapter()
+    public function chapter(): BelongsTo
     {
         return $this->belongsTo(Chapters::class, 'chapter_id', 'id');  // 'chapter_id' in boards BelongsTo 'id' in chapters
     }
