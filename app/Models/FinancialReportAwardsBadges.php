@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class FinancialReportAwardsBadges extends Model
 {
-
     protected $primaryKey = 'id';
 
     protected $guarded = []; // ALL columns are mass-assignable
