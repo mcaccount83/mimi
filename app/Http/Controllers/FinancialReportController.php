@@ -239,23 +239,31 @@ class FinancialReportController extends Controller implements HasMiddleware
         }
         $financialReport->international_event_array = base64_encode(serialize($InternationalEventArray));
 
-        // Donations to Chapte (serialized)
         $MonetaryDonation = null;
-        $FieldCount = $input['MonDonationRowCount'];
+        $FieldCount = $input['MonDonationRowCount']; // <-- missing!
         for ($i = 0; $i < $FieldCount; $i++) {
+            $rawDate = $input['MonDonationDate'.$i] ?? null;
             $MonetaryDonation[$i]['mon_donation_desc'] = $input['DonationDesc'.$i] ?? null;
             $MonetaryDonation[$i]['mon_donation_info'] = $input['DonorInfo'.$i] ?? null;
-            $MonetaryDonation[$i]['mon_donation_date'] = $input['MonDonationDate'.$i] ?? null;
             $MonetaryDonation[$i]['mon_donation_amount'] = $input['DonationAmount'.$i] ?? null;
+            try {
+                $MonetaryDonation[$i]['mon_donation_date'] = !empty($rawDate) && $rawDate !== '__/__/____'
+                    ? Carbon::createFromFormat('m/d/Y', $rawDate)->format('Y-m-d') : null;
+            } catch (\Exception $e) {
+                $MonetaryDonation[$i]['mon_donation_date'] = null;
+                Log::error('MonDonationDate parse error row '.$i.': '.$rawDate.' - '.$e->getMessage());
+            }
         }
         $financialReport->monetary_donations_to_chapter = base64_encode(serialize($MonetaryDonation));
 
         $NonMonetaryDonation = null;
         $FieldCount = $input['NonMonDonationRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
+            $rawDate = $input['NonMonDonationDate'.$i] ?? null;  // <-- missing!
             $NonMonetaryDonation[$i]['nonmon_donation_desc'] = $input['NonMonDonationDesc'.$i] ?? null;
             $NonMonetaryDonation[$i]['nonmon_donation_info'] = $input['NonMonDonorInfo'.$i] ?? null;
-            $NonMonetaryDonation[$i]['nonmon_donation_date'] = $input['NonMonDonationDate'.$i] ?? null;
+            $NonMonetaryDonation[$i]['nonmon_donation_date'] = !empty($rawDate) && $rawDate !== '__/__/____'
+                ? Carbon::createFromFormat('m/d/Y', $rawDate)->format('Y-m-d') : null;
         }
         $financialReport->non_monetary_donations_to_chapter = base64_encode(serialize($NonMonetaryDonation));
 
@@ -275,18 +283,14 @@ class FinancialReportController extends Controller implements HasMiddleware
         $financialReport->wheres_the_money = $input['WheresTheMoney'] ?? null;
         $financialReport->amount_reserved_from_previous_year = isset($input['AmountReservedFromLastYear']) ? preg_replace('/[^\d.]/', '', $input['AmountReservedFromLastYear']) : null;
         $financialReport->bank_balance_now = isset($input['BankBalanceNow']) ? preg_replace('/[^\d.]/', '', $input['BankBalanceNow']) : null;
-        // $amount_reserved_from_previous_year = $input['AmountReservedFromLastYear'];
-        // $amount_reserved_from_previous_year = str_replace(',', '', $amount_reserved_from_previous_year);
-        // $financialReport->amount_reserved_from_previous_year = $amount_reserved_from_previous_year == '' ? null : $amount_reserved_from_previous_year;
-        // $bank_balance_now = $input['BankBalanceNow'];
-        // $bank_balance_now = str_replace(',', '', $bank_balance_now);
-        // $financialReport->bank_balance_now = $bank_balance_now == '' ? null : $bank_balance_now;
 
         // Bank Reconciliation (serialized)
         $BankRecArray = null;
         $FieldCount = $input['BankRecRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
-            $BankRecArray[$i]['bank_rec_date'] = $input['BankRecDate'.$i] ?? null;
+            $rawDate = $input['BankRecDate'.$i] ?? null;  // <-- missing!
+            $BankRecArray[$i]['bank_rec_date'] = !empty($rawDate) && $rawDate !== '__/__/____'
+                ? Carbon::createFromFormat('m/d/Y', $rawDate)->format('Y-m-d') : null;
             $BankRecArray[$i]['bank_rec_check_no'] = $input['BankRecCheckNo'.$i] ?? null;
             $BankRecArray[$i]['bank_rec_desc'] = $input['BankRecDesc'.$i] ?? null;
             $BankRecArray[$i]['bank_rec_payment_amount'] = $input['BankRecPaymentAmount'.$i] ?? null;

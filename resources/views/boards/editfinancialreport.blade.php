@@ -63,7 +63,7 @@
 
                     @include('boards.partials.financial_accordion', ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId,
                         'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chEOYDocuments' => $chEOYDocuments, 'stateShortName' => $stateShortName, 'chActiveId' => $chActiveId,
-                        'reportYearStart' => $reportYearStart, 'reportYearEnd' => $reportYearEnd, 'irsFilingName' => $irsFilingName
+                        'reportYearStart' => $reportYearStart, 'reportYearEnd' => $reportYearEnd, 'irsFilingName' => $irsFilingName,
                     ])
 
                 </div>

@@ -343,9 +343,14 @@ class PaymentController extends Controller implements HasMiddleware
         $paymentType = 'Manual Input';
 
         $input = $request->all();
-        $rereg_date = $input['PaymentDate'];
-        $m2m_date = $input['M2MPaymentDate'];
-        $sustaining_date = $input['SustainingPaymentDate'];
+        $rereg_date = !empty($input['PaymentDate']) && $input['PaymentDate'] !== '__/__/____'
+            ? Carbon::createFromFormat('m/d/Y', $input['PaymentDate'])->format('Y-m-d'): null;
+
+        $m2m_date = !empty($input['M2MPaymentDate']) && $input['M2MPaymentDate'] !== '__/__/____'
+            ? Carbon::createFromFormat('m/d/Y', $input['M2MPaymentDate'])->format('Y-m-d'): null;
+
+        $sustaining_date = !empty($input['SustainingPaymentDate']) && $input['SustainingPaymentDate'] !== '__/__/____'
+            ? Carbon::createFromFormat('m/d/Y', $input['SustainingPaymentDate'])->format('Y-m-d'): null;
 
         $chapter = Chapters::find($id);
         $payments = Payments::find($id);

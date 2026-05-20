@@ -39,7 +39,7 @@
                     <tbody>
                         @foreach($reChapterList as $list)
                         @php
-                            $due = $list->startMonth->month_short_name . ' ' . $list->next_renewal_year;
+                            $due = $list->startMonth->month_short_name.' '.$list->next_renewal_year;
                             $overdue = $currentYear * 12 + $currentMonth - ($list->next_renewal_year * 12 + $list->start_month_id);
                         @endphp
                         <tr>

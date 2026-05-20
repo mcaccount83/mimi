@@ -19,6 +19,7 @@ use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Carbon\Carbon;
 
 class AdminReportController extends Controller implements HasMiddleware
 {
@@ -124,6 +125,7 @@ class AdminReportController extends Controller implements HasMiddleware
             // Not showing international - filter by conference
             $query->where('chapters.conference_id', $confId);
         }
+
         // If checkBox51Status OR checkBox10Status is true, show all conferences (international)
 
         $donationsList = $query->orderByDesc('payment_history.payment_date')->get();
@@ -198,37 +200,30 @@ class AdminReportController extends Controller implements HasMiddleware
         $updatedId = $user['userId'];
         $updatedBy = $user['userName'];
 
-        $chapter = Chapters::find($id);
-        $payments = Payments::find($id);
+        $chapter = Chapters::findOrFail($id);
+        $payments = Payments::findOrFail($id);
 
         DB::beginTransaction();
         try {
-            $chapter->start_month_id = $request->input('ch_founddate');
-            $chapter->next_renewal_year = $request->input('ch_renewyear');
+            $chapter->start_month_id = $request->ch_founddate;
+            $chapter->next_renewal_year = $request->ch_renewyear;
             $chapter->updated_by = $updatedBy;
             $chapter->updated_id = $updatedId;
-
             $chapter->save();
 
-            $payments->rereg_date = $request->input('ch_duespaid');
-            $payments->rereg_payment = $request->input('ch_payment');
-            $payments->rereg_members = $request->input('ch_members');
-
+            $payments->rereg_date = $request->ch_duespaid ? Carbon::createFromFormat('m/d/Y', $request->ch_duespaid)->format('Y-m-d'): null;
+            $payments->rereg_payment = $request->ch_payment;
+            $payments->rereg_members = $request->ch_members;
             $payments->save();
 
             DB::commit();
 
-            return redirect()->to('/adminreports/reregedit')->with('error', 'Failed to update Re-Reg Info.');
+            return redirect()->route('adminreports.editrereg', $id)->with('success', 'Re-Reg Info updated successfully.');
         } catch (\Exception $e) {
-            echo $e->getMessage();
-            exit();
-            DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            DB::rollBack();
+            Log::error($e);
 
-            return redirect()->to('/adminreports/reregedit')->with('success', 'Re-Reg Info updated successfully.');
-        } finally {
-            // This ensures DB connections are released even if exceptions occur
-            DB::disconnect();
+            return redirect()->route('adminreports.editrereg', $id)->with('error', 'Failed to update Re-Reg Info.');
         }
     }
 
@@ -265,10 +260,9 @@ class AdminReportController extends Controller implements HasMiddleware
         return view('coordinators.adminreports.inquiriesnotify')->with($data);
     }
 
-    public function updateInquiriesEmail(Request $request, int $id)
+    public function updateInquiriesEmail(Request $request, int $id): JsonResponse
     {
         try {
-
             $region = Region::findOrFail($id);
 
             // Find or create the RegionInquiry record
@@ -334,10 +328,9 @@ class AdminReportController extends Controller implements HasMiddleware
         return view('coordinators.adminreports.inquiriesmap')->with($data);
     }
 
-    public function updateInquiriesMap(Request $request, int $id)
+    public function updateInquiriesMap(Request $request, int $id): JsonResponse
     {
         try {
-
             $region = Region::findOrFail($id);
 
             // Find or create the RegionInquiry record
@@ -375,7 +368,6 @@ class AdminReportController extends Controller implements HasMiddleware
      */
     public function showDownloads(Request $request): View
     {
-
         $data = [];
 
         return view('coordinators.adminreports.downloads')->with($data);

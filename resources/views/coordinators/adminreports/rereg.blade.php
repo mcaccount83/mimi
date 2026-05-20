@@ -56,7 +56,7 @@
                         <td>{{ $list->name }}</td>
 						<td style="
                                     @php
-                                        $due = $list->startMonth->month_long_name . ' ' . $list->next_renewal_year;
+                                        $due = $list->startMonth->month_long_name.' '.$list->next_renewal_year;
                                         $overdue = ($currentYear * 12 + $currentMonth) - ($list->next_renewal_year * 12 + $list->start_month_id);
                                         if ($overdue > 1) {
                                             echo 'background-color: #dc3545; color: #ffffff;';
@@ -64,7 +64,7 @@
                                             echo 'background-color: #ffc107;';
                                         }
                                     @endphp
-                                " data-sort="{{ $list->next_renewal_year . '-' . str_pad($list->start_month_id, 2, '0', STR_PAD_LEFT) }}">
+                                " data-sort="{{ $list->next_renewal_year.'-'.str_pad($list->start_month_id, 2, '0', STR_PAD_LEFT) }}">
                                 {{ $due }}
                         </td>
 						<td>@formatDate($list->payments->rereg_date)</td>

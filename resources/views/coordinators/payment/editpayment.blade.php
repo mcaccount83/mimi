@@ -58,7 +58,7 @@
                                 </div>
                                 <label class="col-sm-2 col-form-label">Date Received:</label>
                                 <div class="col-sm-2">
-                                    <input type="date" name="PaymentDate" id="PaymentDate"class="form-control" data-inputmask='"alias": "datetime", "inputFormat": "mm/dd/yyyy"' data-mask>
+                                    @dateInput('PaymentDate')
                                 </div>
                                 <label class="col-sm-2 col-form-label">Payment Amount:</label>
                                 <div class="col-sm-2">
@@ -102,7 +102,7 @@
                                 </div>
                                 <label class="col-sm-2 col-form-label">Date Received:</label>
                                 <div class="col-sm-3">
-                                    <input type="date" name="M2MPaymentDate" id="M2MPaymentDate"class="form-control" data-inputmask='"alias": "datetime", "inputFormat": "mm/dd/yyyy"' data-mask>
+                                    @dateInput('M2MPaymentDate')
                                 </div>
                                 <label class="col-sm-2 ms-1 col-form-label">Donation Amount:</label>
                                 <div class="col-sm-3">
@@ -129,7 +129,7 @@
                                 </div>
                                 <label class="col-sm-2 col-form-label">Date Received:</label>
                                 <div class="col-sm-3">
-                                    <input type="date" name="SustainingPaymentDate" id="SustainingPaymentDate"class="form-control" data-inputmask='"alias": "datetime", "inputFormat": "mm/dd/yyyy"' data-mask>
+                                    @dateInput('SustainingPaymentDate')
                                 </div>
                                 <label class="col-sm-2 ms-1 col-form-label">Donation Amount:</label>
                                 <div class="col-sm-3">

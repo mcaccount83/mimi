@@ -588,6 +588,9 @@ function AddPartyExpenseRow() {
 
     function AddMonDonationRow() {
         var ExpenseCount = document.getElementById("MonDonationRowCount").value;
+        const dateMask = `data-inputmask='"alias": "datetime", "inputFormat": "mm/dd/yyyy"'`;
+        const currencyMask = `data-inputmask='"alias": "currency", "rightAlign": false, "groupSeparator": ",", "digits": 2, "digitsOptional": false, "placeholder": "0"'`;
+
         var table = document.getElementById("donation-income");
         var tbody = table.getElementsByTagName('tbody')[0];
         var row = tbody.insertRow(-1);
@@ -599,13 +602,13 @@ function AddPartyExpenseRow() {
 
         cell1.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="DonationDesc${ExpenseCount}" id="DonationDesc${ExpenseCount}"></div>`;
         cell2.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="DonorInfo${ExpenseCount}" id="DonorInfo${ExpenseCount}"></div>`;
-        cell3.innerHTML = `<div class="mb-3"><input type="date" class="form-control" name="MonDonationDate${ExpenseCount}" id="MonDonationDate${ExpenseCount}"></div>`;
-        cell4.innerHTML = `<div class="mb-3"><div class="input-group"><span class="input-group-text">$</span><input type="text" class="form-control" name="DonationAmount${ExpenseCount}" id="DonationAmount${ExpenseCount}" oninput="ChangeDonationAmount()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell3.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="MonDonationDate${ExpenseCount}" id="MonDonationDate${ExpenseCount}" ${dateMask} data-mask placeholder="mm/dd/yyyy"></div>`;
+        cell4.innerHTML = `<div class="mb-3"><div class="input-group"><span class="input-group-text">$</span><input type="text" class="form-control" name="DonationAmount${ExpenseCount}" id="DonationAmount${ExpenseCount}" oninput="ChangeDonationAmount()" ${currencyMask} data-mask></div></div>`;
 
         ExpenseCount++;
         document.getElementById('MonDonationRowCount').value = ExpenseCount;
 
-        Inputmask().mask(document.querySelectorAll('#donation-income .form-control'));
+        Inputmask().mask(row.querySelectorAll('[data-inputmask]'));
     }
 
     function DeleteMonDonationRow() {
@@ -625,6 +628,8 @@ function AddPartyExpenseRow() {
 
     function AddNonMonDonationRow() {
         var ExpenseCount = document.getElementById("NonMonDonationRowCount").value;
+        const dateMask = `data-inputmask='"alias": "datetime", "inputFormat": "mm/dd/yyyy"'`;
+
         var table = document.getElementById("donation-goods");
         var row = table.insertRow(-1);
 
@@ -634,10 +639,12 @@ function AddPartyExpenseRow() {
 
         cell1.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="NonMonDonationDesc${ExpenseCount}" id="NonMonDonationDesc${ExpenseCount}"></div>`;
         cell2.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="NonMonDonorInfo${ExpenseCount}" id="NonMonDonorInfo${ExpenseCount}"></div>`;
-        cell3.innerHTML = `<div class="mb-3"><input type="date" class="form-control" name="NonMonDonationDate${ExpenseCount}" id="NonMonDonationDate${ExpenseCount}"></div>`;
+        cell3.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="NonMonDonationDate${ExpenseCount}" id="NonMonDonationDate${ExpenseCount}" ${dateMask} data-mask placeholder="mm/dd/yyyy"></div>`;
 
         ExpenseCount++;
         document.getElementById('NonMonDonationRowCount').value = ExpenseCount;
+
+        Inputmask().mask(row.querySelectorAll('[data-inputmask]'));
     }
 
     function DeleteNonMonDonationRow() {
@@ -765,8 +772,34 @@ function AddPartyExpenseRow() {
         }
     }
 
+    // function AddBankRecRow(){
+    //     var ExpenseCount = document.getElementById("BankRecRowCount").value;
+
+    //     var table = document.getElementById("bank-rec");
+    //     var row = table.insertRow(-1);
+
+    //     var cell1 = row.insertCell(0);
+    //     var cell2 = row.insertCell(1);
+    //     var cell3 = row.insertCell(2);
+    //     var cell4 = row.insertCell(3);
+    //     var cell5 = row.insertCell(4);
+
+    //     cell1.innerHTML = `<div class="mb-3"><input type="date" class="form-control" name="BankRecDate${ExpenseCount}" id="BankRecDate${ExpenseCount}" data-inputmask='"alias": "datetime", "inputFormat": "mm/dd/yyyy"' data-mask value="{{ $bank_rec_array[$row]['bank_rec_date'] ?? '' }}"></div>`;
+    //     cell2.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="BankRecCheckNo${ExpenseCount}" id="BankRecCheckNo${ExpenseCount}"  oninput="ChangeBankRec()"></div>`;
+    //     cell3.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="BankRecDesc${ExpenseCount}" id="BankRecDesc${ExpenseCount}"></div>`;
+    //     cell4.innerHTML = `<div class="mb-3"><div class="input-group"><span class="input-group-text">$</span><input type="text" class="form-control" name="BankRecPaymentAmount${ExpenseCount}" id="BankRecPaymentAmount${ExpenseCount}" oninput="ChangeBankRec()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+    //     cell5.innerHTML = `<div class="mb-3"><div class="input-group"><span class="input-group-text">$</span><input type="text" class="form-control" name="BankRecDepositAmount${ExpenseCount}" id="BankRecDepositAmount${ExpenseCount}" oninput="ChangeBankRec()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+
+    //     ExpenseCount++;
+    //     document.getElementById('BankRecRowCount').value = ExpenseCount;
+
+    //     Inputmask().mask(document.querySelectorAll('[data-inputmask]'));
+    // }
+
     function AddBankRecRow(){
         var ExpenseCount = document.getElementById("BankRecRowCount").value;
+        const currencyMask = `data-inputmask='"alias": "currency", "rightAlign": false, "groupSeparator": ",", "digits": 2, "digitsOptional": false, "placeholder": "0"'`;
+        const dateMask = `data-inputmask='"alias": "datetime", "inputFormat": "mm/dd/yyyy"'`;
 
         var table = document.getElementById("bank-rec");
         var row = table.insertRow(-1);
@@ -777,16 +810,16 @@ function AddPartyExpenseRow() {
         var cell4 = row.insertCell(3);
         var cell5 = row.insertCell(4);
 
-        cell1.innerHTML = `<div class="mb-3"><input type="date" class="form-control" name="BankRecDate${ExpenseCount}" id="BankRecDate${ExpenseCount}" data-inputmask='"alias": "datetime", "inputFormat": "mm/dd/yyyy"' data-mask value="{{ $bank_rec_array[$row]['bank_rec_date'] ?? '' }}"></div>`;
-        cell2.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="BankRecCheckNo${ExpenseCount}" id="BankRecCheckNo${ExpenseCount}"  oninput="ChangeBankRec()"></div>`;
+        cell1.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="BankRecDate${ExpenseCount}" id="BankRecDate${ExpenseCount}" ${dateMask} data-mask placeholder="mm/dd/yyyy"></div>`;
+        cell2.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="BankRecCheckNo${ExpenseCount}" id="BankRecCheckNo${ExpenseCount}" oninput="ChangeBankRec()"></div>`;
         cell3.innerHTML = `<div class="mb-3"><input type="text" class="form-control" name="BankRecDesc${ExpenseCount}" id="BankRecDesc${ExpenseCount}"></div>`;
-        cell4.innerHTML = `<div class="mb-3"><div class="input-group"><span class="input-group-text">$</span><input type="text" class="form-control" name="BankRecPaymentAmount${ExpenseCount}" id="BankRecPaymentAmount${ExpenseCount}" oninput="ChangeBankRec()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
-        cell5.innerHTML = `<div class="mb-3"><div class="input-group"><span class="input-group-text">$</span><input type="text" class="form-control" name="BankRecDepositAmount${ExpenseCount}" id="BankRecDepositAmount${ExpenseCount}" oninput="ChangeBankRec()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell4.innerHTML = `<div class="mb-3"><div class="input-group"><span class="input-group-text">$</span><input type="text" class="form-control" name="BankRecPaymentAmount${ExpenseCount}" id="BankRecPaymentAmount${ExpenseCount}" oninput="ChangeBankRec()" ${currencyMask} data-mask></div></div>`;
+        cell5.innerHTML = `<div class="mb-3"><div class="input-group"><span class="input-group-text">$</span><input type="text" class="form-control" name="BankRecDepositAmount${ExpenseCount}" id="BankRecDepositAmount${ExpenseCount}" oninput="ChangeBankRec()" ${currencyMask} data-mask></div></div>`;
 
         ExpenseCount++;
         document.getElementById('BankRecRowCount').value = ExpenseCount;
 
-        Inputmask().mask(document.querySelectorAll('[data-inputmask]'));
+        Inputmask().mask(row.querySelectorAll('[data-inputmask]'));
     }
 
     function DeleteBankRecRow() {

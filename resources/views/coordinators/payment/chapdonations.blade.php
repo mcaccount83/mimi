@@ -66,7 +66,7 @@
                                 ${{ $list->payments->m2m_donation }}
                             @endif
                         </td>
-						<td><@formatDate($list->payments->m2m_date)</td>
+						<td>@formatDate($list->payments->m2m_date)</td>
 						<td>
                             @if( $list->payments->sustaining_donation != null )
                                 ${{ $list->payments->sustaining_donation }}

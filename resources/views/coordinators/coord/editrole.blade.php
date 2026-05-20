@@ -126,7 +126,7 @@
                                 <label class="col-form-label">Promoation Date:</label>
                             </div>
                             <div class="col-sm-6">
-                                <input type="date" name="CoordinatorPromoteDate" class="form-control" data-inputmask='"alias": "datetime", "inputFormat": "mm/dd/yyyy"' data-mask value="{{ $cdDetails->last_promoted }}">
+                                @dateInput('CoordinatorPromoteDate', $cdDetails->last_promoted)
                             </div>
                         </div>
 

@@ -34,7 +34,7 @@ class PositionConditionsService
     /**
      * Get all position-based conditions for a user  // Loaded automatically for blades in ViewServiceProvider
      */
-    public function getConditionsForUser(int $positionId, $secPositionId = [], $coorId = null)
+    public function getConditionsForUser(?int $positionId, $secPositionId = [], $coorId = null)
     {
         // Handle null values gracefully
         $positionId = (int) ($positionId ?? 0);

@@ -1314,7 +1314,7 @@ class ChapterController extends Controller implements HasMiddleware
         }
     }
 
-    private function updateUserToOutgoing(object $user)
+    private function updateUserToOutgoing(User $user)
     {
         User::where('id', $user->id)->update([
             'type_id' => UserTypeEnum::OUTGOING,
@@ -1322,7 +1322,7 @@ class ChapterController extends Controller implements HasMiddleware
         ]);
     }
 
-    private function createOutgoingBoardMember(object $user, object $bdDetails, string $updatedBy, int $updatedId)
+    private function createOutgoingBoardMember(User $user, object $bdDetails, string $updatedBy, int $updatedId)
     {
         BoardsOutgoing::updateOrCreate(
             [
@@ -1345,13 +1345,13 @@ class ChapterController extends Controller implements HasMiddleware
         );
     }
 
-    private function removeActiveBoardMember(object $user)
+    private function removeActiveBoardMember(User $user)
     {
         Boards::where('user_id', $user->id)->delete();
         ForumCategorySubscription::where('user_id', $user->id)->delete();
     }
 
-    private function updateExistingBoardMember(object $user, object $boardMember, object $requestData, string $prefix, int $chStatus, string $updatedBy, int $updatedId, array $defaultBoardCategories)
+    private function updateExistingBoardMember(User $user, object $boardMember, object $requestData, string $prefix, int $chStatus, string $updatedBy, int $updatedId, array $defaultBoardCategories)
     {
         $firstName = $requestData->input($prefix.'fname');
         $lastName = $requestData->input($prefix.'lname');

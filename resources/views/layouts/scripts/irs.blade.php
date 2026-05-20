@@ -250,8 +250,8 @@ function promptForNewEIN(chapterId) {
         title: 'Enter EIN',
         html: `
             <p>Please enter the EIN for the chapter.</p>
-            <div style="display: flex; align-items: center; ">
-                <input type="text" id="ein" name="ein" class="swal2-input" data-inputmask='"alias": "datetime", "inputFormat": "mm/dd/yyyy"' data-mask placeholder="Enter EIN" required style="width: 100%;">
+            <div style="display: flex; align-items: center;">
+                <input type="text" id="ein" name="ein" class="swal2-input" placeholder="Enter EIN" required style="width: 100%;">
             </div>
             <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
             <br>
@@ -261,6 +261,9 @@ function promptForNewEIN(chapterId) {
             </div>
             <br>
         `,
+        didOpen: () => {
+            Inputmask({ mask: '99-9999999' }).mask(document.getElementById('ein'));
+        },
         showCancelButton: true,
         confirmButtonText: 'OK',
         cancelButtonText: 'Close',

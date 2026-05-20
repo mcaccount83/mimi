@@ -66,7 +66,7 @@ class BaseBoardController extends Controller
         $allStates = State::where('id', $chStateId)
             ->get();
         $allCountries = Country::all();
-        // $allAwards = FinancialReportAwards::all();
+        $allAwards = FinancialReportAwards::all();
 
         // Current year from the blob
         $financialReport = FinancialReport::find($id);
@@ -143,7 +143,7 @@ class BaseBoardController extends Controller
             'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
             'probationReason' => $probationReason, 'dueDate' => $dueDate, 'startMonthId' => $startMonthId, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink,
             'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'startDate' => $startDate, 'renewalDate' => $renewalDate, 'financialReportPdfs' => $financialReportPdfs,
-            'chAwards' => $chAwards, 'currentApprovedAwards' => $currentApprovedAwards,
+            'chAwards' => $chAwards, 'currentApprovedAwards' => $currentApprovedAwards, 'allAwards' => $allAwards
         ], $boardDetails); // Add board member details from appropriate table
     }
 
