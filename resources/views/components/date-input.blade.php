@@ -1,5 +1,5 @@
 @php
-    $formatted = !empty($value) ? \Carbon\Carbon::parse($value)->format('m/d/Y') : '';
+    $formatted = !empty($value) ? \Illuminate\Support\Carbon::parse($value)->format('m/d/Y') : '';
 @endphp
 <input type="text"
     name="{{ $name }}"

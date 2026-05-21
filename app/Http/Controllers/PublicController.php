@@ -154,7 +154,7 @@ class PublicController extends Controller
         // Display Options
         $display_testing = ($reportYear->display_testing == 1);
         $display_live = ($reportYear->display_live == 1);
-        $currentDate = \Carbon\Carbon::now(); // Full Current Date
+        $currentDate = \Illuminate\Support\Carbon::now(); // Full Current Date
         $currentMonth = $currentDate->format('m'); // Current Month with leading zero
 
         $displayEOYTESTING = ($display_testing && ! $display_live);
@@ -1175,7 +1175,7 @@ class PublicController extends Controller
 
         // Group grants by fiscal year
         $grantsByFiscalYear = $grantList->groupBy(function ($grant) {
-            $date = \Carbon\Carbon::parse($grant->completed_at);
+            $date = \Illuminate\Support\Carbon::parse($grant->completed_at);
             // Fiscal year runs July 1 - June 30
             // If month is July(6) or later, fiscal year starts this year
             // If month is before July, fiscal year started last year
@@ -1228,7 +1228,7 @@ class PublicController extends Controller
 
     //     // Group grants by fiscal year
     //     $grantsByFiscalYear = $grantList->groupBy(function($grant) {
-    //         $date = \Carbon\Carbon::parse($grant->completed_at);
+    //         $date = \Illuminate\Support\Carbon::parse($grant->completed_at);
     //         // Fiscal year runs July 1 - June 30
     //         // If month is July(6) or later, fiscal year starts this year
     //         // If month is before July, fiscal year started last year

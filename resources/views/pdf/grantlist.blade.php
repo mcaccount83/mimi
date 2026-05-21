@@ -64,7 +64,7 @@
             @if($grants->count() > 0)
                 @foreach($grants as $list)
                     <tr style="border-bottom: 1px solid #555;">
-                        <td>{{ \Carbon\Carbon::parse($list->submitted_at)->format('M Y') }}</td>
+                        <td>{{ \Illuminate\Support\Carbon::parse($list->submitted_at)->format('M Y') }}</td>
                         <td>{{$list->chapterstate->state_short_name}}</td>
                         <td>{{ $list->review_description}}</td>
                         <td style="text-align: right; padding: 5px;">${{ number_format($list->amount_awarded, 2) }}</td>
