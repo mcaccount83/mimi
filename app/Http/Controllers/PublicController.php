@@ -120,7 +120,7 @@ class PublicController extends Controller
     public function chapterResources(Request $request): View
     {
         // $user = $request->user();
-        $user = Auth::user();
+        $user = $request->user();
         $userTypeId = null;
 
         if ($user) {
@@ -246,7 +246,7 @@ class PublicController extends Controller
                 $urlPath = substr($urlPath, strlen($basePath));
             }
 
-            // $internalRequest = Request::create($urlPath, 'GET', [], $request->cookies->all());
+            // $internalRequest = $request->create($urlPath, 'GET', [], $request->cookies->all());
             $internalRequest = $request->create($urlPath, 'GET', [], $request->cookies->all());
             $internalRequest->setLaravelSession($request->session());
             $response = app()->handle($internalRequest);
@@ -344,7 +344,7 @@ class PublicController extends Controller
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
         if (! $recaptchaResult['success']) {
-            // return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+            // return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
             return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
         }
 
@@ -560,7 +560,7 @@ class PublicController extends Controller
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
         if (! $recaptchaResult['success']) {
-            // return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+            // return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
             return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
         }
 
@@ -946,7 +946,7 @@ class PublicController extends Controller
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
         if (! $recaptchaResult['success']) {
-            // return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+            // return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
             return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
         }
 
@@ -1101,7 +1101,7 @@ class PublicController extends Controller
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
         if (! $recaptchaResult['success']) {
-            // return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+            // return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
             return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
         }
 

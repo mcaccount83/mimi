@@ -997,7 +997,7 @@ class PDFController extends Controller
         @unlink($coverPath);
         @unlink($filingPath);
 
-        return response($mergedPdfContent, 200, [
+        return response(, , [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => "inline; filename=\"$filename\"",
         ]);
@@ -1126,7 +1126,7 @@ class PDFController extends Controller
         @unlink($coverPath);
         @unlink($reportPath);
 
-        return response($mergedPdfContent, 200, [
+        return response(, , [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => "inline; filename=\"$filename\"",
         ]);
@@ -1370,7 +1370,7 @@ class PDFController extends Controller
         @unlink($coverPath);
         @unlink($reportPath);
 
-        return response($mergedPdfContent, 200, [
+        return response(, , [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => "inline; filename=\"$filename\"",
         ]);

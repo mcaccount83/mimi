@@ -117,9 +117,9 @@
                   </button>
                 @endif
                 {{{$log['text']}}}
-                @if (isset($log['in_file']))
+                @isset($log['in_file'])
                   <br/>{{{$log['in_file']}}}
-                @endif
+                @endisset
                 @if ($log['stack'])
                   <div class="stack" id="stack{{{$key}}}"
                        style="display: none; white-space: pre-wrap;">{{{ trim($log['stack']) }}}
