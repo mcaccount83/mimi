@@ -14,33 +14,33 @@
         "almasaeed2010/adminlte": "~4.0",
         "authorizenet/authorizenet": "^2.0",
         "barryvdh/laravel-dompdf": "^3.1",
-        "dcblogdev/laravel-sent-emails": "^2.0",
+        "dcblogdev/laravel-sent-emails": "dev-master",
         "google/apiclient": "^2.18",
         "google/cloud-recaptcha-enterprise": "^2.2",
         "guzzlehttp/guzzle": "^7.10",
-        "laravel/framework": "^12.39",
-        "laravel/sanctum": "^4.2",
-        "laravel/tinker": "^2.10",
+        "laravel/framework": "^13.11",
+        "laravel/sanctum": "^4.3",
+        "laravel/tinker": "^3.0",
         "laravel/ui": "^4.6",
         "league/flysystem-aws-s3-v3": "^3.30",
         "livewire/livewire": "^3.7",
-        "rap2hpoutre/laravel-log-viewer": "^2.5",
-        "riari/laravel-forum": "^7.0",
+        "rap2hpoutre/laravel-log-viewer": "^3.0",
+        "riari/laravel-forum": "^8.0",
         "romanzipp/laravel-queue-monitor": "^5.4",
         "setasign/fpdf": "^1.8",
         "setasign/fpdi": "^2.6",
-        "spatie/laravel-sitemap": "^7.3"
+        "spatie/laravel-sitemap": "^7.4"
     },
     "require-dev": {
         "fakerphp/faker": "^1.24",
-        "laravel/pint": "^1.25",
-        "laravel/sail": "^1.48",
+        "laravel/pint": "^1.27",
+        "laravel/sail": "^1.53",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.8",
         "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^12.4",
-        "spatie/laravel-ignition": "^2.9",
-        "laravel/pail": "^1.2"
+        "spatie/laravel-ignition": "^2.11",
+        "laravel/pail": "^1.2.5"
     },
     "autoload": {
         "psr-4": {
@@ -73,6 +73,21 @@
         "dev": [
             "Composer\\Config::disableProcessTimeout",
             "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite"
+        ],
+        "setup": [
+            "composer install",
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+            "@php artisan key:generate",
+            "@php artisan migrate --force",
+            "npm install",
+            "npm run build"
+        ],
+        "test": [
+            "@php artisan config:clear --ansi",
+            "@php artisan test"
+        ],
+        "pre-package-uninstall": [
+            "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
         ]
     },
     "extra": {

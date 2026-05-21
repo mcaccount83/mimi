@@ -2,19 +2,22 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
+use Illuminate\Database\Eloquent\Attributes\WithoutTimestamps;
 use Illuminate\Database\Eloquent\Model;
 
+#[Table(key: 'chapter_id')]
+#[WithoutTimestamps]
+#[Unguarded]
 class FinancialReportLastYear extends Model
 {
-    protected $primaryKey = 'chapter_id';
-
-    public $timestamps = false;
-
-    protected $guarded = []; // ALL columns are mass-assignable
-
-    protected $casts = [
-        'created_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime',
+        ];
+    }
 
     public function getTable(): string
     {

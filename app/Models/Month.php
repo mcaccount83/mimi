@@ -2,13 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Model;
 
-class Month extends Model
-{
-    protected $table = 'month';
-
-    protected $primaryKey = 'id';
-
-    protected $fillable = []; // No fillable fields
-}
+#[Table('month', 'id')]
+class Month extends Model {}

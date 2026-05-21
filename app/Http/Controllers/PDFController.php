@@ -1770,7 +1770,7 @@ class PDFController extends Controller
 
         // Group grants by fiscal year
         $grantsByFiscalYear = $grantList->groupBy(function ($grant) {
-            $date = \Carbon\Carbon::parse ($grant->completed_at);
+            $date = \Carbon\Carbon::parse($grant->completed_at);
             // Fiscal year runs July 1 - June 30
             // If month is July(6) or later, fiscal year starts this year
             // If month is before July, fiscal year started last year

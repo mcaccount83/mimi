@@ -14,21 +14,14 @@ use App\Models\ForumCategorySubscription;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
-class UserController extends Controller implements HasMiddleware
+#[Middleware('auth', except: ['logout'])]
+class UserController extends Controller
 {
-    public static function middleware(): array
-    {
-        return [
-            new Middleware('auth', except: ['logout']),
-        ];
-    }
-
     /**
      * Check Email duplication for Board Member or Coordinator when Adding or Updating
      */

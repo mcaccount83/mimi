@@ -5,29 +5,35 @@ namespace App\Models;
 use App\Enums\AdminStatusEnum;
 use App\Enums\ForumCategoryEnum;
 use App\Enums\UserTypeEnum;
+use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+#[Table(key: 'id')]
+#[Unguarded]
+#[Hidden('password', 'remember_token')]
 class User extends Authenticatable
 {
     use Notifiable; // Used for sending automated emails like resetting password.
 
-    protected $primaryKey = 'id';
-
-    protected $guarded = []; // ALL columns are mass-assignable
-
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
-
-    protected $casts = [
-        'type_id' => 'integer',
-        'is_active' => 'integer',
-        'is_admin' => 'integer',
-    ];
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'type_id' => 'integer',
+            'is_active' => 'integer',
+            'is_admin' => 'integer',
+        ];
+    }
 
     public function coordinator(): HasOne
     {

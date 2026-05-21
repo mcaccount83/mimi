@@ -4,24 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Services\PositionConditionsService;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\View\View;
 
-class BoardPendingController extends Controller implements HasMiddleware
+#[Middleware('auth', except: ['logout'])]
+class BoardPendingController extends Controller
 {
     public function __construct(
         protected UserController $userController,
         protected BaseBoardController $baseBoardController,
         protected PositionConditionsService $positionConditionsService,
     ) {}
-
-    public static function middleware(): array
-    {
-        return [
-            new Middleware('auth', except: ['logout']),
-        ];
-    }
 
     /**
      * View New Application Status for Pending Board Members

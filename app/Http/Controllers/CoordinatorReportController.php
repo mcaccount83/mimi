@@ -168,7 +168,7 @@ class CoordinatorReportController extends Controller implements HasMiddleware
     {
         // Check if International's reporting tree checkbox is selected
         $showFullTree = $request->has(CheckboxFilterEnum::REPORTING_TREE) &&
-                        $request->get(CheckboxFilterEnum::REPORTING_TREE) == 'yes';
+                        $request->input(CheckboxFilterEnum::REPORTING_TREE) == 'yes';
 
         if ($showFullTree) {
             // Show International's full reporting tree based on Founder Data

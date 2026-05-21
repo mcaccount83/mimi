@@ -2,17 +2,20 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+#[Unguarded]
 class PaymentLog extends Model
 {
-    protected $guarded = []; // ALL columns are mass-assignable
-
-    protected $casts = [
-        'request_data' => 'array',
-        'response_data' => 'array',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'request_data' => 'array',
+            'response_data' => 'array',
+        ];
+    }
 
     public function board(): HasOne
     {

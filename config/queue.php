@@ -25,7 +25,7 @@ return [
     | each backend supported by Laravel. You're also free to add more.
     |
     | Drivers: "sync", "database", "beanstalkd", "sqs", "redis",
-    |          "deferred", "failover", "null"
+    |          "deferred", "background", "failover", "null"
     |
     */
 
@@ -77,6 +77,10 @@ return [
             'driver' => 'deferred',
         ],
 
+        'background' => [
+            'driver' => 'background',
+        ],
+
         'failover' => [
             'driver' => 'failover',
             'connections' => [
@@ -99,7 +103,7 @@ return [
     */
 
     'batching' => [
-        'database' => env('DB_CONNECTION', 'sql'),
+        'database' => env('DB_CONNECTION', 'sqlite'),
         'table' => 'job_batches',
     ],
 
@@ -118,7 +122,7 @@ return [
 
     'failed' => [
         'driver' => env('QUEUE_FAILED_DRIVER', 'database-uuids'),
-        'database' => env('DB_CONNECTION', 'sql'),
+        'database' => env('DB_CONNECTION', 'sqlite'),
         'table' => 'failed_jobs',
     ],
 

@@ -2,17 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[Table('state', 'id')]
+#[Unguarded]
 class State extends Model
 {
-    protected $table = 'state';
-
-    protected $primaryKey = 'id';
-
-    protected $guarded = []; // ALL columns are mass-assignable
-
     public function region(): BelongsTo
     {
         return $this->belongsTo(Region::class, 'region_id', 'id');

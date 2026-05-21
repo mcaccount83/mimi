@@ -2,17 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Belongsto;
 
+#[Table('grant_request', 'id')]
+#[Unguarded]
 class GrantRequest extends Model
 {
-    protected $table = 'grant_request';
-
-    protected $primaryKey = 'id';
-
-    protected $guarded = []; // ALL columns are mass-assignable
-
     public function chapters(): BelongsTo
     {
         return $this->belongsTo(Chapters::class, 'chapter_id', 'id');  // 'chapter_id' in grant_requests BelongsTo 'id' in chapters

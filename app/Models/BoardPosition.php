@@ -2,11 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Model;
 
-class BoardPosition extends Model
-{
-    protected $table = 'board_position';
-
-    protected $fillable = []; // No fillable fields
-}
+#[Table('board_position')]
+class BoardPosition extends Model {}

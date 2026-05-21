@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Model;
 
-class GoogleDrive extends Model
-{
-    protected $table = 'google_drive_new';
-
-    protected $guarded = []; // ALL columns are mass-assignable
-}
+#[Table('google_drive_new')]
+#[Unguarded]
+class GoogleDrive extends Model {}

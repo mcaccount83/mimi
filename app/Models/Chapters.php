@@ -2,21 +2,24 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Belongsto;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
+#[Unguarded]
 class Chapters extends Model
 {
-    protected $guarded = []; // ALL columns are mass-assignable
-
-    protected $casts = [
-        'status_id' => 'integer',
-        'active_status' => 'integer',
-        'created_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'status_id' => 'integer',
+            'active_status' => 'integer',
+            'created_at' => 'datetime',
+        ];
+    }
 
     public function boards(): HasMany
     {

@@ -5,24 +5,17 @@ namespace App\Http\Controllers;
 use App\Enums\UserTypeEnum;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
-class HomeController extends Controller implements HasMiddleware
+#[Middleware('auth', except: ['logout'])]
+class HomeController extends Controller
 {
     public function __construct(
         protected UserController $userController,
         protected BaseBoardController $baseBoardController,
     ) {}
-
-    public static function middleware(): array
-    {
-        return [
-            new Middleware('auth', except: ['logout']),
-        ];
-    }
 
     /**
      * Home page for Coordinators & Board Members - logic for login redirect
