@@ -10,7 +10,6 @@ class InquiriesYesToChapter extends BaseMailable
 {
     public array $mailData;
 
-
     public function __construct(array $mailData)
     {
         $this->mailData = $mailData;

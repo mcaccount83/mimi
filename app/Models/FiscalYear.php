@@ -32,5 +32,4 @@ class FiscalYear extends Model
     {
         return $this->hasMany(FinancialReportAwardsBadges::class, 'report_year_id', 'id');
     }
-
 }

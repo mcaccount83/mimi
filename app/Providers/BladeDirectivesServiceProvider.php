@@ -87,7 +87,8 @@ class BladeDirectivesServiceProvider extends ServiceProvider
             $value = isset($parts[1]) ? $parts[1] : "''";
             $readonly = isset($parts[2]) && trim($parts[2]) === 'true' ? 'readonly' : '';
             $oninput = isset($parts[3]) ? trim($parts[3], "'\"") : '';
-            $oninputAttr = $oninput ? 'oninput="' . $oninput . '"' : '';
+            $oninputAttr = $oninput ? 'oninput="'.$oninput.'"' : '';
+
             return "<?php echo '<div class=\"input-group\"><span class=\"input-group-text\">$</span><input type=\"text\" name=\"{$name}\" id=\"{$name}\" class=\"form-control\" {$readonly} {$oninputAttr} data-inputmask=\'\"alias\": \"currency\", \"rightAlign\": false, \"groupSeparator\": \",\", \"digits\": 2, \"digitsOptional\": false, \"placeholder\": \"0\"\' data-mask value=\"' . htmlspecialchars({$value} ?? '') . '\"></div>'; ?>";
         });
 
