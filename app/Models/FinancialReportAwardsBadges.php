@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class FinancialReportAwardsBadges extends Model
 {
-
     protected $primaryKey = 'id';
 
     protected $guarded = []; // ALL columns are mass-assignable
