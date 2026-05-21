@@ -767,7 +767,7 @@ class UserController extends Controller implements HasMiddleware
                 // OR CC only for this conference
                     ->orWhere(function ($q) use ($chConfId) {
                         $q->where('position_id', CoordinatorPosition::CC)
-                        ->where('conference_id', $chConfId);
+                            ->where('conference_id', $chConfId);
                     });
             })
             ->get();

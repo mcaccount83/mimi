@@ -162,6 +162,7 @@ class TechReportController extends Controller implements HasMiddleware
 
             if ($PresDetails === null) {
                 $chapterBdData[$chapter->id] = null; // or some default
+
                 continue;
             }
 
@@ -898,7 +899,7 @@ class TechReportController extends Controller implements HasMiddleware
 
     private function addFinancialPdfColumn(array $getFiscalYearOptions): void
     {
-        $newColumnName   = $getFiscalYearOptions['fiscalYearEnd'].'_financial_pdf_path';
+        $newColumnName = $getFiscalYearOptions['fiscalYearEnd'].'_financial_pdf_path';
         $afterColumnName = $getFiscalYearOptions['fiscalYearStart'].'_financial_pdf_path';
 
         Schema::table('documents_eoy', function (Blueprint $table) use ($newColumnName, $afterColumnName) {
@@ -1317,7 +1318,7 @@ class TechReportController extends Controller implements HasMiddleware
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error adding folder. Please try again.'
+                'message' => 'Error adding folder. Please try again.',
             ], 500);
         }
     }

@@ -114,7 +114,9 @@ class ForumEventSubscriber
     public function handleNewThread(UserCreatedThread $event)
     {
         $thread = $event->thread;
-        if (is_null($thread->firstPost?->approved_at)) return;
+        if (is_null($thread->firstPost?->approved_at)) {
+            return;
+        }
 
         $post = $thread->firstPost;
         $category = $thread->category;
