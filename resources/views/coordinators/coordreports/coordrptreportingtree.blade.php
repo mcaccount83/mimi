@@ -116,7 +116,7 @@
                 style {{ $conference }} fill:none,stroke:none
 
                 %% Conference-level coordinators with their manager groups
-                @if (isset($regions_data['_conf']))
+                @isset($regions_data['_conf'])
                     @php
                         $conf_ids = $regions_data['_conf'];
                         // Group conference-level coordinators by their managers
@@ -150,7 +150,7 @@
                             @endforeach
                         @endif
                     @endforeach
-                @endif
+                @endisset
 
                 %% Region subgraphs with nested manager groups
                 @foreach ($regions_data as $region => $ids)

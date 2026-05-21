@@ -211,7 +211,7 @@
             'forum/*',
         ];
     @endphp
-    @if (isset($forumRoute))
+    @isset($forumRoute)
         <li class="nav-item">
              @if ($userTypeId == \App\Enums\UserTypeEnum::COORD && isset($bdTypeId) && $bdTypeId !== null)
         <a href="#" target="_blank" class="nav-link" style="cursor: default; pointer-events: none; background-color: transparent !important; color: #c2c7d0 !important;">
@@ -228,7 +228,7 @@
                 </p>
             </a>
         </li>
-    @endif --}}
+    @endisset --}}
 
     <!-- Main MC Webstie -->
     <li class="nav-item">
