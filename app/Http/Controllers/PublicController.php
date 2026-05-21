@@ -119,7 +119,7 @@ class PublicController extends Controller
      */
     public function chapterResources(Request $request): View
     {
-        $user = Auth::user();
+        $user = $request->user();
         $userTypeId = null;
 
         if ($user) {
@@ -245,7 +245,7 @@ class PublicController extends Controller
                 $urlPath = substr($urlPath, strlen($basePath));
             }
 
-            // $internalRequest = Request::create($urlPath, 'GET', [], $request->cookies->all());
+            // $internalRequest = $request->create($urlPath, 'GET', [], $request->cookies->all());
             $internalRequest = $request->create($urlPath, 'GET', [], $request->cookies->all());
             $internalRequest->setLaravelSession($request->session());
             $response = app()->handle($internalRequest);

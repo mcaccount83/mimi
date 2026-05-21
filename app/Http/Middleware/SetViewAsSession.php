@@ -15,7 +15,7 @@ class SetViewAsSession
         if ($userTypeId == UserTypeEnum::COORD) {
             session(['viewing_as' => 'president']);
         } else {
-            session()->forget('viewing_as');
+            $request->session()->forget('viewing_as');
         }
 
         return $next($request);
