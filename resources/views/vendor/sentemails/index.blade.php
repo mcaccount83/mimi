@@ -6,20 +6,17 @@
 <script src="https://cdn.tailwindcss.com"></script>
 
 @section('content')
-{{-- @if(session('error')) --}}
 @session('error')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         Swal.fire({
             icon: 'error',
             title: 'Attachment Not Found',
-            // text: '{{ session('error') }}',
             text: '{{ $value }}',
         });
     });
 </script>
 @endsession
-{{-- @endif --}}
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid table-container">
