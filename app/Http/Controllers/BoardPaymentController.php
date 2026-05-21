@@ -182,7 +182,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
         if (! $recaptchaResult['success']) {
-            // return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+            // return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
             return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
         }
 
@@ -328,7 +328,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
         if (! $recaptchaResult['success']) {
-            // return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+            // return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
             return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
         }
 
@@ -497,7 +497,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
         if (! $recaptchaResult['success']) {
-            // return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
+            // return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
             return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
         }
 
