@@ -37,4 +37,9 @@ export default defineConfig(({ mode }) => {
             }
         }
     };
+    server: {
+        watch: {
+            ignored: ['**/storage/framework/views/**'],
+        },
+    },
 });
