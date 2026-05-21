@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Unguarded]
 class BoardsDisbanded extends Model
 {
-
     protected function casts(): array
     {
         return [

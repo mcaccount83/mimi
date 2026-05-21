@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 #[Unguarded]
 class FinancialReportReview extends Model
 {
-
     protected function casts(): array
     {
         return [

@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 #[Unguarded]
 class PaymentLog extends Model
 {
-
     protected function casts(): array
     {
         return [

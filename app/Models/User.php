@@ -21,7 +21,6 @@ class User extends Authenticatable
 {
     use Notifiable; // Used for sending automated emails like resetting password.
 
-
     /**
      * Get the attributes that should be cast.
      *

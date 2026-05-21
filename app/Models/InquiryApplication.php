@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 #[Unguarded]
 class InquiryApplication extends Model
 {
-
     protected function casts(): array
     {
         return [

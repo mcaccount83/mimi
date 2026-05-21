@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 #[Unguarded]
 class Coordinators extends Model
 {
-
     protected function casts(): array
     {
         return [

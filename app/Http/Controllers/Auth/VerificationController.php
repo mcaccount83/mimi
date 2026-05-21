@@ -18,5 +18,4 @@ class VerificationController extends Controller
      * Where to redirect users after verification.
      */
     protected $redirectTo = AppServiceProvider::HOME;
-
 }

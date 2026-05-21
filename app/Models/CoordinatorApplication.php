@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Unguarded]
 class CoordinatorApplication extends Model
 {
-
     protected function casts(): array
     {
         return [

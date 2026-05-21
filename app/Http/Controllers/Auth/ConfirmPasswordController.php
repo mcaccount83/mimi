@@ -16,5 +16,4 @@ class ConfirmPasswordController extends Controller
      * Where to redirect users when the intended url fails.
      */
     protected $redirectTo = AppServiceProvider::HOME;
-
 }

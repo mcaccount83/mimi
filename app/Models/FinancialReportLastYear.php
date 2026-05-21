@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Model;
 #[Unguarded]
 class FinancialReportLastYear extends Model
 {
-
     protected function casts(): array
     {
         return [

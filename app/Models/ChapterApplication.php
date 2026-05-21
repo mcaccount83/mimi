@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Unguarded]
 class ChapterApplication extends Model
 {
-
     protected function casts(): array
     {
         return [

@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 #[Table('financial_report_awards', 'id')]
 class FinancialReportAwards extends Model
 {
-
     protected function casts(): array
     {
         return [
