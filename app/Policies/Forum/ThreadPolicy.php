@@ -61,12 +61,12 @@ class ThreadPolicy extends ForumThreadPolicy
     public function deletePosts(User $user, Thread $thread): bool
     {
         return $this->forumConditions->canManageLists($user);
-            // || $this->forumConditions->canManageThreads($user, $thread);
+        // || $this->forumConditions->canManageThreads($user, $thread);
     }
 
     public function restorePosts(User $user, Thread $thread): bool
     {
         return $this->forumConditions->canManageLists($user);
-            // || $this->forumConditions->canManageThreads($user, $thread);
+        // || $this->forumConditions->canManageThreads($user, $thread);
     }
 }
