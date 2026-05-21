@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class FinancialReportAwardsBadges extends Model
 {
-    protected $table = 'financial_report_awards_badges';
 
     protected $primaryKey = 'id';
 
