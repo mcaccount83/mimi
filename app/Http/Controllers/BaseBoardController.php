@@ -140,10 +140,9 @@ class BaseBoardController extends Controller
             'chActiveId' => $chActiveId, 'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord,
             'emailCC' => $emailCC, 'chActiveStatus' => $chActiveStatus, 'reviewerEmail' => $reviewerEmail, 'awards' => $chFinancialReport, 'pcEmail' => $pcEmail,
             'allCountries' => $allCountries, 'pcDetails' => $pcDetails, 'chDisbanded' => $chDisbanded, 'allProbation' => $allProbation, 'chEOYDocuments' => $chEOYDocuments,
-            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
+            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments, 'chAwards' => $chAwards, 'currentApprovedAwards' => $currentApprovedAwards, 'allAwards' => $allAwards,
             'probationReason' => $probationReason, 'dueDate' => $dueDate, 'startMonthId' => $startMonthId, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink,
             'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'startDate' => $startDate, 'renewalDate' => $renewalDate, 'financialReportPdfs' => $financialReportPdfs,
-            'chAwards' => $chAwards, 'currentApprovedAwards' => $currentApprovedAwards, 'allAwards' => $allAwards
         ], $boardDetails); // Add board member details from appropriate table
     }
 

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AdminIRS extends Model
 {
@@ -12,7 +13,7 @@ class AdminIRS extends Model
 
     protected $guarded = []; // ALL columns are mass-assignable
 
-    public function fiscalYear()
+    public function fiscalYear(): BelongsTo
     {
         return $this->belongsTo(FiscalYear::class, 'fiscal_year_id', 'id');
     }

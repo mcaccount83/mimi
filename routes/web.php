@@ -5,7 +5,6 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\BoardController;
-// use App\Http\Controllers\BoardControllerNew;
 use App\Http\Controllers\BoardPaymentController;
 use App\Http\Controllers\BoardPendingController;
 use App\Http\Controllers\ChapterController;
@@ -62,25 +61,17 @@ Route::get('/test-429', function () {
 });
 
 // Login and Logout Routes...Public, No login required...Used for Board & Coordinator Layouts
-Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/', [LoginController::class, 'showLoginForm']);
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 Route::post('logout', [LoginController::class, 'logout']);
 
-// Password Reset Routes...Public, No login required...Used for Board & Coordinator Layouts
+// Password Reset Routes...Public, No login required, Used for Board & Coordinator Layouts
 Route::get('password/request', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
 Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
-
-// UserControllert Routes...Public, No login required...Used for Board & Coordinator Layouts
-Route::get('/checkemail/{email}', [UserController::class, 'checkEmail'])->name('checkemail');
-Route::post('/checkpassword', [UserController::class, 'checkCurrentPassword'])->name('checkpassword');
-Route::post('/updatepassword', [UserController::class, 'updatePassword'])->name('updatepassword');
-Route::get('/load-email-details/{chId}', [UserController::class, 'loadEmailDetails'])->name('load.email.details');
-Route::get('/load-coordinator-list/{id}', [UserController::class, 'loadCoordinatorList'])->name('load.coordinator.list');
 
 // Public Page Routes...Public, No login required
 Route::get('/chapter-links', [PublicController::class, 'chapterLinks'])->name('chapter.links');
@@ -101,12 +92,20 @@ Route::get('/newinquiry', [PublicController::class, 'editNewInquiry'])->name('pu
 Route::post('/updatenewinquiry', [PublicController::class, 'updateNewInquiry'])->name('public.updatenewinquiry');
 Route::get('/newinquirysuccess', [PublicController::class, 'viewNewInquiry'])->name('public.newinquirysuccess');
 Route::get('/grantlist', [PublicController::class, 'viewGrantList'])->name('public.grantlist');
-
 Route::get('/grantlist-pdf', [PDFController::class, 'generateGrantList'])->name('pdf.grantlist');
 Route::post('/grant-list-pdf', [PDFController::class, 'saveGrantList'])->name('pdf.generategrantlist');
 
+// UserControllert Routes...Board/Coord Login Required, Used for Board & Coordinator Layouts
+Route::middleware('auth')->group(function () {
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/checkemail/{email}', [UserController::class, 'checkEmail'])->name('checkemail');
+    Route::post('/checkpassword', [UserController::class, 'checkCurrentPassword'])->name('checkpassword');
+    Route::post('/updatepassword', [UserController::class, 'updatePassword'])->name('updatepassword');
+    Route::get('/load-email-details/{chId}', [UserController::class, 'loadEmailDetails'])->name('load.email.details');
+    Route::get('/load-coordinator-list/{id}', [UserController::class, 'loadCoordinatorList'])->name('load.coordinator.list');
+});
 
-// In your routes/web.php or wherever you have routes
+// Sent Email Log Routes...Coordinator Login Required
 Route::get(config('sentemails.routepath'), [MySentEmailsController::class, 'index'])
     ->middleware(config('sentemails.middleware'))
     ->name('sentemails');
@@ -115,7 +114,6 @@ Route::get('adminreports/sentemails/attachment-{id}', [MySentEmailsController::c
     ->middleware(['web', 'auth'])
     ->name('sentemails.downloadAttachment');
 
-// Keep the other package routes
 Route::get(config('sentemails.routepath').'/{id}', [\Dcblogdev\LaravelSentEmails\Controllers\SentEmailsController::class, 'show'])
     ->middleware(config('sentemails.middleware'))
     ->name('sentemails.show');
@@ -135,11 +133,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/techreports/viewasactivechapter', [TechReportController::class, 'viewAsActiveChapter'])->name('techreports.viewaschapter.active');
     Route::get('/techreports/viewasdisbandchapter', [TechReportController::class, 'viewAsDisbandedChapter'])->name('techreports.viewaschapter.disbanded');
     Route::get('/techreports/viewaspendingchapter', [TechReportController::class, 'viewAsPendingChapter'])->name('techreports.viewaschapter.pending');
-    // Route::get('/techreports/viewasoutgoingchapter', [TechReportController::class, 'viewAsOutgoingChapter'])->name('techreports.viewaschapter.outgoing');
-
-    // Route::get('/techreports/chapterlist', [TechReportController::class, 'listActiveChapters'])->name('techreports.chapterlist');
-    // Route::get('/techreports/chapterlistzapped', [TechReportController::class, 'listZappedChapters'])->name('techreports.chapterlistzapped');
-    // Route::get('/techreports/chapterlistpending', [TechReportController::class, 'listPendingChapters'])->name('techreports.chapterlistpending');
     Route::post('/techreports/updatechapterdelete', [TechReportController::class, 'updateChapterDelete'])->name('techreports.updatechapterdelete');
     Route::post('/techreports/updatecoordinatordelete', [TechReportController::class, 'updateCoordinatorDelete'])->name('techreports.updatecoordinatordelete');
     Route::post('/techreports/resetProbationSubmission', [TechReportController::class, 'resetProbationSubmission'])->name('techreports.resetProbationSubmission');
@@ -147,7 +140,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/techreports/eoy/resetyear', [TechReportController::class, 'resetYear'])->name('techreports.resetyear');
     Route::post('/techreports/eoy/updateirssept', [TechReportController::class, 'updateFilingSept'])->name('techreports.updateirssept');
     Route::post('/techreports/eoy/updateirsdec', [TechReportController::class, 'updateFilingDec'])->name('techreports.updateirsdec');
-    // Route::post('/techreports/eoy/updatetesteoy', [TechReportController::class, 'updateTestEOY'])->name('techreports.updatetesteoy');
     Route::post('/techreports/eoy/updateirscorrections', [TechReportController::class, 'updateFilingCorrections'])->name('techreports.updateirscorrections');
     Route::post('/techreports/eoy/updateirscorrections2', [TechReportController::class, 'updateFilingCorrections2'])->name('techreports.updateirscorrections2');
     Route::post('/techreports/eoy/updateirssubordinate', [TechReportController::class, 'updateSubordinateFiling'])->name('techreports.updateirssubordinate');
@@ -171,10 +163,6 @@ Route::middleware('auth')->group(function () {
 
 // Admin Controller Routes...Coordinator Login Required
 Route::middleware('auth')->group(function () {
-    // Route::get('/adminreports/maillog', [AdminReportController::class, 'showMailLog'])->name('adminreports.maillog');
-    // Route::get('/adminreports/maildetails/{id}', [AdminReportController::class, 'showMailDetails'])->name('adminreports.maildetails');
-    // Route::get(config('sentemails.routepath').'/body/{id}', [\Dcblogdev\LaravelSentEmails\Controllers\SentEmailsController::class, 'body'])
-    // ->middleware(config('sentemails.middleware'))->name('sentemails.body');
     Route::get('/adminreports/paymentlog', [AdminReportController::class, 'showPaymentLog'])->name('adminreports.paymentlog');
     Route::get('/adminreports/paymentdetails/{id}', [AdminReportController::class, 'showPaymentDetails'])->name('adminreports.paymentdetails');
     Route::get('/adminreports/donationlog', [AdminReportController::class, 'showDonationLog'])->name('adminreports.donationlog');
@@ -196,15 +184,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/userreports/duplicateuser', [UserReportController::class, 'showDuplicate'])->name('userreports.duplicateuser');
     Route::get('/userreports/duplicateboardid', [UserReportController::class, 'showDuplicateId'])->name('userreports.duplicateboardid');
     Route::get('/userreports/nopresident', [UserReportController::class, 'showNoPresident'])->name('userreports.nopresident');
-    // Route::get('/userreports/nopresidentinactive', [UserReportController::class, 'showNoPresidentInactive'])->name('userreports.nopresidentinactive');
     Route::get('/userreports/addnewboard/{id}', [UserReportController::class, 'addBoardNew'])->name('userreports.addnewboard');
     Route::post('/userreports/updatenewboard/{id}', [UserReportController::class, 'updateBoardNew'])->name('userreports.updatenewboard');
-       Route::get('/userreports/noinquiriesemail', [UserReportController::class, 'showNoInquiriesEmail'])->name('userreports.noinquiriesemail');
+    Route::get('/userreports/noinquiriesemail', [UserReportController::class, 'showNoInquiriesEmail'])->name('userreports.noinquiriesemail');
     Route::get('/userreports/addinquiriesemail/{id}', [UserReportController::class, 'addInquiriesEmail'])->name('userreports.addinquiriesemail');
     Route::post('/userreports/updateinquiriesemail/{id}', [UserReportController::class, 'updateInquiriesEmail'])->name('userreports.updateinquiriesemail');
-    // Route::get('/userreports/noactivechapter', [UserReportController::class, 'showNoActiveChapter'])->name('userreports.noactivechapter');
     Route::get('/userreports/userdetailsmismatch', [UserReportController::class, 'showUserDetailsMismatch'])->name('userreports.userdetailsmismatch');
-    // Route::get('/userreports/usernoactivecoord', [UserReportController::class, 'showUserNoActiveCoord'])->name('userreports.usernoactivecoord');
     Route::get('/userreports/edituser/{id}', [UserReportController::class, 'editUserInformation'])->name('userreports.edituser');
     Route::post('/userreports/updateuser/{id}', [UserReportController::class, 'updateUserInformation'])->name('userreports.updateuser');
     Route::get('/userreports/noactiveboard', [UserReportController::class, 'showNoActiveBoard'])->name('userreports.noactiveboard');
@@ -253,7 +238,6 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/inquiries/inquiries', [ChapterController::class, 'showChapterInquiries'])->name('chapters.chapinquiries');
     Route::get('/inquiries/inquirieszapped', [ChapterController::class, 'showZappedChapterInquiries'])->name('chapters.chapinquirieszapped');
-
     Route::get('/inquiries/inquiryapplication', [InquiriesController::class, 'showInquiryApplication'])->name('inquiries.inquiryapplication');
     Route::get('/inquiries/inquiryapplicationedit/{id}', [InquiriesController::class, 'editInquiryApplication'])->name('inquiries.editinquiryapplication');
     Route::post('/inquiries/inquiryapplicationupdate/{id}', [InquiriesController::class, 'updateInquiryApplication'])->name('inquiries.updateinquiryapplication');
@@ -283,10 +267,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/chapter/detailsupdate/{id}', [ChapterController::class, 'updateChapterDetails'])->name('chapters.update');
     Route::get('/chapter/boardedit/{id}', [ChapterController::class, 'editChapterBoard'])->name('chapters.editboard');
     Route::post('/chapter/boardupdate/{id}', [ChapterController::class, 'updateChapterBoard'])->name('chapters.updateboard');
-    // Route::get('/online/website', [ChapterController::class, 'showChapterWebsite'])->name('chapters.chapwebsite');
-    // Route::get('/online/socialmedia', [ChapterController::class, 'showRptSocialMedia'])->name('chapters.chapsocialmedia');
-    // Route::get('/online/websiteedit/{id}', [ChapterController::class, 'editChapterWebsite'])->name('chapters.editwebsite');
-    // Route::post('/online/websiteupdate/{id}', [ChapterController::class, 'updateChapterWebsite'])->name('chapters.updatewebsite');
 });
 
 // ChapterReport Controller Routes...Coordinator Login Required
@@ -313,7 +293,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/eoy/boardreport/reminder', [EmailController::class, 'sendEOYBoardReportReminder'])->name('eoyreports.eoyboardreportreminder');
     Route::get('/eoy/financialreport/reminder', [EmailController::class, 'sendEOYFinancialReportReminder'])->name('eoyreports.eoyfinancialreportreminder');
     Route::get('/eoy/status/reminder', [EmailController::class, 'sendEOYStatusReminder'])->name('eoyreports.eoystatusreminder');
-    // Route::get('/eoy/chapterawards', [EmailController::class, 'sendEOYChapterAwards'])->name('eoyreports.eoychapterawards');
     Route::post('/eoy/chapterawards', [EmailController::class, 'sendEOYChapterAwards'])->name('eoyreports.eoychapterawards');
     Route::post('/inquiries/sendnochapter', [EmailController::class, 'sendNoChapterInquiries'])->name('inquiries.sendnochapter');
     Route::post('/inquiries/sendyeschapter', [EmailController::class, 'sendYesChapterInquiries'])->name('inquiries.sendyeschapter');
@@ -497,7 +476,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/files/storeAward/{id}', [GoogleController::class, 'storeAward']);
     Route::post('/files/storeResources/{id}', [GoogleController::class, 'storeResources'])->name('store.resources');
     Route::post('/files/storeToolkit/{id}', [GoogleController::class, 'storeToolkit'])->name('store.toolkit');
-Route::post('/files/storeAwardBadges/{id}', [GoogleController::class, 'storeAwardBadges'])->name('store.awardbadges');
+    Route::post('/files/storeAwardBadges/{id}', [GoogleController::class, 'storeAwardBadges'])->name('store.awardbadges');
     Route::post('/files/storePhotos/{id}', [GoogleController::class, 'storePhotos']);
 });
 

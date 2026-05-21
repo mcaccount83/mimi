@@ -7,10 +7,10 @@ use App\Enums\CoordinatorPosition;
 use App\Enums\ProbationReasonEnum;
 use App\Enums\UserStatusEnum;
 use App\Enums\UserTypeEnum;
-// use App\Http\Requests\AddAdminEmailTechReportRequest;
-// use App\Http\Requests\AddGoogleDriveTechReportRequest;
-// use App\Http\Requests\UpdateAdminEmailTechReportRequest;
-// use App\Http\Requests\UpdateGoogleDriveTechReportRequest;
+use App\Http\Requests\AddAdminEmailTechReportRequest;
+use App\Http\Requests\AddGoogleDriveTechReportRequest;
+use App\Http\Requests\UpdateAdminEmailTechReportRequest;
+use App\Http\Requests\UpdateGoogleDriveTechReportRequest;
 use App\Models\Admin;
 use App\Models\AdminEmail;
 use App\Models\AdminIRS;
@@ -121,6 +121,7 @@ class TechReportController extends Controller implements HasMiddleware
 
             if ($PresDetails === null) {
                 $chapterBdData[$chapter->id] = null; // or some default
+
                 continue;
             }
 
@@ -155,7 +156,7 @@ class TechReportController extends Controller implements HasMiddleware
         $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
         $chapterBdData = [];
-            foreach ($chapterList as $chapter) {
+        foreach ($chapterList as $chapter) {
             $chDetails = $this->baseBoardController->getChapterDetails($chapter->id);
             $PresDetails = $chDetails['PresDetails'] ?? null;
 
@@ -201,6 +202,7 @@ class TechReportController extends Controller implements HasMiddleware
 
             if ($PresDetails === null) {
                 $chapterBdData[$chapter->id] = null; // or some default
+
                 continue;
             }
 
@@ -332,23 +334,23 @@ class TechReportController extends Controller implements HasMiddleware
         $irsCorrectsionsListItems = [
             'Chapters with Wrong Fiscal Year Dates',
             'Chapters Not Found in IRS Database',
-            'Chapters who FILED with the Wrong Fiscal Year Dates'
+            'Chapters who FILED with the Wrong Fiscal Year Dates',
         ];
 
         $irsSubordinateListItems = [
             'All Chapters Currently Active',
             'Chapters Added this Fiscal Year',
-            'Chapters Removed this Fiscal Year'
+            'Chapters Removed this Fiscal Year',
         ];
 
         $irsUpdateListItems1 = [
             'Chapters Added since Subordinate Filing',
-            'Chapters Removed since Subordinate Filing'
+            'Chapters Removed since Subordinate Filing',
         ];
 
         $irsUpdateListItems2 = [
             'Chapters Added since Last Update',
-            'Chapters Removed since Last Update'
+            'Chapters Removed since Last Update',
         ];
 
         $unSubscribeListItems = [
@@ -896,15 +898,15 @@ class TechReportController extends Controller implements HasMiddleware
 
     private function addFinancialPdfColumn(array $getFiscalYearOptions): void
     {
-        $newColumnName   = $getFiscalYearOptions['fiscalYearEnd'] . '_financial_pdf_path';
-        $afterColumnName = $getFiscalYearOptions['fiscalYearStart'] . '_financial_pdf_path';
+        $newColumnName   = $getFiscalYearOptions['fiscalYearEnd'].'_financial_pdf_path';
+        $afterColumnName = $getFiscalYearOptions['fiscalYearStart'].'_financial_pdf_path';
 
         Schema::table('documents_eoy', function (Blueprint $table) use ($newColumnName, $afterColumnName) {
             $table->string($newColumnName, 255)->nullable()->after($afterColumnName);
         });
     }
 
-     private function archiveFinancialTables(array $getFiscalYearOptions): void
+    private function archiveFinancialTables(array $getFiscalYearOptions): void
     {
         $fiscalYearStart = $getFiscalYearOptions['fiscalYearStart'];
 
@@ -946,7 +948,9 @@ class TechReportController extends Controller implements HasMiddleware
         $allChapters = FinancialReport::whereNotNull('chapter_awards')->get();
         foreach ($allChapters as $report) {
             $awards = unserialize(base64_decode($report->chapter_awards));
-            if (! is_array($awards)) continue;
+            if (! is_array($awards)) {
+                continue;
+            }
 
             foreach ($awards as $award) {
                 if (! empty($award['awards_approved'])) {
@@ -954,7 +958,7 @@ class TechReportController extends Controller implements HasMiddleware
                         [
                             'chapter_id' => $report->chapter_id,
                             'awards_type' => $award['awards_type'],
-                            'report_year_id'  => $reportYearId,
+                            'report_year_id' => $reportYearId,
                             'notified' => $report->chapter_awards_notified,
                         ],
                         [
@@ -1294,17 +1298,10 @@ class TechReportController extends Controller implements HasMiddleware
 
     }
 
-    public function addGoogleDrive(Request $request)
+    public function addGoogleDrive(AddGoogleDriveTechReportRequest $request): JsonResponse
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'version' => 'nullable|string|max:50',
-            'folder_id' => 'required|string|max:255'
-        ]);
-
         try {
-            $drive = new GoogleDrive();
+            $drive = new GoogleDrive;
             $drive->name = $request->name;
             $drive->description = $request->description;
             $drive->version = $request->version;
@@ -1313,7 +1310,7 @@ class TechReportController extends Controller implements HasMiddleware
 
             return response()->json([
                 'success' => true,
-                'message' => 'Google Drive folder added successfully!'
+                'message' => 'Google Drive folder added successfully!',
             ]);
         } catch (\Exception $e) {
             Log::error('Google Drive folder creation error: '.$e->getMessage());
@@ -1325,15 +1322,8 @@ class TechReportController extends Controller implements HasMiddleware
         }
     }
 
-    public function updateGoogleDrive(Request $request, int $id)
+    public function updateGoogleDrive(UpdateGoogleDriveTechReportRequest $request, int $id): JsonResponse
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'version' => 'nullable|string|max:50',
-            'folder_id' => 'required|string|max:255'
-        ]);
-
         try {
             $drive = GoogleDrive::findOrFail($id);
             $drive->name = $request->name;
@@ -1390,16 +1380,10 @@ class TechReportController extends Controller implements HasMiddleware
 
     }
 
-    public function addAdminEmail(Request $request)
+    public function addAdminEmail(AddAdminEmailTechReportRequest $request): JsonResponse
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'email' => 'required|string|max:255' // Fixed: emial -> email
-        ]);
-
         try {
-            $admin = new AdminEmail();
+            $admin = new AdminEmail;
             $admin->name = $request->name;
             $admin->description = $request->description;
             $admin->email = $request->email;
@@ -1419,14 +1403,8 @@ class TechReportController extends Controller implements HasMiddleware
         }
     }
 
-    public function updateAdminEmail(Request $request, int $id)
+    public function updateAdminEmail(UpdateAdminEmailTechReportRequest $request, int $id): JsonResponse
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'email' => 'required|string|max:255' // Fixed: emial -> email
-        ]);
-
         try {
             $admin = AdminEmail::findOrFail($id);
             $admin->name = $request->name;
@@ -1578,8 +1556,8 @@ class TechReportController extends Controller implements HasMiddleware
                 $query->orderBy('state_short_name');
             },
         ])
-        ->orderBy('short_name')
-        ->get();
+            ->orderBy('short_name')
+            ->get();
 
         $data = ['confList' => $confList];
 
@@ -1594,18 +1572,18 @@ class TechReportController extends Controller implements HasMiddleware
                 $query->orderBy('state_short_name');
             },
         ])
-        ->join('conference', 'region.conference_id', '=', 'conference.id')
-        ->orderBy('conference.short_name')
-        ->orderBy('region.long_name')
-        ->select('region.*')
-        ->get();
+            ->join('conference', 'region.conference_id', '=', 'conference.id')
+            ->orderBy('conference.short_name')
+            ->orderBy('region.long_name')
+            ->select('region.*')
+            ->get();
 
         // Get all conferences for dropdown
         $conferenceList = Conference::orderBy('short_name')->get();
 
         $data = [
             'regList' => $regList,
-            'conferenceList' => $conferenceList
+            'conferenceList' => $conferenceList,
         ];
 
         return view('coordinators.techreports.regionlist')->with($data);

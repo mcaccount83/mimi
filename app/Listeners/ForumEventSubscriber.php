@@ -15,7 +15,6 @@ use TeamTeaTime\Forum\Events\UserBulkApprovedThreads;
 use TeamTeaTime\Forum\Events\UserCreatedPost;
 use TeamTeaTime\Forum\Events\UserCreatedThread;
 
-
 class ForumEventSubscriber
 {
     public function __construct(
@@ -90,7 +89,9 @@ class ForumEventSubscriber
     public function handleNewPost(UserCreatedPost $event)
     {
         $post = $event->post;
-        if (is_null($post->approved_at)) return;
+        if (is_null($post->approved_at)) {
+            return;
+        }
 
         $thread = $post->thread;
         $category = $thread->category;

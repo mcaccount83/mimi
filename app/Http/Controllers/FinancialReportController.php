@@ -247,7 +247,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             $MonetaryDonation[$i]['mon_donation_info'] = $input['DonorInfo'.$i] ?? null;
             $MonetaryDonation[$i]['mon_donation_amount'] = $input['DonationAmount'.$i] ?? null;
             try {
-                $MonetaryDonation[$i]['mon_donation_date'] = !empty($rawDate) && $rawDate !== '__/__/____'
+                $MonetaryDonation[$i]['mon_donation_date'] = ! empty($rawDate) && $rawDate !== '__/__/____'
                     ? Carbon::createFromFormat('m/d/Y', $rawDate)->format('Y-m-d') : null;
             } catch (\Exception $e) {
                 $MonetaryDonation[$i]['mon_donation_date'] = null;
@@ -262,7 +262,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             $rawDate = $input['NonMonDonationDate'.$i] ?? null;  // <-- missing!
             $NonMonetaryDonation[$i]['nonmon_donation_desc'] = $input['NonMonDonationDesc'.$i] ?? null;
             $NonMonetaryDonation[$i]['nonmon_donation_info'] = $input['NonMonDonorInfo'.$i] ?? null;
-            $NonMonetaryDonation[$i]['nonmon_donation_date'] = !empty($rawDate) && $rawDate !== '__/__/____'
+            $NonMonetaryDonation[$i]['nonmon_donation_date'] = ! empty($rawDate) && $rawDate !== '__/__/____'
                 ? Carbon::createFromFormat('m/d/Y', $rawDate)->format('Y-m-d') : null;
         }
         $financialReport->non_monetary_donations_to_chapter = base64_encode(serialize($NonMonetaryDonation));
@@ -289,7 +289,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         $FieldCount = $input['BankRecRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
             $rawDate = $input['BankRecDate'.$i] ?? null;  // <-- missing!
-            $BankRecArray[$i]['bank_rec_date'] = !empty($rawDate) && $rawDate !== '__/__/____'
+            $BankRecArray[$i]['bank_rec_date'] = ! empty($rawDate) && $rawDate !== '__/__/____'
                 ? Carbon::createFromFormat('m/d/Y', $rawDate)->format('Y-m-d') : null;
             $BankRecArray[$i]['bank_rec_check_no'] = $input['BankRecCheckNo'.$i] ?? null;
             $BankRecArray[$i]['bank_rec_desc'] = $input['BankRecDesc'.$i] ?? null;
@@ -675,7 +675,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             $chDocuments = $baseQuery['chDocuments'];
             $chEOYDocuments = $baseQuery['chEOYDocuments'];
             $chIRSDocuments = $baseQuery['chIRSDocuments'];
-        $chReportDocuments = $baseQuery['chReportDocuments'];
+            $chReportDocuments = $baseQuery['chReportDocuments'];
             $chFinancialReport = $baseQuery['chFinancialReport'];
             $emailListChap = $baseQuery['emailListChap'];
             $emailListCoord = $baseQuery['emailListCoord'];

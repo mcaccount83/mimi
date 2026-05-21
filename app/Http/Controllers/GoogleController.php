@@ -118,6 +118,7 @@ class GoogleController extends Controller implements HasMiddleware
         }
 
         Log::error('Google Drive download failed', ['fileId' => $fileId, 'status' => $response->status()]);
+
         return null;
     }
 
@@ -416,6 +417,7 @@ class GoogleController extends Controller implements HasMiddleware
                 'message' => $e->getMessage(),
                 'line' => $e->getLine(),
             ]);
+
             return response()->json([
                 'status' => 'error',
                 'message' => 'An error occurred while uploading the file.',

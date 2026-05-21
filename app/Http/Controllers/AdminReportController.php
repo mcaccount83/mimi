@@ -11,6 +11,7 @@ use App\Models\Payments;
 use App\Models\Region;
 use App\Models\RegionInquiry;
 use App\Services\PositionConditionsService;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,7 +20,6 @@ use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
-use Carbon\Carbon;
 
 class AdminReportController extends Controller implements HasMiddleware
 {
@@ -211,7 +211,7 @@ class AdminReportController extends Controller implements HasMiddleware
             $chapter->updated_id = $updatedId;
             $chapter->save();
 
-            $payments->rereg_date = $request->ch_duespaid ? Carbon::createFromFormat('m/d/Y', $request->ch_duespaid)->format('Y-m-d'): null;
+            $payments->rereg_date = $request->ch_duespaid ? Carbon::createFromFormat('m/d/Y', $request->ch_duespaid)->format('Y-m-d') : null;
             $payments->rereg_payment = isset($request->ch_payment) ? preg_replace('/[^\d.]/', '', $request->ch_payment) : null;
             $payments->rereg_members = $request->ch_members;
             $payments->save();
@@ -350,7 +350,7 @@ class AdminReportController extends Controller implements HasMiddleware
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed.',
-                'errors' => $e->errors()
+                'errors' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
             Log::error('Inquiries update error: '.$e->getMessage());

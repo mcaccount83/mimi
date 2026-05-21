@@ -126,7 +126,7 @@ class MySentEmailsController extends Controller implements HasMiddleware
         $attachment = \Dcblogdev\LaravelSentEmails\Models\SentEmailAttachment::findOrFail($id);
 
         $privatePath = storage_path('app/private/'.$attachment->path);
-        $legacyPath  = storage_path('app/'.$attachment->path);
+        $legacyPath = storage_path('app/'.$attachment->path);
 
         if (file_exists($privatePath)) {
             return response()->file($privatePath, ['Content-Type' => 'application/pdf']);

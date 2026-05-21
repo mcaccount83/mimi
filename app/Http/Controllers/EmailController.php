@@ -869,7 +869,7 @@ class EmailController extends Controller implements HasMiddleware
                     if ($fileContent) {
                         $badgeAttachments[] = [
                             'content' => base64_encode($fileContent),
-                            'name' => $awardType->type_short_name . '.png',
+                            'name' => $awardType->type_short_name.'.png',
                             'mime' => 'image/png',
                         ];
                     }
