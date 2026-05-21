@@ -12,11 +12,15 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 #[Unguarded]
 class Chapters extends Model
 {
-    protected $casts = [
-        'status_id' => 'integer',
-        'active_status' => 'integer',
-        'created_at' => 'datetime',
-    ];
+
+    protected function casts(): array
+    {
+        return [
+            'status_id' => 'integer',
+            'active_status' => 'integer',
+            'created_at' => 'datetime',
+        ];
+    }
 
     public function boards(): HasMany
     {

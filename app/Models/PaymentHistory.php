@@ -11,10 +11,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Unguarded]
 class PaymentHistory extends Model
 {
-    protected $casts = [
-        'payment_date' => 'date',
-        'payment_amount' => 'decimal:2',
-    ];
+
+    protected function casts(): array
+    {
+        return [
+            'payment_date' => 'date',
+            'payment_amount' => 'decimal:2',
+        ];
+    }
 
     public function chapter(): BelongsTo
     {

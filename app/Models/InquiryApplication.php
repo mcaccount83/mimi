@@ -12,9 +12,13 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 #[Unguarded]
 class InquiryApplication extends Model
 {
-    protected $casts = [
-        'created_at' => 'datetime',
-    ];
+
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime',
+        ];
+    }
 
     public function chapter(): BelongsTo
     {

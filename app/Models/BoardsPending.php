@@ -12,9 +12,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Unguarded]
 class BoardsPending extends Model
 {
-    protected $casts = [
-        'created_at' => 'datetime',
-    ];
+
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime',
+        ];
+    }
 
     public function user(): BelongsTo
     {

@@ -11,10 +11,14 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 #[Unguarded]
 class Coordinators extends Model
 {
-    protected $casts = [
-        'active_status' => 'integer',
-        'created_at' => 'datetime',
-    ];
+
+    protected function casts(): array
+    {
+        return [
+            'active_status' => 'integer',
+            'created_at' => 'datetime',
+        ];
+    }
 
     public function coordTree(): HasOne
     {

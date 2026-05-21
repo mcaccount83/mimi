@@ -9,10 +9,14 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 #[Unguarded]
 class PaymentLog extends Model
 {
-    protected $casts = [
-        'request_data' => 'array',
-        'response_data' => 'array',
-    ];
+
+    protected function casts(): array
+    {
+        return [
+            'request_data' => 'array',
+            'response_data' => 'array',
+        ];
+    }
 
     public function board(): HasOne
     {

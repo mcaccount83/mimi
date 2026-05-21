@@ -21,11 +21,20 @@ class User extends Authenticatable
 {
     use Notifiable; // Used for sending automated emails like resetting password.
 
-    protected $casts = [
-        'type_id' => 'integer',
-        'is_active' => 'integer',
-        'is_admin' => 'integer',
-    ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'type_id' => 'integer',
+            'is_active' => 'integer',
+            'is_admin' => 'integer',
+        ];
+    }
 
     public function coordinator(): HasOne
     {

@@ -11,9 +11,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Unguarded]
 class ChapterApplication extends Model
 {
-    protected $casts = [
-        'created_at' => 'datetime',
-    ];
+
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime',
+        ];
+    }
 
     public function chapter(): BelongsTo
     {

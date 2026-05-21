@@ -10,7 +10,11 @@ use Illuminate\Database\Eloquent\Model;
 #[Unguarded]
 class FinancialReportFinal extends Model
 {
-    protected $casts = [
-        'created_at' => 'datetime',
-    ];
+
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime',
+        ];
+    }
 }
