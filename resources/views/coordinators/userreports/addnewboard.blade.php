@@ -120,7 +120,7 @@
                             </div>
                             <label class="col-sm-2 mb-3 col-form-label"></label>
                             <div class="col-sm-5 mb-3">
-                            <input type="text" name="ch_pre_email" id="ch_pre_email" class="form-control" required placeholder="Email Address" >
+                            <input type="email" name="ch_pre_email" id="ch_pre_email" class="form-control" required placeholder="Email Address" >
                             </div>
                             <div class="col-sm-5 mb-3">
                                 @phoneInput('ch_pre_phone')

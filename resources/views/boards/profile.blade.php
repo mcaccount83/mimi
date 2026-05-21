@@ -33,7 +33,7 @@
                             </div>
                             <label class="col-sm-2 mb-1 col-form-label"></label>
                             <div class="col-sm-5 mb-1">
-                            <input type="text" name="ch_bor_email" id="ch_bor_email" class="form-control" value="{{ $borDetails->email }}" required placeholder="Email Address" >
+                            <input type="email" name="ch_bor_email" id="ch_bor_email" class="form-control" value="{{ $borDetails->email }}" required placeholder="Email Address" >
                             </div>
                             <div class="col-sm-5 mb-1">
                                 @phoneInput('ch_bor_phone', $borDetails->phone)

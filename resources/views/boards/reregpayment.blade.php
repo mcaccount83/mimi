@@ -203,7 +203,7 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <label>Cardholder Email</label> <span class="field-required">*</span>
-                                                <input type="text" name="email" id="email" class="form-control"  required >
+                                                <input type="email" name="email" id="email" class="form-control"  required >
                                             </div>
                                         </div>
 
@@ -330,21 +330,12 @@
     // Call calculateTotal function initially to calculate total based on default values
     calculateTotal();
 
-// Additional email validation
-const emailField = document.getElementById('email');
-if (emailField) {
-    emailField.addEventListener('blur', function() {
-        let emailInput = this.value.trim();
-        let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!emailRegex.test(emailInput)) {
-            this.setCustomValidity('Please enter a valid email address.');
-        } else {
-            this.setCustomValidity('');
+    // Email validation submit listener as safety net
+    document.querySelector('form').addEventListener('submit', function(e) {
+        if (!validateEmailFormat(['#email'])) {
+            e.preventDefault();
         }
     });
-}
-
 </script>
 @endsection
 

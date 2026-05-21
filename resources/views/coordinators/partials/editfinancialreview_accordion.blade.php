@@ -1580,11 +1580,7 @@
                                         <label for="post_balance" class="me-2">Enter Ending Balance (to be used as beginning balance on next year's report):</label>
                                     </div>
                                     <div class="col-md-4">
-                                        <div class="input-group">
-                                            <span class="input-group-text">$</span>
-                                            <input type="text" class="form-control" min="0" step="0.01" name="post_balance" id="post_balance"
-                                                value="{{ !empty($chFinancialReport) ? $chFinancialReport->post_balance : '' }}">
-                                        </div>
+                                        @currencyInput('post_balance', !empty($chFinancialReport) ? $chFinancialReport->post_balance : '')
                                     </div>
                                 </div>
                                 <div class="row mb-3">

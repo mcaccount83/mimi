@@ -64,10 +64,7 @@
                 <div class="row mb-3">
                     <label class="col-md-8 col-form-label">Amount Awarded:</label>
                     <div class="col-sm-4">
-                        <div class="input-group">
-                                <span class="input-group-text">$</span>
-                            <input type="text" name="amount_awarded" id="amount_awarded" class="form-control" value="{{ $grantDetails['amount_awarded'] }}">
-                        </div>
+                        @currencyInput('amount_awarded', $grantDetails['amount_awarded'])
                     </div>
                 </div>
 

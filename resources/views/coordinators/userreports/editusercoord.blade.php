@@ -139,11 +139,11 @@
                                 <div class="row mb-1">
                                     <label class="col-sm-2 col-form-label">Email/Secondary:</label>
                                     <div class="col-sm-5">
-                                    <input type="text" name="cord_email" id="cord_email" class="form-control" value="{{ $cdDetails->email }}"  required >
+                                    <input type="email" name="cord_email" id="cord_email" class="form-control" value="{{ $cdDetails->email }}"  required >
                                     <input type="hidden" id="cord_email_chk" value="{{ $cdDetails->email }}">
                                 </div>
                                     <div class="col-sm-5">
-                                    <input type="text" name="cord_sec_email"class="form-control" value="{{ $cdDetails->sec_email }}" placeholder="Secondary Email">
+                                    <input type="email" name="cord_sec_email"class="form-control" value="{{ $cdDetails->sec_email }}" placeholder="Secondary Email">
                                     </div>
                                 </div>
                                 <div class="row mb-1">
@@ -233,31 +233,5 @@
     <!-- /.content -->
 @endsection
 @section('customscript')
-<script>
 
-  //submit validation function
-//   function PreSaveValidate(){
-//           var NewPassword=document.getElementById("cord_pswd").value;
-// 				//They changed their password
-// 				if(document.getElementById("cord_pswd").value != document.getElementById("cord_pswd").getAttribute("value")){
-// 					if(document.getElementById("cord_pswd").value != document.getElementById("cord_pswd_cnf").value){  //Make sure the password and confirmation match
-// 						alert ("The provided passwords do not match, please re-enter your password.");
-// 						document.getElementById("cord_pswd_cnf").focus();
-// 						return false;
-// 					}
-// 					// Make sure the password is the right length
-// 					else if(NewPassword.length < 7){
-// 						alert("Password must be at least 7 characters.");
-// 						document.getElementById("cord_pswd").focus();
-// 						return false;
-// 					}
-// 					else{
-// 						document.getElementById("cord_pswd_chg").value="1";
-// 					}
-//                 }
-// 		//Okay, all validation passed, save the records to the database
-// 		return true;
-// 	}
-
-</script>
 @endsection

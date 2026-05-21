@@ -14,7 +14,7 @@ class BladeDirectivesServiceProvider extends ServiceProvider
             return <<<'PHP'
             <?php echo '<script>
             document.addEventListener("DOMContentLoaded", function() {
-                $("[data-inputmask]").inputmask();
+                $("[data-inputmask]:visible").inputmask();
             });
             </script>'; ?>
             PHP;
@@ -82,12 +82,13 @@ class BladeDirectivesServiceProvider extends ServiceProvider
 
         // Currency Input field: @currencyInput('BankBalanceNow', $chFinancialReport->bank_balance_now, false)
         Blade::directive('currencyInput', function ($expression) {
-            $parts = array_map('trim', explode(',', $expression, 3));
+            $parts = array_map('trim', explode(',', $expression, 4));
             $name = trim($parts[0], "'\"");
             $value = isset($parts[1]) ? $parts[1] : "''";
             $readonly = isset($parts[2]) && trim($parts[2]) === 'true' ? 'readonly' : '';
-
-            return "<?php echo '<div class=\"input-group\"><span class=\"input-group-text\">$</span><input type=\"text\" name=\"{$name}\" id=\"{$name}\" class=\"form-control\" {$readonly} data-inputmask=\'\"alias\": \"currency\", \"rightAlign\": false, \"groupSeparator\": \",\", \"digits\": 2, \"digitsOptional\": false, \"placeholder\": \"0\"\' data-mask value=\"' . htmlspecialchars({$value} ?? '') . '\"></div>'; ?>";
+            $oninput = isset($parts[3]) ? trim($parts[3], "'\"") : '';
+            $oninputAttr = $oninput ? 'oninput="' . $oninput . '"' : '';
+            return "<?php echo '<div class=\"input-group\"><span class=\"input-group-text\">$</span><input type=\"text\" name=\"{$name}\" id=\"{$name}\" class=\"form-control\" {$readonly} {$oninputAttr} data-inputmask=\'\"alias\": \"currency\", \"rightAlign\": false, \"groupSeparator\": \",\", \"digits\": 2, \"digitsOptional\": false, \"placeholder\": \"0\"\' data-mask value=\"' . htmlspecialchars({$value} ?? '') . '\"></div>'; ?>";
         });
 
         // add more here as needed

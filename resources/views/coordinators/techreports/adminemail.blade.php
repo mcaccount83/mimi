@@ -106,7 +106,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="email">Email <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="email" name="email" required>
+                        <input type="email" class="form-control" id="email" name="email" required>
                     </div>
                 </form>
             </div>
@@ -165,6 +165,17 @@ $(document).ready(function() {
                 icon: 'warning',
                 title: 'Validation Error',
                 text: 'Please fill in all required fields.',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        // Validate email format
+        if (!isValidEmail(formData.email)) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Invalid Email',
+                text: 'Please enter a valid email address.',
                 confirmButtonText: 'OK'
             });
             return;

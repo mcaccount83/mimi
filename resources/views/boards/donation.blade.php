@@ -134,7 +134,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <label>Cardholder Email</label> <span class="field-required">*</span>
-                                        <input type="text" name="email" id="email" class="form-control"  required >
+                                        <input type="email" name="email" id="email" class="form-control"  required >
                                     </div>
                                 </div>
 

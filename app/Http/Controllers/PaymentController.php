@@ -381,7 +381,7 @@ class PaymentController extends Controller implements HasMiddleware
                 }
 
                 $payments->rereg_date = $rereg_date;
-                $payments->rereg_payment = $input['rereg'];
+                $payments->rereg_payment = isset($input['rereg']) ? preg_replace('/[^\d.]/', '', $input['rereg']) : null;
                 $payments->rereg_members = $input['members'];
                 $payments->save();
             }
@@ -598,11 +598,9 @@ class PaymentController extends Controller implements HasMiddleware
         DB::beginTransaction();
         try {
             $grantRequest->reviewer_id = $reviewer_id ?? $coorId;
-            // $grantRequest->review_notes = $input['review_notes'] ?? null;
-                    $grantRequest->review_notes = $input['Review_Log'] ?? null;  // Changed to Review_Log
-
+            $grantRequest->review_notes = $input['Review_Log'] ?? null;
             $grantRequest->review_description = $input['review_description'] ?? null;
-            $grantRequest->amount_awarded = $input['amount_awarded'] ?? null;
+            $grantRequest->amount_awarded = isset($input['amount_awarded']) ? preg_replace('/[^\d.]/', '', $input['amount_awarded']) : null;
             $grantRequest->grant_approved = $input['grant_approved'] ?? null;
 
             // If submitting the grant

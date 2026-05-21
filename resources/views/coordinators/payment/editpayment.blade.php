@@ -62,10 +62,7 @@
                                 </div>
                                 <label class="col-sm-2 col-form-label">Payment Amount:</label>
                                 <div class="col-sm-2">
-                                    <div class="input-group">
-                                            <span class="input-group-text">$</span>
-                                        <input type="text" name="rereg" id="rereg" class="form-control"/>
-                                    </div>
+                                    @currencyInput('rereg')
                                 </div>
                                 <label class="col-sm-2 col-form-label">Members Paid For:</label>
                                 <div class="col-sm-2">
@@ -106,10 +103,7 @@
                                 </div>
                                 <label class="col-sm-2 ms-1 col-form-label">Donation Amount:</label>
                                 <div class="col-sm-3">
-                                    <div class="input-group">
-                                            <span class="input-group-text">$</span>
-                                        <input type="text" name="m2m" id="m2m" class="form-control"/>
-                                    </div>
+                                    @currencyInput('m2m')
                                 </div>
                             </div>
                             <div class="row mb-3 ">
@@ -133,10 +127,7 @@
                                 </div>
                                 <label class="col-sm-2 ms-1 col-form-label">Donation Amount:</label>
                                 <div class="col-sm-3">
-                                    <div class="input-group">
-                                            <span class="input-group-text">$</span>
-                                        <input type="text" name="sustaining" id="sustaining" class="form-control" />
-                                    </div>
+                                    @currencyInput('sustaining')
                                 </div>
                             </div>
                             <div class="row mb-3 ">

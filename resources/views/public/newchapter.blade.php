@@ -150,7 +150,7 @@
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label">Contact:</label>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_pre_email" id="ch_pre_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" required placeholder="Email Address" >
+                                <input type="email" name="ch_pre_email" id="ch_pre_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" required placeholder="Email Address" >
                                 </div>
                                 <div class="col-sm-5 mb-1">
                                     @phoneInput('ch_pre_phone')
@@ -268,7 +268,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label>Cardholder Email</label> <span class="field-required">*</span>
-                                <input type="text" name="email" id="email" class="form-control"  required >
+                                <input type="email" name="email" id="email" class="form-control"  required >
                             </div>
                         </div>
 

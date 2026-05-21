@@ -69,15 +69,15 @@ document.addEventListener('DOMContentLoaded', function() {
       </main>
       <!--end::App Main-->
 
-  <!--begin::Footer-->
-      <!--end::Footer-->
+    <!--begin::Footer-->
+    <!--end::Footer-->
  </div>
-    <!--end::App Wrapper-->
+<!--end::App Wrapper-->
 
-<!-- Sript Functions -->
+@initMasks
+@emailValidation
+
 @include('layouts.scripts.alert')
-@include('layouts.scripts.datamask')
-@include('layouts.scripts.masks')
 @include('layouts.scripts.pdfviewer')
 @include('layouts.scripts.recaptcha')
 
@@ -85,4 +85,5 @@ document.addEventListener('DOMContentLoaded', function() {
 @stack('scripts')
 
 </body>
+  <!--end::Body-->
 </html>

@@ -96,11 +96,11 @@
                                 <div class="row mb-3">
                                     <label class="col-sm-2 col-form-label">Email/Secondary:</label>
                                     <div class="col-sm-5">
-                                    <input type="text" name="cord_email" id="cord_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" placeholder="Email"  required >
+                                    <input type="email" name="cord_email" id="cord_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" placeholder="Email"  required >
                                     <input type="hidden" id="cord_email_chk" >
                                 </div>
                                     <div class="col-sm-5">
-                                    <input type="text" name="cord_sec_email"class="form-control"  placeholder="Secondary Email">
+                                    <input type="email" name="cord_sec_email"class="form-control"  placeholder="Secondary Email">
                                     </div>
                                 </div>
                                 <!-- /.form group -->

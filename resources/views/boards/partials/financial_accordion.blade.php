@@ -157,48 +157,32 @@
        <div class="row mb-3" id="dues">
     <div class="col-md-6" id="newMemberDues">
         <label for="MemberDues" id="lblMemberDues">Member Dues</label>
-        <div class="input-group">
-            <span class="input-group-text">$</span>
-            <input type="text" class="form-control" name="MemberDues" oninput="ChangeMemberCount()" id="MemberDues" value="{{ $chFinancialReport->dues_per_member }}"
-                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-        </div>
+        @currencyInput('MemberDues', $chFinancialReport->dues_per_member, false, 'ChangeMemberCount()')
     </div>
     <div class="col-md-6" id="newMemberDuesChanged" style="display:none">
         <label for="NewMemberDues" id="lblNewMemberDues">Member Dues (New Amount)</label>
-        <div class="input-group">
-            <span class="input-group-text">$</span>
-            <input type="text" class="form-control" name="NewMemberDues" oninput="ChangeMemberCount()" id="NewMemberDues" value="{{ $chFinancialReport->dues_per_member_new_changed }}"
-                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-        </div>
+        @currencyInput('NewMemberDues', $chFinancialReport->dues_per_member_new_changed, false, 'ChangeMemberCount()')
     </div>
 </div>
 
          <div class="row mb-3" id="renewDues" style="display:none">
     <div class="col-md-6" id="renewMemberDues" style="display:none">
         <label for="MemberDuesRenewal" id="lblMemberDuesRenewal">Renewal Dues</label>
-        <div class="input-group">
-            <span class="input-group-text">$</span>
-            <input type="text" class="form-control" name="MemberDuesRenewal" oninput="ChangeMemberCount()" id="MemberDuesRenewal" value="{{ $chFinancialReport->dues_per_member_renewal }}"
-                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-        </div>
+        @currencyInput('MemberDuesRenewal', $chFinancialReport->dues_per_member_renewal, false, 'ChangeMemberCount()')
     </div>
     <div class="col-md-6" id="renewMemberDuesChanged" style="display:none">
         <label for="NewMemberDuesRenewal" id="lblNewMemberDuesRenewal">Renewal Dues (New Amount)</label>
-        <div class="input-group">
-            <span class="input-group-text">$</span>
-            <input type="text" class="form-control" name="NewMemberDuesRenewal" oninput="ChangeMemberCount()" id="NewMemberDuesRenewal" value="{{ $chFinancialReport->dues_per_member_renewal_changed }}"
-                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-        </div>
+        @currencyInput('NewMemberDuesRenewal', $chFinancialReport->dues_per_member_renewal_changed, false, 'ChangeMemberCount()')
     </div>
 </div>
 
          <div class="row mb-3" id="waived" style="display:none">
             <div class="col-md-6" id="waivedMembers">
-                    <label for="MembersNoDues">Total Members Who Paid No Dues</label>
-                                            <div class="input-group">
-                    <input type="text" class="form-control" name="MembersNoDues" id="MembersNoDues" oninput="ChangeMemberCount()" value="{{ $chFinancialReport->members_who_paid_no_dues }}">
+                <label for="MembersNoDues">Total Members Who Paid No Dues</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="MembersNoDues" id="MembersNoDues" oninput="ChangeMemberCount()" value="{{ $chFinancialReport->members_who_paid_no_dues }}">
+                    </div>
                 </div>
-                            </div>
             <div class="col-md-6" style="display:none">
                     <label for="waivedDues">Hidden</label>
                         <div class="input-group">
@@ -216,11 +200,7 @@
             </div>
             <div class="col-md-6" id=partialDues>
                 <label for="PartialDuesMemberDues">Total Partial Dues Amount Collected</label>
-                    <div class="input-group">
-                        <span class="input-group-text">$</span>
-                <input type="text" class="form-control " name="PartialDuesMemberDues" id="PartialDuesMemberDues" oninput="ChangeMemberCount()" value="{{ $chFinancialReport->total_partial_fees_collected }}"
-                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
-                </div>
+                @currencyInput('PartialDuesMemberDues', $chFinancialReport->total_partial_fees_collected, false, 'ChangeMemberCount()')
             </div>
                 </div>
 
@@ -233,11 +213,7 @@
             </div>
         <div class="col-md-6" id="associatesDues">
                 <label for="AssociateMemberDues">Associate Member Dues</label>
-                    <div class="input-group">
-                        <span class="input-group-text">$</span>
-                <input type="text" class="form-control" name="AssociateMemberDues" id="AssociateMemberDues" oninput="ChangeMemberCount()" value="{{ $chFinancialReport->associate_member_fee }}"
-                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
-                </div>
+                @currencyInput('AssociateMemberDues', $chFinancialReport->associate_member_fee, false, 'ChangeMemberCount()')
                 </div>
             <p><small><i>Note: Associate Members are not dues-waived or reduced members. They are a separate category of members. Many chapters do not have any Associate Members, but if your
                     chapter did have Associate Members this year, how many Associate Members did your chapter have?</i></small></p>
@@ -254,11 +230,7 @@
             <div class="row mb-3">
             <div class="col-md-4">
                 <label for="TotalDues">Total Dues Collected</label>
-                    <div class="input-group">
-                        <span class="input-group-text">$</span>
-                <input type="text" class="form-control " name="TotalDues" id="TotalDues"
-                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-                </div>
+                @currencyInput('TotalDues', '', true)
         </div>
     </div>
 
@@ -286,45 +258,32 @@
         <div id="collapseTwo" class="accordion-collapse collapse {{ $chFinancialReport->farthest_step_visited == '2' ? 'show' : '' }}" data-bs-parent="#accordion">
             <div class="accordion-body">
     <section>
-<div class="row mb-3">
-                                    <div class="col-md-4">
-                    <label for="ManditoryMeetingFeesPaid">Mandatory Meeting Room Fees Paid</label>
-                        <div class="input-group">
-                            <span class="input-group-text">$</span>
-                            <input type="text"  class="form-control" name="ManditoryMeetingFeesPaid" id="ManditoryMeetingFeesPaid" oninput="ChangeMeetingFees()" value="{{ $chFinancialReport->manditory_meeting_fees_paid }}"
-                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
-  </div>
-        </div>
-
-                                    <div class="col-md-4">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="ManditoryMeetingFeesPaid">Mandatory Meeting Room Fees Paid</label>
+                @currencyInput('ManditoryMeetingFeesPaid', $chFinancialReport->manditory_meeting_fees_paid, false, 'ChangeMeetingFees()')
+            </div>
+            <div class="col-md-4">
                     <label for="VoluntaryDonationsPaid">Voluntary Donations Paid</label>
-                        <div class="input-group">
-                            <span class="input-group-text">$</span>
-                            <input type="text"  class="form-control" name="VoluntaryDonationsPaid" id="VoluntaryDonationsPaid" oninput="ChangeMeetingFees()" value="{{ $chFinancialReport->voluntary_donations_paid }}"
-                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
-  </div>
-        </div>
-    </div>
+                    @currencyInput('VoluntaryDonationsPaid', $chFinancialReport->voluntary_donations_paid, false, 'ChangeMeetingFees()')
+                </div>
+            </div>
             <div class="row mb-3">
         <div class="col-md-4">
-                    <label for="TotalMeetingRoomExpenses">Total Meeting Room Expenses</label>
-                        <div class="input-group">
-                            <span class="input-group-text">$</span>
-                            <input type="text" class="form-control" name="TotalMeetingRoomExpenses" id="TotalMeetingRoomExpenses"
-                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-   </div>
+                <label for="TotalMeetingRoomExpenses">Total Meeting Room Expenses</label>
+                @currencyInput('TotalMeetingRoomExpenses', '', true)
+            </div>
         </div>
-    </div>
 
 
-                                <div class="col-12 row mb-3">
+                <div class="col-12 row mb-3">
             <label>Did you have speakers at any meetings?<span class="field-required">*</span></label>
-                                    <div class="col-12 d-flex gap-4">
-                                        <div class="form-check form-check-inline">
+            <div class="col-12 d-flex gap-4">
+                <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" id="MeetingSpeakersYes" name="MeetingSpeakers" value="1" {{ $chFinancialReport->meeting_speakers == 1 ? 'checked' : '' }} onchange="ToggleMeetingSpeakersExplanation()">
                     <label class="form-check-label" for="MeetingSpeakersYes">Yes</label>
                 </div>
-                                        <div class="form-check form-check-inline">
+                <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" id="MeetingSpeakersNo" name="MeetingSpeakers" value="0" {{ !is_null($chFinancialReport->meeting_speakers) && $chFinancialReport->meeting_speakers == 0 ? 'checked' : '' }} onchange="ToggleMeetingSpeakersExplanation()">
                     <label class="form-check-label" for="MeetingSpeakersNo">No</label>
                 </div>
@@ -332,7 +291,7 @@
 
         <div class="col-md-12" id="divMeetingSpeakersTopics">
             <label>If yes, check any of the topics that were covered:<span class="field-required">*</span></label>
-                                    <div class="col-12 d-flex gap-4">
+                <div class="col-12 d-flex gap-4">
                 @php
                     $selectedValues = is_null($chFinancialReport->meeting_speakers_array)
                         ? []
@@ -366,61 +325,56 @@
         </div>
     </div>
 
-                                        <div class="row mb-3">
-            <label>Did you have any discussion topics at your meetings? If yes, how often?<span class="field-required">*</span></label>
-                                    <div class="col-12 d-flex gap-4">
-                                                        <div class="form-check form-check-inline">
-
+            <div class="row mb-3">
+                <label>Did you have any discussion topics at your meetings? If yes, how often?<span class="field-required">*</span></label>
+                <div class="col-12 d-flex gap-4">
+            <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" id="SpeakerFrequency4" name="SpeakerFrequency" value="4" {{ $chFinancialReport->discussion_topic_frequency == 4 ? 'checked' : '' }} >
                         <label class="form-check-label" for="SpeakerFrequency4">10+ Times</label>
                     </div>
-                                        <div class="form-check form-check-inline">
+                          <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" id="SpeakerFrequency3" name="SpeakerFrequency" value="3" {{ $chFinancialReport->discussion_topic_frequency == 3 ? 'checked' : '' }} >
                         <label class="form-check-label" for="SpeakerFrequency3">7-9 Times</label>
                     </div>
-                                        <div class="form-check form-check-inline">
+                          <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" id="SpeakerFrequency2" name="SpeakerFrequency" value="2" {{ $chFinancialReport->discussion_topic_frequency == 2 ? 'checked' : '' }} >
                         <label class="form-check-label" for="SpeakerFrequency2">4-6 Times</label>
                     </div>
-                                        <div class="form-check form-check-inline">
+                          <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" id="SpeakerFrequency1" name="SpeakerFrequency" value="1" {{ $chFinancialReport->discussion_topic_frequency == 1 ? 'checked' : '' }} >
                         <label class="form-check-label" for="SpeakerFrequency1">1-3 Times</label>
                     </div>
-                                        <div class="form-check form-check-inline">
+                         <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" id="SpeakerFrequencyNo" name="SpeakerFrequency" value="0" {{ !is_null($chFinancialReport->discussion_topic_frequency) && $chFinancialReport->discussion_topic_frequency == 0 ? 'checked' : '' }} >
                         <label class="form-check-label" for="SpeakerFrequencyNo">No</label>
                     </div>
                 </div>
             </div>
 
-                                              <div class="row mb-3">
+                <div class="row mb-3">
             <label>Did you have a children’s room with babysitters?<span class="field-required">*</span></label>
-                                                <div class="col-12 d-flex gap-4">
-                                        <div class="form-check form-check-inline">
+                       <div class="col-12 d-flex gap-4">
+                    <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" id="ChildrensRoomPaid" name="ChildrensRoom" value="2" {{ $chFinancialReport->childrens_room_sitters == 2 ? 'checked' : '' }} >
                     <label class="form-check-label" for="ChildrensRoomPaid">Yes, with Paid Sitters</label>
                 </div>
-                                        <div class="form-check form-check-inline">
+                    <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" id="ChildrensRoomVol" name="ChildrensRoom" value="1" {{ $chFinancialReport->childrens_room_sitters == 1 ? 'checked' : '' }} >
                     <label class="form-check-label" for="ChildrensRoomVol">Yes, with Volunteer Members</label>
                 </div>
-                                        <div class="form-check form-check-inline">
+                     <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" id="ChildrensRoomNo" name="ChildrensRoom" value="0" {{ !is_null($chFinancialReport->childrens_room_sitters) && $chFinancialReport->childrens_room_sitters == 0 ? 'checked' : '' }} >
                     <label class="form-check-label" for="ChildrensRoomNo">No</label>
                 </div>
             </div>
         </div>
 
-<div class="row mb-3">
-        <div class="col-md-4">
+        <div class="row mb-3">
+                <div class="col-md-4">
                     <label for="PaidBabySitters">Paid Babysitter Expenses (if any)</label>
-                        <div class="input-group">
-                            <span class="input-group-text">$</span>
-                            <input type="text" class="form-control" name="PaidBabySitters" id="PaidBabySitters" oninput="ChangeChildrensRoomExpenses()" value="{{ $chFinancialReport->paid_baby_sitters }}"
-                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
-  </div>
+                    @currencyInput('PaidBabySitters', $chFinancialReport->paid_baby_sitters, false, 'ChangeChildrensRoomExpenses()')
+            </div>
         </div>
-    </div>
             <div class="row">
         <div class="col-12">
                 <p><b>List all Children's Room Miscellaneous Expenses below.</b> Briefly describe the expense and list any supplies or other expenses for each project.</p>
@@ -453,6 +407,8 @@
                                 $other_expenses = isset($childrens_room[$row]['childrens_room_other']) ? floatval(str_replace(['$', ','], '', $childrens_room[$row]['childrens_room_other'])) : 0;
                                 $total_supplies += $supplies;
                                 $total_other_expenses += $other_expenses;
+                                $suppliesField = 'ChildrensRoomSupplies' . $row;
+                                $otherField = 'ChildrensRoomOther' . $row;
                             @endphp
                             <tr>
                                 <td>
@@ -462,20 +418,12 @@
                                 </td>
                                 <td>
                                     <div class="mb-3">
-                                        <div class="input-group">
-                                                <span class="input-group-text">$</span>
-                                            <input type="text" class="form-control" name="ChildrensRoomSupplies{{ $row }}" id="ChildrensRoomSupplies{{ $row }}" oninput="ChangeChildrensRoomExpenses()"
-                                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" value="{{ $childrens_room[$row]['childrens_room_supplies'] ?? '' }}">
-                                        </div>
+                                        <x-currency-input :name="'ChildrensRoomSupplies' . $row" :value="$childrens_room[$row]['childrens_room_supplies'] ?? ''" oninput="ChangeChildrensRoomExpenses()" />
                                     </div>
                                 </td>
                                 <td>
                                     <div class="mb-3">
-                                        <div class="input-group">
-                                                <span class="input-group-text">$</span>
-                                            <input type="text" class="form-control" name="ChildrensRoomOther{{ $row }}" id="ChildrensRoomOther{{ $row }}" oninput="ChangeChildrensRoomExpenses()" value="{{ $childrens_room[$row]['childrens_room_other'] ?? '' }}"
-                                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
-                                        </div>
+                                        <x-currency-input :name="'ChildrensRoomOther' . $row" :value="$childrens_room[$row]['childrens_room_other'] ?? ''" oninput="ChangeChildrensRoomExpenses()" />
                                     </div>
                                 </td>
                             </tr>
@@ -485,21 +433,17 @@
                         <tr>
                             <td><strong>Total</strong></td>
                             <td>
-                                <div class="mb-3">
-                                    <div class="input-group">
-                                            <span class="input-group-text">$</span>
-                                        <input type="text" class="form-control" value="{{ number_format($total_supplies, 2) }}" readonly>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="mb-3">
-                                    <div class="input-group">
-                                            <span class="input-group-text">$</span>
-                                        <input type="text" class="form-control" value="{{ number_format($total_other_expenses, 2) }}" readonly>
-                                    </div>
-                                </div>
-                            </td>
+                            <div class="mb-3">
+                                @php $suppliesTotal = number_format($total_supplies, 2); @endphp
+                                @currencyInput('', $suppliesTotal, true)
+                            </div>
+                        </td>
+                        <td>
+                            <div class="mb-3">
+                                @php $otherTotal = number_format($total_other_expenses, 2); @endphp
+                                @currencyInput('', $otherTotal, true)
+                            </div>
+                        </td>
                         </tr>
                     </tfoot>
                 </table>
@@ -511,15 +455,12 @@
                 </div>
 </div>
 
-<div class="row mb-3">
-        <div class="col-md-4">
-                    <label for="ChildrensRoomTotal">Total Children's Room Expenses</label>
-                        <div class="input-group">
-                            <span class="input-group-text">$</span>
-                            <input type="text"  class="form-control" value="0.00" name="ChildrensRoomTotal"  id="ChildrensRoomTotal"  readonly>
-  </div>
+    <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="ChildrensRoomTotal">Total Children's Room Expenses</label>
+                @currencyInput('ChildrensRoomTotal', '', true)
+            </div>
         </div>
-    </div>
         <input type="hidden" name="ChildrensExpenseRowCount" id="ChildrensExpenseRowCount" value="{{ $ChildrensExpenseRowCount }}" />
 
         <div class="row">
@@ -642,38 +583,22 @@
                         </td>
                         <td>
                             <div class="mb-3">
-                                <div class="input-group">
-                                        <span class="input-group-text">$</span>
-                                    <input type="text" class="form-control" name="ServiceProjectIncome{{ $row }}" id="ServiceProjectIncome{{ $row }}" oninput="ChangeServiceProjectExpenses()"
-                                        data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" value="{{ $service_projects[$row]['service_project_income'] ?? '' }}">
-                                </div>
+                                <x-currency-input :name="'ServiceProjectIncome' . $row" :value="$service_projects[$row]['service_project_income'] ?? ''" oninput="ChangeServiceProjectExpenses()" />
                             </div>
                         </td>
                         <td>
                             <div class="mb-3">
-                                <div class="input-group">
-                                        <span class="input-group-text">$</span>
-                                    <input type="text" class="form-control" name="ServiceProjectSupplies{{ $row }}" id="ServiceProjectSupplies{{ $row }}" oninput="ChangeServiceProjectExpenses()"
-                                        data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" value="{{ $service_projects[$row]['service_project_supplies'] ?? '' }}">
-                                </div>
+                                <x-currency-input :name="'ServiceProjectSupplies' . $row" :value="$service_projects[$row]['service_project_supplies'] ?? ''" oninput="ChangeServiceProjectExpenses()" />
                             </div>
                         </td>
                         <td>
                             <div class="mb-3">
-                                <div class="input-group">
-                                        <span class="input-group-text">$</span>
-                                    <input type="text" class="form-control" name="ServiceProjectDonatedCharity{{ $row }}" id="ServiceProjectDonatedCharity{{ $row }}" oninput="ChangeServiceProjectExpenses()"
-                                        data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" value="{{ $service_projects[$row]['service_project_charity'] ?? '' }}">
-                                </div>
+                                <x-currency-input :name="'ServiceProjectDonatedCharity' . $row" :value="$service_projects[$row]['service_project_charity'] ?? ''" oninput="ChangeServiceProjectExpenses()" />
                             </div>
                         </td>
                         <td>
                             <div class="mb-3">
-                                <div class="input-group">
-                                        <span class="input-group-text">$</span>
-                                    <input type="text" class="form-control" name="ServiceProjectDonatedM2M{{ $row }}" id="ServiceProjectDonatedM2M{{ $row }}" oninput="ChangeServiceProjectExpenses()"
-                                        data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" value="{{ $service_projects[$row]['service_project_m2m'] ?? '' }}">
-                                </div>
+                                <x-currency-input :name="'ServiceProjectDonatedM2M' . $row" :value="$service_projects[$row]['service_project_m2m'] ?? ''" oninput="ChangeServiceProjectExpenses()" />
                             </div>
                         </td>
                     </tr>
@@ -684,34 +609,26 @@
                     <td><strong>Total</strong></td>
                     <td>
                         <div class="mb-3">
-                            <div class="input-group">
-                                    <span class="input-group-text">$</span>
-                                <input type="text" class="form-control" value="{{ number_format($total_income, 2) }}" readonly>
-                            </div>
+                            @php $incomeTotal = number_format($total_income, 2); @endphp
+                            @currencyInput('', $incomeTotal, true)
                         </div>
                     </td>
                     <td>
                         <div class="mb-3">
-                            <div class="input-group">
-                                    <span class="input-group-text">$</span>
-                                <input type="text" class="form-control" value="{{ number_format($total_expenses, 2) }}" readonly>
-                            </div>
+                            @php $expensesTotal = number_format($total_expenses, 2); @endphp
+                            @currencyInput('', $expensesTotal, true)
                         </div>
                     </td>
                     <td>
                         <div class="mb-3">
-                            <div class="input-group">
-                                    <span class="input-group-text">$</span>
-                                <input type="text" class="form-control" value="{{ number_format($total_charity, 2) }}" readonly>
-                            </div>
+                            @php $charityTotal = number_format($total_charity, 2); @endphp
+                            @currencyInput('', $charityTotal, true)
                         </div>
                     </td>
                     <td>
                         <div class="mb-3">
-                            <div class="input-group">
-                                    <span class="input-group-text">$</span>
-                                <input type="text" class="form-control" value="{{ number_format($total_m2m, 2) }}" readonly>
-                            </div>
+                            @php $m2mTotal = number_format($total_m2m, 2); @endphp
+                            @currencyInput('', $m2mTotal, true)
                         </div>
                     </td>
                 </tr>
@@ -727,20 +644,14 @@
 <div class="row mb-3">
         <div class="col-md-4">
                <label for="ServiceProjectIncomeTotal">Total Service Project Income</label>
-                <div class="input-group">
-                    <span class="input-group-text">$</span>
-            <input type="number" class="form-control" min="0"  step="0.01" name="ServiceProjectIncomeTotal"  id="ServiceProjectIncomeTotal" readonly>
- </div>
+               @currencyInput('ServiceProjectIncomeTotal', '', true)
         </div>
     </div>
 
 <div class="row mb-3">
         <div class="col-md-4">
             <label for="ServiceProjectExpenseTotal">Total Service Project Expenses</label>
-                <div class="input-group">
-                    <span class="input-group-text">$</span>
-            <input type="number" class="form-control" min="0"  step="0.01" name="ServiceProjectExpenseTotal"  id="ServiceProjectExpenseTotal" readonly>
-  </div>
+            @currencyInput('ServiceProjectExpenseTotal', '', true)
         </div>
     </div>
 <input type="hidden" name="ServiceProjectRowCount" id="ServiceProjectRowCount" value="{{ $ServiceProjectRowCount }}" />
@@ -812,23 +723,15 @@
                     </div>
                 </td>
              <td>
-                    <div class="mb-3">
-                        <div class="input-group">
-                                <span class="input-group-text">$</span>
-                            <input type="text" class="form-control" name="PartyIncome{{ $row }}" id="PartyIncome{{ $row }}" oninput="ChangePartyExpenses()" value="{{ $party_expenses[$row]['party_expense_income'] ?? '' }}"
-                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="mb-3">
-                        <div class="input-group">
-                                <span class="input-group-text">$</span>
-                            <input type="text" class="form-control" name="PartyExpenses{{ $row }}" id="PartyExpenses{{ $row }}" oninput="ChangePartyExpenses()" value="{{ $party_expenses[$row]['party_expense_expenses'] ?? '' }}"
-                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-                        </div>
-                    </div>
-                </td>
+                <div class="mb-3">
+                    <x-currency-input :name="'PartyIncome' . $row" :value="$party_expenses[$row]['party_expense_income'] ?? ''" oninput="ChangePartyExpenses()" />
+                </div>
+            </td>
+            <td>
+                <div class="mb-3">
+                    <x-currency-input :name="'PartyExpenses' . $row" :value="$party_expenses[$row]['party_expense_expenses'] ?? ''" oninput="ChangePartyExpenses()" />
+                </div>
+            </td>
             </tr>
         @endfor
     </tbody>
@@ -837,18 +740,14 @@
             <td><strong>Total</strong></td>
             <td>
                 <div class="mb-3">
-                    <div class="input-group">
-                            <span class="input-group-text">$</span>
-                        <input type="text" class="form-control" value="{{ number_format($total_income, 2) }}" readonly>
-                    </div>
+                    @php $incomeTotal = number_format($total_income, 2); @endphp
+                     @currencyInput('', $incomeTotal, true)
                 </div>
             </td>
             <td>
                 <div class="mb-3">
-                    <div class="input-group">
-                            <span class="input-group-text">$</span>
-                        <input type="text" class="form-control" value="{{ number_format($total_expenses, 2) }}" readonly>
-                    </div>
+                    @php $expensesTotal = number_format($total_expenses, 2); @endphp
+                    @currencyInput('', $expensesTotal, true)
                 </div>
             </td>
         </tr>
@@ -864,22 +763,14 @@
 <div class="row mb-3">
         <div class="col-md-4">
             <label for="PartyIncomeTotal">Total Benefit Income</label>
-                <div class="input-group">
-                    <span class="input-group-text">$</span>
-            <input type="text" class="form-control" name="PartyIncomeTotal" id="PartyIncomeTotal"
-                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-         </div>
+            @currencyInput('PartyIncomeTotal', '', true)
         </div>
     </div>
 
 <div class="row mb-3">
         <div class="col-md-4">
             <label for="PartyExpenseTotal">Total Benefit Expenses</label>
-                <div class="input-group">
-                    <span class="input-group-text">$</span>
-            <input type="text" class="form-control" name="PartyExpenseTotal" id="PartyExpenseTotal"
-                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-            </div>
+            @currencyInput('PartyExpenseTotal', '', true)
         </div>
     </div>
 <input type="hidden" name="PartyExpenseRowCount" id="PartyExpenseRowCount" value="{{ $PartyExpenseRowCount }}" />
@@ -914,34 +805,19 @@
         </div>
     </div>
       <div class="row mb-3">
-                                    <div class="col-md-4">
-        <label for="PrintingCosts">Printing Costs</label>
-
-            <div class="input-group">
-                <span class="input-group-text">$</span>
-        <input type="text" class="form-control" name="PrintingCosts" id="PrintingCosts" oninput="ChangeOfficeExpenses()" value="{{ $chFinancialReport->office_printing_costs }}"
-            data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
-       </div>
+        <div class="col-md-4">
+            <label for="PrintingCosts">Printing Costs</label>
+            @currencyInput('PrintingCosts', $chFinancialReport->office_printing_costs, false, 'ChangeOfficeExpenses()')
         </div>
 
-                                    <div class="col-md-4">
-        <label for="PostageCosts">Postage Costs</label>
-
-            <div class="input-group">
-                <span class="input-group-text">$</span>
-        <input type="text" class="form-control" name="PostageCosts" id="PostageCosts" oninput="ChangeOfficeExpenses()" value="{{ $chFinancialReport->office_postage_costs }}"
-            data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-             </div>
+        <div class="col-md-4">
+            <label for="PostageCosts">Postage Costs</label>
+            @currencyInput('PostageCosts', $chFinancialReport->office_postage_costs, false, 'ChangeOfficeExpenses()')
         </div>
 
-                                    <div class="col-md-4">
-        <label for="MembershipPins">Membership Pins</label>
-
-            <div class="input-group">
-                <span class="input-group-text">$</span>
-        <input type="text" class="form-control" name="MembershipPins" id="MembershipPins" oninput="ChangeOfficeExpenses()" value="{{ $chFinancialReport->office_membership_pins_cost }}"
-            data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-                    </div>
+        <div class="col-md-4">
+            <label for="MembershipPins">Membership Pins</label>
+            @currencyInput('MembershipPins', $chFinancialReport->office_membership_pins_cost, false, 'ChangeOfficeExpenses()')
         </div>
     </div>
 
@@ -982,11 +858,7 @@
                 </td>
                 <td>
                     <div class="mb-3">
-                        <div class="input-group">
-                                <span class="input-group-text">$</span>
-                            <input type="text" class="form-control" name="OfficeExpenses{{ $row }}" id="OfficeExpenses{{ $row }}" oninput="ChangeOfficeExpenses()" value="{{ $other_office_expenses[$row]['office_other_expense'] ?? '' }}"
-                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
-                        </div>
+                        <x-currency-input :name="'OfficeExpenses' . $row" :value="$other_office_expenses[$row]['office_other_expense'] ?? ''" oninput="ChangeOfficeExpenses()" />
                     </div>
                 </td>
             </tr>
@@ -997,10 +869,8 @@
             <td><strong>Total</strong></td>
             <td>
                 <div class="mb-3">
-                    <div class="input-group">
-                            <span class="input-group-text">$</span>
-                        <input type="text" class="form-control" value="{{ number_format($total_expenses, 2) }}" readonly>
-                    </div>
+                    @php $expensesTotal = number_format($total_expenses, 2); @endphp
+                    @currencyInput('', $expensesTotal, true)
                 </div>
             </td>
         </tr>
@@ -1017,11 +887,7 @@
 <div class="row mb-3">
         <div class="col-md-4">
         <label for="TotalOperatingExpense">Total Office & Operating Expenses</label>
-            <div class="input-group">
-                <span class="input-group-text">$</span>
-        <input type="text" class="form-control" name="TotalOperatingExpense" id="TotalOperatingExpense"
-            data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-  </div>
+        @currencyInput('TotalOperatingExpense', '', true)
         </div>
     </div>
 <input type="hidden" name="OfficeExpenseRowCount" id="OfficeExpenseRowCount" value="{{ $OfficeExpenseRowCount }}" />
@@ -1057,14 +923,8 @@
     </div>
     <div class="row mb-3">
             <div class="col-md-4">
-                <label for="AnnualRegistrationFee">
-                    Chapter Registration Fee<span class="field-required">*</span>
-                </label>
-                        <div class="input-group">
-                            <span class="input-group-text">$</span>
-                <input type="text" class="form-control" name="AnnualRegistrationFee" id="AnnualRegistrationFee" oninput="ChangeReRegistrationExpense()" value="{{ $chFinancialReport->annual_registration_fee }}"
-                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
-        </div>
+                <label for="AnnualRegistrationFee">Chapter Registration Fee<span class="field-required">*</span></label>
+                @currencyInput('AnnualRegistrationFee', $chFinancialReport->annual_registration_fee, false, 'ChangeReRegistrationExpense()')
         </div>
     </div>
 
@@ -1140,20 +1000,12 @@
                 </td>
                 <td>
                     <div class="mb-3">
-                        <div class="input-group">
-                                <span class="input-group-text">$</span>
-                            <input type="text" class="form-control" name="InternationalEventIncome{{ $row }}" id="InternationalEventIncome{{ $row }}" oninput="ChangeInternationalEventExpense()" value="{{ $international_event_array[$row]['intl_event_income'] ?? '' }}"
-                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-                        </div>
+                        <x-currency-input :name="'InternationalEventIncome' . $row" :value="$international_event_array[$row]['intl_event_income'] ?? ''" oninput="ChangeInternationalEventExpense()" />
                     </div>
                 </td>
                 <td>
                     <div class="mb-3">
-                        <div class="input-group">
-                                <span class="input-group-text">$</span>
-                            <input type="text" class="form-control" name="InternationalEventExpense{{ $row }}" id="InternationalEventExpense{{ $row }}" oninput="ChangeInternationalEventExpense()" value="{{ $international_event_array[$row]['intl_event_expenses'] ?? '' }}"
-                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-                        </div>
+                        <x-currency-input :name="'InternationalEventExpense' . $row" :value="$international_event_array[$row]['intl_event_expenses'] ?? ''" oninput="ChangeInternationalEventExpense()" />
                     </div>
                 </td>
             </tr>
@@ -1164,18 +1016,14 @@
             <td><strong>Total</strong></td>
             <td>
                 <div class="mb-3">
-                    <div class="input-group">
-                            <span class="input-group-text">$</span>
-                        <input type="text" class="form-control" value="{{ number_format($total_income, 2) }}" readonly>
-                    </div>
+                    @php $incomeTotal = number_format($total_income, 2); @endphp
+                    @currencyInput('', $incomeTotal, true)
                 </div>
             </td>
             <td>
                 <div class="mb-3">
-                    <div class="input-group">
-                            <span class="input-group-text">$</span>
-                        <input type="text" class="form-control" value="{{ number_format($total_expenses, 2) }}" readonly>
-                    </div>
+                    @php $expensesTotal = number_format($total_expenses, 2); @endphp
+                    @currencyInput('', $expensesTotal, true)
                 </div>
             </td>
         </tr>
@@ -1188,28 +1036,16 @@
     </div>
 </div>
 <div class="row mb-3">
-            <div class="col-md-4">
-    <label for="InternationalEventIncomeTotal">
-        Total Event Registration Income
-    </label>
-        <div class="input-group">
-            <span class="input-group-text">$</span>
-    <input type="text" class="form-control" name="InternationalEventIncomeTotal" id="InternationalEventIncomeTotal"
-        data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-  </div>
+        <div class="col-md-4">
+            <label for="InternationalEventIncomeTotal">Total Event Registration Income</label>
+            @currencyInput('InternationalEventIncomeTotal', '', true)
         </div>
     </div>
 
     <div class="row mb-3">
-            <div class="col-md-4">
-    <label for="InternationalEventExpenseTotal">
-        Total Event Registration Expenses
-    </label>
-        <div class="input-group">
-            <span class="input-group-text">$</span>
-    <input type="text" class="form-control" name="InternationalEventExpenseTotal" id="InternationalEventExpenseTotal"
-        data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-        </div>
+        <div class="col-md-4">
+            <label for="InternationalEventExpenseTotal">Total Event Registration Expenses</label>
+            @currencyInput('InternationalEventExpenseTotal', '', true)
     </div>
 </div>
 <input type="hidden" name="InternationalEventRowCount" name="InternationalEventRowCount" id="InternationalEventRowCount" value="{{ $InternationalEventRowCount }}" />
@@ -1288,11 +1124,7 @@
             </td>
             <td>
                 <div class="mb-3">
-                    <div class="input-group">
-                            <span class="input-group-text">$</span>
-                        <input type="text" class="form-control" name="DonationAmount{{ $row }}" id="DonationAmount{{ $row }}" oninput="ChangeDonationAmount()" value="{{ $monetary_dontations_to_chapter[$row]['mon_donation_amount'] ?? '' }}"
-                            data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-                    </div>
+                    <x-currency-input :name="'DonationAmount' . $row" :value="$monetary_dontations_to_chapter[$row]['mon_donation_amount'] ?? ''" oninput="ChangeDonationAmount()" />
                 </div>
             </td>
         </tr>
@@ -1303,10 +1135,8 @@
             <td colspan="3"><strong>Total</strong></td>
             <td>
                 <div class="mb-3">
-                    <div class="input-group">
-                            <span class="input-group-text">$</span>
-                        <input type="text" class="form-control" value="{{ number_format($total_income, 2) }}" readonly>
-                    </div>
+                    @php $incomeTotal = number_format($total_income, 2); @endphp
+                    @currencyInput('', $incomeTotal, true)
                 </div>
             </td>
         </tr>
@@ -1321,14 +1151,10 @@
 </div>
 
  <div class="row mb-3">
-            <div class="col-md-4">
-    <label for="DonationTotal">Monetary Donation Total</label>
-        <div class="input-group">
-            <span class="input-group-text">$</span>
-    <input type="text" class="form-control"  name="DonationTotal" id="DonationTotal"
-        data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-</div>
-</div>
+    <div class="col-md-4">
+        <label for="DonationTotal">Monetary Donation Total</label>
+        @currencyInput('DonationTotal', '', true)
+    </div>
 </div>
 <input type="hidden" name="MonDonationRowCount" id="MonDonationRowCount" value="{{ $MonDonationRowCount }}" />
 
@@ -1458,22 +1284,12 @@
                 </td>
                 <td>
                     <div class="mb-3">
-                        <div class="input-group">
-                                <span class="input-group-text">$</span>
-                            <input type="text" class="form-control" name="OtherOfficeIncome{{ $row }}" id="OtherOfficeIncome{{ $row }}"
-                                oninput="ChangeOtherOfficeExpenses()" value="{{ $other_income_and_expenses_array[$row]['other_income'] ?? '' }}"
-                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-                        </div>
+                        <x-currency-input :name="'OtherOfficeIncome' . $row" :value="$other_income_and_expenses_array[$row]['other_income'] ?? ''" oninput="ChangeOtherOfficeExpenses()" />
                     </div>
                 </td>
                 <td>
                     <div class="mb-3">
-                        <div class="input-group">
-                                <span class="input-group-text">$</span>
-                            <input type="text" class="form-control" name="OtherOfficeExpenses{{ $row }}" id="OtherOfficeExpenses{{ $row }}"
-                                oninput="ChangeOtherOfficeExpenses()" value="{{ $other_income_and_expenses_array[$row]['other_expenses'] ?? '' }}"
-                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-                        </div>
+                        <x-currency-input :name="'OtherOfficeExpenses' . $row" :value="$other_income_and_expenses_array[$row]['other_expenses'] ?? ''" oninput="ChangeOtherOfficeExpenses()" />
                     </div>
                 </td>
             </tr>
@@ -1484,18 +1300,14 @@
                 <td><strong>Total</strong></td>
                 <td>
                     <div class="mb-3">
-                        <div class="input-group">
-                                <span class="input-group-text">$</span>
-                            <input type="text" class="form-control" value="{{ number_format($total_income, 2) }}" readonly>
-                        </div>
+                        @php $incomeTotal = number_format($total_income, 2); @endphp
+                        @currencyInput('', $incomeTotal, true)
                     </div>
                 </td>
                 <td>
                     <div class="mb-3">
-                        <div class="input-group">
-                                <span class="input-group-text">$</span>
-                            <input type="text" class="form-control" value="{{ number_format($total_expenses, 2) }}" readonly>
-                        </div>
+                        @php $expensesTotal = number_format($total_expenses, 2); @endphp
+                        @currencyInput('', $expensesTotal, true)
                     </div>
                 </td>
             </tr>
@@ -1514,22 +1326,13 @@
         <div class="row mb-3">
             <div class="col-md-4">
             <label for="OtherOfficeIncomeTotal">Total Other Income</label>
-                <div class="input-group">
-                    <span class="input-group-text">$</span>
-            <input type="text" class="form-control" name="OtherOfficeIncomeTotal" id="OtherOfficeIncomeTotal"
-                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-            </div>
+            @currencyInput('OtherOfficeIncomeTotal', '', true)
         </div>
     </div>
-
     <div class="row mb-3">
             <div class="col-md-4">
         <label for="OtherOfficeExpenseTotal">Total Other Expenses</label>
-        <div class="input-group">
-            <span class="input-group-text">$</span>
-            <input type="text" class="form-control" name="OtherOfficeExpenseTotal" id="OtherOfficeExpenseTotal"
-                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-        </div>
+        @currencyInput('OtherOfficeExpenseTotal', '', true)
     </div>
 </div>
    <input type="hidden" name="OtherOfficeExpenseRowCount" id="OtherOfficeExpenseRowCount" value="{{ $OtherOfficeExpenseRowCount }}"/>
@@ -1574,11 +1377,7 @@
             <label>Membership Dues Income:</label>
         </div>
         <div class="col-12 col-md-6">
-            <div class="input-group">
-                <span class="input-group-text">$</span>
-                <input type="text" class="form-control" name="SumMembershipDuesIncome" id="SumMembershipDuesIncome"
-                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-            </div>
+            @currencyInput('SumMembershipDuesIncome', '', true)
         </div>
     </div>
 <div class="row mb-1 align-items-center">
@@ -1586,11 +1385,7 @@
             <label>Service Project Income:</label>
         </div>
         <div class="col-12 col-md-6">
-            <div class="input-group">
-                <span class="input-group-text">$</span>
-                <input type="text" class="form-control" name="SumServiceProjectIncome" id="SumServiceProjectIncome"
-                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-            </div>
+            @currencyInput('SumServiceProjectIncome', '', true)
         </div>
     </div>
 <div class="row mb-1 align-items-center">
@@ -1598,11 +1393,7 @@
             <label>Party Income:</label>
         </div>
         <div class="col-12 col-md-6">
-            <div class="input-group">
-                <span class="input-group-text">$</span>
-                <input type="text" class="form-control" name="SumPartyIncome" id="SumPartyIncome"
-                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-            </div>
+            @currencyInput('SumPartyIncome', '', true)
         </div>
     </div>
 <div class="row mb-1 align-items-center">
@@ -1610,11 +1401,7 @@
             <label>Monetary Donations to Chapter:</label>
         </div>
         <div class="col-12 col-md-6">
-            <div class="input-group">
-                <span class="input-group-text">$</span>
-                <input type="text" class="form-control" name="SumMonetaryDonationIncome" id="SumMonetaryDonationIncome"
-                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-            </div>
+            @currencyInput('SumMonetaryDonationIncome', '', true)
         </div>
     </div>
 <div class="row mb-1 align-items-center">
@@ -1622,11 +1409,7 @@
             <label>International Event Reservation Income:</label>
         </div>
         <div class="col-12 col-md-6">
-            <div class="input-group">
-                <span class="input-group-text">$</span>
-                <input type="text" class="form-control" name="SumInternationalEventIncome" id="SumInternationalEventIncome"
-                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-            </div>
+            @currencyInput('SumInternationalEventIncome', '', true)
         </div>
     </div>
 <div class="row mb-1 align-items-center">
@@ -1634,11 +1417,7 @@
             <label>Other Income:</label>
         </div>
         <div class="col-12 col-md-6">
-            <div class="input-group">
-                <span class="input-group-text">$</span>
-                <input type="text" class="form-control" name="SumOtherIncome" id="SumOtherIncome"
-                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-            </div>
+            @currencyInput('SumOtherIncome', '', true)
         </div>
     </div>
 <div class="row mb-1 align-items-center">
@@ -1646,11 +1425,7 @@
             <label>Total Income:</label>
         </div>
         <div class="col-12 col-md-6">
-            <div class="input-group">
-                <span class="input-group-text">$</span>
-                <input type="text" class="form-control" name="SumTotalIncome" id="SumTotalIncome"
-                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-            </div>
+            @currencyInput('SumTotalIncome', '', true)
         </div>
 </div>
 </div>
@@ -1665,11 +1440,7 @@
                 <label>Meeting Room Expense:</label>
             </div>
             <div class="col-12 col-md-6">
-                <div class="input-group">
-                    <span class="input-group-text">$</span>
-                    <input type="text" class="form-control" name="SumMeetingRoomExpense" id="SumMeetingRoomExpense"
-                        data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-                </div>
+                @currencyInput('SumMeetingRoomExpense', '', true)
             </div>
         </div>
 
@@ -1684,11 +1455,7 @@
                 <label>Supplies:</label>
             </div>
             <div class="col-12 col-md-6">
-                <div class="input-group">
-                    <span class="input-group-text">$</span>
-                    <input type="text" class="form-control" name="SumChildrensSuppliesExpense" id="SumChildrensSuppliesExpense"
-                        data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-                </div>
+                @currencyInput('SumChildrensSuppliesExpense', '', true)
             </div>
         </div>
 
@@ -1697,11 +1464,7 @@
                 <label>Paid Sitters:</label>
             </div>
             <div class="col-12 col-md-6">
-                <div class="input-group">
-                    <span class="input-group-text">$</span>
-                    <input type="text" class="form-control" name="SumChildrensPaidSittersExpense" id="SumChildrensPaidSittersExpense"
-                        data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-                </div>
+                @currencyInput('SumChildrensPaidSittersExpense', '', true)
             </div>
         </div>
 
@@ -1710,11 +1473,7 @@
                 <label>Other:</label>
             </div>
             <div class="col-12 col-md-6">
-            <div class="input-group">
-                <span class="input-group-text">$</span>
-            <input type="text" class="form-control" name="SumChildrensOtherExpense" id="SumChildrensOtherExpense"
-                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-            </div>
+                @currencyInput('SumChildrensOtherExpense', '', true)
             </div>
         </div>
 
@@ -1723,11 +1482,7 @@
             <label>Children's Room Expense Total:</label>
         </div>
         <div class="col-12 col-md-6">
-            <div class="input-group">
-                <span class="input-group-text">$</span>
-            <input type="text" class="form-control" name="SumTotalChildrensRoomExpense" id="SumTotalChildrensRoomExpense"
-                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-            </div>
+            @currencyInput('SumTotalChildrensRoomExpense', '', true)
         </div>
     </div>
 
@@ -1742,11 +1497,7 @@
                 <label>Supplies:</label>
             </div>
             <div class="col-12 col-md-6">
-            <div class="input-group">
-                <span class="input-group-text">$</span>
-            <input type="text" class="form-control" name="SumServiceProjectExpense" id="SumServiceProjectExpense"
-                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-            </div>
+                @currencyInput('SumServiceProjectExpense', '', true)
             </div>
         </div>
 <div class="row mb-1 align-items-center">
@@ -1754,11 +1505,7 @@
                 <label>Amount Donated to Charity/Recipients:</label>
             </div>
             <div class="col-12 col-md-6">
-            <div class="input-group">
-                <span class="input-group-text">$</span>
-            <input type="text" class="form-control" name="SumDonationExpense" id="SumDonationExpense"
-                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-             </div>
+                @currencyInput('SumDonationExpense', '', true)
             </div>
         </div>
 <div class="row mb-1 align-items-center">
@@ -1766,11 +1513,7 @@
                 <label>Mother-to-Mother Fund Donation:</label>
             </div>
             <div class="col-12 col-md-6">
-            <div class="input-group">
-                <span class="input-group-text">$</span>
-            <input type="text" class="form-control" name="SumM2MExpense" id="SumM2MExpense"
-                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-        </div>
+                @currencyInput('SumM2MExpense', '', true)
             </div>
         </div>
 
@@ -1779,11 +1522,7 @@
             <label>Service Project Expense Total:</label>
         </div>
         <div class="col-12 col-md-6">
-           <div class="input-group">
-                <span class="input-group-text">$</span>
-            <input type="text" class="form-control" name="SumTotalServiceProjectExpense" id="SumTotalServiceProjectExpense"
-                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-            </div>
+            @currencyInput('SumTotalServiceProjectExpense', '', true)
         </div>
     </div>
 
@@ -1792,11 +1531,7 @@
                 <label>Party/Members Only Expense:</label>
             </div>
             <div class="col-12 col-md-6">
-                <div class="input-group">
-                    <span class="input-group-text">$</span>
-                <input type="text" class="form-control" name="SumPartyExpense" id="SumPartyExpense"
-                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-                </div>
+                @currencyInput('SumPartyExpense', '', true)
             </div>
         </div>
 
@@ -1811,11 +1546,7 @@
                 <label>Printing:</label>
             </div>
             <div class="col-12 col-md-6">
-                <div class="input-group">
-                    <span class="input-group-text">$</span>
-                <input type="text" class="form-control" name="SumPrintingExpense" id="SumPrintingExpense"
-                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-                </div>
+                @currencyInput('SumPrintingExpense', '', true)
             </div>
         </div>
 
@@ -1824,11 +1555,7 @@
                 <label>Postage:</label>
             </div>
             <div class="col-12 col-md-6">
-            <div class="input-group">
-                <span class="input-group-text">$</span>
-            <input type="text" class="form-control" name="SumPostageExpense" id="SumPostageExpense"
-                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-            </div>
+                @currencyInput('SumPostageExpense', '', true)
             </div>
         </div>
 
@@ -1837,11 +1564,7 @@
                 <label>Membership Pins:</label>
             </div>
             <div class="col-12 col-md-6">
-            <div class="input-group">
-                <span class="input-group-text">$</span>
-            <input type="text" class="form-control" name="SumPinsExpense" id="SumPinsExpense"
-                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-            </div>
+                @currencyInput('SumPinsExpense', '', true)
         </div>
                 </div>
 
@@ -1850,11 +1573,7 @@
                 <label>Other:</label>
             </div>
             <div class="col-12 col-md-6">
-            <div class="input-group">
-                <span class="input-group-text">$</span>
-            <input type="text" class="form-control" name="SumOtherOperatingExpense" id="SumOtherOperatingExpense"
-                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-             </div>
+                @currencyInput('SumOtherOperatingExpense', '', true)
             </div>
         </div>
 
@@ -1863,11 +1582,7 @@
             <label>Office/Operating Expense Total:</label>
         </div>
         <div class="col-12 col-md-6">
-            <div class="input-group">
-                <span class="input-group-text">$</span>
-            <input type="text" class="form-control" name="SumOperatingExpense" id="SumOperatingExpense"
-                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-            </div>
+            @currencyInput('SumOperatingExpense', '', true)
         </div>
     </div>
 
@@ -1876,11 +1591,7 @@
                 <label>Annual Chapter Registration Fee:</label>
             </div>
             <div class="col-12 col-md-6">
-                <div class="input-group">
-                    <span class="input-group-text">$</span>
-                <input type="text" class="form-control" name="SumChapterReRegistrationExpense" id="SumChapterReRegistrationExpense"
-                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-                </div>
+                @currencyInput('SumChapterReRegistrationExpense', '', true)
             </div>
         </div>
 
@@ -1889,11 +1600,7 @@
                 <label>International Event Registration:</label>
             </div>
             <div class="col-12 col-md-6">
-            <div class="input-group">
-                <span class="input-group-text">$</span>
-            <input type="text" class="form-control" name="SumInternationalEventExpense" id="SumInternationalEventExpense"
-                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-          </div>
+                @currencyInput('SumInternationalEventExpense', '', true)
             </div>
         </div>
 
@@ -1902,11 +1609,7 @@
                 <label>Other Expense:</label>
             </div>
             <div class="col-12 col-md-6">
-            <div class="input-group">
-                <span class="input-group-text">$</span>
-            <input type="text" class="form-control" name="SumOtherExpense" id="SumOtherExpense"
-                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-            </div>
+                @currencyInput('SumOtherExpense', '', true)
         </div>
     </div>
 
@@ -1915,11 +1618,7 @@
             <label>Total Expenses:</label>
         </div>
         <div class="col-12 col-md-6">
-            <div class="input-group">
-                <span class="input-group-text">$</span>
-            <input type="text" class="form-control" name="SumTotalExpense" id="SumTotalExpense"
-                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
- </div>
+            @currencyInput('SumTotalExpense', '', true)
         </div>
 </div>
 </div>
@@ -1934,11 +1633,7 @@
                 <label>Profit/Loss:</label>
             </div>
             <div class="col-12 col-md-6">
-                <div class="input-group">
-                    <span class="input-group-text">$</span>
-                <input type="text" class="form-control" name="SumTotalNetIncome" id="SumTotalNetIncome"
-                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-                </div>
+                @currencyInput('SumTotalNetIncome', '', true)
             </div>
         </div>
 
@@ -2037,12 +1732,7 @@
                 @endif
             </label>
             <div class="mb-3">
-                <div class="input-group">
-                    <span class="input-group-text">$</span>
-                    <input type="text" class="form-control" name="AmountReservedFromLastYear" id="AmountReservedFromLastYear" onchange="TreasuryBalanceChange()"
-                           value="{{ $chFinancialReport->amount_reserved_from_previous_year }}"
-                           data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-                </div>
+                @currencyInput('AmountReservedFromLastYear', $chFinancialReport->amount_reserved_from_previous_year, false, 'TreasuryBalanceChange()')
             </div>
         </div>
     </div>
@@ -2056,12 +1746,7 @@
                 @endif
             </label>
             <div class="mb-3">
-                <div class="input-group">
-                    <span class="input-group-text">$</span>
-                    <input type="text" class="form-control" name="LastYearReportEnding" id="LastYearReportEnding"
-                        value="{{$chFinancialReport['pre_balance'] }}"
-                        data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-                </div>
+                @currencyInput('LastYearReportEnding', $chFinancialReport->pre_balance, true)
             </div>
         </div>
     </div>
@@ -2071,12 +1756,8 @@
                 Profit/Loss:
             </label>
             <div class="mb-3">
-                <div class="input-group">
-                    <span class="input-group-text">$</span>
-            <input type="text"class="form-control" name="TotalNetIncome" id="TotalNetIncome"
-                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
+                @currencyInput('TotalNetIncome', '', true)
             </div>
-        </div>
         </div>
     </div>
     <div class="col-md-6 ">
@@ -2088,12 +1769,8 @@
                 Ending Balance (Treasury Balance Now):
             </label>
             <div class="mb-3">
-                <div class="input-group">
-                    <span class="input-group-text">$</span>
-            <input type="text" class="form-control" name="TreasuryBalanceNow" id="TreasuryBalanceNow"
-                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-        </div>
-        </div>
+                @currencyInput('TreasuryBalanceNow', '', true)
+            </div>
         </div>
     </div>
     <div class="col-md-6 ">
@@ -2106,11 +1783,7 @@
                 @endif
             </label>
             <div class="mb-3">
-                <div class="input-group">
-                    <span class="input-group-text">$</span>
-            <input type="text" class="form-control" name="BankBalanceNow" id="BankBalanceNow" oninput="ChangeBankRec()" value="{{ $chFinancialReport->bank_balance_now }}"
-                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-        </div>
+                @currencyInput('BankBalanceNow', $chFinancialReport->bank_balance_now, false, 'ChangeBankRec()')
         </div>
     </div>
 </div>
@@ -2133,59 +1806,48 @@
             <td>Deposit Amount</td>
         </tr>
     </thead>
-    <tbody>
-        @php
-            $bank_rec_array = null;
-            if (isset($chFinancialReport['bank_reconciliation_array'])) {
-                $bank_rec_array = unserialize(base64_decode($chFinancialReport['bank_reconciliation_array']));
-                $BankRecRowCount = is_array($bank_rec_array) ? count($bank_rec_array) : 0;
-            } else {
-                $BankRecRowCount = 1;
-            }
-        @endphp
-        @for ($row = 0; $row < $BankRecRowCount; $row++)
-            <tr>
-                <td>
-                    <div class="mb-3">
-                        <x-date-input :name="'BankRecDate' . $row" :value="$bank_rec_array[$row]['bank_rec_date'] ?? ''" />
-                    </div>
-                </td>
-
-                <td>
-                    <div class="mb-3">
-                        <input type="text" class="form-control" name="BankRecCheckNo{{ $row }}" id="BankRecCheckNo{{ $row }}"
-                            value="{{ $bank_rec_array[$row]['bank_rec_check_no'] ?? '' }}">
-                    </div>
-                </td>
-                <td>
-                    <div class="mb-3">
-                        <input type="text" class="form-control" name="BankRecDesc{{ $row }}" id="BankRecDesc{{ $row }}"
-                            value="{{ $bank_rec_array[$row]['bank_rec_desc'] ?? '' }}">
-                    </div>
-                </td>
-                <td>
-                    <div class="mb-3">
-                        <div class="input-group">
-                                <span class="input-group-text">$</span>
-                            <input type="text" class="form-control" name="BankRecPaymentAmount{{ $row }}" id="BankRecPaymentAmount{{ $row }}"
-                                oninput="ChangeBankRec()" value="{{ $bank_rec_array[$row]['bank_rec_payment_amount'] ?? '' }}"
-                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="mb-3">
-                        <div class="input-group">
-                                <span class="input-group-text">$</span>
-                            <input type="text" class="form-control" name="BankRecDepositAmount{{ $row }}" id="BankRecDepositAmount{{ $row }}"
-                                oninput="ChangeBankRec()" value="{{ $bank_rec_array[$row]['bank_rec_desposit_amount'] ?? '' }}"
-                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        @endfor
-    </tbody>
+   <tbody>
+    @php
+        $bank_rec_array = null;
+        if (isset($chFinancialReport['bank_reconciliation_array'])) {
+            $bank_rec_array = unserialize(base64_decode($chFinancialReport['bank_reconciliation_array']));
+            $BankRecRowCount = is_array($bank_rec_array) ? count($bank_rec_array) : 0;
+        } else {
+            $BankRecRowCount = 1;
+        }
+    @endphp
+    @for ($row = 0; $row < $BankRecRowCount; $row++)
+        <tr>
+            <td>
+                <div class="mb-3">
+                    <x-date-input :name="'BankRecDate' . $row" :value="$bank_rec_array[$row]['bank_rec_date'] ?? ''" />
+                </div>
+            </td>
+            <td>
+                <div class="mb-3">
+                    <input type="text" class="form-control" name="BankRecCheckNo{{ $row }}" id="BankRecCheckNo{{ $row }}"
+                        value="{{ $bank_rec_array[$row]['bank_rec_check_no'] ?? '' }}">
+                </div>
+            </td>
+            <td>
+                <div class="mb-3">
+                    <input type="text" class="form-control" name="BankRecDesc{{ $row }}" id="BankRecDesc{{ $row }}"
+                        value="{{ $bank_rec_array[$row]['bank_rec_desc'] ?? '' }}">
+                </div>
+            </td>
+            <td>
+                <div class="mb-3">
+                    <x-currency-input :name="'BankRecPaymentAmount' . $row" :value="$bank_rec_array[$row]['bank_rec_payment_amount'] ?? ''" oninput="ChangeBankRec()" />
+                </div>
+            </td>
+            <td>
+                <div class="mb-3">
+                    <x-currency-input :name="'BankRecDepositAmount' . $row" :value="$bank_rec_array[$row]['bank_rec_desposit_amount'] ?? ''" oninput="ChangeBankRec()" />
+                </div>
+            </td>
+        </tr>
+    @endfor
+</tbody>
 </table>
 <div class="col-md-12">
     <button type="button" class="btn btn-success bg-gradient btn-sm" onclick="AddBankRecRow()">
@@ -2203,12 +1865,8 @@
                 Ending Balance (Treasury Balance Now):
             </label>
             <div class="mb-3">
-                <div class="input-group">
-                    <span class="input-group-text">$</span>
-            <input type="text" class="form-control" name="TreasuryBalanceNowR" id="TreasuryBalanceNowR"
-                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
+                @currencyInput('TreasuryBalanceNowR', '', true)
             </div>
-        </div>
         </div>
     </div>
 <div class="col-md-6">
@@ -2217,12 +1875,8 @@
             Reconciled Bank Balance:
         </label>
         <div class="mb-3">
-            <div class="input-group">
-                <span class="input-group-text">$</span>
-        <input type="text" class="form-control" name="ReconciledBankBalance" id="ReconciledBankBalance"
-            data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
+            @currencyInput('ReconciledBankBalance', '', true)
         </div>
-    </div>
     </div>
 </div>
 
@@ -3116,78 +2770,10 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
 
 </div><!-- end of accordion -->
 
-
 @push('scripts')
 
     @include('layouts.scripts.financialaccordion')
     @include('layouts.scripts.financialsave')
 
-<script>
-
-// /* Disable fields and buttons  */
-// $(document).ready(function () {
-//     setTimeout(function () {
-//         var submitted = @json($chEOYDocuments->financial_report_received);
-//         // var submittedfinal = @json($chEOYDocuments->final_report_received);
-//         var userTypeId = @json($userTypeId);
-//         var userAdmin = @json($userAdmin);
-
-//         // var effectiveSubmitted = (userTypeId == 'disbanded') ? submittedfinal : submitted;
-
-//        if (userTypeId == 1 && userAdmin != 1) {
-//         $('button, input, select, textarea').not('#btn-back').prop('disabled', true);
-
-//         // } else if (effectiveSubmitted == '1') {
-//         //     $('button').not('#btn-back, #btn-download-pdf').prop('disabled', true);
-//         //     $('input, select, textarea').prop('disabled', true);
-
-//         } else {
-//             $('button, input, select, textarea').prop('disabled', false);
-//         }
-
-//         var allDisabled = true;
-//         $('input, select, textarea').each(function() {
-//             if (!$(this).prop('disabled')) {
-//                 allDisabled = false;
-//                 return false; // Exit loop early if any field is enabled
-//             }
-//         });
-
-//     }, 1000); // 1-second delay
-// });
-
-/* Curency Mask */
-    document.addEventListener("DOMContentLoaded", function() {
-        Inputmask().mask(document.querySelectorAll('[data-inputmask]'));
-
-        document.querySelector('form').addEventListener('submit', function(event) {
-            const inputs = document.querySelectorAll('[data-inputmask]');
-        });
-    });
-
-    function debounce(func, delay) {
-    let debounceTimer;
-    return function() {
-        const context = this;
-        const args = arguments;
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => func.apply(context, args), delay);
-    }
-}
-
-document.querySelectorAll('.input-field-selector').forEach(function(element) {
-    element.addEventListener('input', debounce(ChangeMemberCount, 300));
-});
-
-</script>
-
-<script>
-        function isValidEmail(email) {
-            // Regular expression for email validation
-            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
-        }
-
-    </script>
 @endpush
 

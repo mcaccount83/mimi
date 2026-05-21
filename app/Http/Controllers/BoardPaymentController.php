@@ -233,11 +233,11 @@ class BoardPaymentController extends Controller implements HasMiddleware
         $paymentsAdmin = $adminEmail['payments_admin'];
 
         $payment = $request->input('rereg');
-        $rereg = (float) preg_replace('/[^\d.]/', '', $request->input('rereg'));
+        $rereg = (float) preg_replace('/[^\d.]/', '', $request->rereg ?? '');
         $paymentDate = Carbon::today();
         $invoice = $paymentResponse['data']['invoiceNumber'];
         $donation = $request->input('sustaining');
-        $sustaining = (float) preg_replace('/[^\d.]/', '', $request->input('sustaining'));
+        $sustaining = (float) preg_replace('/[^\d.]/', '', $request->sustaining ?? '');
 
         $chapter = Chapters::find($chId);
         $payments = Payments::find($chId);
@@ -551,7 +551,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
         $paymentsAdmin = $adminEmail['payments_admin'];
 
         $manualOrder = $request->input('manual');
-        $manual = (float) preg_replace('/[^\d.]/', '', $request->input('manual'));
+        $manual = (float) preg_replace('/[^\d.]/', '', $request->manual ?? '');
         $paymentDate = Carbon::today();
         $invoice = $paymentResponse['data']['invoiceNumber'];
 

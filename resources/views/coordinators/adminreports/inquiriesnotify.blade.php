@@ -199,11 +199,6 @@ $(document).ready(function() {
             }
         });
     });
-
-    function isValidEmail(email) {
-        var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
-    }
 });
 </script>
 @endpush

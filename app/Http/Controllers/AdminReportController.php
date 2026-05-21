@@ -212,7 +212,7 @@ class AdminReportController extends Controller implements HasMiddleware
             $chapter->save();
 
             $payments->rereg_date = $request->ch_duespaid ? Carbon::createFromFormat('m/d/Y', $request->ch_duespaid)->format('Y-m-d'): null;
-            $payments->rereg_payment = $request->ch_payment;
+            $payments->rereg_payment = isset($request->ch_payment) ? preg_replace('/[^\d.]/', '', $request->ch_payment) : null;
             $payments->rereg_members = $request->ch_members;
             $payments->save();
 

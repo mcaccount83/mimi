@@ -142,7 +142,7 @@
                              <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">Email/Mailing:</label>
                                 <div class="col-sm-3">
-                                <input type="text" name="ch_email" id="ch_email" class="form-control" value="{{ $chDetails->email }}"  placeholder="Chapter Email Address" >
+                                <input type="email" name="ch_email" id="ch_email" class="form-control" value="{{ $chDetails->email }}"  placeholder="Chapter Email Address" >
                                 </div>
                                 <div class="col-sm-7">
                                 <input type="text" name="cch_pobox" id="ch_pobox" class="form-control" value="{{ $chDetails->po_box }}"  placeholder="Chapter PO Box/Mailing Address" >
@@ -152,7 +152,7 @@
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">Inquiries:</label>
                                 <div class="col-sm-3">
-                                <input type="text" name="ch_inqemailcontact" id="ch_inqemailcontact" class="form-control" value="{{ $chDetails->inquiries_contact }}"  required >
+                                <input type="email" name="ch_inqemailcontact" id="ch_inqemailcontact" class="form-control" value="{{ $chDetails->inquiries_contact }}"  required >
                                 </div>
                                 <div class="col-sm-7">
                                 <input type="text" name="ch_inqnote" id="ch_inqnote" class="form-control" value="{{ $chDetails->inquiries_note }}"  placeholder="Inquiries Notes" >
@@ -185,7 +185,7 @@
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label">Contact:</label>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_pre_email" id="ch_pre_email" class="form-control" value="{{ $chDetails->pendingPresident->email }}" required placeholder="Email Address" >
+                                <input type="email" name="ch_pre_email" id="ch_pre_email" class="form-control" value="{{ $chDetails->pendingPresident->email }}" required placeholder="Email Address" >
                                 </div>
                                 <div class="col-sm-5 mb-1">
                                     @phoneInput('ch_pre_phone', $chDetails->pendingPresident->phone)

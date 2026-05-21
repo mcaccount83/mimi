@@ -49,7 +49,7 @@
                             </div>
                             <label class="col-sm-2 mb-1 col-form-label"></label>
                             <div class="col-sm-5 mb-1">
-                            <input type="text" name="ch_pre_email" id="ch_pre_email" class="form-control" value="{{ $PresDetails->email }}" required placeholder="Email Address" >
+                            <input type="email" name="ch_pre_email" id="ch_pre_email" class="form-control" value="{{ $PresDetails->email }}" required placeholder="Email Address" >
                             </div>
                             <div class="col-sm-5 mb-1">
                                 @phoneInput('ch_pre_phone', $PresDetails->phone)
@@ -60,7 +60,7 @@
                             </div>
                             <label class="col-sm-2 mb-1 col-form-label"><br></label>
                             <div class="col-sm-3 mb-1">
-                             <input type="text" name="ch_pre_city" id="ch_pre_city" class="form-control" value="{{ $PresDetails->city }}"  required placeholder="City">
+                             <input type="email" name="ch_pre_city" id="ch_pre_city" class="form-control" value="{{ $PresDetails->city }}"  required placeholder="City">
                                 </div>
                                 <div class="col-sm-3 mb-1">
                                     <select name="ch_pre_state" id="ch_pre_state" class="form-control" style="width: 100%;" required>
@@ -106,7 +106,7 @@
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"></label>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_avp_email" id="ch_avp_email" class="form-control" value="{{$AVPDetails->email != ''  ? $AVPDetails->email : ''}}" required placeholder="Email Address" >
+                                <input type="email" name="ch_avp_email" id="ch_avp_email" class="form-control" value="{{$AVPDetails->email != ''  ? $AVPDetails->email : ''}}" required placeholder="Email Address" >
                                 </div>
                                 <div class="col-sm-5 mb-1">
                                     @phoneInput('ch_avp_phone', $AVPDetails->phone)
@@ -164,7 +164,7 @@
                             </div>
                             <label class="col-sm-2 mb-1 col-form-label"></label>
                             <div class="col-sm-5 mb-1">
-                            <input type="text" name="ch_mvp_email" id="ch_mvp_email" class="form-control" value="{{$MVPDetails->email != ''  ? $MVPDetails->email : ''}}" required placeholder="Email Address" >
+                            <input type="email" name="ch_mvp_email" id="ch_mvp_email" class="form-control" value="{{$MVPDetails->email != ''  ? $MVPDetails->email : ''}}" required placeholder="Email Address" >
                             </div>
                             <div class="col-sm-5 mb-1">
                                 @phoneInput('ch_mvp_phone', $MVPDetails->phone)
@@ -222,7 +222,7 @@
                             </div>
                             <label class="col-sm-2 mb-1 col-form-label"></label>
                             <div class="col-sm-5 mb-1">
-                            <input type="text" name="ch_trs_email" id="ch_trs_email" class="form-control" value="{{$TRSDetails->email != ''  ? $TRSDetails->email : ''}}" required placeholder="Email Address" >
+                            <input type="email" name="ch_trs_email" id="ch_trs_email" class="form-control" value="{{$TRSDetails->email != ''  ? $TRSDetails->email : ''}}" required placeholder="Email Address" >
                             </div>
                             <div class="col-sm-5 mb-1">
                                 @phoneInput('ch_trs_phone', $TRSDetails->phone)
@@ -280,7 +280,7 @@
                             </div>
                             <label class="col-sm-2 mb-1 col-form-label"></label>
                             <div class="col-sm-5 mb-1">
-                            <input type="text" name="ch_sec_email" id="ch_sec_email" class="form-control" value="{{$SECDetails->email != ''  ? $SECDetails->email : ''}}" required placeholder="Email Address" >
+                            <input type="email" name="ch_sec_email" id="ch_sec_email" class="form-control" value="{{$SECDetails->email != ''  ? $SECDetails->email : ''}}" required placeholder="Email Address" >
                             </div>
                             <div class="col-sm-5 mb-1">
                                 @phoneInput('ch_sec_phone', $SECDetails->phone)

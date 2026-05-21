@@ -84,10 +84,7 @@
                 <div class="row mb-3">
                     <label class="col-sm-4 mb-1 col-form-label">Payment Amount:</label>
                     <div class="col-sm-3 mb-1">
-                        <div class="input-group">
-                                <span class="input-group-text">$</span>
-                            <input type="text" name="ch_payment" class="form-control" value="{{ $chPayments->rereg_payment }}">
-                        </div>
+                        @currencyInput('ch_payment', $chPayments->rereg_payment)
                     </div>
                 </div>
 
