@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[Table('chapter_awards_history')]
+#[Unguarded]
 class ChapterAwardHistory extends Model
 {
-    protected $table = 'chapter_awards_history';
-
-    protected $guarded = []; // ALL columns are mass-assignable
-
     public function chapter(): BelongsTo
     {
         return $this->belongsTo(Chapters::class, 'chapter_id', 'id');  // 'chapter_id' BelongsTo 'id' in chapters

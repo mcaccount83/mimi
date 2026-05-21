@@ -2,16 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Model;
 
+#[Table('financial_report_final', 'chapter_id')]
+#[Unguarded]
 class FinancialReportFinal extends Model
 {
-    protected $table = 'financial_report_final';
-
-    protected $primaryKey = 'chapter_id';
-
-    protected $guarded = []; // ALL columns are mass-assignable
-
     protected $casts = [
         'created_at' => 'datetime',
     ];

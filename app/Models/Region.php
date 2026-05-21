@@ -2,19 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+#[Table('region', 'id')]
+#[Unguarded]
 class Region extends Model
 {
-    protected $table = 'region';
-
-    protected $primaryKey = 'id';
-
-    protected $guarded = []; // ALL columns are mass-assignable
-
     public function conference(): BelongsTo
     {
         return $this->belongsTo(Conference::class, 'conference_id', 'id');  // 'conference_id' in region BelongsTo 'id' in conference

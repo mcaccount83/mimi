@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[Table('payment_history')]
+#[Unguarded]
 class PaymentHistory extends Model
 {
-    protected $table = 'payment_history';
-
-    protected $guarded = []; // ALL columns are mass-assignable
-
     protected $casts = [
         'payment_date' => 'date',
         'payment_amount' => 'decimal:2',

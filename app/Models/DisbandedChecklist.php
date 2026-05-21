@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Model;
 
-class DisbandedChecklist extends Model
-{
-    protected $table = 'disbanded_checklist';
-
-    protected $primaryKey = 'chapter_id';
-
-    protected $guarded = []; // ALL columns are mass-assignable
-}
+#[Table('disbanded_checklist', 'chapter_id')]
+#[Unguarded]
+class DisbandedChecklist extends Model {}

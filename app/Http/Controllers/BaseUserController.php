@@ -8,18 +8,11 @@ use App\Models\User;
 use App\Models\UserStatus;
 use App\Models\UserType;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 
-class BaseUserController extends Controller implements HasMiddleware
+#[Middleware('auth', except: ['logout'])]
+class BaseUserController extends Controller
 {
-    public static function middleware(): array
-    {
-        return [
-            new Middleware('auth', except: ['logout']),
-        ];
-    }
-
     /**
      * Load Logged in User Information
      */

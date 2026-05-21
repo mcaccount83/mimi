@@ -2,17 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[Table('coordinator_recognition', 'coordinator_id')]
+#[Unguarded]
 class CoordinatorRecognition extends Model
 {
-    protected $table = 'coordinator_recognition';
-
-    protected $primaryKey = 'coordinator_id';
-
-    protected $guarded = []; // ALL columns are mass-assignable
-
     public function coordinator(): BelongsTo
     {
         return $this->belongsTo(Coordinators::class, 'coordinator_id', 'id');  // 'coordinator_id' in coordinator_tree BelongsTo 'id' in coordinators

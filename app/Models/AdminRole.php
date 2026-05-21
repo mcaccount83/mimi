@@ -2,13 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Model;
 
-class AdminRole extends Model
-{
-    protected $table = 'admin_role';
-
-    protected $primaryKey = 'id';
-
-    protected $fillable = []; // No fillable fields
-}
+#[Table('admin_role', 'id')]
+class AdminRole extends Model {}

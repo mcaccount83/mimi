@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+#[Unguarded]
 class Coordinators extends Model
 {
-    protected $guarded = []; // ALL columns are mass-assignable
-
     protected $casts = [
         'active_status' => 'integer',
         'created_at' => 'datetime',

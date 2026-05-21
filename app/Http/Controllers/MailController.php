@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Database as DatabaseConnections;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -15,18 +14,12 @@ use romanzipp\QueueMonitor\Enums\MonitorStatus;
 use romanzipp\QueueMonitor\Models\Contracts\MonitorContract;
 use romanzipp\QueueMonitor\Services\QueueMonitor;
 
-class MailController extends Controller implements HasMiddleware
+#[Middleware('auth', except: ['logout'])]
+class MailController extends Controller
 {
     public function __construct(
         protected UserController $userController,
     ) {}
-
-    public static function middleware(): array
-    {
-        return [
-            new Middleware('auth', except: ['logout']),
-        ];
-    }
 
     public function index(Request $request)
     {

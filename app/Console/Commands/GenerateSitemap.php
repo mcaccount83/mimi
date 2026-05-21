@@ -2,16 +2,16 @@
 
 namespace App\Console\Commands;
 
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Spatie\Sitemap\Sitemap;
 use Spatie\Sitemap\Tags\Url;
 
+#[Signature('sitemap:generate')]
+#[Description('Generate the sitemap')]
 class GenerateSitemap extends Command
 {
-    protected $signature = 'sitemap:generate';
-
-    protected $description = 'Generate the sitemap';
-
     public function handle(): void
     {
         Sitemap::create()

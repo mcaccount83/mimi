@@ -2,17 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[Table('coordinator_application', 'coordinator_id')]
+#[Unguarded]
 class CoordinatorApplication extends Model
 {
-    protected $table = 'coordinator_application';
-
-    protected $primaryKey = 'coordinator_id';
-
-    protected $guarded = []; // ALL columns are mass-assignable
-
     protected $casts = [
         'created_at' => 'datetime',
     ];

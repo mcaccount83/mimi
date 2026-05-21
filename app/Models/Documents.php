@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Model;
 
-class Documents extends Model
-{
-    protected $primaryKey = 'chapter_id';
-
-    protected $guarded = []; // ALL columns are mass-assignable
-}
+#[Table(key: 'chapter_id')]
+#[Unguarded]
+class Documents extends Model {}

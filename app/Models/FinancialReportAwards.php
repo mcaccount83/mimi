@@ -2,16 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Model;
 
+#[Table('financial_report_awards', 'id')]
 class FinancialReportAwards extends Model
 {
-    protected $table = 'financial_report_awards';
-
-    protected $primaryKey = 'id';
-
-    protected $fillable = []; // No fillable fields
-
     protected $casts = [
         'created_at' => 'datetime',
     ];

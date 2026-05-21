@@ -2,11 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Model;
 
-class CoordinatorPosition extends Model
-{
-    protected $table = 'coordinator_position';
-
-    protected $fillable = []; // No fillable fields
-}
+#[Table('coordinator_position')]
+class CoordinatorPosition extends Model {}

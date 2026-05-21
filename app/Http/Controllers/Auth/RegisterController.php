@@ -6,11 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Providers\AppServiceProvider;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-class RegisterController extends Controller implements HasMiddleware
+#[Middleware('guest')]
+class RegisterController extends Controller
 {
     use RegistersUsers;
 
@@ -18,13 +19,6 @@ class RegisterController extends Controller implements HasMiddleware
      * Where to redirect users after registration.
      */
     protected $redirectTo = AppServiceProvider::HOME;
-
-    public static function middleware(): array
-    {
-        return [
-            'guest',
-        ];
-    }
 
     /**
      * Get a validator for an incoming registration request.

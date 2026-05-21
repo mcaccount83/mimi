@@ -14,8 +14,7 @@ use App\Models\Resources;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -23,15 +22,9 @@ use Illuminate\Support\Str;
 const client_id = 'YOUR_CLIENT_ID';
 const client_secret = 'YOUR_CLIENT_SECRET';
 
-class GoogleController extends Controller implements HasMiddleware
+#[Middleware('auth', except: ['logout'])]
+class GoogleController extends Controller
 {
-    public static function middleware(): array
-    {
-        return [
-            new Middleware('auth', except: ['logout']),
-        ];
-    }
-
     public function verifyRecaptcha(string $token, string $userIpAddress): array
     {
         $projectId = config('services.recaptcha.project_id');

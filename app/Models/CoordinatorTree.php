@@ -2,17 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
+use Illuminate\Database\Eloquent\Attributes\WithoutTimestamps;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[Table('coordinator_reporting_tree')]
+#[WithoutTimestamps]
+#[Unguarded]
 class CoordinatorTree extends Model
 {
-    public $timestamps = false;
-
-    protected $table = 'coordinator_reporting_tree';
-
-    protected $guarded = []; // ALL columns are mass-assignable
-
     public function coordinator(): BelongsTo
     {
         return $this->belongsTo(Coordinators::class, 'coordinator_id', 'id');  // 'coordinator_id' in coordinator_tree BelongsTo 'id' in coordinators

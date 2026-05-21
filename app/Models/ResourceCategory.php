@@ -2,11 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Model;
 
-class ResourceCategory extends Model
-{
-    protected $table = 'resource_category';
-
-    protected $fillable = []; // No fillable fields
-}
+#[Table('resource_category')]
+class ResourceCategory extends Model {}

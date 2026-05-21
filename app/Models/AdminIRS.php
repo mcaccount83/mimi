@@ -2,17 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[Table('admin_irs', 'id')]
+#[Unguarded]
 class AdminIRS extends Model
 {
-    protected $table = 'admin_irs';
-
-    protected $primaryKey = 'id';
-
-    protected $guarded = []; // ALL columns are mass-assignable
-
     public function fiscalYear(): BelongsTo
     {
         return $this->belongsTo(FiscalYear::class, 'fiscal_year_id', 'id');

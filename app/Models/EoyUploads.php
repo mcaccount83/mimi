@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Model;
 
-class EoyUploads extends Model
-{
-    protected $guarded = []; // ALL columns are mass-assignable
-}
+#[Unguarded]
+class EoyUploads extends Model {}

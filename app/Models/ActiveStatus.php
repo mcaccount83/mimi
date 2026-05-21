@@ -2,13 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Model;
 
-class ActiveStatus extends Model
-{
-    protected $table = 'active_status';
-
-    protected $primaryKey = 'id';
-
-    protected $fillable = []; // No fillable fields
-}
+#[Table('active_status', 'id')]
+class ActiveStatus extends Model {}
