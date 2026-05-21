@@ -50,7 +50,7 @@ class AdminReportController extends Controller implements HasMiddleware
 
         // Check if international checkbox is selected
         $showInternational = $request->has(CheckboxFilterEnum::INTERNATIONAL) &&
-                            $request->get(CheckboxFilterEnum::INTERNATIONAL) == 'yes';
+                            $request->input(CheckboxFilterEnum::INTERNATIONAL) == 'yes';
 
         // Filter by conference unless international is selected
         if (! $showInternational) {
