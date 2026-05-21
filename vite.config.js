@@ -35,11 +35,11 @@ export default defineConfig(({ mode }) => {
                     silenceDeprecations: ['import', 'global-builtin', 'color-functions', 'if-function'],
                 }
             }
-        }
-    };
-    server: {
-        watch: {
-            ignored: ['**/storage/framework/views/**'],
         },
-    },
+        server: {
+            watch: {
+                ignored: ['**/storage/framework/views/**'],
+            },
+        },
+    };
 });

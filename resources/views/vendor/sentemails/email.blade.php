@@ -1,7 +1,7 @@
 {{-- <div class="relative shadow-md">
     <div class="flex items-center justify-between px-5 py-3 bg-white">
-        <h3 class="text-lg font-semibold text-gray-900 truncate">{{ $email->subject }}</h3>
-        <div class="ms-4 flex-shrink-0">
+        <h3 class="text-xl text-gray-900 truncate">{{ $email->subject }}</h3>
+        <div class="ml-4 flex-shrink-0">
             <span>#{{ $email->id }}</span>
         </div>
     </div>
@@ -30,19 +30,18 @@
                                     {{ $attachment->filename }}
                             </a>
                         @endforeach --}}
-                       @foreach($email->attachments as $attachment)
-    <button type="button"
-        class="bg-gray-200 px-2 py-1 rounded-lg text-xs text-gray-800 hover:text-gray-900 hover:bg-gray-300"
-        onclick="openPdfViewer('{{ $attachment->path }}')">
-        {{ $attachment->filename }}
-    </button>
-@endforeach
+                        @foreach($email->attachments as $attachment)
+                            <button type="button"
+                                class="bg-gray-200 px-2 py-1 rounded-lg text-xs text-gray-800 hover:text-gray-900 hover:bg-gray-300"
+                                onclick="openPdfViewer('{{ $attachment->path }}')">
+                                {{ $attachment->filename }}
+                            </button>
+                        @endforeach
                     @endif
                 </span>
             </p>
-            <div class="flex items-center text-end">
-                <span  class="text-xs text-gray-600">#{{ $email->id }}<br>
-                    {{ date('F jS Y H:i A', strtotime($email->created_at)) }}</span>
+            <div class="flex items-center">
+                <span class="text-xs text-gray-600">{{ date('F jS Y H:i A', strtotime($email->created_at)) }}</span>
             </div>
         </div>
         <div class="mt-6 text-gray-800 text-sm border-t-2">

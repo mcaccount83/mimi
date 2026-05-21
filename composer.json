@@ -25,7 +25,7 @@
         "league/flysystem-aws-s3-v3": "^3.30",
         "livewire/livewire": "^3.7",
         "rap2hpoutre/laravel-log-viewer": "^3.0",
-        "riari/laravel-forum": "^8.0",
+        "riari/laravel-forum": "8.0",
         "romanzipp/laravel-queue-monitor": "^5.4",
         "setasign/fpdf": "^1.8",
         "setasign/fpdi": "^2.6",
