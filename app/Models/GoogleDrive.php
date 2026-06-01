@@ -6,6 +6,6 @@ use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Model;
 
-#[Table('google_drive_new')]
+#[Table('google_drive_new', 'id')]
 #[Unguarded]
 class GoogleDrive extends Model {}

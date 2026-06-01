@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-#[Table('fiscal_year')]
+#[Table('fiscal_year', 'id')]
 #[Unguarded]
 class FiscalYear extends Model
 {

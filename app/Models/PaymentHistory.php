@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Table('payment_history')]
+#[Table('payment_history', 'id')]
 #[Unguarded]
 class PaymentHistory extends Model
 {

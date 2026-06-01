@@ -714,7 +714,7 @@ class FinancialReportController extends Controller implements HasMiddleware
     /**
      * Update or create incoming board member
      */
-    public function updateIncomingBoardMember(int $chapterId, int $positionId, string $positionPrefix, string $vacantField, int $idField, Request $request, string $updatedBy, int $userId)
+    public function updateIncomingBoardMember(int $chapterId, int $positionId, string $positionPrefix, string $vacantField, string $idField, Request $request, string $updatedBy, int $userId)
     {
         $boardDetails = BoardsIncoming::where('chapter_id', $chapterId)
             ->where('board_position_id', $positionId)

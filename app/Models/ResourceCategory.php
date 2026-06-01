@@ -5,5 +5,5 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Model;
 
-#[Table('resource_category')]
+#[Table('resource_category', 'id')]
 class ResourceCategory extends Model {}

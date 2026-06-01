@@ -246,7 +246,6 @@ class PublicController extends Controller
                 $urlPath = substr($urlPath, strlen($basePath));
             }
 
-            // $internalRequest = Request::create($urlPath, 'GET', [], $request->cookies->all());
             $internalRequest = $request->create($urlPath, 'GET', [], $request->cookies->all());
             $internalRequest->setLaravelSession($request->session());
             $response = app()->handle($internalRequest);
@@ -344,7 +343,6 @@ class PublicController extends Controller
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
         if (! $recaptchaResult['success']) {
-            // return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
             return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
         }
 
@@ -560,7 +558,6 @@ class PublicController extends Controller
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
         if (! $recaptchaResult['success']) {
-            // return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
             return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
         }
 
@@ -675,7 +672,7 @@ class PublicController extends Controller
      * Process payments with Authorize.net
      */
     public function processPublicPayment(Request $request, string $name, string $description, string $shortDescription, string $transactionType, int $confId, string $shippingCountry,
-        string $shippingFirst, string $shippingLast, string $shippingCompany, string $shippingAddress, string $shippingCity, int $shippingState, int $shippingZip)
+        string $shippingFirst, string $shippingLast, string $shippingCompany, string $shippingAddress, string $shippingCity, string $shippingState, string $shippingZip)
     {
         if (app()->environment('local')) {
             $transactionTypeDetail = 'authOnlyTransaction';  // Auth Only for testing Purposes
@@ -946,7 +943,6 @@ class PublicController extends Controller
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
         if (! $recaptchaResult['success']) {
-            // return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
             return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
         }
 
@@ -1101,7 +1097,6 @@ class PublicController extends Controller
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
         if (! $recaptchaResult['success']) {
-            // return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
             return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
         }
 

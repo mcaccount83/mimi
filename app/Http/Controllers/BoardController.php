@@ -463,7 +463,7 @@ class BoardController extends Controller implements HasMiddleware
     /**
      *Update Chapter Board Information
      */
-    private function updateBoardMember(object $chapter, int $position, object $requestData, array $updatedBy, int $updatedId, array $defaultBoardCategories)
+    private function updateBoardMember(object $chapter, string $position, object $requestData, array $updatedBy, int $updatedId, array $defaultBoardCategories)
     {
         $positionConfig = [
             'president' => [

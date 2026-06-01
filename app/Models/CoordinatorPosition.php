@@ -5,5 +5,5 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Model;
 
-#[Table('coordinator_position')]
+#[Table('coordinator_position', 'id')]
 class CoordinatorPosition extends Model {}

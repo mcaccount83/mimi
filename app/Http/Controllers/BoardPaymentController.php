@@ -182,7 +182,6 @@ class BoardPaymentController extends Controller implements HasMiddleware
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
         if (! $recaptchaResult['success']) {
-            // return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
             return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
         }
 
@@ -328,7 +327,6 @@ class BoardPaymentController extends Controller implements HasMiddleware
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
         if (! $recaptchaResult['success']) {
-            // return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
             return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
         }
 
@@ -497,7 +495,6 @@ class BoardPaymentController extends Controller implements HasMiddleware
         $recaptchaResult = $this->googleController->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip());
 
         if (! $recaptchaResult['success']) {
-            // return back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
             return redirect()->back()->withErrors(['recaptcha' => $recaptchaResult['error']])->withInput();
         }
 
@@ -612,7 +609,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
      * Process payments with Authorize.net
      */
     public function processPayment(Request $request, string $name, string $description, string $shortDescription, string $transactionType, int $confId, string $shippingCountry,
-        string $shippingFirst, string $shippingLast, string $shippingCompany, string $shippingAddress, string $shippingCity, int $shippingState, int $shippingZip)
+        string $shippingFirst, string $shippingLast, string $shippingCompany, string $shippingAddress, string $shippingCity, string $shippingState, string $shippingZip)
     {
         if (app()->environment('local')) {
             $transactionTypeDetail = 'authOnlyTransaction';  // Auth Only for testing Purposes

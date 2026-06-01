@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Table('boards_pending')]
+#[Table('boards_pending', 'id')]
 #[Unguarded]
 class BoardsPending extends Model
 {

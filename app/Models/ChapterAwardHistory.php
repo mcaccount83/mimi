@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Table('chapter_awards_history')]
+#[Table('chapter_awards_history', 'id')]
 #[Unguarded]
 class ChapterAwardHistory extends Model
 {
