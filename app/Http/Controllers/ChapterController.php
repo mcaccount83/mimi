@@ -1401,7 +1401,7 @@ class ChapterController extends Controller implements HasMiddleware
         }
     }
 
-    public function createNewBoardMember(object $chapter, int $relation, int $positionId, object $requestData, string $prefix, int $chStatus, string $updatedBy, int $updatedId, array $defaultBoardCategories)
+    public function createNewBoardMember(object $chapter, string $relation, int $positionId, object $requestData, string $prefix, int $chStatus, string $updatedBy, int $updatedId, array $defaultBoardCategories)
     {
         $firstName = $requestData->input($prefix.'fname');
         $lastName = $requestData->input($prefix.'lname');

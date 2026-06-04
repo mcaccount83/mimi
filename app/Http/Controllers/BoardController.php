@@ -633,7 +633,7 @@ class BoardController extends Controller implements HasMiddleware
         }
     }
 
-    private function createNewBoardMember(object $chapter, int $relation, int $positionId, object $requestData, string $prefix, array $updatedBy, int $updatedId, array $defaultBoardCategories)
+    private function createNewBoardMember(object $chapter, string $relation, int $positionId, object $requestData, string $prefix, array $updatedBy, int $updatedId, array $defaultBoardCategories)
     {
         $firstName = $requestData->input($prefix.'fname');
         $lastName = $requestData->input($prefix.'lname');
