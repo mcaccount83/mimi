@@ -79,7 +79,7 @@
                                 @if($regionalCoordinatorCondition)
                                     {{$chEOYDocuments->financial_review_complete == 1 ? 'checked' : ''}}>
                                     @else
-                                    {{$chEOYDocumentsY->financial_review_complete == 1 ? 'checked' : ''}} disabled>
+                                    {{$chEOYDocuments->financial_review_complete == 1 ? 'checked' : ''}} disabled>
                                      @endif
                                 <label class="form-check-label" for="financial_review_complete"></label>
                             </div>
