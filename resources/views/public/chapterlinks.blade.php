@@ -10,6 +10,7 @@
     <h4>International Chapters</h4>
     <div class="border-horiz2"></div>
 
+    {{-- <div class="chapter-columns"> --}}
     <div style="margin-bottom: 1rem;">
         @foreach($international as $chapter)
             <div style="margin-bottom: 0.25rem;">
@@ -28,6 +29,7 @@
             </div>
         @endforeach
     </div>
+    {{-- </div> --}}
     @endif
 
     <!-- USA Chapters Section -->
@@ -39,7 +41,8 @@
     @endif
     <div class="border-horiz2"></div>
 
-    <div class="accordion" id="accordion-usa" style="column-count: 4; column-gap: 1rem;">
+    <div class="chapter-columns">
+    <div class="accordion" id="accordion-usa">
         @php
             $previousState = null;
             $usaIndex = 0;
@@ -96,11 +99,28 @@
             @endif
         @endforeach
     </div>
+    </div>
 
 </div>
 @endsection
 
 @section('customscript')
+<style>
+.chapter-columns {
+    column-gap: 1rem;
+    column-count: 1;
+}
+@media (min-width: 576px) {
+    .chapter-columns { column-count: 2; }
+}
+@media (min-width: 992px) {
+    .chapter-columns { column-count: 3; }
+}
+@media (min-width: 1200px) {
+    .chapter-columns { column-count: 4; }
+}
+</style>
+
 <script>
 function showChapterInfo(chapter) {
     Swal.fire({
