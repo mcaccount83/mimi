@@ -112,10 +112,6 @@
 </head>
 <body>
         <div class="keep-together" style="page-break-inside: avoid;">
-            {{-- <center>
-                <img src="{{ $_SERVER['DOCUMENT_ROOT'] . '/' . ltrim(config('settings.base_url'), '/') . 'images/logo-mc.png' }}" alt="MC" style="width: 125px;">
-            </center>
-            <br> --}}
             <center><h2>International MOMS Club<br>
                 End of Year Information</h2></center>
 

@@ -31,7 +31,7 @@
 <table width="100%" style="border: none; margin-bottom: 20px;">
     <tr>
         <td width="20%" style="vertical-align: top; padding: 10px;">
-            <img src="{{ $_SERVER['DOCUMENT_ROOT'] . '/' . ltrim(config('settings.base_url'), '/') . 'images/logo-mc-noarch.png' }}" alt="MC" style="width: 120px;">
+            <img src="{{ config('settings.base_url') }}images/logo-mc-noarch.png" alt="MC" style="width: 120px;">
         </td>
         <td width="80%" style="text-align: center; vertical-align: middle;">
             <h2 style="margin: 0;">International MOMS Club<sub style="font-size: 0.5em;">&reg;</sub><br>
@@ -89,7 +89,7 @@
     <h2>Your donations to the Mother-To-Mother Fund<br>
         made these grants possible!</h2>
     <br>
-    <img src="{{ $_SERVER['DOCUMENT_ROOT'] . '/' . ltrim(config('settings.base_url'), '/') . 'images/logo-mc-noarch.png' }}" alt="MC" style="width: 200px;">
+    <img src="{{ config('settings.base_url') }}images/logo-mc-noarch.png" alt="MC" style="width: 120px;">
 </div>
 
 </body>

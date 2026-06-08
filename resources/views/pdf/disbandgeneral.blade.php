@@ -7,7 +7,7 @@
 </head>
 <body>
     <center>
-        <img src="{{ $_SERVER['DOCUMENT_ROOT'] . '/' . ltrim(config('settings.base_url'), '/') . 'images/logo-mc.png' }}" alt="MC" style="width: 125px;">
+        <img src="{{ config('settings.base_url') }}images/logo-mc.png" alt="MC" style="width: 125px;">
     </center>
 <br>
     <p>{{ $currentDateWords }}</p>
