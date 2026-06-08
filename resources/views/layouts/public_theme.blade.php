@@ -51,6 +51,9 @@ document.addEventListener('DOMContentLoaded', function() {
     @include('layouts.styles.forms')
     @include('layouts.styles.sweetalert')
 
+    @stack('styles')
+    @stack('head_scripts')
+
 </head>
   <!--end::Head-->
   <!--begin::Body-->
