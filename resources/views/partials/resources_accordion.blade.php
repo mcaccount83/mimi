@@ -1,7 +1,8 @@
 
 <div class="container-fluid">
-    <div class="accordion" id="accordion-resources" style="column-count: 2; column-gap: 1rem;">
-            @foreach($resourceCategories as $category)
+    <div class="chapter-columns">
+    <div class="accordion" id="accordion-resources">
+        @foreach($resourceCategories as $category)
             <div style="break-inside: avoid; margin-bottom: 0.5rem;">
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="header-{{ Str::slug($category->category_name) }}">
@@ -78,7 +79,20 @@
             </div>
         @endforeach
     </div>
+    </div>
 </div>
+
+@section('customscript')
+<style>
+.chapter-columns {
+    column-gap: 1rem;
+    column-count: 1;}
+
+@media (min-width: 1200px) {
+    .chapter-columns { column-count: 2; }
+}
+</style>
+@endsection
 
 @push('scripts')
 
