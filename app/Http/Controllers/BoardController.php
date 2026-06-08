@@ -1260,24 +1260,30 @@ class BoardController extends Controller implements HasMiddleware
             $activateBoard = $reportYearOptions['activateBoard'];
 
             $message = 'Board info has been Submitted'; // default fallback
+            $activationSuccess = false;
 
             if ($activateBoard) {
                 try {
                     $status = $this->financialReportController->activateSingleBoard($request, $chId);
-                    $message = $status == 'success'
-                        ? 'Board info has been submitted and activated successfully'
-                        : 'Board info submitted, but activation encountered an issue.';
+                    if ($status == 'success') {
+                        $activationSuccess = true;
+                        $message = 'Board info has been submitted and activated successfully';
+                    } else {
+                        $message = 'Board info submitted, but activation encountered an issue.';
+                    }
                 } catch (\Exception $e) {
                     Log::error('Board activation failed: '.$e->getMessage());
                     $message = 'Board info submitted, but activation encountered an issue.';
                 }
             }
 
-            Mail::to($emailCC)->queue(new EOYElectionReportSubmitted($mailData));
-            Mail::to($emailListChap)->queue(new EOYElectionReportThankYou($mailData));
-
-            Mail::to($emailCC)->queue(new EOYElectionReportSubmittedActive($mailData));
-            Mail::to($emailListChap)->queue(new EOYElectionReportThankYouActive($mailData));
+            if ($activationSuccess) {
+                Mail::to($emailCC)->queue(new EOYElectionReportSubmittedActive($mailData));
+                Mail::to($emailListChap)->queue(new EOYElectionReportThankYouActive($mailData));
+            } else {
+                Mail::to($emailCC)->queue(new EOYElectionReportSubmitted($mailData));
+                Mail::to($emailListChap)->queue(new EOYElectionReportThankYou($mailData));
+            }
 
             DB::commit();
 
