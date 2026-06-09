@@ -243,6 +243,9 @@ class FinancialReportController extends Controller implements HasMiddleware
         $FieldCount = $input['MonDonationRowCount']; // <-- missing!
         for ($i = 0; $i < $FieldCount; $i++) {
             $rawDate = $input['MonDonationDate'.$i] ?? null;
+            if ($rawDate && str_contains($rawDate, '_')) {
+                $rawDate = null;
+            }
             $MonetaryDonation[$i]['mon_donation_desc'] = $input['DonationDesc'.$i] ?? null;
             $MonetaryDonation[$i]['mon_donation_info'] = $input['DonorInfo'.$i] ?? null;
             $MonetaryDonation[$i]['mon_donation_amount'] = $input['DonationAmount'.$i] ?? null;
@@ -259,11 +262,19 @@ class FinancialReportController extends Controller implements HasMiddleware
         $NonMonetaryDonation = null;
         $FieldCount = $input['NonMonDonationRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
-            $rawDate = $input['NonMonDonationDate'.$i] ?? null;  // <-- missing!
+            $rawDate = $input['NonMonDonationDate'.$i] ?? null;
+            if ($rawDate && str_contains($rawDate, '_')) {
+                $rawDate = null;
+            }
             $NonMonetaryDonation[$i]['nonmon_donation_desc'] = $input['NonMonDonationDesc'.$i] ?? null;
             $NonMonetaryDonation[$i]['nonmon_donation_info'] = $input['NonMonDonorInfo'.$i] ?? null;
-            $NonMonetaryDonation[$i]['nonmon_donation_date'] = ! empty($rawDate) && $rawDate !== '__/__/____'
-                ? Carbon::createFromFormat('m/d/Y', $rawDate)->format('Y-m-d') : null;
+            try {
+                $NonMonetaryDonation[$i]['nonmon_donation_date'] = ! empty($rawDate) && $rawDate !== '__/__/____'
+                    ? Carbon::createFromFormat('m/d/Y', $rawDate)->format('Y-m-d') : null;
+            } catch (\Exception $e) {
+                $NonMonetaryDonation[$i]['nonmon_donation_date'] = null;
+                Log::error('NonMonDonationDate parse error row '.$i.': '.$rawDate.' - '.$e->getMessage());
+            }
         }
         $financialReport->non_monetary_donations_to_chapter = base64_encode(serialize($NonMonetaryDonation));
 
@@ -288,9 +299,17 @@ class FinancialReportController extends Controller implements HasMiddleware
         $BankRecArray = null;
         $FieldCount = $input['BankRecRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
-            $rawDate = $input['BankRecDate'.$i] ?? null;  // <-- missing!
-            $BankRecArray[$i]['bank_rec_date'] = ! empty($rawDate) && $rawDate !== '__/__/____'
-                ? Carbon::createFromFormat('m/d/Y', $rawDate)->format('Y-m-d') : null;
+            $rawDate = $input['BankRecDate'.$i] ?? null;
+            if ($rawDate && str_contains($rawDate, '_')) {
+                $rawDate = null;
+            }
+            try {
+                $BankRecArray[$i]['bank_rec_date'] = ! empty($rawDate) && $rawDate !== '__/__/____'
+                    ? Carbon::createFromFormat('m/d/Y', $rawDate)->format('Y-m-d') : null;
+            } catch (\Exception $e) {
+                $BankRecArray[$i]['bank_rec_date'] = null;
+                Log::error('BankRecDate parse error row '.$i.': '.$rawDate.' - '.$e->getMessage());
+            }
             $BankRecArray[$i]['bank_rec_check_no'] = $input['BankRecCheckNo'.$i] ?? null;
             $BankRecArray[$i]['bank_rec_desc'] = $input['BankRecDesc'.$i] ?? null;
             $BankRecArray[$i]['bank_rec_payment_amount'] = $input['BankRecPaymentAmount'.$i] ?? null;
@@ -354,7 +373,7 @@ class FinancialReportController extends Controller implements HasMiddleware
 
         // Awards (seralized)
         $ChapterAwards = null;
-        $FieldCount = $input['ChapterAwardsRowCount'] ?? null;
+        $FieldCount = $input['ChapterAwardsRowCount'] ?? 0;
         for ($i = 0; $i < $FieldCount; $i++) {
             $ChapterAwards[$i]['awards_type'] = $input['ChapterAwardsType'.$i] ?? null;
             $ChapterAwards[$i]['awards_desc'] = $input['ChapterAwardsDesc'.$i] ?? null;
