@@ -147,7 +147,7 @@
                                     <input type="text" name="ch_pre_zip" id="ch_pre_zip" class="form-control"   required placeholder="Zip">
                                 </div>
                                 <div class="col-sm-2 mb-3" id="ch_pre_country-container" style="display: none;">
-                                    <select name="ch_pre_country" id="ch_pre_country" class="form-control" style="width: 100%;" required>
+                                    <select name="ch_pre_country" id="ch_pre_country" class="form-control" style="width: 100%;">
                                         <option value="">Select Country</option>
                                         @foreach($allCountries as $country)
                                         <option value="{{$country->id}}">

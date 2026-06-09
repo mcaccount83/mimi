@@ -181,7 +181,7 @@
                                         <input type="text" name="cord_zip" id="cord_zip" class="form-control" value="{{ $cdDetails->zip }}"  required >
                                     </div>
                                     <div class="col-sm-2">
-                                <select name="cord_country" id="cord_country" class="form-control" style="width: 100%;" required>
+                                <select name="cord_country" id="cord_country" class="form-control" style="width: 100%;">
                                     <option value="">Select Country</option>
                                     @foreach($allCountries as $country)
                                             <option value="{{$country->id}}"

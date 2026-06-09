@@ -61,7 +61,7 @@
                                     <input type="text" name="ch_bor_zip" id="ch_bor_zip" class="form-control" value="{{ $borDetails->zip }}"  required placeholder="Zip">
                                 </div>
                                 <div class="col-sm-2" id="ch_bor_country-container" style="display: none;">
-                                    <select name="ch_bor_country" id="ch_bor_country" class="form-control" style="width: 100%;" required>
+                                    <select name="ch_bor_country" id="ch_bor_country" class="form-control" style="width: 100%;">
                                         <option value="">Select Country</option>
                                         @foreach($allCountries as $country)
                                         <option value="{{$country->id}}"

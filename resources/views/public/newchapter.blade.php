@@ -83,7 +83,7 @@
                 <div class="row mb-3 mt-1" id="country-container" style="display: none;">
                     <label class="col-sm-4 col-form-label">Country:</label>
                     <div class="col-sm-8">
-                        <select id="ch_country" name="ch_country" class="form-control" required>
+                        <select id="ch_country" name="ch_country" class="form-control">
                             <option value="">Select Country</option>
                             @foreach($allCountries as $country)
                                 <option value="{{$country->id}}" >

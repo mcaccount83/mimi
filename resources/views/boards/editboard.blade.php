@@ -77,7 +77,7 @@
                                     <input type="text" name="ch_pre_zip" id="ch_pre_zip" class="form-control" value="{{ $PresDetails->zip }}"  required placeholder="Zip">
                                 </div>
                                 <div class="col-sm-2" id="ch_pre_country-container" style="display: none;">
-                                    <select name="ch_pre_country" id="ch_pre_country" class="form-control" style="width: 100%;" required>
+                                    <select name="ch_pre_country" id="ch_pre_country" class="form-control" style="width: 100%;">
                                         <option value="">Select Country</option>
                                         @foreach($allCountries as $country)
                                         <option value="{{$country->id}}"
@@ -134,7 +134,7 @@
                                     <input type="text" name="ch_avp_zip" id="ch_avp_zip" class="form-control" value="{{$AVPDetails->zip != ''  ? $AVPDetails->zip : ''}}"  required placeholder="Zip">
                                 </div>
                                   <div class="col-sm-2" id="ch_avp_country-container" style="display: none;">
-                                    <select name="ch_avp_country" id="ch_avp_country" class="form-control" style="width: 100%;" required>
+                                    <select name="ch_avp_country" id="ch_avp_country" class="form-control" style="width: 100%;">
                                          <option value="">Select Country</option>
                                         @foreach($allCountries as $country)
                                         <option value="{{$country->id}}"
@@ -192,7 +192,7 @@
                                     <input type="text" name="ch_mvp_zip" id="ch_mvp_zip" class="form-control" value="{{$MVPDetails->zip != ''  ? $MVPDetails->zip : ''}}"  required placeholder="Zip">
                                 </div>
                                 <div class="col-sm-2"  id="ch_mvp_country-container" style="display: none;">
-                                    <select name="ch_mvp_country" id="ch_mvp_country" class="form-control" style="width: 100%;" required>
+                                    <select name="ch_mvp_country" id="ch_mvp_country" class="form-control" style="width: 100%;">
                                         <option value="">Select Country</option>
                                         @foreach($allCountries as $country)
                                         <option value="{{$country->id}}"
@@ -250,7 +250,7 @@
                                     <input type="text" name="ch_trs_zip" id="ch_trs_zip" class="form-control" value="{{$TRSDetails->zip != ''  ? $TRSDetails->zip : ''}}"  required placeholder="Zip">
                                 </div>
                                   <div class="col-sm-2" id="ch_trs_country-container" style="display: none;">
-                                    <select name="ch_trs_country" id="ch_trs_country" class="form-control" style="width: 100%;" required>
+                                    <select name="ch_trs_country" id="ch_trs_country" class="form-control" style="width: 100%;">
                                         <option value="">Select Country</option>
                                         @foreach($allCountries as $country)
                                         <option value="{{$country->id}}"
@@ -308,7 +308,7 @@
                                     <input type="text" name="ch_sec_zip" id="ch_sec_zip" class="form-control" value="{{$SECDetails->zip != ''  ? $SECDetails->zip : ''}}"  required placeholder="Zip">
                                 </div>
                                  <div class="col-sm-2" id="ch_sec_country-container" style="display: none;">
-                                    <select name="ch_sec_country" id="ch_sec_country" class="form-control" style="width: 100%;" required>
+                                    <select name="ch_sec_country" id="ch_sec_country" class="form-control" style="width: 100%;">
                                         <option value="">Select Country</option>
                                         @foreach($allCountries as $country)
                                         <option value="{{$country->id}}"

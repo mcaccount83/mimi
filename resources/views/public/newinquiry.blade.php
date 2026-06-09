@@ -68,7 +68,7 @@
                                 <div class="row mb-3" id="country-container" style="display: none;">
                                     <label class="col-sm-4 col-form-label">Which Country:</label>
                                     <div class="col-sm-8">
-                                        <select id="ch_country" name="ch_country" class="form-control" required>
+                                        <select id="ch_country" name="ch_country" class="form-control">
                                             <option value="">Select Country</option>
                                             @foreach($allCountries as $country)
                                                 <option value="{{$country->id}}" >
@@ -110,7 +110,7 @@
                                     <input type="text" name="inquiryZip" id="inquiryZip" class="form-control" placeholder="Zip" required >
                                 </div>
                             <div class="col-sm-2 mb-1" id="inquiryCountry-container" style="display: none;">
-                                <select name="inquiryCountry" id="inquiryCountry" class="form-control" style="width: 100%;" required>
+                                <select name="inquiryCountry" id="inquiryCountry" class="form-control" style="width: 100%;">
                                     <option value="">Select Country</option>
                                     @foreach($allCountries as $country)
                                         <option value="{{$country->id}}">
