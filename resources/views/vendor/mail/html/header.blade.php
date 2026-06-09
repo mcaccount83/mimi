@@ -1,7 +1,7 @@
 <tr>
 <td class="header">
     <a href="{{ $url }}" style="display:inline-block;">
-        {{-- <img src="{{ config('settings.base_url') }}images/logo-long.png" alt="International MOMS Club" width="250"> --}}
+        {{-- Must use app.url (absolute) not base_url (relative) - email clients cannot resolve relative paths --}}
         <img src="{{ rtrim(config('app.url'), '/') }}/images/logo-long2.png" alt="International MOMS Club" width="250">
     </a>
 {{-- <a href="{{ $url }}">
