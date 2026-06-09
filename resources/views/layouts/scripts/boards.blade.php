@@ -52,8 +52,10 @@
             fields.hide().find('input, select, textarea').prop('required', false).val(null);
         } else {
             fields.show().find('input, select, textarea').prop('required', true);
-            // Re-initialize inputmask on phone fields that just became visible
-            fields.find('[data-inputmask]').inputmask();
+            // Re-init via vanilla InputMask
+            fields.find('[data-inputmask]').each(function() {
+                Inputmask().mask(this);
+            });
         }
         updateLabel(checked);
     });
