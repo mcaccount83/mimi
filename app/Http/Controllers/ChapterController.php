@@ -1724,7 +1724,7 @@ class ChapterController extends Controller implements HasMiddleware
         DB::beginTransaction();
         try {
             $chapter->website_url = $website;
-            $chapter->website_status = $request->input('ch_webstatus');
+            $chapter->website_status = $ch_webstatus;
             $chapter->website_notes = $request->input('ch_webnotes');
             $chapter->egroup = $request->input('ch_onlinediss');
             $chapter->social1 = $request->input('ch_social1');

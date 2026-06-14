@@ -15,6 +15,8 @@ use App\Mail\EOYFinancialReportThankYou;
 use App\Mail\EOYFinancialSubmitted;
 use App\Mail\GrantRequestNotice;
 use App\Mail\GrantRequestThankYou;
+use App\Mail\NewWebsiteReviewChapNotice;
+use App\Mail\NewWebsiteReviewNotice;
 use App\Mail\ProbationRptSubmittedCCNotice;
 use App\Mail\ProbationRptThankYou;
 use App\Models\Boards;
@@ -1012,6 +1014,34 @@ class BoardController extends Controller implements HasMiddleware
             $chapter->social2 = $request->input('ch_social2');
             $chapter->social3 = $request->input('ch_social3');
             $chapter->save();
+
+            // Update Chapter MailData//
+            $baseQueryUpd = $this->baseChapterController->getChapterDetails($chId);
+            $chDetailsUpd = $baseQueryUpd['chDetails'];
+            $stateShortName = $baseQueryUpd['stateShortName'];
+            $pcDetailsUpd = $baseQueryUpd['pcDetails'];
+            $emailListChap = $baseQueryUpd['emailListChap'];  // Full Board
+            $emailListCoord = $baseQueryUpd['emailListCoord']; // Full Coord List
+            $emailCC = $baseQueryUpd['emailCC'];  // CC Email
+            $emailPC = $baseQueryUpd['emailPC'];
+
+            if ($request->input('ch_webstatus') != $request->input('ch_hid_webstatus')) {
+                $mailData = array_merge(
+                    $this->baseMailDataController->getChapterData($chDetailsUpd, $stateShortName),
+                    [
+                        'chapterWebsiteUrl' => $website,
+                    ]
+                );
+
+                if ($request->input('ch_webstatus') == 2) {
+                    Mail::to($emailCC)
+                        ->queue(new NewWebsiteReviewNotice($mailData));
+
+                    Mail::to($emailListChap)
+                        ->cc($emailListCoord)
+                        ->queue(new NewWebsiteReviewChapNotice($mailData));
+                }
+            }
 
             DB::commit();
 
