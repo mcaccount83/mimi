@@ -988,47 +988,34 @@ class BoardController extends Controller implements HasMiddleware
 
         $input = $request->all();
 
+        $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
+        if (empty(trim($ch_webstatus))) {
+            $ch_webstatus = 0; // Set it to 0 if it's blank
+        }
+
+        $website = $request->input('ch_website');
+        // Ensure it starts with "http://" or "https://"
+        if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
+            $website = 'http://'.$website;
+        }
+
         $chapter = Chapters::find($chId);
-        $probation = ProbationSubmission::find($chId);
 
         DB::beginTransaction();
         try {
             $chapter->updated_by = $updatedBy;
             $chapter->updated_id = $updatedId;
+            $chapter->website_url = $website;
+            $chapter->website_status = $ch_webstatus;
+            $chapter->egroup = $request->input('ch_onlinediss');
+            $chapter->social1 = $request->input('ch_social1');
+            $chapter->social2 = $request->input('ch_social2');
+            $chapter->social3 = $request->input('ch_social3');
             $chapter->save();
-
-            if ($probation) {
-                $probation->update([
-                    'q1_dues' => $input['q1_dues'] ?? null,
-                    'q1_benefit' => $input['q1_benefit'] ?? null,
-                    'q2_dues' => $input['q2_dues'] ?? null,
-                    'q2_benefit' => $input['q2_benefit'] ?? null,
-                    'q3_dues' => $input['q3_dues'] ?? null,
-                    'q3_benefit' => $input['q3_benefit'] ?? null,
-                    'q4_dues' => $input['q4_dues'] ?? null,
-                    'q4_benefit' => $input['q4_benefit'] ?? null,
-                ]);
-            }
-
-            $mailTable = $this->emailTableController->createProbationSubmissionTable($input);
-
-            $mailData = array_merge(
-                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                $this->baseMailDataController->getProbationData($input),
-                [
-                    'mailTable' => $mailTable,
-                ]
-            );
-
-            Mail::to($emailCC)
-                ->queue(new ProbationRptSubmittedCCNotice($mailData));
-
-            Mail::to($emailListChap)
-                ->queue(new ProbationRptThankYou($mailData));
 
             DB::commit();
 
-            return redirect()->back()->with('success', 'Quarterly Report has been Submitted');
+            return redirect()->back()->with('success', 'Online Information has been Submitted');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
             Log::error($e);  // Log the error
