@@ -349,12 +349,9 @@ class EOYReportController extends Controller implements HasMiddleware
         }
 
         // Handle website URL
-        $website = $request->input('ch_website');
-        // Only add http:// if the website field is not null or empty
-        if (! is_null($website) && ! empty(trim($website))) {
-            if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
-                $website = 'http://'.$website;
-            }
+        $website = trim($request->input('ch_website'));
+        if (!empty($website) && ! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
+            $website = 'https://'.$website;
         }
 
         $documentsEOY = DocumentsEOY::find($chapter_id);

@@ -995,10 +995,9 @@ class BoardController extends Controller implements HasMiddleware
             $ch_webstatus = 0; // Set it to 0 if it's blank
         }
 
-        $website = $request->input('ch_website');
-        // Ensure it starts with "http://" or "https://"
-        if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
-            $website = 'http://'.$website;
+        $website = trim($request->input('ch_website'));
+        if (!empty($website) && ! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
+            $website = 'https://'.$website;
         }
 
         $chapter = Chapters::find($chId);
@@ -1210,11 +1209,9 @@ class BoardController extends Controller implements HasMiddleware
         }
 
         // Handle website URL
-        $website = $request->input('ch_website');
-        if (! is_null($website) && ! empty(trim($website))) {
-            if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
-                $website = 'http://'.$website;
-            }
+        $website = trim($request->input('ch_website'));
+        if (!empty($website) && ! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
+            $website = 'https://'.$website;
         }
 
         $boundaryStatus = $request->input('BoundaryStatus');
