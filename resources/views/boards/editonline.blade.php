@@ -23,12 +23,10 @@
                     <div class="card-body">
 
                            <!-- /.form group -->
-                            <div class="row mb-3">
+                           <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label">Website:</label>
                                 <div class="col-sm-6">
-                                    <input type="text" name="ch_website" id="ch_website" class="form-control"
-                                        value="{{$chDetails->website_url}}"
-                                        placeholder="Chapter Website">
+                                    @urlInput('ch_website', $chDetails->website_url)
                                 </div>
                             </div>
 

@@ -15,6 +15,31 @@ class BladeDirectivesServiceProvider extends ServiceProvider
             <?php echo '<script>
             document.addEventListener("DOMContentLoaded", function() {
                 $("[data-inputmask]:visible").inputmask();
+
+                // URL prefix behavior for .http-mask fields
+                $(document).on("focus", ".http-mask", function() {
+                    if ($(this).val() === "") {
+                        $(this).val("https://");
+                        let len = $(this).val().length;
+                        this.setSelectionRange(len, len);
+                    }
+                });
+
+                $(document).on("blur", ".http-mask", function() {
+                    let val = $(this).val().trim();
+                    if (!val || val === "https://" || val === "http://") {
+                        $(this).val("");
+                    } else if (!val.startsWith("http://") && !val.startsWith("https://")) {
+                        $(this).val("https://" + val);
+                    }
+                });
+
+                $(document).on("keydown", ".http-mask", function(e) {
+                    if ($(this).val() === "https://" && e.key === "Backspace") {
+                        $(this).val("");
+                        e.preventDefault();
+                    }
+                });
             });
             </script>'; ?>
             PHP;
@@ -34,7 +59,11 @@ class BladeDirectivesServiceProvider extends ServiceProvider
         Blade::directive('urlInput', function ($expression) {
             [$name, $value] = array_map('trim', explode(',', $expression, 2));
 
-            return "<?php echo '<input type=\"text\" name=\"' . $name . '\" id=\"' . $name . '\" class=\"form-control http-mask\" value=\"' . (' . $value . ' ?? \'\') . '\" placeholder=\"http://\">'; ?>";
+            return "<?php
+                \$_url = {$value} ?? '';
+                if (\$_url === 'http://' || \$_url === 'https://') \$_url = '';
+                echo '<input type=\"text\" name=\"' . {$name} . '\" id=\"' . {$name} . '\" class=\"form-control http-mask\" value=\"' . htmlspecialchars(\$_url, ENT_QUOTES) . '\" placeholder=\"https://\">';
+            ?>";
         });
 
         // Phone Hyperlink: @tel($chapter->phone)

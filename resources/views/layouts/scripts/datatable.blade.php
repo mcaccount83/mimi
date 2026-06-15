@@ -33,19 +33,5 @@ document.addEventListener('DOMContentLoaded', function() {
             "bottomEnd": "paging"
         }
     });
-
-    // // applyDateMask();
-    // applyPhoneMask();
-    // applyHttpMask();
-
-    // chapterTable.on('draw', function() {
-    //     // applyDateMask();
-    //     applyPhoneMask();
-    //     applyHttpMask();
-    // });
-
-    // coordinatorTable.on('draw', function() {
-    //     // applyDateMask();
-    // });
 });
 </script>
