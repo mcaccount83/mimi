@@ -462,7 +462,8 @@
 
 @endsection
 @section('customscript')
-{{-- @include('layouts.scripts.disablefieldseoy') --}}
+@php $disableMode = 'disable-board'; @endphp
+@include('layouts.scripts.disablefieldseoy')
 <script>
 
 $(document).ready(function() {

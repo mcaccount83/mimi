@@ -4,6 +4,7 @@
 
         var submitted = @json($chEOYDocuments->financial_review_complete);
         var received = @json($chEOYDocuments->financial_report_received);
+        var board = @json($chEOYDocuments->new_board_submitted);
         var activated = @json($chEOYDocuments->new_board_active);
         var ITCondition = @json($ITCondition ?? false);
         var eoyTestCondition = @json($eoyTestCondition ?? false);
@@ -43,8 +44,10 @@
             $('.keep-enabled').prop('disabled', false);
         }
 
+        console.log('board:', board, 'activated:', activated);
+
         if (disableEOYMode === 'disable-board') {
-            if ((activated != '1' && !shouldEnable) || ( activated != '1' && disableBoardEdits)) {
+            if (board == '1') {
                 disableButtons();
                 disableFields();
             }
