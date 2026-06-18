@@ -600,8 +600,6 @@
     }
 
     function TreasuryBalanceChange() {
-        var TreasuryBalance = parseFloat($('#AmountReservedFromLastYear').val().replace(/,/g, '')) || 0;
-        $('#AmountReservedFromLastYear').val(TreasuryBalance.toFixed(2));
         ReCalculateSummaryTotal();
     }
 

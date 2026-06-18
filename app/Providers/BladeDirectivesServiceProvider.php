@@ -12,37 +12,45 @@ class BladeDirectivesServiceProvider extends ServiceProvider
         // Inject Mask: @initMasks - initializes ALL data-inputmask fields
         Blade::directive('initMasks', function () {
             return <<<'PHP'
-            <?php echo '<script>
-            document.addEventListener("DOMContentLoaded", function() {
-                $("[data-inputmask]:visible").inputmask();
+<?php echo '<script>
+document.addEventListener("DOMContentLoaded", function() {
+    $("[data-inputmask]:visible").inputmask();
 
-                // URL prefix behavior for .http-mask fields
-                $(document).on("focus", ".http-mask", function() {
-                    if ($(this).val() === "") {
-                        $(this).val("https://");
-                        let len = $(this).val().length;
-                        this.setSelectionRange(len, len);
-                    }
-                });
+    // URL prefix behavior for .http-mask fields
+    $(document).on("focus", ".http-mask", function() {
+        if ($(this).val() === "") {
+            $(this).val("https://");
+            let len = $(this).val().length;
+            this.setSelectionRange(len, len);
+        }
+    });
 
-                $(document).on("blur", ".http-mask", function() {
-                    let val = $(this).val().trim();
-                    if (!val || val === "https://" || val === "http://") {
-                        $(this).val("");
-                    } else if (!val.startsWith("http://") && !val.startsWith("https://")) {
-                        $(this).val("https://" + val);
-                    }
-                });
+    $(document).on("blur", ".http-mask", function() {
+        let val = $(this).val().trim();
+        if (!val || val === "https://" || val === "http://") {
+            $(this).val("");
+        } else if (!val.startsWith("http://") && !val.startsWith("https://")) {
+            $(this).val("https://" + val);
+        }
+    });
 
-                $(document).on("keydown", ".http-mask", function(e) {
-                    if ($(this).val() === "https://" && e.key === "Backspace") {
-                        $(this).val("");
-                        e.preventDefault();
-                    }
-                });
-            });
-            </script>'; ?>
-            PHP;
+    $(document).on("keydown", ".http-mask", function(e) {
+        if ($(this).val() === "https://" && e.key === "Backspace") {
+            $(this).val("");
+            e.preventDefault();
+        }
+    });
+
+    // Prevent oninput calc functions from firing while currency field is being edited
+    $(document).on("focus", ".currency-input:not([data-inputmask])", function() {
+        $(this).data("editing", true);
+    });
+    $(document).on("blur", ".currency-input:not([data-inputmask])", function() {
+        $(this).data("editing", false);
+    });
+});
+</script>'; ?>
+PHP;
         });
 
         // Email Hyperlink: @mailto($MVPDetails->email)
@@ -118,7 +126,7 @@ class BladeDirectivesServiceProvider extends ServiceProvider
             $oninput = isset($parts[3]) ? trim($parts[3], "'\"") : '';
             $oninputAttr = $oninput ? 'oninput="'.$oninput.'"' : '';
 
-            return "<?php echo '<div class=\"input-group\"><span class=\"input-group-text\">$</span><input type=\"text\" name=\"{$name}\" id=\"{$name}\" class=\"form-control\" {$readonly} {$oninputAttr} data-inputmask=\'\"alias\": \"currency\", \"rightAlign\": false, \"groupSeparator\": \",\", \"digits\": 2, \"digitsOptional\": false, \"placeholder\": \"0\"\' data-mask value=\"' . htmlspecialchars({$value} ?? '') . '\"></div>'; ?>";
+            return "<?php echo '<div class=\"input-group\"><span class=\"input-group-text\">$</span><input type=\"text\" name=\"{$name}\" id=\"{$name}\" class=\"form-control currency-input\" {$readonly} {$oninputAttr} value=\"' . htmlspecialchars({$value} ?? '') . '\"></div>'; ?>";
         });
 
         // add more here as needed
