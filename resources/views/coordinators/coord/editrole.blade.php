@@ -375,7 +375,7 @@ function AddCoordinator() {
     const nCoordinatorID = getSelectedValue('SelectCoordinator');
 
     if (isCoordinatorAlreadyAssigned(nCoordinatorID)) {
-        alert("This coordinator is already assigned!");
+        customWarningAlert("This coordinator is already assigned!");
         return;
     }
 
@@ -416,7 +416,7 @@ function AddChapter() {
     const nChapterID = getSelectedValue('SelectChapter');
 
     if (isChapterAlreadyAssigned(nChapterID)) {
-        alert("This chapter is already assigned!");
+        customWarningAlert("This chapter is already assigned!");
         return;
     }
 

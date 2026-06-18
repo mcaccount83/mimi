@@ -539,12 +539,25 @@
             document.getElementById('post_balance').focus();
             return false;
         }
-        var result = confirm("This will finalize this report and flag it as 'review complete'. Do you wish to continue?");
-        if (result) {
-            document.getElementById('submit_type').value = 'review_complete';
-            document.getElementById('FurthestStep').value = '14';
-            document.getElementById('financial_report').submit();
-        }
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This will finalize this report and flag it as 'review complete'. Do you wish to continue?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Complete Review',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('submit_type').value = 'review_complete';
+                document.getElementById('FurthestStep').value = '14';
+                document.getElementById('financial_report').submit();
+            }
+        });
     });
 
     document.getElementById('AssignedReviewer')?.addEventListener('change', function() {
@@ -555,47 +568,9 @@
             emailMessageGroup.style.display = 'none';
         }
     });
-
-//     function submitFormWithStep(step) {
-//         document.getElementById('FurthestStep').value = step;
-//         document.getElementById('financial_report').submit();
-//     }
-
-//     document.getElementById('btn-step-1')?.addEventListener('click', function() { if (!CheckMembers()) return false; submitFormWithStep(1); });
-//     document.getElementById('btn-step-2')?.addEventListener('click', function() { submitFormWithStep(2); });
-//     document.getElementById('btn-step-3')?.addEventListener('click', function() { if (!CheckService()) return false; submitFormWithStep(3); });
-//     document.getElementById('btn-step-4')?.addEventListener('click', function() { if (!CheckParties()) return false; submitFormWithStep(4); });
-//     document.getElementById('btn-step-5')?.addEventListener('click', function() { submitFormWithStep(5); });
-//     document.getElementById('btn-step-6')?.addEventListener('click', function() { submitFormWithStep(6); });
-//     document.getElementById('btn-step-7')?.addEventListener('click', function() { submitFormWithStep(7); });
-//     document.getElementById('btn-step-8')?.addEventListener('click', function() { submitFormWithStep(8); });
-//     document.getElementById('btn-step-9')?.addEventListener('click', function() { if (!CheckFinancial()) return false; submitFormWithStep(9); });
-//     document.getElementById('btn-step-10')?.addEventListener('click', function() {
-//         var post_balance = document.getElementById('post_balance').value;
-//         if (post_balance == null || post_balance == '') {
-//             customWarningAlert('Please enter Ending Balance');
-//             document.getElementById('post_balance').focus();
-//             return false;
-//         }
-//         if (!CheckReconciliation()) return false;
-//         submitFormWithStep(10);
-//     });
-//     document.getElementById('btn-step-11')?.addEventListener('click', function() { submitFormWithStep(11); });
-//     document.getElementById('btn-step-12')?.addEventListener('click', function() { if (!CheckQuestions()) return false; submitFormWithStep(12); });
-//     document.getElementById('btn-step-13')?.addEventListener('click', function() { submitFormWithStep(13); });
-//     document.getElementById('btn-step-14')?.addEventListener('click', function() {
-//         var assignedReviewer = document.getElementById('AssignedReviewer').value;
-//         if (assignedReviewer == null || assignedReviewer == '') {
-//             customWarningAlert('Please select a Reviewer');
-//             document.getElementById('AssignedReviewer').focus();
-//             return false;
-//         }
-//         submitFormWithStep(14);
-//     });
  });
 </script>
 <script>
-
     function EnableNoteLogButton(NoteNumber){
         var noteValue = document.getElementById("Step" + NoteNumber + "_Note").value.trim();
         var button = document.getElementById("AddNote" + NoteNumber);
@@ -655,84 +630,5 @@
         }
         document.getElementById("Summary_Log").value = SummaryNote;
     }
-
-    // function CheckMembers() {
-    //     var checkRosterAttached = document.querySelector('input[name="checkRosterAttached"]:checked');
-    //     var checkRenewalSeemsRight = document.querySelector('input[name="checkRenewalSeemsRight"]:checked');
-
-    //     if (!checkRosterAttached || !checkRenewalSeemsRight) {
-    //         customWarningAlert("Answer Review Questions in CHAPTER DUES section to Continue.");
-    //         accordion.openAccordionItem('accordion-header-members');
-    //         return false;
-    //     }
-    //     return true;
-    // }
-
-    // function CheckService() {
-    //     var checkServiceProject = document.querySelector('input[name="checkServiceProject"]:checked');
-    //     var checkM2MDonation = document.querySelector('input[name="checkM2MDonation"]:checked');
-
-    //     if (!checkServiceProject || !checkM2MDonation) {
-    //         customWarningAlert("Answer Review Questions in SERVICE PROJECTS section to Continue.");
-    //         accordion.openAccordionItem('accordion-header-service');
-    //         return false;
-    //     }
-    //     return true;
-    // }
-
-    // function CheckParties() {
-    //     var check_party_percentage = document.querySelector('input[name="check_party_percentage"]:checked');
-
-    //     if (!check_party_percentage) {
-    //         customWarningAlert("Answer Review Questions in PARTIES & MEMBER BENEFITS section to Continue.");
-    //         accordion.openAccordionItem('accordion-header-parties');
-    //         return false;
-    //     }
-    //     return true;
-    // }
-
-    // function CheckFinancial() {
-    //     var checkTotalIncome = document.querySelector('input[name="checkTotalIncome"]:checked');
-
-    //     if (!checkTotalIncome) {
-    //         customWarningAlert("Answer Review Questions in FINANCIAL SUMMARY section to Continue.");
-    //         accordion.openAccordionItem('accordion-header-financial');
-    //         return false;
-    //     }
-    //     return true;
-    // }
-
-    // function CheckReconciliation() {
-    //     var check_beginning_balance = document.querySelector('input[name="check_beginning_balance"]:checked');
-    //     var checkBankStatementIncluded = document.querySelector('input[name="checkBankStatementIncluded"]:checked');
-    //     var checkBankStatementMatches = document.querySelector('input[name="checkBankStatementMatches"]:checked');
-    //     var post_balance = document.getElementById('post_balance');
-
-    //     if (!check_beginning_balance || !checkBankStatementIncluded || !checkBankStatementMatches || !post_balance) {
-    //         customWarningAlert("Answer Review Questions in RECONCILIATION section to Continue.");
-    //         accordion.openAccordionItem('accordion-header-reconciliation');
-    //         return false;
-    //     }
-    //     return true;
-    // }
-
-    // function CheckQuestions() {
-    //     var checkPurchasedPins = document.querySelector('input[name="checkPurchasedPins"]:checked');
-    //     var checkPurchasedMCMerch = document.querySelector('input[name="checkPurchasedMCMerch"]:checked');
-    //     var checkOfferedMerch = document.querySelector('input[name="checkOfferedMerch"]:checked');
-    //     var checkBylawsMadeAvailable = document.querySelector('input[name="checkBylawsMadeAvailable"]:checked');
-    //     var checkSisteredAnotherChapter = document.querySelector('input[name="checkSisteredAnotherChapter"]:checked');
-    //     var checkAttendedTraining = document.querySelector('input[name="checkAttendedTraining"]:checked');
-    //     var checkCurrent990NAttached = document.querySelector('input[name="checkCurrent990NAttached"]:checked');
-
-    //     if (!checkPurchasedPins || !checkPurchasedMCMerch || !checkOfferedMerch || !checkBylawsMadeAvailable
-    //         || !checkSisteredAnotherChapter || !checkAttendedTraining || !checkCurrent990NAttached) {
-    //             customWarningAlert("Answer Review Questions in CHAPTER QUESTIONS section to Continue.");
-    //         accordion.openAccordionItem('accordion-header-questions');
-    //         return false;
-    //     }
-    //     return true;
-    // }
-
 </script>
 @endsection

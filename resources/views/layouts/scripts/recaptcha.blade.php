@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 submitButton.disabled = false;
                                 submitButton.innerHTML = originalHTML;
                             }
-                            alert('reCAPTCHA verification failed. Please try again.');
+                            customErrorAlert('reCAPTCHA verification failed. Please try again.');
                         });
                     });
                 });

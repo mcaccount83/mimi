@@ -138,18 +138,18 @@
             <span class="fa fa-download"></span> Download file
           </a>
           -
-          <a id="clean-log" href="?clean={{ \Illuminate\Support\Facades\Crypt::encryptString($current_file) }}{{ ($current_folder) ? '&f=' . \Illuminate\Support\Facades\Crypt::encryptString($current_folder) : '' }}">
-            <span class="fa fa-sync"></span> Clean file
-          </a>
+          <a id="clean-log" href="#" data-href="?clean={{ \Illuminate\Support\Facades\Crypt::encryptString($current_file) }}{{ ($current_folder) ? '&f=' . \Illuminate\Support\Facades\Crypt::encryptString($current_folder) : '' }}">
+    <span class="fa fa-sync"></span> Clean file
+</a>
           -
-          <a id="delete-log" href="?del={{ \Illuminate\Support\Facades\Crypt::encryptString($current_file) }}{{ ($current_folder) ? '&f=' . \Illuminate\Support\Facades\Crypt::encryptString($current_folder) : '' }}">
-            <span class="fa fa-trash"></span> Delete file
-          </a>
+          <a id="delete-log" href="#" data-href="?del={{ \Illuminate\Support\Facades\Crypt::encryptString($current_file) }}{{ ($current_folder) ? '&f=' . \Illuminate\Support\Facades\Crypt::encryptString($current_folder) : '' }}">
+    <span class="fa fa-trash"></span> Delete file
+</a>
           @if(count($files) > 1)
             -
-            <a id="delete-all-log" href="?delall=true{{ ($current_folder) ? '&f=' . \Illuminate\Support\Facades\Crypt::encryptString($current_folder) : '' }}">
-              <span class="fa fa-trash-alt"></span> Delete all files
-            </a>
+            <a id="delete-all-log" href="#" data-href="?delall=true{{ ($current_folder) ? '&f=' . \Illuminate\Support\Facades\Crypt::encryptString($current_folder) : '' }}">
+    <span class="fa fa-trash-alt"></span> Delete all files
+</a>
           @endif
         @endif
       </div>
@@ -167,26 +167,25 @@
 @endsection
 @section('customscript')
 <script>
-
-$(document).ready(function () {
-    $('.table-container tr').on('click', function () {
-        $('#' + $(this).data('display')).toggle();
+    $('#delete-log, #clean-log, #delete-all-log').click(function (e) {
+        e.preventDefault();
+        const href = $(this).data('href');
+        Swal.fire({
+            title: 'Are you sure?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = href;
+            }
         });
-            $('#table-log').DataTable({
-                "order": [$('#table-log').data('orderingIndex'), 'desc'],
-                "stateSave": true,
-                "stateSaveCallback": function (settings, data) {
-                    window.localStorage.setItem("datatable", JSON.stringify(data));
-                    },
-                    "stateLoadCallback": function (settings) {
-                        var data = JSON.parse(window.localStorage.getItem("datatable"));
-                        if (data) data.start = 0;
-                    return data;
-                    }
-                });
-            $('#delete-log, #clean-log, #delete-all-log').click(function () {
-        return confirm('Are you sure?');
     });
-});
 </script>
 @endsection

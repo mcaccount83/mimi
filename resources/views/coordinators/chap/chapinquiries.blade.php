@@ -108,12 +108,6 @@
 @endsection
 @section('customscript')
 <script>
-
-function test() {
-alert('test');
-return false;
-}
-
 function CopyEmail(elementId){
 
 		// Create a "hidden" input

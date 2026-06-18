@@ -150,9 +150,9 @@
 
                 <div class="card-body text-center mt-3">
                 @if ($regionalCoordinatorCondition)
-                    <a href="{{ route('eoyreports.eoystatusreminder') }}" onclick="return confirmSendEOYRptReminder();" class="btn btn-primary bg-gradient mb-2">
-                        <i class="bi bi-envelope-fill me-2"></i>Send EOY Late Notices
-                    </a>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="confirmSendEOYRptReminder(event)">
+    <i class="bi bi-envelope-fill me-2"></i>Send EOY Late Notices
+</button>
                 @endif
                 @if ($assistConferenceCoordinatorCondition)
                     @if ($checkBox3Status)

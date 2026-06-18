@@ -527,21 +527,23 @@ if (stateDropdown && countryContainer && countrySelect) {
 }
 
 function checkDuplicateEmail(email, id) {
-        $.ajax({
-            url: '{{ url("/checkemail/") }}' + '/' + email,
-            type: "GET",
-            success: function(result) {
-                if (result.exists) {
-                    alert('This Email already used in the system. Please try with new one.');
-                    $("#" + id).val('');
-                    $("#" + id).focus();
-                }
-            },
-            error: function(jqXHR, exception) {
-                console.error("Error checking email: ", exception);
+    $.ajax({
+        url: '{{ url("/checkemail/") }}' + '/' + email,
+        type: "GET",
+        success: function(result) {
+            if (result.exists) {
+                customWarningAlert('This email is already in use. Please try a different one.')
+                    .then(() => {
+                        $("#" + id).val('');
+                        $("#" + id).focus();
+                    });
             }
-        });
-    }
+        },
+        error: function(jqXHR, exception) {
+            console.error("Error checking email: ", exception);
+        }
+    });
+}
 
     // ── Password match check ──
     const password = document.getElementById('password');
