@@ -4,6 +4,8 @@ window.jQuery = $;
 
 // Bootstrap 5
 import 'bootstrap';
+import * as bootstrap from 'bootstrap';
+window.bootstrap = bootstrap;
 
 // FontAwesome
 import '@fortawesome/fontawesome-free/css/all.min.css';

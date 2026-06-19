@@ -158,6 +158,8 @@ function addToolkitFile() {
                             showConfirmButton: false,
                             timer: 1500
                         }).then(() => {
+                            document.activeElement.blur();
+                            bootstrap.Modal.getOrCreateInstance(document.getElementById('modal-task')).hide();
                             location.reload();
                         });
                     },
@@ -174,6 +176,8 @@ function addToolkitFile() {
                     showConfirmButton: false,
                     timer: 1500
                 }).then(() => {
+                    document.activeElement.blur();
+                    bootstrap.Modal.getOrCreateInstance(document.getElementById('modal-task')).hide();
                     location.reload();
                 });
             }
@@ -183,10 +187,6 @@ function addToolkitFile() {
             console.error(xhr.responseText);
         }
     });
-
-    // Close the modal
-    bootstrap.Modal.getInstance(document.getElementById('modal-task'))?.hide();
-
     return false;
 }
 
@@ -280,6 +280,8 @@ function updateToolkitFile(id) {
                             showConfirmButton: false,
                             timer: 1500
                         }).then(() => {
+                            document.activeElement.blur();
+                            bootstrap.Modal.getOrCreateInstance(document.getElementById('editResourceModal' + id)).hide();
                             location.reload();
                         });
                     },
@@ -288,26 +290,25 @@ function updateToolkitFile(id) {
                         console.error(xhr.responseText);
                     }
                 });
-            } else {
-                Swal.fire({
-                    title: 'Success!',
-                    text: 'Resource updated successfully.',
-                    icon: 'success',
-                    showConfirmButton: false,
-                    timer: 1500
-                }).then(() => {
-                    location.reload();
-                });
+                } else {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Resource updated successfully.',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        document.activeElement.blur();
+                        bootstrap.Modal.getOrCreateInstance(document.getElementById('editResourceModal' + id)).hide();
+                        location.reload();
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                Swal.fire('Error!', 'Toollkit update failed. Please try again.', 'error');
+                console.error(xhr.responseText);
             }
-        },
-        error: function(xhr, status, error) {
-            Swal.fire('Error!', 'Toollkit update failed. Please try again.', 'error');
-            console.error(xhr.responseText);
-        }
-    });
-
-    // Close the modal
-bootstrap.Modal.getInstance(document.getElementById('editResourceModal' + id))?.hide();
+        });
     return false;
 }
 
@@ -430,6 +431,8 @@ function addResourceFile() {
                             showConfirmButton: false,
                             timer: 1500
                         }).then(() => {
+                            document.activeElement.blur();
+                            bootstrap.Modal.getOrCreateInstance(document.getElementById('modal-task')).hide();
                             location.reload();
                         });
                     },
@@ -438,27 +441,25 @@ function addResourceFile() {
                         console.error(xhr.responseText);
                     }
                 });
-            } else {
-                Swal.fire({
-                    title: 'Success!',
-                    text: 'Resource added successfully.',
-                    icon: 'success',
-                    showConfirmButton: false,
-                    timer: 1500
-                }).then(() => {
-                    location.reload();
-                });
+                } else {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Resource added successfully.',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        document.activeElement.blur();
+                        bootstrap.Modal.getOrCreateInstance(document.getElementById('modal-task')).hide();
+                        location.reload();
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                Swal.fire('Error!', 'Resource add failed. Please try again.', 'error');
+                console.error(xhr.responseText);
             }
-        },
-        error: function(xhr, status, error) {
-            Swal.fire('Error!', 'Resource add failed. Please try again.', 'error');
-            console.error(xhr.responseText);
-        }
-    });
-
-    // Close the modal
-    bootstrap.Modal.getInstance(document.getElementById('modal-task'))?.hide();
-
+        });
     return false;
 }
 
@@ -552,6 +553,8 @@ function updateResourceFile(id) {
                             showConfirmButton: false,
                             timer: 1500
                         }).then(() => {
+                            document.activeElement.blur();
+                            bootstrap.Modal.getOrCreateInstance(document.getElementById('editTaskModal' + id)).hide();
                             location.reload();
                         });
                     },
@@ -568,6 +571,8 @@ function updateResourceFile(id) {
                     showConfirmButton: false,
                     timer: 1500
                 }).then(() => {
+                    document.activeElement.blur();
+                    bootstrap.Modal.getOrCreateInstance(document.getElementById('editTaskModal' + id)).hide();
                     location.reload();
                 });
             }
@@ -577,10 +582,6 @@ function updateResourceFile(id) {
             console.error(xhr.responseText);
         }
     });
-
-    // Close the modal
-bootstrap.Modal.getInstance(document.getElementById('editTaskModal' + id))?.hide();
-
     return false;
 }
 
@@ -658,7 +659,11 @@ function addAwardBadge() {
                 icon: 'success',
                 showConfirmButton: false,
                 timer: 1500
-            }).then(() => { location.reload(); });
+            }).then(() => {
+                document.activeElement.blur();
+                bootstrap.Modal.getOrCreateInstance(document.getElementById('modal-add-badge')).hide();
+                location.reload();
+            });
         },
         error: function(xhr) {
             Swal.fire('Error!', 'Badge upload failed. Please try again.', 'error');
@@ -675,10 +680,6 @@ function addAwardBadge() {
                 console.error(xhr.responseText);
         }
     });
-
-    // Close the modal
-    bootstrap.Modal.getInstance(document.getElementById('modal-add-badge'))?.hide();
-
     return false;
 }
 
@@ -739,7 +740,11 @@ function updateAwardBadge(id) {
                         icon: 'success',
                         showConfirmButton: false,
                         timer: 1500
-                    }).then(() => { location.reload(); });
+                    }).then(() => {
+                        document.activeElement.blur();
+                        bootstrap.Modal.getOrCreateInstance(document.getElementById('editBadgeModal' + id)).hide();
+                        location.reload();
+                    });
                 },
                 error: function(xhr) {
                     Swal.fire('Error!', 'File upload failed. Please try again.', 'error');
@@ -752,8 +757,6 @@ function updateAwardBadge(id) {
             console.error(xhr.responseText);
         }
     });
-
-    bootstrap.Modal.getInstance(document.getElementById('editBadgeModal' + id))?.hide();
     return false;
 }
 
@@ -820,7 +823,9 @@ function updateAwardBadge(id) {
                                 showConfirmButton: false,
                                 timer: 1500
                             }).then(() => {
-                                location.reload(); // Reload the page to reflect changes
+                                document.activeElement.blur();
+                                bootstrap.Modal.getOrCreateInstance(document.getElementById('modal-task')).hide();
+                                location.reload();
                             });
                         },
                         error: function(xhr, status, error) {
@@ -828,11 +833,6 @@ function updateAwardBadge(id) {
                             console.error(xhr.responseText);
                         }
                     });
-
-    // Close the modal
-    bootstrap.Modal.getInstance(document.getElementById('modal-task'))?.hide();
-
-    // Prevent form submission
     return false;
 }
 
@@ -869,7 +869,9 @@ function updateAwardBadge(id) {
                             showConfirmButton: false,
                             timer: 1500
                         }).then(() => {
-                            location.reload(); // Reload the page to reflect changes
+                            document.activeElement.blur();
+                            bootstrap.Modal.getOrCreateInstance(document.getElementById('editTaskModal' + id)).hide();
+                            location.reload();
                         });
                     },
                     error: function(xhr, status, error) {
@@ -877,11 +879,6 @@ function updateAwardBadge(id) {
                         console.error(xhr.responseText);
                     }
                 });
-
-    // Close the modal
-    $('#editTaskModal' + id).modal('hide');
-
-    // Prevent form submission
     return false;
 }
 
