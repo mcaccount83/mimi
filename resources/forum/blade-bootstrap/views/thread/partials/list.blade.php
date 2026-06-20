@@ -35,6 +35,9 @@
             @if ($thread->trashed())
                 <span class="badge rounded-pill bg-danger">{{ trans('forum::general.deleted') }}</span>
             @endif
+            @if (is_null($thread->approved_at))
+                <span class="badge rounded-pill bg-warning text-dark">Pending Approval</span>
+            @endif
             <span class="badge rounded-pill bg-primary" @if (isset($category))style="background: {{ $category->color_light_mode }};"@endif>
                 {{ trans('forum::general.replies') }}:
                 {{ $thread->reply_count }}

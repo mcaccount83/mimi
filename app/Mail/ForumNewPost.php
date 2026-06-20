@@ -6,21 +6,27 @@ use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Mail\Mailables\Headers;
+use TeamTeaTime\Forum\Models\Post;
+use TeamTeaTime\Forum\Models\Thread;
+use TeamTeaTime\Forum\Models\Category;
 
-class NewForumPost extends BaseMailable
+class ForumNewPost extends BaseMailable
 {
     public function __construct(
-        public $post,
-        public $thread,
-        public $category,
-        public $authorNameWithPosition
+        public Post $post,
+        public Thread $thread,
+        public Category $category,
+        public string $authorNameWithPosition,
+        public string $type = 'reply',  // 'thread' or 'reply'
     ) {}
 
     public function envelope(): Envelope
     {
+        $subjectPrefix = $this->type === 'thread' ? '' : 'RE: ';
+
         return new Envelope(
             from: new Address('noreply@momsclub.org', 'MOMS Club'),
-            subject: "{$this->category->title} | RE:{$this->thread->title}",
+            subject: "{$this->category->title} | {$subjectPrefix}{$this->thread->title}",
         );
     }
 

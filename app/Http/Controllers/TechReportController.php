@@ -941,7 +941,7 @@ class TechReportController extends Controller implements HasMiddleware
         }
     }
 
-    private function copyAwardsToHistory(array $reportYearOptions, int $updatedId, array $updatedBy): void
+    private function copyAwardsToHistory(array $reportYearOptions, int $updatedId, string $updatedBy): void
     {
         // $reportYearRange = $reportYearOptions['reportYearRange'];
         $reportYearId = $reportYearOptions['reportYearId'];

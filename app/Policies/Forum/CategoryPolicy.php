@@ -45,13 +45,24 @@ class CategoryPolicy extends ForumCategoryPolicy
         return $this->forumConditions->canAccessList($user, $category);
     }
 
+    public function createThreadsWithoutApproval(User $user, Category $category): bool
+    {
+        return $this->forumConditions->canManageLists($user);
+    }
+
     public function manageThreads(User $user, Category $category): bool
     {
-        return $this->deleteThreads($user, $category)
+        return $this->approveThreads($user, $category)
+            || $this->deleteThreads($user, $category)
             || $this->restoreThreads($user, $category)
             || $this->moveThreadsFrom($user, $category)
             || $this->lockThreads($user, $category)
             || $this->pinThreads($user, $category);
+    }
+
+    public function approveThreads(User $user, Category $category): bool
+    {
+        return $this->forumConditions->canManageLists($user);
     }
 
     public function deleteThreads(User $user, Category $category): bool

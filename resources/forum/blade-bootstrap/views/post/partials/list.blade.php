@@ -34,11 +34,18 @@
         @endif
 
         @if ($post->trashed())
+            <span class="badge rounded-pill bg-danger">{{ trans('forum::general.deleted') }}</span>
+            <br>
             @can ('viewTrashedPosts')
                 {!! Forum::render($post->content) !!}
                 <br>
             @endcan
-            <span class="badge rounded-pill bg-danger">{{ trans('forum::general.deleted') }}</span>
+        @elseif (is_null($post->approved_at))
+            <span class="badge rounded-pill bg-warning text-dark">Pending Approval</span>
+            <br>
+            @can ('approvePosts')
+                {!! Forum::render($post->content) !!}
+            @endcan
         @else
             {!! Forum::render($post->content) !!}
         @endif

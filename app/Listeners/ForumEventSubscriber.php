@@ -4,16 +4,21 @@ namespace App\Listeners;
 
 use App\Enums\UserStatusEnum;
 use App\Mail\ForumBroadcastSummary;
-use App\Mail\NewForumPost;
+use App\Mail\ForumNewPost;
+use App\Mail\ForumPendingApproval;
 use App\Models\User;
 use App\Services\PositionConditionsService;
 use Dcblogdev\LaravelSentEmails\Models\SentEmail;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Mail;
 use TeamTeaTime\Forum\Events\UserApprovedThread;
 use TeamTeaTime\Forum\Events\UserBulkApprovedPosts;
 use TeamTeaTime\Forum\Events\UserBulkApprovedThreads;
 use TeamTeaTime\Forum\Events\UserCreatedPost;
 use TeamTeaTime\Forum\Events\UserCreatedThread;
+use TeamTeaTime\Forum\Models\Post;
+use TeamTeaTime\Forum\Models\Thread;
+use TeamTeaTime\Forum\Models\Category;
 
 class ForumEventSubscriber
 {
@@ -32,7 +37,7 @@ class ForumEventSubscriber
 
             $this->sendForumBroadcast(
                 $usersToNotify,
-                fn ($user) => new NewForumPost($post, $thread, $category, $authorNameWithPosition),
+                fn ($user) => new ForumNewPost($post, $thread, $category, $authorNameWithPosition),
                 "{$category->title} | RE:{$thread->title}",
                 $usersToNotify->count(),
                 $post,
@@ -54,7 +59,7 @@ class ForumEventSubscriber
 
             $this->sendForumBroadcast(
                 $usersToNotify,
-                fn ($user) => new NewForumPost($post, $thread, $category, $authorNameWithPosition),
+                fn ($user) => new ForumNewPost($post, $thread, $category, $authorNameWithPosition),
                 "{$category->title} | RE:{$thread->title}",
                 $usersToNotify->count(),
                 $post,
@@ -76,7 +81,7 @@ class ForumEventSubscriber
 
         $this->sendForumBroadcast(
             $usersToNotify,
-            fn ($user) => new NewForumPost($post, $thread, $category, $authorNameWithPosition),
+            fn ($user) => new ForumNewPost($post, $thread, $category, $authorNameWithPosition),
             "{$category->title} | RE:{$thread->title}",
             $usersToNotify->count(),
             $post,
@@ -89,19 +94,25 @@ class ForumEventSubscriber
     public function handleNewPost(UserCreatedPost $event)
     {
         $post = $event->post;
-        if (is_null($post->approved_at)) {
-            return;
-        }
-
         $thread = $post->thread;
         $category = $thread->category;
         $author = $post->author;
         $authorNameWithPosition = $author ? $author->authorNameForDisplay($category->id) : 'Unknown Author';
+
+        if (is_null($post->approved_at)) {
+            $adminEmails = $this->positionConditionsService->getAdminEmail();
+            $listAdmin = $adminEmails['list_admin'];
+            if ($listAdmin) {
+                Mail::to($listAdmin)->queue(new ForumPendingApproval('reply', $thread, $post, $authorNameWithPosition));
+            }
+            return;
+        }
+
         $usersToNotify = $this->getUsersToNotify($thread);
 
         $this->sendForumBroadcast(
             $usersToNotify,
-            fn ($user) => new NewForumPost($post, $thread, $category, $authorNameWithPosition),
+            fn ($user) => new ForumNewPost($post, $thread, $category, $authorNameWithPosition),
             "{$category->title} | RE:{$thread->title}",
             $usersToNotify->count(),
             $post,
@@ -111,22 +122,28 @@ class ForumEventSubscriber
         );
     }
 
-    public function handleNewThread(UserCreatedThread $event)
+     public function handleNewThread(UserCreatedThread $event)
     {
         $thread = $event->thread;
-        if (is_null($thread->firstPost?->approved_at)) {
-            return;
-        }
-
         $post = $thread->firstPost;
         $category = $thread->category;
         $author = $thread->author;
         $authorNameWithPosition = $author ? $author->authorNameForDisplay($category->id) : 'Unknown Author';
+
+        if (is_null($post?->approved_at)) {
+            $adminEmails = $this->positionConditionsService->getAdminEmail();
+            $listAdmin = $adminEmails['list_admin'];
+            if ($listAdmin) {
+                Mail::to($listAdmin)->queue(new ForumPendingApproval('thread', $thread, $post, $authorNameWithPosition));
+            }
+            return;
+        }
+
         $usersToNotify = $this->getUsersToNotify($thread);
 
         $this->sendForumBroadcast(
             $usersToNotify,
-            fn ($user) => new NewForumPost($post, $thread, $category, $authorNameWithPosition),
+            fn ($user) => new ForumNewPost($post, $thread, $category, $authorNameWithPosition),
             "{$category->title} | RE:{$thread->title}",
             $usersToNotify->count(),
             $post,
@@ -139,8 +156,8 @@ class ForumEventSubscriber
     /**
      * Queue forum broadcast emails and write a single summary log entry.
      */
-    private function sendForumBroadcast($usersToNotify, callable $mailableFactory, string $subject, int $recipientCount,
-        $post, $thread, $category, $authorNameWithPosition): void
+    private function sendForumBroadcast(Collection $usersToNotify, callable $mailableFactory, string $subject, int $recipientCount,
+        Post $post, Thread $thread, Category $category, string $authorNameWithPosition): void
     {
         $delay = 0;
 
@@ -153,7 +170,7 @@ class ForumEventSubscriber
             }
         }
 
-        $adminEmails = app(PositionConditionsService::class)->getAdminEmail();
+        $adminEmails = $this->positionConditionsService->getAdminEmail();
         $listAdmin = $adminEmails['list_admin'];
 
         if ($listAdmin) {
@@ -177,7 +194,7 @@ class ForumEventSubscriber
     /**
      * Get users who should be notified about thread updates.
      */
-    private function getUsersToNotify($thread)
+    private function getUsersToNotify(Thread $thread)
     {
         $categoryId = $thread->category_id;
 
@@ -202,3 +219,55 @@ class ForumEventSubscriber
         ];
     }
 }
+
+
+
+    // public function handleNewPost(UserCreatedPost $event)
+    // {
+    //     $post = $event->post;
+    //     if (is_null($post->approved_at)) {
+    //         return;
+    //     }
+
+    //     $thread = $post->thread;
+    //     $category = $thread->category;
+    //     $author = $post->author;
+    //     $authorNameWithPosition = $author ? $author->authorNameForDisplay($category->id) : 'Unknown Author';
+    //     $usersToNotify = $this->getUsersToNotify($thread);
+
+    //     $this->sendForumBroadcast(
+    //         $usersToNotify,
+    //         fn ($user) => new ForumNewPost($post, $thread, $category, $authorNameWithPosition),
+    //         "{$category->title} | RE:{$thread->title}",
+    //         $usersToNotify->count(),
+    //         $post,
+    //         $thread,
+    //         $category,
+    //         $authorNameWithPosition
+    //     );
+    // }
+
+    // public function handleNewThread(UserCreatedThread $event)
+    // {
+    //     $thread = $event->thread;
+    //     if (is_null($thread->firstPost?->approved_at)) {
+    //         return;
+    //     }
+
+    //     $post = $thread->firstPost;
+    //     $category = $thread->category;
+    //     $author = $thread->author;
+    //     $authorNameWithPosition = $author ? $author->authorNameForDisplay($category->id) : 'Unknown Author';
+    //     $usersToNotify = $this->getUsersToNotify($thread);
+
+    //     $this->sendForumBroadcast(
+    //         $usersToNotify,
+    //         fn ($user) => new ForumNewPost($post, $thread, $category, $authorNameWithPosition),
+    //         "{$category->title} | RE:{$thread->title}",
+    //         $usersToNotify->count(),
+    //         $post,
+    //         $thread,
+    //         $category,
+    //         $authorNameWithPosition
+    //     );
+    // }

@@ -167,9 +167,27 @@
 @endsection
 @section('customscript')
 <script>
+$(document).ready(function () {
+    $('.table-container tr').on('click', function () {
+        $('#' + $(this).data('display')).toggle();
+    });
+
+    $('#table-log').DataTable({
+        "order": [[$('#table-log').data('ordering-index'), 'desc']],
+        "stateSave": true,
+        "stateSaveCallback": function (settings, data) {
+            window.localStorage.setItem("datatable", JSON.stringify(data));
+        },
+        "stateLoadCallback": function (settings) {
+            var data = JSON.parse(window.localStorage.getItem("datatable"));
+            if (data) data.start = 0;
+            return data;
+        }
+    });
+
     $('#delete-log, #clean-log, #delete-all-log').click(function (e) {
         e.preventDefault();
-        const href = $(this).data('href');
+        const href = $(this).data('href');  // was attr('href'), now data('href')
         Swal.fire({
             title: 'Are you sure?',
             icon: 'warning',
@@ -187,5 +205,6 @@
             }
         });
     });
+});
 </script>
 @endsection

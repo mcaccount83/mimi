@@ -1,5 +1,5 @@
 @component('mail::message')
-# {{ $category->title }} | {{ $type === 'thread' ? 'New Thread Posted' : 'New Reply Posted' }}
+# {{ $category->title }} New Topic Created
 
 ## {{ $thread->title }}
 
@@ -18,4 +18,3 @@ View Full Thread
 @endcomponent --}}
 
 @endcomponent
-

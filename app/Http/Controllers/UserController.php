@@ -683,7 +683,7 @@ class UserController extends Controller
     /**
      * Update User to Outgoing when replaced on board
      */
-    public function updateUserToOutgoing(int $userId, array $updatedBy)
+    public function updateUserToOutgoing(int $userId, string $updatedBy)
     {
         $boardDetails = Boards::where('user_id', $userId)->get();
 

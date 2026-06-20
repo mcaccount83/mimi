@@ -39,6 +39,11 @@ class ThreadPolicy extends ForumThreadPolicy
         || ($this->forumConditions->canAccessList($user, $thread->category) && ! $thread->locked);
     }
 
+    public function replyWithoutApproval(User $user, Thread $thread): bool
+    {
+        return $this->forumConditions->canManageLists($user);
+    }
+
     public function delete(User $user, Thread $thread): bool
     {
         return $this->forumConditions->canManageLists($user)

@@ -465,7 +465,7 @@ class BoardController extends Controller implements HasMiddleware
     /**
      *Update Chapter Board Information
      */
-    private function updateBoardMember(object $chapter, string $position, object $requestData, array $updatedBy, int $updatedId, array $defaultBoardCategories)
+    private function updateBoardMember(object $chapter, string $position, object $requestData, string $updatedBy, int $updatedId, array $defaultBoardCategories)
     {
         $positionConfig = [
             'president' => [
@@ -564,7 +564,7 @@ class BoardController extends Controller implements HasMiddleware
         ]);
     }
 
-    private function createOutgoingBoardMember(User $user, object $bdDetails, array $updatedBy, int $updatedId)
+    private function createOutgoingBoardMember(User $user, object $bdDetails, string $updatedBy, int $updatedId)
     {
         BoardsOutgoing::updateOrCreate(
             [
@@ -593,7 +593,7 @@ class BoardController extends Controller implements HasMiddleware
         ForumCategorySubscription::where('user_id', $user->id)->delete();
     }
 
-    private function updateExistingBoardMember(User $user, object $boardMember, object $requestData, string $prefix, array $updatedBy, int $updatedId, array $defaultBoardCategories)
+    private function updateExistingBoardMember(User $user, object $boardMember, object $requestData, string $prefix, string $updatedBy, int $updatedId, array $defaultBoardCategories)
     {
         $firstName = $requestData->input($prefix.'fname');
         $lastName = $requestData->input($prefix.'lname');
@@ -635,7 +635,7 @@ class BoardController extends Controller implements HasMiddleware
         }
     }
 
-    private function createNewBoardMember(object $chapter, string $relation, int $positionId, object $requestData, string $prefix, array $updatedBy, int $updatedId, array $defaultBoardCategories)
+    private function createNewBoardMember(object $chapter, string $relation, int $positionId, object $requestData, string $prefix, string $updatedBy, int $updatedId, array $defaultBoardCategories)
     {
         $firstName = $requestData->input($prefix.'fname');
         $lastName = $requestData->input($prefix.'lname');
