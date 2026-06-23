@@ -102,13 +102,15 @@
                         <td @if($list->documentsEOY->financial_report_received == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             @if($list->documentsEOY->financial_report_received == '1') YES @else NO @endif
                         </td>
-                        <td @if($list->documentsEOY->financial_report_received == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                        <td data-sort="@sortDate($list->documentsEOY->report_received)"
+                            @if($list->documentsEOY->financial_report_received == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             @if($list->documentsEOY->financial_report_received != null)@formatDate($list->documentsEOY->report_received)@endif
                         </td>
                         <td @if($list->documentsEOY->financial_review_complete == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             @if($list->documentsEOY->financial_review_complete == '1') YES @else NO @endif
                         </td>
-                        <td @if($list->documentsEOY->financial_review_complete == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                        <td data-sort="@sortDate($list->documentsEOY->review_complete)"
+                            @if($list->documentsEOY->financial_review_complete == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             @if($list->documentsEOY->review_complete != null)@formatDate($list->documentsEOY->review_complete)@endif
                         </td>
                     </tr>

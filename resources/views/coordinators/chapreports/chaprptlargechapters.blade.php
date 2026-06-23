@@ -54,7 +54,9 @@
                         </td>
                         <td>{{ $list->name }}</td>
                         <td>{{ $list->payments->rereg_members }}</td>
-						<td>@formatDate($list->payments->rereg_date)</td>
+						<td data-sort="@sortDate($list->coordinator_start_date)">
+                            @formatDate($list->payments->rereg_date)
+                        </td>
 					   </tr>
                   @endforeach
                   </tbody>

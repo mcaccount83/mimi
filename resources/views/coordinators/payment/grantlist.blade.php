@@ -52,7 +52,7 @@
                         </td>
                         <td>{{ $list->chapters?->name }}</td>
                         <td>{{ $list->first_name }} {{ $list->last_name }}</td>
-                        <td>
+                        <td data-sort="@if($list->submitted == '1')@sortDate($list->submitted_at)@else9999-12-31@endif">
                             @if($list->submitted == '1') Submitted | @formatDate($list->submitted_at) @else Draft @endif
                         </td>
                          <td>

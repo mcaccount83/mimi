@@ -55,13 +55,13 @@
                             @endif
                         </td>
                     <td>{{ $list->first_name }} {{ $list->last_name }}</td>
-                    <td>@formatDate($list->coordinator_start_date)</td>
-
+                    <td data-sort="@sortDate($list->coordinator_start_date)">
+                        @formatDate($list->coordinator_start_date)
+                    </td>
                     <td>@if($list->recognition->recognition_pin=='1')
                         YES
                         @endif
                     </td>
-
                     <td>
                         @if($list->recognition && $list->recognition->recognitionGift0)
                             {{ $list->recognition->recognitionGift0->recognition_gift }}

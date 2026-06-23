@@ -38,7 +38,9 @@
                     @foreach($inquiryList as $list)
                         <tr id="inquiry-{{ $list->id }}">
                             <td class="text-center align-middle"><a href="{{ url("/inquiries/inquiryapplicationedit/{$list->id}") }}"><i class="bi bi-pin-map-fill"></i></a></td>
-                                <td>@formatDate($list->created_at)</td>
+                                <td data-sort="@sortDate($list->coordinator_start_date)">
+                                    @formatDate($list->created_at)
+                                </td>
                                <td>
                                 @if ($list->state->conference_id > 0)
                                     {{ $list->state->conference->short_name }} / {{ $list->state->region->short_name }}

@@ -81,7 +81,9 @@
                                 data-sort="{{ $list->next_renewal_year . '-' . str_pad($list->start_month_id, 2, '0', STR_PAD_LEFT) }}">
                                 {{ $due }}
                             </td>
-                            <td>@formatDate($list->payments->rereg_date)</td>
+                            <td data-sort="@sortDate($list->coordinator_start_date)">
+                                @formatDate($list->payments->rereg_date)
+                            </td>
                             <td>
                                 @if( $list->payments->rereg_payment != null )
                                 ${{ $list->payments->rereg_payment }}

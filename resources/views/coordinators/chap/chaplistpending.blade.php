@@ -45,7 +45,9 @@
                             <td class="text-center align-middle">
                                 <a onclick="showChapterSetupEmailModal({{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="bi bi-envelope text-primary"></i></a>
                            </td>
-                            <td>@formatDate($list->created_at)</td>
+                            <td data-sort="@sortDate($list->coordinator_start_date)">
+                                @formatDate($list->created_at)
+                            </td>
                             <td>
                                 @if ($list->state->conference_id > 0)
                                     {{ $list->state->conference->short_name }} / {{ $list->state->region->short_name }}

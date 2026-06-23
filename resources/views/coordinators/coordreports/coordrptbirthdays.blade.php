@@ -46,7 +46,9 @@
                         </td>
                         <td>{{ $list->first_name }} {{ $list->last_name }}</td>
                     <td data-sort="{{str_pad($list->birthday_month_id, 2, '0', STR_PAD_LEFT) . '-' .  $list->birthday_day}}">{{ $list->birthdayMonth->month_long_name }}  {{ $list->birthday_day }}</td>
-                    <td>@formatDate($list->card_sent)</td>
+                    <td data-sort="@sortDate($list->coordinator_start_date)">
+                        @formatDate($list->card_sent)
+                    </td>
                     </tr>
                   @endforeach
                   </tbody>

@@ -99,6 +99,11 @@ PHP;
             return "<?php echo $expression ? \\Carbon\\Carbon::parse($expression)->format('m/d/Y') : ''; ?>";
         });
 
+        // Sortable ISO date for DataTables data-sort attribute
+        Blade::directive('sortDate', function ($expression) {
+            return "<?php echo $expression ? \\Carbon\\Carbon::parse($expression)->format('Y-m-d') : ''; ?>";
+        });
+
         // Date Input field: @dateInput('PaymentDate', $payment->date)
         Blade::directive('dateInput', function ($expression) {
             $parts = array_map('trim', explode(',', $expression, 2));

@@ -56,7 +56,9 @@
                         <tbody>
                             @foreach($grants as $list)
                                 <tr style="border-bottom: 1px solid #555;">
-                                    <td>@formatDate($list->submitted_at)</td>
+                                    <td data-sort="@sortDate($list->coordinator_start_date)">
+                                        @formatDate($list->submitted_at)
+                                    </td>
                                     <td>{{$list->chapterstate->state_short_name}}</td>
                                     <td>{{ $list->review_description}}</td>
                                     <td><span class="ms-5">${{ number_format($list->amount_awarded, 2) }}</span></td>

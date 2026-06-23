@@ -66,13 +66,17 @@
                                 ${{ $list->payments->m2m_donation }}
                             @endif
                         </td>
-						<td>@formatDate($list->payments->m2m_date)</td>
+						<td data-sort="@sortDate($list->coordinator_start_date)">
+                            @formatDate($list->payments->m2m_date)
+                        </td>
 						<td>
                             @if( $list->payments->sustaining_donation != null )
                                 ${{ $list->payments->sustaining_donation }}
                             @endif
                         </td>
-						<td>@formatDate($list->payments->sustaining_date)</td>
+						<td data-sort="@sortDate($list->coordinator_start_date)">
+                            @formatDate($list->payments->sustaining_date)
+                        </td>
                         <th>
                             <a href="{{ url("/payment/chapterpaymenthistory/{$list->id}") }}"><i class="bi bi-file-earmark-text"></i></a>
                         </th>

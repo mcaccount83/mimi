@@ -55,7 +55,9 @@
                     </td>
                     <td>{{ $list->name }}</td>
                     <td>{{ $list->ein }}</td>
-                    <td>@formatDate($list->zap_date)</td>
+                    <td data-sort="@sortDate($list->coordinator_start_date)">
+                        @formatDate($list->zap_date)
+                    </td>
                     <td>{{ $list->disband_reason }}</td>
                    @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
                         <td class="text-center align-middle"><i class="bi bi-ban"
