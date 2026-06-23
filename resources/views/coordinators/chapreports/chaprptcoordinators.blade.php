@@ -20,6 +20,20 @@
                 </div>
                 <!-- /.card-header -->
             <div class="card-body">
+            {{-- Sort Toggle --}}
+            <div class="mb-2">
+                @if($sortMode === 'hierarchy')
+                    <a href="{{ request()->fullUrlWithQuery(['sort' => 'default']) }}"
+                    class="btn btn-sm btn-primary">
+                        <i class="bi bi-sort-alpha-down"></i> Sort by Conf/Region/Name
+                    </a>
+                @else
+                    <a href="{{ request()->fullUrlWithQuery(['sort' => 'hierarchy']) }}"
+                    class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-diagram-3"></i> Sort by Coordinator Hierarchy
+                    </a>
+                @endif
+            </div>
                 <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>

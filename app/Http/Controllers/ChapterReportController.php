@@ -270,6 +270,8 @@ class ChapterReportController extends Controller implements HasMiddleware
         $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
         $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
+        $positionCodes = ['BS', 'AC', 'SC', 'ARC', 'RC', 'ACC', 'CC'];
+
         $chaptersData = $chapterList->map(function ($chapter) {
             $id = $chapter->primary_coordinator_id;
             $reportingList = DB::table('coordinator_reporting_tree')
@@ -295,12 +297,86 @@ class ChapterReportController extends Controller implements HasMiddleware
             ];
         });
 
+        $sortMode = $request->get('sort', 'default');
+
+        if ($sortMode === 'hierarchy') {
+            // Position codes ordered from top of hierarchy down
+            // Index = sort priority (CC first, then ACC, RC, ARC, SC, AC, BS)
+            $hierarchyOrder = ['CC', 'ACC', 'RC', 'ARC', 'SC', 'AC', 'BS'];
+
+            // Build a lookup: position code => coordinator name from coordinatorArray
+            $chaptersData = $chaptersData->sortBy(function ($data) use ($hierarchyOrder) {
+                $coords = collect($data['coordinatorArray']);
+                $keys = [];
+                foreach ($hierarchyOrder as $pos) {
+                    $match = $coords->first(fn($c) => $c && $c->position === $pos);
+                    $keys[] = $match ? $match->last_name . ' ' . $match->first_name : 'ZZZZZ';
+                }
+                return implode('|', $keys);
+            })->values();
+        }
+
         $countList = count($chapterList);
-        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status, 'chaptersData' => $chaptersData,
-            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
-            'positionCodes' => ['BS', 'AC', 'SC', 'ARC', 'RC', 'ACC', 'CC'],
+        $data = [
+            'countList'         => $countList,
+            'chapterList'       => $chapterList,
+            'checkBox1Status'   => $checkBox1Status,
+            'chaptersData'      => $chaptersData,
+            'checkBox3Status'   => $checkBox3Status,
+            'checkBox51Status'  => $checkBox51Status,
+            'positionCodes'     => $positionCodes,
+            'sortMode'          => $sortMode,
         ];
 
         return view('coordinators.chapreports.chaprptcoordinators')->with($data);
     }
+
+    // public function showRptChapterCoordinators(Request $request): View
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $coorId = $user['cdId'];
+    //     $confId = $user['confId'];
+    //     $regId = $user['regId'];
+    //     $positionId = $user['cdPositionId'];
+    //     $secPositionId = $user['cdSecPositionId'];
+
+    //     $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+    //     $chapterList = $baseQuery['query']->get();
+    //     $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
+    //     $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
+    //     $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
+
+    //     $chaptersData = $chapterList->map(function ($chapter) {
+    //         $id = $chapter->primary_coordinator_id;
+    //         $reportingList = DB::table('coordinator_reporting_tree')
+    //             ->select('*')
+    //             ->where('coordinator_id', $id)
+    //             ->first();
+
+    //         $filterReportingList = collect((array) $reportingList)
+    //             ->except(['id', 'layer0'])
+    //             ->reverse();
+
+    //         $coordinatorArray = $filterReportingList->map(function ($val) {
+    //             return DB::table('coordinators as cd')
+    //                 ->select('cd.first_name', 'cd.last_name', 'cp.short_title as position')
+    //                 ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+    //                 ->where('cd.id', $val)
+    //                 ->first();
+    //         });
+
+    //         return [
+    //             'chapter' => $chapter,
+    //             'coordinatorArray' => $coordinatorArray->toArray(),
+    //         ];
+    //     });
+
+    //     $countList = count($chapterList);
+    //     $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status, 'chaptersData' => $chaptersData,
+    //         'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
+    //         'positionCodes' => ['BS', 'AC', 'SC', 'ARC', 'RC', 'ACC', 'CC'],
+    //     ];
+
+    //     return view('coordinators.chapreports.chaprptcoordinators')->with($data);
+    // }
 }
