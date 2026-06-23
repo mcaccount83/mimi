@@ -444,6 +444,67 @@ class EmailController extends Controller implements HasMiddleware
         }
     }
 
+    public function sendCoordReportToEmail(Request $request): JsonResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $userCoordId = $user['cdId'];
+
+        $input = $request->all();
+        $emailSubject = $input['subject'];
+        $emailMessage = $input['message'];
+        $userCoordId = $input['userCoordId'];
+
+        $baseQuery = $this->baseCoordinatorController->getCoordinatorDetails($userCoordId);
+        $cdDetails = $baseQuery['cdDetails'];
+        $cdList = $this->userController->loadCoordEmailReportToDetails($userCoordId);
+        $emailListCoord = $cdList['emailListCoord'];
+
+        try {
+            DB::beginTransaction();
+
+            $mailData = array_merge(
+                // $this->baseMailDataController->getNewCoordinatorData($cdDetails),
+                $this->baseMailDataController->getUserData($user),
+                $this->baseMailDataController->getMessageData($input),
+                [
+                    'first_name' => ' ',
+                    'last_name' => ' ',
+                ]
+            );
+
+            Mail::to($emailListCoord)
+                ->queue(new CoordEmail($mailData));
+
+            // Commit the transaction
+            DB::commit();
+
+            $message = 'Email successfully sent';
+
+            // Return JSON response
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+                'redirect' => route('coordinators.view', ['id' => $userCoordId]),
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
+
+            $message = 'Something went wrong, Please try again.';
+
+            // Return JSON error response
+            return response()->json([
+                'status' => 'error',
+                'message' => $message,
+                'redirect' => route('coordinators.view', ['id' => $userCoordId]),
+            ]);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
+        }
+    }
+
     /**
      * Send Chapter Re-Registration Reminder
      */

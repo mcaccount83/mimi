@@ -355,6 +355,20 @@ class UserController extends Controller
         ];
     }
 
+    public function loadCoordEmailReportToDetails(int $cdId)
+    {
+        $emailListCoord = Coordinators::where('report_id', $cdId)
+            ->where('active_status', 1)
+            ->where('on_leave', '!=', 1)
+            ->pluck('email')
+            ->filter()
+            ->toArray();
+
+        return [
+            'emailListCoord' => $emailListCoord,
+        ];
+    }
+
     /**
      * load Coordinator List for a PC selected and their downline
      */

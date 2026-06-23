@@ -126,8 +126,11 @@
                         <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="startExport('intcoordinator', 'International Coordinator List')"><i class="bi bi-download me-2"></i>Export International Coordinator List</button>
                     @endif
                 @endif
-                @if (!$checkBox51Status && !$checkBox3Status)
-                    <a class="btn btn-primary bg-gradient mb-2" onclick="showCoordUplineEmailModal('{{ $userCoordId }}', '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="bi bi-envelope-fill me-2"></i>E-mail Coordinators</a>
+                @if ($checkBox1Status && !$checkBox51Status && !$checkBox3Status)
+                    <a class="btn btn-primary bg-gradient mb-2" onclick="showCoordReportToEmailModal('{{ $userCoordId }}', '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="bi bi-envelope-fill me-2"></i>E-mail Direct Report Coordinators</a>
+                @endif
+                @if (!$checkBox51Status && !$checkBox3Status && !$checkBox1Status)
+                    <a class="btn btn-primary bg-gradient mb-2" onclick="showCoordUplineEmailModal('{{ $userCoordId }}', '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="bi bi-envelope-fill me-2"></i>E-mail All Downline Coordinators</a>
                 @endif
             </div>
             <!-- /.card-body for buttons -->
