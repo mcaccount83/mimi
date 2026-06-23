@@ -303,8 +303,14 @@ class FinancialReportController extends Controller implements HasMiddleware
             if ($rawDate && str_contains($rawDate, '_')) {
                 $rawDate = null;
             }
+
+            // Normalize separators before parsing
+            if ($rawDate) {
+                $rawDate = str_replace('.', '/', $rawDate);
+            }
+
             try {
-                $BankRecArray[$i]['bank_rec_date'] = ! empty($rawDate) && $rawDate !== '__/__/____'
+                $BankRecArray[$i]['bank_rec_date'] = !empty($rawDate) && $rawDate !== '__/__/____'
                     ? Carbon::createFromFormat('m/d/Y', $rawDate)->format('Y-m-d') : null;
             } catch (\Exception $e) {
                 $BankRecArray[$i]['bank_rec_date'] = null;
