@@ -240,17 +240,20 @@ class FinancialReportController extends Controller implements HasMiddleware
         $financialReport->international_event_array = base64_encode(serialize($InternationalEventArray));
 
         $MonetaryDonation = null;
-        $FieldCount = $input['MonDonationRowCount']; // <-- missing!
+        $FieldCount = $input['MonDonationRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
             $rawDate = $input['MonDonationDate'.$i] ?? null;
             if ($rawDate && str_contains($rawDate, '_')) {
                 $rawDate = null;
             }
+            if ($rawDate) {
+                $rawDate = str_replace('.', '/', $rawDate);
+            }
             $MonetaryDonation[$i]['mon_donation_desc'] = $input['DonationDesc'.$i] ?? null;
             $MonetaryDonation[$i]['mon_donation_info'] = $input['DonorInfo'.$i] ?? null;
             $MonetaryDonation[$i]['mon_donation_amount'] = $input['DonationAmount'.$i] ?? null;
             try {
-                $MonetaryDonation[$i]['mon_donation_date'] = ! empty($rawDate) && $rawDate !== '__/__/____'
+                $MonetaryDonation[$i]['mon_donation_date'] = !empty($rawDate) && $rawDate !== '__/__/____'
                     ? Carbon::createFromFormat('m/d/Y', $rawDate)->format('Y-m-d') : null;
             } catch (\Exception $e) {
                 $MonetaryDonation[$i]['mon_donation_date'] = null;
@@ -266,10 +269,13 @@ class FinancialReportController extends Controller implements HasMiddleware
             if ($rawDate && str_contains($rawDate, '_')) {
                 $rawDate = null;
             }
+            if ($rawDate) {
+                $rawDate = str_replace('.', '/', $rawDate);
+            }
             $NonMonetaryDonation[$i]['nonmon_donation_desc'] = $input['NonMonDonationDesc'.$i] ?? null;
             $NonMonetaryDonation[$i]['nonmon_donation_info'] = $input['NonMonDonorInfo'.$i] ?? null;
             try {
-                $NonMonetaryDonation[$i]['nonmon_donation_date'] = ! empty($rawDate) && $rawDate !== '__/__/____'
+                $NonMonetaryDonation[$i]['nonmon_donation_date'] = !empty($rawDate) && $rawDate !== '__/__/____'
                     ? Carbon::createFromFormat('m/d/Y', $rawDate)->format('Y-m-d') : null;
             } catch (\Exception $e) {
                 $NonMonetaryDonation[$i]['nonmon_donation_date'] = null;
