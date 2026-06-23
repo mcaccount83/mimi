@@ -141,8 +141,8 @@ class BaseChapterController extends Controller
      */
     private function applySorting(Builder $baseQuery): array
     {
-        $isPendingPage = request()->route()->getName() == 'chapters.chappending';
-        $isNotApprovedPage = request()->route()->getName() == 'chapters.chapnotapproved';
+        $isPendingPage = request()->route()->getName() == 'chapters.chaplistpending';
+        $isNotApprovedPage = request()->route()->getName() == 'chapters.chaplistdeclined';
         $isZappedPage = request()->route()->getName() == 'chapters.chapzapped';
         $isZappedViewPage = request()->route()->getName() == 'techreports.chapterlistzapped';
         $isReregPage = request()->route()->getName() == 'payment.chapreregistration';
