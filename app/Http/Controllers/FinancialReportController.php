@@ -45,6 +45,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         protected PDFController $pdfController,
         protected BaseMailDataController $baseMailDataController,
         protected PositionConditionsService $positionConditionsService,
+        protected EmailCampaignController $emailCampaignController,
     ) {}
 
     public static function middleware(): array
@@ -878,13 +879,13 @@ class FinancialReportController extends Controller implements HasMiddleware
         $updatedBy = $user['userName'];
 
         // Calculate the fiscal year (current year - next year)
-        $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
-        $reportYearRange = $reportYearOptions['reportYearRange'];
+        // $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
+        // $reportYearRange = $reportYearOptions['reportYearRange'];
 
-        $resources = Resources::with('resourceCategory')->get();
-        $instructionsName = 'Officer Packet';
-        $matchingInstructions = $resources->where('name', $instructionsName)->first();
-        $pdfPath = $matchingInstructions ? 'https://drive.google.com/uc?export=download&id='.$matchingInstructions->file_path : null;
+        // $resources = Resources::with('resourceCategory')->get();
+        // $instructionsName = 'Officer Packet';
+        // $matchingInstructions = $resources->where('name', $instructionsName)->first();
+        // $pdfPath = $matchingInstructions ? 'https://drive.google.com/uc?export=download&id='.$matchingInstructions->file_path : null;
 
         $status = 'fail';
         $BoardsIncomingDetails = BoardsIncoming::where('chapter_id', $id)->get();
@@ -921,6 +922,12 @@ class FinancialReportController extends Controller implements HasMiddleware
                             'updated_id' => $updatedId,
                         ]);
 
+                    }
+
+                    try {
+                        $this->emailCampaignController->sendOldBoardThankYou($id);
+                    } catch (\Exception $e) {
+                        Log::warning("sendOldBoardThankYou failed for chapter {$id}: " . $e->getMessage());
                     }
 
                     Boards::where('chapter_id', $id)->delete();
@@ -967,39 +974,45 @@ class FinancialReportController extends Controller implements HasMiddleware
                     ]);
                 }
 
+                try {
+                    $this->emailCampaignController->sendNewBoardWelcome($id);
+                } catch (\Exception $e) {
+                    Log::warning("sendNewBoardWelcome failed for chapter {$id}: " . $e->getMessage());
+                }
+
                 $documentsEOY = DocumentsEOY::find($id);
                 $documentsEOY->new_board_active = 1;
                 $documentsEOY->save();
 
                 BoardsIncoming::where('chapter_id', $id)->delete();
 
-                $baseQuery = $this->baseChapterController->getChapterDetails($id);
-                $chDetails = $baseQuery['chDetails'];
-                $pcDetails = $baseQuery['pcDetails'];
-                $chPcId = $chDetails->primary_coordinator_id;
-                $stateShortName = $baseQuery['stateShortName'];
-                $emailListChap = $baseQuery['emailListChap'];  // Full Board
-                $emailListCoord = $baseQuery['emailListCoord']; // Full Coord List
-                $emailCCData = $this->userController->loadConferenceCoord($chPcId);
-                // $emailPC = $baseQuery['emailPC'];  // PC Email
+                // $baseQuery = $this->baseChapterController->getChapterDetails($id);
+                // $chDetails = $baseQuery['chDetails'];
+                // $pcDetails = $baseQuery['pcDetails'];
+                // $chPcId = $chDetails->primary_coordinator_id;
+                // $stateShortName = $baseQuery['stateShortName'];
+                // $emailListChap = $baseQuery['emailListChap'];  // Full Board
+                // $emailListCoord = $baseQuery['emailListCoord']; // Full Coord List
+                // $emailCCData = $this->userController->loadConferenceCoord($chPcId);
+                // // $emailPC = $baseQuery['emailPC'];  // PC Email
 
-                $adminyearOptions = $this->positionConditionsService->getReportYearOptions();
-                $boardReportRange = $adminyearOptions['boardReportRange'];
+                // $adminyearOptions = $this->positionConditionsService->getReportYearOptions();
+                // $boardReportRange = $adminyearOptions['boardReportRange'];
 
-                $mailData = array_merge(
-                    $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                    $this->baseMailDataController->getPCData($pcDetails),
-                    $this->baseMailDataController->getCCData($emailCCData),
-                    // $this->baseMailDataController->getUserData($user),
-                    [
-                        'reportYearRange' => $reportYearRange,
-                        'boardReportRange' => $boardReportRange,
-                    ]
-                );
+                // $mailData = array_merge(
+                //     $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+                //     $this->baseMailDataController->getPCData($pcDetails),
+                //     $this->baseMailDataController->getCCData($emailCCData),
+                //     // $this->baseMailDataController->getUserData($user),
+                //     [
+                //         'reportYearRange' => $reportYearRange,
+                //         'boardReportRange' => $boardReportRange,
+                //     ]
+                // );
 
-                Mail::to($emailListChap)
-                    ->cc($emailListCoord)
-                    ->queue(new NewBoardWelcome($mailData, $pdfPath));
+                // Mail::to($emailListChap)
+                //     ->cc($emailListCoord)
+                //     ->queue(new NewBoardWelcome($mailData, $pdfPath));
 
                 DB::commit();
 
