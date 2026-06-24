@@ -89,7 +89,7 @@ class ViewServiceProvider extends ServiceProvider
             $fiscalYearOptions = Auth::check() ? $PositionConditionsService->getFiscalYearOptions() : [];
             $adminYear = $fiscalYearOptions['adminYear'];
 
-            $boardList = $adminYear->unsubscribe_list == null;
+            $boardList = $adminYear->unsubscribe_list != 1;
 
             // Merge all variables
             $viewVariables = array_merge([
