@@ -824,15 +824,15 @@ class FinancialReportController extends Controller implements HasMiddleware
         $secPositionId = $user['cdSecPositionId'];
 
         $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
-        $reportYearStart = $reportYearOptions['reportYearStart'];
+        $reportYearEnd = $reportYearOptions['reportYearEnd'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
-            ->where(function ($query) use ($reportYearStart) {
-                $query->where(function ($q) use ($reportYearStart) {
-                    $q->where('start_year', '<', $reportYearStart)
-                        ->orWhere(function ($q) use ($reportYearStart) {
-                            $q->where('start_year', '=', $reportYearStart)
+            ->where(function ($query) use ($reportYearEnd) {
+                $query->where(function ($q) use ($reportYearEnd) {
+                    $q->where('start_year', '<', $reportYearEnd)
+                        ->orWhere(function ($q) use ($reportYearEnd) {
+                            $q->where('start_year', '=', $reportYearEnd)
                                 ->where('start_month_id', '<', 7);
                         });
                 });
