@@ -87,9 +87,8 @@ class ViewServiceProvider extends ServiceProvider
             $probationParty = ($chDetails?->status_id == OperatingStatusEnum::PROBATION && $chDetails->probation_id == ProbationReasonEnum::EXCESSPARTY);
 
             $fiscalYearOptions = Auth::check() ? $PositionConditionsService->getFiscalYearOptions() : [];
-            $adminYear = $fiscalYearOptions['adminYear'];
-
-            $boardList = $adminYear->unsubscribe_list != 1;
+            $adminYear = $getFiscalYearOptions['adminYear'] ?? null;
+$boardList = $adminYear ? $adminYear->unsubscribe_list != 1 : true;
 
             // Merge all variables
             $viewVariables = array_merge([
