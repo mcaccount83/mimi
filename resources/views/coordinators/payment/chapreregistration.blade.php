@@ -56,7 +56,7 @@
                                     <a onclick="showChapterReRegLateEmailModal('{{ $list->name }}', {{ $list->id }})"><i class="bi bi-envelope text-primary"></i></a>
                                 @endif
                                 @if ($overdue > 1)
-
+                                    <a onclick="showChapterEmailModal('{{ $list->name }}', {{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="bi bi-envelope text-primary"></i></a>
                                 @endif
                             </td>
                             <td>

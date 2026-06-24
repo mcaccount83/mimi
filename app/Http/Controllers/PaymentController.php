@@ -52,6 +52,10 @@ class PaymentController extends Controller implements HasMiddleware
         $regId = $user['regId'];
         $positionId = $user['cdPositionId'];
         $secPositionId = $user['cdSecPositionId'];
+        $userName = $user['userName'];
+        $userPosition = $user['cdPosition'];
+        $userConfName = $user['confName'];
+        $userConfDesc = $user['confDesc'];
 
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentMonth = $dateOptions['currentMonth'];
@@ -81,6 +85,10 @@ class PaymentController extends Controller implements HasMiddleware
         $countList = count($reChapterList);
         $data = ['countList' => $countList, 'reChapterList' => $reChapterList, 'checkBox1Status' => $checkBox1Status,
             'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'checkBox56Status' => $checkBox56Status,
+            'userName' => $userName,
+            'userPosition' => $userPosition,
+            'userConfName' => $userConfName,
+            'userConfDesc' => $userConfDesc,
         ];
 
         return view('coordinators.payment.chapreregistration')->with($data);
