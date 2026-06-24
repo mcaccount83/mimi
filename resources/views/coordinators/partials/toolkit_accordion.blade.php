@@ -44,12 +44,12 @@
                                         @endif
                                         @endif
                                     </div>
+                                    @endforeach
                                     @if($category->category_name == "RESOURCE FOR COORDINATORS")
                                         <div class="col-md-12" style="margin-bottom: 5px;">
                                             <a href="javascript:void(0)" onclick="showPositionAbbreviations()">MIMI Position Abbreviations</a>
                                         </div>
                                     @endif
-                                @endforeach
                             </section>
                         </div>
                     </div>
