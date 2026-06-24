@@ -162,8 +162,8 @@ class ResourcesController extends Controller implements HasMiddleware
         $canEditFiles = ($positionId == CoordinatorPosition::IT || in_array(CoordinatorPosition::IT, $secPositionId));
         // $canEditFiles = ($positionId == CoordinatorPosition::CC || in_array(CoordinatorPosition::CC, $secPositionId));
 
-        $resources = Resources::with('resourceCategory', 'updatedBy')->get();
-        $resourceCategories = ResourceCategory::all();
+        $resources = Resources::with('resourceCategory', 'updatedBy')->orderBy('name')->get();
+        $resourceCategories = ResourceCategory::orderBy('category_name')->get();
 
         foreach ($resources as $resource) {
             $id = $resource->id;

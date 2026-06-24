@@ -204,7 +204,7 @@
     @endisset
 
     <!-- ForumList Menu Item -->
-    {{-- @php
+    @php
         $forumRoute = url(config('forum.frontend.router.prefix') . '/unread');
 
         $activeForumRoutes = [
@@ -228,7 +228,7 @@
                 </p>
             </a>
         </li>
-    @endisset --}}
+    @endisset
 
     <!-- Main MC Webstie -->
     <li class="nav-item">
