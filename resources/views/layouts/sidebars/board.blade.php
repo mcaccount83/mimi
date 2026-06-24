@@ -204,31 +204,33 @@
     @endisset
 
     <!-- ForumList Menu Item -->
-    @php
-        $forumRoute = url(config('forum.frontend.router.prefix') . '/unread');
+    @if ($boardList)
+        @php
+            $forumRoute = url(config('forum.frontend.router.prefix') . '/unread');
 
-        $activeForumRoutes = [
-            'forum/*',
-        ];
-    @endphp
-    @isset($forumRoute)
-        <li class="nav-item">
-             @if ($userTypeId == \App\Enums\UserTypeEnum::COORD && isset($bdTypeId) && $bdTypeId !== null)
-        <a href="#" target="_blank" class="nav-link" style="cursor: default; pointer-events: none; background-color: transparent !important; color: #c2c7d0 !important;">
-            @else
-            <a href="{{ $forumRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeForumRoutes) }}">
-                @endif
-                <i class="nav-icon bi bi-chat-quote-fill"></i>
-                <p>ForumLists
-                    @if( $unreadForumCount > 0)
-                    <span class="badge bg-danger badge-pill notification-badge">
-                        UNREAD
-                    </span>
-                @endif
-                </p>
-            </a>
-        </li>
-    @endisset
+            $activeForumRoutes = [
+                'forum/*',
+            ];
+        @endphp
+        @isset($forumRoute)
+            <li class="nav-item">
+                @if ($userTypeId == \App\Enums\UserTypeEnum::COORD && isset($bdTypeId) && $bdTypeId !== null)
+            <a href="#" target="_blank" class="nav-link" style="cursor: default; pointer-events: none; background-color: transparent !important; color: #c2c7d0 !important;">
+                @else
+                <a href="{{ $forumRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeForumRoutes) }}">
+                    @endif
+                    <i class="nav-icon bi bi-chat-quote-fill"></i>
+                    <p>ForumLists
+                        @if( $unreadForumCount > 0)
+                        <span class="badge bg-danger badge-pill notification-badge">
+                            UNREAD
+                        </span>
+                    @endif
+                    </p>
+                </a>
+            </li>
+        @endisset
+    @endif
 
     <!-- Main MC Webstie -->
     <li class="nav-item">

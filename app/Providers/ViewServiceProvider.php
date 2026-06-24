@@ -6,6 +6,7 @@ use App\Enums\AdminStatusEnum;
 use App\Enums\OperatingStatusEnum;
 use App\Enums\ProbationReasonEnum;
 use App\Enums\UserTypeEnum;
+use App\Models\AdminYear;
 use App\Models\Chapters;
 use App\Services\ForumConditionsService;
 use App\Services\PendingConditionsService;
@@ -36,6 +37,7 @@ class ViewServiceProvider extends ServiceProvider
             $chDetails = null;
             $confId = null;
             $probationParty = null;
+            $boardList = null;
 
             if (Auth::check()) {
                 $user = Auth::user();
@@ -69,6 +71,7 @@ class ViewServiceProvider extends ServiceProvider
             $positionConditionsService = app(PositionConditionsService::class);
             $forumConditionsService = app(ForumConditionsService::class);
             $PendingConditionsService = app(PendingConditionsService::class);
+            $PositionConditionsService = app(PositionConditionsService::class);
 
             $positionConditions = Auth::check() ? $positionConditionsService->getConditionsForUser($positionid, $secpositionid, $corId) : [];
             $getFiscalYearOptions = Auth::check() ? $positionConditionsService->getFiscalYearOptions() : [];
@@ -82,6 +85,11 @@ class ViewServiceProvider extends ServiceProvider
             $dateOptions = $positionConditionsService->getDateOptions();
 
             $probationParty = ($chDetails?->status_id == OperatingStatusEnum::PROBATION && $chDetails->probation_id == ProbationReasonEnum::EXCESSPARTY);
+
+            $fiscalYearOptions = Auth::check() ? $PositionConditionsService->getFiscalYearOptions() : [];
+            $adminYear = $fiscalYearOptions['adminYear'];
+
+            $boardList = $adminYear->unsubscribe_list == 1;
 
             // Merge all variables
             $viewVariables = array_merge([
@@ -105,6 +113,7 @@ class ViewServiceProvider extends ServiceProvider
                 'disbanded' => $disbanded,
                 'pending' => $pending,
                 'probationParty' => $probationParty,
+                'boardList' => $boardList,
             ],
                 $positionConditions,
                 $getFiscalYearOptions,
