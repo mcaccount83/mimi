@@ -23,7 +23,7 @@ class CampaignsOldBoardThankYou extends BaseMailable
             replyTo: [
                 new Address($this->mailData['ccEmail'], $this->mailData['ccName']),
             ],
-            subject: 'Thank You!',
+            subject: "Thank You! | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
         );
     }
 

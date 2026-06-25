@@ -307,8 +307,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/campaigns/sendbudgetmeeting', [EmailCampaignController::class, 'sendBudgetMeetingCampaign'])->name('campaigns.sendbudgetmeeting');
     Route::get('/campaigns/sendcodeofconduct', [EmailCampaignController::class, 'sendCodeOfConductCampaign'])->name('campaigns.sendcodeofconduct');
     Route::get('/campaigns/sendrecordsretention', [EmailCampaignController::class, 'sendRecordsRetentionCampaign'])->name('campaigns.sendrecordsretention');
-    Route::get('/campaigns/sendhappyholidays', [EmailCampaignController::class, 'sendHappyHolidaysCampaign'])->name('campaigns.sendhappyholidays');
-    Route::get('/campaigns/sendelectionstimeline', [EmailCampaignController::class, 'sendElectionsTimelineCampaign'])->name('campaigns.sendelectionstimeline');
+    Route::post('/campaigns/sendholidaybreak', [EmailCampaignController::class, 'sendHolidayBreakCampaign'])->name('campaigns.sendholidaybreak');    Route::get('/campaigns/sendelectionstimeline', [EmailCampaignController::class, 'sendElectionsTimelineCampaign'])->name('campaigns.sendelectionstimeline');
     Route::get('/campaigns/sendprocessingreimbursements', [EmailCampaignController::class, 'sendProcessingReimbursementsCampaign'])->name('campaigns.sendprocessingreimbursements');
     Route::get('/campaigns/sendannualreport', [EmailCampaignController::class, 'sendAnnualReportCampaign'])->name('campaigns.sendannualreport');
     Route::get('/campaigns/sendvolunteerpush', [EmailCampaignController::class, 'sendVolunteerPushCampaign'])->name('campaigns.sendvolunteerpush');

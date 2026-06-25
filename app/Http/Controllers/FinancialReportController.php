@@ -240,48 +240,67 @@ class FinancialReportController extends Controller implements HasMiddleware
         }
         $financialReport->international_event_array = base64_encode(serialize($InternationalEventArray));
 
+        // $MonetaryDonation = null;
+        // $FieldCount = $input['MonDonationRowCount'];
+        // for ($i = 0; $i < $FieldCount; $i++) {
+        //     $rawDate = $input['MonDonationDate'.$i] ?? null;
+        //     if ($rawDate && str_contains($rawDate, '_')) {
+        //         $rawDate = null;
+        //     }
+        //     if ($rawDate) {
+        //         $rawDate = str_replace('.', '/', $rawDate);
+        //     }
+        //     $MonetaryDonation[$i]['mon_donation_desc'] = $input['DonationDesc'.$i] ?? null;
+        //     $MonetaryDonation[$i]['mon_donation_info'] = $input['DonorInfo'.$i] ?? null;
+        //     $MonetaryDonation[$i]['mon_donation_amount'] = $input['DonationAmount'.$i] ?? null;
+        //     try {
+        //         $MonetaryDonation[$i]['mon_donation_date'] = !empty($rawDate) && $rawDate !== '__/__/____'
+        //             ? Carbon::createFromFormat('m/d/Y', $rawDate)->format('Y-m-d') : null;
+        //     } catch (\Exception $e) {
+        //         $MonetaryDonation[$i]['mon_donation_date'] = null;
+        //         Log::error('MonDonationDate parse error row '.$i.': '.$rawDate.' - '.$e->getMessage());
+        //     }
+        // }
+        // $financialReport->monetary_donations_to_chapter = base64_encode(serialize($MonetaryDonation));
+
+        // $NonMonetaryDonation = null;
+        // $FieldCount = $input['NonMonDonationRowCount'];
+        // for ($i = 0; $i < $FieldCount; $i++) {
+        //     $rawDate = $input['NonMonDonationDate'.$i] ?? null;
+        //     if ($rawDate && str_contains($rawDate, '_')) {
+        //         $rawDate = null;
+        //     }
+        //     if ($rawDate) {
+        //         $rawDate = str_replace('.', '/', $rawDate);
+        //     }
+        //     $NonMonetaryDonation[$i]['nonmon_donation_desc'] = $input['NonMonDonationDesc'.$i] ?? null;
+        //     $NonMonetaryDonation[$i]['nonmon_donation_info'] = $input['NonMonDonorInfo'.$i] ?? null;
+        //     try {
+        //         $NonMonetaryDonation[$i]['nonmon_donation_date'] = !empty($rawDate) && $rawDate !== '__/__/____'
+        //             ? Carbon::createFromFormat('m/d/Y', $rawDate)->format('Y-m-d') : null;
+        //     } catch (\Exception $e) {
+        //         $NonMonetaryDonation[$i]['nonmon_donation_date'] = null;
+        //         Log::error('NonMonDonationDate parse error row '.$i.': '.$rawDate.' - '.$e->getMessage());
+        //     }
+        // }
+        // $financialReport->non_monetary_donations_to_chapter = base64_encode(serialize($NonMonetaryDonation));
+
         $MonetaryDonation = null;
         $FieldCount = $input['MonDonationRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
-            $rawDate = $input['MonDonationDate'.$i] ?? null;
-            if ($rawDate && str_contains($rawDate, '_')) {
-                $rawDate = null;
-            }
-            if ($rawDate) {
-                $rawDate = str_replace('.', '/', $rawDate);
-            }
             $MonetaryDonation[$i]['mon_donation_desc'] = $input['DonationDesc'.$i] ?? null;
             $MonetaryDonation[$i]['mon_donation_info'] = $input['DonorInfo'.$i] ?? null;
             $MonetaryDonation[$i]['mon_donation_amount'] = $input['DonationAmount'.$i] ?? null;
-            try {
-                $MonetaryDonation[$i]['mon_donation_date'] = !empty($rawDate) && $rawDate !== '__/__/____'
-                    ? Carbon::createFromFormat('m/d/Y', $rawDate)->format('Y-m-d') : null;
-            } catch (\Exception $e) {
-                $MonetaryDonation[$i]['mon_donation_date'] = null;
-                Log::error('MonDonationDate parse error row '.$i.': '.$rawDate.' - '.$e->getMessage());
-            }
+            $MonetaryDonation[$i]['mon_donation_date'] = $this->parseDateInput($input['MonDonationDate'.$i] ?? null);
         }
         $financialReport->monetary_donations_to_chapter = base64_encode(serialize($MonetaryDonation));
 
         $NonMonetaryDonation = null;
         $FieldCount = $input['NonMonDonationRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
-            $rawDate = $input['NonMonDonationDate'.$i] ?? null;
-            if ($rawDate && str_contains($rawDate, '_')) {
-                $rawDate = null;
-            }
-            if ($rawDate) {
-                $rawDate = str_replace('.', '/', $rawDate);
-            }
             $NonMonetaryDonation[$i]['nonmon_donation_desc'] = $input['NonMonDonationDesc'.$i] ?? null;
             $NonMonetaryDonation[$i]['nonmon_donation_info'] = $input['NonMonDonorInfo'.$i] ?? null;
-            try {
-                $NonMonetaryDonation[$i]['nonmon_donation_date'] = !empty($rawDate) && $rawDate !== '__/__/____'
-                    ? Carbon::createFromFormat('m/d/Y', $rawDate)->format('Y-m-d') : null;
-            } catch (\Exception $e) {
-                $NonMonetaryDonation[$i]['nonmon_donation_date'] = null;
-                Log::error('NonMonDonationDate parse error row '.$i.': '.$rawDate.' - '.$e->getMessage());
-            }
+            $NonMonetaryDonation[$i]['nonmon_donation_date'] = $this->parseDateInput($input['NonMonDonationDate'.$i] ?? null);
         }
         $financialReport->non_monetary_donations_to_chapter = base64_encode(serialize($NonMonetaryDonation));
 
@@ -302,27 +321,39 @@ class FinancialReportController extends Controller implements HasMiddleware
         $financialReport->amount_reserved_from_previous_year = isset($input['AmountReservedFromLastYear']) ? preg_replace('/[^\d.]/', '', $input['AmountReservedFromLastYear']) : null;
         $financialReport->bank_balance_now = isset($input['BankBalanceNow']) ? preg_replace('/[^\d.]/', '', $input['BankBalanceNow']) : null;
 
+        // // Bank Reconciliation (serialized)
+        // $BankRecArray = null;
+        // $FieldCount = $input['BankRecRowCount'];
+        // for ($i = 0; $i < $FieldCount; $i++) {
+        //     $rawDate = $input['BankRecDate'.$i] ?? null;
+        //     if ($rawDate && str_contains($rawDate, '_')) {
+        //         $rawDate = null;
+        //     }
+
+        //     // Normalize separators before parsing
+        //     if ($rawDate) {
+        //         $rawDate = str_replace('.', '/', $rawDate);
+        //     }
+
+        //     try {
+        //         $BankRecArray[$i]['bank_rec_date'] = !empty($rawDate) && $rawDate !== '__/__/____'
+        //             ? Carbon::createFromFormat('m/d/Y', $rawDate)->format('Y-m-d') : null;
+        //     } catch (\Exception $e) {
+        //         $BankRecArray[$i]['bank_rec_date'] = null;
+        //         Log::error('BankRecDate parse error row '.$i.': '.$rawDate.' - '.$e->getMessage());
+        //     }
+        //     $BankRecArray[$i]['bank_rec_check_no'] = $input['BankRecCheckNo'.$i] ?? null;
+        //     $BankRecArray[$i]['bank_rec_desc'] = $input['BankRecDesc'.$i] ?? null;
+        //     $BankRecArray[$i]['bank_rec_payment_amount'] = $input['BankRecPaymentAmount'.$i] ?? null;
+        //     $BankRecArray[$i]['bank_rec_desposit_amount'] = $input['BankRecDepositAmount'.$i] ?? null;
+        // }
+        // $financialReport->bank_reconciliation_array = base64_encode(serialize($BankRecArray));
+
         // Bank Reconciliation (serialized)
         $BankRecArray = null;
         $FieldCount = $input['BankRecRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
-            $rawDate = $input['BankRecDate'.$i] ?? null;
-            if ($rawDate && str_contains($rawDate, '_')) {
-                $rawDate = null;
-            }
-
-            // Normalize separators before parsing
-            if ($rawDate) {
-                $rawDate = str_replace('.', '/', $rawDate);
-            }
-
-            try {
-                $BankRecArray[$i]['bank_rec_date'] = !empty($rawDate) && $rawDate !== '__/__/____'
-                    ? Carbon::createFromFormat('m/d/Y', $rawDate)->format('Y-m-d') : null;
-            } catch (\Exception $e) {
-                $BankRecArray[$i]['bank_rec_date'] = null;
-                Log::error('BankRecDate parse error row '.$i.': '.$rawDate.' - '.$e->getMessage());
-            }
+            $BankRecArray[$i]['bank_rec_date'] = $this->parseDateInput($input['BankRecDate'.$i] ?? null);
             $BankRecArray[$i]['bank_rec_check_no'] = $input['BankRecCheckNo'.$i] ?? null;
             $BankRecArray[$i]['bank_rec_desc'] = $input['BankRecDesc'.$i] ?? null;
             $BankRecArray[$i]['bank_rec_payment_amount'] = $input['BankRecPaymentAmount'.$i] ?? null;
@@ -393,6 +424,24 @@ class FinancialReportController extends Controller implements HasMiddleware
             $ChapterAwards[$i]['awards_approved'] = false;
         }
         $financialReport->chapter_awards = base64_encode(serialize($ChapterAwards));
+    }
+
+    private function parseDateInput(?string $rawDate): ?string
+    {
+        if (!$rawDate || str_contains($rawDate, '_') || $rawDate === '__/__/____') {
+            return null;
+        }
+        $rawDate = str_replace('.', '/', $rawDate);
+        try {
+            try {
+                return Carbon::createFromFormat('m/d/Y', $rawDate)->format('Y-m-d');
+            } catch (\Exception $e) {
+                return Carbon::createFromFormat('m/d/y', $rawDate)->format('Y-m-d');
+            }
+        } catch (\Exception $e) {
+            Log::error('Date parse error: ' . $rawDate . ' - ' . $e->getMessage());
+            return null;
+        }
     }
 
     /**

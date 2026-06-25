@@ -2115,5 +2115,78 @@ function showChapterInquiryEmailModal(chapterName, chapterId, inquiryId, userNam
     });
 }
 
+function confirmSendHolidayBreak(label, route) {
+    Swal.fire({
+        title: 'Happy Holidays Email',
+        html: `
+            <p>Enter the holiday break dates to include in the email.</p>
+            <div class="mb-2 text-start">
+                <label class="form-label">Fall Break</label>
+                <input type="text" id="fallBreak" class="form-control" placeholder="e.g. November 27 - December 1">
+            </div>
+            <div class="mb-2 text-start">
+                <label class="form-label">Winter Break</label>
+                <input type="text" id="winterBreak" class="form-control" placeholder="e.g. December 23 - January 3">
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Send',
+        cancelButtonText: 'Cancel',
+        customClass: {
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const fallBreak = Swal.getPopup().querySelector('#fallBreak').value;
+            const winterBreak = Swal.getPopup().querySelector('#winterBreak').value;
+
+            if (!fallBreak || !winterBreak) {
+                Swal.showValidationMessage('Please enter both break dates.');
+                return false;
+            }
+
+            return { fallBreak, winterBreak };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we queue your emails.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                    $.ajax({
+                        url: route,
+                        type: 'POST',
+                        data: {
+                            fallBreak: result.value.fallBreak,
+                            winterBreak: result.value.winterBreak,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => location.reload());
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong. Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: { confirmButton: 'btn btn-sm btn-success' }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
 </script>
 

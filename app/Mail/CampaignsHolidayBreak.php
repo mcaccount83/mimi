@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
-class CampaignsHappyHolidays extends BaseMailable
+class CampaignsHolidayBreak extends BaseMailable
 {
     public array $mailData;
 
@@ -19,18 +19,18 @@ class CampaignsHappyHolidays extends BaseMailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address($this->mailData['ccEmail'], $this->mailData['ccName']),
+            from: new Address($this->mailData['userEmail'], $this->mailData['userName']),
             replyTo: [
-                new Address($this->mailData['ccEmail'], $this->mailData['ccName']),
+                new Address($this->mailData['userEmail'], $this->mailData['userName']),
             ],
-            subject: 'Thank You!',
+            subject: "Happy Holidays!  | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.campaigns.happyholidays',
+            markdown: 'emails.campaigns.holidaybreak',
         );
     }
 

@@ -9,7 +9,7 @@ use App\Mail\CampaignsVolunteerPush;
 use App\Mail\CampaignsBudgetMeeting;
 use App\Mail\CampaignsCodeOfConduct;
 use App\Mail\CampaignsRecordsRetention;
-use App\Mail\CampaignsHappyHolidays;
+use App\Mail\CampaignsHolidayBreak;
 use App\Mail\CampaignsProcessingReimbursements;
 use App\Mail\CampaignsBoardReport;
 use App\Mail\CampaignsFinancialReport;
@@ -17,6 +17,7 @@ use App\Mail\CampaignsNewBoardWelcome;
 use App\Models\Resources;
 use App\Services\PositionConditionsService;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
@@ -384,7 +385,7 @@ class EmailCampaignController extends Controller
         }
     }
 
-    public function sendHappyHolidaysCampaign(Request $request): RedirectResponse
+    public function sendHolidayBreakCampaign(Request $request): JsonResponse
     {
         try {
             $user = $this->userController->loadUserInformation($request);
@@ -394,8 +395,8 @@ class EmailCampaignController extends Controller
             $positionId = $user['cdPositionId'];
             $secPositionId = $user['cdSecPositionId'];
 
-            $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
-            $boardReportRange = $reportYearOptions['boardReportRange'];
+            $fallBreak = $request->input('fallBreak');
+            $winterBreak = $request->input('winterBreak');
 
             $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
             $chapterList = $baseQuery['query']
@@ -417,8 +418,11 @@ class EmailCampaignController extends Controller
 
                 $mailData[$chDetails->name] = array_merge(
                     $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                    $this->baseMailDataController->getPCData($pcDetails),
-                    $this->baseMailDataController->getCCData($emailCCData),
+                    $this->baseMailDataController->getUserData($user),
+                    [
+                        'fallBreak' => $fallBreak,
+                        'winterBreak' => $winterBreak,
+                    ]
                 );
 
                 $chapterEmails[$chDetails->name] = $emailListChap;
@@ -429,14 +433,14 @@ class EmailCampaignController extends Controller
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
                         ->cc($coordinatorEmails[$chapterName] ?? [])
-                        ->queue(new CampaignsHappyHolidays($data));
+                        ->queue(new CampaignsHolidayBreak($data));
                 }
             }
 
-            return redirect()->back()->with('success', 'Happy Holidays emails have been queued.');
+            return response()->json(['message' => 'Happy Holidays emails have been queued.']);
         } catch (\Exception $e) {
             Log::error($e);
-            return redirect()->back()->with('fail', 'Something went wrong. Please try again.');
+            return response()->json(['message' => 'Something went wrong. Please try again.'], 500);
         }
     }
 
@@ -506,9 +510,6 @@ class EmailCampaignController extends Controller
             $positionId = $user['cdPositionId'];
             $secPositionId = $user['cdSecPositionId'];
 
-            $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
-            $boardReportRange = $reportYearOptions['boardReportRange'];
-
             $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
             $chapterList = $baseQuery['query']
                 ->get();
@@ -520,17 +521,13 @@ class EmailCampaignController extends Controller
             foreach ($chapterList as $chapter) {
                 $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
                 $chDetails = $emailDetails['chDetails'];
-                $pcDetails = $emailDetails['pcDetails'];
                 $stateShortName = $emailDetails['stateShortName'];
-                $chPcId = $chDetails->primary_coordinator_id;
                 $emailListChap = $emailDetails['emailListChap'];
                 $emailListCoord = $emailDetails['emailListCoord'];
-                $emailCCData = $this->userController->loadConferenceCoord($chPcId);
 
                 $mailData[$chDetails->name] = array_merge(
                     $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                    $this->baseMailDataController->getPCData($pcDetails),
-                    $this->baseMailDataController->getCCData($emailCCData),
+                    $this->baseMailDataController->getUserData($user),
                 );
 
                 $chapterEmails[$chDetails->name] = $emailListChap;

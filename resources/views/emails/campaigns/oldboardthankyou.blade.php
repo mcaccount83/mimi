@@ -17,7 +17,11 @@ have come to expect. Many chapters need our guidance, and we want to build a str
 join our team, so please take a moment to think about it, and if you’d like more details or have questions feel free to contact any of
 your coordinators or fill out the online application.
 </p>
-<p><center><a href="https://momsclub.org/coordinators/">https://momsclub.org/coordinators/</a></center></p>
+<p><center>
+@component('mail::button', ['url' => 'https://momsclub.org/coordinators/'])
+Volunteer Information
+@endcomponent
+</center></p>
 <br>
 <p><strong>MCL</strong>,<br>
     {{ $mailData['ccName'] }}<br>

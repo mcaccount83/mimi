@@ -117,25 +117,10 @@
 
           <div class="col-md-8">
             <div class="card card-primary card-outline">
-                {{-- @if ($coordinatorCondition && $conferenceCoordinatorCondition)
-                    <div class="card-body">
-                        <div class="card-header bg-transparent border-0">
-                            <h3>Monthly Email Campaigns</h3>
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <!--  Email Campaigns  -->
-                                    @include('coordinators.partials.emailcampaigns')
-                                </div>
-                            </div>
-                        </div>
-                    @endif --}}
-
                     <div class="card-header bg-transparent border-0">
                         <h3>Chapters & Coordinators</h3>
+                        <!--  Email Campaigns  -->
+                        {{-- @include('coordinators.partials.emailcampaigns') --}}
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">

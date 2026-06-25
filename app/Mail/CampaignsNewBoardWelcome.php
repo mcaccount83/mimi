@@ -26,7 +26,7 @@ class CampaignsNewBoardWelcome extends BaseMailable
             replyTo: [
                 new Address($this->mailData['ccEmail'], $this->mailData['ccName']),
             ],
-            subject: 'Welcome to the Executive Board!',
+            subject: "Welcome to the Executive Board! | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
         );
     }
 
