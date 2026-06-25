@@ -50,10 +50,10 @@
                         $mailData = [
                             'chapterName' => $list->name,
                             'chapterState' => $list->state,
-                            'boardElectionReportReceived' => $list->documentsEOY->new_board_submitted,
-                            'financialReportReceived' => $list->documentsEOY->financial_report_received,
-                            '990NSubmissionReceived' => $list->documentsIRS->irs_path,
-                            'einLetterCopyReceived' => $list->documentsEOY->ein_letter,
+                            'boardElectionReportReceived' => $list->documentsEOY?->new_board_submitted,
+                            'financialReportReceived' => $list->documentsEOY?->financial_report_received,
+                            '990NSubmissionReceived' => $list->documentsIRS?->irs_path,
+                            'einLetterCopyReceived' => $list->documentsEOY?->ein_letter,
                         ];
 
                         $renderedHtml = View::make('emails.endofyear.latereportreminder', ['mailData' => $mailData])->render();
@@ -67,7 +67,7 @@
                                 @endif
                             </td>
                             <td class="text-center align-middle">
-                                @if ($list->documentsEOY->new_board_submitted == null || $list->documentsEOY->financial_report_received == null || $list->documentsEOY->new_board_submitted == 0 || $list->documentsEOY->financial_report_received == 0)
+                                @if ($list->documentsEOY?->new_board_submitted == null || $list->documentsEOY?->financial_report_received == null || $list->documentsEOY?->new_board_submitted == 0 || $list->documentsEOY?->financial_report_received == 0)
                                    <a href="#" class="email-link" data-chapter-name="{{ $list->name }}" data-chapter-id="{{ $list->id }}" data-user-name="{{ $userName }}"
                                     data-user-position="{{ $userPosition }}" data-user-conf-name="{{ $userConfName }}" data-user-conf-desc="{{ $userConfDesc }}"
                                     data-predefined-subject="End of Year Reports Late Notice" data-message-id="msg-{{ $list->id }}"> <i class="bi bi-envelope text-primary"></i></a>
@@ -90,20 +90,20 @@
                                 @endif
                             </td>
                             <td>{{ $list->name }}</td>
-                            <td @if($list->documentsEOY->report_extension == '1') style="background-color: #ffc107;" @else style="background-color: transparent;" @endif>
-                                @if($list->documentsEOY->report_extension == '1') YES @else @endif
+                            <td @if($list->documentsEOY?->report_extension == '1') style="background-color: #ffc107;" @else style="background-color: transparent;" @endif>
+                                @if($list->documentsEOY?->report_extension == '1') YES @else @endif
                             </td>
-                            <td @if($list->documentsEOY->new_board_submitted == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                                @if($list->documentsEOY->new_board_submitted == '1') YES @else NO @endif
+                            <td @if($list->documentsEOY?->new_board_submitted == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                                @if($list->documentsEOY?->new_board_submitted == '1') YES @else NO @endif
                             </td>
-                            <td @if($list->documentsEOY->new_board_active == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                                @if($list->documentsEOY->new_board_active == '1') YES @else NO @endif
+                            <td @if($list->documentsEOY?->new_board_active == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                                @if($list->documentsEOY?->new_board_active == '1') YES @else NO @endif
                             </td>
-                            <td @if($list->documentsEOY->financial_report_received == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                                @if($list->documentsEOY->financial_report_received == '1') YES @else NO @endif
+                            <td @if($list->documentsEOY?->financial_report_received == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                                @if($list->documentsEOY?->financial_report_received == '1') YES @else NO @endif
                             </td>
-                            <td @if($list->documentsEOY->financial_review_complete == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                                @if($list->documentsEOY->financial_review_complete == '1') YES @else NO @endif
+                            <td @if($list->documentsEOY?->financial_review_complete == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                                @if($list->documentsEOY?->financial_review_complete == '1') YES @else NO @endif
                             </td>
                         </tr>
                     @endforeach
