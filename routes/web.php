@@ -12,6 +12,7 @@ use App\Http\Controllers\ChapterReportController;
 use App\Http\Controllers\CoordinatorController;
 use App\Http\Controllers\CoordinatorReportController;
 use App\Http\Controllers\EmailController;
+use App\Http\Controllers\EmailCampaignController;
 use App\Http\Controllers\EOYReportController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\FinancialReportController;
@@ -299,6 +300,20 @@ Route::middleware('auth')->group(function () {
     Route::post('/inquiries/sendyeschapter', [EmailController::class, 'sendYesChapterInquiries'])->name('inquiries.sendyeschapter');
     Route::post('/inquiries/sendchapter', [EmailController::class, 'sendChapterInquiryEmailModal'])->name('inquiries.sendchapter');
     Route::post('/inquiries/sendmember', [EmailController::class, 'sendMemberInquiryEmailModal'])->name('inquiries.sendmember');
+});
+
+// Email Campaign Controller Routes...Coordinator Login Required
+Route::middleware('auth')->group(function () {
+    Route::get('/campaigns/sendbudgetmeeting', [EmailCampaignController::class, 'sendBudgetMeetingCampaign'])->name('campaigns.sendbudgetmeeting');
+    Route::get('/campaigns/sendcodeofconduct', [EmailCampaignController::class, 'sendCodeOfConductCampaign'])->name('campaigns.sendcodeofconduct');
+    Route::get('/campaigns/sendrecordsretention', [EmailCampaignController::class, 'sendRecordsRetentionCampaign'])->name('campaigns.sendrecordsretention');
+    Route::get('/campaigns/sendhappyholidays', [EmailCampaignController::class, 'sendHappyHolidaysCampaign'])->name('campaigns.sendhappyholidays');
+    Route::get('/campaigns/sendelectionstimeline', [EmailCampaignController::class, 'sendElectionsTimelineCampaign'])->name('campaigns.sendelectionstimeline');
+    Route::get('/campaigns/sendprocessingreimbursements', [EmailCampaignController::class, 'sendProcessingReimbursementsCampaign'])->name('campaigns.sendprocessingreimbursements');
+    Route::get('/campaigns/sendannualreport', [EmailCampaignController::class, 'sendAnnualReportCampaign'])->name('campaigns.sendannualreport');
+    Route::get('/campaigns/sendvolunteerpush', [EmailCampaignController::class, 'sendVolunteerPushCampaign'])->name('campaigns.sendvolunteerpush');
+    Route::get('/campaigns/sendboardreport', [EmailCampaignController::class, 'sendBoardReportCampaign'])->name('campaigns.sendboardreport');
+    Route::get('/campaigns/sendfinancialreport', [EmailCampaignController::class, 'sendFinancialReportCampaign'])->name('campaigns.sendfinancialreport');
 });
 
 // New Chapter/Coordinator Controller Routes...Coordinator Login Required

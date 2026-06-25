@@ -17,13 +17,12 @@
     <li>ASK THEM to serve.</li>
     <li>Smile and stay positive when recruiting</li>
 </ul>
-<br>
 <p>If you are struggling or have any questions about the election process, reach out to your Primary Coordinator for ideas and support!</p>
 
 <br>
 <p><strong>MCL</strong>,<br>
-    {{ $mailData['ccName'] }}<br>
-    {{ $mailData['ccPosition'] }}<br>
-    {{ $mailData['ccConfName'] }}, {{ $mailData['ccConfDescription'] }}<br>
-    International MOMS Club</p>
+    {{ $mailData['userName'] }}<br>
+    {{ $mailData['userPosition'] }}<br>
+    {{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}<br>
+    International MOMS Club
 @endcomponent

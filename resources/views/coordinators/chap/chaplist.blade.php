@@ -20,6 +20,9 @@
                 </div>
                 <!-- /.card-header -->
             <div class="card-body">
+                <!--  Email Campaigns  -->
+                {{-- @include('coordinators.partials.emailcampaigns') --}}
+
                 <table id="chapterlist" class="table table-sm table-hover" >
                 <thead>
                   <tr>

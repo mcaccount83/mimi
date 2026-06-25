@@ -2096,5 +2096,24 @@ function showChapterInquiryEmailModal(chapterName, chapterId, inquiryId, userNam
     });
 }
 
+ function confirmSendCampaign(label, route) {
+    Swal.fire({
+        title: `Send ${label}?`,
+        text: `This will send the ${label} to all chapters in your conference/downline.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Send',
+        cancelButtonText: 'Cancel',
+        customClass: {
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = route;
+        }
+    });
+}
+
 </script>
 

@@ -185,6 +185,7 @@ class PositionConditionsService
         return [
             'reportYear' => $reportYear,
             'boardReportRange' => $boardReportRange,
+            'boardReportEnd' => $boardReportEnd,
             'reportYearId' => $reportYearId,
             'reportYearRange' => $reportYearRange,
             'reportYearStart' => $reportYearStart,

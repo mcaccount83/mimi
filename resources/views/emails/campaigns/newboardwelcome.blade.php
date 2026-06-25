@@ -15,6 +15,7 @@
     <li>Take pride in your name! MOMS Club is a registered service mark, so it's important that everyone uses it correctly. No periods, no apostrophe, and always include your chapter's geographic name so everyone knows you're you!</li>
     <li>Have FUN! Being president is a lot of fun! Delegate, then relax, smile and enjoy your term!</li>
 </ul>
+<br>
 <hr>
 <p><b>Officer Packet</b></p>
 <p>You will find the Officer's Resource Packet is attached. The officer packet includes more details about a variety of topics including Party/Member Benefit Expenses, Geographic Boundaries, Sistering, Annual Budget, Ideas for Board Meeting Agendas and more.</p>
@@ -36,7 +37,6 @@
     <li>Note the contact information listed for your chapter’s volunteers. If you ever have trouble reaching your Primary Coordinator, you can click on the name of your Secondary Coordinator to email them.</li>
     <li>You can log on to MIMI anytime. if you receive error messages or if you have any questions at all, please let your Primary Coordinator know!</li>
 </ul>
-<br>
 <p>Other Resources available through your MIMI account:</p>
 <ul>
     <li>Chapter Resources<br>
@@ -46,13 +46,14 @@
     <li>eLearning Portal<br>
     Courses on Board Positions and common topics are available for all board members.</li>
 </ul>
+<br>
 <hr>
 <p><b>Coordinator Team</b></p>
 <p>All MOMS Club chapters have an International Coordinator assigned to help them.<br>
 <center>{{ $mailData['pcName'] }}<br>
                 @mailto($mailData['pcEmail'])</center><br>
 She is there for anything that you need! Any questions you have or good news you want to share -- talk to her, she loves to hear from you!</p>
-
+<br>
 <br>
 <p><strong>MCL</strong>,<br>
     {{ $mailData['ccName'] }}<br>
