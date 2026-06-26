@@ -140,9 +140,9 @@
                                         <a href="{{$chDetails->website_url}}" target="_blank">{{$chDetails->website_url}}</a>
                                     @endif
                                 <br>
-                                <label>Webiste Link Status:</label> {{$websiteLink}}
+                                <label>Website Link Status:</label> {{$websiteLink}}
                                 <br>
-                                <label>Webiste Notes (not visible to board members):</label><br>
+                                <label>Website Notes (not visible to board members):</label><br>
                                 {{ $chDetails->website_notes }}
                             </div>
                             <div class="col-md-6">

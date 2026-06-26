@@ -136,7 +136,7 @@
                                     @else
                                         <a href="{{$chDetails->website_url}}" target="_blank">{{$chDetails->website_url}}</a><br>
                                     @endif
-                                <label class="me-2">Webiste Link Status:</label> {{$websiteLink}}
+                                <label class="me-2">Website Link Status:</label> {{$websiteLink}}
                             </div>
                             <div class="col-12 mb-3">
                                 <label class="me-2">Forum/Group/App:</label> {{ $chDetails->egroup}}<br>
