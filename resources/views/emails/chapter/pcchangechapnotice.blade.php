@@ -1,14 +1,14 @@
 @component('mail::message')
 # MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}
 
-Your chapter has been assigned a new Priamry Coordinator:
-<br>
+<p>Your chapter has been assigned a new Priamry Coordinator:</p>
 {!! $mailData['mailTablePC'] !!}
 <br>
-You should begin using her as your primary point of contact immediately.<br>
+<p>You should begin using her as your primary point of contact immediately.</p>
+<p>
+    You can view/update your chapter details as well as see your current Coordinator list at any time by logging
+    into MIMI at <a href="https://momsclub.org/mimi">https://momsclub.org/mimi</a>.</p>
 <br>
-You can view/update your chapter details as well as see your current Coordinator list at any time by logging into MIMI at https://momsclub.org/mimi.<br>
-<br>
-<strong>MCL,</strong><br>
-International MOMS Club
+<p><strong>MCL,</strong><br>
+International MOMS Club</p>
 @endcomponent

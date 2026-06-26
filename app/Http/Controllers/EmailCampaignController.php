@@ -43,7 +43,6 @@ class EmailCampaignController extends Controller
         $emailCCData = $this->userController->loadConferenceCoord($chPcId);
 
         $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
-        $boardReportRange = $reportYearOptions['boardReportRange'];
 
         $resources = Resources::with('resourceCategory')->get();
         $instructionsName = 'Officer Packet';
@@ -52,11 +51,9 @@ class EmailCampaignController extends Controller
 
         $mailData = array_merge(
             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+            $this->baseMailDataController->getReportYearData($reportYearOptions),
             $this->baseMailDataController->getPCData($pcDetails),
             $this->baseMailDataController->getCCData($emailCCData),
-            [
-                'boardReportRange' => $boardReportRange,
-            ]
         );
 
         Mail::to($emailListChap)
@@ -76,15 +73,12 @@ class EmailCampaignController extends Controller
         $emailCCData = $this->userController->loadConferenceCoord($chPcId);
 
         $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
-        $reportYearRange = $reportYearOptions['reportYearRange'];
 
         $mailData = array_merge(
             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+            $this->baseMailDataController->getReportYearData($reportYearOptions),
             $this->baseMailDataController->getPCData($pcDetails),
             $this->baseMailDataController->getCCData($emailCCData),
-            [
-                'reportYearRange' => $reportYearRange,
-            ]
         );
 
         Mail::to($emailListChap)
@@ -103,9 +97,6 @@ class EmailCampaignController extends Controller
             $secPositionId = $user['cdSecPositionId'];
 
             $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
-            $boardReportRange = $reportYearOptions['boardReportRange'];
-            $reportYearStart = $reportYearOptions['reportYearStart'];
-            $boardReportEnd = $reportYearOptions['boardReportEnd'];
 
             $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
             $chapterList = $baseQuery['query']
@@ -123,23 +114,14 @@ class EmailCampaignController extends Controller
             foreach ($chapterList as $chapter) {
                 $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
                 $chDetails = $emailDetails['chDetails'];
-                // $pcDetails = $emailDetails['pcDetails'];
                 $stateShortName = $emailDetails['stateShortName'];
-                // $chPcId = $chDetails->primary_coordinator_id;
                 $emailListChap = $emailDetails['emailListChap'];
                 $emailListCoord = $emailDetails['emailListCoord'];
-                // $emailCCData = $this->userController->loadConferenceCoord($chPcId);
 
                 $mailData[$chDetails->name] = array_merge(
                     $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                    // $this->baseMailDataController->getPCData($pcDetails),
+                    $this->baseMailDataController->getReportYearData($reportYearOptions),
                     $this->baseMailDataController->getUserData($user),
-                    // $this->baseMailDataController->getCCData($emailCCData),
-                    [
-                        'boardReportRange' => $boardReportRange,
-                        'reportYearStart' => $reportYearStart,
-                        'boardReportEnd' => $boardReportEnd,
-                    ]
                 );
 
                 $chapterEmails[$chDetails->name] = $emailListChap;
@@ -172,7 +154,6 @@ class EmailCampaignController extends Controller
             $secPositionId = $user['cdSecPositionId'];
 
             $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
-            $boardReportRange = $reportYearOptions['boardReportRange'];
 
             $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
             $chapterList = $baseQuery['query']
@@ -185,17 +166,14 @@ class EmailCampaignController extends Controller
             foreach ($chapterList as $chapter) {
                 $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
                 $chDetails = $emailDetails['chDetails'];
-                $pcDetails = $emailDetails['pcDetails'];
                 $stateShortName = $emailDetails['stateShortName'];
-                $chPcId = $chDetails->primary_coordinator_id;
                 $emailListChap = $emailDetails['emailListChap'];
                 $emailListCoord = $emailDetails['emailListCoord'];
-                $emailCCData = $this->userController->loadConferenceCoord($chPcId);
 
                 $mailData[$chDetails->name] = array_merge(
                     $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                    $this->baseMailDataController->getPCData($pcDetails),
-                    $this->baseMailDataController->getCCData($emailCCData),
+                    $this->baseMailDataController->getReportYearData($reportYearOptions),
+                    $this->baseMailDataController->getUserData($user),
                 );
 
                 $chapterEmails[$chDetails->name] = $emailListChap;
@@ -227,9 +205,6 @@ class EmailCampaignController extends Controller
             $positionId = $user['cdPositionId'];
             $secPositionId = $user['cdSecPositionId'];
 
-            $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
-            $boardReportRange = $reportYearOptions['boardReportRange'];
-
             $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
             $chapterList = $baseQuery['query']
                 ->get();
@@ -241,17 +216,13 @@ class EmailCampaignController extends Controller
             foreach ($chapterList as $chapter) {
                 $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
                 $chDetails = $emailDetails['chDetails'];
-                $pcDetails = $emailDetails['pcDetails'];
                 $stateShortName = $emailDetails['stateShortName'];
-                $chPcId = $chDetails->primary_coordinator_id;
                 $emailListChap = $emailDetails['emailListChap'];
                 $emailListCoord = $emailDetails['emailListCoord'];
-                $emailCCData = $this->userController->loadConferenceCoord($chPcId);
 
                 $mailData[$chDetails->name] = array_merge(
                     $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                    $this->baseMailDataController->getPCData($pcDetails),
-                    $this->baseMailDataController->getCCData($emailCCData),
+                    $this->baseMailDataController->getUserData($user),
                 );
 
                 $chapterEmails[$chDetails->name] = $emailListChap;
@@ -283,9 +254,6 @@ class EmailCampaignController extends Controller
             $positionId = $user['cdPositionId'];
             $secPositionId = $user['cdSecPositionId'];
 
-            $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
-            $boardReportRange = $reportYearOptions['boardReportRange'];
-
             $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
             $chapterList = $baseQuery['query']
                 ->get();
@@ -297,17 +265,13 @@ class EmailCampaignController extends Controller
             foreach ($chapterList as $chapter) {
                 $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
                 $chDetails = $emailDetails['chDetails'];
-                $pcDetails = $emailDetails['pcDetails'];
                 $stateShortName = $emailDetails['stateShortName'];
-                $chPcId = $chDetails->primary_coordinator_id;
                 $emailListChap = $emailDetails['emailListChap'];
                 $emailListCoord = $emailDetails['emailListCoord'];
-                $emailCCData = $this->userController->loadConferenceCoord($chPcId);
 
                 $mailData[$chDetails->name] = array_merge(
                     $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                    $this->baseMailDataController->getPCData($pcDetails),
-                    $this->baseMailDataController->getCCData($emailCCData),
+                    $this->baseMailDataController->getUserData($user),
                 );
 
                 $chapterEmails[$chDetails->name] = $emailListChap;
@@ -339,9 +303,6 @@ class EmailCampaignController extends Controller
             $positionId = $user['cdPositionId'];
             $secPositionId = $user['cdSecPositionId'];
 
-            $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
-            $boardReportRange = $reportYearOptions['boardReportRange'];
-
             $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
             $chapterList = $baseQuery['query']
                 ->get();
@@ -353,18 +314,14 @@ class EmailCampaignController extends Controller
             foreach ($chapterList as $chapter) {
                 $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
                 $chDetails = $emailDetails['chDetails'];
-                $pcDetails = $emailDetails['pcDetails'];
                 $stateShortName = $emailDetails['stateShortName'];
-                $chPcId = $chDetails->primary_coordinator_id;
                 $emailListChap = $emailDetails['emailListChap'];
                 $emailListCoord = $emailDetails['emailListCoord'];
-                $emailCCData = $this->userController->loadConferenceCoord($chPcId);
 
                 $mailData[$chDetails->name] = array_merge(
                     $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                    $this->baseMailDataController->getPCData($pcDetails),
-                    $this->baseMailDataController->getCCData($emailCCData),
-                );
+                    $this->baseMailDataController->getUserData($user),
+                  );
 
                 $chapterEmails[$chDetails->name] = $emailListChap;
                 $coordinatorEmails[$chDetails->name] = $emailListCoord;
@@ -409,12 +366,9 @@ class EmailCampaignController extends Controller
             foreach ($chapterList as $chapter) {
                 $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
                 $chDetails = $emailDetails['chDetails'];
-                $pcDetails = $emailDetails['pcDetails'];
                 $stateShortName = $emailDetails['stateShortName'];
-                $chPcId = $chDetails->primary_coordinator_id;
                 $emailListChap = $emailDetails['emailListChap'];
                 $emailListCoord = $emailDetails['emailListCoord'];
-                $emailCCData = $this->userController->loadConferenceCoord($chPcId);
 
                 $mailData[$chDetails->name] = array_merge(
                     $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
@@ -454,9 +408,6 @@ class EmailCampaignController extends Controller
             $positionId = $user['cdPositionId'];
             $secPositionId = $user['cdSecPositionId'];
 
-            $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
-            $boardReportRange = $reportYearOptions['boardReportRange'];
-
             $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
             $chapterList = $baseQuery['query']
                 ->get();
@@ -468,17 +419,13 @@ class EmailCampaignController extends Controller
             foreach ($chapterList as $chapter) {
                 $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
                 $chDetails = $emailDetails['chDetails'];
-                $pcDetails = $emailDetails['pcDetails'];
                 $stateShortName = $emailDetails['stateShortName'];
-                $chPcId = $chDetails->primary_coordinator_id;
                 $emailListChap = $emailDetails['emailListChap'];
                 $emailListCoord = $emailDetails['emailListCoord'];
-                $emailCCData = $this->userController->loadConferenceCoord($chPcId);
 
                 $mailData[$chDetails->name] = array_merge(
                     $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                    $this->baseMailDataController->getPCData($pcDetails),
-                    $this->baseMailDataController->getCCData($emailCCData),
+                    $this->baseMailDataController->getUserData($user),
                 );
 
                 $chapterEmails[$chDetails->name] = $emailListChap;
@@ -560,7 +507,6 @@ class EmailCampaignController extends Controller
             $secPositionId = $user['cdSecPositionId'];
 
             $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
-            $boardReportRange = $reportYearOptions['boardReportRange'];
 
             $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
             $chapterList = $baseQuery['query']
@@ -573,17 +519,14 @@ class EmailCampaignController extends Controller
             foreach ($chapterList as $chapter) {
                 $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
                 $chDetails = $emailDetails['chDetails'];
-                $pcDetails = $emailDetails['pcDetails'];
                 $stateShortName = $emailDetails['stateShortName'];
-                $chPcId = $chDetails->primary_coordinator_id;
                 $emailListChap = $emailDetails['emailListChap'];
                 $emailListCoord = $emailDetails['emailListCoord'];
-                $emailCCData = $this->userController->loadConferenceCoord($chPcId);
 
                 $mailData[$chDetails->name] = array_merge(
                     $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                    $this->baseMailDataController->getPCData($pcDetails),
-                    $this->baseMailDataController->getCCData($emailCCData),
+                    $this->baseMailDataController->getReportYearData($reportYearOptions),
+                    $this->baseMailDataController->getUserData($user),
                 );
 
                 $chapterEmails[$chDetails->name] = $emailListChap;
@@ -617,7 +560,6 @@ class EmailCampaignController extends Controller
             $secPositionId = $user['cdSecPositionId'];
 
             $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
-            $boardReportRange = $reportYearOptions['boardReportRange'];
 
             $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
             $chapterList = $baseQuery['query']
@@ -630,17 +572,14 @@ class EmailCampaignController extends Controller
             foreach ($chapterList as $chapter) {
                 $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
                 $chDetails = $emailDetails['chDetails'];
-                $pcDetails = $emailDetails['pcDetails'];
                 $stateShortName = $emailDetails['stateShortName'];
-                $chPcId = $chDetails->primary_coordinator_id;
                 $emailListChap = $emailDetails['emailListChap'];
                 $emailListCoord = $emailDetails['emailListCoord'];
-                $emailCCData = $this->userController->loadConferenceCoord($chPcId);
 
                 $mailData[$chDetails->name] = array_merge(
                     $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                    $this->baseMailDataController->getPCData($pcDetails),
-                    $this->baseMailDataController->getCCData($emailCCData),
+                    $this->baseMailDataController->getReportYearData($reportYearOptions),
+                    $this->baseMailDataController->getUserData($user),
                 );
 
                 $chapterEmails[$chDetails->name] = $emailListChap;

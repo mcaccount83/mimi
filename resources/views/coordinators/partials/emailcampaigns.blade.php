@@ -12,7 +12,7 @@
                 3  => ['monthInWords' => 'March', 'id' => 'ProcessingReimbursementsCampaign', 'label' => 'Processing Reimbursements', 'route' => route('campaigns.sendprocessingreimbursements')],
                 4  => ['monthInWords' => 'April', 'id' => 'AnnualReportCampaign', 'label' => 'Annual Report Info', 'route' => route('campaigns.sendannualreport')],
                 5  => ['monthInWords' => 'May', 'id' => 'BoardReportCampaign', 'label' => 'Board Report Reminder', 'route' => route('campaigns.sendboardreport')],
-                6  => ['monthInWords' => 'June', 'id' => 'FinancialReportCampaign', 'label' => 'Financial Report Reminder', 'route' => route('campaigns.sendfinancialreport')],
+                6 => ['monthInWords' => 'June', 'id' => 'FinancialReportCampaign', 'label' => 'Financial Report Reminder', 'route' => route('campaigns.sendfinancialreport')],
             ];
         @endphp
 

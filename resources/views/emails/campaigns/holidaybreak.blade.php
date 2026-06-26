@@ -22,5 +22,5 @@
     {{ $mailData['userName'] }}<br>
     {{ $mailData['userPosition'] }}<br>
     {{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}<br>
-    International MOMS Club
+    International MOMS Club</p>
 @endcomponent

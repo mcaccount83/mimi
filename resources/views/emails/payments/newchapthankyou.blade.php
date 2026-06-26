@@ -1,11 +1,9 @@
 @component('mail::message')
 # New Chapter Application
 
-<p>
-Your Application has been Successfully Submitted!<br>
+<p>Your Application has been Successfully Submitted!</p>
 <br>
-Here are a few things to keep in mind as you start your MOMS Club journey.
-</p>
+<p>Here are a few things to keep in mind as you start your MOMS Club journey.</p>
 <ul>
     <li>All chapters are in PENDING status until reviewed by our Coordintaor Team.</li>
     <li>After review, you will receive an email from your Coordinator to establish initial communication as well as verify/set your official chapter name
@@ -18,11 +16,10 @@ Here are a few things to keep in mind as you start your MOMS Club journey.
     <li>After your chapter has moved to ACTIVE status you'll see your MIMI options change to allow more access and infomration, but your login credentials will remain the same.</li>
 </ul>
 <p>
-Log into MIMI - <a href="http://momsclub.org/mimi" target="_blank">http://momsclub.org/mimi</a><br>
-Return to the Main Website - <a href="http://momsclub.org" target="_blank">http://momsclub.org</a>
+    Log into MIMI - <a href="http://momsclub.org/mimi">http://momsclub.org/mimi</a><br>
+    Return to the Main Website - <a href="http://momsclub.org">http://momsclub.org</a>
 </p>
 <br>
-<br>
-<strong>MCL,</strong><br>
-International MOMS Club
+<p><strong>MCL,</strong><br>
+International MOMS Club</p>
 @endcomponent

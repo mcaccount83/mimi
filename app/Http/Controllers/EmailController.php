@@ -796,6 +796,8 @@ class EmailController extends Controller implements HasMiddleware
         $positionId = $user['cdPositionId'];
         $secPositionId = $user['cdSecPositionId'];
 
+        $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
+
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']
             ->whereHas('documentsEOY', function ($query) {
@@ -838,7 +840,8 @@ class EmailController extends Controller implements HasMiddleware
 
             $mailData[$chDetails->name] = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                $this->baseMailDataController->getFinancialReportData($chFinancialReport)
+                $this->baseMailDataController->getFinancialReportData($chFinancialReport),
+                $this->baseMailDataController->getReportYearData($reportYearOptions),
             );
 
         }

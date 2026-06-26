@@ -292,6 +292,21 @@ class BaseMailDataController extends Controller
         ];
     }
 
+    public function getReportYearData(array $reportYearOptions): array
+    {
+        return [
+            'reportYearRange' => $reportYearOptions['reportYearRange'],
+            'reportYearStart' => $reportYearOptions['reportYearStart'],
+            'reportYearEnd' => $reportYearOptions['reportYearEnd'],
+            'boardReportRange' => $reportYearOptions['boardReportRange'],
+            'boardReportStart' => $reportYearOptions['boardReportStart'],
+            'boardReportEnd' => $reportYearOptions['boardReportEnd'],
+            'boardReportName' => $reportYearOptions['boardReportName'],
+            'financialReportName' => $reportYearOptions['financialReportName'],
+            'irsFilingName' => $reportYearOptions['irsFilingName'],
+        ];
+    }
+
     public function getFinancialReportData(object $chFinancialReport)
     {
         return [

@@ -19,11 +19,11 @@ class CampaignsRecordsRetention extends BaseMailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address($this->mailData['ccEmail'], $this->mailData['ccName']),
+            from: new Address($this->mailData['userEmail'], $this->mailData['userName']),
             replyTo: [
-                new Address($this->mailData['ccEmail'], $this->mailData['ccName']),
+                new Address($this->mailData['userEmail'], $this->mailData['userName']),
             ],
-            subject: 'Thank You!',
+            subject: "Records Retention  | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
         );
     }
 

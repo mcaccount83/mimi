@@ -1,13 +1,12 @@
 @component('mail::message')
 # Mentoring Coordinator Notification
 
-You have been reassigned as the Mentoring Coordinator for {{$mailData['cdName']}}.  You should be able to see them (and their chapters) in your MIMI profile.<br>
-<br>
-They have alrady been notified, but feel free to reach out to them directly as well.
-<br>
+<p>
+    You have been reassigned as the Mentoring Coordinator for {{$mailData['cdName']}}.  You should be able
+    to see them (and their chapters) in your MIMI profile.</p>
+<p>They have alrady been notified, but feel free to reach out to them directly as well.</p>
 {!! $mailData['mailTable'] !!}
 <br>
-
-<strong>MCL,</strong><br>
-International MOMS Club
+<p><strong>MCL,</strong><br>
+International MOMS Club</p>
 @endcomponent

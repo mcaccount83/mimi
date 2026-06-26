@@ -1,14 +1,14 @@
 @component('mail::message')
 # Mentoring Coordinator Notification
 
-Your have been assigned a new Mentoring Coordinator:
-<br>
+<p>Your have been assigned a new Mentoring Coordinator:</p>
 {!! $mailData['mailTableRC'] !!}
 <br>
-You should begin using her as your primary point of contact immediately.<br>
+<p>You should begin using her as your primary point of contact immediately.</p>
+<p>
+    You can continue to view details about your Mentoring Coordinator and assigned Chapters at any time
+    by logging into MIMI at <a href="https://momsclub.org/mimi">https://momsclub.org/mimi</a>.</p>
 <br>
-You can continue to view details about your Mentoring Coordinator and assigned Chapters at any time by logging into MIMI at https://momsclub.org/mimi.<br>
-<br>
-<strong>MCL,</strong><br>
-International MOMS Club
+<p><strong>MCL,</strong><br>
+International MOMS Club</p>
 @endcomponent
