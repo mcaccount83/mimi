@@ -85,7 +85,7 @@
 
                     <div class="row mb-3 align-middle">
                         <label class="col-sm-3 col-form-label">990N Submission Issues:<br>
-                            <small>(Wrong Dates, Not Found, etc)</small></label>
+                            <small class="text-muted">(Wrong Dates, Not Found, etc)</small></label>
                         <div class="col-sm-3">
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="irs_issues" id="irs_issues" class="form-check-input"
@@ -189,7 +189,7 @@
 
                     <div class="row mb-3 align-middle">
                         <label class="col-sm-3 col-form-label">990N Submission Issues:<br>
-                            <small>(Wrong Dates, Not Found, etc)</small></label>
+                            <small class="text-muted">(Wrong Dates, Not Found, etc)</small></label>
                         <div class="col-sm-3">
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="irs_issues" id="irs_issues" class="form-check-input"

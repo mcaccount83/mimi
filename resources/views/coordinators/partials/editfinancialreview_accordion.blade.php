@@ -173,7 +173,7 @@
                     <div class="col-md-12">
                         <div class="card card-secondary card-outline collapsed-card mb-4">
                             <div class="card-header" data-lte-toggle="card-collapse" style="cursor: pointer;">
-                                <div class="card-title">ANNUAL REPORT REVIEW <small>(click to open/close)</small></div>
+                                <div class="card-title">ANNUAL REPORT REVIEW <small class="text-muted">(click to open/close)</small></div>
                             </div>
                             <div class="card-body">
                                 @if (!is_null($chEOYDocuments->roster_path))

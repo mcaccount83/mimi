@@ -5,13 +5,13 @@
     now considered PAST DUE.</p>
 <ul>
     @if($mailData['boardElectionReportReceived'] != '1')
-        <li>{{$mailData['boardReportName']}}</li>
+        <li>Board Election Report</li>
     @endif
     @if($mailData['financialReportReceived'] != '1')
-        <li>{{$mailData['financialReportName']}}</li>
+        <li>Financial Report</li>
     @endif
     @if($mailData['990NSubmissionReceived'] != '1')
-        <li>{{$mailData['irsFilingName']}}</li>
+        <li>990N Submission</li>
     @endif
     @if($mailData['einLetterCopyReceived'] == null)
         <li>Copy of EIN Letter</li>

@@ -255,7 +255,7 @@
             </div>
             </div>
             <div class="row mb-1">
-                    <div class="col-auto fw-bold">Proof of 990N Filing <small>(7/1/{{ $reportYearStart}} - 6/30/{{ $reportYearEnd }})</small>:</div>
+                    <div class="col-auto fw-bold">Proof of 990N Filing <small class="text-muted">(7/1/{{ $reportYearStart}} - 6/30/{{ $reportYearEnd }})</small>:</div>
                     <div class="col text-end">
                     @if(is_null($chFinancialReportReview->current_990N_included))
                         <span class="badge bg-secondary fs-7">Please Review</span>
