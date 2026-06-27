@@ -19,9 +19,9 @@ class CampaignsHolidayBreak extends BaseMailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address($this->mailData['userEmail'], $this->mailData['userName']),
+            from: new Address('support@momsclub.org', 'MOMS Club'),
             replyTo: [
-                new Address($this->mailData['userEmail'], $this->mailData['userName']),
+                new Address('support@momsclub.org', 'MOMS Club'),
             ],
             subject: "Happy Holidays!  | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
         );

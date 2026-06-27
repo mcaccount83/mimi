@@ -126,6 +126,12 @@
                             <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="startExport('intchapter', 'International Chapter List')"><i class="bi bi-download me-2"></i>Export International Chapter List</button>
                         @endif
                 @endif
+                @if ($checkBox1Status && !$checkBox51Status && !$checkBox3Status)
+                    <a class="btn btn-primary bg-gradient mb-2" onclick="showChapterPrimaryEmailModal('{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="bi bi-envelope-fill me-2"></i>E-mail Primary Chapters</a>
+                @endif
+                @if (!$checkBox51Status && !$checkBox3Status && !$checkBox1Status)
+                    <a class="btn btn-primary bg-gradient mb-2" onclick="showChapterAllEmailModal('{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="bi bi-envelope-fill me-2"></i>E-mail All Chapters</a>
+                @endif
             </div>
             <!-- /.card-body for buttons -->
 

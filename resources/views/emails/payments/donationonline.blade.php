@@ -1,12 +1,12 @@
 @component('mail::message')
 # Admin {{ $mailData['donationType'] ?? 'Donation' }} Notification
 
-The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has made a {{ $mailData['donationDescription'] ?? 'Donation' }}.<br>
+<p>The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has made a {{ $mailData['donationDescription'] ?? 'Donation' }}.</p>
 <br>
-The donation has been entered into MIMI and a Thank You email has been sent to the chapter.<br>
+<p>The donation has been entered into MIMI and a Thank You email has been sent to the chapter.</p>
 <br>
-<strong>MCL,</strong><br>
-MIMI Database Administrator
+<p><strong>MCL,</strong><br>
+MIMI Database Administrator</p>
 <br>
 <table>
     <tbody>

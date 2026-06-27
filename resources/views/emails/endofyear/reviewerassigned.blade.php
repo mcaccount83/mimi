@@ -1,16 +1,17 @@
 @component('mail::message')
 # Assigned Reviewer Notification
 
-{{$mailData['userName']}} has assigned you to review the financial report for {{$mailData['chapterName']}}, {{$mailData['chapterState']}}. After reviewing, assign to the next reviewer or mark as review complete.<br>
+<p>{{$mailData['userName']}} has assigned you to review the financial report for {{$mailData['chapterName']}}, {{$mailData['chapterState']}}. After reviewing,
+    assign to the next reviewer or mark as review complete.</p>
 <br>
-Message from {{$mailData['userName']}}:<br>
-{{$mailData['reviewerEmailMessage']}}<br>
+<p>Message from {{$mailData['userName']}}:<br>
+{{$mailData['reviewerEmailMessage']}}</p>
 <br>
-The Financial Report PDF is attached and other documnets that can be downloaded are listed below.<br>
+<p>The Financial Report PDF is attached and other documnets that can be downloaded are listed below.</p>
 <br>
-Submitted by: {{$mailData['completedName']}}, @mailto($mailData['completedEmail'])</a><br>
+<p>Submitted by: {{$mailData['completedName']}}, @mailto($mailData['completedEmail'])</a></p>
 <br>
-Downloads Available:
+<p>Downloads Available:<br>
 <ul>
     <li>
         @isset($mailData['rosterPath'])
@@ -39,7 +40,8 @@ Downloads Available:
         @endisset
     </li>
 </ul>
+</p>
 <br>
-<strong>MCL,</strong><br>
-MIMI Database Administrator
+<p><strong>MCL,</strong><br>
+MIMI Database Administrator</p>
 @endcomponent

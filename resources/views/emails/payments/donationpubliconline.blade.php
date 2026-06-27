@@ -1,12 +1,12 @@
 @component('mail::message')
 # Admin Public {{ $mailData['donationType'] ?? 'Donation' }} Notification
 
-A public {{ $mailData['donationDescription'] ?? 'Donation' }} has been made to International MOMS Club. A Thank You email has been sent to the donor.<br>
+<p>A public {{ $mailData['donationDescription'] ?? 'Donation' }} has been made to International MOMS Club. A Thank You email has been sent to the donor.</p>
 <br>
-If this is a donation from a chapter, please forward to the CC so the donation can be entered into their MIMI profile.<br>
+<p>If this is a donation from a chapter, please forward to the CC so the donation can be entered into their MIMI profile.</p>
 <br>
-<strong>MCL,</strong><br>
-MIMI Database Administrator
+<p><strong>MCL,</strong><br>
+MIMI Database Administrator</p>
 <br>
 <table>
     <tbody>

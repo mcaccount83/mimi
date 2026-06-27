@@ -19,9 +19,9 @@ class CampaignsCodeOfConduct extends BaseMailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address($this->mailData['userEmail'], $this->mailData['userName']),
+            from: new Address('support@momsclub.org', 'MOMS Club'),
             replyTo: [
-                new Address($this->mailData['userEmail'], $this->mailData['userName']),
+                new Address('support@momsclub.org', 'MOMS Club'),
             ],
             subject: "Code of Conduct  | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
         );

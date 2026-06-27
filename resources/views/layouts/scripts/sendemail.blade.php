@@ -215,6 +215,310 @@
     });
 }
 
+function showChapterAllEmailModal(userName, userPosition, userConfName, userConfDesc, predefinedSubject = '', predefinedMessage = '') {
+
+    let messageEditor = null;
+
+    Swal.fire({
+        title: 'Chapter Email Message',
+        html: `
+            <p>This will send your message to the full board and full coordinator list for all chapters directly and indirectly
+                under <b>${userName}'s</b>.<br>
+            <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
+                <input type="text" id="email_subject" name="email_subject" class="swal2-input" placeholder="Enter Subject" required style="width: 100%; margin: 0 !important;" value="${predefinedSubject}">
+            </div>
+            <div style="width: 100%; margin-bottom: 10px;">
+                <div id="email_message_editor" style="height: 150px;"></div>
+            </div>
+            <div style="width: 100%; margin-bottom: 10px; text-align: left;">
+                <p><b>MCL,</b><br>
+                ${userName}<br>
+                ${userPosition}<br>
+                ${userConfName}, ${userConfDesc}<br>
+                International MOMS Club</p>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger',
+            popup: 'swal-wide-popup'
+        },
+        didOpen: () => {
+
+            if (!document.getElementById('swal-wide-popup-style')) {
+                const style = document.createElement('style');
+                style.id = 'swal-wide-popup-style';
+                style.innerHTML = `
+                    .swal-wide-popup {
+                        width: 80% !important;
+                        max-width: 800px !important;
+                    }
+                    .ql-toolbar {
+                        background: #f8f9fa;
+                        border-radius: 4px 4px 0 0;
+                    }
+                    .ql-container {
+                        border-radius: 0 0 4px 4px;
+                        font-size: 14px;
+                    }
+                    .ql-editor {
+                        text-align: left;
+                        min-height: 120px;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            messageEditor = new Quill('#email_message_editor', {
+                theme: 'snow',
+                placeholder: 'Email Message',
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ list: 'ordered' }, { list: 'bullet' }],
+                        ['link'],
+                        ['clean']
+                    ]
+                }
+            });
+
+            if (predefinedMessage) {
+                messageEditor.clipboard.dangerouslyPasteHTML(predefinedMessage);
+            }
+        },
+        willClose: () => {
+            if (messageEditor) {
+                messageEditor = null;
+            }
+        },
+        preConfirm: () => {
+            const subject = Swal.getPopup().querySelector('#email_subject').value;
+            const message = messageEditor.root.innerHTML;
+
+            const isEmpty = (html) => html === '<p><br></p>' || html.trim() === '';
+
+            if (!subject) {
+                Swal.showValidationMessage('Please enter subject.');
+                return false;
+            }
+            if (isEmpty(message)) {
+                Swal.showValidationMessage('Please enter message.');
+                return false;
+            }
+            return {
+                email_subject: subject,
+                email_message: message,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn btn-sm btn-success',
+                    cancelButton: 'btn btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+                    $.ajax({
+                        url: '{{ route('chapters.sendchapterall') }}',
+                        type: 'POST',
+                        data: {
+                            subject: data.email_subject,
+                            message: data.email_message,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                location.reload();
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+function showChapterPrimaryEmailModal(userName, userPosition, userConfName, userConfDesc, predefinedSubject = '', predefinedMessage = '') {
+
+    let messageEditor = null;
+
+    Swal.fire({
+        title: 'Chapter Email Message',
+        html: `
+            <p>This will send your message to the full board and full coordinator list for all chapters
+                <b>${userName}</b> is Primary Coordinator for.<br>
+            <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
+                <input type="text" id="email_subject" name="email_subject" class="swal2-input" placeholder="Enter Subject" required style="width: 100%; margin: 0 !important;" value="${predefinedSubject}">
+            </div>
+            <div style="width: 100%; margin-bottom: 10px;">
+                <div id="email_message_editor" style="height: 150px;"></div>
+            </div>
+            <div style="width: 100%; margin-bottom: 10px; text-align: left;">
+                <p><b>MCL,</b><br>
+                ${userName}<br>
+                ${userPosition}<br>
+                ${userConfName}, ${userConfDesc}<br>
+                International MOMS Club</p>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn btn-sm btn-success',
+            cancelButton: 'btn btn-sm btn-danger',
+            popup: 'swal-wide-popup'
+        },
+        didOpen: () => {
+
+            if (!document.getElementById('swal-wide-popup-style')) {
+                const style = document.createElement('style');
+                style.id = 'swal-wide-popup-style';
+                style.innerHTML = `
+                    .swal-wide-popup {
+                        width: 80% !important;
+                        max-width: 800px !important;
+                    }
+                    .ql-toolbar {
+                        background: #f8f9fa;
+                        border-radius: 4px 4px 0 0;
+                    }
+                    .ql-container {
+                        border-radius: 0 0 4px 4px;
+                        font-size: 14px;
+                    }
+                    .ql-editor {
+                        text-align: left;
+                        min-height: 120px;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            messageEditor = new Quill('#email_message_editor', {
+                theme: 'snow',
+                placeholder: 'Email Message',
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ list: 'ordered' }, { list: 'bullet' }],
+                        ['link'],
+                        ['clean']
+                    ]
+                }
+            });
+
+            if (predefinedMessage) {
+                messageEditor.clipboard.dangerouslyPasteHTML(predefinedMessage);
+            }
+        },
+        willClose: () => {
+            if (messageEditor) {
+                messageEditor = null;
+            }
+        },
+        preConfirm: () => {
+            const subject = Swal.getPopup().querySelector('#email_subject').value;
+            const message = messageEditor.root.innerHTML;
+
+            const isEmpty = (html) => html === '<p><br></p>' || html.trim() === '';
+
+            if (!subject) {
+                Swal.showValidationMessage('Please enter subject.');
+                return false;
+            }
+            if (isEmpty(message)) {
+                Swal.showValidationMessage('Please enter message.');
+                return false;
+            }
+            return {
+                email_subject: subject,
+                email_message: message,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn btn-sm btn-success',
+                    cancelButton: 'btn btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+                    $.ajax({
+                        url: '{{ route('chapters.sendchapterprimary') }}',
+                        type: 'POST',
+                        data: {
+                            subject: data.email_subject,
+                            message: data.email_message,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                location.reload();
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
     function showChapterSetupModalBlank() {
     Swal.fire({
         title: 'Chapter Startup Details',

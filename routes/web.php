@@ -287,6 +287,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/chapter/sendstartup', [EmailController::class, 'sendChapterStartup'])->name('chapters.sendstartup');
     Route::post('/chapter/sendnewchapter', [EmailController::class, 'sendNewChapterEmail'])->name('chapters.sendnewchapter');
     Route::post('/chapter/sendchapter', [EmailController::class, 'sendChapterEmail'])->name('chapters.sendchapter');
+    Route::post('/chapter/sendchapterall', [EmailController::class, 'sendChapterAllEmail'])->name('chapters.sendchapterall');
+    Route::post('/chapter/sendchapterprimary', [EmailController::class, 'sendChapterPrimaryEmail'])->name('chapters.sendchapterprimary');
     Route::post('/chapter/sendcoord', [EmailController::class, 'sendCoordEmail'])->name('coordinators.sendcoord');
     Route::post('/chapter/sendcoordup', [EmailController::class, 'sendCoordUplineEmail'])->name('coordinators.sendcoordup');
     Route::post('/chapter/sendcoordrpt', [EmailController::class, 'sendCoordReportToEmail'])->name('coordinators.sendcoordrpt');
@@ -306,6 +308,8 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/campaigns/sendbudgetmeeting', [EmailCampaignController::class, 'sendBudgetMeetingCampaign'])->name('campaigns.sendbudgetmeeting');
     Route::get('/campaigns/sendcodeofconduct', [EmailCampaignController::class, 'sendCodeOfConductCampaign'])->name('campaigns.sendcodeofconduct');
+    Route::get('/campaigns/sendserviceprojects', [EmailCampaignController::class, 'sendServiceProjectsCampaign'])->name('campaigns.sendserviceprojects');
+    Route::get('/campaigns/sendmemberbenefits', [EmailCampaignController::class, 'sendMemberBenefitsCampaign'])->name('campaigns.sendmemberbenefits');
     Route::get('/campaigns/sendrecordsretention', [EmailCampaignController::class, 'sendRecordsRetentionCampaign'])->name('campaigns.sendrecordsretention');
     Route::post('/campaigns/sendholidaybreak', [EmailCampaignController::class, 'sendHolidayBreakCampaign'])->name('campaigns.sendholidaybreak');    Route::get('/campaigns/sendelectionstimeline', [EmailCampaignController::class, 'sendElectionsTimelineCampaign'])->name('campaigns.sendelectionstimeline');
     Route::get('/campaigns/sendprocessingreimbursements', [EmailCampaignController::class, 'sendProcessingReimbursementsCampaign'])->name('campaigns.sendprocessingreimbursements');

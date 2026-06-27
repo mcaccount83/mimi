@@ -12,15 +12,12 @@
 </center></p>
 <br>
 <p>
-    If you have an emergency, you can email me directly at
+    If you have an emergency, you can contact your {{ $mailData['userPosition'] }} ({{ $mailData['userName'] }}) directly at
     <a mailto="{{ $mailData['userEmail'] }}">{{ $mailData['userEmail'] }}</a>
     or you can always send a message to
     <a mailto="support@momsclub.org">support@momsclub.org</a>, and someone will contact you as soon as possible.
 </p>
 <br>
-<p><strong>MCL</strong>,<br>
-    {{ $mailData['userName'] }}<br>
-    {{ $mailData['userPosition'] }}<br>
-    {{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}<br>
-    International MOMS Club</p>
+<p><strong>MCL,</strong><br>
+International MOMS Club</p>
 @endcomponent

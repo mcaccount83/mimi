@@ -1,13 +1,13 @@
 @component('mail::message')
 # Website Link Notification
 
-Thank you for completing the review on the website for the MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}}.<br>
+<p>Thank you for completing the review on the website for the MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}}.</p>
 <br>
-The new website address is: {{$mailData['chapterWebsiteURL']}}.<br>
+<p>The new website address is: {{$mailData['chapterWebsiteURL']}}.</p>
 <br>
-The site has been reviewed and has automatically been added to the main MOMS Club website.<br>
+<p>The site has been reviewed and has automatically been added to the main MOMS Club website.</p>
 <br>
-<strong>MCL,</strong><br>
-MIMI Database Administrator
+<p><strong>MCL,</strong><br>
+MIMI Database Administrator</p>
 <br>
 @endcomponent

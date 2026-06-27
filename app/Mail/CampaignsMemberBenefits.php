@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
-class CampaignsVolunteerPush extends BaseMailable
+class CampaignsMemberBenefits extends BaseMailable
 {
     public array $mailData;
 
@@ -23,14 +23,14 @@ class CampaignsVolunteerPush extends BaseMailable
             replyTo: [
                 new Address('support@momsclub.org', 'MOMS Club'),
             ],
-            subject: "Becoming a Big Sister! | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
+            subject: "Service Projects | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}",
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.campaigns.volunteerpush',
+            markdown: 'emails.campaigns.serviceprojects',
         );
     }
 }

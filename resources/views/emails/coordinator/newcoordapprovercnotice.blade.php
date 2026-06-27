@@ -1,12 +1,11 @@
 @component('mail::message')
 # New Coordinator Notification
 
-A New Coordinator has been approved and you have been assigned as their Mentoring Coordinator.
-<br>
+<p>A New Coordinator has been approved and you have been assigned as their Mentoring Coordinator.</p>
+
 {!! $mailData['mailTable'] !!}
 <br>
-
-<strong>MCL,</strong><br>
-MIMI Database Administrator
+<p><strong>MCL,</strong><br>
+MIMI Database Administrator</p>
 @endcomponent
 

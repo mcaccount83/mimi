@@ -6,7 +6,7 @@
     you will not be having elections. Instead, your founding Board will continue until Spring, {{$mailData['boardReportEnd']}}. All other chapters, however, will be
     electing officers in May or June.
 </p>
-<p>There are several things you can do now to prepare your chapter for the elections, and to ensure a full slate of officers.</p>
+<p>There are several things you can do now to prepare your chapter for the elections, and to ensure a full slate of officers.<br>
 <ul>
     <li>Review the Election Timetable Fact Sheet (attached).</li>
     <li>Complete the Election Process eLearning Training (access through your MIMI login).</li>
@@ -16,11 +16,9 @@
     <li>ASK THEM to serve.</li>
     <li>Smile and stay positive when recruiting</li>
 </ul>
+</p>
 <p>If you are struggling or have any questions about the election process, reach out to your Primary Coordinator for ideas and support!</p>
 <br>
-<p><strong>MCL</strong>,<br>
-    {{ $mailData['userName'] }}<br>
-    {{ $mailData['userPosition'] }}<br>
-    {{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}<br>
-    International MOMS Club</p>
+<p><strong>MCL,</strong><br>
+International MOMS Club</p>>
 @endcomponent

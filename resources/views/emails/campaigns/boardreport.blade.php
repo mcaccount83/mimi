@@ -2,13 +2,11 @@
 <h1><center>{{$mailData['boardReportName']}}</center></h1>
 <br>
 <p>
-    If you have not done so already, please complete the Board Election Report for your chapter!  This report is
-    available now and should be filled out as soon as your chapter has held its election but is due no later
-    than June 30th.
+    The {{$mailData['boardReportName']}} is availale now in MIMI (<a href="https://momsclub.org/mimi">https://momsclub.org/mimi</a>). It should be completed
+    as soon as your chapter has held its election but is due no later than June 30th.
 </p>
 <p>
-    Submitting your report as soon as possible will ensure your incoming board members have access to
-    all the tools they need to be successful. The information from the report is used for:
+    Submitting your report as soon as possible will ensure they have access to all the tools they need to be successful in the upcoming year.
 </p>
 <ul>
     <li>Personal MIMI Login</li>
@@ -19,15 +17,11 @@
     <li>Re-Registration payment reminders & other automated messages</li>
 </ul>
 <p>
-    The Board Election Report (as well as the Financial Report) can be accessed by logging into your MIMI
-    account (<a href="https://momsclub.org/mimi">https://momsclub.org/mimi</a>) and navigating to the EOY Reports
-    section in the left sidebar menu.
+    Once submited, your report will be activated after July 1st and new board members will have full Access. Outgoing board members will still have
+    access to Financial Reports.
 </p>
 <p>If you have any questions about the Board Election Report, please reach out and ask!</p>
 <br>
-<p><strong>MCL</strong>,<br>
-    {{ $mailData['userName'] }}<br>
-    {{ $mailData['userPosition'] }}<br>
-    {{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}<br>
-    International MOMS Club</p>
+<p><strong>MCL,</strong><br>
+International MOMS Club</p>
 @endcomponent

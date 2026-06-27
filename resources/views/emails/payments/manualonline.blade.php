@@ -1,12 +1,12 @@
 @component('mail::message')
 # Admin Manual Order Notification
 
-The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has ordered a replacement manual.<br>
+<p>The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has ordered a replacement manual.</p>
 <br>
-The order has been processed and a receipt has been sent to the chapter.<br>
+<p>The order has been processed and a receipt has been sent to the chapter.</p>
 <br>
-<strong>MCL,</strong><br>
-MIMI Database Administrator
+<p><strong>MCL,</strong><br>
+MIMI Database Administrator</p>
 <br>
 <table>
     <tbody>

@@ -267,8 +267,6 @@ class EmailController extends Controller implements HasMiddleware
         $user = $this->userController->loadUserInformation($request);
 
         $input = $request->all();
-        $emailSubject = $input['subject'];
-        $emailMessage = $input['message'];
         $chapterId = $input['chapterId'];
 
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
@@ -279,11 +277,6 @@ class EmailController extends Controller implements HasMiddleware
 
         try {
             DB::beginTransaction();
-
-            // EmailFields::create([
-            //     'message' => $message,
-            //     'chapter_id' => $chapterId,
-            // ]);
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
@@ -322,6 +315,111 @@ class EmailController extends Controller implements HasMiddleware
         } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
+        }
+    }
+
+    public function sendChapterAllEmail(Request $request): JsonResponse
+    {
+        try {
+            $user = $this->userController->loadUserInformation($request);
+            $coorId = $user['cdId'];
+            $confId = $user['confId'];
+            $regId = $user['regId'];
+            $positionId = $user['cdPositionId'];
+            $secPositionId = $user['cdSecPositionId'];
+
+            $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+            $chapterList = $baseQuery['query']
+                ->get();
+
+            $input = $request->all();
+
+            $chapterEmails = [];
+            $coordinatorEmails = [];
+            $mailData = [];
+
+            foreach ($chapterList as $chapter) {
+                $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
+                $chDetails = $emailDetails['chDetails'];
+                $stateShortName = $emailDetails['stateShortName'];
+                $emailListChap = $emailDetails['emailListChap'];
+                $emailListCoord = $emailDetails['emailListCoord'];
+
+                $mailData[$chDetails->name] = array_merge(
+                    $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+                    $this->baseMailDataController->getMessageData($input),
+                    $this->baseMailDataController->getUserData($user),
+                );
+
+                $chapterEmails[$chDetails->name] = $emailListChap;
+                $coordinatorEmails[$chDetails->name] = $emailListCoord;
+            }
+
+            foreach ($mailData as $chapterName => $data) {
+                if (! empty($chapterName)) {
+                    Mail::to($chapterEmails[$chapterName] ?? [])
+                        ->cc($coordinatorEmails[$chapterName] ?? [])
+                        ->queue(new ChapterEmail($data));
+                }
+            }
+
+            return response()->json(['message' => 'Chapter emails have been queued.']);
+        } catch (\Exception $e) {
+            Log::error($e);
+            return response()->json(['message' => 'Something went wrong. Please try again.'], 500);
+        }
+    }
+
+    public function sendChapterPrimaryEmail(Request $request): JsonResponse
+    {
+        try {
+            $user = $this->userController->loadUserInformation($request);
+            $coorId = $user['cdId'];
+            $confId = $user['confId'];
+            $regId = $user['regId'];
+            $positionId = $user['cdPositionId'];
+            $secPositionId = $user['cdSecPositionId'];
+
+            $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+            $chapterList = $baseQuery['query']
+                ->where('primary_coordinator_id', $coorId)
+                ->get();
+
+            $input = $request->all();
+
+            $chapterEmails = [];
+            $coordinatorEmails = [];
+            $mailData = [];
+
+            foreach ($chapterList as $chapter) {
+                $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
+                $chDetails = $emailDetails['chDetails'];
+                $stateShortName = $emailDetails['stateShortName'];
+                $emailListChap = $emailDetails['emailListChap'];
+                $emailListCoord = $emailDetails['emailListCoord'];
+
+                $mailData[$chDetails->name] = array_merge(
+                    $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+                    $this->baseMailDataController->getMessageData($input),
+                    $this->baseMailDataController->getUserData($user),
+                );
+
+                $chapterEmails[$chDetails->name] = $emailListChap;
+                $coordinatorEmails[$chDetails->name] = $emailListCoord;
+            }
+
+            foreach ($mailData as $chapterName => $data) {
+                if (! empty($chapterName)) {
+                    Mail::to($chapterEmails[$chapterName] ?? [])
+                        ->cc($coordinatorEmails[$chapterName] ?? [])
+                        ->queue(new ChapterEmail($data));
+                }
+            }
+
+            return response()->json(['message' => 'Chapter emails have been queued.']);
+        } catch (\Exception $e) {
+            Log::error($e);
+            return response()->json(['message' => 'Something went wrong. Please try again.'], 500);
         }
     }
 

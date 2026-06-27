@@ -9,6 +9,8 @@ use App\Mail\CampaignsVolunteerPush;
 use App\Mail\CampaignsBudgetMeeting;
 use App\Mail\CampaignsCodeOfConduct;
 use App\Mail\CampaignsRecordsRetention;
+use App\Mail\CampaignsServiceProjects;
+use App\Mail\CampaignsMemberBenefits;
 use App\Mail\CampaignsHolidayBreak;
 use App\Mail\CampaignsProcessingReimbursements;
 use App\Mail\CampaignsBoardReport;
@@ -495,6 +497,105 @@ class EmailCampaignController extends Controller
             return redirect()->back()->with('fail', 'Something went wrong. Please try again.');
         }
     }
+
+    public function sendServiceProjectsCampaign(Request $request): RedirectResponse
+    {
+        try {
+            $user = $this->userController->loadUserInformation($request);
+            $coorId = $user['cdId'];
+            $confId = $user['confId'];
+            $regId = $user['regId'];
+            $positionId = $user['cdPositionId'];
+            $secPositionId = $user['cdSecPositionId'];
+
+            $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+            $chapterList = $baseQuery['query']
+                ->get();
+
+            $chapterEmails = [];
+            $coordinatorEmails = [];
+            $mailData = [];
+
+            foreach ($chapterList as $chapter) {
+                $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
+                $chDetails = $emailDetails['chDetails'];
+                $stateShortName = $emailDetails['stateShortName'];
+                $emailListChap = $emailDetails['emailListChap'];
+                $emailListCoord = $emailDetails['emailListCoord'];
+
+                $mailData[$chDetails->name] = array_merge(
+                    $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+                    $this->baseMailDataController->getUserData($user),
+                );
+
+                $chapterEmails[$chDetails->name] = $emailListChap;
+                $coordinatorEmails[$chDetails->name] = $emailListCoord;
+            }
+
+            foreach ($mailData as $chapterName => $data) {
+                if (! empty($chapterName)) {
+                    Mail::to($chapterEmails[$chapterName] ?? [])
+                        ->cc($coordinatorEmails[$chapterName] ?? [])
+                        ->queue(new CampaignsServiceProjects($data));
+                }
+            }
+
+            return redirect()->back()->with('success', 'Service Projects emails have been queued.');
+        } catch (\Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('fail', 'Something went wrong. Please try again.');
+        }
+    }
+
+    public function sendMemberBenefitsCampaign(Request $request): RedirectResponse
+    {
+        try {
+            $user = $this->userController->loadUserInformation($request);
+            $coorId = $user['cdId'];
+            $confId = $user['confId'];
+            $regId = $user['regId'];
+            $positionId = $user['cdPositionId'];
+            $secPositionId = $user['cdSecPositionId'];
+
+            $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+            $chapterList = $baseQuery['query']
+                ->get();
+
+            $chapterEmails = [];
+            $coordinatorEmails = [];
+            $mailData = [];
+
+            foreach ($chapterList as $chapter) {
+                $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
+                $chDetails = $emailDetails['chDetails'];
+                $stateShortName = $emailDetails['stateShortName'];
+                $emailListChap = $emailDetails['emailListChap'];
+                $emailListCoord = $emailDetails['emailListCoord'];
+
+                $mailData[$chDetails->name] = array_merge(
+                    $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+                    $this->baseMailDataController->getUserData($user),
+                );
+
+                $chapterEmails[$chDetails->name] = $emailListChap;
+                $coordinatorEmails[$chDetails->name] = $emailListCoord;
+            }
+
+            foreach ($mailData as $chapterName => $data) {
+                if (! empty($chapterName)) {
+                    Mail::to($chapterEmails[$chapterName] ?? [])
+                        ->cc($coordinatorEmails[$chapterName] ?? [])
+                        ->queue(new CampaignsMemberBenefits($data));
+                }
+            }
+
+            return redirect()->back()->with('success', 'Member Benefits emails have been queued.');
+        } catch (\Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('fail', 'Something went wrong. Please try again.');
+        }
+    }
+
 
     public function sendBoardReportCampaign(Request $request): RedirectResponse
     {

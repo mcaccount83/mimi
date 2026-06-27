@@ -1,14 +1,17 @@
 @component('mail::message')
 # Website Review Notification
 
-The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has updated their chapter website and they have requested to have it linked to the MOMS Club website.<br>
+<p>The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has updated their chapter
+    website and they have requested to have it linked to the MOMS Club website.</p>
 <br>
-The new website address is: {{$mailData['chapterWebsiteURL']}}.<br>
+<p>The new website address is: {{$mailData['chapterWebsiteURL']}}.</p>
 <br>
-Please review the site based on the website linking guidelines found here - https://momsclub.org/resources/website-linking-guidelines/<br>
+<p>Please review the site based on the website linking guidelines found here:
+    <a href="https://momsclub.org/resources/website-linking-guidelines/">https://momsclub.org/resources/website-linking-guidelines/</a></p>
 <br>
-Once the site has been reviewed and is ready to be linked, please update the Website Link Status to "Linked" in the Chapter's MIMI profile and it will automatically be added to our main website.<br>
+<p>Once the site has been reviewed and is ready to be linked, please update the Website Link Status to "Linked" in the Chapter's
+    MIMI profile and it will automatically be added to our main website.</p>
 <br>
-<strong>MCL,</strong><br>
-MIMI Database Administrator
+<p><strong>MCL,</strong><br>
+MIMI Database Administrator</p>
 @endcomponent

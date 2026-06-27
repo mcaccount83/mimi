@@ -5,7 +5,7 @@
 <p>Welcome, {{$mailData['chapterName']}}, {{$mailData['chapterState']}} board members! Congratulations on being elected to the executive board for your chapter. We hope you have a fantastic year in store. Read on for some tips and information that will help you have a successful year. We look forward to working with you!</p>
 <hr>
 <p><b>Officer Checklist</b></p>
-<p>The following are a few things every Officer needs to know!</p>
+<p>The following are a few things every Officer needs to know!<br>
 <ul>
     <li>Get all your members involved and protect your officers by having the members vote on everything at the monthly business meeting. Plan something fun at each business meeting so members will want to come — a fun activity or speaker — but also have your members vote on everything that the chapter is doing, being sure to get them to volunteer to help at the same time!</li>
     <li>The IRS requires that all nonprofit groups use their money for true nonprofit purposes, so make sure that your treasury pays less than 15% of your chapter's dues income for party expenses or anything that benefits members specifically (like t-shirts or something that goes directly to the members.) Potluck parties or things that the members pay for directly don't count, and will help keep your dues low, too.</li>
@@ -15,6 +15,7 @@
     <li>Take pride in your name! MOMS Club is a registered service mark, so it's important that everyone uses it correctly. No periods, no apostrophe, and always include your chapter's geographic name so everyone knows you're you!</li>
     <li>Have FUN! Being president is a lot of fun! Delegate, then relax, smile and enjoy your term!</li>
 </ul>
+</p>
 <hr>
 <p><b>Officer Packet</b></p>
 <p>You will find the Officer's Resource Packet is attached. The officer packet includes more details about a variety of topics including Party/Member Benefit Expenses, Geographic Boundaries, Sistering, Annual Budget, Ideas for Board Meeting Agendas and more.</p>
@@ -26,7 +27,7 @@
 <br>
 <p>You can log on with the e-mail address we have on file for you. If you are a new board member, your default password is: <b>TempPass4You</b></p>
 <p>The chapter president will have access to all chapter information, including all board members. Other board members will have access to chapter information as well as their own details. (All board members have access to MIMI!).</p>
-<p>Things to check the first time you log in:</p>
+<p>Things to check the first time you log in:<br>
 <ul>
     <li>Change your password if it is still set with the default password.</li>
     <li>Check that all contact details are correct, making updates as necessary.</li>
@@ -36,8 +37,9 @@
     <li>Note the contact information listed for your chapter’s volunteers. If you ever have trouble reaching your Primary Coordinator, you can click on the name of your Secondary Coordinator to email them.</li>
     <li>You can log on to MIMI anytime. if you receive error messages or if you have any questions at all, please let your Primary Coordinator know!</li>
 </ul>
+</p>
 <br>
-<p>Other Resources available through your MIMI account:</p>
+<p>Other Resources available through your MIMI account:<br>
 <ul>
     <li>Chapter Resources<br>
     Other resources including the Bylaws, Fact Sheets, Sample Files, Digital Logos, etc.</li>
@@ -46,6 +48,7 @@
     <li>eLearning Portal<br>
     Courses on Board Positions and common topics are available for all board members.</li>
 </ul>
+</p>
 <hr>
 <p><b>Coordinator Team</b></p>
 <p>All MOMS Club chapters have an International Coordinator assigned to help them.<br>

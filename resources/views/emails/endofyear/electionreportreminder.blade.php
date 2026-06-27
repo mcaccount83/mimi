@@ -9,7 +9,6 @@
 <p>
     Submitting your report as soon as possible will ensure your incoming board members have access to
     all the tools they need to be successful. The information from the report is used for:
-</p>
 <ul>
     <li>Personal MIMI Login</li>
     <li>Chapter Profile & Coordinator Information</li>
@@ -18,6 +17,7 @@
     <li>Receipt of Conference Newsletter & Messages from Coordinators</li>
     <li>Re-Registration payment reminders & other automated messages</li>
 </ul>
+</p>
 <p>
     The Board Election Report (as well as the Financial Report) can be accessed by logging into your MIMI
     account (<a href="https://momsclub.org/mimi">https://momsclub.org/mimi</a>) and navigating to the EOY Reports

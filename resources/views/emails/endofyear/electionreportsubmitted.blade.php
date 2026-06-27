@@ -1,14 +1,13 @@
 @component('mail::message')
 # Election Report Submitted Notification
 
-{{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has submitted their Election Report.<br>
+<p>{{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has submitted their Election Report.</p>
 <br>
-You can activate their new board members at any time to give them access to MIMI.<br>
+<p>You can activate their new board members at any time to give them access to MIMI.</p>
 <br>
-Outgoing board members will still be able to log in and access the Financial Report.<br>
-
+<p>Outgoing board members will still be able to log in and access the Financial Report.</p>
 <br>
-<strong>MCL,</strong><br>
-MIMI Database Administrator
+<p><strong>MCL,</strong><br>
+MIMI Database Administrator</p>
 @endcomponent
 
