@@ -1,14 +1,14 @@
 @component('mail::message')
 # ListAdmin unZapped Notification
 
-The follownig chapter has been unZapped in MIMI:  MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}}, Conference {{$mailData['chapterConf']}}.<br>
+<p>The follownig chapter has been unZapped in MIMI:  MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}}, Conference {{$mailData['chapterConf']}}.</p>
 <br>
-Please re-add members of this chapter to any groups, forums and mailing lists.<br>
+<p>Please re-add members of this chapter to any groups, forums and mailing lists.</p>
 <br>
-<strong>MCL</strong>,<br>
-MIMI Database Administrator
-<br>
-{!! $mailData['mailTable'] !!}
+<p><strong>MCL,</strong><br>
+MIMI Database Administrator</p>
 <br>
 
+{!! $mailData['mailTable'] !!}
+<br>
 @endcomponent

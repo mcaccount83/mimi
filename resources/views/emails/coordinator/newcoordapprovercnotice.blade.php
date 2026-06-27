@@ -2,6 +2,7 @@
 # New Coordinator Notification
 
 <p>A New Coordinator has been approved and you have been assigned as their Mentoring Coordinator.</p>
+<br>
 
 {!! $mailData['mailTable'] !!}
 <br>

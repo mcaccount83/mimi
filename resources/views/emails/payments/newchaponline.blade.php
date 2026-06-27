@@ -101,5 +101,6 @@ MIMI Database Administrator</p>
         <td>{{ $mailData['email'] }}</td>
     </tbody>
 </table>
+<br>
 @endcomponent
 

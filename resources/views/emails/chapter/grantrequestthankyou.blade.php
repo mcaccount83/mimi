@@ -1,13 +1,12 @@
 @component('mail::message')
 # Grant Request Received
 
-{{ $mailData['chapterName'] }}, {{$mailData['chapterState']}}, thank you for submitting your Grant Request.<br>
+<p>{{ $mailData['chapterName'] }}, {{$mailData['chapterState']}}, thank you for submitting your Grant Request.</p>
 <br>
-Your application will be processed by our M2M Committee, If you have any questions, please contact your Regional or Conference Coordinator.<br>
+<p>Your application will be processed by our M2M Committee, If you have any questions, please contact your Regional or Conference Coordinator.</p>
 <br>
-A copy of your request is attached.  Please save/keep a copy for your records.<br>
-
+<p>A copy of your request is attached.  Please save/keep a copy for your records.</p>
 <br>
-<strong>MCL,</strong><br>
-M2M Committee
+<p><strong>MCL,</strong><br>
+M2M Committee</p>
 @endcomponent

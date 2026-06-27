@@ -5,6 +5,7 @@
     {{$mailData['chapterName']}}, {{$mailData['chapterState']}}.  You should be able to see them in your
     MIMI profile.</p>
 <p>They have alrady been notified, but feel free to reach out to them directly as well.</p>
+<br>
 {!! $mailData['mailTable'] !!}
 <br>
 <p><strong>MCL,</strong><br>

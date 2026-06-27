@@ -1,12 +1,13 @@
 @component('mail::message')
 # New Chapter Primary Coordinator Notification
 
-{{$mailData['pcName']}}, the MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}} has been added to MIMI and you have been assigned as the Primary Coordinator.<br>
+<p>{{$mailData['pcName']}}, the MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}} has been added to MIMI and you have been
+    assigned as the Primary Coordinator.</p>
 <br>
-<strong>MCL,</strong><br>
-International MOMS Club
+<p><strong>MCL,</strong><br>
+MIMI Database Administrator</p>
 <br>
 
 {!! $mailData['mailTableNewChapter'] !!}
-
+<br>
 @endcomponent

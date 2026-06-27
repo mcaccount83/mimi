@@ -1,7 +1,6 @@
 @component('mail::message')
 
-<b>MOMS Club of {{ $mailData['chapterName'] }}:</b>
-<br>
+<p><b>MOMS Club of {{ $mailData['chapterName'] }}:</b></p>
 
 @php
     $message = $mailData['message'];

@@ -1,14 +1,14 @@
 @component('mail::message')
 # Retired Coordinator Admin Notice
 
-The following coordinator has been marked as retired in MIMI in {{$mailData['userConfName']}}.<br>
+<p>The following coordinator has been marked as retired in MIMI in {{$mailData['userConfName']}}.</p>
 <br>
-{{$mailData['cdName']}}<br>
-{{$mailData['cdEmail']}}<br>
+<p>{{$mailData['cdName']}}<br>
+{{$mailData['cdEmail']}}</p>
 <br>
-Please deactivate the coordinator's momsclub.org email address and remove from any groups, forums and mailing lists.<br>
+<p>Please deactivate the coordinator's momsclub.org email address and remove from any groups, forums and mailing lists.</p>
 <br>
-<strong>MCL</srong>,<br>
-MIMI Database Administrator
+<p><strong>MCL,</strong><br>
+MIMI Database Administrator</p>
 <br>
 @endcomponent

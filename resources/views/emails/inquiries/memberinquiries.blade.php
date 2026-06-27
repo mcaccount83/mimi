@@ -1,7 +1,6 @@
 @component('mail::message')
 
-<b>{{ $mailData['inquiryFirstName'] }}:</b>
-<br>
+<p><b>{{ $mailData['inquiryFirstName'] }}:</b></p>
 
 @php
     $message = $mailData['message'];

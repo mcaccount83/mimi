@@ -1,12 +1,12 @@
 @component('mail::message')
 # Financial Report Check-In Notification
 
-{{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has submitted their Financial Report. It is ready to be reviewed. The Financial Report PDF is attached and other
-documents that can be downloaded are listed below.<br>
+<p>{{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has submitted their Financial Report. It is ready to be reviewed. The Financial Report PDF is
+    attached and other documents that can be downloaded are listed below.</p>
 <br>
-Submitted by: {{$mailData['completedName']}}, @mailto($mailData['completedEmail'])<br>
+<p>Submitted by: {{$mailData['completedName']}}, @mailto($mailData['completedEmail'])</p>
 <br>
-Downloads Available:
+<p>Downloads Available:<br>
 <ul>
     <li>
         @isset($mailData['rosterPath'])
@@ -35,11 +35,14 @@ Downloads Available:
         @endisset
     </li>
 </ul>
-Coordinators:
+</p>
+<p>Coordinators:<br>
 <ul>
     <li>Primary Coordinator: {{$mailData['pcName']}} </li>
-
 </ul>
-
+</p>
+<br>
+<p><strong>MCL,</strong><br>
+MIMI Database Administrator</p>
 @endcomponent
 

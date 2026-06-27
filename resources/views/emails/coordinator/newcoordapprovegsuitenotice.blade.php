@@ -4,6 +4,8 @@
 <p>A New Coordinator has been approved. Please create the following email address in Google GSuite.  If you choose to create an email address
 different than what is listed below, you will need to go back and update MIMI.  Otherwise, MIMI is already set up with the one listed here.
 </p>
+<br>
+
 {!! $mailData['mailTable'] !!}
 <br>
 <p><strong>MCL,</strong><br>

@@ -1,13 +1,13 @@
 @component('mail::message')
 # EIN Coordinator Notification
 
-The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} in Conference {{ $mailData['chapterConf'] }} has updated thier name in MIMI.<br>
+<p>The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} in Conference {{ $mailData['chapterConf'] }} has updated thier name in MIMI.</[]>
 <br>
-Their coordinator has requested that the IRS be notifed of the name change.<br>
+<p>Their coordinator has requested that the IRS be notifed of the name change.</p>
 <br>
-A copy of the change letter to be faxed to the IRS is attached.<br>
+<p>A copy of the change letter to be faxed to the IRS is attached.</p>
 <br>
-<strong>MCL</strong>,<br>
-MIMI Database Administrator
+<p><strong>MCL,</strong><br>
+MIMI Database Administrator</p>
 <br>
 @endcomponent

@@ -3,6 +3,7 @@
 
 <p>A New Coordinator Application has been submitted for Conference {{ $mailData['conference_id'] }}. Please review the application
     information and contact the coordinator to get them started.</p>
+<br>
 
 {!! $mailData['mailTable'] !!}
 <br>

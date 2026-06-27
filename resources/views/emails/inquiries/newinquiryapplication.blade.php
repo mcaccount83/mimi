@@ -70,5 +70,6 @@ MIMI Database Administrator</p>
         @endif
     </tbody>
 </table>
+<br>
 @endcomponent
 

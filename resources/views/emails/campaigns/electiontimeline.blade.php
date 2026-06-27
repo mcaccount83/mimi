@@ -1,11 +1,9 @@
 @component('mail::message')
 <h1><center>{{$mailData['boardReportRange']}} Election Information</center></h1>
 <br>
-<p>
-    With board elections fast approaching, now is the time to start preparing. If your chapter is new (started after June, {{$mailData['reportYearStart']}})
+<p>With board elections fast approaching, now is the time to start preparing. If your chapter is new (started after June, {{$mailData['reportYearStart']}})
     you will not be having elections. Instead, your founding Board will continue until Spring, {{$mailData['boardReportEnd']}}. All other chapters, however, will be
-    electing officers in May or June.
-</p>
+    electing officers in May or June.</p>
 <p>There are several things you can do now to prepare your chapter for the elections, and to ensure a full slate of officers.<br>
 <ul>
     <li>Review the Election Timetable Fact Sheet (attached).</li>

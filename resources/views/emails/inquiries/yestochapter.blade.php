@@ -1,14 +1,14 @@
 @component('mail::message')
 
-<b>MOMS Club of {{ $mailData['chapterName'] }}:</b><br>
+<p><b>MOMS Club of {{ $mailData['chapterName'] }}:</b></p>
 <br>
-A potential member is Inquiring about your chapter.<br>
+<p>A potential member is Inquiring about your chapter.</p>
 <br>
-<strong>MCL,</strong><br>
+<p><strong>MCL,</strong><br>
     {{ $mailData['userName'] }}<br>
     {{ $mailData['userPosition'] }}<br>
     {{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}<br>
-    International MOMS Club<br>
+    International MOMS Club</p>
 <br>
 <table>
     <tbody>
@@ -64,5 +64,6 @@ A potential member is Inquiring about your chapter.<br>
 
     </tbody>
 </table>
+<br>
 @endcomponent
 
