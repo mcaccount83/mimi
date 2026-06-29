@@ -371,4 +371,9 @@ class AdminReportController extends Controller implements HasMiddleware
 
         return view('coordinators.adminreports.downloads')->with($data);
     }
+
+    public function showEmailCampaigns()
+    {
+        return view('coordinators.adminreports.emailcampaigns');
+    }
 }

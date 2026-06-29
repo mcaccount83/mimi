@@ -120,8 +120,10 @@
                     <div class="card-header bg-transparent border-0">
                         <h3>Chapters & Coordinators</h3>
                         <!--  Email Campaigns  -->
-                        {{-- @include('coordinators.partials.emailcampaigns')
                         @if ($coordinatorCondition && $conferenceCoordinatorCondition)
+                        {{-- <div class="mb-2">
+                            @include('coordinators.partials.emailcampaigns-button')
+                        </div> --}}
                         <div class="mb-2">
                             {{$currentMonthWords}} Re-Reg Reminders <small class="text-muted"><small>(CC Only)</small></small>:
                             <a class="btn btn-xs btn-outline-primary ms-2" href="{{ route('payment.chapreregreminder') }}"><i class="bi bi-envelope me-2">
@@ -132,7 +134,7 @@
                             <a class="btn btn-xs btn-outline-primary ms-2" href="{{ route('payment.chaprereglatereminder') }}"><i class="bi bi-envelope me-2">
                                 </i>Send One Month Late Notices</a>
                         </div>
-                        @endif --}}
+                        @endif
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">

@@ -21,7 +21,11 @@
                 <!-- /.card-header -->
             <div class="card-body">
                 <!--  Email Campaigns  -->
-                {{-- @include('coordinators.partials.emailcampaigns') --}}
+                {{-- @if ($coordinatorCondition && $conferenceCoordinatorCondition)
+                    <div class="mb-2">
+                        @include('coordinators.partials.emailcampaigns-button')
+                    </div>
+                @endif --}}
 
                 <table id="chapterlist" class="table table-sm table-hover" >
                 <thead>

@@ -92,6 +92,7 @@ class PositionConditionsService
         $nextYear = $currentDate->copy()->addYear()->year;
         $lastYear = $currentDate->copy()->subYear()->year;
         $currentMonth = $currentDate->format('m'); // Current Month with leading zero
+        $currentMonthInt = (int) $currentDate->format('n'); // Current month WITHOUT leading zero
         $currentMonthWords = $currentDate->format('F');  // Current Month as Full Name
         $nextMonth = $currentDate->copy()->addMonth()->format('m');  // Next Month with leading zero
         $lastMonth = $currentDate->copy()->subMonth()->format('m');  // Last Month with leading zero
@@ -109,6 +110,7 @@ class PositionConditionsService
             'nextYear' => $nextYear,
             'lastYear' => $lastYear,
             'currentMonth' => $currentMonth,
+            'currentMonthInt' => $currentMonthInt,
             'currentMonthWords' => $currentMonthWords,
             'nextMonth' => $nextMonth,
             'lastMonth' => $lastMonth,

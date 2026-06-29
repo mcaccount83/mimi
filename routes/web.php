@@ -175,6 +175,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/adminreports/inquiriesmap', [AdminReportController::class, 'inquiriesMap'])->name('adminreports.inquiriesmap');
     Route::post('/adminreports/updateinquiriesmao/{id}', [AdminReportController::class, 'updateInquiriesMap'])->name('adminreports.updateinquiriesmap');
     Route::get('/adminreports/downloads', [AdminReportController::class, 'showDownloads'])->name('adminreports.downloads');
+    Route::get('/adminreports/emailcampaigns', [AdminReportController::class, 'showEmailCampaigns'])->name('adminreports.emailcampaigns');
 });
 
 // User Controller Routes...Coordinator Login Required
