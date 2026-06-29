@@ -4,7 +4,7 @@
 
         var submitted = @json($chEOYDocuments->financial_review_complete);
         var received = @json($chEOYDocuments->financial_report_received);
-        var board = @json($chEOYDocuments->new_board_submitted);
+        var boardRpt = @json($chEOYDocuments->new_board_submitted);
         var activated = @json($chEOYDocuments->new_board_active);
         var ITCondition = @json($ITCondition ?? false);
         var eoyTestCondition = @json($eoyTestCondition ?? false);
@@ -44,8 +44,13 @@
             $('.keep-enabled').prop('disabled', false);
         }
 
-        if (disableEOYMode === 'disable-board') {
-            if (board == '1') {
+        if (disableEOYMode === 'disable-boardrpt') {
+            if (boardRpt == '1') {
+                disableButtons();
+                disableFields();
+            }
+        } else if (disableEOYMode === 'disable-board') {
+            if (disableBoardEdits == '1') {
                 disableButtons();
                 disableFields();
             }
