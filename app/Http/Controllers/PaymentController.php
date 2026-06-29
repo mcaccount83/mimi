@@ -172,7 +172,7 @@ class PaymentController extends Controller implements HasMiddleware
             return redirect()->to('/payment/reregistration')->with('success', 'Re-Registration Reminders have been successfully sent.');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         } finally {
@@ -265,7 +265,7 @@ class PaymentController extends Controller implements HasMiddleware
             return redirect()->to('/payment/reregistration')->with('success', 'Re-Registration Late Reminders have been successfully sent.');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         } finally {
@@ -457,7 +457,7 @@ class PaymentController extends Controller implements HasMiddleware
             return to_route('payment.editpayment', ['id' => $id])->with('success', 'Chapter Payments/Donations have been updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return to_route('payment.editpayment', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         } finally {
@@ -628,7 +628,7 @@ class PaymentController extends Controller implements HasMiddleware
             }
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         } finally {
@@ -652,7 +652,7 @@ class PaymentController extends Controller implements HasMiddleware
             return redirect()->back()->with('success', 'Grant Request has been successfully Unsubmitted.');
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error($e);
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
@@ -673,7 +673,7 @@ class PaymentController extends Controller implements HasMiddleware
             return redirect()->back()->with('success', 'Review Complete has been successfully Cleared.');
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error($e);
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }

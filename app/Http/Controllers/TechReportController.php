@@ -301,7 +301,7 @@ class TechReportController extends Controller implements HasMiddleware
             return response()->json(['success' => 'Quarterly Report Data reset successfully.']);
         } catch (\Exception $e) {
             DB::rollback(); // Rollback Transaction
-            Log::error($e); // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
         } finally {
@@ -460,7 +460,7 @@ class TechReportController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             $message = 'Something went wrong, Please try again.';
 
@@ -504,7 +504,7 @@ class TechReportController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             $message = 'Something went wrong, Please try again.';
 
@@ -554,7 +554,7 @@ class TechReportController extends Controller implements HasMiddleware
             return response()->json(['success' => 'Fiscal year reset successfully.']);
         } catch (\Exception $e) {
             DB::rollback(); // Rollback Transaction
-            Log::error($e); // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
         } finally {
@@ -586,7 +586,7 @@ class TechReportController extends Controller implements HasMiddleware
             return response()->json(['success' => 'Successfully subscribed to lists.']);
         } catch (\Exception $e) {
             DB::rollback(); // Rollback Transaction
-            Log::error($e); // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
         }
@@ -613,7 +613,7 @@ class TechReportController extends Controller implements HasMiddleware
             return response()->json(['success' => 'Successfully recorded filing corrections.']);
         } catch (\Exception $e) {
             DB::rollback(); // Rollback Transaction
-            Log::error($e); // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
         }
@@ -637,7 +637,7 @@ class TechReportController extends Controller implements HasMiddleware
             return response()->json(['success' => 'Successfully recorded filing corrections.']);
         } catch (\Exception $e) {
             DB::rollback(); // Rollback Transaction
-            Log::error($e); // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
         }
@@ -664,7 +664,7 @@ class TechReportController extends Controller implements HasMiddleware
             return response()->json(['success' => 'Successfully recorded filing update.']);
         } catch (\Exception $e) {
             DB::rollback(); // Rollback Transaction
-            Log::error($e); // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
         }
@@ -691,7 +691,7 @@ class TechReportController extends Controller implements HasMiddleware
             return response()->json(['success' => 'Successfully recorded filing update.']);
         } catch (\Exception $e) {
             DB::rollback(); // Rollback Transaction
-            Log::error($e); // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
         }
@@ -718,7 +718,7 @@ class TechReportController extends Controller implements HasMiddleware
             return response()->json(['success' => 'Successfully recorded subordinate filing.']);
         } catch (\Exception $e) {
             DB::rollback(); // Rollback Transaction
-            Log::error($e); // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
         }
@@ -753,7 +753,7 @@ class TechReportController extends Controller implements HasMiddleware
             return response()->json(['success' => 'User data tables successfully updated, copied, and renamed.']);
         } catch (\Exception $e) {
             DB::rollback(); // Rollback Transaction
-            Log::error($e); // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
         }
@@ -780,7 +780,7 @@ class TechReportController extends Controller implements HasMiddleware
             return response()->json(['success' => 'Successfully recorded filing update.']);
         } catch (\Exception $e) {
             DB::rollback(); // Rollback Transaction
-            Log::error($e); // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
         }
@@ -809,7 +809,7 @@ class TechReportController extends Controller implements HasMiddleware
             return response()->json(['success' => 'Successfully unsubscribed to lists.']);
         } catch (\Exception $e) {
             DB::rollback(); // Rollback Transaction
-            Log::error($e); // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
         }
@@ -844,7 +844,7 @@ class TechReportController extends Controller implements HasMiddleware
             return response()->json(['success' => 'EOY Fiscal year reset successfully.']);
         } catch (\Exception $e) {
             DB::rollback(); // Rollback Transaction
-            Log::error($e); // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
         } finally {
@@ -891,7 +891,7 @@ class TechReportController extends Controller implements HasMiddleware
             return response()->json(['success' => 'Data tables successfully updated, copied, and renamed.']);
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error($e);
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
         }
@@ -1070,7 +1070,7 @@ class TechReportController extends Controller implements HasMiddleware
             return response()->json(['success' => 'Testing items successfully set to view.']);
         } catch (\Exception $e) {
             DB::rollback(); // Rollback Transaction
-            Log::error($e); // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
         }
@@ -1102,7 +1102,7 @@ class TechReportController extends Controller implements HasMiddleware
             return response()->json(['success' => 'Data sucessfully reset.']);
         } catch (\Exception $e) {
             DB::rollback(); // Rollback Transaction
-            Log::error($e); // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
         }
@@ -1277,7 +1277,7 @@ class TechReportController extends Controller implements HasMiddleware
             return response()->json(['success' => 'Live items successfully set to view.']);
         } catch (\Exception $e) {
             DB::rollback(); // Rollback Transaction
-            Log::error($e); // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
         } finally {
@@ -1362,7 +1362,7 @@ class TechReportController extends Controller implements HasMiddleware
             return response()->json(['success' => 'Drive successfully deleted.']);
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error($e);
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return response()->json(['fail' => 'Something went wrong, Please try again.'], 500);
         }
@@ -1442,7 +1442,7 @@ class TechReportController extends Controller implements HasMiddleware
             return response()->json(['success' => 'System email successfully deleted.']);
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error($e);
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return response()->json(['fail' => 'Something went wrong, Please try again.'], 500);
         }
@@ -1492,7 +1492,7 @@ class TechReportController extends Controller implements HasMiddleware
             return response()->json(['success' => 'Chapter successfully deleted.']);
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return response()->json(['fail' => 'Something went wrong, Please try again.'], 500);
         } finally {
@@ -1538,7 +1538,7 @@ class TechReportController extends Controller implements HasMiddleware
             return response()->json(['success' => 'Coordinator successfully deleted.']); // Fixed message
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return response()->json(['fail' => 'Something went wrong, Please try again.'], 500);
         } finally {

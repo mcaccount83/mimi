@@ -143,7 +143,7 @@ class InquiriesController extends Controller implements HasMiddleware
             return to_route('inquiries.editinquiryapplication', ['id' => $id])->with('success', 'Inquiry Information has been updated');
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error($e);
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return to_route('inquiries.editinquiryapplication', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         } finally {
@@ -165,7 +165,7 @@ class InquiriesController extends Controller implements HasMiddleware
             return to_route('inquiries.editinquiryapplication', ['id' => $id])->with('success', 'Inquiry Response has been updated');
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error($e);
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return to_route('inquiries.editinquiryapplication', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         } finally {
@@ -187,7 +187,7 @@ class InquiriesController extends Controller implements HasMiddleware
             return to_route('inquiries.editinquiryapplication', ['id' => $id])->with('success', 'Inquiry Response has been cleared');
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error($e);
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return to_route('inquiries.editinquiryapplication', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         } finally {

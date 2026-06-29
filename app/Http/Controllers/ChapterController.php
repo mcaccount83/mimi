@@ -387,8 +387,7 @@ class ChapterController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return response()->json([
                 'status' => 'error', 'message' => 'Something went wrong, Please try again.',
                 'redirect' => route('chapters.view', ['id' => $chapterid]),
@@ -510,8 +509,7 @@ class ChapterController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             $message = 'Something went wrong, Please try again.';
 
             // Return JSON error response
@@ -641,8 +639,7 @@ class ChapterController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             $message = 'Something went wrong, Please try again.';
 
             // Return JSON error response
@@ -791,8 +788,7 @@ class ChapterController extends Controller implements HasMiddleware
             return redirect()->to('/chapter/chapterlist')->with('success', 'Chapter created successfully');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return redirect()->to('/chapter/chapterlist')->with('fail', 'Something went wrong, Please try again...');
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -904,8 +900,7 @@ class ChapterController extends Controller implements HasMiddleware
             return redirect()->to('/chapter/chapterlist')->with('success', 'Chapter created successfully');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return redirect()->to('/chapter/chapterlist')->with('fail', 'Something went wrong, Please try again...');
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -1006,8 +1001,7 @@ class ChapterController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return response()->json([
                 'status' => 'error', 'message' => 'Something went wrong, Please try again.',
                 'redirect' => route('chapters.edit', ['id' => $chapterId]),
@@ -1166,8 +1160,7 @@ class ChapterController extends Controller implements HasMiddleware
             return to_route('chapters.view', ['id' => $id])->with('success', 'Chapter Details have been updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return to_route('chapters.view', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -1598,8 +1591,7 @@ class ChapterController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return to_route('chapters.view', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         } finally {
             DB::disconnect();
@@ -1787,8 +1779,7 @@ class ChapterController extends Controller implements HasMiddleware
             return to_route('chapters.editwebsite', ['id' => $id])->with('success', 'Chapter Website & Social Meida has been updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return to_route('chapters.editwebsite', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -1943,8 +1934,7 @@ class ChapterController extends Controller implements HasMiddleware
             return to_route('chapters.editpending', ['id' => $id])->with('success', 'Chapter Details have been updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return to_route('chapters.editpending', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -2083,7 +2073,7 @@ class ChapterController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             // Return JSON error response for AJAX
             return response()->json([
@@ -2136,9 +2126,7 @@ class ChapterController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
-            // Return JSON error response for AJAX
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return response()->json([
                 'success' => false,
                 'message' => 'Something went wrong, Please try again.',

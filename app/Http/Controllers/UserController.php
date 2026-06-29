@@ -747,7 +747,7 @@ class UserController extends Controller
             return response()->json(['success' => 'User successfully deleted.']); // Fixed message
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return response()->json(['fail' => 'Something went wrong, Please try again.'], 500);
         } finally {

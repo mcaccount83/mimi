@@ -218,7 +218,7 @@ class UserReportController extends Controller implements HasMiddleware
             }
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             if ($chapter->active_status == '1') {
                 return redirect()->to('/userreports/nopresident')->with('fail', 'Something went wrong, Please try again...');
             } else {
@@ -311,7 +311,7 @@ class UserReportController extends Controller implements HasMiddleware
             }
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             if ($chapter->active_status == '1') {
                 return redirect()->to('/userreports/nopresident')->with('fail', 'Something went wrong, Please try again...');
             } else {
@@ -421,7 +421,7 @@ class UserReportController extends Controller implements HasMiddleware
             return to_route('userreports.edituser', ['id' => $id])->with('success', 'User Details have been updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return to_route('userreports.edituser', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         } finally {
@@ -550,7 +550,7 @@ class UserReportController extends Controller implements HasMiddleware
             return to_route('userreports.edituserboard', ['id' => $id])->with('success', 'User Details have been updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return to_route('userreports.edituserboard', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         } finally {
@@ -656,7 +656,7 @@ class UserReportController extends Controller implements HasMiddleware
             return to_route('userreports.editusercoord', ['id' => $id])->with('success', 'User Details have been updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return to_route('userreports.editusercoord', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         } finally {

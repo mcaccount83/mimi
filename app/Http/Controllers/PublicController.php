@@ -510,7 +510,7 @@ class PublicController extends Controller
 
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error($e);
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             // For international applications, show a generic error since there's no payment error
             $errorMessage = $isInternational ? 'There was an error processing your application. Please try again.' : $paymentResponse['error'];
@@ -658,7 +658,7 @@ class PublicController extends Controller
             return redirect()->to('/donationsuccess')->with('success', 'Payment was successfully processed and donation has been submitted!');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);  // Log the error
 
             return redirect()->to('/donation')->withErrors(['payment' => $paymentResponse['error']])->withInput();
             // return redirect()->to('/donation')->with('fail', $paymentResponse['error']);
@@ -1052,7 +1052,7 @@ class PublicController extends Controller
             return redirect()->to('/newcoordinatorsuccess')->with('success', 'Application was successfully submitted!');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);  // Log the error
 
             return redirect()->to('/newcoordinator')->with('fail', 'Something went wrong, Please try again.');
         } finally {
@@ -1149,7 +1149,7 @@ class PublicController extends Controller
 
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error($e);
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return redirect()->to('/newinquiry')->with('fail', 'There was an error processing your inquiry. Please try again.');
 

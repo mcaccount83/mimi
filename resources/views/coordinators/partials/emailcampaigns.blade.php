@@ -3,7 +3,7 @@
         @php
             $month = (int) $currentMonth;
             $campaigns = [
-                8  => [['id' => 'BudgetMeetingCampaign', 'label' => 'Meetings & Budgets', 'route' => route('campaigns.sendbudgetmeeting')]],
+                8  => [['id' => 'BudgetMeetingCampaign', 'label' => 'Executive Board', 'route' => route('campaigns.sendbudgetmeeting')]],
                 9  => [['id' => 'ServiceProjectsCampaign', 'label' => 'Service Projects', 'route' => route('campaigns.sendserviceprojects')]],
                 10 => [['id' => 'CodeOfConductCampaign', 'label' => 'Code of Conduct', 'route' => route('campaigns.sendcodeofconduct')]],
                 11 => [

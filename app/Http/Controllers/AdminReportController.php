@@ -221,8 +221,7 @@ class AdminReportController extends Controller implements HasMiddleware
             return redirect()->route('adminreports.editrereg', $id)->with('success', 'Re-Reg Info updated successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error($e);
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return redirect()->route('adminreports.editrereg', $id)->with('error', 'Failed to update Re-Reg Info.');
         }
     }

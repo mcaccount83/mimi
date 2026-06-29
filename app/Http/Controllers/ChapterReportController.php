@@ -149,8 +149,7 @@ class ChapterReportController extends Controller implements HasMiddleware
             return to_route('chapreports.editirs', ['id' => $id])->with('success', 'Chapter IRS Information has been updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return to_route('chapreports.editirs', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur

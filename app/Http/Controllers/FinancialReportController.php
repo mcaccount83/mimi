@@ -540,7 +540,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             }
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return redirect()->back()->with('fail', 'Something went wrong Please try again.');
         } finally {
@@ -707,7 +707,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             }
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return redirect()->back()->with('fail', 'Something went wrong Please try again.');
         } finally {
@@ -783,7 +783,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             return redirect()->back()->with('success', 'Checklist has been successfully updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return redirect()->back()->with('fail', 'Something went wrong Please try again.');
         } finally {

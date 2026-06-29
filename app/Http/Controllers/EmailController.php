@@ -118,7 +118,7 @@ class EmailController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             $message = 'Something went wrong, Please try again.';
 
@@ -243,7 +243,7 @@ class EmailController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             $message = 'Something went wrong, Please try again.';
 
@@ -302,7 +302,7 @@ class EmailController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             $message = 'Something went wrong, Please try again.';
 
@@ -365,7 +365,7 @@ class EmailController extends Controller implements HasMiddleware
 
             return response()->json(['message' => 'Chapter emails have been queued.']);
         } catch (\Exception $e) {
-            Log::error($e);
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return response()->json(['message' => 'Something went wrong. Please try again.'], 500);
         }
     }
@@ -418,7 +418,7 @@ class EmailController extends Controller implements HasMiddleware
 
             return response()->json(['message' => 'Chapter emails have been queued.']);
         } catch (\Exception $e) {
-            Log::error($e);
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return response()->json(['message' => 'Something went wrong. Please try again.'], 500);
         }
     }
@@ -465,7 +465,7 @@ class EmailController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             $message = 'Something went wrong, Please try again.';
 
@@ -526,7 +526,7 @@ class EmailController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             $message = 'Something went wrong, Please try again.';
 
@@ -587,7 +587,7 @@ class EmailController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             $message = 'Something went wrong, Please try again.';
 
@@ -647,7 +647,7 @@ class EmailController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             $message = 'Something went wrong, Please try again.';
 
@@ -707,7 +707,7 @@ class EmailController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             $message = 'Something went wrong, Please try again.';
 
@@ -726,7 +726,7 @@ class EmailController extends Controller implements HasMiddleware
     /**
      * Board Election Report Reminder Auto Send
      */
-    public function sendEOYBoardReportReminder(Request $request): RedirectResponse
+    public function sendEOYBoardReportReminder(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -748,7 +748,7 @@ class EmailController extends Controller implements HasMiddleware
             ->get();
 
         if ($chapterList->isEmpty()) {
-            return redirect()->back()->with('info', 'There are no Chapters with Board Reports Due.');
+            return response()->json(['message' => 'There are no Chapters with Board Reports Due.'], 422);
         }
 
         $chapterIds = [];
@@ -791,12 +791,12 @@ class EmailController extends Controller implements HasMiddleware
         try {
             DB::commit();
 
-            return redirect()->to('/eoyreports/boardreport')->with('success', 'Board Election Reminders have been successfully sent.');
+            return response()->json(['message' => 'Board Election Reminders have been successfully sent.']);
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
-            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+            return response()->json(['message' => 'Something went wrong. Please try again.'], 500);
         } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
@@ -806,7 +806,7 @@ class EmailController extends Controller implements HasMiddleware
     /**
      * Financial Report Reminder Auto Send
      */
-    public function sendEOYFinancialReportReminder(Request $request): RedirectResponse
+    public function sendEOYFinancialReportReminder(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -828,7 +828,7 @@ class EmailController extends Controller implements HasMiddleware
             ->get();
 
         if ($chapterList->isEmpty()) {
-            return redirect()->back()->with('info', 'There are no Chapters with Financial Reports Due.');
+            return response()->json(['message' => 'There are no Chapters with Financial Reports Due.'], 422);
         }
 
         $chapterIds = [];
@@ -870,12 +870,12 @@ class EmailController extends Controller implements HasMiddleware
         try {
             DB::commit();
 
-            return redirect()->to('/eoyreports/financialreport')->with('success', 'Financial Report Reminders have been successfully sent.');
+            return response()->json(['message' => 'Financial Report Reminders have been successfully sent.']);
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
-            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+            return response()->json(['message' => 'Something went wrong. Please try again.'], 500);
         } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
@@ -885,7 +885,7 @@ class EmailController extends Controller implements HasMiddleware
     /**
      * Auto Send EOY Report Status Reminder
      */
-    public function sendEOYStatusReminder(Request $request): RedirectResponse
+    public function sendEOYStatusReminder(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -911,7 +911,7 @@ class EmailController extends Controller implements HasMiddleware
             ->get();
 
         if ($chapterList->isEmpty()) {
-            return redirect()->back()->with('info', 'There are no Chapters with Reports Due.');
+            return response()->json(['message' => 'There are no Chapters with Reports Due.'], 422);
         }
 
         $chapterIds = [];
@@ -940,6 +940,12 @@ class EmailController extends Controller implements HasMiddleware
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getFinancialReportData($chFinancialReport),
                 $this->baseMailDataController->getReportYearData($reportYearOptions),
+                [
+                    'boardElectionReportReceived' => $chEOYDocuments->new_board_submitted ?? null,
+                    'financialReportReceived'     => $chEOYDocuments->financial_report_received ?? null,
+                    '990NSubmissionReceived'      => $chDocuments->irs_path ?? null,
+                    'einLetterCopyReceived'       => $chEOYDocuments->ein_letter ?? null,
+                ]
             );
 
         }
@@ -956,12 +962,12 @@ class EmailController extends Controller implements HasMiddleware
 
             DB::commit();
 
-            return redirect()->to('/eoyreports/status')->with('success', 'EOY Late Notices have been successfully sent.');
+            return response()->json(['message' => 'EOY Late Notices have been successfully sent.']);
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
-            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+            return response()->json(['message' => 'Something went wrong. Please try again.'], 500);
         } finally {
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
@@ -1073,7 +1079,7 @@ class EmailController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             $message = 'Something went wrong, Please try again.';
 
@@ -1124,7 +1130,7 @@ class EmailController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error($e);
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         } finally {
@@ -1173,7 +1179,7 @@ class EmailController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error($e);
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         } finally {
@@ -1230,7 +1236,7 @@ class EmailController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             $message = 'Something went wrong, Please try again.';
 
@@ -1292,7 +1298,7 @@ class EmailController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
             $message = 'Something went wrong, Please try again.';
 

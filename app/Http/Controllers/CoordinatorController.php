@@ -285,8 +285,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             return redirect()->to('/coordinator/coordlist')->with('success', 'Coordinator created successfully.');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return redirect()->to('/')->with('fail', 'Something went wrong, Please try again..');
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -409,8 +408,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             $message = 'Something went wrong, Please try again.';
 
             // Return JSON error response
@@ -456,8 +454,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             $message = 'Something went wrong, please try again.';
 
             return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('coordinators.view', ['id' => $coordId])]);
@@ -501,8 +498,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();   // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             $message = 'Something went wrong, Please try again.';
 
             return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('coordinators.view', ['id' => $coordId])]);
@@ -555,8 +551,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             $message = 'Something went wrong, Please try again.';
 
             return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('coordinators.view', ['id' => $coordId])]);
@@ -631,8 +626,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             $message = 'Something went wrong, Please try again.';
 
             return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('coordinators.view', ['id' => $coordId])]);
@@ -703,8 +697,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             $message = 'Something went wrong, Please try again.';
 
             return response()->json(['status' => 'error', 'message' => $message, 'redirect' => route('coordinators.view', ['id' => $coordId])]);
@@ -883,8 +876,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return false;
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -987,8 +979,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return false;
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -1089,8 +1080,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             echo $e->getMessage();
             exit();
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return to_route('coordinators.view', ['id' => $id])->with('fail', 'Something went wrong, Please try again..');
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -1189,8 +1179,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             echo $e->getMessage();
             exit();
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return to_route('coordinators.editdetails', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -1292,8 +1281,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             return to_route('coordinators.editrecognition', ['id' => $id])->with('success', 'Coordinator profile updated successfully');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return to_route('coordinators.editrecognition', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -1467,8 +1455,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             return redirect()->to('/profile/profile')->with('success', 'Coordinator profile updated successfully');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return redirect()->to('/profile/profile')->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -1585,8 +1572,7 @@ class CoordinatorController extends Controller implements HasMiddleware
             return to_route('coordinators.viewapplication', ['id' => $id])->with('success', 'Coordinator Application has been updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return to_route('coordinators.viewapplication', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -1696,8 +1682,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             // Return JSON error response for AJAX
             return response()->json([
                 'success' => false,
@@ -1749,8 +1734,7 @@ class CoordinatorController extends Controller implements HasMiddleware
 
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             // Return JSON error response for AJAX
             return response()->json([
                 'success' => false,

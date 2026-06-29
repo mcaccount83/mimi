@@ -135,9 +135,9 @@
                 <div class="card-body text-center mt-3">
                 <div class="d-flex justify-content-center align-items-start flex-wrap">
                 @if ($regionalCoordinatorCondition)
-                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="confirmSendBoardRptReminder(event)">
-    <i class="bi bi-envelope-fill me-2"></i>Send Board Election Reminders
-</button>
+                <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="confirmSendBoardRptReminder()">
+                    <i class="bi bi-envelope-fill me-2"></i>Send Board Election Reminders
+                </button>
                 @endif
                 @if ($assistConferenceCoordinatorCondition)
                     <form id="activateAllBoardsForm" action="{{ route('eoyreports.activateallboards') }}" method="POST">

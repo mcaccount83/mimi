@@ -158,9 +158,9 @@
 
               <div class="card-body text-center mt-3">
                 @if ($regionalCoordinatorCondition)
-                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="confirmSendFinancialRptReminder(event)">
-    <i class="bi bi-envelope-fill me-2"></i>Send Financial Report Reminders
-</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="confirmSendFinancialRptReminder()">
+                        <i class="bi bi-envelope-fill me-2"></i>Send Financial Report Reminders
+                    </button>
                 @endif
              </div>
             <!-- /.card-body for buttons -->

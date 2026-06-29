@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\CampaignsAnnualReport;
-use App\Mail\CampaignsElectionTimeline;
+use App\Mail\CampaignsElectionsTimeline;
 use App\Mail\CampaignsOldBoardThankYou;
 use App\Mail\CampaignsVolunteerPush;
 use App\Mail\CampaignsBudgetMeeting;
@@ -13,6 +13,7 @@ use App\Mail\CampaignsServiceProjects;
 use App\Mail\CampaignsMemberBenefits;
 use App\Mail\CampaignsHolidayBreak;
 use App\Mail\CampaignsProcessingReimbursements;
+use App\Mail\CampaignsSummary;
 use App\Mail\CampaignsBoardReport;
 use App\Mail\CampaignsFinancialReport;
 use App\Mail\CampaignsNewBoardWelcome;
@@ -21,6 +22,7 @@ use App\Services\PositionConditionsService;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
 
@@ -88,7 +90,7 @@ class EmailCampaignController extends Controller
             ->queue(new CampaignsOldBoardThankYou($mailData));
     }
 
-    public function sendElectionsTimelineCampaign(Request $request): RedirectResponse
+    public function sendElectionsTimelineCampaign(Request $request): JsonResponse
     {
         try {
             $user = $this->userController->loadUserInformation($request);
@@ -110,7 +112,7 @@ class EmailCampaignController extends Controller
             $pdfPath = $matchingInstructions ? 'https://drive.google.com/uc?export=download&id='.$matchingInstructions->file_path : null;
 
             $chapterEmails = [];
-            $coordinatorEmails = [];
+            $coordinatorSummary = [];
             $mailData = [];
 
             foreach ($chapterList as $chapter) {
@@ -126,26 +128,44 @@ class EmailCampaignController extends Controller
                     $this->baseMailDataController->getUserData($user),
                 );
 
+                $campaignMessage = \Illuminate\Support\Facades\View::make(
+                    'emails.campaigns.partials.electionstimeline_body',
+                    ['mailData' => $mailData[$chDetails->name]]
+                )->render();
+
                 $chapterEmails[$chDetails->name] = $emailListChap;
-                $coordinatorEmails[$chDetails->name] = $emailListCoord;
+
+                foreach ($emailListCoord as $coordEmail) {
+                    if (!isset($coordinatorSummary[$coordEmail])) {
+                        $coordinatorSummary[$coordEmail] = [
+                            'chapterNames' => [],
+                            'campaignMessage' => $campaignMessage,
+                        ];
+                    }
+                    $coordinatorSummary[$coordEmail]['chapterNames'][] = [
+                        'name' => $chDetails->name,
+                        'state' => $stateShortName,
+                    ];
+                }
             }
 
             foreach ($mailData as $chapterName => $data) {
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
-                        ->cc($coordinatorEmails[$chapterName] ?? [])
-                        ->queue(new CampaignsElectionTimeline($data, $pdfPath));
+                        ->queue(new CampaignsElectionsTimeline($data, $pdfPath));
                 }
             }
 
-            return redirect()->back()->with('success', 'Election Timeline emails have been queued.');
+            $this->sendCampaignSummary($user, $coordinatorSummary, 'Election Timeline', $pdfPath);
+
+            return response()->json(['message' => 'Election Timeline emails have been queued.']);
         } catch (\Exception $e) {
-            Log::error($e);
-            return redirect()->back()->with('fail', 'Something went wrong. Please try again.');
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return response()->json(['message' => 'Something went wrong. Please try again.'], 500);
         }
     }
 
-    public function sendAnnualReportCampaign(Request $request): RedirectResponse
+    public function sendAnnualReportCampaign(Request $request): JsonResponse
     {
         try {
             $user = $this->userController->loadUserInformation($request);
@@ -162,7 +182,7 @@ class EmailCampaignController extends Controller
                 ->get();
 
             $chapterEmails = [];
-            $coordinatorEmails = [];
+            $coordinatorSummary = [];
             $mailData = [];
 
             foreach ($chapterList as $chapter) {
@@ -178,26 +198,44 @@ class EmailCampaignController extends Controller
                     $this->baseMailDataController->getUserData($user),
                 );
 
+                $campaignMessage = \Illuminate\Support\Facades\View::make(
+                    'emails.campaigns.partials.annualreport_body',
+                    ['mailData' => $mailData[$chDetails->name]]
+                )->render();
+
                 $chapterEmails[$chDetails->name] = $emailListChap;
-                $coordinatorEmails[$chDetails->name] = $emailListCoord;
+
+                foreach ($emailListCoord as $coordEmail) {
+                    if (!isset($coordinatorSummary[$coordEmail])) {
+                        $coordinatorSummary[$coordEmail] = [
+                            'chapterNames' => [],
+                            'campaignMessage' => $campaignMessage,
+                        ];
+                    }
+                    $coordinatorSummary[$coordEmail]['chapterNames'][] = [
+                        'name' => $chDetails->name,
+                        'state' => $stateShortName,
+                    ];
+                }
             }
 
             foreach ($mailData as $chapterName => $data) {
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
-                        ->cc($coordinatorEmails[$chapterName] ?? [])
                         ->queue(new CampaignsAnnualReport($data));
                 }
             }
 
-            return redirect()->back()->with('success', 'Annual Report emails have been queued.');
+            $this->sendCampaignSummary($user, $coordinatorSummary, 'EOY Reports');
+
+            return response()->json(['message' => 'EOY Reports emails have been queued.']);
         } catch (\Exception $e) {
-            Log::error($e);
-            return redirect()->back()->with('fail', 'Something went wrong. Please try again.');
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return response()->json(['message' => 'Something went wrong. Please try again.'], 500);
         }
     }
 
-    public function sendBudgetMeetingCampaign(Request $request): RedirectResponse
+    public function sendBudgetMeetingCampaign(Request $request): JsonResponse
     {
         try {
             $user = $this->userController->loadUserInformation($request);
@@ -212,7 +250,7 @@ class EmailCampaignController extends Controller
                 ->get();
 
             $chapterEmails = [];
-            $coordinatorEmails = [];
+            $coordinatorSummary = [];
             $mailData = [];
 
             foreach ($chapterList as $chapter) {
@@ -227,26 +265,44 @@ class EmailCampaignController extends Controller
                     $this->baseMailDataController->getUserData($user),
                 );
 
+                $campaignMessage = \Illuminate\Support\Facades\View::make(
+                    'emails.campaigns.partials.budgetmeeting_body',
+                    ['mailData' => $mailData[$chDetails->name]]
+                )->render();
+
                 $chapterEmails[$chDetails->name] = $emailListChap;
-                $coordinatorEmails[$chDetails->name] = $emailListCoord;
+
+                foreach ($emailListCoord as $coordEmail) {
+                    if (!isset($coordinatorSummary[$coordEmail])) {
+                        $coordinatorSummary[$coordEmail] = [
+                            'chapterNames' => [],
+                            'campaignMessage' => $campaignMessage,
+                        ];
+                    }
+                    $coordinatorSummary[$coordEmail]['chapterNames'][] = [
+                        'name' => $chDetails->name,
+                        'state' => $stateShortName,
+                    ];
+                }
             }
 
             foreach ($mailData as $chapterName => $data) {
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
-                        ->cc($coordinatorEmails[$chapterName] ?? [])
                         ->queue(new CampaignsBudgetMeeting($data));
                 }
             }
 
-            return redirect()->back()->with('success', 'Budget & Meeting emails have been queued.');
+            $this->sendCampaignSummary($user, $coordinatorSummary, 'Budget & Meeting');
+
+            return response()->json(['message' => 'Budget & Meeting emails have been queued.']);
         } catch (\Exception $e) {
-            Log::error($e);
-            return redirect()->back()->with('fail', 'Something went wrong. Please try again.');
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return response()->json(['message' => 'Something went wrong. Please try again.'], 500);
         }
     }
 
-    public function sendCodeOfConductCampaign(Request $request): RedirectResponse
+    public function sendCodeOfConductCampaign(Request $request): JsonResponse
     {
         try {
             $user = $this->userController->loadUserInformation($request);
@@ -261,7 +317,7 @@ class EmailCampaignController extends Controller
                 ->get();
 
             $chapterEmails = [];
-            $coordinatorEmails = [];
+            $coordinatorSummary = [];
             $mailData = [];
 
             foreach ($chapterList as $chapter) {
@@ -276,26 +332,44 @@ class EmailCampaignController extends Controller
                     $this->baseMailDataController->getUserData($user),
                 );
 
+                $campaignMessage = \Illuminate\Support\Facades\View::make(
+                    'emails.campaigns.partials.codeofconduct_body',
+                    ['mailData' => $mailData[$chDetails->name]]
+                )->render();
+
                 $chapterEmails[$chDetails->name] = $emailListChap;
-                $coordinatorEmails[$chDetails->name] = $emailListCoord;
+
+                foreach ($emailListCoord as $coordEmail) {
+                    if (!isset($coordinatorSummary[$coordEmail])) {
+                        $coordinatorSummary[$coordEmail] = [
+                            'chapterNames' => [],
+                            'campaignMessage' => $campaignMessage,
+                        ];
+                    }
+                    $coordinatorSummary[$coordEmail]['chapterNames'][] = [
+                        'name' => $chDetails->name,
+                        'state' => $stateShortName,
+                    ];
+                }
             }
 
             foreach ($mailData as $chapterName => $data) {
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
-                        ->cc($coordinatorEmails[$chapterName] ?? [])
                         ->queue(new CampaignsCodeOfConduct($data));
                 }
             }
 
-            return redirect()->back()->with('success', 'Code of Conduct emails have been queued.');
+            $this->sendCampaignSummary($user, $coordinatorSummary, 'Code of Conduct');
+
+            return response()->json(['message' => 'Code of Conduct emails have been queued.']);
         } catch (\Exception $e) {
-            Log::error($e);
-            return redirect()->back()->with('fail', 'Something went wrong. Please try again.');
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return response()->json(['message' => 'Something went wrong. Please try again.'], 500);
         }
     }
 
-    public function sendRecordsRetentionCampaign(Request $request): RedirectResponse
+    public function sendRecordsRetentionCampaign(Request $request): JsonResponse
     {
         try {
             $user = $this->userController->loadUserInformation($request);
@@ -310,7 +384,7 @@ class EmailCampaignController extends Controller
                 ->get();
 
             $chapterEmails = [];
-            $coordinatorEmails = [];
+            $coordinatorSummary = [];
             $mailData = [];
 
             foreach ($chapterList as $chapter) {
@@ -325,22 +399,40 @@ class EmailCampaignController extends Controller
                     $this->baseMailDataController->getUserData($user),
                   );
 
+                $campaignMessage = \Illuminate\Support\Facades\View::make(
+                    'emails.campaigns.partials.recordsretention_body',
+                    ['mailData' => $mailData[$chDetails->name]]
+                )->render();
+
                 $chapterEmails[$chDetails->name] = $emailListChap;
-                $coordinatorEmails[$chDetails->name] = $emailListCoord;
+
+                foreach ($emailListCoord as $coordEmail) {
+                    if (!isset($coordinatorSummary[$coordEmail])) {
+                        $coordinatorSummary[$coordEmail] = [
+                            'chapterNames' => [],
+                            'campaignMessage' => $campaignMessage,
+                        ];
+                    }
+                    $coordinatorSummary[$coordEmail]['chapterNames'][] = [
+                        'name' => $chDetails->name,
+                        'state' => $stateShortName,
+                    ];
+                }
             }
 
             foreach ($mailData as $chapterName => $data) {
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
-                        ->cc($coordinatorEmails[$chapterName] ?? [])
                         ->queue(new CampaignsRecordsRetention($data));
                 }
             }
 
-            return redirect()->back()->with('success', 'Records Retention emails have been queued.');
+            $this->sendCampaignSummary($user, $coordinatorSummary, 'Records Retention');
+
+            return response()->json(['message' => 'Records Retention emails have been queued.']);
         } catch (\Exception $e) {
-            Log::error($e);
-            return redirect()->back()->with('fail', 'Something went wrong. Please try again.');
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return response()->json(['message' => 'Something went wrong. Please try again.'], 500);
         }
     }
 
@@ -362,7 +454,7 @@ class EmailCampaignController extends Controller
                 ->get();
 
             $chapterEmails = [];
-            $coordinatorEmails = [];
+            $coordinatorSummary = [];
             $mailData = [];
 
             foreach ($chapterList as $chapter) {
@@ -381,26 +473,44 @@ class EmailCampaignController extends Controller
                     ]
                 );
 
+                $campaignMessage = \Illuminate\Support\Facades\View::make(
+                    'emails.campaigns.partials.holidaybreak_body',
+                    ['mailData' => $mailData[$chDetails->name]]
+                )->render();
+
                 $chapterEmails[$chDetails->name] = $emailListChap;
-                $coordinatorEmails[$chDetails->name] = $emailListCoord;
+
+                foreach ($emailListCoord as $coordEmail) {
+                    if (!isset($coordinatorSummary[$coordEmail])) {
+                        $coordinatorSummary[$coordEmail] = [
+                            'chapterNames' => [],
+                            'campaignMessage' => $campaignMessage,
+                        ];
+                    }
+                    $coordinatorSummary[$coordEmail]['chapterNames'][] = [
+                        'name' => $chDetails->name,
+                        'state' => $stateShortName,
+                    ];
+                }
             }
 
             foreach ($mailData as $chapterName => $data) {
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
-                        ->cc($coordinatorEmails[$chapterName] ?? [])
                         ->queue(new CampaignsHolidayBreak($data));
                 }
             }
 
-            return response()->json(['message' => 'Happy Holidays emails have been queued.']);
+            $this->sendCampaignSummary($user, $coordinatorSummary, 'Holiday Break');
+
+            return response()->json(['message' => 'Holiday Break emails have been queued.']);
         } catch (\Exception $e) {
-            Log::error($e);
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return response()->json(['message' => 'Something went wrong. Please try again.'], 500);
         }
     }
 
-    public function sendProcessingReimbursementsCampaign(Request $request): RedirectResponse
+    public function sendProcessingReimbursementsCampaign(Request $request): JsonResponse
     {
         try {
             $user = $this->userController->loadUserInformation($request);
@@ -415,7 +525,7 @@ class EmailCampaignController extends Controller
                 ->get();
 
             $chapterEmails = [];
-            $coordinatorEmails = [];
+            $coordinatorSummary = [];
             $mailData = [];
 
             foreach ($chapterList as $chapter) {
@@ -430,26 +540,44 @@ class EmailCampaignController extends Controller
                     $this->baseMailDataController->getUserData($user),
                 );
 
+                $campaignMessage = \Illuminate\Support\Facades\View::make(
+                    'emails.campaigns.partials.processingreimbursements_body',
+                    ['mailData' => $mailData[$chDetails->name]]
+                )->render();
+
                 $chapterEmails[$chDetails->name] = $emailListChap;
-                $coordinatorEmails[$chDetails->name] = $emailListCoord;
+
+                foreach ($emailListCoord as $coordEmail) {
+                    if (!isset($coordinatorSummary[$coordEmail])) {
+                        $coordinatorSummary[$coordEmail] = [
+                            'chapterNames' => [],
+                            'campaignMessage' => $campaignMessage,
+                        ];
+                    }
+                    $coordinatorSummary[$coordEmail]['chapterNames'][] = [
+                        'name' => $chDetails->name,
+                        'state' => $stateShortName,
+                    ];
+                }
             }
 
             foreach ($mailData as $chapterName => $data) {
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
-                        ->cc($coordinatorEmails[$chapterName] ?? [])
                         ->queue(new CampaignsProcessingReimbursements($data));
                 }
             }
 
-            return redirect()->back()->with('success', 'Processing Reimbursement emails have been queued.');
+            $this->sendCampaignSummary($user, $coordinatorSummary, 'Processing Reimbursements');
+
+            return response()->json(['message' => 'Processing Reimbursements emails have been queued.']);
         } catch (\Exception $e) {
-            Log::error($e);
-            return redirect()->back()->with('fail', 'Something went wrong. Please try again.');
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return response()->json(['message' => 'Something went wrong. Please try again.'], 500);
         }
     }
 
-    public function sendVolunteerPushCampaign(Request $request): RedirectResponse
+    public function sendVolunteerPushCampaign(Request $request): JsonResponse
     {
         try {
             $user = $this->userController->loadUserInformation($request);
@@ -464,7 +592,7 @@ class EmailCampaignController extends Controller
                 ->get();
 
             $chapterEmails = [];
-            $coordinatorEmails = [];
+            $coordinatorSummary = [];
             $mailData = [];
 
             foreach ($chapterList as $chapter) {
@@ -479,26 +607,44 @@ class EmailCampaignController extends Controller
                     $this->baseMailDataController->getUserData($user),
                 );
 
+                $campaignMessage = \Illuminate\Support\Facades\View::make(
+                    'emails.campaigns.partials.volunteerpush_body',
+                    ['mailData' => $mailData[$chDetails->name]]
+                )->render();
+
                 $chapterEmails[$chDetails->name] = $emailListChap;
-                $coordinatorEmails[$chDetails->name] = $emailListCoord;
+
+                foreach ($emailListCoord as $coordEmail) {
+                    if (!isset($coordinatorSummary[$coordEmail])) {
+                        $coordinatorSummary[$coordEmail] = [
+                            'chapterNames' => [],
+                            'campaignMessage' => $campaignMessage,
+                        ];
+                    }
+                    $coordinatorSummary[$coordEmail]['chapterNames'][] = [
+                        'name' => $chDetails->name,
+                        'state' => $stateShortName,
+                    ];
+                }
             }
 
             foreach ($mailData as $chapterName => $data) {
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
-                        ->cc($coordinatorEmails[$chapterName] ?? [])
                         ->queue(new CampaignsVolunteerPush($data));
                 }
             }
 
-            return redirect()->back()->with('success', 'Volunteer Push emails have been queued.');
+            $this->sendCampaignSummary($user, $coordinatorSummary, 'Volunteer Push');
+
+            return response()->json(['message' => 'Volunteer Push emails have been queued.']);
         } catch (\Exception $e) {
-            Log::error($e);
-            return redirect()->back()->with('fail', 'Something went wrong. Please try again.');
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return response()->json(['message' => 'Something went wrong. Please try again.'], 500);
         }
     }
 
-    public function sendServiceProjectsCampaign(Request $request): RedirectResponse
+    public function sendServiceProjectsCampaign(Request $request): JsonResponse
     {
         try {
             $user = $this->userController->loadUserInformation($request);
@@ -513,7 +659,7 @@ class EmailCampaignController extends Controller
                 ->get();
 
             $chapterEmails = [];
-            $coordinatorEmails = [];
+            $coordinatorSummary = [];
             $mailData = [];
 
             foreach ($chapterList as $chapter) {
@@ -528,26 +674,44 @@ class EmailCampaignController extends Controller
                     $this->baseMailDataController->getUserData($user),
                 );
 
+                $campaignMessage = \Illuminate\Support\Facades\View::make(
+                    'emails.campaigns.partials.serviceprojects_body',
+                    ['mailData' => $mailData[$chDetails->name]]
+                )->render();
+
                 $chapterEmails[$chDetails->name] = $emailListChap;
-                $coordinatorEmails[$chDetails->name] = $emailListCoord;
+
+                foreach ($emailListCoord as $coordEmail) {
+                    if (!isset($coordinatorSummary[$coordEmail])) {
+                        $coordinatorSummary[$coordEmail] = [
+                            'chapterNames' => [],
+                            'campaignMessage' => $campaignMessage,
+                        ];
+                    }
+                    $coordinatorSummary[$coordEmail]['chapterNames'][] = [
+                        'name' => $chDetails->name,
+                        'state' => $stateShortName,
+                    ];
+                }
             }
 
             foreach ($mailData as $chapterName => $data) {
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
-                        ->cc($coordinatorEmails[$chapterName] ?? [])
                         ->queue(new CampaignsServiceProjects($data));
                 }
             }
 
-            return redirect()->back()->with('success', 'Service Projects emails have been queued.');
+            $this->sendCampaignSummary($user, $coordinatorSummary, 'Service Projects');
+
+            return response()->json(['message' => 'Service Projects emails have been queued.']);
         } catch (\Exception $e) {
-            Log::error($e);
-            return redirect()->back()->with('fail', 'Something went wrong. Please try again.');
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return response()->json(['message' => 'Something went wrong. Please try again.'], 500);
         }
     }
 
-    public function sendMemberBenefitsCampaign(Request $request): RedirectResponse
+    public function sendMemberBenefitsCampaign(Request $request): JsonResponse
     {
         try {
             $user = $this->userController->loadUserInformation($request);
@@ -557,12 +721,17 @@ class EmailCampaignController extends Controller
             $positionId = $user['cdPositionId'];
             $secPositionId = $user['cdSecPositionId'];
 
+            $resources = Resources::with('resourceCategory')->get();
+            $instructionsName = 'Party Expenses & 15% Rule';
+            $matchingInstructions = $resources->where('name', $instructionsName)->first();
+            $pdfPath = $matchingInstructions ? 'https://drive.google.com/uc?export=download&id='.$matchingInstructions->file_path : null;
+
             $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
             $chapterList = $baseQuery['query']
                 ->get();
 
             $chapterEmails = [];
-            $coordinatorEmails = [];
+            $coordinatorSummary = [];
             $mailData = [];
 
             foreach ($chapterList as $chapter) {
@@ -577,27 +746,45 @@ class EmailCampaignController extends Controller
                     $this->baseMailDataController->getUserData($user),
                 );
 
+                $campaignMessage = \Illuminate\Support\Facades\View::make(
+                    'emails.campaigns.partials.memberbenefits_body',
+                    ['mailData' => $mailData[$chDetails->name]]
+                )->render();
+
                 $chapterEmails[$chDetails->name] = $emailListChap;
-                $coordinatorEmails[$chDetails->name] = $emailListCoord;
+
+                foreach ($emailListCoord as $coordEmail) {
+                    if (!isset($coordinatorSummary[$coordEmail])) {
+                        $coordinatorSummary[$coordEmail] = [
+                            'chapterNames' => [],
+                            'campaignMessage' => $campaignMessage,
+                        ];
+                    }
+                    $coordinatorSummary[$coordEmail]['chapterNames'][] = [
+                        'name' => $chDetails->name,
+                        'state' => $stateShortName,
+                    ];
+                }
             }
 
             foreach ($mailData as $chapterName => $data) {
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
-                        ->cc($coordinatorEmails[$chapterName] ?? [])
-                        ->queue(new CampaignsMemberBenefits($data));
+                        ->queue(new CampaignsMemberBenefits($data, $pdfPath));
                 }
             }
 
-            return redirect()->back()->with('success', 'Member Benefits emails have been queued.');
+            $this->sendCampaignSummary($user, $coordinatorSummary, 'Member Benefits');
+
+            return response()->json(['message' => 'Member Benefits emails have been queued.']);
         } catch (\Exception $e) {
-            Log::error($e);
-            return redirect()->back()->with('fail', 'Something went wrong. Please try again.');
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return response()->json(['message' => 'Something went wrong. Please try again.'], 500);
         }
     }
 
 
-    public function sendBoardReportCampaign(Request $request): RedirectResponse
+    public function sendBoardReportCampaign(Request $request): JsonResponse
     {
         try {
             $user = $this->userController->loadUserInformation($request);
@@ -614,7 +801,7 @@ class EmailCampaignController extends Controller
                 ->get();
 
             $chapterEmails = [];
-            $coordinatorEmails = [];
+            $coordinatorSummary = [];
             $mailData = [];
 
             foreach ($chapterList as $chapter) {
@@ -630,27 +817,45 @@ class EmailCampaignController extends Controller
                     $this->baseMailDataController->getUserData($user),
                 );
 
+                $campaignMessage = \Illuminate\Support\Facades\View::make(
+                    'emails.campaigns.partials.boardreport_body',
+                    ['mailData' => $mailData[$chDetails->name]]
+                )->render();
+
                 $chapterEmails[$chDetails->name] = $emailListChap;
-                $coordinatorEmails[$chDetails->name] = $emailListCoord;
+
+                foreach ($emailListCoord as $coordEmail) {
+                    if (!isset($coordinatorSummary[$coordEmail])) {
+                        $coordinatorSummary[$coordEmail] = [
+                            'chapterNames' => [],
+                            'campaignMessage' => $campaignMessage,
+                        ];
+                    }
+                    $coordinatorSummary[$coordEmail]['chapterNames'][] = [
+                        'name' => $chDetails->name,
+                        'state' => $stateShortName,
+                    ];
+                }
             }
 
             foreach ($mailData as $chapterName => $data) {
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
-                        ->cc($coordinatorEmails[$chapterName] ?? [])
                         ->queue(new CampaignsBoardReport($data));
                 }
             }
 
-            return redirect()->back()->with('success', 'Board Report Reminder emails have been queued.');
+            $this->sendCampaignSummary($user, $coordinatorSummary, 'Board Report');
+
+            return response()->json(['message' => 'Board Report Reminder emails have been queued.']);
         } catch (\Exception $e) {
-            Log::error($e);
-            return redirect()->back()->with('fail', 'Something went wrong. Please try again.');
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return response()->json(['message' => 'Something went wrong. Please try again.'], 500);
         }
     }
 
 
-    public function sendFinancialReportCampaign(Request $request): RedirectResponse
+    public function sendFinancialReportCampaign(Request $request): JsonResponse
     {
         try {
             $user = $this->userController->loadUserInformation($request);
@@ -667,7 +872,7 @@ class EmailCampaignController extends Controller
                 ->get();
 
             $chapterEmails = [];
-            $coordinatorEmails = [];
+            $coordinatorSummary = [];
             $mailData = [];
 
             foreach ($chapterList as $chapter) {
@@ -683,22 +888,56 @@ class EmailCampaignController extends Controller
                     $this->baseMailDataController->getUserData($user),
                 );
 
+                $campaignMessage = \Illuminate\Support\Facades\View::make(
+                    'emails.campaigns.partials.financialreport_body',
+                    ['mailData' => $mailData[$chDetails->name]]
+                )->render();
+
                 $chapterEmails[$chDetails->name] = $emailListChap;
-                $coordinatorEmails[$chDetails->name] = $emailListCoord;
+
+                foreach ($emailListCoord as $coordEmail) {
+                    if (!isset($coordinatorSummary[$coordEmail])) {
+                        $coordinatorSummary[$coordEmail] = [
+                            'chapterNames' => [],
+                            'campaignMessage' => $campaignMessage,
+                        ];
+                    }
+                    $coordinatorSummary[$coordEmail]['chapterNames'][] = [
+                        'name' => $chDetails->name,
+                        'state' => $stateShortName,
+                    ];
+                }
             }
 
             foreach ($mailData as $chapterName => $data) {
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
-                        ->cc($coordinatorEmails[$chapterName] ?? [])
                         ->queue(new CampaignsFinancialReport($data));
                 }
             }
 
-            return redirect()->back()->with('success', 'Financial Report Reminder emails have been queued.');
+            $this->sendCampaignSummary($user, $coordinatorSummary, 'Financial Report');
+
+            return response()->json(['message' => 'Financial Report emails have been queued.']);
         } catch (\Exception $e) {
-            Log::error($e);
-            return redirect()->back()->with('fail', 'Something went wrong. Please try again.');
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return response()->json(['message' => 'Something went wrong. Please try again.'], 500);
+        }
+    }
+
+    private function sendCampaignSummary(array $user, array $coordinatorSummary, string $campaignLabel, ?string $pdfPath = null): void
+    {
+        foreach ($coordinatorSummary as $coordEmail => $summary) {
+            $summaryData = array_merge(
+                $this->baseMailDataController->getUserData($user),
+                [
+                    'campaignLabel' => $campaignLabel,
+                    'chapterNames' => $summary['chapterNames'],
+                    'campaignMessage' => $summary['campaignMessage'],
+                ]
+            );
+            Mail::to($coordEmail)
+                ->queue(new CampaignsSummary($summaryData, $pdfPath));
         }
     }
 }

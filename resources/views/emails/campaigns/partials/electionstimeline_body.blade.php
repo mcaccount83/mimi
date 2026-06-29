@@ -1,4 +1,3 @@
-@component('mail::message')
 <h1><center>{{$mailData['boardReportRange']}} Election Information</center></h1>
 <br>
 <p>With board elections fast approaching, now is the time to start preparing. If your chapter is new (started after June, {{$mailData['reportYearStart']}})
@@ -18,5 +17,4 @@
 <p>If you are struggling or have any questions about the election process, reach out to your Primary Coordinator for ideas and support!</p>
 <br>
 <p><strong>MCL,</strong><br>
-International MOMS Club</p>>
-@endcomponent
+International MOMS Club</p>

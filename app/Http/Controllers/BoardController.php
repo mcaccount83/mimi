@@ -792,8 +792,7 @@ class BoardController extends Controller implements HasMiddleware
             return redirect()->back()->with('success', 'Chapter has successfully updated');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return redirect()->to('/home')->with('fail', 'Something went wrong, Please try again');
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -931,8 +930,7 @@ class BoardController extends Controller implements HasMiddleware
             return redirect()->back()->with('success', 'Quarterly Report has been Submitted');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -1047,8 +1045,7 @@ class BoardController extends Controller implements HasMiddleware
             return redirect()->back()->with('success', 'Online Information has been Submitted');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -1304,8 +1301,7 @@ class BoardController extends Controller implements HasMiddleware
             return redirect()->back()->with('success', $message);
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error($e);
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         } finally {
             DB::disconnect();
@@ -1407,8 +1403,7 @@ class BoardController extends Controller implements HasMiddleware
             }
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return redirect()->back()->with('fail', 'Something went wrong Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -1795,8 +1790,7 @@ class BoardController extends Controller implements HasMiddleware
             return redirect()->back()->with('success', 'Board profile updated successfully');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         } finally {
             // This ensures DB connections are released even if exceptions occur

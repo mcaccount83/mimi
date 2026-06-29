@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
-class CampaignsElectionTimeline extends BaseMailable
+class CampaignsElectionsTimeline extends BaseMailable
 {
     public array $mailData;
 
@@ -33,7 +33,7 @@ class CampaignsElectionTimeline extends BaseMailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.campaigns.electiontimeline',
+            markdown: 'emails.campaigns.electionstimeline',
         );
     }
 

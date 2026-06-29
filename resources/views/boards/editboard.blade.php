@@ -350,6 +350,6 @@
     @php $disableMode = 'disable-all'; @endphp
     @include('layouts.scripts.disablefields')
 @endif
-@php $disableMode = 'disable-board'; @endphp
+{{-- @php $disableMode = 'disable-board'; @endphp --}}
 @include('layouts.scripts.disablefieldseoy')
 @endsection

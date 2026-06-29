@@ -44,8 +44,6 @@
             $('.keep-enabled').prop('disabled', false);
         }
 
-        console.log('board:', board, 'activated:', activated);
-
         if (disableEOYMode === 'disable-board') {
             if (board == '1') {
                 disableButtons();

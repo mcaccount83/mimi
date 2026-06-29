@@ -308,8 +308,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
             return redirect()->to('/home')->with('success', 'Payment was successfully processed and profile has been updated!');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return redirect()->back()->withErrors(['payment' => $paymentResponse['error']])->withInput();
             // return redirect()->back()->with('fail', $paymentResponse['error']);
         } finally {
@@ -477,8 +476,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
             return redirect()->to('/home')->with('success', 'Payment was successfully processed and profile has been updated!');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return redirect()->back()->withErrors(['payment' => $paymentResponse['error']])->withInput();
         } finally {
             // This ensures DB connections are released even if exceptions occur
@@ -596,8 +594,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
             return redirect()->to('/home')->with('success', 'Payment was successfully processed and order has been placed!');
         } catch (\Exception $e) {
             DB::rollback();  // Rollback Transaction
-            Log::error($e);  // Log the error
-
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return redirect()->back()->withErrors(['payment' => $paymentResponse['error']])->withInput();
         } finally {
             // This ensures DB connections are released even if exceptions occur
