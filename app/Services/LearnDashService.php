@@ -12,7 +12,7 @@ class LearnDashService
     protected string $username;
     protected string $password;
 
-    const TIMEOUT = 10;
+    const TIMEOUT = 20;
     const COURSES_CACHE_TTL = 1800;  // 30 min
     const PROGRESS_CACHE_TTL = 300;  // 5 min
 
@@ -75,40 +75,42 @@ class LearnDashService
         }) ?? [];
     }
 
-    public function getUserProgress(string $email): array
+    public function getUserProgress(string $email): ?array
     {
-        $cacheKey = 'learndash_progress_' . md5($email);
+        $cacheKey    = 'learndash_progress_' . md5($email);
+        $failCacheKey = 'learndash_progress_fail_' . md5($email);
 
-        return Cache::remember($cacheKey, self::PROGRESS_CACHE_TTL, function () use ($email) {
+        // If we recently failed for this email, don't hammer WP again
+        if (Cache::has($failCacheKey)) {
+            return [];
+        }
+
+        $result = Cache::remember($cacheKey, self::PROGRESS_CACHE_TTL, function () use ($email, $failCacheKey) {
             try {
                 $response = Http::timeout(self::TIMEOUT)
-                    ->withHeaders(['Cache-Control' => 'no-cache, no-store, must-revalidate'])
                     ->get("{$this->baseUrl}/wp-json/public/v1/user-progress", [
                         'email' => $email,
                     ]);
 
                 if ($response->successful()) {
-                    $data = $response->json();
-                    return collect($data['courses'] ?? [])
-                        ->keyBy('course_id')
-                        ->toArray();
+                    return $response->json() ?? [];
                 }
 
-                Log::warning('LearnDash getUserProgress non-success', [
-                    'email'  => $email,
-                    'status' => $response->status(),
-                ]);
-
-                return [];
+                Cache::put($failCacheKey, true, 60); // back off 60s on bad status
+                return null;
 
             } catch (\Illuminate\Http\Client\ConnectionException $e) {
                 Log::error('LearnDash getUserProgress timeout/connection error', [
                     'email' => $email,
                     'error' => $e->getMessage(),
                 ]);
+
+                Cache::put($failCacheKey, true, 60); // back off 60s on timeout
                 return null;
             }
-        }) ?? [];
+        });
+
+        return $result ?? [];
     }
 
     public function getBulkUserProgress(array $emails): array
