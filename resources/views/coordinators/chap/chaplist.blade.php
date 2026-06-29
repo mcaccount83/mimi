@@ -15,13 +15,13 @@
                         <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Active Chapter List
                         </h3>
-                        {{-- @include('layouts.dropdown_menus.menu_chapters') --}}
+                        @include('layouts.dropdown_menus.menu_chapters')
                     </div>
                 </div>
                 <!-- /.card-header -->
             <div class="card-body">
                 <!--  Email Campaigns  -->
-                @include('coordinators.partials.emailcampaigns')
+                {{-- @include('coordinators.partials.emailcampaigns') --}}
 
                 <table id="chapterlist" class="table table-sm table-hover" >
                 <thead>
