@@ -989,6 +989,55 @@ function showNewChapterEmailModal(chapterId) {
         });
     }
 
+    function confirmSendReRegReminder(title, text, route) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Send',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Processing...',
+                    text: 'Please wait while we queue your emails.',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        $.ajax({
+                            url: route,
+                            type: 'POST',
+                            data: { _token: '{{ csrf_token() }}' },
+                            success: function(response) {
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: response.message,
+                                    icon: 'success',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                }).then(() => location.reload());
+                            },
+                            error: function(xhr) {
+                                Swal.fire({
+                                    title: xhr.status === 422 ? 'Nothing to Send' : 'Error!',
+                                    text: xhr.responseJSON?.message ?? 'Something went wrong. Please try again.',
+                                    icon: xhr.status === 422 ? 'info' : 'error',
+                                    confirmButtonText: 'OK',
+                                    customClass: { confirmButton: 'btn btn-sm btn-success' }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
     function showChapterReRegEmailModal(chapterName, chapterId) {
     Swal.fire({
         title: 'Chapter Re-Registration Reminder',
