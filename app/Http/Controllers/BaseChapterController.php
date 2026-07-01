@@ -10,6 +10,11 @@ use App\Models\Chapters;
 use App\Models\Conference;
 use App\Models\Coordinators;
 use App\Models\Country;
+use App\Models\Documents;
+use App\Models\DocumentsIRS;
+use App\Models\DocumentsEOY;
+use App\Models\DocumentsReport;
+use App\Models\FinancialReport;
 use App\Models\FinancialReportAwards;
 use App\Models\Month;
 use App\Models\Probation;
@@ -301,12 +306,12 @@ class BaseChapterController extends Controller
         $websiteLink = $chDetails->webLink?->link_status ?? null;
 
         $chPayments = $chDetails->payments;
-        $chDocuments = $chDetails->documents;
-        $chEOYDocuments = $chDetails->documentsEOY;
+        $chDocuments = $chDetails->documents ?? Documents::firstOrNew(['chapter_id' => $chId]);
+        $chEOYDocuments = $chDetails->documentsEOY ?? DocumentsEOY::firstOrNew(['chapter_id' => $chId]);
         $reviewComplete = $chDetails->documentsEOY?->review_complete ?? null;
-        $chIRSDocuments = $chDetails->documentsIRS;
-        $chReportDocuments = $chDetails->documentsReort;
-        $chFinancialReport = $chDetails->financialReport;
+        $chIRSDocuments = $chDetails->documentsIRS ?? DocumentsIRS::firstOrNew(['chapter_id' => $chId]);
+        $chReportDocuments = $chDetails->documentsReort ?? DocumentsReport::firstOrNew(['chapter_id' => $chId]);
+        $chFinancialReport = $chDetails->financialReport ?? FinancialReport::firstOrNew(['chapter_id' => $chId]);
         $chFinancialReportFinal = $chDetails->financialReportFinal;
         $chFinancialReportReview = $chDetails->financialReportReview;
 

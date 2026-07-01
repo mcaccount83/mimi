@@ -34,10 +34,11 @@
                             @if($m == 7)
                                 <tr>
                                     <td class="text-center align-middle text-muted">
-                                        <i class="bi bi-envelope text-primary"></i>
+                                        {{-- <i class="bi bi-envelope text-primary"></i> --}}
                                     </td>
                                     <td>{{ $name }}</td>
-                                    <td class="fst-italic text-muted"><small>Auto-sent on board activation</small></td>
+                                    <td>Thank You Old Board & Welcome New Board<br>
+                                        <small class="fst-italic text-muted">Auto-sends when new board is activated</small></td>
                                 </tr>
                             @elseif(isset($campaigns[$m]))
                                 @foreach($campaigns[$m] as $campaign)

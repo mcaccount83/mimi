@@ -118,6 +118,38 @@ class PositionConditionsService
         ];
     }
 
+    public function getEmailCampaignData()
+    {
+        $campaigns = [
+            8  => [['id' => 'BudgetMeetingCampaign', 'label' => 'The Executive Board', 'route' => route('campaigns.sendbudgetmeeting')]],
+            // 9  => [['id' => 'ServiceProjectsCampaign', 'label' => 'Service Projects', 'route' => route('campaigns.sendserviceprojects')]],
+            // 10 => [['id' => 'CodeOfConductCampaign', 'label' => 'Code of Conduct', 'route' => route('campaigns.sendcodeofconduct')]],
+            11 => [
+                ['id' => 'MemberBenefitsCampaign', 'label' => 'Parties/Member Benefits', 'route' => route('campaigns.sendmemberbenefits')],
+                ['id' => 'HolidayBreakCampaign', 'label' => 'Holiday Break', 'route' => route('campaigns.sendholidaybreak'), 'fn' => 'confirmSendHolidayBreak'],
+            ],
+            // 12 => [['id' => 'RecordsRetentionCampaign', 'label' => 'Records Retention', 'route' => route('campaigns.sendrecordsretention')]],
+            1  => [['id' => 'VolunteerPush', 'label' => 'Volunteer Push', 'route' => route('campaigns.sendvolunteerpush')]],
+            2  => [['id' => 'ElectionsTimelineCampaign', 'label' => 'Election Information', 'route' => route('campaigns.sendelectionstimeline')]],
+            // 3  => [['id' => 'ProcessingReimbursementsCampaign', 'label' => 'Processing Reimbursements', 'route' => route('campaigns.sendprocessingreimbursements')]],
+            4  => [['id' => 'AnnualReportCampaign', 'label' => 'EOY Report Info', 'route' => route('campaigns.sendannualreport')]],
+            5  => [['id' => 'BoardReportCampaign', 'label' => 'Board Report Info', 'route' => route('campaigns.sendboardreport')]],
+            6  => [['id' => 'FinancialReportCampaign', 'label' => 'Financial Report Info', 'route' => route('campaigns.sendfinancialreport')]],
+        ];
+
+        $monthNames = [
+            1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
+            5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
+            9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December',
+        ];
+
+        return [
+            'campaigns' => $campaigns,
+            'monthNames' => $monthNames,
+        ];
+
+    }
+
     /**
      * Get EOY Date options based on fiscal year // Loaded automatically for blades in ViewServiceProvider & Called manually when needed
      */

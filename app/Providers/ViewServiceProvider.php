@@ -81,36 +81,12 @@ class ViewServiceProvider extends ServiceProvider
             $pendingNewChapterCount = ($confId) ? $PendingConditionsService->getpendingNewChapterCount($confId) : 0;
             $pendingNewCoordCount = ($confId) ? $PendingConditionsService->getpendingNewCoordCount($confId) : 0;
             $dateOptions = $positionConditionsService->getDateOptions();
+            $getEmailCampaignData = $positionConditionsService->getEmailCampaignData();
 
             $probationParty = ($chDetails?->status_id == OperatingStatusEnum::PROBATION && $chDetails->probation_id == ProbationReasonEnum::EXCESSPARTY);
 
             $adminYear = $getFiscalYearOptions['adminYear'] ?? null;
             $boardList = $adminYear ? $adminYear->unsubscribe_list != 1 : true;
-
-            // $currentMonth = (int) date('n');
-
-            $campaigns = [
-                8  => [['id' => 'BudgetMeetingCampaign', 'label' => 'Executive Board', 'route' => route('campaigns.sendbudgetmeeting')]],
-                9  => [['id' => 'ServiceProjectsCampaign', 'label' => 'Service Projects', 'route' => route('campaigns.sendserviceprojects')]],
-                10 => [['id' => 'CodeOfConductCampaign', 'label' => 'Code of Conduct', 'route' => route('campaigns.sendcodeofconduct')]],
-                11 => [
-                    ['id' => 'MemberBenefitsCampaign', 'label' => 'Member Benefits', 'route' => route('campaigns.sendmemberbenefits')],
-                    ['id' => 'HolidayBreakCampaign', 'label' => 'Holiday Break', 'route' => route('campaigns.sendholidaybreak'), 'fn' => 'confirmSendHolidayBreak'],
-                ],
-                12 => [['id' => 'RecordsRetentionCampaign', 'label' => 'Records Retention', 'route' => route('campaigns.sendrecordsretention')]],
-                1  => [['id' => 'VolunteerPush', 'label' => 'Volunteer Push', 'route' => route('campaigns.sendvolunteerpush')]],
-                2  => [['id' => 'ElectionsTimelineCampaign', 'label' => 'Election Information', 'route' => route('campaigns.sendelectionstimeline')]],
-                3  => [['id' => 'ProcessingReimbursementsCampaign', 'label' => 'Processing Reimbursements', 'route' => route('campaigns.sendprocessingreimbursements')]],
-                4  => [['id' => 'AnnualReportCampaign', 'label' => 'EOY Report Info', 'route' => route('campaigns.sendannualreport')]],
-                5  => [['id' => 'BoardReportCampaign', 'label' => 'Board Report Info', 'route' => route('campaigns.sendboardreport')]],
-                6  => [['id' => 'FinancialReportCampaign', 'label' => 'Financial Report Info', 'route' => route('campaigns.sendfinancialreport')]],
-            ];
-
-            $monthNames = [
-                1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
-                5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
-                9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December',
-            ];
 
             // Merge all variables
             $viewVariables = array_merge([
@@ -135,14 +111,12 @@ class ViewServiceProvider extends ServiceProvider
                 'pending' => $pending,
                 'probationParty' => $probationParty,
                 'boardList' => $boardList,
-                // 'currentMonth' => $currentMonth,
-                'campaigns' => $campaigns,
-                'monthNames' => $monthNames,
             ],
                 $positionConditions,
                 $getFiscalYearOptions,
                 $getReportYearOptions,
                 $dateOptions,
+                $getEmailCampaignData,
                 ($userTypeId == UserTypeEnum::BOARD ? ['chDetails' => $chDetails] : []),
             );
 
