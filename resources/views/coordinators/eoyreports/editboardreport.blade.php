@@ -530,9 +530,13 @@
                            <form id="activateSingleBoardForm" action="{{ route('eoyreports.activateboardreport', ['id' => $chDetails->id]) }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="board" value="active">
-                                <button type="button" class="btn btn-primary bg-gradient mb-2 ms-1" onclick="confirmActivateSingleBoard()">
-                                    <i class="bi bi-play-fill me-2"></i>Activate Board
-                                </button>
+                                @if($assistConferenceCoordinatorCondition)
+                                    <button type="button" class="btn btn-primary bg-gradient mb-2 ms-1" onclick="confirmActivateAllBoards()">
+                                        <i class="bi bi-play-fill me-2"></i>Activate All Boards
+                                    </button>
+                                @else
+                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" disabled><i class="bi bi-play-fill me-2"></i>Board Activation Neeeded</button>
+                                @endif
                             </form>
                             @endif
                         </div>

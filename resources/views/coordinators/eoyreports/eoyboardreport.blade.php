@@ -142,9 +142,13 @@
                 @if ($assistConferenceCoordinatorCondition)
                     <form id="activateAllBoardsForm" action="{{ route('eoyreports.activateallboards') }}" method="POST">
                         @csrf
-                        <button type="button" class="btn btn-primary bg-gradient mb-2 ms-1" onclick="confirmActivateAllBoards()">
-                            <i class="bi bi-play-fill me-2"></i>Activate All Boards
-                        </button>
+                        @if($assistConferenceCoordinatorCondition)
+                            <button type="button" class="btn btn-primary bg-gradient mb-2 ms-1" onclick="confirmActivateAllBoards()">
+                                <i class="bi bi-play-fill me-2"></i>Activate All Boards
+                            </button>
+                        @else
+                            <button type="button" class="btn btn-primary bg-gradient btn-sm" disabled><i class="bi bi-play-fill me-2"></i>Board Activation Neeeded</button>
+                        @endif
                     </form>
                 @endif
                   </div>

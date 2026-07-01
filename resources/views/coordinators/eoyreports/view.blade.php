@@ -184,9 +184,13 @@
                                 <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='{{ route('eoyreports.editboardreport', ['id' => $chDetails->id]) }}'">View Board Election Report</button>
                                 @if($chEOYDocuments->new_board_active != '1')
                                     @if($chEOYDocuments->new_board_submitted == '1')
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="confirmActivateSingleBoard()">
-                                        <i class="bi bi-play-fill me-2"></i>Activate Board
-                                    </button>
+                                        @if($assistConferenceCoordinatorCondition)
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="confirmActivateSingleBoard()">
+                                                <i class="bi bi-play-fill me-2"></i>Activate Board
+                                            </button>
+                                        @else
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm" disabled><i class="bi bi-play-fill me-2"></i>Board Activation Neeeded</button>
+                                        @endif
                                     @else
                                         <button type="button" class="btn btn-primary bg-gradient btn-sm" disabled >Report Not Submitted</button>
                                     @endif
