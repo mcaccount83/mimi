@@ -59,16 +59,16 @@
                 disableButtons();
                 disableFields();
             } else if (submitted == '1') {
-                disableButtons(['review-clear', 'financial-pdf', 'generate-pdf']);
+                disableButtons(['review-clear', 'financial-pdf', 'generate-pdf', 'btn-download-pdf']);
                 disableFields();
             }
         } else {
             // default — mirrors the original script exactly
             if (received == '1' && !shouldEnable) {
-                disableButtons();
+                disableButtons(['review-clear', 'financial-pdf', 'generate-pdf', 'btn-download-pdf']);
                 disableFields();
             } else if (submitted == '1' && !shouldEnable) {
-                disableButtons(['review-clear', 'financial-pdf', 'generate-pdf']);
+                disableButtons(['review-clear', 'financial-pdf', 'generate-pdf', 'btn-download-pdf']);
                 disableFields();
             }
         }

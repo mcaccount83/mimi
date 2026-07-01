@@ -2751,10 +2751,10 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     </div>
     <div class="row">
         <div class="col-12 text-center">
-            <button type="button" class="btn btn-primary bg-gradient mb-2" id="btn-step-14">
-                <i class="bi bi-floppy-fill me-2"></i>Save
-            </button>
+            <button type="button" class="btn btn-primary bg-gradient mb-2" id="btn-step-14"><i class="bi bi-floppy-fill me-2"></i>Save Report</button>
+            @if(!$displayEINInstructionsLIVE)
             <p style="color: #dc3545;">Report is currently Save Only. Submission will be available beginning July 1st.</p>
+            @endif
             @if($displayEINInstructionsLIVE)
                 <button type="button" class="btn btn-success bg-gradient mb-2" id="final-submit">
                     <i class="bi bi-chevron-double-right me-2"></i>Submit Report
