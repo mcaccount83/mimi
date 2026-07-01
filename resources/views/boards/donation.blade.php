@@ -160,8 +160,8 @@
                                 </div>
 
                                 <div class="card-body text-center mt-3">
-                                    <div class="col-md-12" style="color: #dc3545;"><center>Page will automatically re-direct after payment submission with success or error message.<br>
-                                        DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center></div>
+                                    <div class="col-md-12 text-center" style="color: #dc3545;">Page will automatically re-direct after payment submission with success or error message.<br>
+                                        DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</div>
                                     <br>
                                         <button type="submit" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-chevron-double-right me-2"></i>{{ __('Submit Payment') }}</button>
                                 </div>

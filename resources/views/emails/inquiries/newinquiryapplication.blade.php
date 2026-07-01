@@ -1,13 +1,13 @@
 @component('mail::message')
 # New Inquiry Notification
 
-<p>A potential member is inquiring about a chapter in your area.<br>
+<p>A potential member is inquiring about a chapter in your area.</p>
 <ul>
     <li>{{ $mailData['stateLong'] }}</li>
     <li>{{ $mailData['regionName'] }} Region</li>
     <li>Conference {{ $mailData['confDesc'] }}</li>
 </ul>
-</p>
+<br>
 <p><strong>MCL,</strong><br>
 MIMI Database Administrator</p>
 <br>

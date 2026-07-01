@@ -6,7 +6,7 @@
 <br>
 <p>Submitted by: {{$mailData['completedName']}}, @mailto($mailData['completedEmail'])</p>
 <br>
-<p>Downloads Available:<br>
+<p>Downloads Available:</p>
 <ul>
     <li>
         @isset($mailData['rosterPath'])
@@ -35,12 +35,10 @@
         @endisset
     </li>
 </ul>
-</p>
-<p>Coordinators:<br>
+<p>Coordinators:</p>
 <ul>
     <li>Primary Coordinator: {{$mailData['pcName']}} </li>
 </ul>
-</p>
 <br>
 <p><strong>MCL,</strong><br>
 MIMI Database Administrator</p>
