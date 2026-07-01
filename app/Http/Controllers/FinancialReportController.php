@@ -520,7 +520,7 @@ class FinancialReportController extends Controller implements HasMiddleware
                     ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath, $reportYearRange));
 
                 if ($chFinancialReport->reviewer_id == null) {
-                    DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chapterId]);
+                    DB::update('UPDATE financial_report_review SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chapterId]);
                     Mail::to($emailCC)
                         ->queue(new EOYFinancialSubmitted($mailData, $pdfPath, $reportYearRange));
                 }
