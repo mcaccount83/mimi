@@ -1780,7 +1780,7 @@ class ExportController extends Controller implements HasMiddleware
 
                 // Initialize row data with basic chapter info
                 $rowData = [
-                    'Conference' => $chDetails->conference_id,
+                    'Conference' => $chDetails->state->conference_id,
                     'Region' => $baseQuery['regionLongName'],
                     'State' => $baseQuery['stateShortName'],
                     'Chapter Name' => $chDetails->name,

@@ -30,7 +30,7 @@
             <input type="hidden" name="ch_state" value="{{$chDetails->state_id}}">
             <input type="hidden" name="ch_hid_primarycor" value="{{$chDetails->primary_coordinator_id}}">
             <input type="hidden" id="ch_pre_email_chk" value="{{ $chDetails->pendingPresident->email }}">
-            <input type="hidden" id="ch_region" name="ch_region" value="{{ $chDetails->region_id }}">
+            <input type="hidden" id="ch_region" name="ch_region" value="{{ $chDetails->state->region_id }}">
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
@@ -79,7 +79,7 @@
                         <br>
                         Save all changes before approval, so information in emails will be correct!
                         <br>
-                            <button type="button" class="btn btn-success bg-gradient mb-2" onclick="chapApprove({{ $chDetails->id }}, '{{ $chDetails->region_id }}')"><i class="bi bi-check-lg me-2"></i>Approve Chapter</button>
+                            <button type="button" class="btn btn-success bg-gradient mb-2" onclick="chapApprove({{ $chDetails->id }}, '{{ $chDetails->state->region_id }}')"><i class="bi bi-check-lg me-2"></i>Approve Chapter</button>
                         <button type="button" class="btn btn-danger bg-gradient mb-2" onclick="chapDecline({{ $chDetails->id }})"><i class="bi bi-x-circle me-2"></i>Decline Chaper</button>
                 </li>
                 @endif

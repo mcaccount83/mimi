@@ -97,23 +97,17 @@ class PDFController extends Controller
 
         $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
         $chDetails = $baseQuery['chDetails'];
-        // $chDocuments = $baseQuery['chDocuments'];
-        // $conf = $chDetails->conference_id;
+        $chDocuments = $baseQuery['chDocuments'];
+        // $conf = $chDetails->state->conference_id;
         // $state = $baseQuery['stateShortName'];
         $chapterName = $chDetails->name;
 
-        $chStateId = $chDetails->state_id;
+        $chConfId = $chDetails->state->conference_id;
         if ($chDetails->state_id < 52) {
             $stateShortName = $chDetails->state->state_short_name;
         } else {
             $stateShortName = $chDetails->country->short_name;
         }
-
-        $regionLongName = $chDetails->state->region->long_name;
-        $conferenceDescription = $chDetails->state->conference->conference_description;
-        $chConfId = $chDetails->state->conference_id;
-        $chRegId = $chDetails->state->region_id;
-        $chPcId = $chDetails->primary_coordinator_id;
 
         $result = $this->generateFinancialReport($chapterId, $PresDetails);
         $pdf = $result['pdf'];
@@ -129,7 +123,7 @@ class PDFController extends Controller
         $mimetype = 'application/pdf';
         $filecontent = file_get_contents($pdfPath);
 
-        if ($file_id = $this->googleController->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $chConfId, $chStateId, $chapterName)) {
+        if ($file_id = $this->googleController->uploadToEOYGoogleDrive($filename, $mimetype, $filecontent, $sharedDriveId, $year, $chConfId, $stateShortName, $chapterName)) {
             $existingDocRecord = DocumentsReport::where('chapter_id', $chapterId)->first();
             if ($existingDocRecord) {
                 $existingDocRecord->$yearColumnName = $file_id;
