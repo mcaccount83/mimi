@@ -1,75 +1,78 @@
 @component('mail::message')
 # Admin Manual Order Notification
 
-<p>The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has ordered a replacement manual.</p>
-<br>
-<p>The order has been processed and a receipt has been sent to the chapter.</p>
-<br>
-<p><strong>MCL,</strong><br>
-MIMI Database Administrator</p>
-<br>
-<table>
+The MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }} has ordered a replacement manual.
+
+The order has been processed and a receipt has been sent to the chapter.
+
+**MCL,**
+MIMI Database Administrator
+
+---
+
+<table style="width:100%; border-collapse: collapse; font-family: inherit; font-size: inherit;">
     <tbody>
         <tr>
-            <td colspan="2" style="background-color: #D0D0D0;"><center><strong>Shipping Information</strong></center></td>
+            <td colspan="2" style="background-color: #D0D0D0; padding: 8px; text-align: center;"><strong>Shipping Information</strong></td>
         </tr>
         <tr>
-            <td>Chapter Name:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }}</td>
+            <td style="padding: 8px;">Chapter Name</td>
+            <td style="padding: 8px;">{{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }}</td>
         </tr>
         <tr>
-            <td>Shipping Name:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['ship_fname'] }} {{ $mailData['ship_lname'] }}</td>
+            <td style="padding: 8px;">Shipping Name</td>
+            <td style="padding: 8px;">{{ $mailData['ship_fname'] }} {{ $mailData['ship_lname'] }}</td>
         </tr>
         <tr>
-            <td>Shipping Email:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['ship_email'] }} </td>
+            <td style="padding: 8px;">Shipping Email</td>
+            <td style="padding: 8px;">{{ $mailData['ship_email'] }}</td>
         </tr>
         <tr>
-            <td>Shipping Phone:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['ship_phone'] }} </td>
+            <td style="padding: 8px;">Shipping Phone</td>
+            <td style="padding: 8px;">{{ $mailData['ship_phone'] }}</td>
         </tr>
         <tr>
-            <td>Shipping Address:&nbsp;&nbsp;<br>
-                &nbsp;&nbsp;</td>
-            <td>{{ $mailData['ship_street'] }}<br>
+            <td style="padding: 8px;">Shipping Address</td>
+            <td style="padding: 8px;">
+                {{ $mailData['ship_street'] }}<br>
                 {{ $mailData['ship_city'] }}, {{ $mailData['ship_state'] }} {{ $mailData['ship_zip'] }}<br>
-                {{ $mailData['ship_country']}}</td>
+                {{ $mailData['ship_country'] }}
+            </td>
         </tr>
         <tr>
-            <td colspan="2" style="background-color: #D0D0D0;"><center><strong>Payment Information</strong></center></td>
+            <td colspan="2" style="background-color: #D0D0D0; padding: 8px; text-align: center;"><strong>Payment Information</strong></td>
         </tr>
         <tr>
-            <td>Chapter Manual:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['manualOrder'] }}</td>
+            <td style="padding: 8px;">Chapter Manual</td>
+            <td style="padding: 8px;">{{ $mailData['manualOrder'] }}</td>
         </tr>
         <tr>
-            <td>Online Processing Fee:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['processingFee'] }}</td>
+            <td style="padding: 8px;">Online Processing Fee</td>
+            <td style="padding: 8px;">{{ $mailData['processingFee'] }}</td>
         </tr>
         <tr>
-            <td>Total Paid:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['totalPaid'] }}</td>
+            <td style="padding: 8px;">Total Paid</td>
+            <td style="padding: 8px;">{{ $mailData['totalPaid'] }}</td>
         </tr>
         <tr>
-            <td>Payment Type:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['paymentType'] }}</td>
-        </tr>
-        <td colspan="2" style="background-color: #D0D0D0;"><center><strong>Cardholder Information</strong></center></td>
+            <td style="padding: 8px;">Payment Type</td>
+            <td style="padding: 8px;">{{ $mailData['paymentType'] }}</td>
         </tr>
         <tr>
-            <td>Invoice Number:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['manualInvoice'] }}</td>
+            <td colspan="2" style="background-color: #D0D0D0; padding: 8px; text-align: center;"><strong>Cardholder Information</strong></td>
         </tr>
         <tr>
-            <td>Cardholder Name:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['fname'] }} {{ $mailData['lname'] }}</td>
+            <td style="padding: 8px;">Invoice Number</td>
+            <td style="padding: 8px;">{{ $mailData['manualInvoice'] }}</td>
         </tr>
         <tr>
-            <td>Cardholder Email:&nbsp;&nbsp;</td>
-        <td>{{ $mailData['email'] }}</td>
+            <td style="padding: 8px;">Cardholder Name</td>
+            <td style="padding: 8px;">{{ $mailData['fname'] }} {{ $mailData['lname'] }}</td>
+        </tr>
+        <tr>
+            <td style="padding: 8px;">Cardholder Email</td>
+            <td style="padding: 8px;">{{ $mailData['email'] }}</td>
+        </tr>
     </tbody>
 </table>
-<br>
 @endcomponent
-

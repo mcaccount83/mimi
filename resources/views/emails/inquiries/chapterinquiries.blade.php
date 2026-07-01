@@ -1,6 +1,5 @@
 @component('mail::message')
-
-<p><b>MOMS Club of {{ $mailData['chapterName'] }}:</b></p>
+**MOMS Club of {{ $mailData['chapterName'] }}:**
 
 @php
     $message = $mailData['message'];
@@ -10,10 +9,9 @@
 
 {!! $message !!}
 
-<br>
-<p><strong>MCL,</strong><br>
-    {{ $mailData['userName'] }}<br>
-    {{ $mailData['userPosition'] }}<br>
-    {{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}<br>
-    International MOMS Club</p>
+**MCL,**
+{{ $mailData['userName'] }}
+{{ $mailData['userPosition'] }}
+{{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}
+International MOMS Club
 @endcomponent

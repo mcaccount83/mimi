@@ -5,17 +5,12 @@
 
 {{ $post->content }}
 
-<b>Posted by:</b><br>
+**Posted by:**
 {!! $authorNameWithPosition !!}
 
---------------------------------------------------------
+---
 
-To stop receiving emails of new posts/replies: Log into your MIMI account, navigate to "Update Profile" and "Unsubscribe" from the appropriate list.
-
-{{-- @component('mail::button', ['url' => route('forum.thread.show', [$thread->id, Str::slug($thread->title)])])
-
-View Full Thread
-@endcomponent --}}
-
+To stop receiving emails of new posts/replies: Log into your MIMI account, navigate to "Update Profile"
+and "Unsubscribe" from the appropriate list.
 @endcomponent
 

@@ -1,69 +1,67 @@
 @component('mail::message')
+**MOMS Club of {{ $mailData['chapterName'] }}:**
 
-<p><b>MOMS Club of {{ $mailData['chapterName'] }}:</b></p>
-<br>
-<p>A potential member is Inquiring about your chapter.</p>
-<br>
-<p><strong>MCL,</strong><br>
-    {{ $mailData['userName'] }}<br>
-    {{ $mailData['userPosition'] }}<br>
-    {{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}<br>
-    International MOMS Club</p>
-<br>
-<table>
+A potential member is inquiring about your chapter.
+
+**MCL,**
+{{ $mailData['userName'] }}
+{{ $mailData['userPosition'] }}
+{{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}
+International MOMS Club
+
+---
+
+<table style="width:100%; border-collapse: collapse; font-family: inherit; font-size: inherit;">
     <tbody>
         <tr>
-            <td colspan="2" style="background-color: #D0D0D0;"><center><strong>Inquiry Information</strong></center></td>
-        </tr>
-         <tr>
-            <td>Name&nbsp;&nbsp;</td>
-            <td>{{ $mailData['inquiryFirstName'] }} {{ $mailData['inquiryLastName'] }}</td>
+            <td colspan="2" style="background-color: #D0D0D0; padding: 8px; text-align: center;"><strong>Inquiry Information</strong></td>
         </tr>
         <tr>
-            <td>Email&nbsp;&nbsp;</td>
-            <td>{{ $mailData['inquiryEmail'] }}</td>
+            <td style="padding: 8px;">Name</td>
+            <td style="padding: 8px;">{{ $mailData['inquiryFirstName'] }} {{ $mailData['inquiryLastName'] }}</td>
         </tr>
         <tr>
-            <td>Phone&nbsp;&nbsp;</td>
-            <td>{{ $mailData['inquiryPhone'] }}</td>
-        </tr>
-         <tr>
-            <td>Address&nbsp;&nbsp;</td>
-            <td>{{ $mailData['inquiryAddress'] }}</td>
+            <td style="padding: 8px;">Email</td>
+            <td style="padding: 8px;">{{ $mailData['inquiryEmail'] }}</td>
         </tr>
         <tr>
-            <td>&nbsp;&nbsp;</td>
-            <td>{{ $mailData['inquiryCity'] }}, {{ $mailData['inquiryState'] }} {{ $mailData['inquiryZip'] }}</td>
+            <td style="padding: 8px;">Phone</td>
+            <td style="padding: 8px;">{{ $mailData['inquiryPhone'] }}</td>
         </tr>
-         <tr>
-            <td>&nbsp;&nbsp;</td>
-            <td>{{ $mailData['inquiryCountry'] }}</td>
+        <tr>
+            <td style="padding: 8px;">Address</td>
+            <td style="padding: 8px;">{{ $mailData['inquiryAddress'] }}</td>
         </tr>
-          <tr>
-            <td>County&nbsp;&nbsp;</td>
-            <td>{{ $mailData['inquiryCounty'] }}</td>
+        <tr>
+            <td style="padding: 8px;"></td>
+            <td style="padding: 8px;">{{ $mailData['inquiryCity'] }}, {{ $mailData['inquiryState'] }} {{ $mailData['inquiryZip'] }}</td>
         </tr>
-         @if (isset($mailData['inquiryTownship']) && !empty($mailData['inquiryTownship']))
-            <tr>
-                <td>Township&nbsp;&nbsp;</td>
-            <td>{{ $mailData['inquiryTownship'] }}</td>
-            </tr>
+        <tr>
+            <td style="padding: 8px;"></td>
+            <td style="padding: 8px;">{{ $mailData['inquiryCountry'] }}</td>
+        </tr>
+        <tr>
+            <td style="padding: 8px;">County</td>
+            <td style="padding: 8px;">{{ $mailData['inquiryCounty'] }}</td>
+        </tr>
+        @if (isset($mailData['inquiryTownship']) && !empty($mailData['inquiryTownship']))
+        <tr>
+            <td style="padding: 8px;">Township</td>
+            <td style="padding: 8px;">{{ $mailData['inquiryTownship'] }}</td>
+        </tr>
         @endif
         @if (isset($mailData['inquiryArea']) && !empty($mailData['inquiryArea']))
-            <tr>
-                <td>Area&nbsp;&nbsp;</td>
-            <td>{{ $mailData['inquiryArea'] }}</td>
-            </tr>
+        <tr>
+            <td style="padding: 8px;">Area</td>
+            <td style="padding: 8px;">{{ $mailData['inquiryArea'] }}</td>
+        </tr>
         @endif
-         @if (isset($mailData['inquirySchool']) && !empty($mailData['inquirySchool']))
-            <tr>
-                <td>School District&nbsp;&nbsp;</td>
-            <td>{{ $mailData['inquirySchool'] }}</td>
-            </tr>
+        @if (isset($mailData['inquirySchool']) && !empty($mailData['inquirySchool']))
+        <tr>
+            <td style="padding: 8px;">School District</td>
+            <td style="padding: 8px;">{{ $mailData['inquirySchool'] }}</td>
+        </tr>
         @endif
-
     </tbody>
 </table>
-<br>
 @endcomponent
-

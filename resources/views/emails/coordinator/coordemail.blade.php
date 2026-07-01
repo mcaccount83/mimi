@@ -1,8 +1,7 @@
 @component('mail::message')
-
 @if($mailData['first_name'] != ' ')
-<b>{{ $mailData['first_name'] }}:</b>
-<br>
+**{{ $mailData['first_name'] }}:**
+
 @endif
 
 @php
@@ -34,7 +33,7 @@
     // Clean up any remaining tags
     $message = strip_tags($message);
 
-    // DECODE HTML ENTITIES (including &nbsp;) - This is the key addition
+    // Decode HTML entities (including &nbsp;)
     $message = html_entity_decode($message, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
     // Trim whitespace
@@ -46,10 +45,9 @@
 
 {!! nl2br(e($message)) !!}
 
-<br>
-<p><strong>MCL</strong>,<br>
-    {{ $mailData['userName'] }}<br>
-    {{ $mailData['userPosition'] }}<br>
-    {{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}<br>
-    International MOMS Club</p>
+**MCL**,
+{{ $mailData['userName'] }}
+{{ $mailData['userPosition'] }}
+{{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}
+International MOMS Club
 @endcomponent

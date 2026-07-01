@@ -1,7 +1,8 @@
 @component('mail::message')
 # EIN Coordinator Notification
 
-The MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }} in Conference {{ $mailData['chapterConf'] }} has updated their name in MIMI.
+The MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }} in Conference {{ $mailData['chapterConf'] }} has updated
+their name in MIMI.
 
 Their coordinator has requested that the IRS be notified of the name change.
 

@@ -1,83 +1,88 @@
 @component('mail::message')
 # Re-Registration Admin Payment Notification
 
-<p>The MOMS Club of {{ $mailData['chapterName'] }}, {{$mailData['chapterState']}} has submitted their Re-Registration payment.</p>
-<br>
-<p>The Re-Registration Payment and Sustaining Chapter Donation (if they made one) have been entered into MIMI and a Thank You email has been sent to the chapter.</p>
-<br>
-<p><strong>MCL,</strong><br>
-MIMI Database Administrator</p>
-<br>
-<table>
+The MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }} has submitted their
+Re-Registration payment.
+
+The Re-Registration Payment and Sustaining Chapter Donation (if they made one) have been entered into
+MIMI and a Thank You email has been sent to the chapter.
+
+**MCL,**
+MIMI Database Administrator
+
+---
+
+<table style="width:100%; border-collapse: collapse; font-family: inherit; font-size: inherit;">
     <tbody>
         <tr>
-            <td colspan="2" style="background-color: #D0D0D0;"><center><strong>Chapter Information</strong></center></td>
+            <td colspan="2" style="background-color: #D0D0D0; padding: 8px; text-align: center;"><strong>Chapter Information</strong></td>
         </tr>
         <tr>
-            <td>Chapter Name:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }}</td>
+            <td style="padding: 8px;">Chapter Name</td>
+            <td style="padding: 8px;">{{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }}</td>
         </tr>
         <tr>
-            <td>President Name:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['presName'] }}</td>
+            <td style="padding: 8px;">President Name</td>
+            <td style="padding: 8px;">{{ $mailData['presName'] }}</td>
         </tr>
         <tr>
-            <td>President Address:&nbsp;&nbsp;<br>
-                &nbsp;&nbsp;</td>
-            <td>{{ $mailData['presAddress'] }}<br>
+            <td style="padding: 8px;">President Address</td>
+            <td style="padding: 8px;">
+                {{ $mailData['presAddress'] }}<br>
                 {{ $mailData['presCity'] }}, {{ $mailData['presState'] }} {{ $mailData['presZip'] }}<br>
-                {{ $mailData['presCountry']}}</td>
+                {{ $mailData['presCountry'] }}
+            </td>
         </tr>
         <tr>
-            <td colspan="2" style="background-color: #D0D0D0;"><center><strong>Payment Information</strong></center></td>
+            <td colspan="2" style="background-color: #D0D0D0; padding: 8px; text-align: center;"><strong>Payment Information</strong></td>
         </tr>
         <tr>
-            <td>Payment Date:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['reregPaid'] }}</td>
+            <td style="padding: 8px;">Payment Date</td>
+            <td style="padding: 8px;">{{ $mailData['reregPaid'] }}</td>
         </tr>
         <tr>
-            <td>Number of Members:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['reregMembers'] }}</td>
+            <td style="padding: 8px;">Number of Members</td>
+            <td style="padding: 8px;">{{ $mailData['reregMembers'] }}</td>
         </tr>
         <tr>
-            <td>Late Fee:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['lateFee'] }}</td>
+            <td style="padding: 8px;">Late Fee</td>
+            <td style="padding: 8px;">{{ $mailData['lateFee'] }}</td>
         </tr>
         <tr>
-            <td>Total Re-Registration Fees:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['reregPayment'] }}</td>
+            <td style="padding: 8px;">Total Re-Registration Fees</td>
+            <td style="padding: 8px;">{{ $mailData['reregPayment'] }}</td>
         </tr>
         <tr>
-            <td>Sustaining Chapter Donation:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['sustainingDonation'] }}</td>
+            <td style="padding: 8px;">Sustaining Chapter Donation</td>
+            <td style="padding: 8px;">{{ $mailData['sustainingDonation'] }}</td>
         </tr>
         <tr>
-            <td>Online Processing Fee:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['processingFee'] }}</td>
+            <td style="padding: 8px;">Online Processing Fee</td>
+            <td style="padding: 8px;">{{ $mailData['processingFee'] }}</td>
         </tr>
         <tr>
-            <td>Total Paid:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['totalPaid'] }}</td>
-        </tr>
-        <td colspan="2" style="background-color: #D0D0D0;"><center><strong>Cardholder Information</strong></center></td>
+            <td style="padding: 8px;">Total Paid</td>
+            <td style="padding: 8px;">{{ $mailData['totalPaid'] }}</td>
         </tr>
         <tr>
-            <td>Invoice Number:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['reregInvoice'] }}</td>
+            <td colspan="2" style="background-color: #D0D0D0; padding: 8px; text-align: center;"><strong>Cardholder Information</strong></td>
         </tr>
         <tr>
-            <td>Customer ID:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['chapterId'] }}</td>
+            <td style="padding: 8px;">Invoice Number</td>
+            <td style="padding: 8px;">{{ $mailData['reregInvoice'] }}</td>
         </tr>
         <tr>
-            <td>Cardholder Name:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['fname'] }} {{ $mailData['lname'] }}</td>
+            <td style="padding: 8px;">Customer ID</td>
+            <td style="padding: 8px;">{{ $mailData['chapterId'] }}</td>
         </tr>
         <tr>
-            <td>Cardholder Email:&nbsp;&nbsp;</td>
-        <td>{{ $mailData['email'] }}</td>
+            <td style="padding: 8px;">Cardholder Name</td>
+            <td style="padding: 8px;">{{ $mailData['fname'] }} {{ $mailData['lname'] }}</td>
+        </tr>
+        <tr>
+            <td style="padding: 8px;">Cardholder Email</td>
+            <td style="padding: 8px;">{{ $mailData['email'] }}</td>
+        </tr>
     </tbody>
 </table>
-<br>
 @endcomponent
-

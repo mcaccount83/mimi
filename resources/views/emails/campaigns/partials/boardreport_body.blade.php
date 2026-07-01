@@ -1,6 +1,7 @@
 # {{ $mailData['boardReportName'] }}
 
-The {{ $mailData['boardReportName'] }} is available now in MIMI at [https://momsclub.org/mimi](https://momsclub.org/mimi). It should be completed as soon as your chapter has held its election but is due no later than June 30th.
+The {{ $mailData['boardReportName'] }} is available now in MIMI at [https://momsclub.org/mimi](https://momsclub.org/mimi). It should be completed as soon
+as your chapter has held its election but is due no later than June 30th.
 
 Submitting your report as soon as possible will ensure they have access to all the tools they need to be successful in the upcoming year.
 
