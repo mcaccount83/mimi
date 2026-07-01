@@ -24,7 +24,7 @@
               <thead>
 			    <tr>
                 <th>
-                    @if ($conferenceCoordinatorCondition)
+                    @if ($coordinatorCondition && $conferenceCoordinatorCondition)
                     Donation
                     @endif
                 </th>
@@ -42,7 +42,7 @@
                 @foreach($chapterList as $list)
                   <tr>
                             <td class="text-center align-middle">
-                                @if ($conferenceCoordinatorCondition)
+                                @if ($coordinatorCondition && $conferenceCoordinatorCondition)
 	                                <a href="{{ url("/payment/chapterpaymentedit/{$list->id}") }}"><i class="bi bi-credit-card"></i></a>
                                 @endif
                             </td>

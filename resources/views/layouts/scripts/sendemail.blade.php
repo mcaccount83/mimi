@@ -72,6 +72,80 @@
         });
     }
 
+    function showEOYChapterEmailModal(chapterName, chapterId, type) {
+        const titles = {
+            'board':     'Board Report Reminder',
+            'financial': 'Financial Report Reminder',
+            'late':      'EOY Late Notice',
+        };
+        const messages = {
+            'board':     `This will send a Board Election Report reminder to the full board and all coordinators for <b>${chapterName}</b>.`,
+            'financial': `This will send a Financial Report reminder to the full board and all coordinators for <b>${chapterName}</b>.`,
+            'late':      `This will send an EOY Late Notice to the full board and all coordinators for <b>${chapterName}</b>.`,
+        };
+        const routes = {
+            'board':     '{{ route("eoyreports.eoyboardreportreminderchapter") }}',
+            'financial': '{{ route("eoyreports.eoyfinancialreportreminderchapter") }}',
+            'late':      '{{ route("eoyreports.eoystatusreminderchapter") }}',
+        };
+
+        Swal.fire({
+            title: titles[type],
+            html: `
+                <p>${messages[type]}</p>
+                <input type="hidden" id="chapter_id" value="${chapterId}">
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Send',
+            cancelButtonText: 'Close',
+            customClass: {
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger'
+            },
+            preConfirm: () => ({
+                chapter_id: Swal.getPopup().querySelector('#chapter_id').value,
+            })
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Processing...',
+                    text: 'Please wait while we process your request.',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        $.ajax({
+                            url: routes[type],
+                            type: 'POST',
+                            data: {
+                                chapterId: result.value.chapter_id,
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: response.message,
+                                    icon: 'success',
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                    customClass: { confirmButton: 'btn btn-sm btn-success' }
+                                }).then(() => location.reload());
+                            },
+                            error: function(xhr) {
+                                Swal.fire({
+                                    title: xhr.status === 422 ? 'Nothing to Send' : 'Error!',
+                                    text: xhr.responseJSON?.message ?? 'Something went wrong. Please try again.',
+                                    icon: xhr.status === 422 ? 'info' : 'error',
+                                    confirmButtonText: 'OK',
+                                    customClass: { confirmButton: 'btn btn-sm btn-success' }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
     function showChapterEmailModal(chapterName, chapterId, userName, userPosition, userConfName, userConfDesc, predefinedSubject = '', predefinedMessage = '') {
 
         let messageEditor = null;

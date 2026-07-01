@@ -79,7 +79,7 @@
                             </div>
                         </div>
 
-                        @if($chDetails->ein == null && ($conferenceCoordinatorCondition || $einCondition))
+                        @if($chDetails->ein == null && ($coordinatorCondition && $conferenceCoordinatorCondition || $einCondition))
                            <div class="row mb-3">
                                                     <label class="col-sm-2 col-form-label mb-1">EIN Fax Coversheet:</label>
                                 <div class="col-sm-10">

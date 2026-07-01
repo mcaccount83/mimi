@@ -298,6 +298,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/eoy/boardreport/reminder', [EmailController::class, 'sendEOYBoardReportReminder'])->name('eoyreports.eoyboardreportreminder');
     Route::post('/eoy/financialreport/reminder', [EmailController::class, 'sendEOYFinancialReportReminder'])->name('eoyreports.eoyfinancialreportreminder');
     Route::post('/eoy/status/reminder', [EmailController::class, 'sendEOYStatusReminder'])->name('eoyreports.eoystatusreminder');
+    Route::post('/eoy/boardreportchapter/reminder', [EmailController::class, 'sendEOYBoardReportReminderChapter'])->name('eoyreports.eoyboardreportreminderchapter');
+    Route::post('/eoy/financialreportchapter/reminder', [EmailController::class, 'sendEOYFinancialReportReminderChapter'])->name('eoyreports.eoyfinancialreportreminderchapter');
+    Route::post('/eoy/statuschapter/reminder', [EmailController::class, 'sendEOYStatusReminderChapter'])->name('eoyreports.eoystatusreminderchapter');
     Route::post('/eoy/chapterawards', [EmailController::class, 'sendEOYChapterAwards'])->name('eoyreports.eoychapterawards');
     Route::post('/inquiries/sendnochapter', [EmailController::class, 'sendNoChapterInquiries'])->name('inquiries.sendnochapter');
     Route::post('/inquiries/sendyeschapter', [EmailController::class, 'sendYesChapterInquiries'])->name('inquiries.sendyeschapter');

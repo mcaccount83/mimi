@@ -112,14 +112,14 @@
             <!-- /.card-body for checkboxes -->
 
                 <div class="card-body text-center mt-3">
-                @if($conferenceCoordinatorCondition)
+                @if($coordinatorCondition && $conferenceCoordinatorCondition)
                     @if ($checkBox51Status)
                         <a class="btn btn-primary bg-gradient mb-2" href="{{ route('coordinators.coordpending', ['check5' => 'yes']) }}"><i class="bi bi-person-fill-add me-2"></i>New International Coordinators Pending</a>
                     @else
                         <a class="btn btn-primary bg-gradient mb-2" href="{{ route('coordinators.coordpending') }}"><i class="bi bi-person-fill-add me-2"></i>New Coordinators Pending</a>
                     @endif
                 @endif
-                @if ($regionalCoordinatorCondition)
+                @if ($coordinatorCondition && $regionalCoordinatorCondition)
                     @if ($checkBox3Status)
                         <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="startExport('coordinator', 'Coordinator List')"><i class="bi bi-download me-2"></i>Export Coordinator List</button>
                     @elseif ($checkBox51Status)

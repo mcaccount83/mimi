@@ -112,7 +112,11 @@
                                     <div class="block px-6 pt-2 pb-2 bg-white border-b-2">
                                         <div class="flex justify-between">
                                             <span class="text-sm font-semibold text-gray-900">{{ $from }}</span>
-                                            <span class="text-xs text-gray-500">{{ $email->created_at->diffForHumans() }}</span>
+                                            {{-- <span class="text-xs text-gray-500">{{ $email->created_at->setTimezone('UTC')->diffForHumans() }}</span> --}}
+                                            <span class="text-xs text-gray-500">
+    {{ \Carbon\Carbon::parse($email->getAttributes()['created_at'], 'UTC')->setTimezone(config('app.timezone'))->diffForHumans() }}
+</span>
+
                                         </div>
                                         <a href="#" class="emailitem" data-id="{{ $email->id }}">
                                             <p class="text-sm text-gray-900">{{ $email->subject }}</p>

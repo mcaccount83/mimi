@@ -23,8 +23,10 @@
                 <table id="chapterlist" class="table table-sm table-hover">
                     <thead>
                         <tr>
-                            <th>Payment</th>
-                            <th>Send</th>
+                            @if ($coordinatorCondition && $conferenceCoordinatorCondition)
+                                <th>Payment</th>
+                                <th>Send</th>
+                            @endif
                             <th>Conf/Reg</th>
                             <th>State</th>
                             <th>Name</th>
@@ -42,23 +44,24 @@
                             $due = $list->startMonth->month_short_name.' '.$list->next_renewal_year;
                             $overdue = $currentYear * 12 + $currentMonth - ($list->next_renewal_year * 12 + $list->start_month_id);
                         @endphp
+
                         <tr>
-                            <td class="text-center align-middle">
-                                @if ($conferenceCoordinatorCondition)
+                            @if ($coordinatorCondition && $conferenceCoordinatorCondition)
+                                <td class="text-center align-middle">
                                     <a href="{{ url("/payment/chapterpaymentedit/{$list->id}") }}"><i class="bi bi-credit-card"></i></a>
-                                @endif
-                            </td>
-                            <td class="text-center align-middle">
-                                @if ($due && !$overdue)
-                                    <a onclick="showChapterReRegEmailModal('{{ $list->name }}', {{ $list->id }})"><i class="bi bi-envelope text-primary"></i></a>
-                                @endif
-                                @if ($overdue == 1)
-                                    <a onclick="showChapterReRegLateEmailModal('{{ $list->name }}', {{ $list->id }})"><i class="bi bi-envelope text-primary"></i></a>
-                                @endif
-                                @if ($overdue > 1)
-                                    <a onclick="showChapterEmailModal('{{ $list->name }}', {{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="bi bi-envelope text-primary"></i></a>
-                                @endif
-                            </td>
+                                </td>
+                                <td class="text-center align-middle">
+                                    @if ($due && !$overdue)
+                                        <a onclick="showChapterReRegEmailModal('{{ $list->name }}', {{ $list->id }})"><i class="bi bi-envelope text-primary"></i></a>
+                                    @endif
+                                    @if ($overdue == 1)
+                                        <a onclick="showChapterReRegLateEmailModal('{{ $list->name }}', {{ $list->id }})"><i class="bi bi-envelope text-primary"></i></a>
+                                    @endif
+                                    @if ($overdue > 1)
+                                        <a onclick="showChapterEmailModal('{{ $list->name }}', {{ $list->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="bi bi-envelope text-primary"></i></a>
+                                    @endif
+                                </td>
+                            @endif
                             <td>
                                 @if ($list->state->conference_id > 0)
                                     {{ $list->state->conference->short_name }} / {{ $list->state->region->short_name }}
@@ -137,7 +140,7 @@
             <!-- /.card-body for checkboxes -->
 
                 <div class="card-body text-center mt-3">
-                    @if($conferenceCoordinatorCondition)
+                    @if($coordinatorCondition && $conferenceCoordinatorCondition)
                         @if(!$checkBox1Status && !$checkBox3Status && !$checkBox51Status && !$checkBox56Status)
                             <a class="btn btn-primary bg-gradient mb-2" href="{{ route('payment.chapreregreminder') }}"><i class="bi bi-envelope-fill me-2"></i>Send Current Month Reminders</a>
                             <a class="btn btn-primary bg-gradient mb-2" href="{{ route('payment.chaprereglatereminder') }}"><i class="bi bi-envelope-fill me-2"></i>Send One Month Late Notices</a>

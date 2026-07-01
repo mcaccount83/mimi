@@ -82,7 +82,7 @@
             <!-- /.card-body for checkboxes -->
 
                 <div class="card-body text-center mt-3">
-                @if($conferenceCoordinatorCondition)
+                @if($coordinatorCondition && $conferenceCoordinatorCondition)
                                 If your new coordinator is not listed above, you can manually add them.<br>
                     <a class="btn btn-primary bg-gradient mb-2" href="{{ route('coordinators.editnew') }}"><i class="bi bi-plus me-2"></i>Manually Add New Coordinator</a>
                 @endif

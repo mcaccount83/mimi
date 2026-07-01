@@ -67,12 +67,8 @@
                                 @endif
                             </td>
                             <td class="text-center align-middle">
-                                @if ($list->documentsEOY?->new_board_submitted == null || $list->documentsEOY?->financial_report_received == null || $list->documentsEOY?->new_board_submitted == 0 || $list->documentsEOY?->financial_report_received == 0)
-                                   <a href="#" class="email-link" data-chapter-name="{{ $list->name }}" data-chapter-id="{{ $list->id }}" data-user-name="{{ $userName }}"
-                                    data-user-position="{{ $userPosition }}" data-user-conf-name="{{ $userConfName }}" data-user-conf-desc="{{ $userConfDesc }}"
-                                    data-predefined-subject="End of Year Reports Late Notice" data-message-id="msg-{{ $list->id }}"> <i class="bi bi-envelope text-primary"></i></a>
-                                    <textarea id="msg-{{ $list->id }}" class="d-none">{{ $renderedHtml = View::make('emails.endofyear.latereportreminder',
-                                        ['mailData' => $mailData, 'minimal' => true, ])->render(); }}</textarea>
+                                @if($coordinatorCondition && $conferenceCoordinatorCondition)
+                                    <a onclick="showEOYChapterEmailModal('{{ $list->name }}', {{ $list->id }}, 'late')"><i class="bi bi-envelope text-primary"></i></a>
                                 @endif
                             </td>
                             <td>
@@ -149,12 +145,12 @@
             <!-- /.card-body for checkboxes -->
 
                 <div class="card-body text-center mt-3">
-                @if ($regionalCoordinatorCondition)
+                @if ($coordinatorCondition && $conferenceCoordinatorCondition)
                     <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="confirmSendEOYRptReminder()">
                         <i class="bi bi-envelope-fill me-2"></i>Send EOY Late Notices
                     </button>
-                @endif
-                @if ($assistConferenceCoordinatorCondition)
+                {{-- @endif
+                @if ($assistConferenceCoordinatorCondition) --}}
                     @if ($checkBox3Status)
                         <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="startExport('eoystatus', 'EOY Status Lis')"><i class="bi bi-download me-2"></i>Export EOY Status List</button>
                     @elseif ($checkBox51Status)

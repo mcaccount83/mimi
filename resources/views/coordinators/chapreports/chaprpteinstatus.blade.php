@@ -38,7 +38,7 @@
                 @foreach($chapterList as $list)
                     <tr >
                         <td class="text-center align-middle">
-                            @if ($conferenceCoordinatorCondition)
+                            @if ($coordinatorCondition && $conferenceCoordinatorCondition)
                                 <a href="{{ url("/chapterreports/irsedit/{$list->id}") }}"><i class="bi bi-bank"></i></a>
                             @else
                                 &nbsp; <!-- Placeholder to ensure the cell isn't completely empty -->

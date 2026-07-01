@@ -724,7 +724,7 @@ class EmailController extends Controller implements HasMiddleware
     }
 
     /**
-     * Board Election Report Reminder Auto Send
+     * Board Election Report Reminder Auto Send - BULK
      */
     public function sendEOYBoardReportReminder(Request $request): JsonResponse
     {
@@ -804,7 +804,33 @@ class EmailController extends Controller implements HasMiddleware
     }
 
     /**
-     * Financial Report Reminder Auto Send
+     * Board Election Report Reminder Auto Send - Single Chapter
+     */
+    public function sendEOYBoardReportReminderChapter(Request $request): JsonResponse
+    {
+        $chapterId = $request->input('chapterId');
+
+        $emailDetails = $this->baseChapterController->getChapterDetails($chapterId);
+        $chDetails = $emailDetails['chDetails'];
+        $stateShortName = $emailDetails['stateShortName'];
+        $chFinancialReport = $emailDetails['chFinancialReport'];
+        $emailListChap = $emailDetails['emailListChap'];
+        $emailListCoord = $emailDetails['emailListCoord'];
+
+        $mailData = array_merge(
+            $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+            $this->baseMailDataController->getFinancialReportData($chFinancialReport)
+        );
+
+        Mail::to($emailListChap)
+            ->cc($emailListCoord)
+            ->queue(new EOYElectionReportReminder($mailData));
+
+        return response()->json(['message' => 'Board Election Reminder has been successfully sent.']);
+    }
+
+    /**
+     * Financial Report Reminder Auto Send - BULK
      */
     public function sendEOYFinancialReportReminder(Request $request): JsonResponse
     {
@@ -883,7 +909,33 @@ class EmailController extends Controller implements HasMiddleware
     }
 
     /**
-     * Auto Send EOY Report Status Reminder
+     * Financial Report Reminder Auto Send - Single Chapter
+     */
+    public function sendEOYFinancialReportReminderChapter(Request $request): JsonResponse
+    {
+        $chapterId = $request->input('chapterId');
+
+        $emailDetails = $this->baseChapterController->getChapterDetails($chapterId);
+        $chDetails = $emailDetails['chDetails'];
+        $stateShortName = $emailDetails['stateShortName'];
+        $chFinancialReport = $emailDetails['chFinancialReport'];
+        $emailListChap = $emailDetails['emailListChap'];
+        $emailListCoord = $emailDetails['emailListCoord'];
+
+        $mailData = array_merge(
+            $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+            $this->baseMailDataController->getFinancialReportData($chFinancialReport)
+        );
+
+        Mail::to($emailListChap)
+            ->cc($emailListCoord)
+            ->queue(new EOYFinancialReportReminder($mailData));
+
+        return response()->json(['message' => 'Financial Report Reminder has been successfully sent.']);
+    }
+
+    /**
+     * Auto Send EOY Report Status Reminder - BULK
      */
     public function sendEOYStatusReminder(Request $request): JsonResponse
     {
@@ -972,6 +1024,43 @@ class EmailController extends Controller implements HasMiddleware
             // This ensures DB connections are released even if exceptions occur
             DB::disconnect();
         }
+    }
+
+    /**
+     * Auto Send EOY Report Status Reminder - Single Chapter
+     */
+    public function sendEOYStatusReminderChapter(Request $request): JsonResponse
+    {
+        $chapterId = $request->input('chapterId');
+
+        $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
+
+        $emailDetails = $this->baseChapterController->getChapterDetails($chapterId);
+        $chDetails = $emailDetails['chDetails'];
+        $stateShortName = $emailDetails['stateShortName'];
+        $chDocuments = $emailDetails['chDocuments'];
+        $chEOYDocuments = $emailDetails['chEOYDocuments'];
+        $chFinancialReport = $emailDetails['chFinancialReport'];
+        $emailListChap = $emailDetails['emailListChap'];
+        $emailListCoord = $emailDetails['emailListCoord'];
+
+        $mailData = array_merge(
+            $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+            $this->baseMailDataController->getFinancialReportData($chFinancialReport),
+            $this->baseMailDataController->getReportYearData($reportYearOptions),
+            [
+                'boardElectionReportReceived' => $chEOYDocuments->new_board_submitted ?? null,
+                'financialReportReceived'     => $chEOYDocuments->financial_report_received ?? null,
+                '990NSubmissionReceived'      => $chDocuments->irs_path ?? null,
+                'einLetterCopyReceived'       => $chEOYDocuments->ein_letter ?? null,
+            ]
+        );
+
+        Mail::to($emailListChap)
+            ->cc($emailListCoord)
+            ->queue(new EOYLateReportReminder($mailData));
+
+        return response()->json(['message' => 'EOY Late Notice has been successfully sent.']);
     }
 
     public function sendEOYChapterAwards(Request $request): JsonResponse

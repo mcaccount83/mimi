@@ -2,7 +2,7 @@
     @if ($coordinatorCondition || ($coordinatorCondition && $conferenceCoordinatorCondition))
         <a class="dropdown-item" href="{{ route('payment.chapreregistration') }}">Re-Registration Payments</a>
         <a class="dropdown-item" href="{{ route('payment.chapdonations') }}">M2M & Sustaining Donations</a>
-        @if ($conferenceCoordinatorCondition)
+        @if ($coordinatorCondition && $conferenceCoordinatorCondition)
             <a class="dropdown-item" href="{{ route('payment.grantlist') }}">Grant Requests</a>
         @endif
     {{-- @elseif ($coordinatorCondition)
