@@ -12,11 +12,12 @@
 </head>
 <body>
     <center><h2>MOMS Club of {{ $pdfData['chapterName'] }}, {{ $pdfData['chapterState'] }}<br>
-    @if ($pdfData['final_report_received'] == 1)
-        Final Financial Report</h2></center>
-    @else
-        {{ $financialReportName }}</h2></center>
-    @endif
+        @if ($pdfData['final_report_received'] == 1)
+            Final Financial Report
+        @else
+            {{ $financialReportName }}
+        @endif
+        </h2></center>
     EIN: {{ $pdfData['chapterEIN'] }}<br>
     Boundaries: {{ $pdfData['chapterBoundaries'] }}<br>
 

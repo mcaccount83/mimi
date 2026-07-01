@@ -296,6 +296,7 @@ class PDFController extends Controller
                 'completed_name' => $chFinancialReport->completed_name,
                 'completed_email' => $chFinancialReport->completed_email,
                 'submitted' => $chFinancialReport->submitted,
+                'final_report_received' => $chFinancialReport->final_report_received ?? null,
             ],
         );
 
