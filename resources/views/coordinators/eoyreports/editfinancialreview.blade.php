@@ -437,7 +437,7 @@
             <div class="card-body">
                 <div class="col-md-12">
                     @if($chEOYDocuments->financial_report_received)
-                        @if ($chFinancialReport->reviewer_id != null)
+                        @if ($chFinancialReportReview->reviewer_id != null)
                             <label>Assigned Reviewer:</label>&nbsp;&nbsp;{{ $chDetails->reportReviewer->first_name }} {{ $chDetails->reportReviewer->last_name }}
                         @else
                             <span style="color: #dc3545;">No Reviewer Assigned - Select Reviewer before saving report review to prevent errors</span>

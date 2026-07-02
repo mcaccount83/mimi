@@ -493,6 +493,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             $chIRSDocuments = $baseQuery['chIRSDocuments'];
             $chReportDocuments = $baseQuery['chReportDocuments'];
             $chFinancialReport = $baseQuery['chFinancialReport'];
+            $chFinancialReportReview = $baseQuery['chFinancialReportReview'];
             $emailListChap = $baseQuery['emailListChap'];
             $emailListCoord = $baseQuery['emailListCoord'];
             $pcDetails = $baseQuery['pcDetails'];
@@ -520,13 +521,13 @@ class FinancialReportController extends Controller implements HasMiddleware
                     ->cc($emailListChap)
                     ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath, $reportYearRange));
 
-                if ($chFinancialReport->reviewer_id == null) {
+                if ($chFinancialReportReview->reviewer_id == null) {
                     DB::update('UPDATE financial_report_review SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chapterId]);
                     Mail::to($emailCC)
                         ->queue(new EOYFinancialSubmitted($mailData, $pdfPath, $reportYearRange));
                 }
 
-                if ($chFinancialReport->reviewer_id != null) {
+                if ($chFinancialReportReview->reviewer_id != null) {
                     Mail::to($reviewerEmail)
                         ->queue(new EOYFinancialSubmitted($mailData, $pdfPath, $reportYearRange));
                 }

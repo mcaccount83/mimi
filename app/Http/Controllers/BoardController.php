@@ -1357,6 +1357,7 @@ class BoardController extends Controller implements HasMiddleware
             $chIRSDocuments = $baseQuery['chIRSDocuments'];
             $chReportDocuments = $baseQuery['chReportDocuments'];
             $chFinancialReport = $baseQuery['chFinancialReport'];
+            $chFinancialReportReview = $baseQuery['chFinancialReportReview'];
             $emailListChap = $baseQuery['emailListChap'];
             $emailListCoord = $baseQuery['emailListCoord'];
             $pcDetails = $baseQuery['pcDetails'];
@@ -1383,13 +1384,13 @@ class BoardController extends Controller implements HasMiddleware
                     ->cc($emailListChap)
                     ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath, $reportYearStart));
 
-                if ($chFinancialReport->reviewer_id == null) {
+                if ($chFinancialReportReview->reviewer_id == null) {
                     DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chId]);
                     Mail::to($emailCC)
                         ->queue(new EOYFinancialSubmitted($mailData, $pdfPath, $reportYearStart));
                 }
 
-                if ($chFinancialReport->reviewer_id != null) {
+                if ($chFinancialReportReview->reviewer_id != null) {
                     Mail::to($reviewerEmail)
                         ->queue(new EOYFinancialSubmitted($mailData, $pdfPath, $reportYearStart));
                 }
