@@ -48,9 +48,16 @@
                                                     {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
                                                     <span style="font-size: smaller; color: #6c757d;">(Chapter Specific Route)</span>
                                                 @else
-                                                    <a href="{{ route($resourceItem->link, ['id' => $chDetails->id]) }}" target="_blank">
+                                                    {{-- <a href="{{ route($resourceItem->link, ['id' => $chDetails->id]) }}" target="_blank">
                                                         {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
-                                                    </a>
+                                                    </a> --}}
+                                                    @if(isset($chDetails))
+                                                        <a href="{{ route($resourceItem->link, ['id' => $chDetails->id]) }}" target="_blank">
+                                                            {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                                        </a>
+                                                    @else
+                                                        {{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}
+                                                    @endif
                                                 @endif
                                             @elseif ($resourceItem->file_type == 1)
                                                 <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">
