@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\PositionConditionsService;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class BaseMailDataController extends Controller
 {

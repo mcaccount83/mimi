@@ -508,6 +508,7 @@ class FinancialReportController extends Controller implements HasMiddleware
                 $this->baseMailDataController->getPCData($pcDetails),
                 $this->baseMailDataController->getPresData($PresDetails),
                 $this->baseMailDataController->getFinancialReportData($chFinancialReport),
+                $this->baseMailDataController->getFinancialDocumentsData($chDocuments, $chEOYDocuments, $chIRSDocuments, $chReportDocuments),
             );
 
             $reportYearOptions = $this->positionConditionsService->getReportYearOptions();

@@ -94,7 +94,7 @@ class BaseBoardController extends Controller
         $chDocuments = $chDetails->documents;
         $chEOYDocuments = $chDetails->documentsEOY;
         $chIRSDocuments = $chDetails->documentsIRS;
-        $chReportDocuments = $chDetails->documentsReort;
+        $chReportDocuments = $chDetails->documentsReport;
         $reviewerEmail = $chDetails->reportReviewer?->email;
         $chFinancialReport = $chDetails->financialReport;
         $chFinancialReportFinal = $chDetails->financialReportFinal;
