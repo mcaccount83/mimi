@@ -42,7 +42,7 @@
                 <div class="row mb-1">
                     <div class="col-auto fw-bold">Financial Report PDF:</div>
                     <div class="col text-end">
-                        <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->$yearColumnName }}">Download PDF</a>
+                        <a data-no-wait href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->$yearColumnName }}">Download PDF</a>
                     </div>
                 </div>
             @endif
@@ -50,7 +50,7 @@
                     <div class="col-auto fw-bold">Chapter Roster File:</div>
                     <div class="col text-end">
                         @if ($chEOYDocuments->roster_path != null)
-                            <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->roster_path }}">Chapter Roster</a>
+                            <a data-no-wait href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->roster_path }}">Chapter Roster</a>
                         @else
                            <span class="badge bg-secondary fs-7">No file attached</span>
                         @endif
@@ -60,7 +60,7 @@
                     <div class="col-auto fw-bold">Primary Bank Statement:</div>
                     <div class="col text-end">
                     @if ($chEOYDocuments->statement_1_path != null)
-                        <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->statement_1_path }}">Primary Statement</a>
+                        <a data-no-wait href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->statement_1_path }}">Primary Statement</a>
                     @else
                         <span class="badge bg-secondary fs-7">No file attached</span>
                     @endif
@@ -70,7 +70,7 @@
                     <div class="col-auto fw-bold">Additional Bank Statement:</div>
                     <div class="col text-end">
                 @if ($chEOYDocuments->statement_2_path != null)
-                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->statement_2_path }}">Additional Statement</a>
+                    <a data-no-wait href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->statement_2_path }}">Additional Statement</a>
                 @else
                     <span class="badge bg-secondary fs-7">No file attached</span>
                 @endif
@@ -80,7 +80,7 @@
                     <div class="col-auto fw-bold">990N Filing:</div>
                     <div class="col text-end">
                 @if ($chIRSDocuments->irs_path != null)
-                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $chIRSDocuments->irs_path }}">990N Confirmation</a>
+                    <a data-no-wait href="https://drive.google.com/uc?export=download&id={{ $chIRSDocuments->irs_path }}">990N Confirmation</a>
                 @else
                     <span class="badge bg-secondary fs-7">No file attached</span>
                 @endif

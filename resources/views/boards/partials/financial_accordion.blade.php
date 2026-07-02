@@ -24,7 +24,7 @@
         @if (!is_null($chEOYDocuments->roster_path))
                 <div class="col-12">
                     <label>Chapter Roster Uploaded:</label>
-                    <a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->roster_path }}">&nbsp; View Chapter Roster</a><br>
+                    <a data-no-wait href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->roster_path }}">&nbsp; View Chapter Roster</a><br>
                 </div>
                 <div class="col-12" id="RosterBlock">
                     <strong style="color: #dc3545;">Please Note</strong><br>
@@ -1660,12 +1660,12 @@
 <section>
     @if (!is_null($chEOYDocuments->statement_1_path))
         <div class="col-md-12">
-            <label>Bank Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->statement_1_path }}">&nbsp; View Bank Statement</a><br>
+            <label>Bank Statement Uploaded:</label><a data-no-wait href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->statement_1_path }}">&nbsp; View Bank Statement</a><br>
         </div>
     @endif
     @if (!is_null($chEOYDocuments->statement_2_path))
         <div class="col-md-12">
-            <label>Additional Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->statement_2_path }}">&nbsp; View Additional Bank Statement</a><br>
+            <label>Additional Statement Uploaded:</label><a data-no-wait href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->statement_2_path }}">&nbsp; View Additional Bank Statement</a><br>
         </div>
     @endif
 
@@ -1911,7 +1911,7 @@
 <section>
     @if (!is_null($chIRSDocuments->irs_path))
         <div class="col-md-12">
-            <label>990N Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chIRSDocuments->irs_path }}">&nbsp; View 990N Confirmation</a><br>
+            <label>990N Uploaded:</label><a data-no-wait href="https://drive.google.com/uc?export=download&id={{ $chIRSDocuments->irs_path }}">&nbsp; View 990N Confirmation</a><br>
         </div>
     @endif
 
@@ -2567,7 +2567,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
 
                 @if ($chEOYDocuments->award_path != null)
                 <div class="col-md-12" id="AwardBlock">
-                        <label>Award Files Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->award_path }}">&nbsp; View Award Files</a><br>
+                        <label>Award Files Uploaded:</label><a data-no-wait href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->award_path }}">&nbsp; View Award Files</a><br>
                         <strong style="color: #dc3545;">Please Note</strong><br>
                             Save award entry information before replacing file(s). This will refresh the screen - be sure to save all work before clicking button to Replace Award Files.<br>
                         <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showAwardUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Replace Award Files</button>

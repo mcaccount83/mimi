@@ -66,7 +66,7 @@
                         </td>
                         <td class="text-center align-middle">
                             @if($list->documentsEOY->financial_report_received == '1' && $list->documentsEOY->$yearColumnName != null)
-                                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $list->documentsEOY->$yearColumnName }}"><i class="bi bi-file-earmark-pdf"></i></a>
+                                <a data-no-wait href="https://drive.google.com/uc?export=download&id={{ $list->documentsEOY->$yearColumnName }}"><i class="bi bi-file-earmark-pdf"></i></a>
                             @endif
                         </td>
                         <!-- Email link to be dynamically populated via AJAX -->
