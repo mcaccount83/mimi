@@ -35,7 +35,7 @@
           <ul class="list-group list-group-flush mb-3">
             <li class="list-group-item">
                <label>Review Summary</label><br>
-            Answers from questios in previous sections will show up here after they have been saved.<br>
+            Answers from questions in previous sections will show up here after they have been saved.<br>
             <br>
             @if ($chEOYDocuments->financial_report_received)
             @if ($chEOYDocuments->$yearColumnName != null)
