@@ -5,7 +5,7 @@
 ready to be reviewed. The Financial Report PDF is attached and other documents that can be downloaded are
 listed below.
 
-Submitted by: {{ $mailData['completedName'] }}, @mailto($mailData['completedEmail'])
+Submitted by: {{ $mailData['completedName'] }}, @mailto($mailData['completedEmail'])<br>
 
 **Downloads Available:**
 
