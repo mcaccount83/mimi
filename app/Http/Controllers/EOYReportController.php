@@ -1031,6 +1031,40 @@ class EOYReportController extends Controller implements HasMiddleware
 
         $allAwards = FinancialReportAwards::all();
 
+        // Build the date-filtered base query ONCE as a reusable scope
+        $dateFilteredQuery = $baseQuery['query']
+            ->where(function ($query) use ($reportYearEnd) {
+                $query->where(function ($q) use ($reportYearEnd) {
+                    $q->where('start_year', '<', $reportYearEnd)
+                        ->orWhere(function ($q) use ($reportYearEnd) {
+                            $q->where('start_year', '=', $reportYearEnd)
+                                ->where('start_month_id', '<', 7);
+                        });
+                });
+            });
+
+        // For conf/region/international roles, show all chapters (no award filter)
+        if ($checkBox3Status || $checkBox51Status) {
+            $chapterList = $dateFilteredQuery->get();
+        } else {
+            // Only chapters with at least one valid award entry
+            $chapterList = $dateFilteredQuery
+                ->whereHas('financialReport', fn ($q) => $q->whereNotNull('chapter_awards'))
+                ->get()
+                ->filter(function ($chapter) {
+                    if (!isset($chapter->financialReport->chapter_awards)) {
+                        return false;
+                    }
+                    $awards = unserialize(base64_decode($chapter->financialReport->chapter_awards));
+                    if (!$awards) {
+                        return false;
+                    }
+                    return collect($awards)->contains(fn ($award) => !empty($award['awards_type']));
+                })
+                ->values(); // re-index after filter
+        }
+
+        // Now compute hasAnyAwards/actualMaxAwards from the already-filtered list
         $hasAnyAwards = false;
         $actualMaxAwards = 0;
 
@@ -1038,7 +1072,7 @@ class EOYReportController extends Controller implements HasMiddleware
             if (isset($list->financialReport->chapter_awards)) {
                 $awards = unserialize(base64_decode($list->financialReport->chapter_awards));
                 if ($awards) {
-                    $validAwards = collect($awards)->filter(fn ($award) => ! empty($award['awards_type']))->count();
+                    $validAwards = collect($awards)->filter(fn ($award) => !empty($award['awards_type']))->count();
                     if ($validAwards > 0) {
                         $hasAnyAwards = true;
                         $actualMaxAwards = max($actualMaxAwards, $validAwards);
@@ -1047,15 +1081,8 @@ class EOYReportController extends Controller implements HasMiddleware
             }
         }
 
-        if ($checkBox3Status || $checkBox51Status) {
-            $chapterList = $baseQuery['query']->get();
-        } else {
-            $chapterList = $baseQuery['query']
-                ->whereHas('financialReport', fn ($q) => $q->whereNotNull('chapter_awards'))
-                ->get();
-        }
-
         $countList = count($chapterList);
+
         $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status, 'checkBox2Status' => $checkBox2Status,
             'allAwards' => $allAwards, 'hasAnyAwards' => $hasAnyAwards, 'actualMaxAwards' => $actualMaxAwards, 'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'checkBox52Status' => $checkBox52Status,
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
