@@ -57,6 +57,10 @@ window.pleaseWait = (function () {
     };
 
     return {
+        show: function () {
+            if (overlayTimer) clearTimeout(overlayTimer);
+            showOverlay();
+        },
         cancel: function () {
             if (overlayTimer) clearTimeout(overlayTimer);
             overlayTimer = null;

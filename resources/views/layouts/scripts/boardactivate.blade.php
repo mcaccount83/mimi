@@ -11,6 +11,7 @@
             cancelButtonText: 'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
+                window.pleaseWait.show();
                 document.getElementById('activateSingleBoardForm').submit();
             }
         });
@@ -28,6 +29,7 @@
             cancelButtonText: 'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
+                window.pleaseWait.show();
                 document.getElementById('activateAllBoardsForm').submit();
             }
         });
