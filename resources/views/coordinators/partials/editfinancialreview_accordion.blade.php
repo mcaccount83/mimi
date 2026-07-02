@@ -1580,7 +1580,7 @@
                                         <label for="post_balance" class="me-2">Enter Ending Balance (to be used as beginning balance on next year's report):</label>
                                     </div>
                                     <div class="col-md-4">
-                                        @currencyInput('post_balance', !empty($chFinancialReport) ? $chFinancialReport->post_balance : '')
+                                        @currencyInput('post_balance', !empty($chFinancialReport) ? $chFinancialReportReview->post_balance : '')
                                     </div>
                                 </div>
                                 <div class="row mb-3">
