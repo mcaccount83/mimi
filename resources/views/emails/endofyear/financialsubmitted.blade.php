@@ -9,12 +9,24 @@ Submitted by: {{ $mailData['completedName'] }}, @mailto($mailData['completedEmai
 
 **Downloads Available:**
 
-- @isset($mailData['rosterPath'])[Chapter Roster](https://drive.google.com/uc?export=download&id={{ $mailData['rosterPath'] }})@else No Roster Attached @endisset
-- @isset($mailData['statement1Path'])[Primary Bank Statement](https://drive.google.com/uc?export=download&id={{ $mailData['statement1Path'] }})@else No Statement Attached @endisset
-@isset($mailData['statement2Path'])
+@if(!empty($mailData['rosterPath']))
+- [Chapter Roster](https://drive.google.com/uc?export=download&id={{ $mailData['rosterPath'] }})
+@else
+- No Roster Attached
+@endif
+@if(!empty($mailData['statement1Path']))
+- [Primary Bank Statement](https://drive.google.com/uc?export=download&id={{ $mailData['statement1Path'] }})
+@else
+- No Statement Attached
+@endif
+@if(!empty($mailData['statement2Path']))
 - [Additional Bank Statement](https://drive.google.com/uc?export=download&id={{ $mailData['statement2Path'] }})
-@endisset
-- @isset($mailData['irsPath'])[990N Confirmation File](https://drive.google.com/uc?export=download&id={{ $mailData['irsPath'] }})@else No 990N File Attached @endisset
+@endif
+@if(!empty($mailData['irsPath']))
+- [990N Confirmation File](https://drive.google.com/uc?export=download&id={{ $mailData['irsPath'] }})
+@else
+- No 990N File Attached
+@endif
 
 **Coordinators:**
 
