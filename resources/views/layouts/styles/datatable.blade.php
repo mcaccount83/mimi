@@ -67,4 +67,12 @@
         color: #212529 !important;
         font-weight: bold;
     }
+
+    /* Multi-column sort tip */
+.dt-sort-tip {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+    flex-basis: 100%;  /* forces it to its own line in the flex row */
+}
 </style>
