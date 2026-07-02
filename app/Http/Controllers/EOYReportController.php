@@ -1083,6 +1083,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $chConfId = $baseQuery['chConfId'];
         $chPcId = $baseQuery['chPcId'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
+        $chFinancialReportReview = $baseQuery['chFinancialReportReview'];
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
         $chIRSDocuments = $baseQuery['chIRSDocuments'];
         $chReportDocuments = $baseQuery['chReportDocuments'];
@@ -1091,7 +1092,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $data = ['coorId' => $coorId, 'confId' => $confId, 'chapterStatus' => $chapterStatus, 'chEOYDocuments' => $chEOYDocuments,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
-            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
+            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments, 'chFinancialReportReview' => $chFinancialReportReview,
         ];
 
         return view('coordinators.eoyreports.editawards')->with($data);
