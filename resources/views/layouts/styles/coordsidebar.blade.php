@@ -2,6 +2,9 @@
     /* Sidebar font size */
     .app-sidebar .sidebar-wrapper {
         font-size: 0.95rem !important;
+        height: calc(100vh - 4rem); /* adjust 4rem to match your navbar/brand-link height */
+        overflow-y: auto;
+        overflow-x: hidden;
     }
 
     .app-sidebar .nav-link {

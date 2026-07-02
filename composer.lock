@@ -75,16 +75,16 @@
         },
         {
             "name": "almasaeed2010/adminlte",
-            "version": "v4.0.3",
+            "version": "v4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ColorlibHQ/AdminLTE.git",
-                "reference": "deabfa49323d4766c443670911651ff26fa8c72f"
+                "reference": "9fa52cc765e63e374276b83dd024bcd9a3b8d245"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ColorlibHQ/AdminLTE/zipball/deabfa49323d4766c443670911651ff26fa8c72f",
-                "reference": "deabfa49323d4766c443670911651ff26fa8c72f",
+                "url": "https://api.github.com/repos/ColorlibHQ/AdminLTE/zipball/9fa52cc765e63e374276b83dd024bcd9a3b8d245",
+                "reference": "9fa52cc765e63e374276b83dd024bcd9a3b8d245",
                 "shasum": ""
             },
             "type": "library",
@@ -112,7 +112,7 @@
             ],
             "support": {
                 "issues": "https://github.com/ColorlibHQ/AdminLTE/issues",
-                "source": "https://github.com/ColorlibHQ/AdminLTE/tree/v4.0.3"
+                "source": "https://github.com/ColorlibHQ/AdminLTE/tree/v4.1.0"
             },
             "funding": [
                 {
@@ -124,7 +124,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-07-01T10:47:08+00:00"
+            "time": "2026-07-02T12:50:16+00:00"
         },
         {
             "name": "authorizenet/authorizenet",
@@ -225,16 +225,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.387.1",
+            "version": "3.387.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "2e1a16e9c87f2a069aa8a0a14a314dd148de21e1"
+                "reference": "dac6a19ffc71e6d100f06098e7df58f2e27103f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/2e1a16e9c87f2a069aa8a0a14a314dd148de21e1",
-                "reference": "2e1a16e9c87f2a069aa8a0a14a314dd148de21e1",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/dac6a19ffc71e6d100f06098e7df58f2e27103f9",
+                "reference": "dac6a19ffc71e6d100f06098e7df58f2e27103f9",
                 "shasum": ""
             },
             "require": {
@@ -316,9 +316,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.387.1"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.387.2"
             },
-            "time": "2026-07-01T18:10:42+00:00"
+            "time": "2026-07-02T18:06:18+00:00"
         },
         {
             "name": "barryvdh/laravel-dompdf",
@@ -2421,16 +2421,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v13.18.0",
+            "version": "v13.18.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "138e5806ed7e4e21591948b661119d3810f052cf"
+                "reference": "7d66044819e269f05924793a6800022dc181d850"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/138e5806ed7e4e21591948b661119d3810f052cf",
-                "reference": "138e5806ed7e4e21591948b661119d3810f052cf",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/7d66044819e269f05924793a6800022dc181d850",
+                "reference": "7d66044819e269f05924793a6800022dc181d850",
                 "shasum": ""
             },
             "require": {
@@ -2641,7 +2641,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2026-06-30T12:54:13+00:00"
+            "time": "2026-07-02T18:35:20+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -11659,5 +11659,5 @@
         "php": "^8.3"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
