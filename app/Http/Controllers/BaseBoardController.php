@@ -31,7 +31,7 @@ class BaseBoardController extends Controller
     {
         // Load chapter with common relations
         $chDetails = Chapters::with([
-            'country', 'state', 'startMonth', 'webLink', 'documents', 'financialReport', 'financialReportFinal', 'payments',
+            'country', 'state', 'startMonth', 'webLink', 'documents', 'financialReport', 'financialReportFinal', 'payments', 'financialReportReview',
             'reportReviewer', 'primaryCoordinator', 'probation', 'disbandCheck', 'activeStatus', 'documentsEOY', 'documentsIRS', 'documentsReport',
         ])->find($id);
 
@@ -97,6 +97,7 @@ class BaseBoardController extends Controller
         $chReportDocuments = $chDetails->documentsReport;
         $reviewerEmail = $chDetails->reportReviewer?->email;
         $chFinancialReport = $chDetails->financialReport;
+        $chFinancialReportReview = $chDetails->financialReportReview;
         $chFinancialReportFinal = $chDetails->financialReportFinal;
         $chDisbanded = $chDetails->disbandCheck;
 
@@ -143,6 +144,7 @@ class BaseBoardController extends Controller
             'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments, 'chAwards' => $chAwards, 'currentApprovedAwards' => $currentApprovedAwards, 'allAwards' => $allAwards,
             'probationReason' => $probationReason, 'dueDate' => $dueDate, 'startMonthId' => $startMonthId, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink,
             'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'startDate' => $startDate, 'renewalDate' => $renewalDate, 'financialReportPdfs' => $financialReportPdfs,
+            'chFinancialReportReview' => $chFinancialReportReview,
         ], $boardDetails); // Add board member details from appropriate table
     }
 

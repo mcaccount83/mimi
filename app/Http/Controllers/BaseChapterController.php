@@ -282,11 +282,8 @@ class BaseChapterController extends Controller
      */
     public function getChapterDetails(int $chId)
     {
-        $chDetails = Chapters::with([
-    'country', 'state', 'documents', 'financialReport', 'financialReportReview',
-    'startMonth', 'primaryCoordinator', 'payments', 'probation', 'financialReportFinal',
-    'documentsEOY', 'documentsIRS', 'documentsReport'  // ← fixed typo
-])->find($chId);
+        $chDetails = Chapters::with(['country', 'state', 'documents', 'financialReport', 'financialReportReview', 'startMonth', 'primaryCoordinator', 'payments',
+            'probation', 'financialReportFinal', 'documentsEOY', 'documentsIRS', 'documentsReport'])->find($chId);
         $chActiveId = $chDetails->active_status;
         $chActiveStatus = $chDetails->activeStatus->active_status;
 
