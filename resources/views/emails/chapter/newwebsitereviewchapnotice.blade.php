@@ -8,6 +8,6 @@ Your submitted site is: [{{ $mailData['chapterWebsiteURL'] }}]({{ $mailData['cha
 
 List of linked chapters can be found here: [https://momsclub.org/chapters/chapter-links/](https://momsclub.org/chapters/chapter-links/)
 
-**MCL,**
+**MCL,**<br>
 International MOMS Club
 @endcomponent

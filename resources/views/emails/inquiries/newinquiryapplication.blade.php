@@ -7,7 +7,7 @@ A potential member is inquiring about a chapter in your area.
 - {{ $mailData['regionName'] }} Region
 - Conference {{ $mailData['confDesc'] }}
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 
 ---

@@ -17,5 +17,5 @@ If you need help or extra time for ANY reason, contact your Primary Coordinator 
 late report, and a late report may put your chapter at risk of losing its non-profit status for the year. The report is very easy to complete,
 so please make sure you send it in on time!
 
-**MCL,**
+**MCL,**<br>
 International MOMS Club

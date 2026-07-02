@@ -7,7 +7,7 @@ Otherwise, MIMI is already set up with the one listed here.
 
 {!! $mailData['mailTable'] !!}
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 @endcomponent
 

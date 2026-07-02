@@ -20,9 +20,9 @@ questions feel free to contact any of your coordinators or fill out the online a
 Volunteer Information
 @endcomponent
 
-**MCL**,
-{{ $mailData['ccName'] }}
-{{ $mailData['ccPosition'] }}
-{{ $mailData['ccConfName'] }}, {{ $mailData['ccConfDescription'] }}
+**MCL**,<br>
+{{ $mailData['ccName'] }}<br>
+{{ $mailData['ccPosition'] }}<br>
+{{ $mailData['ccConfName'] }}, {{ $mailData['ccConfDescription'] }}<br>
 International MOMS Club
 @endcomponent

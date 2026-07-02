@@ -7,6 +7,6 @@ Your application will be processed by our M2M Committee. If you have any questio
 
 A copy of your request is attached. Please save/keep a copy for your records.
 
-**MCL,**
+**MCL,**<br>
 M2M Committee
 @endcomponent

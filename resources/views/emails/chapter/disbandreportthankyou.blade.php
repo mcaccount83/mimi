@@ -5,6 +5,6 @@
 
 A copy of your report is attached. Please save/keep a copy for your records.
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 @endcomponent

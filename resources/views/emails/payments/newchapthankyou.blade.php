@@ -21,6 +21,6 @@ information, but your login credentials will remain the same.
 Log into MIMI: [http://momsclub.org/mimi](http://momsclub.org/mimi)
 Return to the Main Website: [http://momsclub.org](http://momsclub.org)
 
-**MCL,**
+**MCL,**<br>
 International MOMS Club
 @endcomponent

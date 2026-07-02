@@ -12,6 +12,6 @@ Please review the site based on the website linking guidelines found here:
 Once the site has been reviewed and is ready to be linked, please update the Website Link Status to "Linked" in the chapter's MIMI profile
 and it will automatically be added to our main website.
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 @endcomponent

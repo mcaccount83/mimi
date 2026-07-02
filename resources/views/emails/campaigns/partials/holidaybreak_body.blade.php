@@ -12,5 +12,5 @@ If you have an emergency, you can contact your {{ $mailData['userPosition'] }} (
 at [{{ $mailData['userEmail'] }}](mailto:{{ $mailData['userEmail'] }}) or you can always send a message
 to [support@momsclub.org](mailto:support@momsclub.org), and someone will contact you as soon as possible.
 
-**MCL,**
+**MCL,**<br>
 International MOMS Club

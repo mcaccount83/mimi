@@ -5,6 +5,6 @@
 
 {!! $mailData['mailTable'] !!}
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 @endcomponent

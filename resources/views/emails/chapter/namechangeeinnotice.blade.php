@@ -8,6 +8,6 @@ Their coordinator has requested that the IRS be notified of the name change.
 
 A copy of the change letter to be faxed to the IRS is attached.
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 @endcomponent

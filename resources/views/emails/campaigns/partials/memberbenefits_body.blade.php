@@ -36,7 +36,7 @@ that benefited the members, and therefore would be included in the "party expens
 
 A more detailed Fact Sheet on Party Expenses & the 15% Rule is attached for your reference. It can also be found in the Resources section of MIMI.
 
-**MCL,**
+**MCL,**<br>
 International MOMS Club
 
 

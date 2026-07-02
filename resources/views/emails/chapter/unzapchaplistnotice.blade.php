@@ -6,7 +6,7 @@ The following chapter has been unZapped in MIMI: MOMS Club of {{ $mailData['chap
 
 Please re-add members of this chapter to any groups, forums and mailing lists.
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 
 ---

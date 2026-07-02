@@ -32,6 +32,6 @@ Submitted by: {{ $mailData['completedName'] }}, @mailto($mailData['completedEmai
 
 - Primary Coordinator: {{ $mailData['pcName'] }}
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 @endcomponent

@@ -6,7 +6,7 @@ The MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }}
 
 The donation has been entered into MIMI and a Thank You email has been sent to the chapter.
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 
 ---

@@ -9,6 +9,6 @@ not just in your local area, but across the country and around the world.
 
 Your support of the International MOMS Club is both generous and most appreciated!
 
-**MCL,**
+**MCL,**<br>
 International MOMS Club
 @endcomponent

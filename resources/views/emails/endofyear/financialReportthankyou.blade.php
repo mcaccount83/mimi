@@ -7,6 +7,6 @@ Your Coordinator Team will review your report shortly and reach out with any que
 
 A copy of your report is attached. Please save/keep a copy for your records.
 
-**MCL,**
+**MCL,**<br>
 International MOMS Club
 @endcomponent

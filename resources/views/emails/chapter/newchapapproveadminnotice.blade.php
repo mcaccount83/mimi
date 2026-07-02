@@ -5,7 +5,7 @@ A new chapter has been approved for Conference {{ $mailData['chapterConf'] }}. P
 
 {!! $mailData['mailTable'] !!}
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 @endcomponent
 

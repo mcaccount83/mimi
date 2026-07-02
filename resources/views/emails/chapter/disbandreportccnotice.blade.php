@@ -6,6 +6,6 @@ disbanded, this is for information only and does not need to be reviewed.
 
 Submitted by: {{ $mailData['completedName'] }}, @mailto($mailData['completedEmail'])
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 @endcomponent

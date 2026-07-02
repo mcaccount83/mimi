@@ -7,7 +7,7 @@ A Thank You email has been sent to the donor.
 If this is a donation from a chapter, please forward to the CC so the donation can be entered into
 their MIMI profile.
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 
 ---

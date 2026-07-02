@@ -16,5 +16,5 @@ Once submitted, your report will be activated after July 1st and new board membe
 
 If you have any questions about the Board Election Report, please reach out and ask!
 
-**MCL,**
+**MCL,**<br>
 International MOMS Club

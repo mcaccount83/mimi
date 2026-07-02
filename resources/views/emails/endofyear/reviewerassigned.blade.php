@@ -32,6 +32,6 @@ Submitted by: {{ $mailData['completedName'] }}, @mailto($mailData['completedEmai
 - No 990N File Attached
 @endif
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 @endcomponent

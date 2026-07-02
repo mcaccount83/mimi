@@ -10,6 +10,6 @@ You should begin using her as your primary point of contact immediately.
 You can continue to view details about your Mentoring Coordinator and assigned Chapters at any time
 by logging into MIMI at [https://momsclub.org/mimi](https://momsclub.org/mimi).
 
-**MCL,**
+**MCL,**<br>
 International MOMS Club
 @endcomponent

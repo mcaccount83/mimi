@@ -76,9 +76,9 @@ All MOMS Club chapters have an International Coordinator assigned to help them.
 
 She is there for anything that you need! Any questions you have or good news you want to share -- talk to her, she loves to hear from you!
 
-**MCL**,
-{{ $mailData['ccName'] }}
-{{ $mailData['ccPosition'] }}
-{{ $mailData['ccConfName'] }}, {{ $mailData['ccConfDescription'] }}
+**MCL**,<br>
+{{ $mailData['ccName'] }}<br>
+{{ $mailData['ccPosition'] }}<br>
+{{ $mailData['ccConfName'] }}, {{ $mailData['ccConfDescription'] }}<br>
 International MOMS Club
 @endcomponent

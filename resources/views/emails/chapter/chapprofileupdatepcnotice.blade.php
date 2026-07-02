@@ -3,7 +3,7 @@
 
 The MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }} has been updated through the MOMS Information Management Interface.
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 
 ---

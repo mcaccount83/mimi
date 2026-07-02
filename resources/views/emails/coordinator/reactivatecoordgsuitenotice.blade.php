@@ -8,6 +8,6 @@ The following coordinator has been reactivated in MIMI in {{ $mailData['userConf
 
 Please reactivate the coordinator's momsclub.org email address.
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 @endcomponent

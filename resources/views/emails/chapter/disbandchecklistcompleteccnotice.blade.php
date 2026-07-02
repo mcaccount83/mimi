@@ -3,7 +3,7 @@
 
 {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }} has completed their Disbanding Checklist.
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 @endcomponent
 

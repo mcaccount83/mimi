@@ -3,6 +3,6 @@ Your Inquiry has been Successfully Submitted!
 
 Thank you for your interest in a MOMS Club chapter! Someone will be in touch with you shortly.
 
-**MCL,**
+**MCL,**<br>
 International MOMS Club
 @endcomponent

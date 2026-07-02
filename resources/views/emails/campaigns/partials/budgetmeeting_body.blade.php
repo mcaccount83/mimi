@@ -47,5 +47,5 @@ vote on everything the chapter does and all money the chapter spends. For more i
 
 For more information about committees, voting, minutes, and meetings, see your Chapter manual and talk to your Coordinator.
 
-**MCL,**
+**MCL,**<br>
 International MOMS Club

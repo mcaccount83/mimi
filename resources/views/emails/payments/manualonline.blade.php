@@ -5,7 +5,7 @@ The MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }}
 
 The order has been processed and a receipt has been sent to the chapter.
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 
 ---

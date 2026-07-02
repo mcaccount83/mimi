@@ -7,7 +7,7 @@ Re-Registration payment.
 The Re-Registration Payment and Sustaining Chapter Donation (if they made one) have been entered into
 MIMI and a Thank You email has been sent to the chapter.
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 
 ---

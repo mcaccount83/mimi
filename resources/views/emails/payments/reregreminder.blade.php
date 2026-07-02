@@ -12,6 +12,6 @@ done so already.
 Thank you for your prompt renewal payment and/or sustaining chapter donation! If you have any
 questions, please do not hesitate to contact your chapter's Primary Coordinator.
 
-**MCL,**
+**MCL,**<br>
 International MOMS Club
 @endcomponent

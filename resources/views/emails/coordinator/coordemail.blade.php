@@ -45,9 +45,9 @@
 
 {!! nl2br(e($message)) !!}
 
-**MCL**,
-{{ $mailData['userName'] }}
-{{ $mailData['userPosition'] }}
-{{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}
+**MCL**,<br>
+{{ $mailData['userName'] }}<br>
+{{ $mailData['userPosition'] }}<br>
+{{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}<br>
 International MOMS Club
 @endcomponent

@@ -12,9 +12,9 @@ After reviewing your End of Year reports, your chapter has been approved for the
 Badges for the award(s) are also attached. Feel free to use these badges to display on your website
 or other advertisements. You can also view/download award badges from your MIMI profile.
 
-**MCL**,
-{{ $mailData['userName'] }}
-{{ $mailData['userPosition'] }}
-{{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}
+**MCL**,<br>
+{{ $mailData['userName'] }}<br>
+{{ $mailData['userPosition'] }}<br>
+{{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}<br>
 International MOMS Club
 @endcomponent

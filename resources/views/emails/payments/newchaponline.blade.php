@@ -8,7 +8,7 @@ The New Chapter Application Fee is authorize only and must be retrieved in 30 da
 have to resubmit their application. New Chapter must be approved and moved from PENDING to ACTIVE status
 before fee can be retrieved.
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 
 ---

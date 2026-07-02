@@ -8,6 +8,6 @@ A new Bug or Wish has been added to the To Do list.
 
 Reported by: {{ $mailData['ReportedId'] }} on {{ $mailData['ReportedDate'] }}
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 @endcomponent

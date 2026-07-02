@@ -26,6 +26,6 @@ placed on probation.
 
 If you have any questions at all, do not hesitate to ask.
 
-**MCL,**
+**MCL,**<br>
 International MOMS Club
 @endcomponent

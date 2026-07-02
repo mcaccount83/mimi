@@ -9,9 +9,9 @@ complete the disbanding checklist, make your final re-registration payment and s
 
 If you have any questions at all, please do not hesitate to reach out to anyone on your Coordinator Team.
 
-**MCL**,
-{{ $mailData['userName'] }}
-{{ $mailData['userPosition'] }}
-{{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}
+**MCL**,<br>
+{{ $mailData['userName'] }}<br>
+{{ $mailData['userPosition'] }}<br>
+{{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}<br>
 International MOMS Club
 @endcomponent

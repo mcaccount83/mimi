@@ -5,7 +5,7 @@ The following chapters received the **{{ $mailData['campaignLabel'] }}** email c
 - {{ $chapter['name'] }}, {{ $chapter['state'] }}
 @endforeach
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 
 ---

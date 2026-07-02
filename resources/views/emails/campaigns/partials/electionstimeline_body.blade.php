@@ -16,5 +16,5 @@ There are several things you can do now to prepare your chapter for the election
 
 If you are struggling or have any questions about the election process, reach out to your Primary Coordinator for ideas and support!
 
-**MCL,**
+**MCL,**<br>
 International MOMS Club

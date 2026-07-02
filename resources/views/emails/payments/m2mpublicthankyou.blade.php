@@ -12,6 +12,6 @@ be available should a disaster strike a MOMS Club family in the future.
 
 Thank you again for helping!
 
-**MCL,**
+**MCL,**<br>
 Mother-To-Mother Fund Committee
 @endcomponent

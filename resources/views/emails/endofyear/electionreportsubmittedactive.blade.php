@@ -7,6 +7,6 @@ Their new board members have automatically been activated and have access to MIM
 
 Outgoing board members will still be able to log in and access the Financial Report.
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 @endcomponent

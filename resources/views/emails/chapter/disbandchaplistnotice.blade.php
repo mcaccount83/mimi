@@ -7,7 +7,7 @@ MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }}, Co
 
 Please remove members of this chapter from any groups, forums and mailing lists.
 
-**MCL,**
+**MCL,**<br>
 International MOMS Club
 
 <table style="width:100%; border-collapse: collapse; font-family: inherit; font-size: inherit;">

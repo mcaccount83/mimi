@@ -7,6 +7,6 @@ Your linked site is: {{ $mailData['chapterWebsiteURL'] }}.
 
 List of linked chapters can be found here: [https://momsclub.org/chapters/chapter-links/](https://momsclub.org/chapters/chapter-links/)
 
-**MCL,**
+**MCL,**<br>
 International MOMS Club
 @endcomponent

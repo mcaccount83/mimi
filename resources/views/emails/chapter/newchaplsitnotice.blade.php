@@ -7,7 +7,7 @@ MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }}, Co
 
 Please add members of this chapter to any groups, forums and mailing lists.
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 
 ---

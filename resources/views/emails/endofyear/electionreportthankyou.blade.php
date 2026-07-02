@@ -8,6 +8,6 @@ Once activated, your incoming board members will have access to your chapter's M
 Outgoing board members will still be able to log in and access the Financial Report.
 Financial Reports are due on July 15th.
 
-**MCL,**
+**MCL,**<br>
 International MOMS Club
 @endcomponent

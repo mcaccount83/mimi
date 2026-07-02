@@ -6,7 +6,7 @@ the application information and contact the coordinator to get them started.
 
 {!! $mailData['mailTable'] !!}
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 @endcomponent
 

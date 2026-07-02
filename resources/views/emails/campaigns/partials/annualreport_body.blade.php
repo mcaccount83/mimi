@@ -38,5 +38,5 @@ late report may put your chapter at risk of losing its non-profit status for the
 Be sure to save a copy of your report in your chapter's permanent files. The International MOMS Club does not keep copies of your reports long term. You
 need to be sure your chapter has a copy and keeps it for the life of your chapter, as this would be the information you would need if the IRS were to do an audit.
 
-**MCL,**
+**MCL,**<br>
 International MOMS Club

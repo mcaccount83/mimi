@@ -7,6 +7,6 @@ You may now consider the steps to officially close your chapter finished.
 
 If you have any additional questions, please reach out to your Primary Coordinator.
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 @endcomponent

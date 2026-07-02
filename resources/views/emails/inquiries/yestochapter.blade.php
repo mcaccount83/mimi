@@ -3,10 +3,10 @@
 
 A potential member is inquiring about your chapter.
 
-**MCL,**
-{{ $mailData['userName'] }}
-{{ $mailData['userPosition'] }}
-{{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}
+**MCL,**<br>
+{{ $mailData['userName'] }}<br>
+{{ $mailData['userPosition'] }}<br>
+{{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}<br>
 International MOMS Club
 
 ---

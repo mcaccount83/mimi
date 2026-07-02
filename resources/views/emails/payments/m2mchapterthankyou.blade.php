@@ -14,6 +14,6 @@ be available should a disaster strike a MOMS Club family in the future.
 Thank you again for helping! Your members should be very proud of themselves! I know we are very proud of
 all of you!
 
-**MCL,**
+**MCL,**<br>
 Mother-To-Mother Fund Committee
 @endcomponent

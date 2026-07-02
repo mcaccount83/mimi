@@ -8,6 +8,6 @@ They have already been notified, but feel free to reach out to them directly as 
 
 {!! $mailData['mailTable'] !!}
 
-**MCL,**
+**MCL,**<br>
 International MOMS Club
 @endcomponent

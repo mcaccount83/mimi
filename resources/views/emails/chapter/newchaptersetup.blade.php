@@ -55,9 +55,9 @@ You'll receive a manual in the mail shortly after your new chapter has been appr
 do not feel overwhelmed and do not feel like you need to read it all right away. All of our "first steps" are listed right here in this guide.
 The additional information in the manual will be helpful as your chapter grows.
 
-**MCL**,
-{{ $mailData['userName'] }}
-{{ $mailData['userPosition'] }}
-{{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}
+**MCL**,<br>
+{{ $mailData['userName'] }}<br>
+{{ $mailData['userPosition'] }}<br>
+{{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}<br>
 International MOMS Club
 @endcomponent

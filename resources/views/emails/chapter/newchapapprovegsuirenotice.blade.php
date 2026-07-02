@@ -6,7 +6,7 @@ address is listed below). Once created, you'll need to go back and enter the new
 
 {!! $mailData['mailTableNewEmail'] !!}
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 @endcomponent
 

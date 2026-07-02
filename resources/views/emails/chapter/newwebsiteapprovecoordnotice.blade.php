@@ -7,6 +7,6 @@ The new website address is: {{ $mailData['chapterWebsiteURL'] }}.
 
 The site has been reviewed and has automatically been added to the main MOMS Club website.
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 @endcomponent

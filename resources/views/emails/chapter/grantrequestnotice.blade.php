@@ -10,7 +10,7 @@ Details are below as well as in MIMI. If you need more information, please reach
 {{ $mailData['board_email'] }}
 {{ $mailData['board_phone'] }}
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 
 ---

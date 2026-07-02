@@ -20,6 +20,6 @@ section in the left sidebar menu.
 
 If you have any questions about the Board Election Report, please reach out and ask!
 
-**MCL,**
+**MCL,**<br>
 International MOMS Club
 @endcomponent

@@ -9,9 +9,9 @@ I am excited that you have decided to become a MOMS Club Coordinator! I will be 
 personal email to discuss our specific needs and where you best fit into our team. However, if you have any
 questions in the meantime, please do not hesitate to reach out and ask!
 
-**MCL**,
-{{ $mailData['ccName'] }}
-{{ $mailData['ccPosition'] }}
-{{ $mailData['ccConfName'] }}, {{ $mailData['ccConfDescription'] }}
+**MCL**,<br>
+{{ $mailData['ccName'] }}<br>
+{{ $mailData['ccPosition'] }}<br>
+{{ $mailData['ccConfName'] }}, {{ $mailData['ccConfDescription'] }}<br>
 International MOMS Club
 @endcomponent

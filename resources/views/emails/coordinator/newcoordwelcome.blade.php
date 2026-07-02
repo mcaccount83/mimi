@@ -115,9 +115,9 @@ full coordinator team is cc'd here and listed in your MIMI profile so you have a
 I'm also here for anything that you need! But, as your Mentoring Coordinator, {{ $mailData['cdReportFName'] }}
 should always be your first point of contact.
 
-**MCL**,
-{{ $mailData['userName'] }}
-{{ $mailData['userPosition'] }}
-{{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}
+**MCL**,<br>
+{{ $mailData['userName'] }}<br>
+{{ $mailData['userPosition'] }}<br>
+{{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}<br>
 International MOMS Club
 @endcomponent

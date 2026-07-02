@@ -8,9 +8,9 @@ If you don't hear, please let me know and I'll make sure they received your inqu
 like to contact them directly yourself, you can reach them at
 [{{ $mailData['chapterInquiriesContact'] }}]({{ $mailData['chapterInquiriesContact'] }}).
 
-**MCL,**
-{{ $mailData['userName'] }}
-{{ $mailData['userPosition'] }}
-{{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}
+**MCL,**<br>
+{{ $mailData['userName'] }}<br>
+{{ $mailData['userPosition'] }}<br>
+{{ $mailData['userConfName'] }}, {{ $mailData['userConfDesc'] }}<br>
 International MOMS Club
 @endcomponent

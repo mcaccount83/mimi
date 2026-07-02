@@ -5,7 +5,7 @@ A new Coordinator has been approved and you have been assigned as their Mentorin
 
 {!! $mailData['mailTable'] !!}
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
 @endcomponent
 
