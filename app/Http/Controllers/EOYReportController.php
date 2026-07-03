@@ -945,11 +945,12 @@ class EOYReportController extends Controller implements HasMiddleware
         $chConfId = $baseQuery['chConfId'];
         $chPcId = $baseQuery['chPcId'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
+        $chFinancialReportReview = $baseQuery['chFinancialReportReview'];
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
         $chIRSDocuments = $baseQuery['chIRSDocuments'];
         $chReportDocuments = $baseQuery['chReportDocuments'];
 
-        $data = ['coorId' => $coorId, 'confId' => $confId, 'chEOYDocuments' => $chEOYDocuments,
+        $data = ['coorId' => $coorId, 'confId' => $confId, 'chEOYDocuments' => $chEOYDocuments, 'chFinancialReportReview' => $chFinancialReportReview,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport, 'chapterStatus' => $chapterStatus,
             'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
