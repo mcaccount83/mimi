@@ -892,7 +892,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <h3 class="mb-0">{{$SECDetails->first_name}} {{$SECDetails->last_name}}</h3>
-                                <@mailto($SECDetails->email)
+                                @mailto($SECDetails->email)
                                 <br>
                                 @tel($SECDetails->phone)
                                 <br>
