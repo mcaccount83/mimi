@@ -893,17 +893,6 @@ class EOYReportController extends Controller implements HasMiddleware
         $reportYearEnd = $reportYearOptions['reportYearEnd'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
-        $chapterList = $baseQuery['query']
-            ->where(function ($query) use ($reportYearEnd) {
-                $query->where(function ($q) use ($reportYearEnd) {
-                    $q->where('start_year', '<', $reportYearEnd)
-                        ->orWhere(function ($q) use ($reportYearEnd) {
-                            $q->where('start_year', '=', $reportYearEnd)
-                                ->where('start_month_id', '<', 7); // July is month 7
-                        });
-                });
-            })
-            ->get();
 
         $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
         $checkBox2Status = $baseQuery[CheckboxFilterEnum::REVIEWER];
@@ -911,17 +900,30 @@ class EOYReportController extends Controller implements HasMiddleware
         $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
         $checkBox52Status = $baseQuery[CheckboxFilterEnum::INTERNATIONALEOY];
 
-        if ($checkBox3Status || $checkBox51Status) {
-            $chapterList = $baseQuery['query']
-                ->get();
-        } else {
-            $chapterList = $baseQuery['query']
-                ->where('boundary_issue_notes', '!=', null)
-                ->get();
+        $query = $baseQuery['query']
+            ->where(function ($q) use ($reportYearEnd) {
+                $q->where('start_year', '<', $reportYearEnd)
+                    ->orWhere(function ($q) use ($reportYearEnd) {
+                        $q->where('start_year', '=', $reportYearEnd)
+                            ->where('start_month_id', '<', 7);
+                    });
+            });
+
+        if (!$checkBox3Status && !$checkBox51Status) {
+            $query->whereNotNull('boundary_issue_notes')
+                ->where('boundary_issue_notes', '!=', '');
         }
 
-        $data = ['chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status, 'checkBox52Status' => $checkBox52Status,
-            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'checkBox2Status' => $checkBox2Status];
+        $chapterList = $query->get();
+
+        $data = [
+            'chapterList' => $chapterList,
+            'checkBox1Status' => $checkBox1Status,
+            'checkBox2Status' => $checkBox2Status,
+            'checkBox3Status' => $checkBox3Status,
+            'checkBox51Status' => $checkBox51Status,
+            'checkBox52Status' => $checkBox52Status,
+        ];
 
         return view('coordinators.eoyreports.eoyboundaries')->with($data);
     }
