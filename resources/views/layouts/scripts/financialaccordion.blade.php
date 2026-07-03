@@ -172,7 +172,8 @@
         var newMembersDuesNew = NewMembers2 * NewMemberDues;
         var renewMembersDuesNew = RenewedMembers2 * NewMemberDues;
         var renewMembersNewDuesDiff = RenewedMembers2 * NewMemberDuesRenewal;
-        var partialMembersDues = PartialDuesMembers * (Number($('#PartialDuesMemberDues').val().replace(/[^0-9.-]+/g,"")) || 0);
+        var partialMembersDues_old = PartialDuesMembers * (Number($('#PartialDuesMemberDues').val().replace(/[^0-9.-]+/g,"")) || 0);
+        var partialMembersDues = (Number($('#PartialDuesMemberDues').val().replace(/[^0-9.-]+/g,"")) || 0);
         var associateMembersDues = AssociateMembers * (Number($('#AssociateMemberDues').val().replace(/[^0-9.-]+/g,"")) || 0);
 
         var TotalFees;

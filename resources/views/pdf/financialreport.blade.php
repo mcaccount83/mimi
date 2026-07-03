@@ -124,20 +124,21 @@
         $newMembersNew = $pdfData['total_new_members_changed_dues'] * $pdfData['dues_per_member_new_changed'];
         $renewMembersNew = $pdfData['total_renewed_members_changed_dues'] * $pdfData['dues_per_member_new_changed'];
         $renewMembersNewDiff = $pdfData['total_renewed_members_changed_dues'] * $pdfData['dues_per_member_renewal_changed'];
-        $partialMembers = $pdfData['members_who_paid_partial_dues'] * $pdfData['total_partial_fees_collected'];
+        // $partialMembers = $pdfData['members_who_paid_partial_dues'] * $pdfData['total_partial_fees_collected'];
+        $partialDues = $pdfData['total_partial_fees_collected'];
         $associateMembers = $pdfData['total_associate_members'] * $pdfData['associate_member_fee'];
 
         $totalMembers = $pdfData['total_new_members'] + $pdfData['total_renewed_members'] + $pdfData['total_new_members_changed_dues'] + $pdfData['total_renewed_members_changed_dues']
                 + $pdfData['members_who_paid_partial_dues'] + $pdfData['total_associate_members'] + $pdfData['members_who_paid_no_dues'];
 
         if ($pdfData['different_dues'] == 1 && $pdfData['changed_dues'] == 1) {
-            $totalDues = $newMembers + $renewalMembersDiff + $newMembersNew + $renewMembersNewDiff + $partialMembers + $associateMembers;
+            $totalDues = $newMembers + $renewalMembersDiff + $newMembersNew + $renewMembersNewDiff + $partialDues + $associateMembers;
         } elseif ($pdfData['different_dues'] == 1) {
-            $totalDues = $newMembers + $renewalMembersDiff + $partialMembers + $associateMembers;
+            $totalDues = $newMembers + $renewalMembersDiff + $partialDues + $associateMembers;
         } elseif ($pdfData['changed_dues'] == 1) {
-            $totalDues = $newMembers + $renewalMembers + $newMembersNew + $renewMembersNew + $partialMembers + $associateMembers;
+            $totalDues = $newMembers + $renewalMembers + $newMembersNew + $renewMembersNew + $partialDues + $associateMembers;
         } else {
-            $totalDues = $newMembers + $renewalMembers + $partialMembers + $associateMembers;
+            $totalDues = $newMembers + $renewalMembers + $partialDues + $associateMembers;
         }
     @endphp
     <br>
