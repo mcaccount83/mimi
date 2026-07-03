@@ -10,4 +10,14 @@
     h4 { font-size: 1.25rem !important; }
     h5 { font-size: 1rem !important; }
     h6 { font-size: 0.87rem !important; }
+
+    ul, ol {
+        font-size: 16px;
+        line-height: 1.5em;
+    }
+
+    li {
+        font-size: 16px;
+        line-height: 1.5em;
+    }
 </style>
