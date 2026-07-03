@@ -1213,7 +1213,8 @@ class EOYReportController extends Controller implements HasMiddleware
             ->groupBy('report_year_id');
 
         $awardBadges = FinancialReportAwardsBadges::with(['fiscalYear', 'eoyAward'])->get();
-        $badgeLookup = $awardBadges->keyBy(fn ($b) => $b->report_year_id.'_'.$b->eoy_award_id);
+        // $badgeLookup = $awardBadges->keyBy(fn ($b) => $b->report_year_id.'_'.$b->eoy_award_id);
+        $badgeLookup = $awardBadges->keyBy(fn ($b) => $b->fiscalYear->report_year.'_'.$b->eoy_award_id);
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chAwards' => $chAwards, 'currentApprovedAwards' => $currentApprovedAwards, 'awardTypes' => $awardTypes, 'confId' => $confId, 'chConfId' => $chConfId,
