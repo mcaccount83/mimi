@@ -20,7 +20,7 @@ class EnsureUserIsBoardOrDisbanded
 
         // Check if the user is active and of type 'board'
         if (! $user ||
-            ! ($user->type_id == UserTypeEnum::BOARD || $user->type_id == UserTypeEnum::DISBANDED ||
+            ! ($user->type_id == UserTypeEnum::BOARD || $user->type_id == UserTypeEnum::DISBANDED || $user->type_id == UserTypeEnum::OUTGOING ||
             $user->type_id == UserTypeEnum::COORD || $user->is_admin == AdminStatusEnum::ADMIN)) {
             Auth::logout();
             $request->session()->flush();

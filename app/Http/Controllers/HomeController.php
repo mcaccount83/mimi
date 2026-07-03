@@ -51,7 +51,7 @@ class HomeController extends Controller
         }
 
         if ($userTypeId == UserTypeEnum::OUTGOING) {
-            return redirect()->to('board/financialreport/'.$user['chapterId']);
+            return redirect()->to('board/endofyear/financialreport/'.$user['chapterId']);
         }
 
         if ($userTypeId == UserTypeEnum::DISBANDED) {
