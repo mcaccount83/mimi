@@ -1,4 +1,5 @@
     <!-- Board Dashboard Menu Item -->
+@if(auth()->user()->type_id == \App\Enums\UserTypeEnum::DISBANDED)
 @isset($chDetails)
 @php
     $boardRoute = route('board.editdisbandchecklist', ['id' => $chDetails->id]);
@@ -11,6 +12,7 @@
     </a>
 </li>
 @endisset
+@endif
 
     <!-- ReReg Menu Item -->
     @isset($chDetails)
