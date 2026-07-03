@@ -227,8 +227,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/payment/chapterpaymentedit/{id}', [PaymentController::class, 'editChapterPayment'])->name('payment.editpayment');
     Route::get('/payment/chapterpaymenthistory/{id}', [PaymentController::class, 'viewPaymentHistory'])->name('payment.paymenthistory');
     Route::post('/payment/chapterpaymentupdate/{id}', [PaymentController::class, 'updateChapterPayment'])->name('payment.updatepayment');
-    Route::get('/payment/reregistrationreminder', [PaymentController::class, 'createChapterReRegistrationReminder'])->name('payment.chapreregreminder');
-    Route::get('/payment/reregistrationlatereminder', [PaymentController::class, 'createChapterReRegistrationLateReminder'])->name('payment.chaprereglatereminder');
+    Route::post('/payment/reregistrationreminder', [PaymentController::class, 'createChapterReRegistrationReminder'])->name('payment.chapreregreminder');
+    Route::post('/payment/reregistrationlatereminder', [PaymentController::class, 'createChapterReRegistrationLateReminder'])->name('payment.chaprereglatereminder');
     Route::get('/payment/grantlist', [PaymentController::class, 'showGrantList'])->name('payment.grantlist');
     Route::get('/payment/grantdetailsedit/{id}', [PaymentController::class, 'editGrantDetails'])->name('payment.editgrantdetails');
     Route::post('/payment/grantdetailsupdate/{id}', [PaymentController::class, 'UpdateGrantDetails'])->name('payment.updategrantdetails');

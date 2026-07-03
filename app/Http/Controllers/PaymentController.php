@@ -14,6 +14,7 @@ use App\Models\GrantRequest;
 use App\Models\PaymentHistory;
 use App\Models\Payments;
 use App\Services\PositionConditionsService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -97,7 +98,7 @@ class PaymentController extends Controller implements HasMiddleware
     /**
      * ReRegistration Reminders Auto Send
      */
-    public function createChapterReRegistrationReminder(Request $request): RedirectResponse
+    public function createChapterReRegistrationReminder(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $confId = $user['confId'];
@@ -124,8 +125,8 @@ class PaymentController extends Controller implements HasMiddleware
                 ->get();
 
             if ($chapters->isEmpty()) {
-                return redirect()->back()->with('info', 'There are no Chapters with Registrations Due.');
-            }
+            return response()->json(['status' => 'info', 'message' => 'There are no Chapters with Registrations Due.'], 422);
+        }
 
             $chapterIds = [];
             $chapterEmails = [];
@@ -169,22 +170,22 @@ class PaymentController extends Controller implements HasMiddleware
 
             DB::commit();
 
-            return redirect()->to('/payment/reregistration')->with('success', 'Re-Registration Reminders have been successfully sent.');
-        } catch (\Exception $e) {
-            DB::rollback();  // Rollback Transaction
-            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+        return response()->json(['status' => 'success', 'message' => 'Re-Registration Reminders have been successfully sent.']);
 
-            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
-        } finally {
-            // This ensures DB connections are released even if exceptions occur
-            DB::disconnect();
-        }
+    } catch (\Exception $e) {
+        DB::rollback();
+        Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+
+        return response()->json(['status' => 'error', 'message' => 'Something went wrong, Please try again.'], 500);
+    } finally {
+        DB::disconnect();
+    }
     }
 
     /**
      * ReRegistration Late Notices Auto Send
      */
-    public function createChapterReRegistrationLateReminder(Request $request): RedirectResponse
+    public function createChapterReRegistrationLateReminder(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $confId = $user['confId'];
@@ -216,8 +217,8 @@ class PaymentController extends Controller implements HasMiddleware
                 ->get();
 
             if ($chapters->isEmpty()) {
-                return redirect()->back()->with('info', 'There are no Chapters with Late Registrations Due.');
-            }
+            return response()->json(['status' => 'info', 'message' => 'There are no Chapters with Registrations Due.'], 422);
+        }
 
             $chapterIds = [];
             $chapterEmails = [];
@@ -260,18 +261,16 @@ class PaymentController extends Controller implements HasMiddleware
                 }
             }
 
-            DB::commit();
+            return response()->json(['status' => 'success', 'message' => 'Re-Registration Late Reminders have been successfully sent.']);
 
-            return redirect()->to('/payment/reregistration')->with('success', 'Re-Registration Late Reminders have been successfully sent.');
-        } catch (\Exception $e) {
-            DB::rollback();  // Rollback Transaction
-            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+    } catch (\Exception $e) {
+        DB::rollback();
+        Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
-            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
-        } finally {
-            // This ensures DB connections are released even if exceptions occur
-            DB::disconnect();
-        }
+        return response()->json(['status' => 'error', 'message' => 'Something went wrong, Please try again.'], 500);
+    } finally {
+        DB::disconnect();
+    }
     }
 
     /**
