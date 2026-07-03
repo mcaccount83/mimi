@@ -21,7 +21,7 @@
                     </li>
                     @foreach($chAwards as $yearId  => $awards)
                         <li class="nav-item">
-                            <a class="nav-link" href="#awards-{{ $yearId  }}" data-bs-toggle="tab">{{ $awards->first()->fiscalYear->fiscal_year }}</a>
+                            <a class="nav-link" href="#awards-{{ $yearId  }}" data-bs-toggle="tab">{{ $awards->first()->fiscalYear->report_year }}</a>
                         </li>
                     @endforeach
                 </ul>
@@ -70,7 +70,7 @@
                     @foreach($chAwards as $yearId  => $awards)
                         <div class="tab-pane" id="awards-{{ $yearId  }}">
                             <div class="card-header bg-transparent border-0">
-                                <h3>{{ $awards->first()->fiscalYear->fiscal_year }} Chapter Awards</h3>
+                                <h3>{{ $awards->first()->fiscalYear->report_year }} Chapter Awards</h3>
                             </div>
                         <!-- /.card-header -->
                             <div class="card-body">
