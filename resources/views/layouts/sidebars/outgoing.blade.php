@@ -72,7 +72,7 @@
     <!-- Documents Menu Item -->
     @isset($chDetails)
     @php
-        $boardRoute = route('board.editprofile', ['id' => $chDetails->id]);
+        $boardRoute = route('board.chapterprofile', ['id' => $chDetails->id]);
 
         $activeBoardRoutes = [
             'board/profile/*',

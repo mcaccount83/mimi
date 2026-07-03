@@ -51,7 +51,7 @@
                                         <td>
                                             <div class="btn-group">
                                                 {{-- <a href="{{ route('board.editpresident', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-primary bg-gradient btn-sm me-2">President Profile</a> --}}
-                                                <a href="{{ route('board.editprofile', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-primary bg-gradient btn-sm me-2">Board Profile</a>
+                                                <a href="{{ route('board.chapterprofile', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-primary bg-gradient btn-sm me-2">Board Profile</a>
                                                 <a href="{{ route('board.editboardreport', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-primary bg-gradient btn-sm me-2">Board Report</a>
                                                 <a href="{{ route('board.editfinancialreport', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-primary bg-gradient btn-sm me-2">Financial Report</a>
                                                 <a href="{{ route('board.editreregpayment', ['id' => $chapter->id]) }}" target="_blank" class="btn btn-primary bg-gradient btn-sm me-2">Re-reg Payment</a>
