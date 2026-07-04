@@ -136,7 +136,7 @@
 </div>
 <!------End Step 4 ------>
 
-<!------Start Step 6 ------>
+<!------Start Step 5 ------>
 <div style="break-inside: avoid; margin-bottom: 0.5rem;">
 <div class="accordion-item {{$adminYear->unsubscribe_list == 1 ? 'step-complete' : '' }}">
         <h2 class="accordion-header" id="header-unsubscribe-list">

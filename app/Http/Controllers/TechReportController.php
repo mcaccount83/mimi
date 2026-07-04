@@ -358,6 +358,7 @@ class TechReportController extends Controller implements HasMiddleware
         $unSubscribeListItems = [
             'Remove Board Members from BoardList',
             'Remove Board Members from Publc Announcements',
+            'Copy/Reset BoardList Forum Category',
         ];
 
         $resetEOYTableItems = [
@@ -420,7 +421,7 @@ class TechReportController extends Controller implements HasMiddleware
             'Copy/Rename Boards Table',
             'Copy/Rename Coordinators Table',
             'Copy/Rename Users Table',
-            'Copy/Reset BoardList Forum Category',
+
         ];
 
         $data = ['adminYear' => $adminYear, 'canEditFiles' => $canEditFiles, 'irsYear' => $irsYear, 'reportYear' => $reportYear, 'irsCorrectsionsListItems' => $irsCorrectsionsListItems,
@@ -742,7 +743,7 @@ class TechReportController extends Controller implements HasMiddleware
 
         DB::beginTransaction();
         try {
-            $this->resetBoardList($currentYear);
+            // $this->resetBoardList($currentYear);
 
             $adminYear = AdminYear::where('fiscal_year_id', $fiscalYearId)->firstOrFail();
             $adminYear->update([
@@ -792,11 +793,17 @@ class TechReportController extends Controller implements HasMiddleware
      */
     public function updateUnsubscribeLists(Request $request): JsonResponse
     {
+        // Get the current month and year for table renaming
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $currentYear = $dateOptions['currentYear'];
+
         $fiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
         $fiscalYearId = $fiscalYearOptions['fiscalYearId'];
 
         DB::beginTransaction();
         try {
+            $this->resetBoardList($currentYear);
+
             $boardListAll = $this->forumSubscriptionController->bulkRemoveBoardBoardList();
             $publicListBoard = $this->forumSubscriptionController->bulkRemoveBoardPublicAnnouncements();
 
