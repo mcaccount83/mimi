@@ -163,6 +163,7 @@ class PositionConditionsService
         $irsYear = AdminIRS::with('fiscalYear')
             ->orderByDesc('created_at') // newest created row first
             ->first();
+        $boardListActive = $adminYear->boardlist_active;
 
         // Fiscal year values directly from table
         $fiscalYearId = $fiscalYear->id;
@@ -186,6 +187,7 @@ class PositionConditionsService
             'fiscalMonthStart' => $fiscalMonthStart,
             'fiscalMonthEnd' => $fiscalMonthEnd,
             'fiscalYearEndDate' => $fiscalYearEndDate,
+            'boardListActive' => ($boardListActive == 1),
         ];
     }
 

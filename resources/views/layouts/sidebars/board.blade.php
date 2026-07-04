@@ -204,7 +204,7 @@
     @endisset
 
     <!-- ForumList Menu Item -->
-    @if ($boardList)
+    @if ($boardListActive)
         @php
             $forumRoute = url(config('forum.frontend.router.prefix') . '/unread');
 
