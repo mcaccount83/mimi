@@ -129,9 +129,9 @@
                         <div class="form-check form-switch">
                             <input type="checkbox" name="showConfReg" id="showConfReg" class="form-check-input" {{$checkBox3Status ? 'checked' : '' }} onchange="showConfReg()" />
                                 @if ($assistConferenceCoordinatorCondition)
-                                    <label class="form-check-label" for="showConfReg">Show All Chapters in Conference (Export Available)</label>
+                                    <label class="form-check-label" for="showConfReg">Show All Chapters in Conference</label>
                                 @else
-                                    <label class="form-check-label" for="showConfReg">Show All Chapters in Region (Export Available)</label>
+                                    <label class="form-check-label" for="showConfReg">Show All Chapters in Region</label>
                                 @endif
                         </div>
                     </div>
@@ -148,6 +148,35 @@
             <!-- /.card-body for checkboxes -->
 
             <div class="card-body text-center mt-3">
+                @if ($checkBox51Status)
+                {{-- Bulk Action Buttons --}}
+                    <button type="button" class="btn btn-success bg-gradient mb-2 bulk-action-btn"
+                        data-action="{{ route('forum.boardpublcannouncements.bulk-subscribe') }}"
+                        data-label="Add all active board members to Public Announcements">
+                        <i class="bi bi-plus-circle-fill me-1"></i> Add All to Public Announcements
+                    </button>
+                    <button type="button" class="btn btn-danger bg-gradient mb-2 bulk-action-btn"
+                        data-action="{{ route('forum.boardpublcannouncements.bulk-unsubscribe') }}"
+                        data-label="Remove all board members to Public Announcements">
+                        <i class="bi bi-dash-circle-fill me-1"></i> Remove All from Public Announcements
+                    </button>
+                <br>
+                    <button type="button" class="btn btn-success bg-gradient mb-2 bulk-action-btn"
+                        data-action="{{ route('forum.boardboardlist.bulk-subscribe') }}"
+                        data-label="Add all active board members to BoardList">
+                        <i class="bi bi-plus-circle-fill me-1"></i> Add All to BoardList
+                    </button>
+                    <button type="button" class="btn btn-danger bg-gradient mb-2 bulk-action-btn"
+                        data-action="{{ route('forum.boardboardlist.bulk-unsubscribe') }}"
+                        data-label="Remove all board members from BoardList">
+                        <i class="bi bi-dash-circle-fill me-1"></i> Remove All from BoardList
+                    </button>
+
+                    {{-- Hidden form used to submit the confirmed action --}}
+                    <form id="bulk-action-form" method="POST" style="display:none;">
+                        @csrf
+                    </form>
+                @endif
             </div>
             <!-- /.card-body for buttons -->
 

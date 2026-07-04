@@ -513,7 +513,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/listadmin/coordinatorlist/bulk-subscribe', [ForumSubscriptionController::class, 'bulkAddCoordinatorsList'])->name('forum.coordinatorlist.bulk-subscribe');
     Route::post('/listadmin/coordinatorboardlist/bulk-subscribe', [ForumSubscriptionController::class, 'bulkAddCoordinatorsBoardList'])->name('forum.coordinatorboardlist.bulk-subscribe');
     Route::post('/listadmin/coordinatorpublidannouncement/bulk-subscribe', [ForumSubscriptionController::class, 'bulkAddCoordinatorsPublicAnnounceements'])->name('forum.coordinatorpublidannouncement.bulk-subscribe');
+    Route::post('/listadmin/coordinatorlist/bulk-unsubscribe', [ForumSubscriptionController::class, 'bulkRemoveCoordinatorsList'])->name('forum.coordinatorlist.bulk-unsubscribe');
     Route::post('/listadmin/coordinatorboardlist/bulk-unsubscribe', [ForumSubscriptionController::class, 'bulkRemoveCoordinatorsBoardList'])->name('forum.coordinatorboardlist.bulk-unsubscribe');
+    Route::post('/listadmin/coordinatorpublidannouncement/bulk-unsubscribe', [ForumSubscriptionController::class, 'bulkRemoveCoordinatorsPublicAnnounceements'])->name('forum.coordinatorpublidannouncement.bulk-unsubscribe');
     Route::post('/listadmin/boardlist/bulk-subscribe', [ForumSubscriptionController::class, 'bulkAddBoardList'])->name('forum.boardlist.bulk-subscribe');
     Route::post('/listadmin/publcannouncements/bulk-subscribe', [ForumSubscriptionController::class, 'bulkAddPublicAnnouncements'])->name('forum.publcannouncements.bulk-subscribe');
     Route::post('/listadmin/boardlist/bulk-unsubscribe', [ForumSubscriptionController::class, 'bulkRemoveBoardList'])->name('forum.boardlist.bulk-unsubscribe');

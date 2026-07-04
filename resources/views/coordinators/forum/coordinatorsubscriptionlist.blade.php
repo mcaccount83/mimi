@@ -87,9 +87,9 @@
                         <div class="form-check form-switch">
                             <input type="checkbox" name="showConfReg" id="showConfReg" class="form-check-input" {{$checkBox3Status ? 'checked' : '' }} onchange="showConfReg()" />
                                 @if ($assistConferenceCoordinatorCondition)
-                                    <label class="form-check-label" for="showConfReg">Show All Coordinators in Conference (Export Available)</label>
+                                    <label class="form-check-label" for="showConfReg">Show All Coordinators in Conference</label>
                                 @else
-                                    <label class="form-check-label" for="showConfReg">Show All Coordinators in Region (Export Available)</label>
+                                    <label class="form-check-label" for="showConfReg">Show All Coordinators in Region</label>
                                 @endif
                         </div>
                     </div>
@@ -106,6 +106,46 @@
             <!-- /.card-body for checkboxes -->
 
             <div class="card-body text-center mt-3">
+                @if ($checkBox51Status)
+                {{-- Bulk Action Buttons --}}
+                    <button type="button" class="btn btn-success bg-gradient mb-2 bulk-action-btn"
+                        data-action="{{ route('forum.coordinatorpublidannouncement.bulk-subscribe') }}"
+                        data-label="Add all active coordinators to Public Announcements">
+                        <i class="bi bi-plus-circle-fill me-1"></i> Add All to Public Announcements
+                    </button>
+                    <button type="button" class="btn btn-danger bg-gradient mb-2 bulk-action-btn"
+                        data-action="{{ route('forum.coordinatorpublidannouncement.bulk-unsubscribe') }}"
+                        data-label="Remove all coordinators from Public Announcements">
+                        <i class="bi bi-dash-circle-fill me-1"></i> Remove All from Public Announcements
+                    </button>
+                <br>
+                    <button type="button" class="btn btn-success bg-gradient mb-2 bulk-action-btn"
+                        data-action="{{ route('forum.coordinatorlist.bulk-subscribe') }}"
+                        data-label="Add all active coordinators to CoordinatorList">
+                        <i class="bi bi-plus-circle-fill me-1"></i> Add All to CoordinatorList
+                    </button>
+                    <button type="button" class="btn btn-danger bg-gradient mb-2 bulk-action-btn"
+                        data-action="{{ route('forum.coordinatorlist.bulk-unsubscribe') }}"
+                        data-label="Remove all coordinators from CoordinatorList">
+                        <i class="bi bi-dash-circle-fill me-1"></i> Remove All from CoordinatorList
+                    </button>
+                <br>
+                    <button type="button" class="btn btn-success bg-gradient mb-2 bulk-action-btn"
+                        data-action="{{ route('forum.coordinatorboardlist.bulk-subscribe') }}"
+                        data-label="Add all active coordinators to BoardList">
+                        <i class="bi bi-plus-circle-fill me-1"></i> Add All to BoardList
+                    </button>
+                    <button type="button" class="btn btn-danger bg-gradient mb-2 bulk-action-btn"
+                        data-action="{{ route('forum.coordinatorboardlist.bulk-unsubscribe') }}"
+                        data-label="Remove all coordinators from BoardList">
+                        <i class="bi bi-dash-circle-fill me-1"></i> Remove All from BoardList
+                    </button>
+
+                    {{-- Hidden form used to submit the confirmed action --}}
+                    <form id="bulk-action-form" method="POST" style="display:none;">
+                        @csrf
+                    </form>
+                @endif
             </div>
             <!-- /.card-body for buttons -->
 

@@ -276,6 +276,7 @@
     @include('layouts.scripts.coordinatorlist')
     @include('layouts.scripts.datatable')
     @include('layouts.scripts.email')
+    @include('layouts.scripts.forumsubscriptions')
     @include('layouts.scripts.export')
     @include('layouts.scripts.information')
     @include('layouts.scripts.irs')

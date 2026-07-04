@@ -141,7 +141,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
     /**
      * Add all active coordinators to CoordinatorList Subscribe by Email
      */
-    public function bulkAddCoordinatorsList(): RedirectResponse
+    public function bulkAddCoordinatorsList(): RedirectResponse|JsonResponse
     {
         $category = ForumCategory::where('title', 'CoordinatorList')
             ->first();
@@ -179,16 +179,22 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
         }
 
         if (empty($errors)) {
-            return redirect()->back()->with('success', "Successfully subscribed {$subscriptionCount} coordinators to CoorinatorList");
+            $message = "Successfully subscribed {$subscriptionCount} coordinators to CoordinatorList";
+            return request()->expectsJson()
+                ? response()->json(['message' => $message])
+                : redirect()->back()->with('success', $message);
         } else {
-            return redirect()->back()->with('warning', "Subscribed {$subscriptionCount} coordinators, but encountered errors: ".implode(', ', $errors));
+            $message = "Subscribed {$subscriptionCount} coordinators, but encountered errors: " . implode(', ', $errors);
+            return request()->expectsJson()
+                ? response()->json(['message' => $message], 422)
+                : redirect()->back()->with('warning', $message);
         }
     }
 
     /**
      * Add all active coordinators to BoardList Subscribe by Email
      */
-    public function bulkAddCoordinatorsBoardList(): RedirectResponse
+    public function bulkAddCoordinatorsBoardList(): RedirectResponse|JsonResponse
     {
         $category = ForumCategory::where('title', 'BoardList')
             ->first();
@@ -226,16 +232,22 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
         }
 
         if (empty($errors)) {
-            return redirect()->back()->with('success', "Successfully subscribed {$subscriptionCount} coordinators to BoardList");
+            $message = "Successfully subscribed {$subscriptionCount} coordinators to BoardList";
+            return request()->expectsJson()
+                ? response()->json(['message' => $message])
+                : redirect()->back()->with('success', $message);
         } else {
-            return redirect()->back()->with('warning', "Subscribed {$subscriptionCount} coordinators, but encountered errors: ".implode(', ', $errors));
+            $message = "Subscribed {$subscriptionCount} coordinators, but encountered errors: " . implode(', ', $errors);
+            return request()->expectsJson()
+                ? response()->json(['message' => $message], 422)
+                : redirect()->back()->with('warning', $message);
         }
     }
 
     /**
      * Add all active coordinators to Public Announcements Subscribe by Email
      */
-    public function bulkAddCoordinatorsPublicAnnounceements(): RedirectResponse
+    public function bulkAddCoordinatorsPublicAnnounceements(): RedirectResponse|JsonResponse
     {
         $category = ForumCategory::where('title', 'Public Announcements')
             ->first();
@@ -531,7 +543,40 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
     /**
      * Remove all coordinators from BoardList Subscription
      */
-    public function bulkRemoveCoordinatorsBoardList(): RedirectResponse
+    public function bulkRemoveCoordinatorsList(): RedirectResponse|JsonResponse
+    {
+        try {
+            // Get category
+            $category = ForumCategory::where('title', 'CoordinatorList')
+                ->first();
+
+            if (! $category) {
+                return redirect()->back()->with('error', 'CoordinatorList category not found');
+            }
+
+            // Delete subscriptions only for users who are coordinators
+            $deletedCount = ForumCategorySubscription::where('category_id', $category->id)
+                ->whereHas('user', function ($query) {
+                    $query->where('type_id', UserTypeEnum::COORD);
+                })
+                ->delete();
+
+            $message = "Successfully unsubscribed {$deletedCount} coordinators from CoordinatorList";
+                return request()->expectsJson()
+                    ? response()->json(['message' => $message])
+                    : redirect()->back()->with('success', $message);
+
+            } catch (\Exception $e) {
+                Log::error('Bulk unsubscribe error:', ['error' => $e->getMessage()]);
+
+                $message = "Error during bulk unsubscribe: {$e->getMessage()}";
+                return request()->expectsJson()
+                    ? response()->json(['message' => $message], 500)
+                    : redirect()->back()->with('error', $message);
+            }
+    }
+
+    public function bulkRemoveCoordinatorsBoardList(): RedirectResponse|JsonResponse
     {
         try {
             // Get category
@@ -549,13 +594,60 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
                 })
                 ->delete();
 
-            return redirect()->back()->with('success', "Successfully unsubscribed {$deletedCount} coordinators from BoardList");
+            $message = "Successfully unsubscribed {$deletedCount} coordinators from BoardList";
+                return request()->expectsJson()
+                    ? response()->json(['message' => $message])
+                    : redirect()->back()->with('success', $message);
 
-        } catch (\Exception $e) {
-            Log::error('Bulk unsubscribe error:', ['error' => $e->getMessage()]);
+            } catch (\Exception $e) {
+                Log::error('Bulk unsubscribe error:', ['error' => $e->getMessage()]);
 
-            return redirect()->back()->with('error', "Error during bulk unsubscribe: {$e->getMessage()}");
-        }
+                $message = "Error during bulk unsubscribe: {$e->getMessage()}";
+                return request()->expectsJson()
+                    ? response()->json(['message' => $message], 500)
+                    : redirect()->back()->with('error', $message);
+            }
+
+        //     return redirect()->back()->with('success', "Successfully unsubscribed {$deletedCount} coordinators from BoardList");
+
+        // } catch (\Exception $e) {
+        //     Log::error('Bulk unsubscribe error:', ['error' => $e->getMessage()]);
+
+        //     return redirect()->back()->with('error', "Error during bulk unsubscribe: {$e->getMessage()}");
+        // }
+    }
+
+    public function bulkRemoveCoordinatorsPublicAnnounceements(): RedirectResponse|JsonResponse
+    {
+        try {
+            // Get category
+            $category = ForumCategory::where('title', 'Public Announcements')
+                ->first();
+
+            if (! $category) {
+                return redirect()->back()->with('error', 'Public Announcements category not found');
+            }
+
+            // Delete subscriptions only for users who are coordinators
+            $deletedCount = ForumCategorySubscription::where('category_id', $category->id)
+                ->whereHas('user', function ($query) {
+                    $query->where('type_id', UserTypeEnum::COORD);
+                })
+                ->delete();
+
+            $message = "Successfully unsubscribed {$deletedCount} coordinators from Public Announcements";
+                return request()->expectsJson()
+                    ? response()->json(['message' => $message])
+                    : redirect()->back()->with('success', $message);
+
+            } catch (\Exception $e) {
+                Log::error('Bulk unsubscribe error:', ['error' => $e->getMessage()]);
+
+                $message = "Error during bulk unsubscribe: {$e->getMessage()}";
+                return request()->expectsJson()
+                    ? response()->json(['message' => $message], 500)
+                    : redirect()->back()->with('error', $message);
+            }
     }
 
     /**
