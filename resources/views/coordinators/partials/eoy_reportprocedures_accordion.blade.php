@@ -19,7 +19,7 @@
             @if ($reportYear->reset_report_year != 1 && ($currentMonth >= 1 && $currentMonth <= 3))
                 <button type="button" id="reset-yeareoy" class="btn btn-danger bg-gradient mb-2"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year EOY</button>
             @else
-                <button type="button" id="reset-yeareoy" class="btn btn-danger bg-gradient mb-2" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year EOY</button>
+                <button type="button" class="btn btn-danger bg-gradient mb-2" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year EOY</button>
             @endif
         </div>
 </section>
@@ -45,9 +45,9 @@
         <div class="col-md-12">
             Complete in Feb/March to prepare for data for testing.<br>
             @if ($reportYear->reset_year == 1 && $reportYear->reset_eoy_tables != 1 && ($currentMonth >= 1 && $currentMonth <= 5))
-                                <button type="button" id="update-eoy-database" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset EOY Tables Data Tables</button>
+                    <button type="button" id="update-eoy-database" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset EOY Tables Data Tables</button>
                 @else
-                                <button type="button" id="update-eoy-database" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset EOY Tables Data Tables</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset EOY Tables Data Tables</button>
                 @endif
                      <p style="font-weight: bold;">The following functions will be performed:</p>
                      @foreach($resetEOYTableItems as $item)
@@ -83,9 +83,9 @@
             <div class="col-md-12">
             Complete in Feb/March when ready for data for testing.<br>
                 @if ($reportYear->reset_eoy_tables == 1 && $reportYear->display_testing != 1 && $currentMonth >= 1 && $currentMonth <= 5)
-                                <button type="button" id="view-eoy-testing" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-toggle-on me-2"></i>Display EOY Testing Items</button>
+                    <button type="button" id="view-eoy-testing" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-toggle-on me-2"></i>Display EOY Testing Items</button>
             @else
-                                <button type="button" id="view-eoy-testing" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-toggle-on me-2"></i>Display EOY Testing Items</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-toggle-on me-2"></i>Display EOY Testing Items</button>
             @endif
                 <p style="font-weight: bold;">The following functions will be performed:</p>
                     @foreach($displayTestingItemsItems as $item)

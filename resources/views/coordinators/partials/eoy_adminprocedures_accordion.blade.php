@@ -16,7 +16,7 @@
                 <section>
                     <div class="col-md-12">
                     To be used in BoardList and other display areas.<br>
-                        <button type="button" id="reset-year" class="btn btn-danger bg-gradient mb-2" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year</button>
+                        <button type="button" class="btn btn-danger bg-gradient mb-2" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year</button>
                 </div>
 </section>
 </div><!-- end of accordion body -->
@@ -82,7 +82,7 @@
                 @if ($reportYear->reset_report_year != 1 && ($currentMonth >= 1 && $currentMonth <= 5))
                     <button type="button" id="reset-yeareoy" class="btn btn-danger bg-gradient mb-2"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year EOY</button>
                 @else
-                    <button type="button" id="reset-yeareoy" class="btn btn-danger bg-gradient mb-2" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year EOY</button>
+                    <button type="button" class="btn btn-danger bg-gradient mb-2" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year EOY</button>
                 @endif
                 <br>
                {{-- @if ($adminYear->test_eoy != 1) --}}
@@ -194,7 +194,7 @@
                     @if ($adminYear->unsubscribe_list == 1 && $fiscalYearRange == $reportYearRange && ( $currentMonth >= 6 && $currentMonth <= 9 ))
                                 <button type="button" id="reset-year" class="btn btn-danger bg-gradient mb-2"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year</button>
                             @else
-                                <button type="button" id="reset-year" class="btn btn-danger bg-gradient mb-2" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year</button>
+                                <button type="button" class="btn btn-danger bg-gradient mb-2" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year</button>
                             @endif
                 </div>
 </section>
