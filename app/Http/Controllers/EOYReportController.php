@@ -916,13 +916,8 @@ class EOYReportController extends Controller implements HasMiddleware
 
         $chapterList = $query->get();
 
-        $data = [
-            'chapterList' => $chapterList,
-            'checkBox1Status' => $checkBox1Status,
-            'checkBox2Status' => $checkBox2Status,
-            'checkBox3Status' => $checkBox3Status,
-            'checkBox51Status' => $checkBox51Status,
-            'checkBox52Status' => $checkBox52Status,
+        $data = ['chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status, 'checkBox2Status' => $checkBox2Status, 'checkBox3Status' => $checkBox3Status,
+            'checkBox51Status' => $checkBox51Status, 'checkBox52Status' => $checkBox52Status,
         ];
 
         return view('coordinators.eoyreports.eoyboundaries')->with($data);
