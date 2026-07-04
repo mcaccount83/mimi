@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\CheckboxFilterEnum;
 use App\Enums\CoordinatorPosition;
 use App\Enums\ProbationReasonEnum;
+use App\Enums\ForumCategoryEnum;
 use App\Enums\UserStatusEnum;
 use App\Enums\UserTypeEnum;
 use App\Http\Requests\AddAdminEmailTechReportRequest;
@@ -1205,42 +1206,38 @@ class TechReportController extends Controller implements HasMiddleware
 
     private function resetBoardList(int $currentYear): void
     {
-        // Archive forum category 2 threads to a new year-labeled category
         $lastYear = $currentYear - 1;
+        $boardListId = ForumCategoryEnum::BOARDLIST;
 
-        // Fetch category 2 to copy its settings
-        $category2 = DB::table('forum_categories')->where('id', 2)->first();
-        // Get max _lft/_rgt for positioning the new category at the end
+        $category = DB::table('forum_categories')->where('id', $boardListId)->first();
         $maxRgt = DB::table('forum_categories')->max('_rgt');
 
         $newCategoryId = DB::table('forum_categories')->insertGetId([
             'title' => "{$lastYear}-{$currentYear} BoardList",
-            'description' => $category2->description,
-            'accepts_threads' => $category2->accepts_threads,
+            'description' => $category->description,
+            'accepts_threads' => $category->accepts_threads,
             'newest_thread_id' => null,
             'latest_active_thread_id' => null,
-            'thread_count' => $category2->thread_count,
-            'post_count' => $category2->post_count,
-            'is_private' => $category2->is_private,
-            'thread_approval_enabled' => $category2->thread_approval_enabled,
-            'post_approval_enabled' => $category2->post_approval_enabled,
+            'thread_count' => $category->thread_count,
+            'post_count' => $category->post_count,
+            'is_private' => $category->is_private,
+            'thread_approval_enabled' => $category->thread_approval_enabled,
+            'post_approval_enabled' => $category->post_approval_enabled,
             'created_at' => now(),
             'updated_at' => now(),
             '_lft' => $maxRgt + 1,
             '_rgt' => $maxRgt + 2,
-            'parent_id' => $category2->parent_id,
-            'color_light_mode' => $category2->color_light_mode,
-            'color_dark_mode' => $category2->color_dark_mode,
+            'parent_id' => $category->parent_id,
+            'color_light_mode' => $category->color_light_mode,
+            'color_dark_mode' => $category->color_dark_mode,
         ]);
 
-        // Move all threads from category 2 to the new archived category
         DB::table('forum_threads')
-            ->where('category_id', 2)
+            ->where('category_id', $boardListId)
             ->update(['category_id' => $newCategoryId]);
 
-        // Reset category 2 counts (threads moved out, ready for new year)
         DB::table('forum_categories')
-            ->where('id', 2)
+            ->where('id', $boardListId)
             ->update([
                 'newest_thread_id' => null,
                 'latest_active_thread_id' => null,

@@ -125,7 +125,7 @@
             @if ($reportYear->display_testing == 1 && $reportYear->reset_AFTER_testing != 1 && ( $currentMonth >= 3 && $currentMonth <= 6 ))
                 <button type="button" id="reset-database-after" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Database AFTER Testing</button>
             @else
-                <button type="button" id="reset-database-after" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Database AFTER Testing</button>
+                <button type="button" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Database AFTER Testing</button>
             @endif
                 <p style="font-weight: bold;">The following functions will be performed:</p>
                     @foreach($resetAFTERtestingItems as $item)
@@ -165,7 +165,7 @@
             @if ($reportYear->reset_AFTER_testing == 1 && $reportYear->display_live != 1 && ( $currentMonth >= 3 && $currentMonth <= 6 ))
                 <button type="button" id="view-eoy-live" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-toggle-on me-2"></i>Display EOY LIVE Items</button>
             @else
-                <button type="button" id="view-eoy-live" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-toggle-on me-2"></i>Display EOY LIVE Items</button>
+                <button type="button" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-toggle-on me-2"></i>Display EOY LIVE Items</button>
             @endif
                 <p style="font-weight: bold;">The following functions will be performed:</p>
                     @foreach($displayLiveItemsItems as $item)

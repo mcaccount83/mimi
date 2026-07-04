@@ -41,9 +41,9 @@
                     <div class="col-md-12">
                     Complete in August, after activating boards, so new board members receive subscription to Lists.<br>
                     @if ($adminYear->subscribe_list != 1 && ( $currentMonth >= 2 && $currentMonth <= 9 ))
-                                <button type="button" id="update-eoy-subscribelists" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-plus-lg me-2"></i>Subscribe to Lists</button>
+                        <button type="button" id="update-eoy-subscribelists" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-plus-lg me-2"></i>Subscribe to Lists</button>
                     @else
-                                <button type="button" id="update-eoy-subscribelists" class="btn btn-primary bg-gradient-primary mb-3" disabled><i class="bi bi-plus-lg me-2"></i>Subscribe to Lists</button>
+                        <button type="button" class="btn btn-primary bg-gradient-primary mb-3" disabled><i class="bi bi-plus-lg me-2"></i>Subscribe to Lists</button>
                     @endif
                 <p style="font-weight: bold;">The following functions will be performed:</p>
                      @foreach($subscribeListItems as $item)
@@ -114,7 +114,7 @@
             @if ($adminYear->update_user_tables != 1 && ( $currentMonth >= 4 && $currentMonth <= 6 ))
                 <button type="button" id="update-data-database" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-copy me-2"></i>Copy Data Tables</button>
             @else
-                <button type="button" id="update-data-database" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-copy me-2"></i>Copy Data Tables</button>
+                <button type="button" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-copy me-2"></i>Copy Data Tables</button>
             @endif
                 <p style="font-weight: bold;">The following functions will be performed:</p>
                     @foreach($updateUserTablesItems as $item)
@@ -154,7 +154,7 @@
             @if ($adminYear->subscribe_list == 1 && $adminYear->unsubscribe_list != 1 && ( $currentMonth >= 5 && $currentMonth <= 7 ))
                 <button type="button" id="update-eoy-unsubscribelists" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-ban me-2"></i>Unsubscribe from Lists</button>
             @else
-                <button type="button" id="update-eoy-unsubscribelists" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-ban me-2"></i>Unsubscribe from Lists</button>
+                <button type="button" class="btn btn-primary bg-gradient mb-3" disabled><i class="bi bi-ban me-2"></i>Unsubscribe from Lists</button>
             @endif
                 <p style="font-weight: bold;">The following functions will be performed:</p>
                     @foreach($unSubscribeListItems as $item)
