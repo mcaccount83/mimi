@@ -75,33 +75,37 @@
 
                          <div class="row mb-3">
                             <label class="col-sm-2">ForumList Subscriptions:</label>
-                                        @php
-                                            $Subscriptions = $borDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
-                                        @endphp
-                                        <div class="col-sm-10">
-                                            <div class="mb-1">You can always access all Public Announcement & BoardList posts through your MIMI profile, subscribing will allow you to receive individual emails when
-                                                a new post is made.</div>
-                                            <div class="mb-2">All board members are automatically subscribed to Public Announcements and BoardList at the beginning of each fiscal year.
-                                                If you'd like to udpate the settings for either list, simply subscribe or unsubscribe below.
-                                            </div>
-                                            <div class="mb-1"><b>Public Announcements:</b>
-                                            {{ in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}
-                                            @if (in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
-                                                <button type="button" class="btn btn-danger bg-gradient btn-xs ms-2" onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $borDetails->user_id }})"><i class="bi bi-ban me-2"></i>Unsubscribe</button>
-                                            @else
-                                                <button type="button" class="btn btn-success bg-gradient btn-xs ms-2" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $borDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
-                                            @endif
-                                            </div>
-                                            <div class="mb-1"><b>BoardList:</b>
-                                            {{ in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}
-                                            @if (in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
-                                                <button type="button" class="btn btn-danger bg-gradient btn-xs ms-2" onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $borDetails->user_id }})"><i class="bi bi-ban me-2"></i>Unsubscribe</button>
-                                            @else
-                                                <button type="button" class="btn btn-success bg-gradient btn-xs ms-2" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $borDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
-                                            @endif
-                                            </div>
+                                @php
+                                    $Subscriptions = $borDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
+                                @endphp
+                                <div class="col-sm-10">
+                                    @if ($boardListActive)
+                                        <div class="mb-1">You can always access all Public Announcement & BoardList posts through your MIMI profile, subscribing will allow you to receive individual emails when
+                                            a new post is made.</div>
+                                        <div class="mb-2">All board members are automatically subscribed to Public Announcements and BoardList at the beginning of each fiscal year.
+                                            If you'd like to udpate the settings for either list, simply subscribe or unsubscribe below.
                                         </div>
-
+                                        <div class="mb-1"><b>Public Announcements:</b>
+                                        {{ in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}
+                                        @if (in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
+                                            <button type="button" class="btn btn-danger bg-gradient btn-xs ms-2" onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $borDetails->user_id }})"><i class="bi bi-ban me-2"></i>Unsubscribe</button>
+                                        @else
+                                            <button type="button" class="btn btn-success bg-gradient btn-xs ms-2" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $borDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
+                                        @endif
+                                        </div>
+                                        <div class="mb-1"><b>BoardList:</b>
+                                        {{ in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}
+                                        @if (in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
+                                            <button type="button" class="btn btn-danger bg-gradient btn-xs ms-2" onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $borDetails->user_id }})"><i class="bi bi-ban me-2"></i>Unsubscribe</button>
+                                        @else
+                                            <button type="button" class="btn btn-success bg-gradient btn-xs ms-2" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $borDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
+                                        @endif
+                                        </div>
+                                    @else
+                                        <div class="mb-2">All board members will automatically be subscribed to Public Announcements and BoardList at the beginning of August.</div>
+                                        <div class="mb-2">Once the list is available, you'll be able to subcribe or unsubscribe here.</div>
+                                    @endif
+                                </div>
                         </div>
 
                         <div class="col-md-12">
