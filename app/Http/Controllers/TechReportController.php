@@ -421,7 +421,6 @@ class TechReportController extends Controller implements HasMiddleware
             'Copy/Rename Boards Table',
             'Copy/Rename Coordinators Table',
             'Copy/Rename Users Table',
-
         ];
 
         $data = ['adminYear' => $adminYear, 'canEditFiles' => $canEditFiles, 'irsYear' => $irsYear, 'reportYear' => $reportYear, 'irsCorrectsionsListItems' => $irsCorrectsionsListItems,
@@ -581,6 +580,7 @@ class TechReportController extends Controller implements HasMiddleware
             $adminYear = AdminYear::where('fiscal_year_id', $fiscalYearId)->firstOrFail();
             $adminYear->update([
                 'subscribe_list' => 1,
+                'boardlist_active' => 1,
             ]);
 
             DB::commit(); // Commit transaction
@@ -810,6 +810,7 @@ class TechReportController extends Controller implements HasMiddleware
             $adminYear = AdminYear::where('fiscal_year_id', $fiscalYearId)->firstOrFail();
             $adminYear->update([
                 'unsubscribe_list' => 1,
+                'boardlist_active' => null,
             ]);
 
             DB::commit(); // Commit transaction
