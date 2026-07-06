@@ -355,11 +355,14 @@ class EmailController extends Controller implements HasMiddleware
                 $coordinatorEmails[$chDetails->name] = $emailListCoord;
             }
 
+            $delay = 0;
             foreach ($mailData as $chapterName => $data) {
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
                         ->cc($coordinatorEmails[$chapterName] ?? [])
-                        ->queue(new ChapterEmail($data));
+                        // ->queue(new ChapterEmail($data));
+                        ->later(now()->addSeconds($delay), new ChapterEmail($data));
+                    $delay += 15;
                 }
             }
 
@@ -408,11 +411,14 @@ class EmailController extends Controller implements HasMiddleware
                 $coordinatorEmails[$chDetails->name] = $emailListCoord;
             }
 
+            $delay = 0;
             foreach ($mailData as $chapterName => $data) {
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
                         ->cc($coordinatorEmails[$chapterName] ?? [])
-                        ->queue(new ChapterEmail($data));
+                        // ->queue(new ChapterEmail($data));
+                        ->later(now()->addSeconds($delay), new ChapterEmail($data));
+                    $delay += 15;
                 }
             }
 
@@ -780,11 +786,14 @@ class EmailController extends Controller implements HasMiddleware
 
         }
 
+        $delay = 0;
         foreach ($mailData as $chapterName => $data) {
             if (! empty($chapterName)) {
                 Mail::to($chapterEmails[$chapterName] ?? [])
                     ->cc($coordinatorEmails[$chapterName] ?? [])
-                    ->queue(new EOYElectionReportReminder($data));
+                    // ->queue(new EOYElectionReportReminder($data));
+                    ->later(now()->addSeconds($delay), new EOYElectionReportReminder($data));
+                    $delay += 15;
             }
         }
 
@@ -886,11 +895,14 @@ class EmailController extends Controller implements HasMiddleware
 
         }
 
+        $delay = 0;
         foreach ($mailData as $chapterName => $data) {
             if (! empty($chapterName)) {
                 Mail::to($chapterEmails[$chapterName] ?? [])
                     ->cc($coordinatorEmails[$chapterName] ?? [])
-                    ->queue(new EOYFinancialReportReminder($data));
+                    // ->queue(new EOYFinancialReportReminder($data));
+                    ->later(now()->addSeconds($delay), new EOYFinancialReportReminder($data));
+                $delay += 15;
             }
         }
         try {
@@ -1002,11 +1014,14 @@ class EmailController extends Controller implements HasMiddleware
 
         }
 
+        $delay = 0;
         foreach ($mailData as $chapterName => $data) {
             if (! empty($chapterName)) {
                 Mail::to($chapterEmails[$chapterName] ?? [])
                     ->cc($coordinatorEmails[$chapterName] ?? [])
-                    ->queue(new EOYLateReportReminder($data));
+                    // ->queue(new EOYLateReportReminder($data));
+                    ->later(now()->addSeconds($delay), new EOYLateReportReminder($data));
+                    $delay += 15;
             }
         }
 

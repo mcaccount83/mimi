@@ -149,10 +149,13 @@ class EmailCampaignController extends Controller
                 }
             }
 
+            $delay = 0;
             foreach ($mailData as $chapterName => $data) {
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
-                        ->queue(new CampaignsElectionsTimeline($data, $pdfPath));
+                        // ->queue(new CampaignsElectionsTimeline($data, $pdfPath));
+                        ->later(now()->addSeconds($delay), new CampaignsElectionsTimeline($data, $pdfPath));
+                    $delay += 15;
                 }
             }
 
@@ -219,10 +222,13 @@ class EmailCampaignController extends Controller
                 }
             }
 
+            $delay = 0;
             foreach ($mailData as $chapterName => $data) {
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
-                        ->queue(new CampaignsAnnualReport($data));
+                        // ->queue(new CampaignsAnnualReport($data));
+                        ->later(now()->addSeconds($delay), new CampaignsAnnualReport($data));
+                    $delay += 15;
                 }
             }
 
@@ -286,10 +292,13 @@ class EmailCampaignController extends Controller
                 }
             }
 
+            $delay = 0;
             foreach ($mailData as $chapterName => $data) {
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
-                        ->queue(new CampaignsBudgetMeeting($data));
+                        // ->queue(new CampaignsBudgetMeeting($data));
+                        ->later(now()->addSeconds($delay), new CampaignsBudgetMeeting($data));
+                    $delay += 15;
                 }
             }
 
@@ -353,10 +362,13 @@ class EmailCampaignController extends Controller
                 }
             }
 
+            $delay = 0;
             foreach ($mailData as $chapterName => $data) {
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
-                        ->queue(new CampaignsCodeOfConduct($data));
+                        // ->queue(new CampaignsCodeOfConduct($data));
+                        ->later(now()->addSeconds($delay), new CampaignsCodeOfConduct($data));
+                    $delay += 15;
                 }
             }
 
@@ -420,10 +432,13 @@ class EmailCampaignController extends Controller
                 }
             }
 
+            $delay = 0;
             foreach ($mailData as $chapterName => $data) {
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
-                        ->queue(new CampaignsRecordsRetention($data));
+                        // ->queue(new CampaignsRecordsRetention($data));
+                        ->later(now()->addSeconds($delay), new CampaignsRecordsRetention($data));
+                    $delay += 15;
                 }
             }
 
@@ -494,10 +509,13 @@ class EmailCampaignController extends Controller
                 }
             }
 
+            $delay = 0;
             foreach ($mailData as $chapterName => $data) {
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
-                        ->queue(new CampaignsHolidayBreak($data));
+                        // ->queue(new CampaignsHolidayBreak($data));
+                        ->later(now()->addSeconds($delay), new CampaignsHolidayBreak($data));
+                    $delay += 15;
                 }
             }
 
@@ -561,10 +579,13 @@ class EmailCampaignController extends Controller
                 }
             }
 
+            $delay = 0;
             foreach ($mailData as $chapterName => $data) {
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
-                        ->queue(new CampaignsProcessingReimbursements($data));
+                        // ->queue(new CampaignsProcessingReimbursements($data));
+                        ->later(now()->addSeconds($delay), new CampaignsProcessingReimbursements($data));
+                    $delay += 15;
                 }
             }
 
@@ -628,10 +649,13 @@ class EmailCampaignController extends Controller
                 }
             }
 
+            $delay = 0;
             foreach ($mailData as $chapterName => $data) {
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
-                        ->queue(new CampaignsVolunteerPush($data));
+                        // ->queue(new CampaignsVolunteerPush($data));
+                        ->later(now()->addSeconds($delay), new CampaignsVolunteerPush($data));
+                    $delay += 15;
                 }
             }
 
@@ -695,10 +719,13 @@ class EmailCampaignController extends Controller
                 }
             }
 
+            $delay = 0;
             foreach ($mailData as $chapterName => $data) {
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
-                        ->queue(new CampaignsServiceProjects($data));
+                        // ->queue(new CampaignsServiceProjects($data));
+                        ->later(now()->addSeconds($delay), new CampaignsServiceProjects($data));
+                    $delay += 15;
                 }
             }
 
@@ -767,10 +794,13 @@ class EmailCampaignController extends Controller
                 }
             }
 
+            $delay = 0;
             foreach ($mailData as $chapterName => $data) {
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
-                        ->queue(new CampaignsMemberBenefits($data, $pdfPath));
+                        // ->queue(new CampaignsMemberBenefits($data, $pdfPath));
+                        ->later(now()->addSeconds($delay), new CampaignsMemberBenefits($data, $pdfPath));
+                    $delay += 15;
                 }
             }
 
@@ -838,10 +868,13 @@ class EmailCampaignController extends Controller
                 }
             }
 
+            $delay = 0;
             foreach ($mailData as $chapterName => $data) {
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
-                        ->queue(new CampaignsBoardReport($data));
+                        // ->queue(new CampaignsBoardReport($data));
+                        ->later(now()->addSeconds($delay), new CampaignsBoardReport($data));
+                    $delay += 15;
                 }
             }
 
@@ -909,10 +942,13 @@ class EmailCampaignController extends Controller
                 }
             }
 
+            $delay = 0;
             foreach ($mailData as $chapterName => $data) {
                 if (! empty($chapterName)) {
                     Mail::to($chapterEmails[$chapterName] ?? [])
-                        ->queue(new CampaignsFinancialReport($data));
+                        // ->queue(new CampaignsFinancialReport($data));
+                        ->later(now()->addSeconds($delay), new CampaignsFinancialReport($data));
+                    $delay += 15;
                 }
             }
 

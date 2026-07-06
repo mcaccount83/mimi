@@ -18,6 +18,8 @@ use App\Models\FinancialReportAwards;
 use App\Models\FinancialReportAwardsBadges;
 use App\Models\FinancialReportFinal;
 use App\Models\FinancialReportReview;
+use App\Models\ResourceCategory;
+use App\Models\Resources;
 use App\Models\State;
 use App\Models\Website;
 use App\Services\PositionConditionsService;
@@ -488,10 +490,12 @@ class EOYReportController extends Controller implements HasMiddleware
         // $submitted = $baseQuery['submitted'];
         $rrList = $baseQuery['rrList'];
 
+        $resources = Resources::with('resourceCategory')->get();
+
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'chFinancialReportReview' => $chFinancialReportReview,
             'chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'rrList' => $rrList, 'allAwards' => $allAwards, 'chDocuments' => $chDocuments, 'chEOYDocuments' => $chEOYDocuments,
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc, 'confId' => $confId, 'chConfId' => $chConfId,
-            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
+            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments, 'resources' => $resources,
         ];
 
         return view('coordinators.eoyreports.editfinancialreview')->with($data);
@@ -1115,7 +1119,9 @@ class EOYReportController extends Controller implements HasMiddleware
         $chReportDocuments = $baseQuery['chReportDocuments'];
         $allAwards = $baseQuery['allAwards'];
 
-        $data = ['coorId' => $coorId, 'confId' => $confId, 'chapterStatus' => $chapterStatus, 'chEOYDocuments' => $chEOYDocuments,
+        $resources = Resources::with('resourceCategory')->get();
+
+        $data = ['coorId' => $coorId, 'confId' => $confId, 'chapterStatus' => $chapterStatus, 'chEOYDocuments' => $chEOYDocuments, 'resources' => $resources,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
             'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments, 'chFinancialReportReview' => $chFinancialReportReview,

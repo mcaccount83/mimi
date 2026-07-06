@@ -59,6 +59,14 @@
                     <button type="button" id="AwardNotify" class="btn btn-primary bg-gradient btn-xs ms-1" onclick="showChapterAwardsEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }})"><i class="bi bi-envelope-fill me-2"></i>Send Award Notification</button>
                         @endif
                         <br>
+
+                        Questions?
+                    @foreach($resources as $resourceItem)
+                    @if ($resourceItem->name == 'Annual Recognition Instructions')
+                        <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">Annual Recognition Instructions</a>
+                    @endif
+                    @endforeach
+                </div>
                    </div>
                     <!-- /.card-header -->
                     <div class="card-body">

@@ -447,7 +447,17 @@
                         <span style="color: #dc3545;">REPORT NOT YET SUBMITTED FOR REVIEW</span>
                     @endif
                 <p>Have some questions about reviewing?<br>
-                    <a href="https://momsclub.org/reviewing-reports-faq/"   target="_blank">Check out our FAQ!</a></p>
+                    @foreach($resources as $resourceItem)
+                    @if ($resourceItem->name == 'Annual Report Review Instructions')
+                        <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">Annual Report Review Instructions</a><br>
+                    @endif
+                    @endforeach
+                    @foreach($resources as $resourceItem)
+                    @if ($resourceItem->name == 'Annual Recognition Instructions')
+                        <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">Annual Recognition Instructions</a><br>
+                    @endif
+                    @endforeach
+                    {{-- <a href="https://momsclub.org/reviewing-reports-faq/"   target="_blank">Check out our FAQ!</a></p> --}}
                 </div>
 
                     <div class="card-body">
