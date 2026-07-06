@@ -128,7 +128,7 @@ class EmailCampaignController extends Controller
                     $this->baseMailDataController->getUserData($user),
                 );
 
-                $campaignMessage = \Illuminate\Support\Facades\View::make(
+                $campaignMessage = view(
                     'emails.campaigns.partials.electionstimeline_body',
                     ['mailData' => $mailData[$chDetails->name]]
                 )->render();
@@ -201,7 +201,7 @@ class EmailCampaignController extends Controller
                     $this->baseMailDataController->getUserData($user),
                 );
 
-                $campaignMessage = \Illuminate\Support\Facades\View::make(
+                $campaignMessage = view(
                     'emails.campaigns.partials.annualreport_body',
                     ['mailData' => $mailData[$chDetails->name]]
                 )->render();
@@ -271,7 +271,7 @@ class EmailCampaignController extends Controller
                     $this->baseMailDataController->getUserData($user),
                 );
 
-                $campaignMessage = \Illuminate\Support\Facades\View::make(
+                $campaignMessage = view(
                     'emails.campaigns.partials.budgetmeeting_body',
                     ['mailData' => $mailData[$chDetails->name]]
                 )->render();
@@ -341,7 +341,7 @@ class EmailCampaignController extends Controller
                     $this->baseMailDataController->getUserData($user),
                 );
 
-                $campaignMessage = \Illuminate\Support\Facades\View::make(
+                $campaignMessage = view(
                     'emails.campaigns.partials.codeofconduct_body',
                     ['mailData' => $mailData[$chDetails->name]]
                 )->render();
@@ -411,7 +411,7 @@ class EmailCampaignController extends Controller
                     $this->baseMailDataController->getUserData($user),
                   );
 
-                $campaignMessage = \Illuminate\Support\Facades\View::make(
+                $campaignMessage = view(
                     'emails.campaigns.partials.recordsretention_body',
                     ['mailData' => $mailData[$chDetails->name]]
                 )->render();
@@ -488,7 +488,7 @@ class EmailCampaignController extends Controller
                     ]
                 );
 
-                $campaignMessage = \Illuminate\Support\Facades\View::make(
+                $campaignMessage = view(
                     'emails.campaigns.partials.holidaybreak_body',
                     ['mailData' => $mailData[$chDetails->name]]
                 )->render();
@@ -558,7 +558,7 @@ class EmailCampaignController extends Controller
                     $this->baseMailDataController->getUserData($user),
                 );
 
-                $campaignMessage = \Illuminate\Support\Facades\View::make(
+                $campaignMessage = view(
                     'emails.campaigns.partials.processingreimbursements_body',
                     ['mailData' => $mailData[$chDetails->name]]
                 )->render();
@@ -628,7 +628,7 @@ class EmailCampaignController extends Controller
                     $this->baseMailDataController->getUserData($user),
                 );
 
-                $campaignMessage = \Illuminate\Support\Facades\View::make(
+                $campaignMessage = view(
                     'emails.campaigns.partials.volunteerpush_body',
                     ['mailData' => $mailData[$chDetails->name]]
                 )->render();
@@ -698,7 +698,7 @@ class EmailCampaignController extends Controller
                     $this->baseMailDataController->getUserData($user),
                 );
 
-                $campaignMessage = \Illuminate\Support\Facades\View::make(
+                $campaignMessage = view(
                     'emails.campaigns.partials.serviceprojects_body',
                     ['mailData' => $mailData[$chDetails->name]]
                 )->render();
@@ -773,7 +773,7 @@ class EmailCampaignController extends Controller
                     $this->baseMailDataController->getUserData($user),
                 );
 
-                $campaignMessage = \Illuminate\Support\Facades\View::make(
+                $campaignMessage = view(
                     'emails.campaigns.partials.memberbenefits_body',
                     ['mailData' => $mailData[$chDetails->name]]
                 )->render();
@@ -847,7 +847,7 @@ class EmailCampaignController extends Controller
                     $this->baseMailDataController->getUserData($user),
                 );
 
-                $campaignMessage = \Illuminate\Support\Facades\View::make(
+                $campaignMessage = view(
                     'emails.campaigns.partials.boardreport_body',
                     ['mailData' => $mailData[$chDetails->name]]
                 )->render();
@@ -921,7 +921,7 @@ class EmailCampaignController extends Controller
                     $this->baseMailDataController->getUserData($user),
                 );
 
-                $campaignMessage = \Illuminate\Support\Facades\View::make(
+                $campaignMessage = view(
                     'emails.campaigns.partials.financialreport_body',
                     ['mailData' => $mailData[$chDetails->name]]
                 )->render();
