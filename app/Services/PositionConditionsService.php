@@ -81,7 +81,7 @@ class PositionConditionsService
      */
     public function getDateOptions(): array
     {
-        $currentDate = \Carbon\Carbon::now(); // Full Current Date
+        $currentDate = \Illuminate\Support\Carbon::now(); // Full Current Date
         $currentDateYmd = $currentDate->format('Y-m-d');
         $currentDateWords = $currentDate->format('F j, Y'); // e.g., July 9, 2024
         $nextMonthDateWords = $currentDate->copy()->addMonth()->format('F j, Y'); // e.g., July 9, 2024
