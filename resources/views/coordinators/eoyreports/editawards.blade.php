@@ -60,7 +60,7 @@
                         @endif
                         <br>
 
-                        Questions?
+                    Questions?
                     @foreach($resources as $resourceItem)
                     @if ($resourceItem->name == 'Annual Recognition Instructions')
                         <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">Annual Recognition Instructions</a>

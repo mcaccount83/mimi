@@ -457,7 +457,6 @@
                         <a href="javascript:void(0)" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">Annual Recognition Instructions</a><br>
                     @endif
                     @endforeach
-                    {{-- <a href="https://momsclub.org/reviewing-reports-faq/"   target="_blank">Check out our FAQ!</a></p> --}}
                 </div>
 
                     <div class="card-body">
