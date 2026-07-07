@@ -545,8 +545,8 @@
                     <td width="36%">Project Description<span class="field-required">*</span></td>
                     <td width="16%">Income</td>
                     <td width="16%">Supplies & Expenses</td>
-                    <td width="16%">Charity Donation</td>
-                    <td width="16%">M2M Donation</td>
+                    <td width="16%">Charitable Donation</td>
+                    <td width="16%">M2M Fund Donation</td>
                 </tr>
             </thead>
             <tbody>
