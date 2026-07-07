@@ -262,11 +262,32 @@ class PositionConditionsService
         ];
     }
 
-    public function getViewAs(int $userTypeId, object $PresDetails): array
+    // public function getViewAs(int $userTypeId, object $PresDetails): array
+    // {
+    //     $viewingAs = session('viewing_as', 'board');
+    //     $presTypeId = $PresDetails?->user?->type_id ?? null;
+
+    //     if ($userTypeId == UserTypeEnum::COORD && $viewingAs == 'coord') {
+    //         return [
+    //             'bdPositionId' => '1',
+    //             'bdDetails' => $PresDetails,
+    //             'bdTypeId' => $presTypeId,
+    //         ];
+    //     }
+
+    //     return [
+    //         'bdPositionId' => $PresDetails?->position_id ?? null,
+    //         'bdDetails' => $PresDetails,
+    //         'bdTypeId' => $presTypeId,
+    //     ];
+    // }
+
+    public function getViewAs(int $userTypeId, int $userId, object $PresDetails, ?object $ownBoardDetails = null): array
     {
         $viewingAs = session('viewing_as', 'board');
         $presTypeId = $PresDetails?->user?->type_id ?? null;
 
+        // Coordinator explicitly viewing as the chapter president (proxy access)
         if ($userTypeId == UserTypeEnum::COORD && $viewingAs == 'coord') {
             return [
                 'bdPositionId' => '1',
@@ -275,6 +296,16 @@ class PositionConditionsService
             ];
         }
 
+        // Actual board member viewing their own profile
+        if ($userTypeId != UserTypeEnum::COORD && $ownBoardDetails) {
+            return [
+                'bdPositionId' => $ownBoardDetails->position_id ?? null,
+                'bdDetails' => $ownBoardDetails,
+                'bdTypeId' => $ownBoardDetails?->user?->type_id ?? null,
+            ];
+        }
+
+        // Fallback: coordinator not in "view as" mode — still defaults to president
         return [
             'bdPositionId' => $PresDetails?->position_id ?? null,
             'bdDetails' => $PresDetails,

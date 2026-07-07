@@ -80,6 +80,7 @@ class BoardController extends Controller implements HasMiddleware
     public function chapterProfile(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
         $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
@@ -137,7 +138,12 @@ class BoardController extends Controller implements HasMiddleware
             ->orderByDesc('submitted_at')
             ->get();
 
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $ownBoardDetails = Boards::with(['state', 'country', 'user'])
+            ->where('chapter_id', $chId)
+            ->where('user_id', $userId)
+            ->first();
+
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $userId, $PresDetails, $ownBoardDetails);
         $bdPositionId = $bdData['bdPositionId'];
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];
@@ -161,6 +167,7 @@ class BoardController extends Controller implements HasMiddleware
     public function viewDocuments(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
         $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
@@ -190,8 +197,13 @@ class BoardController extends Controller implements HasMiddleware
 
         $allProbation = $baseQuery['allProbation'];
 
+        $ownBoardDetails = Boards::with(['state', 'country', 'user'])
+            ->where('chapter_id', $chId)
+            ->where('user_id', $userId)
+            ->first();
+
         $PresDetails = $baseQuery['PresDetails'];
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $userId, $PresDetails, $ownBoardDetails);
         $bdPositionId = $bdData['bdPositionId'];
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];
@@ -213,6 +225,7 @@ class BoardController extends Controller implements HasMiddleware
     public function viewReRegHistory(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
         $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
@@ -270,7 +283,12 @@ class BoardController extends Controller implements HasMiddleware
             ->orderByDesc('submitted_at')
             ->get();
 
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $ownBoardDetails = Boards::with(['state', 'country', 'user'])
+            ->where('chapter_id', $chId)
+            ->where('user_id', $userId)
+            ->first();
+
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $userId, $PresDetails, $ownBoardDetails);
         $bdPositionId = $bdData['bdPositionId'];
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];
@@ -294,6 +312,7 @@ class BoardController extends Controller implements HasMiddleware
     public function viewDonationHistory(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
         $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
@@ -351,7 +370,12 @@ class BoardController extends Controller implements HasMiddleware
             ->orderByDesc('submitted_at')
             ->get();
 
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $ownBoardDetails = Boards::with(['state', 'country', 'user'])
+            ->where('chapter_id', $chId)
+            ->where('user_id', $userId)
+            ->first();
+
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $userId, $PresDetails, $ownBoardDetails);
         $bdPositionId = $bdData['bdPositionId'];
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];
@@ -375,6 +399,7 @@ class BoardController extends Controller implements HasMiddleware
     public function viewAwardHistory(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
         $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
@@ -399,7 +424,12 @@ class BoardController extends Controller implements HasMiddleware
         $TRSDetails = $baseQuery['TRSDetails'];
         $SECDetails = $baseQuery['SECDetails'];
 
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $ownBoardDetails = Boards::with(['state', 'country', 'user'])
+            ->where('chapter_id', $chId)
+            ->where('user_id', $userId)
+            ->first();
+
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $userId, $PresDetails, $ownBoardDetails);
         $bdPositionId = $bdData['bdPositionId'];
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];
@@ -416,6 +446,7 @@ class BoardController extends Controller implements HasMiddleware
     public function editBoard(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
         $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
@@ -446,7 +477,12 @@ class BoardController extends Controller implements HasMiddleware
         $TRSDetails = $baseQuery['TRSDetails'];
         $SECDetails = $baseQuery['SECDetails'];
 
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $ownBoardDetails = Boards::with(['state', 'country', 'user'])
+            ->where('chapter_id', $chId)
+            ->where('user_id', $userId)
+            ->first();
+
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $userId, $PresDetails, $ownBoardDetails);
         $bdPositionId = $bdData['bdPositionId'];
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];
@@ -806,6 +842,7 @@ class BoardController extends Controller implements HasMiddleware
     public function editManualOrderForm(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
         $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
@@ -816,8 +853,13 @@ class BoardController extends Controller implements HasMiddleware
         $allStates = $baseQuery['allStates'];
         $allCountries = $baseQuery['allCountries'];
 
+        $ownBoardDetails = Boards::with(['state', 'country', 'user'])
+            ->where('chapter_id', $chId)
+            ->where('user_id', $userId)
+            ->first();
+
         $PresDetails = $baseQuery['PresDetails'];
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $userId, $PresDetails, $ownBoardDetails);
         $bdPositionId = $bdData['bdPositionId'];
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];
@@ -835,6 +877,7 @@ class BoardController extends Controller implements HasMiddleware
     public function editProbationSubmission(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
         $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
@@ -854,8 +897,13 @@ class BoardController extends Controller implements HasMiddleware
         $rangeStartDateFormatted = $rangeStartDate->format('m/d/Y');
         $rangeEndDateFormatted = $rangeEndDate->format('m/d/Y');
 
+        $ownBoardDetails = Boards::with(['state', 'country', 'user'])
+            ->where('chapter_id', $chId)
+            ->where('user_id', $userId)
+            ->first();
+
         $PresDetails = $baseQuery['PresDetails'];
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $userId, $PresDetails, $ownBoardDetails);
         $bdPositionId = $bdData['bdPositionId'];
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];
@@ -941,6 +989,7 @@ class BoardController extends Controller implements HasMiddleware
     public function editOnlineInfo(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
         $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
@@ -955,8 +1004,13 @@ class BoardController extends Controller implements HasMiddleware
 
         $allWebLinks = $baseQuery['allWebLinks'];
 
+        $ownBoardDetails = Boards::with(['state', 'country', 'user'])
+            ->where('chapter_id', $chId)
+            ->where('user_id', $userId)
+            ->first();
+
         $PresDetails = $baseQuery['PresDetails'];
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $userId, $PresDetails, $ownBoardDetails);
         $bdPositionId = $bdData['bdPositionId'];
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];
@@ -1059,6 +1113,7 @@ class BoardController extends Controller implements HasMiddleware
     public function viewResources(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
         $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
@@ -1066,8 +1121,13 @@ class BoardController extends Controller implements HasMiddleware
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
 
+        $ownBoardDetails = Boards::with(['state', 'country', 'user'])
+            ->where('chapter_id', $chId)
+            ->where('user_id', $userId)
+            ->first();
+
         $PresDetails = $baseQuery['PresDetails'];
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $userId, $PresDetails, $ownBoardDetails);
         $bdPositionId = $bdData['bdPositionId'];
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];
@@ -1089,6 +1149,7 @@ class BoardController extends Controller implements HasMiddleware
     public function viewEndOfYear(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
         $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
@@ -1110,8 +1171,13 @@ class BoardController extends Controller implements HasMiddleware
         $resources = Resources::with('resourceCategory')->get();
         $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
 
+        $ownBoardDetails = Boards::with(['state', 'country', 'user'])
+            ->where('chapter_id', $chId)
+            ->where('user_id', $userId)
+            ->first();
+
         $PresDetails = $baseQuery['PresDetails'];
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $userId, $PresDetails, $ownBoardDetails);
         $bdPositionId = $bdData['bdPositionId'];
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];
@@ -1130,6 +1196,7 @@ class BoardController extends Controller implements HasMiddleware
     public function editBoardReport(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
         $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
@@ -1165,7 +1232,12 @@ class BoardController extends Controller implements HasMiddleware
             $SECDetails = $baseActiveBoardQuery['SECDetails'];
         }
 
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $activePresDetails);
+        $ownBoardDetails = Boards::with(['state', 'country', 'user'])
+            ->where('chapter_id', $chId)
+            ->where('user_id', $userId)
+            ->first();
+
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $userId, $PresDetails, $ownBoardDetails);
         $bdPositionId = $bdData['bdPositionId'];
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];
@@ -1429,6 +1501,7 @@ class BoardController extends Controller implements HasMiddleware
     public function viewELearning(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
         $userTypeId = $user['userTypeId'];
 
         $userInfo = User::find($request->user()->id); // Formatted for course re-route
@@ -1455,7 +1528,12 @@ class BoardController extends Controller implements HasMiddleware
             ];
         });
 
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $ownBoardDetails = Boards::with(['state', 'country', 'user'])
+            ->where('chapter_id', $chId)
+            ->where('user_id', $userId)
+            ->first();
+
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $userId, $PresDetails, $ownBoardDetails);
         $bdPositionId = $bdData['bdPositionId'];
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];
@@ -1486,6 +1564,7 @@ class BoardController extends Controller implements HasMiddleware
     public function viewGrantRequestList(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
         $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
@@ -1501,8 +1580,13 @@ class BoardController extends Controller implements HasMiddleware
         $baseQuery = $this->baseBoardController->getChapterDetails($chId);
         $stateShortName = $baseQuery['stateShortName'];
 
+        $ownBoardDetails = Boards::with(['state', 'country', 'user'])
+            ->where('chapter_id', $chId)
+            ->where('user_id', $userId)
+            ->first();
+
         $PresDetails = $baseQuery['PresDetails'];
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $userId, $PresDetails, $ownBoardDetails);
         $bdPositionId = $bdData['bdPositionId'];
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];
@@ -1643,6 +1727,7 @@ class BoardController extends Controller implements HasMiddleware
     public function showNewGrantRequest(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
         $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
@@ -1661,8 +1746,13 @@ class BoardController extends Controller implements HasMiddleware
             $borDetails = $user['bdDetails'];
         }
 
+        $ownBoardDetails = Boards::with(['state', 'country', 'user'])
+            ->where('chapter_id', $chId)
+            ->where('user_id', $userId)
+            ->first();
+
         $PresDetails = $baseQuery['PresDetails'];
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $userId, $PresDetails, $ownBoardDetails);
         $bdPositionId = $bdData['bdPositionId'];
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];
@@ -1738,8 +1828,13 @@ class BoardController extends Controller implements HasMiddleware
         $allStates = $baseQuery['allStates'];
         $allCountries = $baseQuery['allCountries'];
 
+        $ownBoardDetails = Boards::with(['state', 'country', 'user'])
+            ->where('chapter_id', $chId)
+            ->where('user_id', $userId)
+            ->first();
+
         $PresDetails = $baseQuery['PresDetails'];
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $userId, $PresDetails, $ownBoardDetails);
         $bdPositionId = $bdData['bdPositionId'];
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];

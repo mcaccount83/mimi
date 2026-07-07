@@ -18,7 +18,7 @@ use App\Models\FinancialReportAwards;
 use App\Models\FinancialReportAwardsBadges;
 use App\Models\FinancialReportFinal;
 use App\Models\FinancialReportReview;
-use App\Models\ResourceCategory;
+use App\Models\Irs990nFiling;
 use App\Models\Resources;
 use App\Models\State;
 use App\Models\Website;
@@ -1292,9 +1292,14 @@ class EOYReportController extends Controller implements HasMiddleware
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $chFinancialReportReview = $baseQuery['chFinancialReportReview'];
 
+        $allFilings = Irs990nFiling::where('chapter_id', $id)
+            ->orderByDesc('tax_period_end')
+            ->get();
+
         $data = ['coorId' => $coorId, 'confId' => $confId, 'chapterStatus' => $chapterStatus, 'chEOYDocuments' => $chEOYDocuments, 'chFinancialReportReview' => $chFinancialReportReview,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport, 'chIRSDocuments' => $chIRSDocuments,
+            'allFilings' => $allFilings,
         ];
 
         return view('coordinators.eoyreports.editirssubmission')->with($data);

@@ -52,7 +52,8 @@
             <div class="card card-primary card-outline">
                 <div class="card-body">
                     <div class="card-header bg-transparent border-0">
-                <h3>{{ $reportYearRange }} 990N Filing Details</h3>
+                <h3>{{ $reportYearStart }} 990N Filing Details</h3>
+                        Dates: July 1, {{ $reportYearStart }} - June 30, {{ $reportYearEnd }}
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
@@ -156,109 +157,57 @@
                   </div>
               <!-- /.card-body -->
 
-              {{-- <div class="card-body">
-                    <div class="card-header bg-transparent border-0">
-                <h3>Last Year's 990N Filing Details</h3>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body">
+              <div class="card card-primary card-outline mt-3">
+    <div class="card-header bg-transparent border-0">
+        <h5 class="mb-0">990N Filings on Record (IRS Data)</h5>
+    </div>
+    <div class="card-body">
+        @if($allFilings->isNotEmpty())
+            <div class="accordion" id="filingHistoryAccordion">
+                @foreach($allFilings as $index => $filing)
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading-{{ $filing->id }}">
+                            <button class="accordion-button {{ $index >= 3 ? 'collapsed' : '' }}"
+                                    type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse-{{ $filing->id }}"
+                                    aria-expanded="{{ $index < 3 ? 'true' : 'false' }}"
+                                    aria-controls="collapse-{{ $filing->id }}">
+                                Tax Year {{ $filing->tax_year }}
+                                &nbsp;<small class="text-muted ms-2">
+                                    ({{ $filing->tax_period_begin?->format('m/d/Y') }} – {{ $filing->tax_period_end?->format('m/d/Y') }})
+                                </small>
+                            </button>
+                        </h2>
+                        <div id="collapse-{{ $filing->id }}"
+                             class="accordion-collapse collapse {{ $index < 3 ? 'show' : '' }}"
+                             aria-labelledby="heading-{{ $filing->id }}"
+                             data-bs-parent="#filingHistoryAccordion">
+                            <div class="accordion-body">
+                                <dl class="row mb-0">
+                                    <dt class="col-sm-4">Organization Name on File</dt>
+                                    <dd class="col-sm-8">{{ $filing->organization_name }}</dd>
 
-                        <div class="row mb-2">
-                        <div class="col-sm-3">
-                            <label>990N Filing:</label>
-                        </div>
-                        <div class="col-sm-9">
-                                @if (!empty($chIRSDocuments->irs_path_previous))
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="eoy-irs" onclick="openPdfViewer('{{ $chIRSDocuments->irs_path }}')">View 990N Confirmation</button>
-                                @else
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No file attached</button>
-                                @endif
-                        </div>
-                    </div>
+                                    <dt class="col-sm-4">Tax Period</dt>
+                                    <dd class="col-sm-8">
+                                        {{ $filing->tax_period_begin?->format('m/d/Y') }} –
+                                        {{ $filing->tax_period_end?->format('m/d/Y') }}
+                                    </dd>
 
-                    <div class="row mb-2 align-middle">
-                        <label class="col-sm-3 col-form-label">990N Verified on IRS Website:</label>
-                        <div class="col-sm-9">
-                            <div class="form-check form-switch">
-                                <input type="checkbox" name="irs_verified" id="irs_verified" class="form-check-input"
-                                {{ $chIRSDocuments->irs_verified_previous == 1 ? 'checked' : ''}} disabled>
-                                <label class="form-check-label" for="irs_verified"></label>
+                                    <dt class="col-sm-4">Last Synced</dt>
+                                    <dd class="col-sm-8">{{ $filing->synced_at->format('m/d/Y g:i A') }}</dd>
+                                </dl>
                             </div>
                         </div>
                     </div>
+                @endforeach
+            </div>
+        @else
+            <p class="text-muted mb-0">No IRS filing records found yet for this chapter's EIN.</p>
+        @endif
+    </div>
+</div>
 
-                    <div class="row mb-3 align-middle">
-                        <label class="col-sm-3 col-form-label">990N Submission Issues:<br>
-                            <small class="text-muted">(Wrong Dates, Not Found, etc)</small></label>
-                        <div class="col-sm-3">
-                            <div class="form-check form-switch">
-                                <input type="checkbox" name="irs_issues" id="irs_issues" class="form-check-input"
-                                {{ $chIRSDocuments->irs_issues_previous == 1 ? 'checked' : ''}} disabled>
-                                <label class="form-check-label" for="irs_issues"></label>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- This row is hidden by default and shows when irs_issues is checked -->
-                    <div class="row mb-3 align-middle" id="irs_details_row" style="display: {{ $chIRSDocuments->irs_issues == 1 ? 'flex' : 'none' }};">
-                        <label class="col-sm-2 col-form-label">Wrong Dates Listed:</label>
-                        <div class="col-sm-1">
-                            <div class="form-check form-switch">
-                                <input type="checkbox" name="irs_wrongdate" id="irs_wrongdate" class="form-check-input exclusive-toggle"
-                                {{ $chIRSDocuments->irs_wrongdate_previous == 1 ? 'checked' : ''}} disabled>
-                                <label class="form-check-label" for="irs_wrongdate"></label>
-                            </div>
-                        </div>
-                        <label class="col-sm-2 col-form-label">Chapter Not Found:</label>
-                        <div class="col-sm-1">
-                            <div class="form-check form-switch">
-                                <input type="checkbox" name="irs_notfound" id="irs_notfound" class="form-check-input exclusive-toggle"
-                                {{ $chIRSDocuments->irs_notfound_previous == 1 ? 'checked' : ''}} disabled>
-                                <label class="form-check-label" for="irs_notfound"></label>
-                            </div>
-                        </div>
-                        <label class="col-sm-2 col-form-label">FILED w/Wrong Dates</label>
-                        <div class="col-sm-1">
-                            <div class="form-check form-switch">
-                                <input type="checkbox" name="irs_filedwrong" id="irs_filedwrong" class="form-check-input exclusive-toggle"
-                                {{ $chIRSDocuments->irs_filedwrong_previous == 1 ? 'checked' : ''}} disabled>
-                                <label class="form-check-label" for="irs_filedwrong"></label>
-                            </div>
-                        </div>
-
-                        @if($ITCondition == 1 )
-                            <label class="col-sm-2 col-form-label">IRS Notified:</label>
-                            <div class="col-sm-1">
-                                <div class="form-check form-switch">
-                                    <input type="checkbox" name="irs_notified" id="irs_notified" class="form-check-input"
-                                    {{ $chIRSDocuments->irs_notified_previous == 1 ? 'checked' : ''}} disabled>
-                                    <label class="form-check-label" for="irs_notified"></label>
-                                </div>
-                            </div>
-                        @else
-                            <label class="col-sm-2 col-form-label">IRS Notified:</label>
-                            <div class="col-sm-1">
-                                <div class="form-check form-switch">
-                                    <input type="checkbox" name="irs_notified" id="irs_notified" class="form-check-input"
-                                    {{ $chIRSDocuments->irs_notified_previous == 1 ? 'checked' : ''}} disabled>
-                                    <label class="form-check-label" for="irs_notified"></label>
-                                    <input type="hidden" name="irs_notified" value="{{ $chIRSDocuments->irs_notified }}">
-                                </div>
-                            </div>
-                        @endif
-                    </div>
-
-                         <!-- /.form group -->
-                      <div class="row mb-2">
-                        <label class="col-sm-3 col-form-label">990 Submission Notes:</label>
-                        <div class="col-sm-9">
-                        <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chIRSDocuments->irs_notes_previous }}" disabled>
-                        </div>
-                    </div>
-
-                    </div>
-                  </div> --}}
-              <!-- /.card-body -->
             </div>
             <!-- /.card -->
           </div>
