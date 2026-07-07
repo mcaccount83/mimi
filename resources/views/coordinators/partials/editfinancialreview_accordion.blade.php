@@ -457,8 +457,8 @@
                                 <td>Project Description</td>
                                 <td>Project Income</td>
                                 <td>Supplies/Expenses</td>
-                                <td>Charity Donation</td>
-                                <td>M2M Donation</td>
+                                <td>Charitable Donation</td>
+                                <td>M2M Fund Donation</td>
                             </tr>
                         </thead>
                         <tbody>
