@@ -38,18 +38,9 @@ After a few months you'll find your writing style and become more comfortable re
 
 **Your Mentoring Coordinator**
 
-{{ $mailData['cdReportTo'] }}
-@mailto($mailData['cdReportEmail'])
+{{ $mailData['cdReportTo'] }}<br>
+@mailto($mailData['cdReportEmail'])<br>
 {{ $mailData['cdReportPhone'] }}
-
----
-
-**Let's Get Started!**
-
-Complete the Big Sister training in our eLearning Portal to gain a fuller understanding of the role of a Big Sister.
-
-[https://momsclub.org/elearning/coordinator-training/](https://momsclub.org/elearning/coordinator-training/)
-Password: Toolkit2021
 
 ---
 
@@ -71,8 +62,8 @@ we'll send you a new link!
 
 Although you are probably familiar with MIMI as a board member of your chapter, you will also use MIMI as a coordinator.
 
-[https://momsclub.org/mimi/login](https://momsclub.org/mimi/login)
-Username: {{ $mailData['cdEmail'] }}
+[https://momsclub.org/mimi/login](https://momsclub.org/mimi/login)<br>
+Username: {{ $mailData['cdEmail'] }}<br>
 Password: TempPass4You
 
 After logging in you will see the coordinator dashboard instead of your chapter's profile page.
@@ -84,11 +75,20 @@ to set both accounts up with the same email address you will get an error when t
 
 ---
 
+**What does a Big Sister Do?**
+
+Complete the Big Sister training in our eLearning Portal to gain a fuller understanding of the role of a Big Sister.
+
+You'll access your eLearning Library through your MIMI login.  Once logged in, navigate to Resources->eLearning Library to view
+courses available to you and to track your progress.
+
+---
+
 **Your Chapter List**
 
 @if (count($mailData['cdChapters']) > 0)
 @foreach ($mailData['cdChapters'] as $chapter)
-- {{ $chapter->name }}, {{ $chapter->state->state_short_name }}
+- {{ $chapter->name }}, {{ $chapter->state->state_short_name }}<br>
 @endforeach
 @else
 No chapters have been assigned to you yet. You will be notified once your group of chapters has been set.
