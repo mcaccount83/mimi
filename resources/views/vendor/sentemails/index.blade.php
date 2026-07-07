@@ -114,7 +114,7 @@
                                             <span class="text-sm font-semibold text-gray-900">{{ $from }}</span>
                                             {{-- <span class="text-xs text-gray-500">{{ $email->created_at->setTimezone('UTC')->diffForHumans() }}</span> --}}
                                             <span class="text-xs text-gray-500">
-    {{ \Carbon\Carbon::parse($email->getAttributes()['created_at'], 'UTC')->setTimezone(config('app.timezone'))->diffForHumans() }}
+    {{ \Illuminate\Support\Carbon::parse($email->getAttributes()['created_at'], 'UTC')->setTimezone(config('app.timezone'))->diffForHumans() }}
 </span>
 
                                         </div>

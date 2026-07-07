@@ -11,7 +11,7 @@ use App\Models\Payments;
 use App\Models\Region;
 use App\Models\RegionInquiry;
 use App\Services\PositionConditionsService;
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
