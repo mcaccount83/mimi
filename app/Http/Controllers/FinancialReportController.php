@@ -63,6 +63,7 @@ class FinancialReportController extends Controller implements HasMiddleware
     public function editFinancialReport(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
         $userTypeId = $user['userTypeId'];
         $userName = $loggedInName = $user['userName'];
         $userEmail = $user['userEmail'];
@@ -79,8 +80,13 @@ class FinancialReportController extends Controller implements HasMiddleware
         $awards = $baseQuery['awards'];
         $allAwards = $baseQuery['allAwards'];
 
+        $ownBoardDetails = Boards::with(['state', 'country', 'user'])
+            ->where('chapter_id', $chId)
+            ->where('user_id', $userId)
+            ->first();
+
         $PresDetails = $baseQuery['PresDetails'];
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $userId, $PresDetails, $ownBoardDetails);
         $bdPositionId = $bdData['bdPositionId'];
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];
@@ -102,6 +108,7 @@ class FinancialReportController extends Controller implements HasMiddleware
     public function editFinancialReportFinal(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
         $userTypeId = $user['userTypeId'];
         $userName = $loggedInName = $user['userName'];
         $userEmail = $user['userEmail'];
@@ -122,8 +129,13 @@ class FinancialReportController extends Controller implements HasMiddleware
 
         $chDisbanded = $baseQuery['chDisbanded'];
 
+        $ownBoardDetails = Boards::with(['state', 'country', 'user'])
+            ->where('chapter_id', $chId)
+            ->where('user_id', $userId)
+            ->first();
+
         $PresDetails = $baseQuery['PresDetails'];
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $userId, $PresDetails, $ownBoardDetails);
         $bdPositionId = $bdData['bdPositionId'];
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];
@@ -495,6 +507,7 @@ class FinancialReportController extends Controller implements HasMiddleware
     public function editDisbandChecklist(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
         $userTypeId = $user['userTypeId'];
         $userName = $loggedInName = $user['userName'];
         $userEmail = $user['userEmail'];
@@ -515,8 +528,13 @@ class FinancialReportController extends Controller implements HasMiddleware
 
         $chDisbanded = $baseQuery['chDisbanded'];
 
+        $ownBoardDetails = Boards::with(['state', 'country', 'user'])
+            ->where('chapter_id', $chId)
+            ->where('user_id', $userId)
+            ->first();
+
         $PresDetails = $baseQuery['PresDetails'];
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $userId, $PresDetails, $ownBoardDetails);
         $bdPositionId = $bdData['bdPositionId'];
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];

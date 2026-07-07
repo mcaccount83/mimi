@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Services\PositionConditionsService;
+use App\Models\Boards;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\View\View;
+
 
 #[Middleware('auth', except: ['logout'])]
 class BoardPendingController extends Controller
@@ -22,6 +24,7 @@ class BoardPendingController extends Controller
     public function showNewChapterStatus(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
         $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
@@ -32,8 +35,13 @@ class BoardPendingController extends Controller
         $allStates = $baseQuery['allStates'];
         $allCountries = $baseQuery['allCountries'];
 
+        $ownBoardDetails = Boards::with(['state', 'country', 'user'])
+            ->where('chapter_id', $chId)
+            ->where('user_id', $userId)
+            ->first();
+
         $PresDetails = $baseQuery['PresDetails'];
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $userId, $PresDetails, $ownBoardDetails);
         $bdPositionId = $bdData['bdPositionId'];
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];

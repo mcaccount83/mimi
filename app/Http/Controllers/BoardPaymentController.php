@@ -9,6 +9,7 @@ use App\Mail\PaymentsManualOrderReceipt;
 use App\Mail\PaymentsReRegChapterThankYou;
 use App\Mail\PaymentsReRegOnline;
 use App\Mail\PaymentsSustainingChapterThankYou;
+use App\Models\Boards;
 use App\Models\Chapters;
 use App\Models\Country;
 use App\Models\PaymentHistory;
@@ -109,6 +110,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
     public function editReregistrationPaymentFormNEW(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
         $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
@@ -121,8 +123,13 @@ class BoardPaymentController extends Controller implements HasMiddleware
         $renewalDate = $baseQuery['renewalDate'];
         $chDisbanded = $baseQuery['chDisbanded'];
 
+        $ownBoardDetails = Boards::with(['state', 'country', 'user'])
+            ->where('chapter_id', $chId)
+            ->where('user_id', $userId)
+            ->first();
+
         $PresDetails = $baseQuery['PresDetails'];
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $userId, $PresDetails, $ownBoardDetails);
         $bdPositionId = $bdData['bdPositionId'];
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];
@@ -149,6 +156,7 @@ class BoardPaymentController extends Controller implements HasMiddleware
     public function editDonationFormNEW(Request $request, int $chId): View
     {
         $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
         $userTypeId = $user['userTypeId'];
         $userAdmin = $user['userAdmin'];
 
@@ -159,8 +167,13 @@ class BoardPaymentController extends Controller implements HasMiddleware
         $allCountries = $baseQuery['allCountries'];
         $chDisbanded = $baseQuery['chDisbanded'];
 
+        $ownBoardDetails = Boards::with(['state', 'country', 'user'])
+            ->where('chapter_id', $chId)
+            ->where('user_id', $userId)
+            ->first();
+
         $PresDetails = $baseQuery['PresDetails'];
-        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+        $bdData = $this->positionConditionsService->getViewAs($userTypeId, $userId, $PresDetails, $ownBoardDetails);
         $bdPositionId = $bdData['bdPositionId'];
         $borDetails = $bdData['bdDetails'];
         $bdTypeId = $bdData['bdTypeId'];

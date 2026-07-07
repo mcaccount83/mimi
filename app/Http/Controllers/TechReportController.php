@@ -126,7 +126,12 @@ class TechReportController extends Controller implements HasMiddleware
                 continue;
             }
 
-            $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+            $ownBoardDetails = Boards::with(['state', 'country', 'user'])
+                ->where('chapter_id', $chId)
+                ->where('user_id', $userId)
+                ->first();
+
+            $bdData = $this->positionConditionsService->getViewAs($userTypeId, $userId, $PresDetails, $ownBoardDetails);
             $chapterBdData[$chapter->id] = $bdData;
         }
 
@@ -167,7 +172,12 @@ class TechReportController extends Controller implements HasMiddleware
                 continue;
             }
 
-            $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+            $ownBoardDetails = Boards::with(['state', 'country', 'user'])
+                ->where('chapter_id', $chId)
+                ->where('user_id', $userId)
+                ->first();
+
+            $bdData = $this->positionConditionsService->getViewAs($userTypeId, $userId, $PresDetails, $ownBoardDetails);
             $chapterBdData[$chapter->id] = $bdData;
         }
 
@@ -208,7 +218,12 @@ class TechReportController extends Controller implements HasMiddleware
                 continue;
             }
 
-            $bdData = $this->positionConditionsService->getViewAs($userTypeId, $PresDetails);
+            $ownBoardDetails = Boards::with(['state', 'country', 'user'])
+                ->where('chapter_id', $chId)
+                ->where('user_id', $userId)
+                ->first();
+
+            $bdData = $this->positionConditionsService->getViewAs($userTypeId, $userId, $PresDetails, $ownBoardDetails);
             $chapterBdData[$chapter->id] = $bdData;
         }
 
