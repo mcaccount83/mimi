@@ -104,6 +104,7 @@ class TechReportController extends Controller implements HasMiddleware
         $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
         $userTypeId = $user['userTypeId'];
         $coorId = $user['cdId'];
         $confId = $user['confId'];
@@ -119,6 +120,7 @@ class TechReportController extends Controller implements HasMiddleware
         foreach ($chapterList as $chapter) {
             $chDetails = $this->baseBoardController->getChapterDetails($chapter->id);
             $PresDetails = $chDetails['PresDetails'] ?? null;
+            $chId = $chapter->id;
 
             if ($PresDetails === null) {
                 $chapterBdData[$chapter->id] = null; // or some default
@@ -150,6 +152,7 @@ class TechReportController extends Controller implements HasMiddleware
         $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
         $userTypeId = $user['userTypeId'];
         $coorId = $user['cdId'];
         $confId = $user['confId'];
@@ -165,6 +168,7 @@ class TechReportController extends Controller implements HasMiddleware
         foreach ($chapterList as $chapter) {
             $chDetails = $this->baseBoardController->getChapterDetails($chapter->id);
             $PresDetails = $chDetails['PresDetails'] ?? null;
+            $chId = $chapter->id;
 
             if ($PresDetails === null) {
                 $chapterBdData[$chapter->id] = null; // or some default
@@ -196,6 +200,7 @@ class TechReportController extends Controller implements HasMiddleware
         $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
         $userTypeId = $user['userTypeId'];
         $coorId = $user['cdId'];
         $confId = $user['confId'];
@@ -211,6 +216,7 @@ class TechReportController extends Controller implements HasMiddleware
         foreach ($chapterList as $chapter) {
             $chDetails = $this->baseBoardController->getChapterDetails($chapter->id);
             $PresDetails = $chDetails['PresDetails'] ?? null;
+            $chId = $chapter->id;
 
             if ($PresDetails === null) {
                 $chapterBdData[$chapter->id] = null; // or some default
