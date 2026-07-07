@@ -80,17 +80,29 @@ class GoogleController extends Controller
         $client_id = config('services.google.client_id');
         $client_secret = config('services.google.client_secret');
         $refresh_token = config('services.google.refresh_token');
+
         $response = Http::post('https://oauth2.googleapis.com/token', [
             'client_id' => $client_id,
             'client_secret' => $client_secret,
             'refresh_token' => $refresh_token,
             'grant_type' => 'refresh_token',
-            'scope' => 'https://www.googleapis.com/auth/drive', // Add the necessary scope for Shared Drive access
+            'scope' => 'https://www.googleapis.com/auth/drive',
         ]);
 
-        $accessToken = json_decode((string) $response->getBody(), true)['access_token'];
+        $data = json_decode((string) $response->getBody(), true);
 
-        return $accessToken;
+        if (!isset($data['access_token'])) {
+            Log::error('Google token refresh failed', [
+                'status' => $response->status(),
+                'body' => $data,
+            ]);
+
+            throw new \RuntimeException(
+                'Google Drive auth failed: ' . ($data['error_description'] ?? $data['error'] ?? 'unknown error')
+            );
+        }
+
+        return $data['access_token'];
     }
 
     /**
