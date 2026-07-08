@@ -148,7 +148,7 @@
 
 @section('customscript')
 @if($userTypeId == \App\Enums\UserTypeEnum::COORD)
-    @php $disableMode = 'disable-all'; @endphp
+    @php($disableMode = 'disable-all')
     @include('layouts.scripts.disablefields')
 @endif
 <script>

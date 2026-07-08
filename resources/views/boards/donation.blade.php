@@ -1,3 +1,4 @@
+@php($includeRecaptcha = true)
 @extends('layouts.mimi_theme')
 
 @section('page_title', 'MOMS Club of ' . $chDetails->name . ', ' . $stateShortName)
@@ -202,7 +203,7 @@
 @endsection
 @section('customscript')
 @if($userTypeId == \App\Enums\UserTypeEnum::COORD)
-    @php $disableMode = 'disable-all'; @endphp
+    @php($disableMode = 'disable-all')
     @include('layouts.scripts.disablefields')
 @endif
 <script>
@@ -243,29 +244,6 @@
         }
     });
 });
-
-    /* Disable fields and buttons  */
-    $(document).ready(function () {
-        var userTypeId = @json($userTypeId);
-        var userAdmin = @json($userAdmin);
-
-        $('select[name="pres_state"]').prop('disabled', true);
-
-         if (userTypeId == '1' && userAdmin != 1) {
-            $('button, input, select, textarea').not('#btn-back').prop('disabled', true);
-        }
-
-        });
-
-        // document.querySelector('form').addEventListener('submit', function(){
-        //     document.querySelector('button[type="submit"]').setAttribute('disabled', 'disabled');
-        // });
-
-        function formatCurrency(input) {
-            let value = input.value.replace(/\D/g, '');
-            value = (value / 100).toFixed(2);
-            input.value = '$' + value;
-        }
 
     // Function to calculate total due
     function calculateTotal() {

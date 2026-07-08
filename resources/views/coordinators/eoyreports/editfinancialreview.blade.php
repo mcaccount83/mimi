@@ -507,9 +507,9 @@
     <!-- /.content -->
 @endsection
 @section('customscript')
-    @php $disableMode = 'disable-review'; @endphp
-    @include('layouts.scripts.disablefieldseoy')
-    @include('layouts.scripts.financialreviewsave')
+@php($disableMode = 'disable-review')
+@include('layouts.scripts.disablefieldseoy')
+@include('layouts.scripts.financialreviewsave')
 
 <script>
    document.addEventListener('DOMContentLoaded', function() {

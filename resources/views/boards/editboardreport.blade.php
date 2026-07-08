@@ -462,7 +462,7 @@
 
 @endsection
 @section('customscript')
-@php $disableMode = 'disable-boardrpt'; @endphp
+@php($disableMode = 'disable-boardrpt')
 @include('layouts.scripts.disablefieldseoy')
 <script>
 

@@ -1,3 +1,4 @@
+@php($includeRecaptcha = true)
 @extends('layouts.mimi_theme')
 
 @section('content')
@@ -203,7 +204,7 @@
 @endsection
 @section('customscript')
 @if($userTypeId == \App\Enums\UserTypeEnum::COORD)
-    @php $disableMode = 'disable-all'; @endphp
+    @php($disableMode = 'disable-all')
     @include('layouts.scripts.disablefields')
 @endif
 
