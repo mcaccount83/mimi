@@ -93,7 +93,10 @@
             <div>
                 <strong>{{ $awardTypes[$award['awards_type']]->award_type ?? 'Unknown' }}</strong><br>
                 Description: {{ $award['awards_desc'] }}
+            <br>
+                <b><small>Approved: {{ date('m/d/Y', strtotime($award->approved_at)) }} by {{ $award->approved_by }}</small></b>
             </div>
+
         </div>
     </div>
 @endforeach
