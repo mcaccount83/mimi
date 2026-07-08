@@ -93,8 +93,9 @@
             <div>
                 <strong>{{ $awardTypes[$award['awards_type']]->award_type ?? 'Unknown' }}</strong><br>
                 @if(!empty($award['awards_desc']))
-        Description: {{ $award['awards_desc'] }}
-    @endif
+                    Description: {{ $award['awards_desc'] }}
+                @endif
+                Approval: {{ ($award['awards_approved'] ?? null) == 1 ? 'Approved' : 'Not Approved' }}
             </div>
         </div>
     </div>
