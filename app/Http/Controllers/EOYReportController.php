@@ -1201,12 +1201,16 @@ class EOYReportController extends Controller implements HasMiddleware
 
         // Current year from the blob
         $financialReport = FinancialReport::find($id);
+        $chapterAwards = $financialReport?->chapter_awards;
         $currentAwards = $financialReport->chapter_awards
             ? unserialize(base64_decode($financialReport->chapter_awards))
             : [];
 
         // Filter to only approved ones for display
-        $currentApprovedAwards = array_filter($currentAwards, fn ($a) => ! empty($a['awards_approved']));
+        $currentApprovedAwards = array_filter(
+            $currentAwards,
+            fn ($a) => ! empty($a['awards_approved'])
+        );
 
         // Historical from the history table (exclude current year)
         $chAwards = ChapterAwardHistory::with('awardtype', 'fiscalYear')

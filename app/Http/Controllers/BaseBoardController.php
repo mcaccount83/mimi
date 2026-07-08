@@ -70,9 +70,7 @@ class BaseBoardController extends Controller
 
         // Current year from the blob
         $financialReport = FinancialReport::find($id);
-
         $chapterAwards = $financialReport?->chapter_awards;
-
         $currentAwards = $chapterAwards
             ? unserialize(base64_decode($chapterAwards))
             : [];

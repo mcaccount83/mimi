@@ -23,6 +23,7 @@ use App\Models\Boards;
 use App\Models\BoardsIncoming;
 use App\Models\BoardsOutgoing;
 use App\Models\Chapters;
+use App\Models\ChapterAwardHistory;
 use App\Models\DocumentsEOY;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportAwards;
@@ -410,10 +411,37 @@ class BoardController extends Controller implements HasMiddleware
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
 
-        $awardTypes = FinancialReportAwards::all()->keyBy('id');
+        // $awardTypes = FinancialReportAwards::all()->keyBy('id');
 
-        $currentApprovedAwards = $baseQuery['currentApprovedAwards'];
-        $chAwards = $baseQuery['chAwards'];
+        // $currentApprovedAwards = $baseQuery['currentApprovedAwards'];
+        // $chAwards = $baseQuery['chAwards'];
+
+        // $awardBadges = FinancialReportAwardsBadges::with(['fiscalYear', 'eoyAward'])->get();
+        // // $badgeLookup = $awardBadges->keyBy(fn ($b) => $b->report_year_id.'_'.$b->eoy_award_id);
+        // $badgeLookup = $awardBadges->keyBy(fn ($b) => $b->fiscalYear->report_year.'_'.$b->eoy_award_id);
+
+         $awardTypes = FinancialReportAwards::all()->keyBy('id');
+
+        // Current year from the blob
+        $financialReport = FinancialReport::find($chId);
+        $chapterAwards = $financialReport?->chapter_awards;
+        $currentAwards = $financialReport->chapter_awards
+            ? unserialize(base64_decode($financialReport->chapter_awards))
+            : [];
+
+        // Filter to only approved ones for display
+        $currentApprovedAwards = array_filter(
+            $currentAwards,
+            fn ($a) => ! empty($a['awards_approved'])
+        );
+
+        // Historical from the history table (exclude current year)
+        $chAwards = ChapterAwardHistory::with('awardtype', 'fiscalYear')
+            ->where('chapter_id', $chId)
+            ->orderByDesc('report_year_id')
+            ->orderBy('awards_type')
+            ->get()
+            ->groupBy('report_year_id');
 
         $awardBadges = FinancialReportAwardsBadges::with(['fiscalYear', 'eoyAward'])->get();
         // $badgeLookup = $awardBadges->keyBy(fn ($b) => $b->report_year_id.'_'.$b->eoy_award_id);

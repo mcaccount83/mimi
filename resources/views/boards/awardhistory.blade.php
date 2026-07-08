@@ -39,7 +39,7 @@
                         <div class="card-body">
                             @if(count($currentApprovedAwards) > 0)
                                 @foreach($currentApprovedAwards as $award)
-    @php $badge = $badgeLookup->get($reportYearRange.'_'.$award['awards_type']); @endphp
+@php $badge = $badgeLookup->get($reportYearRange.'_'.$award['awards_type']); @endphp
     <div class="card mb-2">
         <div class="card-body d-flex align-items-center gap-3">
             <div style="width: 80px; flex-shrink: 0; text-align: center;">
@@ -52,10 +52,8 @@
                 @endif
             </div>
             <div>
-                {{-- <strong>{{ $awardTypes[$award['awards_type']]->award_type ?? 'Unknown' }}</strong><br> --}}
-                <strong>{{ $award->awardtype->award_type }}</strong><br>
+                <strong>{{ $awardTypes[$award['awards_type']]->award_type ?? 'Unknown' }}</strong><br>
                 Description: {{ $award['awards_desc'] }}
-                <b><small>Approved: {{ date('m/d/Y', strtotime($award->approved_at)) }} by {{ $award->approved_by }}</small></b>
             </div>
         </div>
     </div>
