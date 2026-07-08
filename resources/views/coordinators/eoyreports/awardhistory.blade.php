@@ -92,9 +92,9 @@
             </div>
             <div>
                 <strong>{{ $awardTypes[$award['awards_type']]->award_type ?? 'Unknown' }}</strong><br>
-                @if ({{ $award['awards_desc'] }})
-                    Description: {{ $award['awards_desc'] }}
-                @endif
+                @if(!empty($award['awards_desc']))
+        Description: {{ $award['awards_desc'] }}
+    @endif
             </div>
         </div>
     </div>
@@ -132,9 +132,9 @@
             </div>
             <div>
                 <strong>{{ $award->awardtype->award_type }}</strong><br>
-                @if ({{ $award['awards_desc'] }})
-                    Description: {{ $award['awards_desc'] }}<br>
-                @endif
+                @if(!empty($award['awards_desc']))
+        Description: {{ $award['awards_desc'] }}<br>
+    @endif
                 <b><small>Approved: {{ date('m/d/Y', strtotime($award->approved_at)) }} by {{ $award->approved_by }}</small></b>
             </div>
         </div>
