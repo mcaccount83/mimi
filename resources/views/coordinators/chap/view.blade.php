@@ -514,7 +514,7 @@
                                 @endif
                             </div>
 
-                            <div class="row mb-2">
+                            {{-- <div class="row mb-2">
                                 <div class="col-sm-3">
                                     <label>Chapter Awards:</label>
                                 </div>
@@ -528,7 +528,29 @@
                                     Chapter was not nominated for any awards.
                                 </div>
                                     @endif
-                            </div>
+                            </div> --}}
+
+<div class="row mb-2">
+    <div class="col-sm-3">
+        <label>Chapter Awards:</label>
+    </div>
+    @php
+        $chapter_awards_check = null;
+        if (isset($chFinancialReport['chapter_awards']) && !empty($chFinancialReport['chapter_awards'])) {
+            $blobData = base64_decode($chFinancialReport['chapter_awards']);
+            $chapter_awards_check = unserialize($blobData);
+        }
+    @endphp
+    @if (is_array($chapter_awards_check) && count($chapter_awards_check) > 0)
+        <div class="col-sm-9">
+            Chapter was nominated for one or more awards.
+        </div>
+    @else
+        <div class="col-sm-9">
+            Chapter was not nominated for any awards.
+        </div>
+    @endif
+</div>
 
                         @else
                             <strong>Report Status/Links are not available at this time.</strong>
