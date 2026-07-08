@@ -52,8 +52,10 @@
                 @endif
             </div>
             <div>
-                <strong>{{ $awardTypes[$award['awards_type']]->award_type ?? 'Unknown' }}</strong><br>
+                {{-- <strong>{{ $awardTypes[$award['awards_type']]->award_type ?? 'Unknown' }}</strong><br> --}}
+                <strong>{{ $award->awardtype->award_type }}</strong><br>
                 Description: {{ $award['awards_desc'] }}
+                <b><small>Approved: {{ date('m/d/Y', strtotime($award->approved_at)) }} by {{ $award->approved_by }}</small></b>
             </div>
         </div>
     </div>

@@ -410,6 +410,8 @@ class BoardController extends Controller implements HasMiddleware
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
 
+        $awardTypes = FinancialReportAwards::all()->keyBy('id');
+
         $currentApprovedAwards = $baseQuery['currentApprovedAwards'];
         $chAwards = $baseQuery['chAwards'];
 
@@ -439,6 +441,7 @@ class BoardController extends Controller implements HasMiddleware
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
             'userTypeId' => $userTypeId, 'userAdmin' => $userAdmin, 'startMonthId' => $startMonthId, 'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId,
             'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'chAwards' => $chAwards, 'currentApprovedAwards' => $currentApprovedAwards,
+            'awardTypes' => $awardTypes,
         ];
 
         return view('boards.awardhistory')->with($data);
