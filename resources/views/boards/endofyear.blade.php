@@ -45,8 +45,8 @@
                                     @else
                                         <button type="button" class="btn btn-primary bg-gradient" disabled>{{$financialReportName}} Not Available</button>
                                     @endif
-                                    @if (!empty($chEOYDocuments->$yearColumnName))
-                                        <button type="button" class="btn btn-primary bg-gradient" onclick="openPdfViewer('{{ $chEOYDocuments->$yearColumnName }}')">{{$financialPDFName}}</button>
+                                    @if (!empty($chReportDocuments->$yearColumnName))
+                                        <button type="button" class="btn btn-primary bg-gradient" onclick="openPdfViewer('{{ $chReportDocuments->$yearColumnName }}')">{{$financialPDFName}}</button>
                                     @endif
                                     <br><br>
                                     @php

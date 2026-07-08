@@ -505,8 +505,8 @@
                                             @else
                                                 <button type="button" class="btn btn-primary bg-gradient btn-sm" disabled>Financial Report Not Available</button>
                                             @endif
-                                            @if (!empty($chEOYDocuments->$yearColumnName))
-                                                <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="openPdfViewer('{{ $chEOYDocuments->$yearColumnName }}')">View/Download Financial PDF</button>
+                                            @if (!empty($chReportDocuments->$yearColumnName))
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="openPdfViewer('{{ $chReportDocuments->$yearColumnName }}')">View/Download Financial PDF</button>
                                             @endif
                                         </div>
                                     </div>

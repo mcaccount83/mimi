@@ -207,8 +207,8 @@
                         </div>
                         <div class="col-sm-9">
                             <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='{{ route('eoyreports.editfinancialreview', ['id' => $chDetails->id]) }}'">View Financial Report</button>
-                        @if (!empty($chEOYDocuments->$yearColumnName != null))
-                            <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="openPdfViewer('{{ $chEOYDocuments->$yearColumnName }}')">View/Download Financial PDF</button>
+                        @if (!empty($chReportDocuments->$yearColumnName != null))
+                            <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="openPdfViewer('{{ $chReportDocuments->$yearColumnName }}')">View/Download Financial PDF</button>
                         @endif
                         @if ($chEOYDocuments->financial_report_received == 1)
                             <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="generateFinancialReport()">Regenerate Financial PDF</button>

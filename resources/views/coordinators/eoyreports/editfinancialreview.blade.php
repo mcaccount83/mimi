@@ -38,11 +38,11 @@
             Answers from questions in previous sections will show up here after they have been saved.<br>
             <br>
             @if ($chEOYDocuments->financial_report_received)
-            @if ($chEOYDocuments->$yearColumnName != null)
+            @if ($chReportDocuments->$yearColumnName != null)
                 <div class="row mb-1">
                     <div class="col-auto fw-bold">Financial Report PDF:</div>
                     <div class="col text-end">
-                        <a data-no-wait href="https://drive.google.com/uc?export=download&id={{ $chEOYDocuments->$yearColumnName }}">Download PDF</a>
+                        <a data-no-wait href="https://drive.google.com/uc?export=download&id={{ $chReportDocuments->$yearColumnName }}">Download PDF</a>
                     </div>
                 </div>
             @endif
@@ -405,15 +405,15 @@
                 <span style="color: #dc3545;"><b>"Mark as Review Complete" is for FINAL REVIEWER USE ONLY!</b></span>
             @endif
             <br><br>
-            @if ($chEOYDocuments->$yearColumnName != null)
-                <button type="button" class="btn btn-primary bg-gradient mb-2" type="button" id="financial-pdf" onclick="openPdfViewer('{{ $chEOYDocuments->$yearColumnName }}')"><i class="bi bi-file-earmark-pdf-fill me-2"></i>View/Download Financial Report PDF</button>
+            @if ($chReportDocuments->$yearColumnName != null)
+                <button type="button" class="btn btn-primary bg-gradient mb-2" type="button" id="financial-pdf" onclick="openPdfViewer('{{ $chReportDocuments->$yearColumnName }}')"><i class="bi bi-file-earmark-pdf-fill me-2"></i>View/Download Financial Report PDF</button>
             @else
                 <button type="button" class="btn btn-primary bg-gradient mb-2 disabled" type="button" id="financial-pdf" disabled><i class="bi bi-file-earmark-pdf-fill me-2"></i>No PDF Report Available</button>
             @endif
-            @if ($chEOYDocuments->$yearColumnName != null && $chEOYDocuments->financial_report_received)
+            @if ($chReportDocuments->$yearColumnName != null && $chEOYDocuments->financial_report_received)
                 <br>
                 <button type="button" id="generate-pdf" class="btn btn-primary bg-gradient btn-sm" onclick="generateFinancialReport()"><i class="bi bi-arrow-repeat me-2"></i>Regenerate Financial PDF</button>
-            @elseif ($chEOYDocuments->$yearColumnName == null && $chEOYDocuments->financial_report_received)
+            @elseif ($chReportDocuments->$yearColumnName == null && $chEOYDocuments->financial_report_received)
                 <br>
                 <button type="button" id="generate-pdf" class="btn btn-primary bg-gradient btn-sm" onclick="generateFinancialReport()"><i class="bi bi-arrow-repeat me-2"></i>Generate Financial PDF</button>
             @endif

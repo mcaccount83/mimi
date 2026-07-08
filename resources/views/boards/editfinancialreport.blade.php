@@ -36,13 +36,13 @@
                                     Your chapter's Financial Report has been Submitted. A coordinator will review your report and let you know if there are any questions.<br>
                                     Please save a copy of the PDF for your records.</span><br>
                                 <br>
-                                <button type="button" id="btn-download-pdf" class="btn btn-primary bg-gradient" onclick="openPdfViewer('{{ $chEOYDocuments->$yearColumnName }}')">{{$financialPDFName}}</button>
+                                <button type="button" id="btn-download-pdf" class="btn btn-primary bg-gradient" onclick="openPdfViewer('{{ $chReportDocuments->$yearColumnName }}')">{{$financialPDFName}}</button>
                             @elseif ($chEOYDocuments->financial_report_received == '1' && $chEOYDocuments->financial_review_complete == '1')
                                 <label class="me-2">Report Status:</label><span class="badge bg-success fs-7">Reviewed</span><br><br>
                                     Your chapter's Financial Report Review has been completed.<br>
                                     Please save a copy of the PDF for your records.</span><br>
                                 <br>
-                                <button type="button" id="btn-download-pdf" class="btn btn-primary bg-gradient" onclick="openPdfViewer('{{ $chEOYDocuments->$yearColumnName }}')">{{$financialPDFName}}</button>
+                                <button type="button" id="btn-download-pdf" class="btn btn-primary bg-gradient" onclick="openPdfViewer('{{ $chReportDocuments->$yearColumnName }}')">{{$financialPDFName}}</button>
                             @endif
                         </div>
                 </div>
