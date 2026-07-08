@@ -74,7 +74,7 @@
                     <div class="row mb-3 align-middle">
                         <label class="col-sm-2 col-form-label">Update Boundaries:</label>
                         <div class="col-sm-10">
-                        <input type="text" name="ch_territory" id="ch_territory" class="form-control" value="{{ $chDetails->territory }}>
+                        <input type="text" name="ch_territory" id="ch_territory" class="form-control" value="{{ $chDetails->territory }}">
                         </div>
                     </div>
                     <!-- /.form group -->
