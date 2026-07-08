@@ -19,7 +19,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/flash.js'])
 
     <!-- Google Recaptcha -->
-    <script src="https://www.google.com/recaptcha/enterprise.js?render={{ config('services.recaptcha.site_key') }}"></script>
+    {{-- <script src="https://www.google.com/recaptcha/enterprise.js?render={{ config('services.recaptcha.site_key') }}"></script> --}}
 
     {{-- Flash Messages as meta tags --}}
     @if ($message = Session::get('success'))
