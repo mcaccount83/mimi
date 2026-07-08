@@ -1,3 +1,4 @@
+@php($includeRecaptcha = true)
 @extends('layouts.mimi_theme')
 
 @section('content')

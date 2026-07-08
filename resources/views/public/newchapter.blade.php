@@ -1,3 +1,4 @@
+@php($includeRecaptcha = true)
 @extends('layouts.public_theme')
 
 @section('content')

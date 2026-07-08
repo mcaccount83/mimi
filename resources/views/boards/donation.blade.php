@@ -1,3 +1,4 @@
+@php($includeRecaptcha = true)
 @extends('layouts.mimi_theme')
 
 @section('page_title', 'MOMS Club of ' . $chDetails->name . ', ' . $stateShortName)
@@ -257,9 +258,9 @@
 
         });
 
-        document.querySelector('form').addEventListener('submit', function(){
-            document.querySelector('button[type="submit"]').setAttribute('disabled', 'disabled');
-        });
+        // document.querySelector('form').addEventListener('submit', function(){
+        //     document.querySelector('button[type="submit"]').setAttribute('disabled', 'disabled');
+        // });
 
         function formatCurrency(input) {
             let value = input.value.replace(/\D/g, '');
