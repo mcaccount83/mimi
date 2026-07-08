@@ -25,8 +25,17 @@ const client_secret = 'YOUR_CLIENT_SECRET';
 #[Middleware('auth', except: ['logout'])]
 class GoogleController extends Controller
 {
-    public function verifyRecaptcha(string $token, string $userIpAddress): array
+    public function verifyRecaptcha(?string $token, string $userIpAddress): array
     {
+        if (empty($token)) {
+            Log::warning('reCAPTCHA token missing', ['ip' => $userIpAddress]);
+
+            return [
+                'success' => false,
+                'error' => 'Security verification failed. Please refresh the page and try again.',
+            ];
+        }
+
         $projectId = config('services.recaptcha.project_id');
         $siteKey = config('services.recaptcha.site_key');
         $apiKey = config('services.recaptcha.secret_key');
