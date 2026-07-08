@@ -329,11 +329,11 @@
         }
     @endphp
     @if (count($chapter_awards_check) > 0)
-        <div class="col-md-12">
+        <div class="col-md-12 text-end">
             Chapter was nominated for one or more awards.
         </div>
     @else
-        <div class="col-md-12">
+        <div class="col-md-12 text-end">
             Chapter was not nominated for any awards.
         </div>
     @endif
