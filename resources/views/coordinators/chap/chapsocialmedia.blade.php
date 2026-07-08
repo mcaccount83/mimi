@@ -24,9 +24,9 @@
               <thead>
 			    <tr>
                     <th>Online<br>Details</th>
-                    <th>Conf/Reg>
-                  <th>State</th>
-                  <th>Name</th>
+                    <th>Conf/Reg</th>
+                    <th>State</th>
+                    <th>Name</th>
                     <th>Facebook</th>
                     <th>Twitter</th>
                     <th>Instagram</th>

@@ -33,12 +33,12 @@
               <thead>
 			    <tr>
 					<th>Boundary<br>Details</th>
-                    <th>Conf/Reg>
-				  <th>State</th>
-                  <th>Name</th>
-                 <th>Reported Issue</th>
-				 <th>Boundary on File</th>
-				 <th>Resolved</th>
+                    <th>Conf/Reg</th>
+                    <th>State</th>
+                    <th>Name</th>
+                    <th>Reported Issue</th>
+                    <th>Boundary on File</th>
+                    <th>Resolved</th>
                 </tr>
                 </thead>
                 <tbody>
