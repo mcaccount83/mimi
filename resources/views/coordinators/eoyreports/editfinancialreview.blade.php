@@ -319,6 +319,24 @@
                     <div class="col text-end">
                     <button type="button" id="back-eoy" class="btn btn-primary bg-gradient btn-xs keep-enabled" onclick="window.location.href='{{ route('eoyreports.editawards', ['id' => $chDetails->id]) }}'">View/Update Award Information</button>
               </div>
+    @php
+        $chapter_awards_check = [];
+        if (!empty($chFinancialReport['chapter_awards'])) {
+            $decoded = unserialize(base64_decode($chFinancialReport['chapter_awards']));
+            if (is_array($decoded)) {
+                $chapter_awards_check = array_filter($decoded, fn ($a) => !empty($a['awards_type']));
+            }
+        }
+    @endphp
+    @if (count($chapter_awards_check) > 0)
+        <div class="col-sm-9">
+            Chapter was nominated for one or more awards.
+        </div>
+    @else
+        <div class="col-sm-9">
+            Chapter was not nominated for any awards.
+        </div>
+    @endif
             </div>
 
             </li>
