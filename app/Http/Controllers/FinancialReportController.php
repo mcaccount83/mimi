@@ -365,20 +365,54 @@ class FinancialReportController extends Controller implements HasMiddleware
         $financialReport->chapter_awards = base64_encode(serialize($ChapterAwards));
     }
 
+    // private function parseDateInput(?string $rawDate): ?string
+    // {
+    //     if (!$rawDate || str_contains($rawDate, '_') || $rawDate === '__/__/____') {
+    //         return null;
+    //     }
+    //     $rawDate = str_replace('.', '/', $rawDate);
+    //     try {
+    //         try {
+    //             return Carbon::createFromFormat('m/d/Y', $rawDate)->format('Y-m-d');
+    //         } catch (\Exception $e) {
+    //             return Carbon::createFromFormat('m/d/y', $rawDate)->format('Y-m-d');
+    //         }
+    //     } catch (\Exception $e) {
+    //         Log::error('Date parse error: ' . $rawDate . ' - ' . $e->getMessage());
+    //         return null;
+    //     }
+    // }
+
     private function parseDateInput(?string $rawDate): ?string
     {
-        if (!$rawDate || str_contains($rawDate, '_') || $rawDate === '__/__/____') {
+        if (empty($rawDate)) {
             return null;
         }
-        $rawDate = str_replace('.', '/', $rawDate);
+
+        $rawDate = trim($rawDate);
+
+        // Strip everything except digits - handles missing slashes,
+        // misplaced slashes, dots, dashes, whatever gets through
+        $digitsOnly = preg_replace('/\D/', '', $rawDate);
+
         try {
-            try {
-                return Carbon::createFromFormat('m/d/Y', $rawDate)->format('Y-m-d');
-            } catch (\Exception $e) {
-                return Carbon::createFromFormat('m/d/y', $rawDate)->format('Y-m-d');
+            switch (strlen($digitsOnly)) {
+                case 8: // mmddyyyy
+                    return Carbon::createFromFormat('mdY', $digitsOnly)->format('Y-m-d');
+                case 6: // mmddyy
+                    return Carbon::createFromFormat('mdy', $digitsOnly)->format('Y-m-d');
+                default:
+                    // Fall back to normal parsing for anything that still
+                    // has valid separators in the right place
+                    $normalized = str_replace('.', '/', $rawDate);
+                    try {
+                        return Carbon::createFromFormat('m/d/Y', $normalized)->format('Y-m-d');
+                    } catch (\Exception $e) {
+                        return Carbon::createFromFormat('m/d/y', $normalized)->format('Y-m-d');
+                    }
             }
         } catch (\Exception $e) {
-            Log::error('Date parse error: ' . $rawDate . ' - ' . $e->getMessage());
+            Log::warning("Date parse error: {$rawDate} - " . $e->getMessage());
             return null;
         }
     }
