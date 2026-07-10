@@ -162,7 +162,7 @@
                             <div class="col-sm-3">
                                 <label>Boundary Issues:</label>
                             </div>
-                            @if ($chDetails->boundary_issues != null)
+                            @if ($chDetails->boundary_issues  == 1)
                                 <div class="col-sm-6">
                                     Chapter has reported boundary issues.
                                 </div>

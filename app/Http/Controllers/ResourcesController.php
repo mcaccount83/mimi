@@ -492,17 +492,23 @@ class ResourcesController extends Controller implements HasMiddleware
         $boardCourses = $this->learndashService->getCoursesForUserType('board');
 
         // Fetch progress keyed by course ID
-        $userProgress = $this->learndashService->getUserProgress($user->email);
+        // $userProgress = $this->learndashService->getUserProgress($user->email);
+        // dd($userProgress);
 
         // Merge progress + auto-login URLs
+        $userProgress = $this->learndashService->getUserProgress($user->email);
+        $progressByCourseId = $userProgress['courses'] ?? [];
+
+        // dd($progressByCourseId);
+
         foreach ($coordinatorCourses as &$course) {
             $course['auto_login_url'] = $this->learndashService->getAutoLoginUrl($course, $user);
-            $course['progress'] = $userProgress[$course['id']] ?? null;
+            $course['progress'] = $progressByCourseId[$course['id']] ?? null;
         }
 
         foreach ($boardCourses as &$course) {
             $course['auto_login_url'] = $this->learndashService->getAutoLoginUrl($course, $user);
-            $course['progress'] = $userProgress[$course['id']] ?? null;
+            $course['progress'] = $progressByCourseId[$course['id']] ?? null;
         }
 
         // Group by category - store both name and slug
