@@ -305,6 +305,165 @@
         });
     }
 
+    function showChapterEmailEOYModal(chapterName, chapterId, userName, userPosition, userConfName, userConfDesc, predefinedSubject = '', predefinedMessage = '') {
+
+        let messageEditor = null;
+
+        Swal.fire({
+            title: 'Chapter Email Message',
+            html: `
+                <p>This will send your message to the full board as well as the person who submitted the report and full coordinator list for <b>${chapterName}</b>.<br>
+                <small>To send a message through your email client go to: Chapter Details->Documents->Blank Email to Board.</small></p>
+                <div style="display: flex; align-items: center; width: 100%; margin-bottom: 10px;">
+                    <input type="text" id="email_subject" name="email_subject" class="swal2-input" placeholder="Enter Subject" required style="width: 100%; margin: 0 !important;" value="${predefinedSubject}">
+                </div>
+                <div style="width: 100%; margin-bottom: 10px; text-align: left;">
+                    <p><br><b>MOMS Club of ${chapterName}:</b></p>
+                </div>
+                <div style="width: 100%; margin-bottom: 10px;">
+                    <div id="email_message_editor" style="height: 150px;"></div>
+                </div>
+                <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
+                <div style="width: 100%; margin-bottom: 10px; text-align: left;">
+                    <p><b>MCL,</b><br>
+                    ${userName}<br>
+                    ${userPosition}<br>
+                    ${userConfName}, ${userConfDesc}<br>
+                    International MOMS Club</p>
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Close',
+            customClass: {
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger',
+                popup: 'swal-wide-popup'
+            },
+            didOpen: () => {
+
+                if (!document.getElementById('swal-wide-popup-style')) {
+                    const style = document.createElement('style');
+                    style.id = 'swal-wide-popup-style';
+                    style.innerHTML = `
+                        .swal-wide-popup {
+                            width: 80% !important;
+                            max-width: 800px !important;
+                        }
+                        .ql-toolbar {
+                            background: #f8f9fa;
+                            border-radius: 4px 4px 0 0;
+                        }
+                        .ql-container {
+                            border-radius: 0 0 4px 4px;
+                            font-size: 14px;
+                        }
+                        .ql-editor {
+                            text-align: left;
+                            min-height: 120px;
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+
+                messageEditor = new Quill('#email_message_editor', {
+                    theme: 'snow',
+                    placeholder: 'Email Message',
+                    modules: {
+                        toolbar: [
+                            ['bold', 'italic', 'underline', 'strike'],
+                            [{ list: 'ordered' }, { list: 'bullet' }],
+                            ['link'],
+                            ['clean']
+                        ]
+                    }
+                });
+
+                if (predefinedMessage) {
+                    messageEditor.clipboard.dangerouslyPasteHTML(predefinedMessage);
+                }
+            },
+            willClose: () => {
+                if (messageEditor) {
+                    messageEditor = null;
+                }
+            },
+            preConfirm: () => {
+                const subject = Swal.getPopup().querySelector('#email_subject').value;
+                const message = messageEditor.root.innerHTML;
+                const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+
+                const isEmpty = (html) => html === '<p><br></p>' || html.trim() === '';
+
+                if (!subject) {
+                    Swal.showValidationMessage('Please enter subject.');
+                    return false;
+                }
+                if (isEmpty(message)) {
+                    Swal.showValidationMessage('Please enter message.');
+                    return false;
+                }
+                return {
+                    email_subject: subject,
+                    email_message: message,
+                    chapter_id: chapterId,
+                };
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const data = result.value;
+
+                Swal.fire({
+                    title: 'Processing...',
+                    text: 'Please wait while we process your request.',
+                    allowOutsideClick: false,
+                    customClass: {
+                        confirmButton: 'btn btn-sm btn-success',
+                        cancelButton: 'btn btn-sm btn-danger'
+                    },
+                    didOpen: () => {
+                        Swal.showLoading();
+                        $.ajax({
+                            url: '{{ route('chapters.sendchaptereoy') }}',
+                            type: 'POST',
+                            data: {
+                                subject: data.email_subject,
+                                message: data.email_message,
+                                chapterId: data.chapter_id,
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: response.message,
+                                    icon: 'success',
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                    customClass: {
+                                        confirmButton: 'btn btn-sm btn-success'
+                                    }
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            },
+                            error: function(jqXHR, exception) {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Something went wrong, Please try again.',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK',
+                                    customClass: {
+                                        confirmButton: 'btn btn-sm btn-success'
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
     function showChapterAllEmailModal(userName, userPosition, userConfName, userConfDesc, predefinedSubject = '', predefinedMessage = '') {
 
         let messageEditor = null;

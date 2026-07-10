@@ -290,6 +290,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/chapter/sendchapter', [EmailController::class, 'sendChapterEmail'])->name('chapters.sendchapter');
     Route::post('/chapter/sendchapterall', [EmailController::class, 'sendChapterAllEmail'])->name('chapters.sendchapterall');
     Route::post('/chapter/sendchapterprimary', [EmailController::class, 'sendChapterPrimaryEmail'])->name('chapters.sendchapterprimary');
+    Route::post('/chapter/sendchaptereoy', [EmailController::class, 'sendChapterEOYEmail'])->name('chapters.sendchaptereoy');
     Route::post('/chapter/sendcoord', [EmailController::class, 'sendCoordEmail'])->name('coordinators.sendcoord');
     Route::post('/chapter/sendcoordup', [EmailController::class, 'sendCoordUplineEmail'])->name('coordinators.sendcoordup');
     Route::post('/chapter/sendcoordrpt', [EmailController::class, 'sendCoordReportToEmail'])->name('coordinators.sendcoordrpt');

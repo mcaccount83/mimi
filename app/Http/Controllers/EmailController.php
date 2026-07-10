@@ -260,7 +260,7 @@ class EmailController extends Controller implements HasMiddleware
     }
 
     /**
-     * Send Chapter EIN Number Notification Email
+     * Send Chapter Email
      */
     public function sendChapterEmail(Request $request): JsonResponse
     {
@@ -426,6 +426,66 @@ class EmailController extends Controller implements HasMiddleware
         } catch (\Exception $e) {
             Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return response()->json(['message' => 'Something went wrong. Please try again.'], 500);
+        }
+    }
+
+    public function sendChapterEOYEmail(Request $request): JsonResponse
+    {
+        $user = $this->userController->loadUserInformation($request);
+
+        $input = $request->all();
+        $chapterId = $input['chapterId'];
+
+        $baseQuery = $this->baseChapterController->getChapterDetails($chapterId);
+        $chDetails = $baseQuery['chDetails'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $emailListChap = $baseQuery['emailListChap'];  // Full Board
+        $emailListCoord = $baseQuery['emailListCoord']; // Full Coord List
+        $chFinancialReport = $baseQuery['chFinancialReport'];
+        $completedEmail = $chFinancialReport->completed_email;
+
+        try {
+            DB::beginTransaction();
+
+            $mailData = array_merge(
+                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+                $this->baseMailDataController->getUserData($user),
+                $this->baseMailDataController->getMessageData($input),
+            );
+
+            $toList = array_merge((array) $emailListChap, [$completedEmail]);
+
+            Mail::to($toList)
+                ->cc($emailListCoord)
+                ->queue(new ChapterEmail($mailData));
+
+            // Commit the transaction
+            DB::commit();
+
+            $message = 'Email successfully sent';
+
+            // Return JSON response
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+                'redirect' => route('chapters.view', ['id' => $chapterId]),
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+
+            $message = 'Something went wrong, Please try again.';
+
+            // Return JSON error response
+            return response()->json([
+                'status' => 'error',
+                'message' => $message,
+                'redirect' => route('chapters.view', ['id' => $chapterId]),
+            ]);
+        } finally {
+            // This ensures DB connections are released even if exceptions occur
+            DB::disconnect();
         }
     }
 
