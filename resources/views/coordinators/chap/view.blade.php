@@ -572,7 +572,7 @@
                                 <label>Financial Report History:</label>
                             </div>
                             <div class="col-sm-9">
-                                <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='{{ route('eoyreports.awardhistory', ['id' => $chDetails->id]) }}'">View Report History</button>
+                                <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='{{ route('eoyreports.eoyreporthistory', ['id' => $chDetails->id]) }}'">View Report History</button>
                             </div>
                         </div>
 

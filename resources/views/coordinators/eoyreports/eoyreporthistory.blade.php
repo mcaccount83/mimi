@@ -48,7 +48,7 @@
                     <h3>{{ $reportYearRange }} Financial Reports</h3>
                     @if (count($financialReportPdfs) > 0)
                         @foreach ($financialReportPdfs as $year => $path)
-                            <button type="button" class="btn btn-primary bg-gradient btn-sm me-1 mb-1 keep-enabled" onclick="openPdfViewer('{{ $path }}')">{{ $year - 1 }}-{{ $year }} Financial Report</button>
+                            <br><button type="button" class="btn btn-primary bg-gradient btn-sm me-1 mb-1 keep-enabled" onclick="openPdfViewer('{{ $path }}')">{{ $year - 1 }}-{{ $year }} Financial Report</button>
                         @endforeach
                     @else
                         <p class="text-muted">No historical reports available.</p>
