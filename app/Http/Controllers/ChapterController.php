@@ -298,6 +298,7 @@ class ChapterController extends Controller implements HasMiddleware
         $chReportDocuments = $baseQuery['chReportDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $reviewComplete = $baseQuery['reviewComplete'];
+        $financialReportPdfs = $baseQuery['financialReportPdfs'];
 
         $startMonthName = $baseQuery['startMonthName'];
         $startDate = $baseQuery['startDate'];
@@ -331,7 +332,7 @@ class ChapterController extends Controller implements HasMiddleware
             'chFinancialReport' => $chFinancialReport, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'chPayments' => $chPayments,
             'conferenceDescription' => $conferenceDescription, 'chDisbanded' => $chDisbanded, 'chEOYDocuments' => $chEOYDocuments, 'dueDate' => $dueDate, 'renewalDate' => $renewalDate,
             'resources' => $resources, 'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
-            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
+            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments, 'financialReportPdfs' => $financialReportPdfs,
         ];
 
         return view('coordinators.chap.view')->with($data);
