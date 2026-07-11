@@ -280,6 +280,19 @@
                             </div>
                             @endif
 
+                            @if (count($financialReportPdfs) > 0)
+                                <div class="row">
+                                    <div class="col-sm-6 mb-2">
+                                        <label>Financial Reports:</label>
+                                    </div>
+                                    <div class="col-sm-6 mb-2">
+                                        @foreach ($financialReportPdfs as $year => $path)
+                                            <br><button type="button" class="btn btn-primary bg-gradient btn-sm me-1 mb-1 keep-enabled" onclick="openPdfViewer('{{ $path }}')">{{ $year - 1 }}-{{ $year }} Financial Report</button>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+
                         @endif
                         </div>
                         </div>

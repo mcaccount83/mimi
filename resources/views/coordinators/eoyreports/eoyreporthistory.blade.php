@@ -45,7 +45,7 @@
            <div class="col-md-8">
             <div class="card card-primary card-outline">
                 <div class="card-body">
-                    <h3>{{ $reportYearRange }} Financial Reports</h3>
+                    <h3>Financial Reports</h3>
                     @if (count($financialReportPdfs) > 0)
                         @foreach ($financialReportPdfs as $year => $path)
                             <br><button type="button" class="btn btn-primary bg-gradient btn-sm me-1 mb-1 keep-enabled" onclick="openPdfViewer('{{ $path }}')">{{ $year - 1 }}-{{ $year }} Financial Report</button>
