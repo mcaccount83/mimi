@@ -684,7 +684,7 @@ class PDFController extends Controller
                 case 'warning_party':
                     Mail::to($emailListChap)
                         ->cc($emailListCoord)
-                        ->queue(new ProbationChapWarningPartyLetter($mailData, $pdfPath));
+                        ->queue(new ProbationChapWarningPartyLetter($mailData, $pdfPath, $pdfPath2));
                     break;
                 case 'probation_release':
                     Mail::to($emailListChap)

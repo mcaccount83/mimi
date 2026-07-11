@@ -13,10 +13,13 @@ class ProbationChapWarningPartyLetter extends BaseMailable
 
     protected string $pdfPath;
 
-    public function __construct(array $mailData, string $pdfPath)
+    protected string $pdfPath2;
+
+    public function __construct(array $mailData, string $pdfPath, string $pdfPath2)
     {
         $this->mailData = $mailData;
         $this->pdfPath = $pdfPath;
+        $this->pdfPath2 = $pdfPath2;
     }
 
     public function envelope(): Envelope
@@ -39,10 +42,14 @@ class ProbationChapWarningPartyLetter extends BaseMailable
 
     public function attachments(): array
     {
+        $pdfContent2 = file_get_contents($this->pdfPath2);
+
         return [
             Attachment::fromPath($this->pdfPath)
                 ->as($this->mailData['chapterState'].'_'.$this->mailData['chapterNameSanitized'].'_Warning_Party.pdf')
                 ->withMime('application/pdf'),
+            Attachment::fromData(fn () => $pdfContent2, 'FSChapterPartyExpense.pdf'
+                )->withMime('application/pdf'),
         ];
     }
 }
