@@ -567,6 +567,15 @@
                             </div>
                         </div>
 
+                        <div class="row mb-2">
+                            <div class="col-sm-3">
+                                <label>Financial Report History:</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='{{ route('eoyreports.awardhistory', ['id' => $chDetails->id]) }}'">View Report History</button>
+                            </div>
+                        </div>
+
                       </div>
                     <!-- /.card-body -->
                 </div>

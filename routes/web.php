@@ -425,6 +425,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/eoyreports/editawards/{id}', [EOYReportController::class, 'editEOYAwards'])->name('eoyreports.editawards');
     Route::post('/eoyreports/updateawards/{id}', [EOYReportController::class, 'updateEOYAwards'])->name('eoyreports.updateawards');
     Route::get('/eoyreports/awardhistory/{id}', [EOYReportController::class, 'viewEOYAwardsHistory'])->name('eoyreports.awardhistory');
+    Route::get('/eoyreports/reporthistory/{id}', [EOYReportController::class, 'viewEOYReportHistory'])->name('eoyreports.eoyreporthistory');
     Route::get('/eoyreports/irssubmission', [EOYReportController::class, 'showIRSSubmission'])->name('eoyreports.eoyirssubmission');
     Route::get('/eoyreports/editirssubmission/{id}', [EOYReportController::class, 'editIRSSubmission'])->name('eoyreports.editirssubmission');
     Route::post('/eoyreports/updateirssubmission/{id}', [EOYReportController::class, 'updateIRSSubmission'])->name('eoyreports.updateirssubmission');

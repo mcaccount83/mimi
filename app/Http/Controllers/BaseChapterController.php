@@ -363,6 +363,18 @@ class BaseChapterController extends Controller
             ->get()
             ->groupBy('report_year_id');
 
+        $financialReportPdfs = [];
+            if ($chReportDocuments) {
+                foreach ($chReportDocuments->getAttributes() as $column => $value) {
+                    if (preg_match('/^(\d{4})_financial_pdf_path$/', $column, $matches) && ! empty($value)) {
+                        $year = $matches[1];
+                        $financialReportPdfs[$year] = $value;
+                    }
+                }
+                krsort($financialReportPdfs);
+            }
+
+
         return ['chDetails' => $chDetails, 'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'allActive' => $allActive,
             'conferenceDescription' => $conferenceDescription, 'chConfId' => $chConfId, 'chRegId' => $chRegId, 'chPcId' => $chPcId, 'chId' => $chId, 'chFinancialReportFinal' => $chFinancialReportFinal,
             'chDocuments' => $chDocuments, 'reviewComplete' => $reviewComplete, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards, 'chPayments' => $chPayments,
@@ -371,7 +383,7 @@ class BaseChapterController extends Controller
             'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC, 'emailPC' => $emailPC, 'cc_id' => $cc_id,
             'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink, 'pcName' => $pcName, 'probationReason' => $probationReason,
             'allMonths' => $allMonths, 'pcDetails' => $pcDetails, 'allProbation' => $allProbation, 'chFinancialReportReview' => $chFinancialReportReview,
-            'dueDate' => $dueDate, 'startDate' => $startDate, 'renewalDate' => $renewalDate, 'chAwards' => $chAwards,
+            'dueDate' => $dueDate, 'startDate' => $startDate, 'renewalDate' => $renewalDate, 'chAwards' => $chAwards, "financialReportPdfs" => $financialReportPdfs
         ];
     }
 

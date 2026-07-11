@@ -1232,6 +1232,29 @@ class EOYReportController extends Controller implements HasMiddleware
         return view('coordinators.eoyreports.awardhistory')->with($data);
     }
 
+    public function viewEOYReportHistory(Request $request, int $id): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+
+        $baseQuery = $this->baseChapterController->getChapterDetails($id);
+        $chDetails = $baseQuery['chDetails'];
+        $chapterStatus = $baseQuery['chapterStatus'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $regionLongName = $baseQuery['regionLongName'];
+        $conferenceDescription = $baseQuery['conferenceDescription'];
+        $chFinancialReport = $baseQuery['chFinancialReport'];
+        $chConfId = $baseQuery['chConfId'];
+        $financialReportPdfs = $baseQuery['financialReportPdfs'];
+
+        $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
+            'financialReportPdfs' => $financialReportPdfs, 'confId' => $confId, 'chConfId' => $chConfId, 'chapterStatus' => $chapterStatus, 'chFinancialReport' => $chFinancialReport,
+        ];
+
+        return view('coordinators.eoyreports.eoyreporthistory')->with($data);
+    }
+
     /**
      * View the 990N Filing Details
      */
