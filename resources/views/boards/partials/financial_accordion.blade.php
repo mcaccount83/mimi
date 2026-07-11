@@ -1724,11 +1724,27 @@
     <div class="col-12 form-row mb-3">
     <div class="col-md-6 ">
         <div class="mb-3">
+            <label for="LastYearReportEnding">
+                @if($userTypeId == \App\Enums\UserTypeEnum::DISBANDED)
+                Last Report's Ending Balance:
+                @else
+                Last Year's Report Ending Balance (June 30, {{ $reportYearStart }}):
+                @endif
+                <x-help-icon text="This is automatically carried over from last year's ending balance. It should be your starting point for this year's report." />
+            </label>
+            <div class="mb-3">
+                @currencyInput('LastYearReportEnding', $chFinancialReport->pre_balance, true)
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 ">
+        <div class="mb-3">
             <label for="AmountReservedFromLastYear">
                 @if($userTypeId == \App\Enums\UserTypeEnum::DISBANDED)
                 Beginning Balance:
                 @else
                 This Year's Beginning Balance (July 1, {{ $reportYearStart }}):
+                <x-help-icon text="Enter your starting balance, this should be the same as last year's ending balance." />
                 @endif
             </label>
             <div class="mb-3">
@@ -1738,22 +1754,9 @@
     </div>
     <div class="col-md-6 ">
         <div class="mb-3">
-            <label for="LastYearReportEnding">
-                @if($userTypeId == \App\Enums\UserTypeEnum::DISBANDED)
-                Last Report's Ending Balance:
-                @else
-                Last Year's Report Ending Balance (June 30, {{ $reportYearStart }}):
-                @endif
-            </label>
-            <div class="mb-3">
-                @currencyInput('LastYearReportEnding', $chFinancialReport->pre_balance, true)
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 ">
-        <div class="mb-3">
             <label for="TotalNetIncome">
                 Profit/Loss:
+                <x-help-icon text="Automatically calculated as Total Income minus Total Expenses for this fiscal year (July 1 – June 30)." />
             </label>
             <div class="mb-3">
                 @currencyInput('TotalNetIncome', '', true)
@@ -1767,6 +1770,8 @@
         <div class="mb-3">
             <label for="TreasuryBalanceNow">
                 Ending Balance (Treasury Balance Now):
+                <x-help-icon text="Automatically calculated as Beginning Balance + Profit/Loss. If this does not match your actual bank balance as of June 30, you will need
+                to enter reconciliation transactions." />
             </label>
             <div class="mb-3">
                 @currencyInput('TreasuryBalanceNow', '', true)
@@ -1781,6 +1786,8 @@
                 @else
                 Ending Bank Statement Balance (June 30, {{ $reportYearEnd }}):
                 @endif
+                <x-help-icon text="Enter your actual bank statement balance. If this does not match your Treasury Balance Now, you will need
+                to enter reconciliation transactions." />
             </label>
             <div class="mb-3">
                 @currencyInput('BankBalanceNow', $chFinancialReport->bank_balance_now, false, 'ChangeBankRec()')
@@ -1863,6 +1870,8 @@
         <div class="mb-3">
             <label for="TreasuryBalanceNowR">
                 Ending Balance (Treasury Balance Now):
+                <x-help-icon text="Automatically calculated as Treasury Balance Now +/- Reconiliation entries. If this does not match your Treasury Balance Now, you will need
+                to enter reconciliation transactions." />
             </label>
             <div class="mb-3">
                 @currencyInput('TreasuryBalanceNowR', '', true)
