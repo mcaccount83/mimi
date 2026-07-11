@@ -655,6 +655,11 @@ class PDFController extends Controller
                 Documents::create($newDocData);
             }
 
+            $resources = Resources::with('resourceCategory')->get();
+            $instructionsName = 'Party Expenses & 15% Rule';
+            $matchingInstructions = $resources->where('name', $instructionsName)->first();
+            $pdfPath2 = $matchingInstructions ? 'https://drive.google.com/uc?export=download&id='.$matchingInstructions->file_path : null;
+
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
                 $this->baseMailDataController->getUserData($user),
@@ -674,7 +679,7 @@ class PDFController extends Controller
                 case 'probation_party':
                     Mail::to($emailListChap)
                         ->cc($emailListCoord)
-                        ->queue(new ProbationChapPartyLetter($mailData, $pdfPath));
+                        ->queue(new ProbationChapPartyLetter($mailData, $pdfPath, $pdfPath2));
                     break;
                 case 'warning_party':
                     Mail::to($emailListChap)
