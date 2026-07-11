@@ -287,7 +287,7 @@
                                     </div>
                                     <div class="col-sm-6 mb-2">
                                         @foreach ($financialReportPdfs as $year => $path)
-                                            <br><button type="button" class="btn btn-primary bg-gradient btn-sm me-1 mb-1 keep-enabled" onclick="openPdfViewer('{{ $path }}')">{{ $year - 1 }}-{{ $year }} Financial Report</button>
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm me-1 mb-1 keep-enabled" onclick="openPdfViewer('{{ $path }}')">{{ $year - 1 }}-{{ $year }} Financial Report</button><br>
                                         @endforeach
                                     </div>
                                 </div>
