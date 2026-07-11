@@ -1585,13 +1585,13 @@
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label for="AddNote10">Add New Note:</label>
+                                    <label for="Step10_Note">Add New Note:</label>
                                     <div class="col-12">
-                                        <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(10)" name="AddNote10" id="AddNote10"
+                                        <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(10)" name="Step10_Note" id="Step10_Note"
                                             {{ $chFinancialReportReview->review_complete != "" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
-                                        <button type="button" id="AddNote10Btn" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(10)" disabled>
+                                        <button type="button" id="AddNote10" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(10)" disabled>
                                             <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
                                         </button>
                                     </div>
