@@ -1730,7 +1730,7 @@
                 @else
                 Last Year's Report Ending Balance (June 30, {{ $reportYearStart }}):
                 @endif
-                <x-help-icon text="This is automatically carried over from last year's ending balance. It should be your starting point for this year's report." />
+                <x-help-icon text="Automatically carried over from last year's ending balance. It should be your starting point for this year's report." />
             </label>
             <div class="mb-3">
                 @currencyInput('LastYearReportEnding', $chFinancialReport->pre_balance, true)
@@ -1770,7 +1770,7 @@
         <div class="mb-3">
             <label for="TreasuryBalanceNow">
                 Ending Balance (Treasury Balance Now):
-                <x-help-icon text="Automatically calculated as Beginning Balance + Profit/Loss. If this does not match your actual bank balance as of June 30, you will need
+                <x-help-icon text="Automatically calculated as Beginning Balance + Profit/Loss. If this does not match your actual bank balance, you will need
                 to enter reconciliation transactions." />
             </label>
             <div class="mb-3">
