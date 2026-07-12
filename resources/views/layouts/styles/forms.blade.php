@@ -23,12 +23,20 @@
         margin-left: 0.5rem !important; /* Adjust the margin to control spacing for Vacant Buttons */
     }
 
-    .form-check-input:checked ~ .form-check-label {
-        color: black; /* Label color when toggle is ON for Vacant Buttons */
+    .form-switch .form-check-input:checked ~ .form-check-label {
+        color: black;
     }
 
-    .form-check-input:not(:checked) ~ .form-check-label {
-        color: #b0b0b0; /* Subdued label color when toggle is OFF for Vacant Buttons */
-        opacity: 0.6;   /* Optional: Adds a subdued effectfor Vacant Buttons */
+    .form-switch .form-check-input:not(:checked) ~ .form-check-label {
+        color: #b0b0b0;
+        opacity: 0.6;
+    }
+
+    .form-control[readonly] {
+        background-color: #e9ecef !important;
+        opacity: 1;
+    }
+    .input-group:has(.form-control[readonly]) .input-group-text {
+        background-color: #e9ecef;
     }
 </style>
