@@ -23,7 +23,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-auto fw-bold">Report Extension Given:</div>
+    <div class="col-auto fw-bold">Report Extension Given (or Unsubmitted):</div>
     <div class="col text-end">
         {{ $chEOYDocuments->report_extension == 1 ? 'YES' : 'NO' }}
     </div>

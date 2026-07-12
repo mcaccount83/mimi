@@ -86,7 +86,7 @@
                           </div>
 
                           <div class="d-flex align-items-center justify-content-between w-100">
-                            <label class="col-form-label mb-0 me-2">Report Extension Given:</label>
+                            <label class="col-form-label mb-0 me-2">Report Extension Given (or Unsubmitted):</label>
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="report_extension" id="report_extension" class="form-check-input"
                                        onchange="toggleExtensionNotes()"
