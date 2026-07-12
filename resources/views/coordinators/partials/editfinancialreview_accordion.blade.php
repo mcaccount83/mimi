@@ -1578,8 +1578,8 @@
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-12">
-                                        <label for="post_balance" class="me-2">Enter Ending Balance (to be used as beginning balance on next year's report):</label>
-                                        <small>This should be the Treasury Balance Now/Reconciled Bank Statement Number</small>
+                                        <label for="post_balance" class="me-2">Enter Ending Balance (to be used as beginning balance on next year's report):</label><br>
+                                        <small>This should be the Treasury Balance Now/Reconciled Bank Statement Amojnt.</small>
                                     </div>
                                     <div class="col-md-4">
                                         @currencyInput('post_balance', !empty($chFinancialReport) ? $chFinancialReportReview->post_balance : '')
