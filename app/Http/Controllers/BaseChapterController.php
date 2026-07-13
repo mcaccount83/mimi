@@ -15,6 +15,7 @@ use App\Models\DocumentsIRS;
 use App\Models\DocumentsEOY;
 use App\Models\DocumentsReport;
 use App\Models\FinancialReport;
+use App\Models\FinancialReportReview;
 use App\Models\FinancialReportAwards;
 use App\Models\Month;
 use App\Models\Probation;
@@ -313,7 +314,7 @@ class BaseChapterController extends Controller
         $chReportDocuments = $chDetails->documentsReport ?? DocumentsReport::firstOrNew(['chapter_id' => $chId]);
         $chFinancialReport = $chDetails->financialReport ?? FinancialReport::firstOrNew(['chapter_id' => $chId]);
         $chFinancialReportFinal = $chDetails->financialReportFinal;
-        $chFinancialReportReview = $chDetails->financialReportReview;
+        $chFinancialReportReview = $chDetails->financialReportReview ?? FinancialReportReview::firstOrNew(['chapter_id' => $chId]);
 
         $allActive = ActiveStatus::all();  // Full List for Dropdown Menu
         $allStatuses = Status::all();  // Full List for Dropdown Menu

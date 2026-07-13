@@ -8,7 +8,12 @@ use App\Models\ChapterAwardHistory;
 use App\Models\Chapters;
 use App\Models\Coordinators;
 use App\Models\Country;
+use App\Models\Documents;
+use App\Models\DocumentsIRS;
+use App\Models\DocumentsEOY;
+use App\Models\DocumentsReport;
 use App\Models\FinancialReport;
+use App\Models\FinancialReportReview;
 use App\Models\FinancialReportAwards;
 use App\Models\Probation;
 use App\Models\State;
@@ -89,13 +94,13 @@ class BaseBoardController extends Controller
 
         // Chapter data
         $chPayments = $chDetails->payments;
-        $chDocuments = $chDetails->documents;
-        $chEOYDocuments = $chDetails->documentsEOY;
-        $chIRSDocuments = $chDetails->documentsIRS;
-        $chReportDocuments = $chDetails->documentsReport;
+        $chDocuments = $chDetails->documents ?? Documents::firstOrNew(['chapter_id' => $chId]);
+        $chEOYDocuments = $chDetails->documentsEOY ?? DocumentsEOY::firstOrNew(['chapter_id' => $chId]);
+        $chIRSDocuments = $chDetails->documentsIRS ?? DocumentsIRS::firstOrNew(['chapter_id' => $chId]);
+        $chReportDocuments = $chDetails->documentsReport ?? DocumentsReport::firstOrNew(['chapter_id' => $chId]);
         $reviewerEmail = $chDetails->reportReviewer?->email;
-        $chFinancialReport = $chDetails->financialReport;
-        $chFinancialReportReview = $chDetails->financialReportReview;
+        $chFinancialReport = $chDetails->financialReport ?? FinancialReport::firstOrNew(['chapter_id' => $chId]);
+        $chFinancialReportReview = $chDetails->financialReportReview ?? FinancialReportReview::firstOrNew(['chapter_id' => $chId]);
         $chFinancialReportFinal = $chDetails->financialReportFinal;
         $chDisbanded = $chDetails->disbandCheck;
 
