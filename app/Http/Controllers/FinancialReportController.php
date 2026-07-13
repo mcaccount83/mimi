@@ -389,32 +389,45 @@ class FinancialReportController extends Controller implements HasMiddleware
             return null;
         }
 
-        $rawDate = trim($rawDate);
+        $rawDate = trim(str_replace('.', '/', $rawDate));
 
-        // Strip everything except digits - handles missing slashes,
-        // misplaced slashes, dots, dashes, whatever gets through
-        $digitsOnly = preg_replace('/\D/', '', $rawDate);
-
-        try {
-            switch (strlen($digitsOnly)) {
-                case 8: // mmddyyyy
-                    return Carbon::createFromFormat('mdY', $digitsOnly)->format('Y-m-d');
-                case 6: // mmddyy
-                    return Carbon::createFromFormat('mdy', $digitsOnly)->format('Y-m-d');
-                default:
-                    // Fall back to normal parsing for anything that still
-                    // has valid separators in the right place
-                    $normalized = str_replace('.', '/', $rawDate);
-                    try {
-                        return Carbon::createFromFormat('m/d/Y', $normalized)->format('Y-m-d');
-                    } catch (\Exception $e) {
-                        return Carbon::createFromFormat('m/d/y', $normalized)->format('Y-m-d');
-                    }
+        // Try standard slash formats first
+        foreach (['m/d/Y', 'm/d/y'] as $format) {
+            try {
+                return Carbon::createFromFormat($format, $rawDate)->format('Y-m-d');
+            } catch (\Exception $e) {
+                // keep trying
             }
-        } catch (\Exception $e) {
-            Log::warning("Date parse error: {$rawDate} - " . $e->getMessage());
-            return null;
         }
+
+        // Digit-only fallback: strip everything but digits, then try
+        // plausible mm/dd/yyyy splits from the right (year is most reliable anchor)
+        $digits = preg_replace('/\D/', '', $rawDate);
+        $len = strlen($digits);
+
+        $candidates = [];
+        if ($len === 8) $candidates[] = ['mdY', $digits];           // 06292026
+        if ($len === 6) {
+            $candidates[] = ['mdy', $digits];                       // 062926
+        }
+        if ($len === 7) {
+            $candidates[] = ['mdY', '0' . $digits];                 // dropped leading month zero
+            $candidates[] = ['mdY', substr($digits,0,2).'0'.substr($digits,2)]; // dropped leading day zero
+        }
+
+        foreach ($candidates as [$fmt, $val]) {
+            try {
+                $date = Carbon::createFromFormat($fmt, $val);
+                if ($date->year >= 2000 && $date->year <= 2099) {
+                    return $date->format('Y-m-d');
+                }
+            } catch (\Exception $e) {
+                // keep trying
+            }
+        }
+
+        Log::warning("Date parse error: {$rawDate} - could not determine format, {$len} digits");
+        return null;
     }
 
     /**
