@@ -121,9 +121,9 @@ class BaseBoardController extends Controller
         $emailListCoord = $emailData['emailListCoord'];
 
         // PC Details for Sending Email
-        $pcDetails = Coordinators::find($chPcId);
-        $pcEmail = $pcDetails->email;
-        $pcName = $pcDetails->first_name.' '.$pcDetails->last_name;
+$pcDetails = Coordinators::find($chPcId);
+$pcEmail = $pcDetails?->email;
+$pcName = $pcDetails ? $pcDetails->first_name.' '.$pcDetails->last_name : null;
 
         // Load Conference Coordinators for Sending Email
         $ccEmailData = $this->userController->loadConferenceCoord($chPcId);
