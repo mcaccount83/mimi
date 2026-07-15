@@ -15,7 +15,9 @@ class BladeDirectivesServiceProvider extends ServiceProvider
     <?php echo '<script>
     document.addEventListener("DOMContentLoaded", function() {
         Inputmask("(999) 999-9999").mask($(".phone-mask"));
-        $("[data-inputmask]:visible:not(.phone-mask)").inputmask(); // handles url and any others
+        $("[data-inputmask]:visible:not(.phone-mask)").inputmask({
+            clearIncomplete: true
+        }); 
 
         // URL prefix behavior for .http-mask fields
         $(document).on("focus", ".http-mask", function() {

@@ -8,6 +8,7 @@ use App\Enums\CoordinatorPosition;
 use App\Enums\UserStatusEnum;
 use App\Enums\UserTypeEnum;
 use App\Mail\NewCoordApproveGSuiteNotice;
+use App\Mail\NewCoordApproveCCNotice;
 use App\Mail\NewCoordApproveRCNotice;
 use App\Mail\NewCoordinatordWelcome;
 use App\Mail\PCChangeChapNotice;
@@ -1667,6 +1668,9 @@ class CoordinatorController extends Controller implements HasMiddleware
 
             Mail::to($gsuiteAdmin)
                 ->queue(new NewCoordApproveGSuiteNotice($mailData));
+
+            Mail::to($gsuiteAdmin)
+                ->queue(new NewCoordApproveCCNotice($mailData));
 
             Mail::to($rcEmail)
                 ->queue(new NewCoordApproveRCNotice($mailData));

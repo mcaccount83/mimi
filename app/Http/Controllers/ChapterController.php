@@ -38,6 +38,7 @@ use App\Models\Documents;
 use App\Models\DocumentsEOY;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportFinal;
+use App\Models\FinancialReportReview;
 use App\Models\ForumCategorySubscription;
 use App\Models\Payments;
 use App\Models\ProbationSubmission;
@@ -1976,6 +1977,10 @@ class ChapterController extends Controller implements HasMiddleware
             $chapter->save();
 
             FinancialReport::create([
+                'chapter_id' => $chapterId,
+            ]);
+
+            FinancialReportReview::create([
                 'chapter_id' => $chapterId,
             ]);
 
