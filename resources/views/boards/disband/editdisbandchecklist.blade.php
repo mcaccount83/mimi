@@ -167,7 +167,7 @@
                                                 <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board.editreregpayment', ['id' => $chDetails->id]) }}'"><i class="bi bi-credit-card-fill me-2"></i>Pay ReRegistration</button>
                                         @endif
                                           @if ($chDisbanded?->donate_funds != '1')
-                                                <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('bboard.editdonate', ['id' => $chDetails->id]) }}'"><i class="bi bi-currency-dollar me-2"></i>Donate Chapter Funds</button>
+                                                <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board.editdonate', ['id' => $chDetails->id]) }}'"><i class="bi bi-currency-dollar me-2"></i>Donate Chapter Funds</button>
                                         @endif
                                         @if ($chDisbanded?->file_financial != '1')
                                                 <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('board.editfinancialreportfinal', ['id' => $chDetails->id]) }}'"><i class="bi bi-file-earmark-bar-graph me-2"></i>Submit Financial Report</button>

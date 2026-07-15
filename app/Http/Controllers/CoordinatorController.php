@@ -16,7 +16,9 @@ use App\Mail\PCChangePCNotice;
 use App\Mail\RCChangeCoordNotice;
 use App\Mail\RCChangeRCNotice;
 use App\Mail\ReactivateCoordGSuiteNotice;
+use App\Mail\ReactivateCoordCCNotice;
 use App\Mail\RetireCoordGSuiteNotice;
+use App\Mail\RetireCoordCCNotice;
 use App\Models\Chapters;
 use App\Models\CoordinatorRecognition;
 use App\Models\Coordinators;
@@ -593,6 +595,10 @@ class CoordinatorController extends Controller implements HasMiddleware
 
             ForumCategorySubscription::where('user_id', $cdUserId)->delete();
 
+            // $emailCCData = $this->userController->loadConferenceCoordConf($cdConfId);
+            // $cc_id = $emailCCData['cc_id'];
+            // $emailCC = $emailCCData['cc_email'];
+
             // Get Mail Data
             // $coordName = $coordinator->fisrt_name.' '.$coordinator->last_name;
             // $coordConf = $coordinator->conference_id;
@@ -616,8 +622,11 @@ class CoordinatorController extends Controller implements HasMiddleware
             $adminEmail = $this->positionConditionsService->getAdminEmail();
             $gsuiteAdmin = $adminEmail['gsuite_admin'];  // Gsuite Coor Email
 
+            // Mail::to($gsuiteAdmin)
+            //     ->queue(new RetireCoordGSuiteNotice($mailData));
+
             Mail::to($gsuiteAdmin)
-                ->queue(new RetireCoordGSuiteNotice($mailData));
+                ->queue(new RetireCoordCCNotice($mailData));
 
             DB::commit();
 
@@ -687,8 +696,11 @@ class CoordinatorController extends Controller implements HasMiddleware
             $adminEmail = $this->positionConditionsService->getAdminEmail();
             $gsuiteAdmin = $adminEmail['gsuite_admin'];  // Gsuite Coor Email
 
+            // Mail::to($gsuiteAdmin)
+            //     ->queue(new ReactivateCoordGSuiteNotice($mailData));
+
             Mail::to($gsuiteAdmin)
-                ->queue(new ReactivateCoordGSuiteNotice($mailData));
+                ->queue(new ReactivateCoordCCNotice($mailData));
 
             DB::commit();
 
@@ -1666,8 +1678,8 @@ class CoordinatorController extends Controller implements HasMiddleware
                 'mailTable' => $mailTable,
             ]);
 
-            Mail::to($gsuiteAdmin)
-                ->queue(new NewCoordApproveGSuiteNotice($mailData));
+            // Mail::to($gsuiteAdmin)
+            //     ->queue(new NewCoordApproveGSuiteNotice($mailData));
 
             Mail::to($gsuiteAdmin)
                 ->queue(new NewCoordApproveCCNotice($mailData));
