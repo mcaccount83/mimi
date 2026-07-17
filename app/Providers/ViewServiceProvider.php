@@ -51,7 +51,7 @@ class ViewServiceProvider extends ServiceProvider
                     $confId = $corDetails->state->conference_id ?? null;
                 }
 
-                if ($userTypeId == UserTypeEnum::BOARD && $user->board) {
+                if (in_array($userTypeId, [UserTypeEnum::BOARD, UserTypeEnum::OUTGOING, UserTypeEnum::DISBANDED, UserTypeEnum::PENDING]) && $user->board) {
                     $bdDetails = $user->board;
                     $loggedIn = $bdDetails['first_name'].' '.$bdDetails['last_name'];
                     $chId = $bdDetails['chapter_id'];

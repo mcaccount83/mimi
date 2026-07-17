@@ -1,27 +1,12 @@
     <!-- Disband Checklist Dashboard Menu Item -->
+    @isset($chDetails)
     <li class="nav-item">
         <a href="{{ route('board.editdisbandchecklist', ['id' => $chDetails->id]) }}" class="nav-link {{ Request::is('board/disbandchecklist/*') ? 'active' : '' }}">
             <i class="nav-icon bi bi-house-fill"></i>
             <p>Disband Checklist</p>
         </a>
     </li>
-    {{-- @isset($chDetails)
-     @php
-        $boardRoute = route('board.editdisbandchecklist', ['id' => $chDetails->id]);
-
-        $activeBoardRoutes = [
-            'board/disbandchecklist/*',
-        ];
-    @endphp
-    @isset($boardRoute)
-        <li class="nav-item">
-            <a href="{{ $boardRoute }}" class="nav-link {{ $positionService->isActiveRoute($activeBoardRoutes) }}">
-                <i class="nav-icon bi bi-house-fill"></i>
-                <p>Disband Checklist</p>
-            </a>
-        </li>
     @endisset
-    @endisset --}}
 
     <!-- ReReg Menu Item -->
     @isset($chDetails)
