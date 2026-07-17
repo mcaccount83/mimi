@@ -224,7 +224,7 @@ class TechReportController extends Controller implements HasMiddleware
                 continue;
             }
 
-            $ownBoardDetails = Boards::with(['state', 'country', 'user'])
+            $ownBoardDetails = BoardsPending::with(['state', 'country', 'user'])
                 ->where('chapter_id', $chId)
                 ->where('user_id', $userId)
                 ->first();

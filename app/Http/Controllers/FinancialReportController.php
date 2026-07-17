@@ -154,7 +154,7 @@ class FinancialReportController extends Controller implements HasMiddleware
     /**
      * Save EOY Financial Report Accordion
      */
-    public function saveAccordionFields(FinancialReport $financialReport, array $input): void
+    public function saveAccordionFields(FinancialReport|FinancialReportFinal $financialReport, array $input): void
     {
         // $financialReport->farthest_step_visited = $input['FurthestStep'];
 
