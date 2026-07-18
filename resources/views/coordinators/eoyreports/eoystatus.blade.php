@@ -46,20 +46,6 @@
                 </thead>
                 <tbody>
                     @foreach($chapterList as $list)
-                    @php
-                        $mailData = [
-                            'chapterName' => $list->name,
-                            'chapterState' => $list->state,
-                            'boardElectionReportReceived' => $list->documentsEOY?->new_board_submitted,
-                            'financialReportReceived' => $list->documentsEOY?->financial_report_received,
-                            '990NSubmissionReceived' => $list->documentsIRS?->irs_path,
-                            'einLetterCopyReceived' => $list->documentsEOY?->ein_letter,
-                        ];
-
-                        $renderedHtml = View::make('emails.endofyear.latereportreminder', ['mailData' => $mailData])->render();
-                        $renderedPlainText = strip_tags($renderedHtml);
-                    @endphp
-
                         <tr>
                             <td class="text-center align-middle">
                                 @if($coordinatorCondition)

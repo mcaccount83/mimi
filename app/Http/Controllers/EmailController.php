@@ -1010,96 +1010,175 @@ class EmailController extends Controller implements HasMiddleware
      * Auto Send EOY Report Status Reminder - BULK
      */
     public function sendEOYStatusReminder(Request $request): JsonResponse
-    {
-        $user = $this->userController->loadUserInformation($request);
-        $coorId = $user['cdId'];
-        $confId = $user['confId'];
-        $regId = $user['regId'];
-        $positionId = $user['cdPositionId'];
-        $secPositionId = $user['cdSecPositionId'];
+{
+    $user = $this->userController->loadUserInformation($request);
+    $coorId = $user['cdId'];
+    $confId = $user['confId'];
+    $regId = $user['regId'];
+    $positionId = $user['cdPositionId'];
+    $secPositionId = $user['cdSecPositionId'];
 
-        $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
+    $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
 
-        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
-        $chapterList = $baseQuery['query']
-            ->whereHas('documentsEOY', function ($query) {
-                $query->where('report_extension', '0')
-                    ->orWhereNull('report_extension');
-            })
-            ->whereHas('documentsEOY', function ($query) {
-                $query->where('new_board_submitted', '0')
-                    ->orWhereNull('new_board_submitted')
-                    ->orWhere('financial_report_received', '0')
-                    ->orWhereNull('financial_report_received');
-            })
-            ->get();
+    $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+    $chapterList = $baseQuery['query']
+        ->whereHas('documentsEOY', function ($query) {
+            $query->where('report_extension', '0')
+                ->orWhereNull('report_extension');
+        })
+        ->whereHas('documentsEOY', function ($query) {
+            $query->where('new_board_submitted', '0')
+                ->orWhereNull('new_board_submitted')
+                ->orWhere('financial_report_received', '0')
+                ->orWhereNull('financial_report_received');
+        })
+        ->get();
 
-        if ($chapterList->isEmpty()) {
-            return response()->json(['message' => 'There are no Chapters with Reports Due.'], 422);
-        }
-
-        $chapterIds = [];
-        $chapterEmails = [];
-        $coordinatorEmails = [];
-        $mailData = [];
-
-        foreach ($chapterList as $chapter) {
-            $chapterIds[] = $chapter->id;
-
-            if ($chapter->name) {
-                $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
-                $chDetails = $emailDetails['chDetails'];
-                $stateShortName = $emailDetails['stateShortName'];
-                $chDocuments = $emailDetails['chDocuments'];
-                $chEOYDocuments = $emailDetails['chEOYDocuments'];
-                $chFinancialReport = $emailDetails['chFinancialReport'];
-                $emailListChap = $emailDetails['emailListChap'];
-                $emailListCoord = $emailDetails['emailListCoord'];
-
-                $chapterEmails[$chDetails->name] = $emailListChap;
-                $coordinatorEmails[$chDetails->name] = $emailListCoord;
-            }
-
-            $mailData[$chDetails->name] = array_merge(
-                $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
-                $this->baseMailDataController->getFinancialReportData($chFinancialReport),
-                $this->baseMailDataController->getReportYearData($reportYearOptions),
-                [
-                    'boardElectionReportReceived' => $chEOYDocuments->new_board_submitted ?? null,
-                    'financialReportReceived'     => $chEOYDocuments->financial_report_received ?? null,
-                    '990NSubmissionReceived'      => $chDocuments->irs_path ?? null,
-                    'einLetterCopyReceived'       => $chEOYDocuments->ein_letter ?? null,
-                ]
-            );
-
-        }
-
-        $delay = 0;
-        foreach ($mailData as $chapterName => $data) {
-            if (! empty($chapterName)) {
-                Mail::to($chapterEmails[$chapterName] ?? [])
-                    ->cc($coordinatorEmails[$chapterName] ?? [])
-                    // ->queue(new EOYLateReportReminder($data));
-                    ->later(now()->addSeconds($delay), new EOYLateReportReminder($data));
-                    $delay += 15;
-            }
-        }
-
-        try {
-
-            DB::commit();
-
-            return response()->json(['message' => 'EOY Late Notices have been successfully sent.']);
-        } catch (\Exception $e) {
-            DB::rollback();  // Rollback Transaction
-            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
-
-            return response()->json(['message' => 'Something went wrong. Please try again.'], 500);
-        } finally {
-            // This ensures DB connections are released even if exceptions occur
-            DB::disconnect();
-        }
+    if ($chapterList->isEmpty()) {
+        return response()->json(['message' => 'There are no Chapters with Reports Due.'], 422);
     }
+
+    $chapterEmails = [];
+    $coordinatorEmails = [];
+    $mailData = [];
+
+    foreach ($chapterList as $chapter) {
+        if (! $chapter->name) {
+            continue; // nothing to build or send for this row
+        }
+
+        $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
+        $chDetails         = $emailDetails['chDetails'];
+        $stateShortName    = $emailDetails['stateShortName'];
+        $chDocuments       = $emailDetails['chDocuments'];
+        $chEOYDocuments    = $emailDetails['chEOYDocuments'];
+        $chIRSDocuments    = $emailDetails['chIRSDocuments'];
+        $chReportDocuments = $emailDetails['chReportDocuments'];
+        $chFinancialReport = $emailDetails['chFinancialReport'];
+        $emailListChap     = $emailDetails['emailListChap'];
+        $emailListCoord    = $emailDetails['emailListCoord'];
+
+        $chapterEmails[$chapter->id] = $emailListChap;
+        $coordinatorEmails[$chapter->id] = $emailListCoord;
+
+        $mailData[$chapter->id] = array_merge(
+            $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+            $this->baseMailDataController->getFinancialReportData($chFinancialReport),
+            $this->baseMailDataController->getFinancialDocumentsData($chDocuments, $chEOYDocuments, $chIRSDocuments, $chReportDocuments),
+            $this->baseMailDataController->getReportYearData($reportYearOptions),
+        );
+    }
+
+    try {
+        $delay = 0;
+        foreach ($mailData as $chapterId => $data) {
+            Mail::to($chapterEmails[$chapterId] ?? [])
+                ->cc($coordinatorEmails[$chapterId] ?? [])
+                ->later(now()->addSeconds($delay), new EOYLateReportReminder($data));
+            $delay += 15;
+        }
+
+        return response()->json(['message' => 'EOY Late Notices have been successfully sent.']);
+    } catch (\Exception $e) {
+        Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+
+        return response()->json(['message' => 'Something went wrong. Please try again.'], 500);
+    }
+}
+    // public function sendEOYStatusReminder(Request $request): JsonResponse
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $coorId = $user['cdId'];
+    //     $confId = $user['confId'];
+    //     $regId = $user['regId'];
+    //     $positionId = $user['cdPositionId'];
+    //     $secPositionId = $user['cdSecPositionId'];
+
+    //     $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
+
+    //     $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+    //     $chapterList = $baseQuery['query']
+    //         ->whereHas('documentsEOY', function ($query) {
+    //             $query->where('report_extension', '0')
+    //                 ->orWhereNull('report_extension');
+    //         })
+    //         ->whereHas('documentsEOY', function ($query) {
+    //             $query->where('new_board_submitted', '0')
+    //                 ->orWhereNull('new_board_submitted')
+    //                 ->orWhere('financial_report_received', '0')
+    //                 ->orWhereNull('financial_report_received');
+    //         })
+    //         ->get();
+
+    //     if ($chapterList->isEmpty()) {
+    //         return response()->json(['message' => 'There are no Chapters with Reports Due.'], 422);
+    //     }
+
+    //     $chapterIds = [];
+    //     $chapterEmails = [];
+    //     $coordinatorEmails = [];
+    //     $mailData = [];
+
+    //     foreach ($chapterList as $chapter) {
+    //         $chapterIds[] = $chapter->id;
+
+    //         if ($chapter->name) {
+    //             $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
+    //             $chDetails = $emailDetails['chDetails'];
+    //             $stateShortName = $emailDetails['stateShortName'];
+    //             $chDocuments = $emailDetails['chDocuments'];
+    //             $chEOYDocuments = $emailDetails['chEOYDocuments'];
+    //             $chIRSDocuments = $emailDetails['chIRSDocuments'];
+    //             $chReportDocuments = $emailDetails['chReportDocuments'];
+    //             $chFinancialReport = $emailDetails['chFinancialReport'];
+    //             $emailListChap = $emailDetails['emailListChap'];
+    //             $emailListCoord = $emailDetails['emailListCoord'];
+
+    //             $chapterEmails[$chDetails->name] = $emailListChap;
+    //             $coordinatorEmails[$chDetails->name] = $emailListCoord;
+    //         }
+
+    //         $mailData[$chDetails->name] = array_merge(
+    //             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+    //             $this->baseMailDataController->getFinancialReportData($chFinancialReport),
+    //             $this->baseMailDataController->getFinancialDocumentsData($chDocuments, $chEOYDocuments, $chIRSDocuments, $chReportDocuments),
+    //             $this->baseMailDataController->getReportYearData($reportYearOptions),
+    //             // [
+    //             //     'boardElectionReportReceived' => $chEOYDocuments->new_board_submitted ?? null,
+    //             //     'financialReportReceived'     => $chEOYDocuments->financial_report_received ?? null,
+    //             //     '990NSubmissionReceived'      => $chDocuments->irs_path ?? null,
+    //             //     'einLetterCopyReceived'       => $chDocuments->ein_letter_path ?? null,
+    //             // ]
+    //         );
+
+    //     }
+
+    //     $delay = 0;
+    //     foreach ($mailData as $chapterName => $data) {
+    //         if (! empty($chapterName)) {
+    //             Mail::to($chapterEmails[$chapterName] ?? [])
+    //                 ->cc($coordinatorEmails[$chapterName] ?? [])
+    //                 // ->queue(new EOYLateReportReminder($data));
+    //                 ->later(now()->addSeconds($delay), new EOYLateReportReminder($data));
+    //                 $delay += 15;
+    //         }
+    //     }
+
+    //     try {
+
+    //         DB::commit();
+
+    //         return response()->json(['message' => 'EOY Late Notices have been successfully sent.']);
+    //     } catch (\Exception $e) {
+    //         DB::rollback();  // Rollback Transaction
+    //         Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+
+    //         return response()->json(['message' => 'Something went wrong. Please try again.'], 500);
+    //     } finally {
+    //         // This ensures DB connections are released even if exceptions occur
+    //         DB::disconnect();
+    //     }
+    // }
 
     /**
      * Auto Send EOY Report Status Reminder - Single Chapter
@@ -1115,6 +1194,8 @@ class EmailController extends Controller implements HasMiddleware
         $stateShortName = $emailDetails['stateShortName'];
         $chDocuments = $emailDetails['chDocuments'];
         $chEOYDocuments = $emailDetails['chEOYDocuments'];
+        $chIRSDocuments = $emailDetails['chIRSDocuments'];
+        $chReportDocuments = $emailDetails['chReportDocuments'];
         $chFinancialReport = $emailDetails['chFinancialReport'];
         $emailListChap = $emailDetails['emailListChap'];
         $emailListCoord = $emailDetails['emailListCoord'];
@@ -1122,13 +1203,14 @@ class EmailController extends Controller implements HasMiddleware
         $mailData = array_merge(
             $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
             $this->baseMailDataController->getFinancialReportData($chFinancialReport),
+            $this->baseMailDataController->getFinancialDocumentsData($chDocuments, $chEOYDocuments, $chIRSDocuments, $chReportDocuments),
             $this->baseMailDataController->getReportYearData($reportYearOptions),
-            [
-                'boardElectionReportReceived' => $chEOYDocuments->new_board_submitted ?? null,
-                'financialReportReceived'     => $chEOYDocuments->financial_report_received ?? null,
-                '990NSubmissionReceived'      => $chDocuments->irs_path ?? null,
-                'einLetterCopyReceived'       => $chEOYDocuments->ein_letter ?? null,
-            ]
+            // [
+            //     'boardElectionReportReceived' => $chEOYDocuments->new_board_submitted ?? null,
+            //     'financialReportReceived'     => $chEOYDocuments->financial_report_received ?? null,
+            //     '990NSubmissionReceived'      => $chDocuments->irs_path ?? null,
+            //     'einLetterCopyReceived'       => $chDocuments->ein_letter_path ?? null,
+            // ]
         );
 
         Mail::to($emailListChap)
