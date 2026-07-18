@@ -293,9 +293,10 @@ class BaseCoordinatorController extends Controller
         // Fetch coordinator courses and their progress
         $coordinatorCourses = $this->learnDashService->getCoursesForUserType('coordinator');
         $userProgress = $this->learnDashService->getUserProgress($cdDetails->user->email);
+        $progressByCourseId = $userProgress['courses'] ?? [];
 
         foreach ($coordinatorCourses as &$course) {
-            $course['progress'] = $userProgress[(int) $course['id']] ?? null;
+            $course['progress'] = $progressByCourseId[(int) $course['id']] ?? null;
         }
 
         $coursesByCategory = collect($coordinatorCourses)->groupBy(function ($course) {

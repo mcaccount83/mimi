@@ -68,9 +68,9 @@
                         <div class="form-check form-switch">
                             <input type="checkbox" name="showConfReg" id="showConfReg" class="form-check-input" {{$checkBox3Status ? 'checked' : '' }} onchange="showConfReg()" />
                                 @if ($assistConferenceCoordinatorCondition)
-                                    <label class="form-check-label" for="showConfReg">Show All Coordinators in Conference (Export Available)</label>
+                                    <label class="form-check-label" for="showConfReg">Show All Coordinators in Conference</label>
                                 @else
-                                    <label class="form-check-label" for="showConfReg">Show All Coordinators in Region (Export Available)</label>
+                                    <label class="form-check-label" for="showConfReg">Show All Coordinators in Region</label>
                                 @endif
                         </div>
                     </div>
