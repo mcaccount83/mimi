@@ -19,8 +19,9 @@
                                             {{ $course['title']['rendered'] }}
                                         </a>
                                         @if(!empty($course['progress']) && $course['progress']['status'] === 'completed')
-                                            <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>Completed</span>
+                                            <span class="badge bg-success"><i class="bi bi-check-circle-fill me-1"></i>Completed</span>
                                         @elseif(!empty($course['progress']) && $course['progress']['status'] === 'in_progress')
+                                            <span class="badge bg-warning"><i class="bi bi-clock-history me-1"></i>In Progress</span>
                                             <div class="progress mt-2" style="height: 8px;">
                                                 <div class="progress-bar bg-primary" style="width: {{ $course['progress']['percent'] }}%"></div>
                                             </div>

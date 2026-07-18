@@ -171,4 +171,26 @@ class LearnDashService
     {
         Cache::forget("learndash_courses_{$userTypeId}");
     }
+
+    public function getCoursesWithProgressByCategory(string $userTypeId, $laravelUser): \Illuminate\Support\Collection
+    {
+        $courses = $this->getCoursesForUserType($userTypeId);
+        $userProgress = $this->getUserProgress($laravelUser->email);
+        $progressByCourseId = $userProgress['courses'] ?? [];
+
+        foreach ($courses as &$course) {
+            $course['auto_login_url'] = $this->getAutoLoginUrl($course, $laravelUser);
+            $course['progress'] = $progressByCourseId[(int) $course['id']] ?? null;
+        }
+        unset($course);
+
+        return collect($courses)->groupBy(function ($course) {
+            return $course['categories'][0]['slug'] ?? 'uncategorized';
+        })->map(function ($courses, $slug) {
+            return [
+                'name' => $courses->first()['categories'][0]['name'] ?? ucfirst(str_replace('-', ' ', $slug)),
+                'courses' => $courses,
+            ];
+        });
+    }
 }

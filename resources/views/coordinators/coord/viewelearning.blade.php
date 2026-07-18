@@ -3,6 +3,11 @@
 @section('page_title', 'Coordinator Details')
 @section('breadcrumb', 'Appreciation & Recognition')
 
+<style>
+    #accordion-courses .accordion-button::after {
+    display: none;
+}
+</style>
 @section('content')
     <!-- Main content -->
     <form class="form-horizontal" method="POST" action='{{ route("coordinators.updaterecognition",$cdDetails->id) }}'>
@@ -48,35 +53,14 @@
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                       <div class="row">
-    @forelse($coursesByCategory as $categorySlug => $categoryData)
-        <div class="col-md-6">
-            <label class="mb-2">{{ $categoryData['name'] }}</label>
-            <ul class="list-unstyled mb-3">
-                @foreach($categoryData['courses'] as $course)
-                    <li class="mb-2 d-flex align-items-center gap-2">
-                        <span>{{ $course['title']['rendered'] }}</span>
-                        @if(!empty($course['progress']) && $course['progress']['status'] === 'completed')
-                            <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>Completed</span>
-                        @elseif(!empty($course['progress']) && $course['progress']['status'] === 'in_progress')
-                            <div>
-                                <div class="progress" style="height: 8px; width: 80px;">
-                                    <div class="progress-bar bg-primary" style="width: {{ $course['progress']['percent'] }}%"></div>
-                                </div>
-                                <small class="text-muted">{{ $course['progress']['percent'] }}% ({{ $course['progress']['steps_completed'] }}/{{ $course['progress']['steps_total'] }})</small>
+                        <div class="row">
+                            <div class="row">
+                                @include('coordinators.partials.elearning_coord_accordion')
                             </div>
-                        @else
-                            <span class="badge bg-secondary">Not Started</span>
-                        @endif
-                    </li>
-                @endforeach
-            </ul>
-        </div>
-    @empty
-        <p class="text-muted">No courses found.</p>
-    @endforelse
-</div>
-
+                            <br>
+                            <div class="row">
+                                @include('partials.elearning_board_accordion')
+                            </div>
                         </div>
                     </div>
               <!-- /.card-body -->

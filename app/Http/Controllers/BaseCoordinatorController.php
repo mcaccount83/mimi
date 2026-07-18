@@ -291,22 +291,8 @@ class BaseCoordinatorController extends Controller
         $rc_pos = $rcDetailsInfo['rc_pos'];
 
         // Fetch coordinator courses and their progress
-        $coordinatorCourses = $this->learnDashService->getCoursesForUserType('coordinator');
-        $userProgress = $this->learnDashService->getUserProgress($cdDetails->user->email);
-        $progressByCourseId = $userProgress['courses'] ?? [];
-
-        foreach ($coordinatorCourses as &$course) {
-            $course['progress'] = $progressByCourseId[(int) $course['id']] ?? null;
-        }
-
-        $coursesByCategory = collect($coordinatorCourses)->groupBy(function ($course) {
-            return $course['categories'][0]['slug'] ?? 'uncategorized';
-        })->map(function ($courses, $slug) {
-            return [
-                'name' => $courses->first()['categories'][0]['name'] ?? ucfirst(str_replace('-', ' ', $slug)),
-                'courses' => $courses,
-            ];
-        });
+        $coordinatorCoursesByCategory = $this->learnDashService->getCoursesWithProgressByCategory('coordinator', $cdDetails->user);
+        $boardCoursesByCategory = $this->learnDashService->getCoursesWithProgressByCategory('board', $cdDetails->user);
 
         return ['cdDetails' => $cdDetails, 'cdId' => $cdId, 'cdActiveId' => $cdActiveId, 'regionLongName' => $regionLongName, 'cdUserAdmin' => $cdUserAdmin, 'emailCC' => $emailCC,
             'conferenceDescription' => $conferenceDescription, 'cdConfId' => $cdConfId, 'cdRegId' => $cdRegId, 'cdRptId' => $cdRptId, 'allAdminRoles' => $allAdminRoles,
@@ -314,7 +300,7 @@ class BaseCoordinatorController extends Controller
             'secondaryPosition' => $secondaryPosition, 'allRegions' => $allRegions, 'allStates' => $allStates, 'allMonths' => $allMonths, 'secondaryPositionId' => $secondaryPositionId,
             'rcDetails' => $rcDetails, 'allPositions' => $allPositions, 'allCoordinators' => $allCoordinators, 'cdPositionid' => $cdPositionid, 'secondaryPositionShort' => $secondaryPositionShort,
             'allRecognitionGifts' => $allRecognitionGifts, 'allCountries' => $allCountries, 'cdstateShortName' => $cdstateShortName, 'cdApp' => $cdApp, 'emailCCData' => $emailCCData,
-            'coursesByCategory' => $coursesByCategory,
+            'coordinatorCoursesByCategory' => $coordinatorCoursesByCategory, 'boardCoursesByCategory' => $boardCoursesByCategory,
         ];
     }
 

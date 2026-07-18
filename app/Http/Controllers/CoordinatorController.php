@@ -321,7 +321,8 @@ class CoordinatorController extends Controller implements HasMiddleware
         $cdLeave = $baseQuery['cdDetails']->on_leave;
         $cdUserAdmin = $baseQuery['cdUserAdmin'];
         $cdAdminRole = $baseQuery['cdAdminRole'];
-        $coursesByCategory = $baseQuery['coursesByCategory'];
+        $coordinatorCoursesByCategory = $baseQuery['coordinatorCoursesByCategory'];
+        $boardCoursesByCategory = $baseQuery['boardCoursesByCategory'];
 
         // $dateOptions = $this->positionConditionsService->getDateOptions();
         // $threeMonthsAgo = $dateOptions['threeMonthsAgo'];  // Big Sister Email
@@ -341,7 +342,8 @@ class CoordinatorController extends Controller implements HasMiddleware
         $data = ['cdDetails' => $cdDetails, 'cdConfId' => $cdConfId, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
             'cdActiveId' => $cdActiveId, 'confId' => $confId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
             'drList' => $drList, 'chList' => $chList, 'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'startDate' => $startDate,
-            'secondaryPosition' => $secondaryPosition, 'cdPositionid' => $cdPositionid, 'cdAdminRole' => $cdAdminRole, 'coursesByCategory' => $coursesByCategory,
+            'secondaryPosition' => $secondaryPosition, 'cdPositionid' => $cdPositionid, 'cdAdminRole' => $cdAdminRole,
+            'coordinatorCoursesByCategory' => $coordinatorCoursesByCategory, 'boardCoursesByCategory' => $boardCoursesByCategory,
         ];
 
         return view('coordinators.coord.view')->with($data);
@@ -1327,12 +1329,13 @@ class CoordinatorController extends Controller implements HasMiddleware
         $cdLeave = $baseQuery['cdDetails']->on_leave;
         $cdUserAdmin = $baseQuery['cdUserAdmin'];
         $cdAdminRole = $baseQuery['cdAdminRole'];
-        $coursesByCategory = $baseQuery['coursesByCategory'];
+        $coordinatorCoursesByCategory = $baseQuery['coordinatorCoursesByCategory'];
+        $boardCoursesByCategory = $baseQuery['boardCoursesByCategory'];
 
         $data = ['cdDetails' => $cdDetails, 'conferenceDescription' => $conferenceDescription, 'regionLongName' => $regionLongName,
             'cdActiveId' => $cdActiveId, 'cdLeave' => $cdLeave, 'ReportTo' => $ReportTo, 'cdUserAdmin' => $cdUserAdmin,
             'displayPosition' => $displayPosition, 'mimiPosition' => $mimiPosition, 'secondaryPosition' => $secondaryPosition, 'cdAdminRole' => $cdAdminRole,
-            'coursesByCategory' => $coursesByCategory,
+            'coordinatorCoursesByCategory' => $coordinatorCoursesByCategory, 'boardCoursesByCategory' => $boardCoursesByCategory,
         ];
 
         return view('coordinators.coord.viewelearning')->with($data);
