@@ -24,6 +24,9 @@
                                 , {{ $regionLongName }} Region
                             @endif
                         </p>
+                        <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2" onclick="window.location.href='{{ route('impersonate.start', ['userId' => $cdDetails->user_id]) }}'">
+                            View as {{ $cdDetails->first_name }} {{ $cdDetails->last_name }}
+                        </button>
                     </div>
                   <ul class="list-group list-group-flush mb-3">
                       <li class="list-group-item">

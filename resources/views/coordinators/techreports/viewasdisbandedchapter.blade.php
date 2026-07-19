@@ -13,7 +13,7 @@
                             <div class="card-header d-flex align-items-center">
                             <div class="dropdown d-flex align-items-center">
                         <h3 class="card-title dropdown-toggle mb-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            View Board Pages
+                            View As Chapter
                         </h3>
                             @include('layouts.dropdown_menus.menu_reports_tech')
                         </div>
@@ -23,7 +23,6 @@
                                 request()->routeIs('techreports.viewaschapter.active')    => 'Active',
                                 request()->routeIs('techreports.viewaschapter.disbanded') => 'Disbanded',
                                 request()->routeIs('techreports.viewaschapter.pending')   => 'Pending',
-                                // request()->routeIs('techreports.viewaschapter.outgoing')  => 'Outgoing',
                                 default => 'View As',
                             };
                         @endphp
@@ -35,7 +34,6 @@
                                 <li><a class="dropdown-item" href="{{ route('techreports.viewaschapter.active') }}">Active</a></li>
                                 <li><a class="dropdown-item" href="{{ route('techreports.viewaschapter.disbanded') }}">Disbanded</a></li>
                                 <li><a class="dropdown-item" href="{{ route('techreports.viewaschapter.pending') }}">Pending</a></li>
-                            {{-- <li><a class="dropdown-item" href="{{ route('techreports.viewaschapter.outgoing') }}">Outgoing</a></li> --}}
                         </ul>
                 </div>
         </div>
@@ -47,9 +45,10 @@
                                     <th>Conf/Reg</th>
                                     <th>State</th>
                                     <th>Chapter Name</th>
+                                    <th>President Name</th>
                                     <th>View As...</th>
-                                    <th>Chapter Page</th>
-                                    <th>Board/User Type</th>
+                                    <th>Disband Date</th>
+                                    {{-- <th>Board/User Type</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
@@ -82,13 +81,27 @@
                                             @endif
                                         </td>
                                         <td>
-                                            @if (\App\Enums\UserTypeEnum::label($bdTypeId) != 'N/A')
-                                            <a href="{{ route('board.chapterprofile', ['id' => $list->id]) }}" target="_blank" class="btn btn-primary bg-gradient btn-sm me-2">Chapter Profile</a>
+                                            @if ($borDetails?->user_id)
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm ms-2"
+                                                        onclick="window.location.href='{{ route('impersonate.start', ['userId' => $borDetails->user_id]) }}'">
+                                                    View as {{ $borDetails->first_name }} {{ $borDetails->last_name }}
+                                                </button>
+                                            @else
+                                                <button type="button" class="btn btn-primary bg-gradient btn-sm ms-2" disabled>
+                                                    Position Vacant
+                                                </button>
                                             @endif
+                                            {{-- <a href="{{ route('impersonate.start', ['userId' => $borDetails->user_id, 'returnTo' => request()->route()->getName()]) }}"
+                                                class="btn btn-primary bg-gradient btn-sm ms-2">View as {{ $borDetails->first_name }} {{ $borDetails->last_name }}
+                                            </a> --}}
+                                            {{-- @if (\App\Enums\UserTypeEnum::label($bdTypeId) != 'N/A')
+                                            <a href="{{ route('board.chapterprofile', ['id' => $list->id]) }}" target="_blank" class="btn btn-primary bg-gradient btn-sm me-2">Chapter Profile</a>
+                                            @endif --}}
                                         </td>
-                                        <td>
+                                        {{-- <td>
                                             {{ \App\Enums\UserTypeEnum::label($bdTypeId) }}
-                                        </td>
+                                        </td> --}}
+                                        <td>@formatDate($list->zap_date)</td>
                                     </tr>
                                      @php
                                         // Unset so these don't leak into layout/sidebar

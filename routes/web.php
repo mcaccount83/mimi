@@ -19,6 +19,7 @@ use App\Http\Controllers\FinancialReportController;
 use App\Http\Controllers\ForumSubscriptionController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ImpersonationController;
 use App\Http\Controllers\InquiriesController;
 use App\Http\Controllers\MySentEmailsController;
 use App\Http\Controllers\PaymentController;
@@ -73,6 +74,12 @@ Route::get('password/request', [ForgotPasswordController::class, 'showLinkReques
 Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
+
+// View pages as another user - board or coordinator
+Route::middleware(['auth'])->group(function () {
+    Route::get('/impersonate/{userId}', [ImpersonationController::class, 'start'])->name('impersonate.start');
+    Route::get('/impersonate-stop', [ImpersonationController::class, 'stop'])->name('impersonate.stop');
+});
 
 // Public Page Routes...Public, No login required
 Route::get('/chapter-links', [PublicController::class, 'chapterLinks'])->name('chapter.links');
@@ -134,6 +141,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/techreports/viewasactivechapter', [TechReportController::class, 'viewAsActiveChapter'])->name('techreports.viewaschapter.active');
     Route::get('/techreports/viewasdisbandchapter', [TechReportController::class, 'viewAsDisbandedChapter'])->name('techreports.viewaschapter.disbanded');
     Route::get('/techreports/viewaspendingchapter', [TechReportController::class, 'viewAsPendingChapter'])->name('techreports.viewaschapter.pending');
+    Route::get('/techreports/viewasoutgoingchapter', [TechReportController::class, 'viewAsOutgoingChapter'])->name('techreports.viewaschapter.outgoing');
+    Route::get('/techreports/viewasactivecoordinator', [TechReportController::class, 'viewAsActiveCoordinator'])->name('techreports.viewascoordinator.active');
     Route::post('/techreports/updatechapterdelete', [TechReportController::class, 'updateChapterDelete'])->name('techreports.updatechapterdelete');
     Route::post('/techreports/updatecoordinatordelete', [TechReportController::class, 'updateCoordinatorDelete'])->name('techreports.updatecoordinatordelete');
     Route::post('/techreports/resetProbationSubmission', [TechReportController::class, 'resetProbationSubmission'])->name('techreports.resetProbationSubmission');

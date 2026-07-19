@@ -195,6 +195,7 @@
       </aside>
       <!--end::Sidebar-->
       <main class="app-main">
+          @include('partials.impersonation_banner')
         <div class="app-content-header">
           <div class="container-fluid">
             <div class="row">

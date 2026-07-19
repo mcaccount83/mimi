@@ -160,8 +160,13 @@ class TechReportController extends Controller implements HasMiddleware
         $positionId = $user['cdPositionId'];
         $secPositionId = $user['cdSecPositionId'];
 
+        $dateOptions = $this->positionConditionsService->getDateOptions();
+        $oneYearAgo = $dateOptions['oneYearAgo'];
+
         $baseQuery = $this->baseChapterController->getBaseQuery(0, $coorId, $confId, $regId, $positionId, $secPositionId);
-        $chapterList = $baseQuery['query']->get();
+        $chapterList = $baseQuery['query']
+            ->where('zap_date', '>=', $oneYearAgo)
+            ->get();
         $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
         $chapterBdData = [];
@@ -208,7 +213,7 @@ class TechReportController extends Controller implements HasMiddleware
         $positionId = $user['cdPositionId'];
         $secPositionId = $user['cdSecPositionId'];
 
-        $baseQuery = $this->baseChapterController->getBaseQuery(3, $coorId, $confId, $regId, $positionId, $secPositionId);
+        $baseQuery = $this->baseChapterController->getBaseQuery(2, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
         $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
 
@@ -241,6 +246,85 @@ class TechReportController extends Controller implements HasMiddleware
         $countList = $chapterList->count();
 
         return view('coordinators.techreports.viewaspendingchapter')->with($data);
+    }
+
+    public function viewAsOutgoingChapter(Request $request): View
+    {
+        $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
+
+        $user = $this->userController->loadUserInformation($request);
+        $userTypeId = $user['userTypeId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
+
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+
+        $chapterIdsWithOutgoing = BoardsOutgoing::pluck('chapter_id')->unique();
+
+    $chapterList = $baseQuery['query']
+            ->whereIn('chapters.id', $chapterIdsWithOutgoing)
+            ->get();
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
+
+        $chapterBdData = [];
+        foreach ($chapterList as $chapter) {
+            $outgoingDetails = BoardsOutgoing::with(['state', 'country', 'user'])
+                ->where('chapter_id', $chapter->id)
+                ->first();
+
+            if ($outgoingDetails === null) {
+                $chapterBdData[$chapter->id] = null;
+                continue;
+            }
+
+            $chapterBdData[$chapter->id] = [
+                'bdPositionId' => $outgoingDetails->position_id ?? null,
+                'bdDetails' => $outgoingDetails,
+                'bdTypeId' => $outgoingDetails?->user?->type_id ?? null,
+            ];
+        }
+
+        $countList = $chapterList->count();
+        $data = ['countList' => $countList, 'chapterList' => $chapterList,
+            'checkBox51Status' => $checkBox51Status, 'chapterBdData' => $chapterBdData, 'userTypeId' => $userTypeId,
+        ];
+
+        return view('coordinators.techreports.viewasoutgoingchapter')->with($data);
+    }
+
+    public function viewAsActiveCoordinator(Request $request): View
+    {
+        $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
+
+        $user = $this->userController->loadUserInformation($request);
+        $userId = $user['userId'];
+        $userTypeId = $user['userTypeId'];
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
+
+        $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+        $coordinatorList = $baseQuery['query']->get();
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
+
+        $coordinatorData = [];
+        foreach ($coordinatorList as $coordinator) {
+            $cdDetails = $this->baseCoordinatorController->getCoordinatorDetails($coordinator->id);
+            $coordinatorData[$coordinator->id] = $cdDetails;
+        }
+
+        $countList = $coordinatorList->count();
+
+        $data = ['countList' => $countList, 'coordinatorList' => $coordinatorList,
+            'checkBox51Status' => $checkBox51Status, 'coordinatorData' => $coordinatorData, 'userTypeId' => $userTypeId,
+        ];
+
+        return view('coordinators.techreports.viewasactivecoordinator')->with($data);
     }
 
     /**

@@ -62,7 +62,7 @@ class BaseBoardController extends Controller
         $chapterStatus = $chDetails->status?->chapter_status;
         $probationReason = $chDetails->probation?->probation_reason;
         $websiteLink = $chDetails->webLink?->link_status ?? null;
-        $startMonthName = $chDetails->startMonth->month_long_name;
+        $startMonthName = $chDetails->startMonth?->month_long_name;
 
         // Full lists for dropdown menus
         $allActive = ActiveStatus::all();
@@ -122,8 +122,8 @@ class BaseBoardController extends Controller
 
         // PC Details for Sending Email
         $pcDetails = Coordinators::find($chPcId);
-        $pcEmail = $pcDetails->email;
-        $pcName = $pcDetails->first_name.' '.$pcDetails->last_name;
+        $pcEmail = $pcDetails?->email;
+        $pcName = $pcDetails?->first_name.' '.$pcDetails?->last_name;
 
         // Load Conference Coordinators for Sending Email
         $ccEmailData = $this->userController->loadConferenceCoord($chPcId);

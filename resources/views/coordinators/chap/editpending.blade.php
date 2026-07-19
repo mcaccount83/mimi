@@ -96,14 +96,14 @@
                 <div class="card-body">
                         <div class="card-header bg-transparent border-0">
                         <h3>General Information
-                                @if ($chDetails->active_status == \App\Enums\ChapterStatusEnum::ACTIVE)
+                                {{-- @if ($chDetails->active_status == \App\Enums\ChapterStatusEnum::ACTIVE)
                                     <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('board.chapterprofile', ['id' => $chDetails->id]) }}'">View Chapter Profile As President</button>
                                 @elseif ($chDetails->active_status == \App\Enums\ChapterStatusEnum::ZAPPED)
                                     <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('board.editdisbandchecklist', ['id' => $chDetails->id]) }}'">View Disband Checklist As President</button>
                                 @elseif ($chDetails->active_status == \App\Enums\ChapterStatusEnum::PENDING ||
                                         $chDetails->active_status == \App\Enums\ChapterStatusEnum::NOTAPPROVED)
                                     <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('board.newchapterstatus', ['id' => $chDetails->id]) }}'">View Chapter Status As Founder</button>
-                                @endif
+                                @endif --}}
                         </h3>
                      </div>
                     <!-- /.card-header -->

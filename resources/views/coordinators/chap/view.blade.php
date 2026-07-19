@@ -86,14 +86,14 @@
                     <div class="general-field">
                         <div class="card-header bg-transparent border-0">
                             <h3>General Information
-                                @if ($chDetails->active_status == \App\Enums\ChapterStatusEnum::ACTIVE)
+                                {{-- @if ($chDetails->active_status == \App\Enums\ChapterStatusEnum::ACTIVE)
                                     <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('board.chapterprofile', ['id' => $chDetails->id]) }}'">View Chapter Profile As President</button>
                                 @elseif ($chDetails->active_status == \App\Enums\ChapterStatusEnum::ZAPPED)
                                     <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('board.editdisbandchecklist', ['id' => $chDetails->id]) }}'">View Disband Checklist As President</button>
                                 @elseif ($chDetails->active_status == \App\Enums\ChapterStatusEnum::PENDING ||
                                         $chDetails->active_status == \App\Enums\ChapterStatusEnum::NOTAPPROVED)
                                     <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('board.newchapterstatus', ['id' => $chDetails->id]) }}'">View Chapter Status As Founder</button>
-                                @endif
+                                @endif --}}
                         </h3>
                         </div>
                         <!-- /.card-header -->
@@ -677,7 +677,11 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <h3 class="mb-0">{{$PresDetails->first_name}} {{$PresDetails->last_name}}</h3>
+                                        <h3 class="mb-0">{{$PresDetails->first_name}} {{$PresDetails->last_name}}
+                                            <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('impersonate.start', ['userId' => $PresDetails->user_id]) }}'">
+                                                View as {{ $PresDetails->first_name }} {{ $PresDetails->last_name }}
+                                            </button>
+                                        </h3>
                                         @mailto($PresDetails->email)
                                         <br>
                                         @tel($PresDetails->phone)
@@ -742,7 +746,11 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <h3 class="mb-0">{{$AVPDetails->first_name}} {{$AVPDetails->last_name}}</h3>
+                                        <h3 class="mb-0">{{$AVPDetails->first_name}} {{$AVPDetails->last_name}}
+                                            <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('impersonate.start', ['userId' => $AVPDetails->user_id]) }}'">
+                                                View as {{ $AVPDetails->first_name }} {{ $AVPDetails->last_name }}
+                                            </button>
+                                        </h3>
                                         @mailto($AVPDetails->email)
                                         <br>
                                         @tel($AVPDetails->phone)
@@ -807,7 +815,11 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <h3 class="mb-0">{{$MVPDetails->first_name}} {{$MVPDetails->last_name}}</h3>
+                                        <h3 class="mb-0">{{$MVPDetails->first_name}} {{$MVPDetails->last_name}}
+                                            <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('impersonate.start', ['userId' => $MVPDetails->user_id]) }}'">
+                                                View as {{ $MVPDetails->first_name }} {{ $MVPDetails->last_name }}
+                                            </button>
+                                        </h3>
                                         @mailto($MVPDetails->email)
                                         <br>
                                         @tel($MVPDetails->phone)
@@ -872,7 +884,11 @@
                             <div class="card-body">
                               <div class="row">
                                 <div class="col-md-6">
-                                    <h3 class="mb-0">{{$TRSDetails->first_name}} {{$TRSDetails->last_name}}</h3>
+                                    <h3 class="mb-0">{{$TRSDetails->first_name}} {{$TRSDetails->last_name}}
+                                        <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('impersonate.start', ['userId' => $TRSDetails->user_id]) }}'">
+                                            View as {{ $TRSDetails->first_name }} {{ $TRSDetails->last_name }}
+                                        </button>
+                                    </h3>
                                     @mailto($TRSDetails->email)
                                     <br>
                                     @tel($TRSDetails->phone)
@@ -937,7 +953,11 @@
                             <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <h3 class="mb-0">{{$SECDetails->first_name}} {{$SECDetails->last_name}}</h3>
+                                <h3 class="mb-0">{{$SECDetails->first_name}} {{$SECDetails->last_name}}
+                                    <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('impersonate.start', ['userId' => $SECDetails->user_id]) }}'">
+                                        View as {{ $SECDetails->first_name }} {{ $SECDetails->last_name }}
+                                    </button>
+                                </h3>
                                 @mailto($SECDetails->email)
                                 <br>
                                 @tel($SECDetails->phone)

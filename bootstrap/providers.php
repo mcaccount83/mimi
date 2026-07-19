@@ -4,6 +4,7 @@ return [
     App\Providers\AppServiceProvider::class,
     App\Providers\BladeDirectivesServiceProvider::class,
     App\Providers\ForumServiceProvider::class,
+    App\Providers\ImpersonationViewComposerServiceProvider::class,
     App\Providers\LogViewerServiceProvider::class,
     App\Providers\QueuemonitorServiceProvider::class,
     App\Providers\SentEmailsServiceProvider::class,

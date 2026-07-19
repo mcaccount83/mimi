@@ -13,16 +13,17 @@
                             <div class="card-header d-flex align-items-center">
                             <div class="dropdown d-flex align-items-center">
                         <h3 class="card-title dropdown-toggle mb-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            View As Chapter
+                            View As Coordinator
                         </h3>
                             @include('layouts.dropdown_menus.menu_reports_tech')
                         </div>
 
-                        @php
+                        {{-- @php
                             $viewAsLabel = match(true) {
-                                request()->routeIs('techreports.viewaschapter.active')    => 'Active',
-                                request()->routeIs('techreports.viewaschapter.disbanded') => 'Disbanded',
-                                request()->routeIs('techreports.viewaschapter.pending')   => 'Pending',
+                                request()->routeIs('techreports.viewascoordinator.active')    => 'Active',
+                                request()->routeIs('techreports.viewascoordinator.retired') => 'Retired',
+                                request()->routeIs('techreports.viewascoordinator.pending')   => 'Pending',
+                                request()->routeIs('techreports.viewascoordinator.rejected')   => 'Rejected',
                                 default => 'View As',
                             };
                         @endphp
@@ -31,11 +32,12 @@
                                 {{ $viewAsLabel }}
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="statusDropdown">
-                                <li><a class="dropdown-item" href="{{ route('techreports.viewaschapter.active') }}">Active</a></li>
-                                <li><a class="dropdown-item" href="{{ route('techreports.viewaschapter.disbanded') }}">Disbanded</a></li>
-                                <li><a class="dropdown-item" href="{{ route('techreports.viewaschapter.pending') }}">Pending</a></li>
+                                <li><a class="dropdown-item" href="{{ route('techreports.viewascoordinator.active') }}">Active</a></li>
+                                <li><a class="dropdown-item" href="{{ route('techreports.viewascoordinator.retired') }}">Retired</a></li>
+                                <li><a class="dropdown-item" href="{{ route('techreports.viewascoordinator.pending') }}">Pending</a></li>
+                                <li><a class="dropdown-item" href="{{ route('techreports.viewascoordinator.rejected') }}">Rejected</a></li>
                         </ul>
-                </div>
+                </div> --}}
         </div>
                      <!-- /.card-header -->
                     <div class="card-body">
@@ -44,21 +46,21 @@
                                 <tr>
                                     <th>Conf/Reg</th>
                                     <th>State</th>
-                                    <th>Chapter Name</th>
-                                    <th>President Name</th>
+                                    <th>Coordinator Name</th>
                                     <th>View As...</th>
+                                    {{-- <th></th> --}}
                                     {{-- <th>Board/User Type</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($chapterList as $list)
+                                @foreach($coordinatorList as $list)
                                 @php
-                                    $bd = $chapterBdData[$list->id] ?? [];
-                                    $bdTypeId    = $bd['bdTypeId'] ?? null;
-                                    $bdPositionId = $bd['bdPositionId'] ?? null;
-                                    $borDetails  = $bd['bdDetails'] ?? null;
+                                    $cd = $coordinatorData[$list->id] ?? [];
+                                    $cdTypeId    = $cd['cordTypeId'] ?? null;
+                                    $cdDisplayPositionId = $cd['cordDisplayPositionId'] ?? null;
+                                    $cdDetails  = $cd['cdDetails'] ?? null;
                                 @endphp
-                                    <tr id="chapter-{{ $list->id }}">
+                                    <tr id="coordinator-{{ $list->id }}">
                                         <td>
                                             @if ($list->state->conference_id > 0)
                                                 {{ $list->state->conference->short_name }} / {{ $list->state->region->short_name }}
@@ -73,32 +75,29 @@
                                                 {{$list->state->country?->short_name}}
                                             @endif
                                         </td>
-                                        <td>{{ $list->name }}</td>
-                                        <td>
-                                            @if ($borDetails->first_name != null)
-                                                {{$borDetails->first_name}} {{$borDetails->last_name}}, {{$borDetails->position->position}}
+                                        <td>{{$cdDetails->first_name}} {{$cdDetails->last_name}}, {{$cdDetails->displayPosition->short_title}}</td>
+                                        {{-- <td>
+                                            @if ($cdDetails->first_name != null)
+                                                {{$cdDetails->first_name}} {{$cdDetails->last_name}}, {{$cdDetails->displayPosition->short_title}}
                                             @endif
-                                        </td>
+                                        </td> --}}
                                         <td>
-                                            <button type="button" class="btn btn-primary bg-gradient btn-sm ms-2" onclick="window.location.href='{{ route('impersonate.start', ['userId' => $borDetails->user_id]) }}'">
-                                                View as {{ $borDetails->first_name }} {{ $borDetails->last_name }}
+                                            <button type="button" class="btn btn-primary bg-gradient btn-sm ms-2" onclick="window.location.href='{{ route('impersonate.start', ['userId' => $cdDetails->user_id]) }}'">
+                                                View as {{ $cdDetails->first_name }} {{ $cdDetails->last_name }}
                                             </button>
-                                            {{-- <a href="{{ route('impersonate.start', ['userId' => $borDetails->user_id, 'returnTo' => request()->route()->getName()]) }}"
-                                                class="btn btn-primary bg-gradient btn-sm ms-2">View as {{ $borDetails->first_name }} {{ $borDetails->last_name }}
+                                            {{-- <a href="{{ route('impersonate.start', ['userId' => $cdDetails->user_id, 'returnTo' => request()->route()->getName()]) }}"
+                                                class="btn btn-primary bg-gradient btn-sm ms-2">View as {{ $cdDetails->first_name }} {{ $cdDetails->last_name }}
                                             </a> --}}
-                                            {{-- @if (\App\Enums\UserTypeEnum::label($bdTypeId) != 'N/A')
-                                            <a href="{{ route('board.chapterprofile', ['id' => $list->id]) }}" target="_blank" class="btn btn-primary bg-gradient btn-sm me-2">Chapter Profile</a>
-                                            @endif --}}
                                         </td>
                                         {{-- <td>
-                                            {{ \App\Enums\UserTypeEnum::label($bdTypeId) }}
+                                            {{ \App\Enums\UserTypeEnum::label($cdTypeId) }}
                                         </td> --}}
                                     </tr>
                                      @php
                                         // Unset so these don't leak into layout/sidebar
-                                        $bdTypeId = null;
-                                        $bdPositionId = null;
-                                        $borDetails = null;
+                                        $cdTypeId = null;
+                                        $cdDisplayPositionId = null;
+                                        $cdDetails = null;
                                     @endphp
                                 @endforeach
                             </tbody>

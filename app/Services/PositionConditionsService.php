@@ -262,26 +262,6 @@ class PositionConditionsService
         ];
     }
 
-    // public function getViewAs(int $userTypeId, object $PresDetails): array
-    // {
-    //     $viewingAs = session('viewing_as', 'board');
-    //     $presTypeId = $PresDetails?->user?->type_id ?? null;
-
-    //     if ($userTypeId == UserTypeEnum::COORD && $viewingAs == 'coord') {
-    //         return [
-    //             'bdPositionId' => '1',
-    //             'bdDetails' => $PresDetails,
-    //             'bdTypeId' => $presTypeId,
-    //         ];
-    //     }
-
-    //     return [
-    //         'bdPositionId' => $PresDetails?->position_id ?? null,
-    //         'bdDetails' => $PresDetails,
-    //         'bdTypeId' => $presTypeId,
-    //     ];
-    // }
-
     public function getViewAs(int $userTypeId, int $userId, object $PresDetails, ?object $ownBoardDetails = null): array
     {
         $viewingAs = session('viewing_as', 'board');
