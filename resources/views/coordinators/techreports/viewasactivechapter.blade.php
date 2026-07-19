@@ -23,6 +23,7 @@
                                 request()->routeIs('techreports.viewaschapter.active')    => 'Active',
                                 request()->routeIs('techreports.viewaschapter.disbanded') => 'Disbanded',
                                 request()->routeIs('techreports.viewaschapter.pending')   => 'Pending',
+                                request()->routeIs('techreports.viewaschapter.outgoing')   => 'Outgoing',
                                 default => 'View As',
                             };
                         @endphp
@@ -34,6 +35,7 @@
                                 <li><a class="dropdown-item" href="{{ route('techreports.viewaschapter.active') }}">Active</a></li>
                                 <li><a class="dropdown-item" href="{{ route('techreports.viewaschapter.disbanded') }}">Disbanded</a></li>
                                 <li><a class="dropdown-item" href="{{ route('techreports.viewaschapter.pending') }}">Pending</a></li>
+                                <li><a class="dropdown-item" href="{{ route('techreports.viewaschapter.outgoing') }}">Outgoing</a></li>
                         </ul>
                 </div>
         </div>
