@@ -493,60 +493,6 @@ class ResourcesController extends Controller implements HasMiddleware
             'boardCoursesByCategory' => $this->learndashService->getCoursesWithProgressByCategory('board', $user),
         ]);
     }
-    // {
-    //     $user = User::find($request->user()->id);
-
-    //     $coordinatorCourses = $this->learndashService->getCoursesForUserType('coordinator');
-    //     $boardCourses = $this->learndashService->getCoursesForUserType('board');
-
-    //     // Fetch progress keyed by course ID
-    //     // $userProgress = $this->learndashService->getUserProgress($user->email);
-    //     // dd($userProgress);
-
-    //     // Merge progress + auto-login URLs
-    //     $userProgress = $this->learndashService->getUserProgress($user->email);
-    //     $progressByCourseId = $userProgress['courses'] ?? [];
-
-    //     // dd($progressByCourseId);
-
-    //     foreach ($coordinatorCourses as &$course) {
-    //         $course['auto_login_url'] = $this->learndashService->getAutoLoginUrl($course, $user);
-    //         $course['progress'] = $progressByCourseId[$course['id']] ?? null;
-    //     }
-
-    //     foreach ($boardCourses as &$course) {
-    //         $course['auto_login_url'] = $this->learndashService->getAutoLoginUrl($course, $user);
-    //         $course['progress'] = $progressByCourseId[$course['id']] ?? null;
-    //     }
-
-    //     // Group by category - store both name and slug
-    //     $coordinatorCoursesByCategory = collect($coordinatorCourses)->groupBy(function ($coordinatorCourse) {
-    //         return $coordinatorCourse['categories'][0]['slug'] ?? 'uncategorized';
-    //     })->map(function ($courses, $slug) {
-    //         return [
-    //             'name' => $courses->first()['categories'][0]['name'] ?? ucfirst(str_replace('-', ' ', $slug)),
-    //             'courses' => $courses,
-    //         ];
-    //     });
-
-    //     $boardCoursesByCategory = collect($boardCourses)->groupBy(function ($course) {
-    //         return $course['categories'][0]['slug'] ?? 'uncategorized';
-    //     })->map(function ($courses, $slug) {
-    //         return [
-    //             'name' => $courses->first()['categories'][0]['name'] ?? ucfirst(str_replace('-', ' ', $slug)),
-    //             'courses' => $courses,
-    //         ];
-    //     });
-
-    //     $data = [
-    //         'coordinatorCourses' => $coordinatorCourses,
-    //         'boardCourses' => $boardCourses,
-    //         'coordinatorCoursesByCategory' => $coordinatorCoursesByCategory,
-    //         'boardCoursesByCategory' => $boardCoursesByCategory,
-    //     ];
-
-    //     return view('coordinators.resources.elearning')->with($data);
-    // }
 
     public function redirectToCourse($courseId, Request $request): RedirectResponse
     {
