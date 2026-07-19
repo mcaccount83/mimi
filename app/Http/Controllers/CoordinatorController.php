@@ -489,6 +489,7 @@ class CoordinatorController extends Controller implements HasMiddleware
         DB::beginTransaction();
         try {
             $coordinators->on_leave = 1;
+            $coordinators->leave_date = Carbon::now();
             $coordinators->updated_by = $updatedBy;
             $coordinators->updated_by = $updatedId;
             $coordinators->save();
