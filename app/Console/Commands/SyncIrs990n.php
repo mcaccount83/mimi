@@ -16,7 +16,7 @@ class SyncIrs990n extends Command
     protected $description = 'Cross-reference chapter EINs against the IRS 990-N e-Postcard bulk data and store all matching filing years';
 
     // TODO: confirm current bulk download URL on irs.gov before enabling in production
-    protected string $bulkDataUrl = 'https://www.irs.gov/pub/irs-soi/eo_epostcard.txt'; // PLACEHOLDER — verify
+    protected string $bulkDataUrl = 'https://apps.irs.gov/pub/epostcard/data-download-epostcard.zip';
 
     public function handle(): int
     {
@@ -44,19 +44,30 @@ class SyncIrs990n extends Command
         if ($localPath) {
             $filePath = $localPath;
         } else {
-            $filePath = storage_path('app/irs-990n-bulk.txt');
+            $zipPath = storage_path('app/irs-990n-bulk.zip');
             $this->info('Downloading IRS bulk file...');
 
-            if (!$this->downloadToDisk($this->bulkDataUrl, $filePath)) {
+            if (!$this->downloadToDisk($this->bulkDataUrl, $zipPath)) {
                 $this->error('Failed to download IRS bulk data.');
-                Log::error('IRS 990-N sync: download failed');
+                Log::error('IRS 990-N sync: download failed', ['url' => $this->bulkDataUrl]);
                 return self::FAILURE;
             }
-        }
 
-        if (!file_exists($filePath)) {
-            $this->error("File not found: {$filePath}");
-            return self::FAILURE;
+            $this->info('Extracting bulk file...');
+            $zip = new \ZipArchive();
+            if ($zip->open($zipPath) !== true) {
+                $this->error('Failed to open downloaded zip file.');
+                Log::error('IRS 990-N sync: zip open failed', ['path' => $zipPath]);
+                @unlink($zipPath);
+                return self::FAILURE;
+            }
+
+            $entryName = $zip->getNameIndex(0);
+            $zip->extractTo(storage_path('app'), [$entryName]);
+            $zip->close();
+            @unlink($zipPath); // cleanup the zip, we only need the extracted file
+
+            $filePath = storage_path('app/'.$entryName);
         }
 
         // 3. Stream-parse line by line, pipe-delimited, no header row.
