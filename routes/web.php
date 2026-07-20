@@ -413,6 +413,7 @@ Route::middleware('auth')->group(function () {
 // EOYReports Controller Routes...Coordinator Login Required
 Route::middleware('auth')->group(function () {
     Route::get('/eoyreports/status', [EOYReportController::class, 'showEOYStatus'])->name('eoyreports.eoystatus');
+    Route::get('/eoyreports/review', [EOYReportController::class, 'showEOYReview'])->name('eoyreports.eoyreview');
     Route::get('/eoyreports/editstatus/{id}', [EOYReportController::class, 'editEOYDetails'])->name('eoyreports.view');
     Route::post('/eoyreports/updatestatus/{id}', [EOYReportController::class, 'updateEOYDetails'])->name('eoyreports.update');
     Route::get('/eoyreports/boardreport', [EOYReportController::class, 'showEOYBoardReport'])->name('eoyreports.eoyboardreport');

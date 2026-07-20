@@ -98,6 +98,52 @@ class EOYReportController extends Controller implements HasMiddleware
     }
 
     /**
+     * View the EOY Status list
+     */
+    public function showEOYReview(Request $request): View
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $coorId = $user['cdId'];
+        $confId = $user['confId'];
+        $regId = $user['regId'];
+        $positionId = $user['cdPositionId'];
+        $secPositionId = $user['cdSecPositionId'];
+        $userName = $user['userName'];
+        $userPosition = $user['cdPosition'];
+        $userConfName = $user['confName'];
+        $userConfDesc = $user['confDesc'];
+
+        $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
+        $reportYearEnd = $reportYearOptions['reportYearEnd'];
+
+        $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
+        $chapterList = $baseQuery['query']
+            ->where(function ($query) use ($reportYearEnd) {
+                $query->where(function ($q) use ($reportYearEnd) {
+                    $q->where('start_year', '<', $reportYearEnd)
+                        ->orWhere(function ($q) use ($reportYearEnd) {
+                            $q->where('start_year', '=', $reportYearEnd)
+                                ->where('start_month_id', '<', 7); // July is month 7
+                        });
+                });
+            })
+            ->get();
+
+        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
+        $checkBox2Status = $baseQuery[CheckboxFilterEnum::REVIEWER];
+        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
+        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
+
+        $countList = count($chapterList);
+        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status, 'checkBox2Status' => $checkBox2Status,
+            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
+            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
+        ];
+
+        return view('coordinators.eoyreports.eoyreview')->with($data);
+    }
+
+    /**
      * Edit the EOY Status Details
      */
     public function editEOYDetails(Request $request, int $id): View
