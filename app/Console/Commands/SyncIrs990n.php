@@ -3,7 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Models\Chapters;
+use App\Models\DocumentsIRS;
 use App\Models\Irs990nFiling;
+use App\Services\PositionConditionsService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -15,11 +17,18 @@ class SyncIrs990n extends Command
 
     protected $description = 'Cross-reference chapter EINs against the IRS 990-N e-Postcard bulk data and store all matching filing years';
 
-    // TODO: confirm current bulk download URL on irs.gov before enabling in production
     protected string $bulkDataUrl = 'https://apps.irs.gov/pub/epostcard/data-download-epostcard.zip';
+
+    public function __construct(protected PositionConditionsService $positionConditionsService)
+    {
+        parent::__construct();
+    }
 
     public function handle(): int
     {
+        $fiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
+        $currentReportYear = $fiscalYearOptions['fiscalYearStart'];
+
         $localPath = $this->option('file');
 
         // 1. Build a lookup of chapter EINs we actually care about (normalized, digits only)
@@ -116,6 +125,8 @@ class SyncIrs990n extends Command
                 continue;
             }
 
+            $mostRecentYear = collect($matchesByEin[$ein])->max('tax_year');
+
             foreach ($matchesByEin[$ein] as $filing) {
                 if ($this->option('dry-run')) {
                     $this->line("Would record: {$chapter->name} (EIN: {$ein}) — Tax Year {$filing['tax_year']}");
@@ -137,6 +148,10 @@ class SyncIrs990n extends Command
                 );
 
                 $filingsWritten++;
+            }
+
+            if (!$this->option('dry-run') && (string) $mostRecentYear === (string) $currentReportYear) {
+                DocumentsIRS::where('chapter_id', $chapter->id)->update(['irs_verified' => 1]);
             }
         }
 
