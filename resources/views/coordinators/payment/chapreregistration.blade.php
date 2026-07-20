@@ -140,7 +140,7 @@
             <!-- /.card-body for checkboxes -->
 
                 <div class="card-body text-center mt-3">
-                    @if(!$checkBox1Status && !$checkBox3Status && !$checkBox51Status && !$checkBox56Status)
+                    {{-- @if(!$checkBox1Status && !$checkBox3Status && !$checkBox51Status && !$checkBox56Status)
                         <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="confirmSendReRegReminder('Send Current Month Reminders?',
                                 'This will send re-registration reminders to all chapters due this month.', '{{ route('payment.chapreregreminder') }}')">
                             <i class="bi bi-envelope-fill me-2"></i>Send Current Month Reminders</button>
@@ -148,6 +148,19 @@
                                 'This will send late re-registration notices to all chapters who are one month overdue.', '{{ route('payment.chaprereglatereminder') }}')">
                             <i class="bi bi-envelope-fill me-2"></i>Send One Month Late Notices
                         </button>
+                    @endif --}}
+                    @if(!$checkBox1Status && !$checkBox3Status && !$checkBox51Status && !$checkBox56Status)
+                            Current Month Reminders will AutoSend on the 1st of Each Month.<br>
+                            One Month Late Notices will AutoSend on the 10th of Each Month.<br>
+                        @if(($coordinatorCondition && $conferenceCoordinatorCondition))
+                            <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="confirmSendReRegReminder('Send Current Month Reminders?',
+                                    'This will send re-registration reminders to all chapters due this month.', '{{ route('payment.chapreregreminder') }}')">
+                                <i class="bi bi-envelope-fill me-2"></i>Send Current Month Reminders</button>
+                            <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="confirmSendReRegReminder('Send One Month Late Notices?',
+                                    'This will send late re-registration notices to all chapters who are one month overdue.', '{{ route('payment.chaprereglatereminder') }}')">
+                                <i class="bi bi-envelope-fill me-2"></i>Send One Month Late Notices
+                            </button>
+                        @endif
                     @endif
                 </div>
             <!-- /.card-body for buttons -->

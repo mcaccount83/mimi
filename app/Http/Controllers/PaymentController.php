@@ -14,6 +14,7 @@ use App\Models\GrantRequest;
 use App\Models\PaymentHistory;
 use App\Models\Payments;
 use App\Services\PositionConditionsService;
+use App\Services\PaymentReminderService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,6 +33,7 @@ class PaymentController extends Controller implements HasMiddleware
         protected BaseChapterController $baseChapterController,
         protected BaseMailDataController $baseMailDataController,
         protected PositionConditionsService $positionConditionsService,
+        protected PaymentReminderService $paymentReminderService,
     ) {}
 
     public static function middleware(): array
@@ -101,85 +103,24 @@ class PaymentController extends Controller implements HasMiddleware
     public function createChapterReRegistrationReminder(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $confId = $user['confId'];
 
-        $dateOptions = $this->positionConditionsService->getDateOptions();
-        $currentDate = $dateOptions['currentDate'];
-        $currentYear = $dateOptions['currentYear'];
-        $currentMonth = $dateOptions['currentMonth'];
-        $currentMonthWords = $dateOptions['currentMonthWords'];
-        $rangeEndDate = $currentDate->copy()->subMonth()->endOfMonth();
-        $rangeStartDate = $rangeEndDate->copy()->startOfMonth()->subYear()->addMonth();
+        $conditions = $this->positionConditionsService->getConditionsForUser(
+            $user['cdPositionId'] ?? null,
+            $user['cdSecPositionId'] ?? [],
+            $user['cdId'] ?? null
+        );
 
-        $rangeStartDateFormatted = $rangeStartDate->format('m-d-Y');
-        $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
-
-        try {
-            $chapters = Chapters::with(['state.conference'])
-                ->whereHas('state.conference', function ($q) use ($confId) {
-                    $q->where('conference.id', $confId);
-                })
-                ->where('start_month_id', $currentMonth)
-                ->where('next_renewal_year', $currentYear)
-                ->where('active_status', 1)
-                ->get();
-
-            if ($chapters->isEmpty()) {
-            return response()->json(['status' => 'info', 'message' => 'There are no Chapters with Registrations Due.'], 422);
+        if (! ($conditions['coordinatorCondition'] && $conditions['conferenceCoordinatorCondition'])) {
+            return response()->json(['status' => 'error', 'message' => 'You are not authorized to send reminders.'], 403);
         }
 
-            $chapterIds = [];
-            $chapterEmails = [];
-            $coordinatorEmails = [];
-            $mailData = [];
-
-            foreach ($chapters as $chapter) {
-                $chapterIds[] = $chapter->id;
-
-                $chapterName = $chapter->name;
-                $stateShortName = $chapter->state->state_short_name;
-
-                if ($chapterName) {
-                    $emailData = $this->userController->loadEmailDetails($chapter->id);
-                    $emailListChap = $emailData['emailListChap'];
-                    $emailListCoord = $emailData['emailListCoord'];
-
-                    $chapterEmails[$chapterName] = $emailListChap;
-                    $coordinatorEmails[$chapterName] = $emailListCoord;
-                }
-
-                $mailData[$chapterName] = [
-                    'chapterName' => $chapterName,
-                    'chapterState' => $stateShortName,
-                    'startRange' => $rangeStartDateFormatted,
-                    'endRange' => $rangeEndDateFormatted,
-                    'startMonth' => $currentMonthWords,
-                ];
-            }
-
-            foreach ($mailData as $chapterName => $data) {
-                $to_email = $chapterEmails[$chapterName] ?? [];
-                $cc_email = $coordinatorEmails[$chapterName] ?? [];
-
-                if (! empty($to_email)) {
-                    Mail::to($to_email)
-                        ->cc($cc_email)
-                        ->queue(new PaymentsReRegReminder($data));
-                }
-            }
-
-            DB::commit();
-
-        return response()->json(['status' => 'success', 'message' => 'Re-Registration Reminders have been successfully sent.']);
-
-    } catch (\Exception $e) {
-        DB::rollback();
-        Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
-
-        return response()->json(['status' => 'error', 'message' => 'Something went wrong, Please try again.'], 500);
-    } finally {
-        DB::disconnect();
-    }
+        try {
+            $result = $this->paymentReminderService->sendReRegistrationReminders();
+            return response()->json($result, $result['status'] === 'info' ? 422 : 200);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return response()->json(['status' => 'error', 'message' => 'Something went wrong, Please try again.'], 500);
+        }
     }
 
     /**
@@ -188,90 +129,196 @@ class PaymentController extends Controller implements HasMiddleware
     public function createChapterReRegistrationLateReminder(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
-        $confId = $user['confId'];
 
-        $dateOptions = $this->positionConditionsService->getDateOptions();
-        $currentDate = $dateOptions['currentDate'];
-        $currentYear = $dateOptions['currentYear'];
-        $currentMonth = $dateOptions['currentMonth'];
-        $lastMonth = $dateOptions['lastMonth'];
-        if ($currentMonth == '01' && $lastMonth == '12') {
-            $currentYear = $currentYear - 1;
+        $conditions = $this->positionConditionsService->getConditionsForUser(
+            $user['cdPositionId'] ?? null,
+            $user['cdSecPositionId'] ?? [],
+            $user['cdId'] ?? null
+        );
+
+        if (! ($conditions['coordinatorCondition'] && $conditions['conferenceCoordinatorCondition'])) {
+            return response()->json(['status' => 'error', 'message' => 'You are not authorized to send reminders.'], 403);
         }
-        $currentMonthWords = $dateOptions['currentMonthWords'];
-        $lastMonthWords = $dateOptions['lastMonthWords'];
-        $rangeEndDate = $currentDate->copy()->subMonths(2)->endOfMonth();
-        $rangeStartDate = $rangeEndDate->copy()->startOfMonth()->subYear()->addMonth();
-
-        $rangeStartDateFormatted = $rangeStartDate->format('m-d-Y');
-        $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
 
         try {
-            $chapters = Chapters::with(['state.conference'])
-                ->whereHas('state.conference', function ($q) use ($confId) {
-                    $q->where('conference.id', $confId);
-                })
-                ->where('start_month_id', $lastMonth)
-                ->where('next_renewal_year', $currentYear)
-                ->where('active_status', 1)
-                ->get();
-
-            if ($chapters->isEmpty()) {
-            return response()->json(['status' => 'info', 'message' => 'There are no Chapters with Registrations Due.'], 422);
+            $result = $this->paymentReminderService->sendLateReRegistrationReminders();
+            return response()->json($result, $result['status'] === 'info' ? 422 : 200);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return response()->json(['status' => 'error', 'message' => 'Something went wrong, Please try again.'], 500);
         }
-
-            $chapterIds = [];
-            $chapterEmails = [];
-            $coordinatorEmails = [];
-            $mailData = [];
-
-            foreach ($chapters as $chapter) {
-                $chapterIds[] = $chapter->id;
-
-                $chapterName = $chapter->name;
-                $stateShortName = $chapter->state->state_short_name;
-
-                if ($chapterName) {
-                    $emailData = $this->userController->loadEmailDetails($chapter->id);
-                    $emailListChap = $emailData['emailListChap'];
-                    $emailListCoord = $emailData['emailListCoord'];
-
-                    $chapterEmails[$chapterName] = $emailListChap;
-                    $coordinatorEmails[$chapterName] = $emailListCoord;
-                }
-
-                $mailData[$chapterName] = [
-                    'chapterName' => $chapterName,
-                    'chapterState' => $stateShortName,
-                    'startRange' => $rangeStartDateFormatted,
-                    'endRange' => $rangeEndDateFormatted,
-                    'startMonth' => $lastMonthWords,
-                    'dueMonth' => $currentMonthWords,
-                ];
-            }
-
-            foreach ($mailData as $chapterName => $data) {
-                $to_email = $chapterEmails[$chapterName] ?? [];
-                $cc_email = $coordinatorEmails[$chapterName] ?? [];
-
-                if (! empty($to_email)) {
-                    Mail::to($to_email)
-                        ->cc($cc_email)
-                        ->queue(new PaymentsReRegLate($data));
-                }
-            }
-
-            return response()->json(['status' => 'success', 'message' => 'Re-Registration Late Reminders have been successfully sent.']);
-
-    } catch (\Exception $e) {
-        DB::rollback();
-        Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
-
-        return response()->json(['status' => 'error', 'message' => 'Something went wrong, Please try again.'], 500);
-    } finally {
-        DB::disconnect();
     }
-    }
+
+        // public function createChapterReRegistrationReminder(Request $request): JsonResponse
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $confId = $user['confId'];
+
+    //     $dateOptions = $this->positionConditionsService->getDateOptions();
+    //     $currentDate = $dateOptions['currentDate'];
+    //     $currentYear = $dateOptions['currentYear'];
+    //     $currentMonth = $dateOptions['currentMonth'];
+    //     $currentMonthWords = $dateOptions['currentMonthWords'];
+    //     $rangeEndDate = $currentDate->copy()->subMonth()->endOfMonth();
+    //     $rangeStartDate = $rangeEndDate->copy()->startOfMonth()->subYear()->addMonth();
+
+    //     $rangeStartDateFormatted = $rangeStartDate->format('m-d-Y');
+    //     $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
+
+    //     try {
+    //         $chapters = Chapters::with(['state.conference'])
+    //             ->whereHas('state.conference', function ($q) use ($confId) {
+    //                 $q->where('conference.id', $confId);
+    //             })
+    //             ->where('start_month_id', $currentMonth)
+    //             ->where('next_renewal_year', $currentYear)
+    //             ->where('active_status', 1)
+    //             ->get();
+
+    //         if ($chapters->isEmpty()) {
+    //         return response()->json(['status' => 'info', 'message' => 'There are no Chapters with Registrations Due.'], 422);
+    //     }
+
+    //         $chapterIds = [];
+    //         $chapterEmails = [];
+    //         $coordinatorEmails = [];
+    //         $mailData = [];
+
+    //         foreach ($chapters as $chapter) {
+    //             $chapterIds[] = $chapter->id;
+
+    //             $chapterName = $chapter->name;
+    //             $stateShortName = $chapter->state->state_short_name;
+
+    //             if ($chapterName) {
+    //                 $emailData = $this->userController->loadEmailDetails($chapter->id);
+    //                 $emailListChap = $emailData['emailListChap'];
+    //                 $emailListCoord = $emailData['emailListCoord'];
+
+    //                 $chapterEmails[$chapterName] = $emailListChap;
+    //                 $coordinatorEmails[$chapterName] = $emailListCoord;
+    //             }
+
+    //             $mailData[$chapterName] = [
+    //                 'chapterName' => $chapterName,
+    //                 'chapterState' => $stateShortName,
+    //                 'startRange' => $rangeStartDateFormatted,
+    //                 'endRange' => $rangeEndDateFormatted,
+    //                 'startMonth' => $currentMonthWords,
+    //             ];
+    //         }
+
+    //         foreach ($mailData as $chapterName => $data) {
+    //             $to_email = $chapterEmails[$chapterName] ?? [];
+    //             $cc_email = $coordinatorEmails[$chapterName] ?? [];
+
+    //             if (! empty($to_email)) {
+    //                 Mail::to($to_email)
+    //                     ->cc($cc_email)
+    //                     ->queue(new PaymentsReRegReminder($data));
+    //             }
+    //         }
+
+    //         DB::commit();
+
+    //         return response()->json(['status' => 'success', 'message' => 'Re-Registration Reminders have been successfully sent.']);
+    //     } catch (\Exception $e) {
+    //         DB::rollback();
+    //         Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+
+    //         return response()->json(['status' => 'error', 'message' => 'Something went wrong, Please try again.'], 500);
+    //     } finally {
+    //         DB::disconnect();
+    //     }
+    // }
+
+
+    // public function createChapterReRegistrationLateReminder(Request $request): JsonResponse
+    // {
+    //     $user = $this->userController->loadUserInformation($request);
+    //     $confId = $user['confId'];
+
+    //     $dateOptions = $this->positionConditionsService->getDateOptions();
+    //     $currentDate = $dateOptions['currentDate'];
+    //     $currentYear = $dateOptions['currentYear'];
+    //     $currentMonth = $dateOptions['currentMonth'];
+    //     $lastMonth = $dateOptions['lastMonth'];
+    //     if ($currentMonth == '01' && $lastMonth == '12') {
+    //         $currentYear = $currentYear - 1;
+    //     }
+    //     $currentMonthWords = $dateOptions['currentMonthWords'];
+    //     $lastMonthWords = $dateOptions['lastMonthWords'];
+    //     $rangeEndDate = $currentDate->copy()->subMonths(2)->endOfMonth();
+    //     $rangeStartDate = $rangeEndDate->copy()->startOfMonth()->subYear()->addMonth();
+
+    //     $rangeStartDateFormatted = $rangeStartDate->format('m-d-Y');
+    //     $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
+
+    //     try {
+    //         $chapters = Chapters::with(['state.conference'])
+    //             ->whereHas('state.conference', function ($q) use ($confId) {
+    //                 $q->where('conference.id', $confId);
+    //             })
+    //             ->where('start_month_id', $lastMonth)
+    //             ->where('next_renewal_year', $currentYear)
+    //             ->where('active_status', 1)
+    //             ->get();
+
+    //         if ($chapters->isEmpty()) {
+    //         return response()->json(['status' => 'info', 'message' => 'There are no Chapters with Registrations Due.'], 422);
+    //     }
+
+    //         $chapterIds = [];
+    //         $chapterEmails = [];
+    //         $coordinatorEmails = [];
+    //         $mailData = [];
+
+    //         foreach ($chapters as $chapter) {
+    //             $chapterIds[] = $chapter->id;
+
+    //             $chapterName = $chapter->name;
+    //             $stateShortName = $chapter->state->state_short_name;
+
+    //             if ($chapterName) {
+    //                 $emailData = $this->userController->loadEmailDetails($chapter->id);
+    //                 $emailListChap = $emailData['emailListChap'];
+    //                 $emailListCoord = $emailData['emailListCoord'];
+
+    //                 $chapterEmails[$chapterName] = $emailListChap;
+    //                 $coordinatorEmails[$chapterName] = $emailListCoord;
+    //             }
+
+    //             $mailData[$chapterName] = [
+    //                 'chapterName' => $chapterName,
+    //                 'chapterState' => $stateShortName,
+    //                 'startRange' => $rangeStartDateFormatted,
+    //                 'endRange' => $rangeEndDateFormatted,
+    //                 'startMonth' => $lastMonthWords,
+    //                 'dueMonth' => $currentMonthWords,
+    //             ];
+    //         }
+
+    //         foreach ($mailData as $chapterName => $data) {
+    //             $to_email = $chapterEmails[$chapterName] ?? [];
+    //             $cc_email = $coordinatorEmails[$chapterName] ?? [];
+
+    //             if (! empty($to_email)) {
+    //                 Mail::to($to_email)
+    //                     ->cc($cc_email)
+    //                     ->queue(new PaymentsReRegLate($data));
+    //             }
+    //         }
+
+    //         return response()->json(['status' => 'success', 'message' => 'Re-Registration Late Reminders have been successfully sent.']);
+    //     } catch (\Exception $e) {
+    //         DB::rollback();
+    //         Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+
+    //         return response()->json(['status' => 'error', 'message' => 'Something went wrong, Please try again.'], 500);
+    //     } finally {
+    //         DB::disconnect();
+    //     }
+    // }
 
     /**
      * View Doantions List
