@@ -49,9 +49,9 @@
                     @foreach($chapterList as $list)
                     <tr>
                         <td class="text-center align-middle">
-                            @if ($assistConferenceCoordinatorCondition)
+                            {{-- @if ($assistConferenceCoordinatorCondition) --}}
                                <a href="{{ url("/eoyreports/editirssubmission/{$list->id}") }}"><i class="bi bi-bank"></i></i></a>
-                           @endif
+                           {{-- @endif --}}
                         </td>
                         <td>
                             @if ($list->state->conference_id > 0)

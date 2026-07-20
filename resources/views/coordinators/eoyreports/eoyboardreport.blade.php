@@ -55,9 +55,9 @@
                     @endphp
                         <tr id="chapter-{{ $list->id }}">
                             <td class="text-center align-middle">
-                            @if ($assistConferenceCoordinatorCondition)
+                            {{-- @if ($assistConferenceCoordinatorCondition) --}}
                                <a href="{{ url("/eoyreports/editboardreport/{$list->id}") }}"><i class="bi bi-person-bounding-box"></i></a>
-                           @endif
+                           {{-- @endif --}}
                         </td>
                             <td class="text-center align-middle">
                                 @if ($list->documentsEOY->new_board_submitted == null || $list->documentsEOY->new_board_submitted == 0)

@@ -65,7 +65,7 @@
                             <a href="{{ url("/eoyreports/editfinancialreview/{$list->id}") }}"><i class="bi bi-calculator-fill"></i></a>
                         </td>
                         <td class="text-center align-middle">
-                            @if($list->documentsEOY->financial_report_received == '1' && $list->documentsEOY->$yearColumnName != null)
+                            @if($list->documentsEOY->financial_report_received == '1' && $list->documentsReport->$yearColumnName != null)
                                 <a data-no-wait href="https://drive.google.com/uc?export=download&id={{ $list->documentsEOY->$yearColumnName }}"><i class="bi bi-file-earmark-pdf"></i></a>
                             @endif
                         </td>

@@ -68,9 +68,9 @@
             @endphp
                 <tr>
                     <td class="text-center">
-                        @if ($assistConferenceCoordinatorCondition)
+                        {{-- @if ($assistConferenceCoordinatorCondition) --}}
                             <a href="{{ url("/eoyreports/editawards/{$list->id}") }}"><i class="bi bi-award-fill"></i></a>
-                        @endif
+                        {{-- @endif --}}
                     </td>
                     <td>
                         @if(!empty($validChapterAwards))
