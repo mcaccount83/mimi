@@ -78,7 +78,7 @@
                         @if($list->documentsIRS?->irs_verified) YES @else NO @endif
                         </td>
                         <td>
-                            {{ $list->irs990nFilings->max('tax_year') ?? 'None' }}
+                            {{ $list->irs990nFilings?->max('tax_year') ?? 'None' }}
                         </td>
                         <td @if(!$list->documentsIRS?->irs_issues) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             @if($list->documentsIRS?->irs_issues) YES @else NO @endif
