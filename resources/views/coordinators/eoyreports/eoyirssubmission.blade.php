@@ -74,10 +74,10 @@
                         <td @if($list->documentsIRS?->irs_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             @if($list->documentsIRS?->irs_path != null) YES @else NO @endif
                         </td>
-                      <td @if($list->documentsIRS?->irs_verified) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                        @if($list->documentsIRS?->irs_verified) YES @else NO @endif
+                        <td @if($list->documentsIRS?->irs_verified) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documentsIRS?->irs_verified) YES @else NO @endif
                         </td>
-                        <td>
+                        <td @if($list->irs990nFilings?->max('tax_year') == $reportYearStart) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             {{ $list->irs990nFilings?->max('tax_year') ?? 'None' }}
                         </td>
                         <td @if(!$list->documentsIRS?->irs_issues) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
