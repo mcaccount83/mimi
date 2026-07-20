@@ -26,8 +26,8 @@ class SyncIrs990n extends Command
 
     public function handle(): int
     {
-        $fiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
-        $currentReportYear = $fiscalYearOptions['fiscalYearStart'];
+        $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
+        $currentReportYear = $reportYearOptions['reportYearStart'];
 
         $localPath = $this->option('file');
 
@@ -134,10 +134,7 @@ class SyncIrs990n extends Command
                 }
 
                 Irs990nFiling::updateOrCreate(
-                    [
-                        'chapter_id' => $chapter->id,
-                        'tax_year' => $filing['tax_year'],
-                    ],
+                    ['chapter_id' => $chapter->id, 'tax_year' => $filing['tax_year']],
                     [
                         'ein' => $ein,
                         'tax_period_begin' => $filing['period_begin'],
