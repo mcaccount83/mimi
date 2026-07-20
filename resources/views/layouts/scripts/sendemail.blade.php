@@ -1201,7 +1201,7 @@ function showNewChapterEmailModal(chapterId) {
     Swal.fire({
         title: 'Chapter Re-Registration Reminder',
         html: `
-            <p>This will send the regular re-registration reminder for <b>${chapterName}</b> to the full board and all coordinators.</p>
+            <p>This will send the standard Re-Registration Reminder for <b>${chapterName}</b> to the full board and all coordinators.</p>
             <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
         `,
         showCancelButton: true,
@@ -1277,7 +1277,7 @@ function showNewChapterEmailModal(chapterId) {
     Swal.fire({
         title: 'Chapter Re-Registration Late Notice',
         html: `
-            <p>This will send the regular re-registration late notice for <b>${chapterName}</b> to the full board and all coordinators.</p>
+            <p>This will send the standard Re-Registration Late Notice for <b>${chapterName}</b> to the full board and all coordinators.</p>
             <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
         `,
         showCancelButton: true,
