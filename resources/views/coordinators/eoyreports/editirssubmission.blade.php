@@ -76,11 +76,19 @@
                     <div class="row mb-2 align-middle">
                         <label class="col-sm-3 col-form-label">990N Verified on IRS Website:</label>
                         <div class="col-sm-9">
-                            <div class="form-check form-switch">
-                                <input type="checkbox" name="irs_verified" id="irs_verified" class="form-check-input"
-                                {{ $chIRSDocuments->irs_verified == 1 ? 'checked' : ''}}>
-                                <label class="form-check-label" for="irs_verified"></label>
-                            </div>
+                            @if ($assistConferenceCoordinatorCondition)
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" name="irs_verified" id="irs_verified" class="form-check-input"
+                                    {{ $chIRSDocuments->irs_verified == 1 ? 'checked' : ''}}>
+                                    <label class="form-check-label" for="irs_verified"></label>
+                                </div>
+                            @else
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" name="irs_verified" id="irs_verified" class="form-check-input"
+                                    {{ $chIRSDocuments->irs_verified == 1 ? 'checked' : ''}} disabled>
+                                    <label class="form-check-label" for="irs_verified"></label>
+                                </div>
+                            @endif
                         </div>
                     </div>
 
@@ -88,11 +96,19 @@
                         <label class="col-sm-3 col-form-label">990N Submission Issues:<br>
                             <small class="text-muted">(Wrong Dates, Not Found, etc)</small></label>
                         <div class="col-sm-3">
-                            <div class="form-check form-switch">
-                                <input type="checkbox" name="irs_issues" id="irs_issues" class="form-check-input"
-                                {{ $chIRSDocuments->irs_issues == 1 ? 'checked' : ''}}>
-                                <label class="form-check-label" for="irs_issues"></label>
-                            </div>
+                            @if ($assistConferenceCoordinatorCondition)
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" name="irs_issues" id="irs_issues" class="form-check-input"
+                                    {{ $chIRSDocuments->irs_issues == 1 ? 'checked' : ''}}>
+                                    <label class="form-check-label" for="irs_issues"></label>
+                                </div>
+                            @else
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" name="irs_issues" id="irs_issues" class="form-check-input"
+                                    {{ $chIRSDocuments->irs_issues == 1 ? 'checked' : ''}} disabled>
+                                    <label class="form-check-label" for="irs_issues"></label>
+                                </div>
+                            @endif
                         </div>
                     </div>
 
