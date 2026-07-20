@@ -153,6 +153,7 @@
                             One Month Late Notices will AutoSend on the 10th of Each Month.<br>
                     @if(!$checkBox1Status && !$checkBox3Status && !$checkBox51Status && !$checkBox56Status)
                         @if(($coordinatorCondition && $conferenceCoordinatorCondition))
+                            Manually Send with Buttons Below.<br>
                             <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="confirmSendReRegReminder('Send Current Month Reminders?',
                                     'This will send re-registration reminders to all chapters due this month.', '{{ route('payment.chapreregreminder') }}')">
                                 <i class="bi bi-envelope-fill me-2"></i>Send Current Month Reminders</button>
