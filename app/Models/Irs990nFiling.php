@@ -17,9 +17,4 @@ class Irs990nFiling extends Model
     {
         return $this->belongsTo(Chapters::class, 'chapter_id');
     }
-
-    public function irs990nFilings(): HasMany
-    {
-        return $this->hasMany(Irs990nFiling::class, 'chapter_id');
-    }
 }

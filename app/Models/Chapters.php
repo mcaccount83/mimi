@@ -224,4 +224,9 @@ class Chapters extends Model
     {
         return $this->hasOne(ProbationSubmission::class, 'chapter_id', 'id');  // 'chapter_id' in pobation_submission HasOne 'id' in chapters
     }
+
+    public function irs990nFilings(): HasMany
+    {
+        return $this->hasMany(Irs990nFiling::class, 'chapter_id');
+    }
 }
