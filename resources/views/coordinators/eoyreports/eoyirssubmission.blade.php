@@ -39,6 +39,7 @@
                 <th>EIN</th>
                 <th>990N Attached</th>
                 <th>IRS Verified</th>
+                <th>Most Recent<br>990N Filed</th>
                 <th>Filing Issues</th>
                 <th>Issue Details</th>
                 <th>IRS Notified</th>
@@ -75,6 +76,9 @@
                         </td>
                       <td @if($list->documentsIRS?->irs_verified) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
                         @if($list->documentsIRS?->irs_verified) YES @else NO @endif
+                        </td>
+                        <td>
+                            {{ $list->irs990nFilings->max('tax_year') ?? 'None' }}
                         </td>
                         <td @if(!$list->documentsIRS?->irs_issues) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             @if($list->documentsIRS?->irs_issues) YES @else NO @endif

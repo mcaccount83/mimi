@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Table('irs_990n_filings', 'id')]
 class Irs990nFiling extends Model
@@ -15,5 +16,10 @@ class Irs990nFiling extends Model
     public function chapter(): BelongsTo
     {
         return $this->belongsTo(Chapters::class, 'chapter_id');
+    }
+
+    public function irs990nFilings(): HasMany
+    {
+        return $this->hasMany(Irs990nFiling::class, 'chapter_id');
     }
 }
