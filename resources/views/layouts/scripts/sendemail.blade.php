@@ -1151,7 +1151,7 @@ function showNewChapterEmailModal(chapterId) {
     function confirmSendReRegReminder(title, text, route) {
         Swal.fire({
             title: title,
-            text: text,
+            html: text,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Yes, Send',

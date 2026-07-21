@@ -155,10 +155,10 @@
                         @if(($coordinatorCondition && $conferenceCoordinatorCondition))
                             Manually Send with Buttons Below.<br>
                             <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="confirmSendReRegReminder('Send Current Month Reminders?',
-                                    'This will send re-registration reminders to all chapters due this month.', '{{ route('payment.chapreregreminder') }}')">
+                                    'Current Month Reminders will AutoSend on the 1st of Each Month.<br><br>This will send Re-Registration Reminders to all chapters due this month.', '{{ route('payment.chapreregreminder') }}')">
                                 <i class="bi bi-envelope-fill me-2"></i>Send Current Month Reminders</button>
                             <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="confirmSendReRegReminder('Send One Month Late Notices?',
-                                    'This will send late re-registration notices to all chapters who are one month overdue.', '{{ route('payment.chaprereglatereminder') }}')">
+                                    'One Month Late Notices will AutoSend on the 10th of Each Month.<br><br>This will send Late Notices to all chapters who are one month overdue.', '{{ route('payment.chaprereglatereminder') }}')">
                                 <i class="bi bi-envelope-fill me-2"></i>Send One Month Late Notices
                             </button>
                         @endif
