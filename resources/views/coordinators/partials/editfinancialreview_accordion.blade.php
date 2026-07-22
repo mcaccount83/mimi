@@ -206,12 +206,12 @@
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkRosterAttached" value="1"
-                                                {{ $chFinancialReportReview->roster_attached == 1 ? 'checked' : '' }} required>
+                                                {{ $chFinancialReportReview->review_roster_attached == 1 ? 'checked' : '' }} required>
                                             <label class="form-check-label">Yes</label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkRosterAttached" value="0"
-                                                {{ !is_null($chFinancialReportReview->roster_attached) && $chFinancialReportReview->roster_attached == 0 ? 'checked' : '' }}>
+                                                {{ !is_null($chFinancialReportReview->review_roster_attached) && $chFinancialReportReview->review_roster_attached == 0 ? 'checked' : '' }}>
                                             <label class="form-check-label">No</label>
                                         </div>
                                     </div>
@@ -221,12 +221,12 @@
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkRenewalSeemsRight" value="1"
-                                                {{ $chFinancialReportReview->renewal_seems_right == 1 ? 'checked' : '' }} required>
+                                                {{ $chFinancialReportReview->review_renewal_seems_right == 1 ? 'checked' : '' }} required>
                                             <label class="form-check-label">Yes</label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkRenewalSeemsRight" value="0"
-                                                {{ !is_null($chFinancialReportReview->renewal_seems_right) && $chFinancialReportReview->renewal_seems_right == 0 ? 'checked' : '' }}>
+                                                {{ !is_null($chFinancialReportReview->review_renewal_seems_right) && $chFinancialReportReview->review_renewal_seems_right == 0 ? 'checked' : '' }}>
                                             <label class="form-check-label">No</label>
                                         </div>
                                     </div>
@@ -533,12 +533,12 @@
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkServiceProject" value="1"
-                                                {{ $chFinancialReportReview->minimum_service_project == 1 ? 'checked' : '' }} required>
+                                                {{ $chFinancialReportReview->review_minimum_service_project == 1 ? 'checked' : '' }} required>
                                             <label class="form-check-label">Yes</label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkServiceProject" value="0"
-                                                {{ !is_null($chFinancialReportReview->minimum_service_project) && $chFinancialReportReview->minimum_service_project == 0 ? 'checked' : '' }}>
+                                                {{ !is_null($chFinancialReportReview->review_minimum_service_project) && $chFinancialReportReview->review_minimum_service_project == 0 ? 'checked' : '' }}>
                                             <label class="form-check-label">No</label>
                                         </div>
                                     </div>
@@ -548,12 +548,12 @@
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkM2MDonation" value="1"
-                                                {{ $chFinancialReportReview->m2m_donation == 1 ? 'checked' : '' }} required>
+                                                {{ $chFinancialReportReview->review_m2m_donation == 1 ? 'checked' : '' }} required>
                                             <label class="form-check-label">Yes</label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkM2MDonation" value="0"
-                                                {{ !is_null($chFinancialReportReview->m2m_donation) && $chFinancialReportReview->m2m_donation == 0 ? 'checked' : '' }}>
+                                                {{ !is_null($chFinancialReportReview->review_m2m_donation) && $chFinancialReportReview->review_m2m_donation == 0 ? 'checked' : '' }}>
                                             <label class="form-check-label">No</label>
                                         </div>
                                     </div>
@@ -680,17 +680,17 @@
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkPartyPercentage" value="2"
-                                                {{ $chFinancialReportReview->party_percentage == 2 ? 'checked' : '' }} required>
+                                                {{ $chFinancialReportReview->review_party_percentage == 2 ? 'checked' : '' }} required>
                                             <label class="form-check-label">They are under 15%</label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkPartyPercentage" value="1"
-                                                {{ $chFinancialReportReview->party_percentage == 1 ? 'checked' : '' }}>
+                                                {{ $chFinancialReportReview->review_party_percentage == 1 ? 'checked' : '' }}>
                                             <label class="form-check-label">They are between 15-20%</label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkPartyPercentage" value="0"
-                                                {{ !is_null($chFinancialReportReview->party_percentage) && $chFinancialReportReview->party_percentage == 0 ? 'checked' : '' }}>
+                                                {{ !is_null($chFinancialReportReview->review_party_percentage) && $chFinancialReportReview->review_party_percentage == 0 ? 'checked' : '' }}>
                                             <label class="form-check-label">They are over 20%</label>
                                         </div>
                                     </div>
@@ -927,12 +927,12 @@
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkAttendedTraining" value="1"
-                                                {{ $chFinancialReportReview->attended_training == 1 ? 'checked' : '' }}>
+                                                {{ $chFinancialReportReview->review_attended_training == 1 ? 'checked' : '' }}>
                                             <label class="form-check-label">Yes</label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkAttendedTraining" value="0"
-                                                {{ !is_null($chFinancialReportReview->attended_training) && $chFinancialReportReview->attended_training == 0 ? 'checked' : '' }}>
+                                                {{ !is_null($chFinancialReportReview->review_attended_training) && $chFinancialReportReview->review_attended_training == 0 ? 'checked' : '' }}>
                                             <label class="form-check-label">No</label>
                                         </div>
                                     </div>
@@ -1328,12 +1328,12 @@
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkTotalIncome" value="1"
-                                                {{ $chFinancialReportReview->total_income_less == 1 ? 'checked' : '' }}>
+                                                {{ $chFinancialReportReview->review_total_income_less == 1 ? 'checked' : '' }}>
                                             <label class="form-check-label">Yes</label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkTotalIncome" value="0"
-                                                {{ !is_null($chFinancialReportReview->total_income_less) && $chFinancialReportReview->total_income_less == 0 ? 'checked' : '' }}>
+                                                {{ !is_null($chFinancialReportReview->review_total_income_less) && $chFinancialReportReview->review_total_income_less == 0 ? 'checked' : '' }}>
                                             <label class="form-check-label">No</label>
                                         </div>
                                     </div>
@@ -1536,12 +1536,12 @@
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkBeginningBalance" value="1"
-                                                {{ $chFinancialReportReview->beginning_balance == 1 ? 'checked' : '' }}>
+                                                {{ $chFinancialReportReview->review_beginning_balance == 1 ? 'checked' : '' }}>
                                             <label class="form-check-label">Yes</label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkBeginningBalance" value="0"
-                                                {{ !is_null($chFinancialReportReview->beginning_balance) && $chFinancialReportReview->beginning_balance == 0 ? 'checked' : '' }}>
+                                                {{ !is_null($chFinancialReportReview->review_beginning_balance) && $chFinancialReportReview->review_beginning_balance == 0 ? 'checked' : '' }}>
                                             <label class="form-check-label">No</label>
                                         </div>
                                     </div>
@@ -1551,12 +1551,12 @@
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkBankStatementIncluded" value="1"
-                                                {{ $chFinancialReportReview->bank_statement_included == 1 ? 'checked' : '' }}>
+                                                {{ $chFinancialReportReview->review_bank_statement_included == 1 ? 'checked' : '' }}>
                                             <label class="form-check-label">Yes</label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkBankStatementIncluded" value="0"
-                                                {{ !is_null($chFinancialReportReview->bank_statement_included) && $chFinancialReportReview->bank_statement_included == 0 ? 'checked' : '' }}>
+                                                {{ !is_null($chFinancialReportReview->review_bank_statement_included) && $chFinancialReportReview->review_bank_statement_included == 0 ? 'checked' : '' }}>
                                             <label class="form-check-label">No</label>
                                         </div>
                                     </div>
@@ -1566,12 +1566,12 @@
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkBankStatementMatches" value="1"
-                                                {{ $chFinancialReportReview->bank_statement_matches == 1 ? 'checked' : '' }}>
+                                                {{ $chFinancialReportReview->review_bank_statement_matches == 1 ? 'checked' : '' }}>
                                             <label class="form-check-label">Yes</label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkBankStatementMatches" value="0"
-                                                {{ !is_null($chFinancialReportReview->bank_statement_matches) && $chFinancialReportReview->bank_statement_matches == 0 ? 'checked' : '' }}>
+                                                {{ !is_null($chFinancialReportReview->review_bank_statement_matches) && $chFinancialReportReview->review_bank_statement_matches == 0 ? 'checked' : '' }}>
                                             <label class="form-check-label">No</label>
                                         </div>
                                     </div>
@@ -1679,12 +1679,12 @@
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkCurrent990NAttached" value="1"
-                                                {{ $chFinancialReportReview->current_990N_included == 1 ? 'checked' : '' }}>
+                                                {{ $chFinancialReportReview->review_current_990N_included == 1 ? 'checked' : '' }}>
                                             <label class="form-check-label">Yes</label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkCurrent990NAttached" value="0"
-                                                {{ !is_null($chFinancialReportReview->current_990N_included) && $chFinancialReportReview->current_990N_included == 0 ? 'checked' : '' }}>
+                                                {{ !is_null($chFinancialReportReview->review_current_990N_included) && $chFinancialReportReview->review_current_990N_included == 0 ? 'checked' : '' }}>
                                             <label class="form-check-label">No</label>
                                         </div>
                                     </div>
@@ -1883,12 +1883,12 @@
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkPurchasedPins" value="1"
-                                                {{ $chFinancialReportReview->purchased_pins == 1 ? 'checked' : '' }}>
+                                                {{ $chFinancialReportReview->review_purchased_pins == 1 ? 'checked' : '' }}>
                                             <label class="form-check-label">Yes</label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkPurchasedPins" value="0"
-                                                {{ !is_null($chFinancialReportReview->purchased_pins) && $chFinancialReportReview->purchased_pins == 0 ? 'checked' : '' }}>
+                                                {{ !is_null($chFinancialReportReview->review_purchased_pins) && $chFinancialReportReview->review_purchased_pins == 0 ? 'checked' : '' }}>
                                             <label class="form-check-label">No</label>
                                         </div>
                                     </div>
@@ -1898,12 +1898,12 @@
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkPurchasedMCMerch" value="1"
-                                                {{ $chFinancialReportReview->purchased_mc_merch == 1 ? 'checked' : '' }}>
+                                                {{ $chFinancialReportReview->review_purchased_mc_merch == 1 ? 'checked' : '' }}>
                                             <label class="form-check-label">Yes</label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkPurchasedMCMerch" value="0"
-                                                {{ !is_null($chFinancialReportReview->purchased_mc_merch) && $chFinancialReportReview->purchased_mc_merch == 0 ? 'checked' : '' }}>
+                                                {{ !is_null($chFinancialReportReview->review_purchased_mc_merch) && $chFinancialReportReview->review_purchased_mc_merch == 0 ? 'checked' : '' }}>
                                             <label class="form-check-label">No</label>
                                         </div>
                                     </div>
@@ -1913,12 +1913,12 @@
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkOfferedMerch" value="1"
-                                                {{ $chFinancialReportReview->offered_merch == 1 ? 'checked' : '' }}>
+                                                {{ $chFinancialReportReview->review_offered_merch == 1 ? 'checked' : '' }}>
                                             <label class="form-check-label">Yes</label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkOfferedMerch" value="0"
-                                                {{ !is_null($chFinancialReportReview->offered_merch) && $chFinancialReportReview->offered_merch == 0 ? 'checked' : '' }}>
+                                                {{ !is_null($chFinancialReportReview->review_offered_merch) && $chFinancialReportReview->review_offered_merch == 0 ? 'checked' : '' }}>
                                             <label class="form-check-label">No</label>
                                         </div>
                                     </div>
@@ -1928,12 +1928,12 @@
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkBylawsMadeAvailable" value="1"
-                                                {{ $chFinancialReportReview->bylaws_available == 1 ? 'checked' : '' }}>
+                                                {{ $chFinancialReportReview->review_bylaws_available == 1 ? 'checked' : '' }}>
                                             <label class="form-check-label">Yes</label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkBylawsMadeAvailable" value="0"
-                                                {{ !is_null($chFinancialReportReview->bylaws_available) && $chFinancialReportReview->bylaws_available == 0 ? 'checked' : '' }}>
+                                                {{ !is_null($chFinancialReportReview->review_bylaws_available) && $chFinancialReportReview->review_bylaws_available == 0 ? 'checked' : '' }}>
                                             <label class="form-check-label">No</label>
                                         </div>
                                     </div>
@@ -1943,12 +1943,12 @@
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkSisteredAnotherChapter" value="1"
-                                                {{ $chFinancialReportReview->sistered_another_chapter == 1 ? 'checked' : '' }}>
+                                                {{ $chFinancialReportReview->review_sistered_another_chapter == 1 ? 'checked' : '' }}>
                                             <label class="form-check-label">Yes</label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="checkSisteredAnotherChapter" value="0"
-                                                {{ !is_null($chFinancialReportReview->sistered_another_chapter) && $chFinancialReportReview->sistered_another_chapter == 0 ? 'checked' : '' }}>
+                                                {{ !is_null($chFinancialReportReview->review_sistered_another_chapter) && $chFinancialReportReview->review_sistered_another_chapter == 0 ? 'checked' : '' }}>
                                             <label class="form-check-label">No</label>
                                         </div>
                                     </div>

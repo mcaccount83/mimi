@@ -49,11 +49,11 @@
             <label>Did your chapter change your dues this year?<span class="field-required">*</span></label>
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="optChangeDuesYes" name="optChangeDues" value="1" {{ $chFinancialReport->changed_dues == 1 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
+                    <input class="form-check-input" type="radio" id="optChangeDuesYes" name="optChangeDues" value="1" {{ $chFinancialReportQuestions->changed_dues == 1 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
                     <label class="form-check-label" for="optChangeDuesYes">Yes</label>
                 </div>
                                         <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="optChangeDuesNo" name="optChangeDues" value="0" {{ !is_null($chFinancialReport->changed_dues) && $chFinancialReport->changed_dues == 0 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
+                    <input class="form-check-input" type="radio" id="optChangeDuesNo" name="optChangeDues" value="0" {{ !is_null($chFinancialReportQuestions->changed_dues) && $chFinancialReportQuestions->changed_dues == 0 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
                     <label class="form-check-label" for="optChangeDuesNo">No</label>
                 </div>
             </div>
@@ -62,11 +62,11 @@
             <label>Did your chapter charge different amounts for new and returning members?<span class="field-required">*</span></label>
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="optNewOldDifferentYes" name="optNewOldDifferent" value="1" {{ $chFinancialReport->different_dues == 1 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
+                    <input class="form-check-input" type="radio" id="optNewOldDifferentYes" name="optNewOldDifferent" value="1" {{ $chFinancialReportQuestions->different_dues == 1 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
                     <label class="form-check-label" for="optNewOldDifferentYes">Yes</label>
                 </div>
                                         <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="optNewOldDifferentNo" name="optNewOldDifferent" value="0" {{ !is_null($chFinancialReport->different_dues) && $chFinancialReport->different_dues == 0 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
+                    <input class="form-check-input" type="radio" id="optNewOldDifferentNo" name="optNewOldDifferent" value="0" {{ !is_null($chFinancialReportQuestions->different_dues) && $chFinancialReportQuestions->different_dues == 0 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
                     <label class="form-check-label" for="optNewOldDifferentNo">No</label>
                 </div>
             </div>
@@ -77,13 +77,13 @@
             <div class="col-12 d-flex gap-4">
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" id="optNoFullDuesYes" name="optNoFullDues" value="1"
-                        {{ $chFinancialReport->not_all_full_dues == 1 ? 'checked' : '' }}
+                        {{ $chFinancialReportQuestions->not_all_full_dues == 1 ? 'checked' : '' }}
                         onchange="ToggleNotFullDuesExplanation()">
                     <label class="form-check-label" for="optNoFullDuesYes">Yes</label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" id="optNoFullDuesNo" name="optNoFullDues" value="0"
-                        {{ !is_null($chFinancialReport->not_all_full_dues) && $chFinancialReport->not_all_full_dues == 0 ? 'checked' : '' }}
+                        {{ !is_null($chFinancialReportQuestions->not_all_full_dues) && $chFinancialReportQuestions->not_all_full_dues == 0 ? 'checked' : '' }}
                         onchange="ToggleNotFullDuesExplanation()">
                     <label class="form-check-label" for="optNoFullDuesNo">No</label>
                 </div>
@@ -92,9 +92,9 @@
                 <label>If yes, which types apply:<span class="field-required">*</span></label>
                 <div class="col-12 d-flex gap-4">
                     @php
-                        $selectedValues = is_null($chFinancialReport->not_full_dues_array)
+                        $selectedValues = is_null($chFinancialReportQuestions->not_full_dues_array)
                             ? []
-                            : json_decode($chFinancialReport->not_full_dues_array);
+                            : json_decode($chFinancialReportQuestions->not_full_dues_array);
                     @endphp
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" id="Dues0" name="Dues[]" value="0"
@@ -128,13 +128,13 @@
             <div class="col-md-6" id="newMembers">
                 <label for="TotalNewMembers" id="lblTotalNewMembers">Total New Members (who paid dues)</label>
                 <div class="input-group">
-                <input type="number" class="form-control txt-num" oninput="ChangeMemberCount()" name="TotalNewMembers" id="TotalNewMembers" value="{{ $chFinancialReport->total_new_members }}">
+                <input type="number" class="form-control txt-num" oninput="ChangeMemberCount()" name="TotalNewMembers" id="TotalNewMembers" value="{{ $chFinancialReportQuestions->total_new_members }}">
                 </div>
             </div>
             <div class="col-md-6" id="renewMembers">
                 <label for="TotalRenewedMembers" id="lblTotalRenewedMembers">Total Renewed Members (who paid dues)</label>
                 <div class="input-group">
-                <input type="number" class="form-control " oninput="ChangeMemberCount()" name="TotalRenewedMembers" id="TotalRenewedMembers" value="{{ $chFinancialReport->total_renewed_members }}">
+                <input type="number" class="form-control " oninput="ChangeMemberCount()" name="TotalRenewedMembers" id="TotalRenewedMembers" value="{{ $chFinancialReportQuestions->total_renewed_members }}">
                 </div>
             </div>
         </div>
@@ -143,13 +143,13 @@
     <div class="col-md-6" id="newMembersChangedDues">
         <label for="TotalNewMembersNewFee" id="lblTotalNewMembersNewFee">Total New Members (who paid NEW dues)</label>
         <div class="input-group">
-            <input type="number" class="form-control" oninput="ChangeMemberCount()" name="TotalNewMembersNewFee" id="TotalNewMembersNewFee" value="{{ $chFinancialReport->total_new_members_changed_dues }}">
+            <input type="number" class="form-control" oninput="ChangeMemberCount()" name="TotalNewMembersNewFee" id="TotalNewMembersNewFee" value="{{ $chFinancialReportQuestions->total_new_members_changed_dues }}">
         </div>
     </div>
     <div class="col-md-6" id="renewMembersChangedDues">
         <label for="TotalRenewedMembersNewFee" id="lblTotalRenewedMembersNewFee">Total Renewed Members (who paid NEW dues)</label>
         <div class="input-group">
-            <input type="number" class="form-control" oninput="ChangeMemberCount()" name="TotalRenewedMembersNewFee" id="TotalRenewedMembersNewFee" value="{{ $chFinancialReport->total_renewed_members_changed_dues }}">
+            <input type="number" class="form-control" oninput="ChangeMemberCount()" name="TotalRenewedMembersNewFee" id="TotalRenewedMembersNewFee" value="{{ $chFinancialReportQuestions->total_renewed_members_changed_dues }}">
         </div>
     </div>
 </div>
@@ -157,22 +157,22 @@
        <div class="row mb-3" id="dues">
     <div class="col-md-6" id="newMemberDues">
         <label for="MemberDues" id="lblMemberDues">Member Dues</label>
-        @currencyInput('MemberDues', $chFinancialReport->dues_per_member, false, 'ChangeMemberCount()')
+        @currencyInput('MemberDues', $chFinancialReportQuestions->dues_per_member, false, 'ChangeMemberCount()')
     </div>
     <div class="col-md-6" id="newMemberDuesChanged" style="display:none">
         <label for="NewMemberDues" id="lblNewMemberDues">Member Dues (New Amount)</label>
-        @currencyInput('NewMemberDues', $chFinancialReport->dues_per_member_new_changed, false, 'ChangeMemberCount()')
+        @currencyInput('NewMemberDues', $chFinancialReportQuestions->dues_per_member_new_changed, false, 'ChangeMemberCount()')
     </div>
 </div>
 
          <div class="row mb-3" id="renewDues" style="display:none">
     <div class="col-md-6" id="renewMemberDues" style="display:none">
         <label for="MemberDuesRenewal" id="lblMemberDuesRenewal">Renewal Dues</label>
-        @currencyInput('MemberDuesRenewal', $chFinancialReport->dues_per_member_renewal, false, 'ChangeMemberCount()')
+        @currencyInput('MemberDuesRenewal', $chFinancialReportQuestions->dues_per_member_renewal, false, 'ChangeMemberCount()')
     </div>
     <div class="col-md-6" id="renewMemberDuesChanged" style="display:none">
         <label for="NewMemberDuesRenewal" id="lblNewMemberDuesRenewal">Renewal Dues (New Amount)</label>
-        @currencyInput('NewMemberDuesRenewal', $chFinancialReport->dues_per_member_renewal_changed, false, 'ChangeMemberCount()')
+        @currencyInput('NewMemberDuesRenewal', $chFinancialReportQuestions->dues_per_member_renewal_changed, false, 'ChangeMemberCount()')
     </div>
 </div>
 
@@ -180,7 +180,7 @@
             <div class="col-md-6" id="waivedMembers">
                 <label for="MembersNoDues">Total Members Who Paid No Dues</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" name="MembersNoDues" id="MembersNoDues" oninput="ChangeMemberCount()" value="{{ $chFinancialReport->members_who_paid_no_dues }}">
+                        <input type="text" class="form-control" name="MembersNoDues" id="MembersNoDues" oninput="ChangeMemberCount()" value="{{ $chFinancialReportQuestions->members_who_paid_no_dues }}">
                     </div>
                 </div>
             <div class="col-md-6" style="display:none">
@@ -195,12 +195,12 @@
             <div class="col-md-6" id="partialMembers">
                 <label for="TotalPartialDuesMembers">Total Members Who Paid Partial Dues</label>
                                         <div class="input-group">
-                <input type="number" class="form-control" name="TotalPartialDuesMembers" id="TotalPartialDuesMembers" oninput="ChangeMemberCount()"value="{{ $chFinancialReport->members_who_paid_partial_dues }}">
+                <input type="number" class="form-control" name="TotalPartialDuesMembers" id="TotalPartialDuesMembers" oninput="ChangeMemberCount()"value="{{ $chFinancialReportQuestions->members_who_paid_partial_dues }}">
                   </div>
             </div>
             <div class="col-md-6" id=partialDues>
                 <label for="PartialDuesMemberDues">Total Partial Dues Amount Collected</label>
-                @currencyInput('PartialDuesMemberDues', $chFinancialReport->total_partial_fees_collected, false, 'ChangeMemberCount()')
+                @currencyInput('PartialDuesMemberDues', $chFinancialReportQuestions->total_partial_fees_collected, false, 'ChangeMemberCount()')
             </div>
                 </div>
 
@@ -208,12 +208,12 @@
             <div class="col-md-6" id="associatesMembers">
                 <label for="TotalAssociateMembers">Total Associate Members</label>
                                     <div class="input-group">
-                <input type="number" class="form-control" name="TotalAssociateMembers" id="TotalAssociateMembers" oninput="ChangeMemberCount()" value="{{ $chFinancialReport->total_associate_members }}">
+                <input type="number" class="form-control" name="TotalAssociateMembers" id="TotalAssociateMembers" oninput="ChangeMemberCount()" value="{{ $chFinancialReportQuestions->total_associate_members }}">
                 </div>
             </div>
         <div class="col-md-6" id="associatesDues">
                 <label for="AssociateMemberDues">Associate Member Dues</label>
-                @currencyInput('AssociateMemberDues', $chFinancialReport->associate_member_fee, false, 'ChangeMemberCount()')
+                @currencyInput('AssociateMemberDues', $chFinancialReportQuestions->associate_member_fee, false, 'ChangeMemberCount()')
                 </div>
             <p><small><i>Note: Associate Members are not dues-waived or reduced members. They are a separate category of members. Many chapters do not have any Associate Members, but if your
                     chapter did have Associate Members this year, how many Associate Members did your chapter have?</i></small></p>
@@ -280,11 +280,11 @@
             <label>Did you have speakers at any meetings?<span class="field-required">*</span></label>
             <div class="col-12 d-flex gap-4">
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="MeetingSpeakersYes" name="MeetingSpeakers" value="1" {{ $chFinancialReport->meeting_speakers == 1 ? 'checked' : '' }} onchange="ToggleMeetingSpeakersExplanation()">
+                    <input class="form-check-input" type="radio" id="MeetingSpeakersYes" name="MeetingSpeakers" value="1" {{ $chFinancialReportQuestions->meeting_speakers == 1 ? 'checked' : '' }} onchange="ToggleMeetingSpeakersExplanation()">
                     <label class="form-check-label" for="MeetingSpeakersYes">Yes</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="MeetingSpeakersNo" name="MeetingSpeakers" value="0" {{ !is_null($chFinancialReport->meeting_speakers) && $chFinancialReport->meeting_speakers == 0 ? 'checked' : '' }} onchange="ToggleMeetingSpeakersExplanation()">
+                    <input class="form-check-input" type="radio" id="MeetingSpeakersNo" name="MeetingSpeakers" value="0" {{ !is_null($chFinancialReportQuestions->meeting_speakers) && $chFinancialReport->meeting_speakers == 0 ? 'checked' : '' }} onchange="ToggleMeetingSpeakersExplanation()">
                     <label class="form-check-label" for="MeetingSpeakersNo">No</label>
                 </div>
             </div>
@@ -329,23 +329,23 @@
                 <label>Did you have any discussion topics at your meetings? If yes, how often?<span class="field-required">*</span></label>
                 <div class="col-12 d-flex gap-4">
             <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" id="SpeakerFrequency4" name="SpeakerFrequency" value="4" {{ $chFinancialReport->discussion_topic_frequency == 4 ? 'checked' : '' }} >
+                        <input class="form-check-input" type="radio" id="SpeakerFrequency4" name="SpeakerFrequency" value="4" {{ $chFinancialReportQuestions->discussion_topic_frequency == 4 ? 'checked' : '' }} >
                         <label class="form-check-label" for="SpeakerFrequency4">10+ Times</label>
                     </div>
                           <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" id="SpeakerFrequency3" name="SpeakerFrequency" value="3" {{ $chFinancialReport->discussion_topic_frequency == 3 ? 'checked' : '' }} >
+                        <input class="form-check-input" type="radio" id="SpeakerFrequency3" name="SpeakerFrequency" value="3" {{ $chFinancialReportQuestions->discussion_topic_frequency == 3 ? 'checked' : '' }} >
                         <label class="form-check-label" for="SpeakerFrequency3">7-9 Times</label>
                     </div>
                           <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" id="SpeakerFrequency2" name="SpeakerFrequency" value="2" {{ $chFinancialReport->discussion_topic_frequency == 2 ? 'checked' : '' }} >
+                        <input class="form-check-input" type="radio" id="SpeakerFrequency2" name="SpeakerFrequency" value="2" {{ $chFinancialReportQuestions->discussion_topic_frequency == 2 ? 'checked' : '' }} >
                         <label class="form-check-label" for="SpeakerFrequency2">4-6 Times</label>
                     </div>
                           <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" id="SpeakerFrequency1" name="SpeakerFrequency" value="1" {{ $chFinancialReport->discussion_topic_frequency == 1 ? 'checked' : '' }} >
+                        <input class="form-check-input" type="radio" id="SpeakerFrequency1" name="SpeakerFrequency" value="1" {{ $chFinancialReportQuestions->discussion_topic_frequency == 1 ? 'checked' : '' }} >
                         <label class="form-check-label" for="SpeakerFrequency1">1-3 Times</label>
                     </div>
                          <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" id="SpeakerFrequencyNo" name="SpeakerFrequency" value="0" {{ !is_null($chFinancialReport->discussion_topic_frequency) && $chFinancialReport->discussion_topic_frequency == 0 ? 'checked' : '' }} >
+                        <input class="form-check-input" type="radio" id="SpeakerFrequencyNo" name="SpeakerFrequency" value="0" {{ !is_null($chFinancialReportQuestions->discussion_topic_frequency) && $chFinancialReportQuestions->discussion_topic_frequency == 0 ? 'checked' : '' }} >
                         <label class="form-check-label" for="SpeakerFrequencyNo">No</label>
                     </div>
                 </div>
@@ -355,15 +355,15 @@
             <label>Did you have a children’s room with babysitters?<span class="field-required">*</span></label>
                        <div class="col-12 d-flex gap-4">
                     <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="ChildrensRoomPaid" name="ChildrensRoom" value="2" {{ $chFinancialReport->childrens_room_sitters == 2 ? 'checked' : '' }} >
+                    <input class="form-check-input" type="radio" id="ChildrensRoomPaid" name="ChildrensRoom" value="2" {{ $chFinancialReportQuestions->childrens_room_sitters == 2 ? 'checked' : '' }} >
                     <label class="form-check-label" for="ChildrensRoomPaid">Yes, with Paid Sitters</label>
                 </div>
                     <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="ChildrensRoomVol" name="ChildrensRoom" value="1" {{ $chFinancialReport->childrens_room_sitters == 1 ? 'checked' : '' }} >
+                    <input class="form-check-input" type="radio" id="ChildrensRoomVol" name="ChildrensRoom" value="1" {{ $chFinancialReportQuestions->childrens_room_sitters == 1 ? 'checked' : '' }} >
                     <label class="form-check-label" for="ChildrensRoomVol">Yes, with Volunteer Members</label>
                 </div>
                      <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="ChildrensRoomNo" name="ChildrensRoom" value="0" {{ !is_null($chFinancialReport->childrens_room_sitters) && $chFinancialReport->childrens_room_sitters == 0 ? 'checked' : '' }} >
+                    <input class="form-check-input" type="radio" id="ChildrensRoomNo" name="ChildrensRoom" value="0" {{ !is_null($chFinancialReportQuestions->childrens_room_sitters) && $chFinancialReportQuestions->childrens_room_sitters == 0 ? 'checked' : '' }} >
                     <label class="form-check-label" for="ChildrensRoomNo">No</label>
                 </div>
             </div>
@@ -498,18 +498,18 @@
         <label>Did your chapter perform at least one service project to benefit mothers or children?<span class="field-required">*</span></label>
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="PerformServiceProjectYes" name="PerformServiceProject" value="1" {{ $chFinancialReport->at_least_one_service_project == 1 ? 'checked' : '' }} onchange="TogglePerformServiceProjectExplanation()">
+                <input class="form-check-input" type="radio" id="PerformServiceProjectYes" name="PerformServiceProject" value="1" {{ $chFinancialReportQuestions->at_least_one_service_project == 1 ? 'checked' : '' }} onchange="TogglePerformServiceProjectExplanation()">
                 <label class="form-check-label" for="PerformServiceProjectYes">Yes</label>
             </div>
                                         <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="PerformServiceProjectNo" name="PerformServiceProject" value="0" {{ !is_null($chFinancialReport->at_least_one_service_project) && $chFinancialReport->at_least_one_service_project == 0 ? 'checked' : '' }} onchange="TogglePerformServiceProjectExplanation()">
+                <input class="form-check-input" type="radio" id="PerformServiceProjectNo" name="PerformServiceProject" value="0" {{ !is_null($chFinancialReportQuestions->at_least_one_service_project) && $chFinancialReportQuestions->at_least_one_service_project == 0 ? 'checked' : '' }} onchange="TogglePerformServiceProjectExplanation()">
                 <label class="form-check-label" for="PerformServiceProjectNo">No</label>
             </div>
         </div>
     <div class="col-md-12 "  id="divPerformServiceProjectExplanation" >
         <div class="col-sm-12" >
             <label for="PerformServiceProjectExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-            <textarea class="form-control" rows="2" name="PerformServiceProjectExplanation" id="PerformServiceProjectExplanation">{{ $chFinancialReport->at_least_one_service_project_explanation }}</textarea>
+            <textarea class="form-control" rows="2" name="PerformServiceProjectExplanation" id="PerformServiceProjectExplanation">{{ $chFinancialReportQuestions->at_least_one_service_project_explanation }}</textarea>
         </div>
     </div>
 </div>
@@ -518,18 +518,18 @@
         <label>Did your chapter make any contributions to any organization or individual that is not registered with the government as a charity?<span class="field-required">*</span></label>
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="ContributionsNotRegNPYes" name="ContributionsNotRegNP" value="1" {{ $chFinancialReport->contributions_not_registered_charity == 1 ? 'checked' : '' }} onchange="ToggleContributionsNotRegNPExplanation()">
+                <input class="form-check-input" type="radio" id="ContributionsNotRegNPYes" name="ContributionsNotRegNP" value="1" {{ $chFinancialReportQuestions->contributions_not_registered_charity == 1 ? 'checked' : '' }} onchange="ToggleContributionsNotRegNPExplanation()">
                 <label class="form-check-label" for="ContributionsNotRegNPYes">Yes</label>
             </div>
                                         <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="ContributionsNotRegNPNo" name="ContributionsNotRegNP" value="0" {{ !is_null($chFinancialReport->contributions_not_registered_charity) && $chFinancialReport->contributions_not_registered_charity == 0 ? 'checked' : '' }} onchange="ToggleContributionsNotRegNPExplanation()">
+                <input class="form-check-input" type="radio" id="ContributionsNotRegNPNo" name="ContributionsNotRegNP" value="0" {{ !is_null($chFinancialReportQuestions->contributions_not_registered_charity) && $chFinancialReportQuestions->contributions_not_registered_charity == 0 ? 'checked' : '' }} onchange="ToggleContributionsNotRegNPExplanation()">
                 <label class="form-check-label" for="ContributionsNotRegNPNo">No</label>
             </div>
     </div>
     <div class="col-md-12" id="divContributionsNotRegNPExplanation" >
         <div class="col-sm-12" >
             <label for="ContributionsNotRegNPExplanation">If yes, please explain who received the contributions and why you chose them:<span class="field-required">*</span></label>
-            <textarea class="form-control" rows="2" name="ContributionsNotRegNPExplanation" id="ContributionsNotRegNPExplanation">{{ $chFinancialReport->contributions_not_registered_charity_explanation }}</textarea>
+            <textarea class="form-control" rows="2" name="ContributionsNotRegNPExplanation" id="ContributionsNotRegNPExplanation">{{ $chFinancialReportQuestions->contributions_not_registered_charity_explanation }}</textarea>
         </div>
     </div>
     </div>
@@ -940,11 +940,11 @@
         <label>Did your chapter attend an International Event (in person or virtual)?<span class="field-required">*</span></label>
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="InternationalEventYes" name="InternationalEvent" value="1" {{ $chFinancialReport->international_event == 1 ? 'checked' : '' }} onchange="ToggleInternationalEventExplanation()">
+                <input class="form-check-input" type="radio" id="InternationalEventYes" name="InternationalEvent" value="1" {{ $chFinancialReportQuestions->international_event == 1 ? 'checked' : '' }} onchange="ToggleInternationalEventExplanation()">
                 <label class="form-check-label" for="InternationalEventYes">Yes</label>
             </div>
                                         <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="InternationalEventNo" name="InternationalEvent" value="0" {{ !is_null($chFinancialReport->international_event) && $chFinancialReport->international_event == 0 ? 'checked' : '' }} onchange="ToggleInternationalEventExplanation()">
+                <input class="form-check-input" type="radio" id="InternationalEventNo" name="InternationalEvent" value="0" {{ !is_null($chFinancialReportQuestions->international_event) && $chFinancialReportQuestions->international_event == 0 ? 'checked' : '' }} onchange="ToggleInternationalEventExplanation()">
                 <label class="form-check-label" for="SInternationalEventNo">No</label>
             </div>
         </div>
@@ -1697,11 +1697,11 @@
             <label>Is a copy of your chapter’s most recent bank statement included?<span class="field-required">*</span></label>
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="BankStatementIncludedYes" name="BankStatementIncluded" value="1" {{ $chFinancialReport->bank_statement_included == 1 ? 'checked' : '' }} onchange="ToggleBankStatementIncludedExplanation()">
+                    <input class="form-check-input" type="radio" id="BankStatementIncludedYes" name="BankStatementIncluded" value="1" {{ $chFinancialReportQuestions->bank_statement_included == 1 ? 'checked' : '' }} onchange="ToggleBankStatementIncludedExplanation()">
                     <label class="form-check-label" for="BankStatementIncludedYes">Yes</label>
                 </div>
                                         <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="BankStatementIncludedNo" name="BankStatementIncluded" value="0" {{ !is_null($chFinancialReport->bank_statement_included) && $chFinancialReport->bank_statement_included == 0 ? 'checked' : '' }} onchange="ToggleBankStatementIncludedExplanation()">
+                    <input class="form-check-input" type="radio" id="BankStatementIncludedNo" name="BankStatementIncluded" value="0" {{ !is_null($chFinancialReportQuestions->bank_statement_included) && $chFinancialReportQuestions->bank_statement_included == 0 ? 'checked' : '' }} onchange="ToggleBankStatementIncludedExplanation()">
                     <label class="form-check-label" for="BankStatementIncludedNo">No</label>
                 </div>
             </div>
@@ -1709,13 +1709,13 @@
         <div class="col-md-12">
             <div class="col-sm-12" id="divBankStatementIncludedExplanation">
                 <label for="BankStatementIncludedExplanation">If no, briefly explain:</label>
-                <textarea class="form-control" rows="2" name="BankStatementIncludedExplanation" id="BankStatementIncludedExplanation">{{ $chFinancialReport->bank_statement_included_explanation }}</textarea>
+                <textarea class="form-control" rows="2" name="BankStatementIncludedExplanation" id="BankStatementIncludedExplanation">{{ $chFinancialReportQuestions->bank_statement_included_explanation }}</textarea>
             </div>
         </div>
         <div class="col-sm-12" >
             <div class="col-sm-12" id="WheresTheMoney">
                 <label style="display: block;">If your group does not have any bank accounts, where is the chapter money kept?</label>
-                <textarea class="form-control" rows="2" name="WheresTheMoney" id="WheresTheMoney">{{ $chFinancialReport->wheres_the_money }}</textarea>
+                <textarea class="form-control" rows="2" name="WheresTheMoney" id="WheresTheMoney">{{ $chFinancialReportQuestions->wheres_the_money }}</textarea>
             </div>
         </div>
         </div>
@@ -1953,18 +1953,18 @@
             @endif
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="FileIRSYes" name="FileIRS" value="1" {{ $chFinancialReport->file_irs == 1 ? 'checked' : '' }} onchange="ToggleFileIRSExplanation()">
+                    <input class="form-check-input" type="radio" id="FileIRSYes" name="FileIRS" value="1" {{ $chFinancialReportQuestions->file_irs == 1 ? 'checked' : '' }} onchange="ToggleFileIRSExplanation()">
                     <label class="form-check-label" for="FileIRSYes">Yes</label>
                 </div>
                                         <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="FileIRSNo" name="FileIRS" value="0" {{ !is_null($chFinancialReport->file_irs) && $chFinancialReport->file_irs == 0 ? 'checked' : '' }} onchange="ToggleFileIRSExplanation()">
+                    <input class="form-check-input" type="radio" id="FileIRSNo" name="FileIRS" value="0" {{ !is_null($chFinancialReportQuestions->file_irs) && $chFinancialReportQuestions->file_irs == 0 ? 'checked' : '' }} onchange="ToggleFileIRSExplanation()">
                     <label class="form-check-label" for="FileIRSNo">No</label>
                 </div>
             </div>
         <div class="col-md-12" style="margin-bottom: 10px">
             <div class="col-sm-12" id="divFileIRSExplanation">
                 <label for="FileIRSExplanation">If no, briefly explain:</label>
-                <textarea class="form-control" rows="2" name="FileIRSExplanation" id="FileIRSExplanation">{{ $chFinancialReport->file_irs_explanation }}</textarea>
+                <textarea class="form-control" rows="2" name="FileIRSExplanation" id="FileIRSExplanation">{{ $chFinancialReportQuestions->file_irs_explanation }}</textarea>
             </div>
         </div>
                 </div>
@@ -2048,18 +2048,18 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <label>1. Did you make the Bylaws and/or manual available for any chapter members that requested them?<span class="field-required">*</span></label>
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="ByLawsAvailableYes" name="ByLawsAvailable" value="1" {{ $chFinancialReport->bylaws_available == 1 ? 'checked' : '' }} onchange="ToggleByLawsAvailableExplanation()">
+            <input class="form-check-input" type="radio" id="ByLawsAvailableYes" name="ByLawsAvailable" value="1" {{ $chFinancialReportQuestions->bylaws_available == 1 ? 'checked' : '' }} onchange="ToggleByLawsAvailableExplanation()">
             <label class="form-check-label" for="ByLawsAvailableYes">Yes</label>
         </div>
                                         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="ByLawsAvailableNo" name="ByLawsAvailable" value="0" {{ !is_null($chFinancialReport->bylaws_available) && $chFinancialReport->bylaws_available == 0 ? 'checked' : '' }} onchange="ToggleByLawsAvailableExplanation()">
+            <input class="form-check-input" type="radio" id="ByLawsAvailableNo" name="ByLawsAvailable" value="0" {{ !is_null($chFinancialReportQuestions->bylaws_available) && $chFinancialReportQuestions->bylaws_available == 0 ? 'checked' : '' }} onchange="ToggleByLawsAvailableExplanation()">
             <label class="form-check-label" for="ByLawsAvailableNo">No</label>
         </div>
     </div>
 <div class="col-md-12" id="divByLawsAvailableExplanation">
     <div class="col-sm-12">
         <label for="ByLawsAvailableExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-        <textarea class="form-control" rows="2" name="ByLawsAvailableExplanation" id="ByLawsAvailableExplanation">{{ $chFinancialReport->bylaws_available_explanation }}</textarea>
+        <textarea class="form-control" rows="2" name="ByLawsAvailableExplanation" id="ByLawsAvailableExplanation">{{ $chFinancialReportQuestions->bylaws_available_explanation }}</textarea>
     </div>
 </div>
 </div>
@@ -2068,18 +2068,18 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <label>2. Did your chapter vote on all activities and expenditures during the fiscal year?<span class="field-required">*</span></label>
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="VoteAllActivitiesYes" name="VoteAllActivities" value="1" {{ $chFinancialReport->vote_all_activities == 1 ? 'checked' : '' }} onchange="ToggleVoteAllActivitiesExplanation()">
+            <input class="form-check-input" type="radio" id="VoteAllActivitiesYes" name="VoteAllActivities" value="1" {{ $chFinancialReportQuestions->vote_all_activities == 1 ? 'checked' : '' }} onchange="ToggleVoteAllActivitiesExplanation()">
             <label class="form-check-label" for="VoteAllActivitiesYes">Yes</label>
         </div>
                                         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="VoteAllActivitiesNo" name="VoteAllActivities" value="0" {{ !is_null($chFinancialReport->vote_all_activities) && $chFinancialReport->vote_all_activities == 0 ? 'checked' : '' }} onchange="ToggleVoteAllActivitiesExplanation()">
+            <input class="form-check-input" type="radio" id="VoteAllActivitiesNo" name="VoteAllActivities" value="0" {{ !is_null($chFinancialReportQuestions->vote_all_activities) && $chFinancialReportQuestions->vote_all_activities == 0 ? 'checked' : '' }} onchange="ToggleVoteAllActivitiesExplanation()">
             <label class="form-check-label" for="VoteAllActivitiesNo">No</label>
         </div>
     </div>
 <div class="col-md-12" id="divVoteAllActivitiesExplanation">
     <div class="col-sm-12">
         <label for="VoteAllActivitiesExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-        <textarea class="form-control" rows="2" name="VoteAllActivitiesExplanation" id="VoteAllActivitiesExplanation">{{ $chFinancialReport->vote_all_activities_explanation }}</textarea>
+        <textarea class="form-control" rows="2" name="VoteAllActivitiesExplanation" id="VoteAllActivitiesExplanation">{{ $chFinancialReportQuestions->vote_all_activities_explanation }}</textarea>
     </div>
 </div>
 </div>
@@ -2088,18 +2088,18 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <label>3. Did you have any child focused outings or activities?<span class="field-required">*</span></label>
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="ChildOutingsYes" name="ChildOutings" value="1" {{ $chFinancialReport->child_outings == 1 ? 'checked' : '' }} onchange="ToggleChildOutingsExplanation()">
+            <input class="form-check-input" type="radio" id="ChildOutingsYes" name="ChildOutings" value="1" {{ $chFinancialReportQuestions->child_outings == 1 ? 'checked' : '' }} onchange="ToggleChildOutingsExplanation()">
             <label class="form-check-label" for="ChildOutingsYes">Yes</label>
         </div>
                                         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="ChildOutingsNo" name="ChildOutings" value="0" {{ !is_null($chFinancialReport->child_outings) && $chFinancialReport->child_outings == 0 ? 'checked' : '' }} onchange="ToggleChildOutingsExplanation()">
+            <input class="form-check-input" type="radio" id="ChildOutingsNo" name="ChildOutings" value="0" {{ !is_null($chFinancialReportQuestions->child_outings) && $chFinancialReportQuestions->child_outings == 0 ? 'checked' : '' }} onchange="ToggleChildOutingsExplanation()">
             <label class="form-check-label" for="ChildOutingsNo">No</label>
         </div>
     </div>
 <div class="col-md-12" id="divChildOutingsExplanation">
     <div class="col-sm-12">
         <label for="ChildOutingsExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-        <textarea class="form-control" rows="2" name="ChildOutingsExplanation" id="ChildOutingsExplanation">{{ $chFinancialReport->child_outings_explanation }}</textarea>
+        <textarea class="form-control" rows="2" name="ChildOutingsExplanation" id="ChildOutingsExplanation">{{ $chFinancialReportQuestions->child_outings_explanation }}</textarea>
     </div>
 </div>
 </div>
@@ -2108,22 +2108,22 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <label>4. Did you have playgroups? If so, how were they arranged?<span class="field-required">*</span></label>
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="PlaygroupsMulti" name="Playgroups" value="2" {{ $chFinancialReport->playgroups == 2 ? 'checked' : '' }} onchange="TogglePlaygroupsExplanation()">
+                <input class="form-check-input" type="radio" id="PlaygroupsMulti" name="Playgroups" value="2" {{ $chFinancialReportQuestions->playgroups == 2 ? 'checked' : '' }} onchange="TogglePlaygroupsExplanation()">
                 <label class="form-check-label" for="PlaygroupsMulti">Yes, Multi-Aged Groups</label>
             </div>
                                         <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="PlaygroupsAge" name="Playgroups" value="1" {{ $chFinancialReport->playgroups == 1 ? 'checked' : '' }} onchange="TogglePlaygroupsExplanation()">
+                <input class="form-check-input" type="radio" id="PlaygroupsAge" name="Playgroups" value="1" {{ $chFinancialReportQuestions->playgroups == 1 ? 'checked' : '' }} onchange="TogglePlaygroupsExplanation()">
                 <label class="form-check-label" for="PlaygroupsAge">Yes, Arranged by Age</label>
             </div>
                                         <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="PlaygroupsNo" name="Playgroups" value="0" {{ !is_null($chFinancialReport->playgroups) && $chFinancialReport->playgroups == 0 ? 'checked' : '' }} onchange="TogglePlaygroupsExplanation()">
+                <input class="form-check-input" type="radio" id="PlaygroupsNo" name="Playgroups" value="0" {{ !is_null($chFinancialReportQuestions->playgroups) && $chFinancialReportQuestions->playgroups == 0 ? 'checked' : '' }} onchange="TogglePlaygroupsExplanation()">
                 <label class="form-check-label" for="PlaygroupsNo">No</label>
             </div>
         </div>
 <div class="col-md-12" id="divPlaygroupsExplanation" style="display: {{ $chFinancialReport->playgroups == 0 ? 'block' : 'none' }}">
     <div class="col-sm-12">
         <label for="PlaygroupsExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-        <textarea class="form-control" rows="2" name="PlaygroupsExplanation" id="PlaygroupsExplanation">{{ $chFinancialReport->playgroups_explanation }}</textarea>
+        <textarea class="form-control" rows="2" name="PlaygroupsExplanation" id="PlaygroupsExplanation">{{ $chFinancialReportQuestions->playgroups_explanation }}</textarea>
     </div>
 </div>
 </div>
@@ -2132,30 +2132,30 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <label>5. Did your chapter have scheduled park days? If yes, how often?<span class="field-required">*</span></label>
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="ParkDays4" name="ParkDays" value="4" {{ $chFinancialReport->park_day_frequency == 4 ? 'checked' : '' }} onchange="ToggleParkDaysExplanation()">
+                <input class="form-check-input" type="radio" id="ParkDays4" name="ParkDays" value="4" {{ $chFinancialReportQuestions->park_day_frequency == 4 ? 'checked' : '' }} onchange="ToggleParkDaysExplanation()">
                 <label class="form-check-label" for="ParkDays4">10+ Times</label>
             </div>
                                         <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="ParkDays3" name="ParkDays" value="3" {{ $chFinancialReport->park_day_frequency == 3 ? 'checked' : '' }} onchange="ToggleParkDaysExplanation()">
+                <input class="form-check-input" type="radio" id="ParkDays3" name="ParkDays" value="3" {{ $chFinancialReportQuestions->park_day_frequency == 3 ? 'checked' : '' }} onchange="ToggleParkDaysExplanation()">
                 <label class="form-check-label" for="ParkDays3">7-9 Times</label>
             </div>
                                         <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="ParkDays2" name="ParkDays" value="2" {{ $chFinancialReport->park_day_frequency == 2 ? 'checked' : '' }} onchange="ToggleParkDaysExplanation()">
+                <input class="form-check-input" type="radio" id="ParkDays2" name="ParkDays" value="2" {{ $chFinancialReportQuestions->park_day_frequency == 2 ? 'checked' : '' }} onchange="ToggleParkDaysExplanation()">
                 <label class="form-check-label" for="ParkDays2">4-6 Times</label>
             </div>
                                         <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="ParkDays1" name="ParkDays" value="1" {{ $chFinancialReport->park_day_frequency == 1 ? 'checked' : '' }} onchange="ToggleParkDaysExplanation()">
+                <input class="form-check-input" type="radio" id="ParkDays1" name="ParkDays" value="1" {{ $chFinancialReportQuestions->park_day_frequency == 1 ? 'checked' : '' }} onchange="ToggleParkDaysExplanation()">
                 <label class="form-check-label" for="ParkDays1">1-3 Times</label>
             </div>
                                         <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="ParkDaysNo" name="ParkDays" value="0" {{ !is_null($chFinancialReport->park_day_frequency) && $chFinancialReport->park_day_frequency == 0 ? 'checked' : '' }} onchange="ToggleParkDaysExplanation()">
+                <input class="form-check-input" type="radio" id="ParkDaysNo" name="ParkDays" value="0" {{ !is_null($chFinancialReportQuestions->park_day_frequency) && $chFinancialReportQuestions->park_day_frequency == 0 ? 'checked' : '' }} onchange="ToggleParkDaysExplanation()">
                 <label class="form-check-label" for="ParkDaysNo">No</label>
             </div>
         </div>
 <div class="col-md-12" id="divParkDaysExplanation" style="display: {{ $chFinancialReport->park_day_frequency == 0 ? 'block' : 'none' }}">
     <div class="col-sm-12">
         <label for="ParkDaysExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-        <textarea class="form-control" rows="2" name="ParkDaysExplanation" id="ParkDaysExplanation">{{ $chFinancialReport->park_day_frequency_explanation }}</textarea>
+        <textarea class="form-control" rows="2" name="ParkDaysExplanation" id="ParkDaysExplanation">{{ $chFinancialReportQuestions->park_day_frequency_explanation }}</textarea>
     </div>
 </div>
 </div>
@@ -2164,18 +2164,18 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <label>6. Did you have any mother focused outings or activities?<span class="field-required">*</span></label>
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="MotherOutingsYes" name="MotherOutings" value="1" {{ $chFinancialReport->mother_outings == 1 ? 'checked' : '' }} onchange="ToggleMotherOutingsExplanation()">
+            <input class="form-check-input" type="radio" id="MotherOutingsYes" name="MotherOutings" value="1" {{ $chFinancialReportQuestions->mother_outings == 1 ? 'checked' : '' }} onchange="ToggleMotherOutingsExplanation()">
             <label class="form-check-label" for="MotherOutingsYes">Yes</label>
         </div>
                                         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="MotherOutingsNo" name="MotherOutings" value="0" {{ !is_null($chFinancialReport->mother_outings) && $chFinancialReport->mother_outings == 0 ? 'checked' : '' }} onchange="ToggleMotherOutingsExplanation()">
+            <input class="form-check-input" type="radio" id="MotherOutingsNo" name="MotherOutings" value="0" {{ !is_null($chFinancialReportQuestions->mother_outings) && $chFinancialReportQuestions->mother_outings == 0 ? 'checked' : '' }} onchange="ToggleMotherOutingsExplanation()">
             <label class="form-check-label" for="MotherOutingsNo">No</label>
         </div>
     </div>
 <div class="col-md-12" id="divMotherOutingsExplanation">
     <div class="col-sm-12">
         <label for="MotherOutingsExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-        <textarea class="form-control" rows="2" name="MotherOutingsExplanation" id="MotherOutingsExplanation">{{ $chFinancialReport->mother_outings_explanation }}</textarea>
+        <textarea class="form-control" rows="2" name="MotherOutingsExplanation" id="MotherOutingsExplanation">{{ $chFinancialReportQuestions->mother_outings_explanation }}</textarea>
     </div>
 </div>
 </div>
@@ -2184,9 +2184,9 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <label>7. Did your chapter have any of the following activity groups?<span class="field-required">*</span></label>
                                     <div class="col-12 d-flex gap-4">
         @php
-            $selectedValues = is_null($chFinancialReport->activity_array)
+            $selectedValues = is_null($chFinancialReportQuestions->activity_array)
                 ? []
-                : json_decode($chFinancialReport->activity_array);
+                : json_decode($chFinancialReportQuestions->activity_array);
         @endphp
                                         <div class="form-check form-check-inline">
             <input class="form-check-input" type="checkbox" id="Activity0" name="Activity[]" value="0" {{ in_array('0', $selectedValues) ? 'checked' : '' }} onchange="ToggleActivityOtherExplanation()">
@@ -2216,7 +2216,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
 <div class="col-md-12"  id="divActivityOtherExplanation">
     <div class="col-sm-12">
        <label for="ActivityOtherExplanation">If other, briefly explain:</label>
-       <textarea class="form-control" rows="2" name="ActivityOtherExplanation" id="ActivityOtherExplanation">{{ $chFinancialReport->activity_other_explanation }}</textarea>
+       <textarea class="form-control" rows="2" name="ActivityOtherExplanation" id="ActivityOtherExplanation">{{ $chFinancialReportQuestions->activity_other_explanation }}</textarea>
     </div>
 </div>
 </div>
@@ -2225,18 +2225,18 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <label>8. Did you offer or inform your members about MOMS Club merchandise?<span class="field-required">*</span></label>
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="OfferedMerchYes" name="OfferedMerch" value="1" {{ $chFinancialReport->offered_merch == 1 ? 'checked' : '' }} onchange="ToggleOfferedMerchExplanation()">
+            <input class="form-check-input" type="radio" id="OfferedMerchYes" name="OfferedMerch" value="1" {{ $chFinancialReportQuestions->offered_merch == 1 ? 'checked' : '' }} onchange="ToggleOfferedMerchExplanation()">
             <label class="form-check-label" for="OfferedMerchYes">Yes</label>
         </div>
                                         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="OfferedMerchNo" name="OfferedMerch" value="0" {{ !is_null($chFinancialReport->offered_merch) && $chFinancialReport->offered_merch == 0 ? 'checked' : '' }} onchange="ToggleOfferedMerchExplanation()">
+            <input class="form-check-input" type="radio" id="OfferedMerchNo" name="OfferedMerch" value="0" {{ !is_null($chFinancialReportQuestions->offered_merch) && $chFinancialReport->offered_merch == 0 ? 'checked' : '' }} onchange="ToggleOfferedMerchExplanation()">
             <label class="form-check-label" for="OfferedMerchNo">No</label>
         </div>
     </div>
 <div class="col-md-12" id="divOfferedMerchExplanation">
     <div class="col-sm-12">
         <label for="OfferedMerchExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-        <textarea class="form-control" rows="2" name="OfferedMerchExplanation" id="OfferedMerchExplanation">{{ $chFinancialReport->offered_merch_explanation }}</textarea>
+        <textarea class="form-control" rows="2" name="OfferedMerchExplanation" id="OfferedMerchExplanation">{{ $chFinancialReportQuestions->offered_merch_explanation }}</textarea>
     </div>
 </div>
 </div>
@@ -2245,18 +2245,18 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <label>9. Did you purchase any merchandise from International other than pins?<span class="field-required">*</span></label>
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="BoughtMerchYes" name="BoughtMerch" value="1" {{ $chFinancialReport->bought_merch == 1 ? 'checked' : '' }} onchange="ToggleBoughtMerchExplanation()">
+            <input class="form-check-input" type="radio" id="BoughtMerchYes" name="BoughtMerch" value="1" {{ $chFinancialReportQuestions->bought_merch == 1 ? 'checked' : '' }} onchange="ToggleBoughtMerchExplanation()">
             <label class="form-check-label" for="BoughtMerchYes">Yes</label>
         </div>
                                         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="BoughtMerchNo" name="BoughtMerch" value="0" {{ !is_null($chFinancialReport->bought_merch) && $chFinancialReport->bought_merch == 0 ? 'checked' : '' }} onchange="ToggleBoughtMerchExplanation()">
+            <input class="form-check-input" type="radio" id="BoughtMerchNo" name="BoughtMerch" value="0" {{ !is_null($chFinancialReportQuestions->bought_merch) && $chFinancialReportQuestions->bought_merch == 0 ? 'checked' : '' }} onchange="ToggleBoughtMerchExplanation()">
             <label class="form-check-label" for="BoughtMerchNo">No</label>
         </div>
     </div>
 <div class="col-md-12" id="divBoughtMerchExplanation">
     <div class="col-sm-12">
         <label for="BoughtMerchExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-        <textarea class="form-control" rows="2" name="BoughtMerchExplanation" id="BoughtMerchExplanation">{{ $chFinancialReport->bought_merch_explanation }}</textarea>
+        <textarea class="form-control" rows="2" name="BoughtMerchExplanation" id="BoughtMerchExplanation">{{ $chFinancialReportQuestions->bought_merch_explanation }}</textarea>
     </div>
 </div>
 </div>
@@ -2265,18 +2265,18 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <label>10. Did you purchase pins from International?<span class="field-required">*</span></label>
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="BoughtPinsYes" name="BoughtPins" value="1" {{ $chFinancialReport->purchase_pins == 1 ? 'checked' : '' }} onchange="ToggleBoughtPinsExplanation()">
+            <input class="form-check-input" type="radio" id="BoughtPinsYes" name="BoughtPins" value="1" {{ $chFinancialReportQuestions->purchase_pins == 1 ? 'checked' : '' }} onchange="ToggleBoughtPinsExplanation()">
             <label class="form-check-label" for="BoughtPinsYes">Yes</label>
         </div>
                                         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="BoughtPinsNo" name="BoughtPins" value="0" {{ !is_null($chFinancialReport->purchase_pins) && $chFinancialReport->purchase_pins == 0 ? 'checked' : '' }} onchange="ToggleBoughtPinsExplanation()">
+            <input class="form-check-input" type="radio" id="BoughtPinsNo" name="BoughtPins" value="0" {{ !is_null($chFinancialReportQuestions->purchase_pins) && $chFinancialReportQuestions->purchase_pins == 0 ? 'checked' : '' }} onchange="ToggleBoughtPinsExplanation()">
             <label class="form-check-label" for="BoughtPinsNo">No</label>
         </div>
     </div>
 <div class="col-md-12" id="divBoughtPinsExplanation">
     <div class="col-sm-12">
         <label for="BoughtPinsExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-        <textarea class="form-control" rows="2" name="BoughtPinsExplanation" id="BoughtPinsExplanation">{{ $chFinancialReport->purchase_pins_explanation }}</textarea>
+        <textarea class="form-control" rows="2" name="BoughtPinsExplanation" id="BoughtPinsExplanation">{{ $chFinancialReportQuestions->purchase_pins_explanation }}</textarea>
     </div>
     </div>
     </div>
@@ -2285,18 +2285,18 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <label>11. Did anyone in your chapter receive any compensation or pay for their work with your chapter?<span class="field-required">*</span></label>
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="ReceiveCompensationYes" name="ReceiveCompensation" value="1" {{ $chFinancialReport->receive_compensation == 1 ? 'checked' : '' }} onchange="ToggleReceiveCompensationExplanation()">
+            <input class="form-check-input" type="radio" id="ReceiveCompensationYes" name="ReceiveCompensation" value="1" {{ $chFinancialReportQuestions->receive_compensation == 1 ? 'checked' : '' }} onchange="ToggleReceiveCompensationExplanation()">
             <label class="form-check-label" for="ReceiveCompensationYes">Yes</label>
         </div>
                                         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="ReceiveCompensationNo" name="ReceiveCompensation" value="0" {{ !is_null($chFinancialReport->receive_compensation) && $chFinancialReport->receive_compensation == 0 ? 'checked' : '' }} onchange="ToggleReceiveCompensationExplanation()">
+            <input class="form-check-input" type="radio" id="ReceiveCompensationNo" name="ReceiveCompensation" value="0" {{ !is_null($chFinancialReportQuestions->receive_compensation) && $chFinancialReportQuestions->receive_compensation == 0 ? 'checked' : '' }} onchange="ToggleReceiveCompensationExplanation()">
             <label class="form-check-label" for="ReceiveCompensationNo">No</label>
         </div>
     </div>
 <div class="col-md-12" id="divReceiveCompensationExplanation">
     <div class="col-md-12">
         <label for="ReceiveCompensationExplanation">If yes, briefly explain:<span class="field-required">*</span></label>
-            <textarea class="form-control" rows="2" name="ReceiveCompensationExplanation" id="ReceiveCompensationExplanation">{{ $chFinancialReport->receive_compensation_explanation }}</textarea>
+            <textarea class="form-control" rows="2" name="ReceiveCompensationExplanation" id="ReceiveCompensationExplanation">{{ $chFinancialReportQuestions->receive_compensation_explanation }}</textarea>
         <div class="help-block with-errors"></div>
     </div>
 </div>
@@ -2306,18 +2306,18 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <label>12. Did any officer, member or family of a member benefit financially in any way from the member’s position with your chapter?<span class="field-required">*</span></label>
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="FinancialBenefitYes" name="FinancialBenefit" value="1" {{ $chFinancialReport->financial_benefit == 1 ? 'checked' : '' }} onchange="ToggleFinancialBenefitExplanation()">
+            <input class="form-check-input" type="radio" id="FinancialBenefitYes" name="FinancialBenefit" value="1" {{ $chFinancialReportQuestions->financial_benefit == 1 ? 'checked' : '' }} onchange="ToggleFinancialBenefitExplanation()">
             <label class="form-check-label" for="FinancialBenefitYes">Yes</label>
         </div>
                                         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="FinancialBenefitNo" name="FinancialBenefit" value="0" {{ !is_null($chFinancialReport->financial_benefit) && $chFinancialReport->financial_benefit == 0 ? 'checked' : '' }} onchange="ToggleFinancialBenefitExplanation()">
+            <input class="form-check-input" type="radio" id="FinancialBenefitNo" name="FinancialBenefit" value="0" {{ !is_null($chFinancialReportQuestions->financial_benefit) && $chFinancialReportQuestions->financial_benefit == 0 ? 'checked' : '' }} onchange="ToggleFinancialBenefitExplanation()">
             <label class="form-check-label" for="FinancialBenefitNo">No</label>
         </div>
     </div>
 <div class="col-md-12" id="divFinancialBenefitExplanation">
     <div class="col-md-12">
         <label for="FinancialBenefitExplanation">If yes, briefly explain:<span class="field-required">*</span></label>
-        <textarea class="form-control" rows="2" name="FinancialBenefitExplanation" id="FinancialBenefitExplanation">{{ $chFinancialReport->financial_benefit_explanation }}</textarea>
+        <textarea class="form-control" rows="2" name="FinancialBenefitExplanation" id="FinancialBenefitExplanation">{{ $chFinancialReportQuestions->financial_benefit_explanation }}</textarea>
     </div>
 </div>
 </div>
@@ -2326,18 +2326,18 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <label>13. Did your chapter attempt to influence any national, state/provincial, or local legislation, or support any other organization that did?<span class="field-required">*</span></label>
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="InfluencePoliticalYes" name="InfluencePolitical" value="1" {{ $chFinancialReport->influence_political == 1 ? 'checked' : '' }} onchange="ToggleInfluencePoliticalExplanation()">
+            <input class="form-check-input" type="radio" id="InfluencePoliticalYes" name="InfluencePolitical" value="1" {{ $chFinancialReportQuestions->influence_political == 1 ? 'checked' : '' }} onchange="ToggleInfluencePoliticalExplanation()">
             <label class="form-check-label" for="InfluencePoliticalYes">Yes</label>
         </div>
                                         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="InfluencePoliticalNo" name="InfluencePolitical" value="0" {{ !is_null($chFinancialReport->influence_political) && $chFinancialReport->influence_political == 0 ? 'checked' : '' }} onchange="ToggleInfluencePoliticalExplanation()">
+            <input class="form-check-input" type="radio" id="InfluencePoliticalNo" name="InfluencePolitical" value="0" {{ !is_null($chFinancialReportQuestions->influence_political) && $chFinancialReportQuestions->influence_political == 0 ? 'checked' : '' }} onchange="ToggleInfluencePoliticalExplanation()">
             <label class="form-check-label" for="InfluencePoliticalNo">No</label>
         </div>
     </div>
 <div class="col-sm-12" id="divInfluencePoliticalExplanation">
     <div class="col-md-12">
         <label for="InfluencePoliticalExplanation">If yes, briefly explain:<span class="field-required">*</span></label>
-        <textarea class="form-control" rows="2" name="InfluencePoliticalExplanation" id="InfluencePoliticalExplanation" >{{ $chFinancialReport->influence_political_explanation }}</textarea>
+        <textarea class="form-control" rows="2" name="InfluencePoliticalExplanation" id="InfluencePoliticalExplanation" >{{ $chFinancialReportQuestions->influence_political_explanation }}</textarea>
     </div>
 </div>
 </div>
@@ -2346,18 +2346,18 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
     <label>14. Did your chapter sister another chapter?<span class="field-required">*</span></label>
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="SisterChapterYes" name="SisterChapter" value="1" {{ $chFinancialReport->sister_chapter == 1 ? 'checked' : '' }} onchange="ToggleSisterChapterExplanation()">
+            <input class="form-check-input" type="radio" id="SisterChapterYes" name="SisterChapter" value="1" {{ $chFinancialReportQuestions->sister_chapter == 1 ? 'checked' : '' }} onchange="ToggleSisterChapterExplanation()">
             <label class="form-check-label" for="SisterChapterYes">Yes</label>
         </div>
                                         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="SisterChapterNo" name="SisterChapter" value="0" {{ !is_null($chFinancialReport->sister_chapter) && $chFinancialReport->sister_chapter == 0 ? 'checked' : '' }} onchange="ToggleSisterChapterExplanation()">
+            <input class="form-check-input" type="radio" id="SisterChapterNo" name="SisterChapter" value="0" {{ !is_null($chFinancialReportQuestions->sister_chapter) && $chFinancialReportQuestions->sister_chapter == 0 ? 'checked' : '' }} onchange="ToggleSisterChapterExplanation()">
             <label class="form-check-label" for="SisterChapterNo">No</label>
         </div>
     </div>
 <div class="col-sm-12" id="divSisterChapterExplanation" style="display: {{ $chFinancialReport->sister_chapter == 1 ? 'block' : 'none' }}">
     <div class="col-md-12">
         <label for="SisterChapterExplanation">If yes, which chapter?<span class="field-required">*</span></label>
-        <textarea class="form-control" rows="2" name="SisterChapterExplanation" id="SisterChapterExplanation" >{{ $chFinancialReport->sister_chapter_explanation }}</textarea>
+        <textarea class="form-control" rows="2" name="SisterChapterExplanation" id="SisterChapterExplanation" >{{ $chFinancialReportQuestions->sister_chapter_explanation }}</textarea>
     </div>
 </div>
 </div>
@@ -2500,11 +2500,11 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
                     <label>Did you follow the Bylaws and all instructions from International?<span class="field-required">*</span></label>
                     <div class="col-md-12 row">
                         <div class="form-check" style="margin-left: 20px;">
-                            <input class="form-check-input" type="radio" id="OutstandingFollowByLawsYes" name="OutstandingFollowByLaws" value="1" {{ $chFinancialReport->outstanding_follow_bylaws == 1 ? 'checked' : '' }}>
+                            <input class="form-check-input" type="radio" id="OutstandingFollowByLawsYes" name="OutstandingFollowByLaws" value="1" {{ $chFinancialReportQuestions->outstanding_follow_bylaws == 1 ? 'checked' : '' }}>
                             <label class="form-check-label" for="OutstandingFollowByLawsYes">Yes</label>
                         </div>
                         <div class="form-check" style="margin-left: 20px;">
-                            <input class="form-check-input" type="radio" id="OutstandingFollowByLawsNo" name="OutstandingFollowByLaws" value="0" {{ !is_null($chFinancialReport->outstanding_follow_bylaws) && $chFinancialReport->outstanding_follow_bylaws == 0 ? 'checked' : '' }} >
+                            <input class="form-check-input" type="radio" id="OutstandingFollowByLawsNo" name="OutstandingFollowByLaws" value="0" {{ !is_null($chFinancialReportQuestions->outstanding_follow_bylaws) && $chFinancialReportQuestions->outstanding_follow_bylaws == 0 ? 'checked' : '' }} >
                             <label class="form-check-label" for="OutstandingFollowByLawsNo">No</label>
                         </div>
                     </div>
@@ -2517,11 +2517,11 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
                         A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older children (or vice versa) would not be offering a well-rounded program.</p>
                     <div class="col-md-12 row">
                         <div class="form-check" style="margin-left: 20px;">
-                            <input class="form-check-input" type="radio" id="OutstandingWellRoundedYes" name="OutstandingWellRounded" value="1" {{ $chFinancialReport->outstanding_well_rounded == 1 ? 'checked' : '' }} >
+                            <input class="form-check-input" type="radio" id="OutstandingWellRoundedYes" name="OutstandingWellRounded" value="1" {{ $chFinancialReportQuestions->outstanding_well_rounded == 1 ? 'checked' : '' }} >
                             <label class="form-check-label" for="OutstandingWellRoundedYes">Yes</label>
                         </div>
                         <div class="form-check" style="margin-left: 20px;">
-                            <input class="form-check-input" type="radio" id="OutstandingWellRoundedNo" name="OutstandingWellRounded" value="0" {{ !is_null($chFinancialReport->outstanding_well_rounded) && $chFinancialReport->outstanding_well_rounded == 0 ? 'checked' : '' }} >
+                            <input class="form-check-input" type="radio" id="OutstandingWellRoundedNo" name="OutstandingWellRounded" value="0" {{ !is_null($chFinancialReportQuestions->outstanding_well_rounded) && $chFinancialReportQuestions->outstanding_well_rounded == 0 ? 'checked' : '' }} >
                             <label class="form-check-label" for="OutstandingWellRoundedNo">No</label>
                         </div>
                     </div>
@@ -2533,11 +2533,11 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
                         A chapter MUST communicate often and positively with their Coordinator to receive this award.</p>
                     <div class="col-md-12 row">
                         <div class="form-check" style="margin-left: 20px;">
-                            <input class="form-check-input" type="radio" id="OutstandingCommunicatedYes" name="OutstandingCommunicated" value="1" {{ $chFinancialReport->outstanding_communicated == 1 ? 'checked' : '' }} >
+                            <input class="form-check-input" type="radio" id="OutstandingCommunicatedYes" name="OutstandingCommunicated" value="1" {{ $chFinancialReportQuestions->outstanding_communicated == 1 ? 'checked' : '' }} >
                             <label class="form-check-label" for="OutstandingCommunicatedYes">Yes</label>
                         </div>
                         <div class="form-check" style="margin-left: 20px;">
-                            <input class="form-check-input" type="radio" id="OutstandingCommunicatedNo" name="OutstandingCommunicated" value="0" {{ !is_null($chFinancialReport->outstanding_communicated) && $chFinancialReport->outstanding_communicated == 0 ? 'checked' : '' }} >
+                            <input class="form-check-input" type="radio" id="OutstandingCommunicatedNo" name="OutstandingCommunicated" value="0" {{ !is_null($chFinancialReportQuestions->outstanding_communicated) && $chFinancialReportQuestions->outstanding_communicated == 0 ? 'checked' : '' }} >
                             <label class="form-check-label" for="OutstandingCommunicatedNo">No</label>
                         </div>
                     </div>
@@ -2555,11 +2555,11 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
                         </ul></p>
                     <div class="col-md-12 row">
                         <div class="form-check" style="margin-left: 20px;">
-                            <input class="form-check-input" type="radio" id="OutstandingSupportMomsClubYes" name="OutstandingSupportMomsClub" value="1" {{ $chFinancialReport->outstanding_support_international == 1 ? 'checked' : '' }} >
+                            <input class="form-check-input" type="radio" id="OutstandingSupportMomsClubYes" name="OutstandingSupportMomsClub" value="1" {{ $chFinancialReportQuestions->outstanding_support_international == 1 ? 'checked' : '' }} >
                             <label class="form-check-label" for="OutstandingSupportMomsClubYes">Yes</label>
                         </div>
                         <div class="form-check" style="margin-left: 20px;">
-                            <input class="form-check-input" type="radio" id="OutstandingSupportMomsClubNo" name="OutstandingSupportMomsClub" value="0" {{ !is_null($chFinancialReport->outstanding_support_international) && $chFinancialReport->outstanding_support_international == 0 ? 'checked' : '' }} >
+                            <input class="form-check-input" type="radio" id="OutstandingSupportMomsClubNo" name="OutstandingSupportMomsClub" value="0" {{ !is_null($chFinancialReportQuestions->outstanding_support_international) && $chFinancialReportQuestions->outstanding_support_international == 0 ? 'checked' : '' }} >
                             <label class="form-check-label" for="OutstandingSupportMomsClubNo">No</label>
                         </div>
                     </div>

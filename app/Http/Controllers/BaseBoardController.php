@@ -13,6 +13,7 @@ use App\Models\DocumentsIRS;
 use App\Models\DocumentsEOY;
 use App\Models\DocumentsReport;
 use App\Models\FinancialReport;
+use App\Models\FinancialReportQuestions;
 use App\Models\FinancialReportReview;
 use App\Models\FinancialReportAwards;
 use App\Models\Probation;
@@ -100,6 +101,7 @@ class BaseBoardController extends Controller
         $chReportDocuments = $chDetails->documentsReport ?? DocumentsReport::firstOrNew(['chapter_id' => $chId]);
         $reviewerEmail = $chDetails->reportReviewer?->email;
         $chFinancialReport = $chDetails->financialReport ?? FinancialReport::firstOrNew(['chapter_id' => $chId]);
+        $chFinancialReportQuestions = $chDetails->financialReportQuestions ?? FinancialReportQuestions::firstOrNew(['chapter_id' => $chId]);
         $chFinancialReportReview = $chDetails->financialReportReview ?? FinancialReportReview::firstOrNew(['chapter_id' => $chId]);
         $chFinancialReportFinal = $chDetails->financialReportFinal;
         $chDisbanded = $chDetails->disbandCheck;
@@ -147,7 +149,7 @@ class BaseBoardController extends Controller
             'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments, 'chAwards' => $chAwards, 'currentApprovedAwards' => $currentApprovedAwards, 'allAwards' => $allAwards,
             'probationReason' => $probationReason, 'dueDate' => $dueDate, 'startMonthId' => $startMonthId, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink,
             'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'startDate' => $startDate, 'renewalDate' => $renewalDate, 'financialReportPdfs' => $financialReportPdfs,
-            'chFinancialReportReview' => $chFinancialReportReview,
+            'chFinancialReportReview' => $chFinancialReportReview, 'chFinancialReportQuestions' => $chFinancialReportQuestions
         ], $boardDetails); // Add board member details from appropriate table
     }
 

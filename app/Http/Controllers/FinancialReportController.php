@@ -18,7 +18,9 @@ use App\Models\Chapters;
 use App\Models\DisbandedChecklist;
 use App\Models\DocumentsEOY;
 use App\Models\FinancialReport;
+use App\Models\FinancialReportQuestions;
 use App\Models\FinancialReportFinal;
+use App\Models\FinancialReportFinalQuestions;
 use App\Models\ResourceCategory;
 use App\Models\Resources;
 use App\Models\User;
@@ -77,6 +79,8 @@ class FinancialReportController extends Controller implements HasMiddleware
         $chIRSDocuments = $baseQuery['chIRSDocuments'];
         $chReportDocuments = $baseQuery['chReportDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
+        $chFinancialReportQuestions = $baseQuery['chFinancialReportQuestions'];
+        $chFinancialReportQuestions = $baseQuery['chFinancialReportQuestions'];
         $awards = $baseQuery['awards'];
         $allAwards = $baseQuery['allAwards'];
 
@@ -98,7 +102,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'stateShortName' => $stateShortName,
             'awards' => $awards, 'allAwards' => $allAwards, 'resourceCategories' => $resourceCategories, 'chEOYDocuments' => $chEOYDocuments,
             'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails,
-            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
+            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments, 'chFinancialReportQuestions' => $chFinancialReportQuestions
         ];
 
         return view('boards.editfinancialreport')->with($data);
@@ -123,6 +127,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         $chIRSDocuments = $baseQuery['chIRSDocuments'];
         $chReportDocuments = $baseQuery['chReportDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReportFinal'];
+        $chFinancialReportQuestions = $baseQuery['chFinancialReportQuestions'];
 
         $resources = Resources::with('resourceCategory')->get();
         $resourceCategories = ResourceCategory::all();
@@ -144,7 +149,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
             'chDisbanded' => $chDisbanded, 'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin, 'chEOYDocuments' => $chEOYDocuments,
             'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails,
-            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
+            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments, 'chFinancialReportQuestions' => $chFinancialReportQuestions
         ];
 
         return view('boards.disband.editfinancialreportfinal')->with($data);
@@ -154,75 +159,144 @@ class FinancialReportController extends Controller implements HasMiddleware
     /**
      * Save EOY Financial Report Accordion
      */
-    public function saveAccordionFields(FinancialReport|FinancialReportFinal $financialReport, array $input): void
+    public function saveAccordionCalculations(FinancialReport|FinancialReportFinal $financialReport, array $input): void
     {
-        // $financialReport->farthest_step_visited = $input['FurthestStep'];
+        // --- Membership counts & dues total ---
+        $ChangedMeetingFees = ($input['optChangeDues'] ?? null) == '1';
+        $ChargedMembersDifferently = ($input['optNewOldDifferent'] ?? null) == '1';
 
-        // CHAPTER DUES
-        $financialReport->changed_dues = $input['optChangeDues'] ?? null;
-        $financialReport->different_dues = $input['optNewOldDifferent'] ?? null;
-        $financialReport->not_all_full_dues = $input['optNoFullDues'] ?? null;
-        $financialReport->not_full_dues_array = $input['Dues'] ?? null;
-        $financialReport->total_new_members = $input['TotalNewMembers'] ?? null;
-        $financialReport->total_renewed_members = $input['TotalRenewedMembers'] ?? null;
-        $financialReport->dues_per_member = $input['MemberDues'] ?? null;
-        $financialReport->total_new_members_changed_dues = $input['TotalNewMembersNewFee'] ?? null;
-        $financialReport->total_renewed_members_changed_dues = $input['TotalRenewedMembersNewFee'] ?? null;
-        $financialReport->dues_per_member_renewal = $input['MemberDuesRenewal'] ?? null;
-        $financialReport->dues_per_member_new_changed = $input['NewMemberDues'] ?? null;
-        $financialReport->dues_per_member_renewal_changed = $input['NewMemberDuesRenewal'] ?? null;
-        $financialReport->members_who_paid_no_dues = $input['MembersNoDues'] ?? null;
-        $financialReport->members_who_paid_partial_dues = $input['TotalPartialDuesMembers'] ?? null;
-        $financialReport->total_partial_fees_collected = $input['PartialDuesMemberDues'] ?? null;
-        $financialReport->total_associate_members = $input['TotalAssociateMembers'] ?? null;
-        $financialReport->associate_member_fee = $input['AssociateMemberDues'] ?? null;
+        $NewMembers = (int) ($input['TotalNewMembers'] ?? 0);
+        $RenewedMembers = (int) ($input['TotalRenewedMembers'] ?? 0);
+        $NewMembers2 = (int) ($input['TotalNewMembersNewFee'] ?? 0);
+        $RenewedMembers2 = (int) ($input['TotalRenewedMembersNewFee'] ?? 0);
+        $MembersNoDues = (int) ($input['MembersNoDues'] ?? 0);
+        $PartialDuesMembers = (int) ($input['TotalPartialDuesMembers'] ?? 0);
+        $AssociateMembers = (int) ($input['TotalAssociateMembers'] ?? 0);
+
+        $MemberDues = (float) preg_replace('/[^0-9.-]/', '', $input['MemberDues'] ?? 0);
+        $NewMemberDues = (float) preg_replace('/[^0-9.-]/', '', $input['NewMemberDues'] ?? 0);
+        $MemberDuesRenewal = (float) preg_replace('/[^0-9.-]/', '', $input['MemberDuesRenewal'] ?? 0);
+        $NewMemberDuesRenewal = (float) preg_replace('/[^0-9.-]/', '', $input['NewMemberDuesRenewal'] ?? 0);
+        $PartialDuesMemberDues = (float) preg_replace('/[^0-9.-]/', '', $input['PartialDuesMemberDues'] ?? 0);
+        $AssociateMemberDues = (float) preg_replace('/[^0-9.-]/', '', $input['AssociateMemberDues'] ?? 0);
+
+        $financialReport->member_count_total = $NewMembers + $RenewedMembers + $MembersNoDues
+            + $AssociateMembers + $PartialDuesMembers + $NewMembers2 + $RenewedMembers2;
+
+        $newMembersDues = $NewMembers * $MemberDues;
+        $renewalMembersDues = $RenewedMembers * $MemberDues;
+        $renewalMembersDuesDiff = $RenewedMembers * $MemberDuesRenewal;
+        $newMembersDuesNew = $NewMembers2 * $NewMemberDues;
+        $renewMembersDuesNew = $RenewedMembers2 * $NewMemberDues;
+        $renewMembersNewDuesDiff = $RenewedMembers2 * $NewMemberDuesRenewal;
+        $partialMembersDues = $PartialDuesMemberDues;
+        $associateMembersDues = $AssociateMembers * $AssociateMemberDues;
+
+        if ($ChangedMeetingFees && $ChargedMembersDifferently) {
+            $TotalFees = $newMembersDues + $renewalMembersDuesDiff + $newMembersDuesNew + $renewMembersNewDuesDiff + $associateMembersDues + $partialMembersDues;
+        } elseif ($ChargedMembersDifferently) {
+            $TotalFees = $newMembersDues + $renewalMembersDuesDiff + $associateMembersDues + $partialMembersDues;
+        } elseif ($ChangedMeetingFees) {
+            $TotalFees = $newMembersDues + $renewalMembersDues + $newMembersDuesNew + $renewMembersDuesNew + $associateMembersDues + $partialMembersDues;
+        } else {
+            $TotalFees = $newMembersDues + $renewalMembersDues + $associateMembersDues + $partialMembersDues;
+        }
+
+        $financialReport->member_dues_total = round($TotalFees, 2);
+        $SumTotalDues = round($TotalFees, 2);
 
         // MONTHLY MEETING EXPENSES
         $financialReport->manditory_meeting_fees_paid = isset($input['ManditoryMeetingFeesPaid']) ? preg_replace('/[^\d.]/', '', $input['ManditoryMeetingFeesPaid']) : null;
         $financialReport->voluntary_donations_paid = isset($input['VoluntaryDonationsPaid']) ? preg_replace('/[^\d.]/', '', $input['VoluntaryDonationsPaid']) : null;
-        $financialReport->meeting_speakers = $input['MeetingSpeakers'] ?? null;
-        $financialReport->meeting_speakers_array = $input['Speakers'] ?? null;
-        $financialReport->discussion_topic_frequency = $input['SpeakerFrequency'] ?? null;
-        $financialReport->childrens_room_sitters = $input['ChildrensRoom'] ?? null;
         $financialReport->paid_baby_sitters = isset($input['PaidBabySitters']) ? preg_replace('/[^\d.]/', '', $input['PaidBabySitters']) : null;
 
         // Children Room Expenses (serialized)
         $ChildrenRoomArray = null;
+        $SumChildrensSuppliesExpense = 0;
+        $SumChildrensOtherExpense = 0;
         $FieldCount = $input['ChildrensExpenseRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
+            $children_supplies = (float) preg_replace('/[^\d.]/', '', $input['ChildrensRoomSupplies'.$i] ?? 0);
+            $children_other = (float) preg_replace('/[^\d.]/', '', $input['ChildrensRoomOther'.$i] ?? 0);
+
             $ChildrenRoomArray[$i]['childrens_room_desc'] = $input['ChildrensRoomDesc'.$i] ?? null;
             $ChildrenRoomArray[$i]['childrens_room_supplies'] = $input['ChildrensRoomSupplies'.$i] ?? null;
             $ChildrenRoomArray[$i]['childrens_room_other'] = $input['ChildrensRoomOther'.$i] ?? null;
+
+            $SumChildrensSuppliesExpense += $children_supplies;
+            $SumChildrensOtherExpense += $children_other;
         }
         $financialReport->childrens_room_expenses = base64_encode(serialize($ChildrenRoomArray));
 
-        // SERVICE PROJECTS
-        $financialReport->at_least_one_service_project = $input['PerformServiceProject'] ?? null;
-        $financialReport->at_least_one_service_project_explanation = $input['PerformServiceProjectExplanation'] ?? null;
-        $financialReport->contributions_not_registered_charity = $input['ContributionsNotRegNP'] ?? null;
-        $financialReport->contributions_not_registered_charity_explanation = $input['ContributionsNotRegNPExplanation'] ?? null;
+        $SumManditoryMeetingFees = (float) preg_replace('/[^\d.]/', '', $input['ManditoryMeetingFeesPaid'] ?? 0);
+        $SumVoluntaryDonations = (float) preg_replace('/[^\d.]/', '', $input['VoluntaryDonationsPaid'] ?? 0);
+        $SumMeetingRoomFees = round($SumManditoryMeetingFees + $SumVoluntaryDonations, 2);
+
+        $financialReport->meeting_expenses_total = round($SumMeetingRoomFees, 2);
+
+        $SumPaidSittersExpense = (float) preg_replace('/[^\d.]/', '', $input['PaidBabySitters'] ?? 0);
+        $SumChildrensRoomFees = round($SumChildrensSuppliesExpense + $SumChildrensOtherExpense + $SumPaidSittersExpense, 2);
+
+        $financialReport->children_expenses_supplies = round($SumChildrensSuppliesExpense, 2);
+        $financialReport->children_expenses_other = round($SumChildrensOtherExpense, 2);
+        $financialReport->children_expenses_total = round($SumChildrensRoomFees, 2);
 
         // Service Projects (serialized)
         $ServiceProjectFields = null;
+        $SumServiceProjectIncome = 0;
+        $SumServiceProjectSuppliesExpense = 0;
+        $SumServiceProjectCharityExpense = 0;
+        $SumServiceProjectM2MExpense = 0;
         $FieldCount = $input['ServiceProjectRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
+            $service_income = (float) preg_replace('/[^\d.]/', '', $input['ServiceProjectIncome'.$i] ?? 0);
+            $service_supplies = (float) preg_replace('/[^\d.]/', '', $input['ServiceProjectSupplies'.$i] ?? 0);
+            $service_charity = (float) preg_replace('/[^\d.]/', '', $input['ServiceProjectDonatedCharity'.$i] ?? 0);
+            $service_m2m = (float) preg_replace('/[^\d.]/', '', $input['ServiceProjectDonatedM2M'.$i] ?? 0);
+
             $ServiceProjectFields[$i]['service_project_desc'] = $input['ServiceProjectDesc'.$i] ?? null;
             $ServiceProjectFields[$i]['service_project_income'] = $input['ServiceProjectIncome'.$i] ?? null;
             $ServiceProjectFields[$i]['service_project_supplies'] = $input['ServiceProjectSupplies'.$i] ?? null;
             $ServiceProjectFields[$i]['service_project_charity'] = $input['ServiceProjectDonatedCharity'.$i] ?? null;
             $ServiceProjectFields[$i]['service_project_m2m'] = $input['ServiceProjectDonatedM2M'.$i] ?? null;
+
+            $SumServiceProjectIncome += $service_income;
+            $SumServiceProjectSuppliesExpense += $service_supplies;
+            $SumServiceProjectCharityExpense += $service_charity;
+            $SumServiceProjectM2MExpense += $service_m2m;
         }
         $financialReport->service_project_array = base64_encode(serialize($ServiceProjectFields));
 
+        $SumServiceProjectExpense = round($SumServiceProjectSuppliesExpense + $SumServiceProjectCharityExpense + $SumServiceProjectM2MExpense, 2);
+
+        $financialReport->service_project_income_total = round($SumServiceProjectIncome, 2);
+        $financialReport->service_project_expenses_supplies = round($SumServiceProjectSuppliesExpense, 2);
+        $financialReport->service_project_expenses_charity = round($SumServiceProjectCharityExpense, 2);
+        $financialReport->service_project_expenses_m2m = round($SumServiceProjectM2MExpense, 2);
+        $financialReport->service_project_expenses_total = round($SumServiceProjectExpense, 2);
+
         // Party Expenses (serialized)
         $PartyExpenseFields = null;
+        $SumPartyIncome = 0;
+        $SumPartyExpense = 0;
         $FieldCount = $input['PartyExpenseRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
+            $party_income = (float) preg_replace('/[^\d.]/', '', $input['PartyIncome'.$i] ?? 0);
+            $party_expense = (float) preg_replace('/[^\d.]/', '', $input['PartyExpenses'.$i] ?? 0);
+
             $PartyExpenseFields[$i]['party_expense_desc'] = $input['PartyDesc'.$i] ?? null;
             $PartyExpenseFields[$i]['party_expense_income'] = $input['PartyIncome'.$i] ?? null;
             $PartyExpenseFields[$i]['party_expense_expenses'] = $input['PartyExpenses'.$i] ?? null;
+
+            $SumPartyIncome += $party_income;
+            $SumPartyExpense += $party_expense;
+
         }
         $financialReport->party_expense_array = base64_encode(serialize($PartyExpenseFields));
+
+        $financialReport->party_income_total = round($SumPartyIncome, 2);
+        $financialReport->party_expense_total = round($SumPartyExpense, 2);
+        $financialReport->party_percentage = $SumTotalDues > 0 ? round($SumPartyExpense / $SumTotalDues, 2) : 0;
 
         // OFFICE & OPERATING EXPENSES
         $financialReport->office_printing_costs = isset($input['PrintingCosts']) ? preg_replace('/[^\d.]/', '', $input['PrintingCosts']) : null;
@@ -231,36 +305,68 @@ class FinancialReportController extends Controller implements HasMiddleware
 
         // Office Other Expenses (serialized)
         $OfficeOtherArray = null;
+        $SumOfficeOtherExpense = 0;
         $FieldCount = $input['OfficeExpenseRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
+            $office_expense = (float) preg_replace('/[^\d.]/', '', $input['OfficeExpenses'.$i] ?? 0);
+
             $OfficeOtherArray[$i]['office_other_desc'] = $input['OfficeDesc'.$i] ?? null;
             $OfficeOtherArray[$i]['office_other_expense'] = $input['OfficeExpenses'.$i] ?? null;
+
+            $SumOfficeOtherExpense += $office_expense;
         }
         $financialReport->office_other_expenses = base64_encode(serialize($OfficeOtherArray));
 
+        $SumOfficePrinting = (float) preg_replace('/[^\d.]/', '', $input['PrintingCosts'] ?? 0);
+        $SumOfficePostage = (float) preg_replace('/[^\d.]/', '', $input['PostageCosts'] ?? 0);
+        $SumOfficeMembershipPins = (float) preg_replace('/[^\d.]/', '', $input['MembershipPins'] ?? 0);
+        $SumOfficeExpense = round($SumOfficeOtherExpense + $SumOfficePrinting + $SumOfficePostage + $SumOfficeMembershipPins, 2);
+
+        $financialReport->office_expenses_other = round($SumOfficeOtherExpense, 2);
+        $financialReport->office_expenses_total = round($SumOfficeExpense, 2);
+
         // INTERNATIONAL EVENTS & RE-REGISTRATION
         $financialReport->annual_registration_fee = isset($input['AnnualRegistrationFee']) ? preg_replace('/[^\d.]/', '', $input['AnnualRegistrationFee']) : null;
-        $financialReport->international_event = isset($input['InternationalEvent']) ? preg_replace('/[^\d.]/', '', $input['InternationalEvent']) : null;
+
+        $SumReRegFee = (float) preg_replace('/[^\d.]/', '', $input['AnnualRegistrationFee'] ?? 0);
 
         // International Events (serialized)
         $InternationalEventArray = null;
+        $SumInternationalEventIncome = 0;
+        $SumInternationalEventExpense = 0;
         $FieldCount = $input['InternationalEventRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
+            $international_event_income = (float) preg_replace('/[^\d.]/', '', $input['InternationalEventIncome'.$i] ?? 0);
+            $international_event_expense = (float) preg_replace('/[^\d.]/', '', $input['InternationalEventExpense'.$i] ?? 0);
+
             $InternationalEventArray[$i]['intl_event_desc'] = $input['InternationalEventDesc'.$i] ?? null;
             $InternationalEventArray[$i]['intl_event_income'] = $input['InternationalEventIncome'.$i] ?? null;
             $InternationalEventArray[$i]['intl_event_expenses'] = $input['InternationalEventExpense'.$i] ?? null;
+
+            $SumInternationalEventIncome += $international_event_income;
+            $SumInternationalEventExpense += $international_event_expense;
         }
         $financialReport->international_event_array = base64_encode(serialize($InternationalEventArray));
 
+        $financialReport->international_event_income_total = round($SumInternationalEventIncome, 2);
+        $financialReport->international_event_expenses_total = round($SumInternationalEventExpense, 2);
+
         $MonetaryDonation = null;
+        $SumDonationIncome = 0;
         $FieldCount = $input['MonDonationRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
+            $donation_income = (float) preg_replace('/[^\d.]/', '', $input['DonationAmount'.$i] ?? 0);
+
             $MonetaryDonation[$i]['mon_donation_desc'] = $input['DonationDesc'.$i] ?? null;
             $MonetaryDonation[$i]['mon_donation_info'] = $input['DonorInfo'.$i] ?? null;
             $MonetaryDonation[$i]['mon_donation_amount'] = $input['DonationAmount'.$i] ?? null;
             $MonetaryDonation[$i]['mon_donation_date'] = $this->parseDateInput($input['MonDonationDate'.$i] ?? null);
+
+            $SumDonationIncome += $donation_income;
         }
         $financialReport->monetary_donations_to_chapter = base64_encode(serialize($MonetaryDonation));
+
+        $financialReport->donation_income_total = round($SumDonationIncome, 2);
 
         $NonMonetaryDonation = null;
         $FieldCount = $input['NonMonDonationRowCount'];
@@ -273,86 +379,169 @@ class FinancialReportController extends Controller implements HasMiddleware
 
         // OTHER INCOME & EXPENSES (seralized)
         $OtherOffice = null;
+        $SumOtherIncome = 0;
+        $SumOtherExpense = 0;
         $FieldCount = $input['OtherOfficeExpenseRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
+            $other_income = (float) preg_replace('/[^\d.]/', '', $input['OtherOfficeIncome'.$i] ?? 0);
+            $other_expenses = (float) preg_replace('/[^\d.]/', '', $input['OtherOfficeExpenses'.$i] ?? 0);
+
             $OtherOffice[$i]['other_desc'] = $input['OtherOfficeDesc'.$i] ?? null;
             $OtherOffice[$i]['other_expenses'] = $input['OtherOfficeExpenses'.$i] ?? null;
             $OtherOffice[$i]['other_income'] = $input['OtherOfficeIncome'.$i] ?? null;
+
+            $SumOtherIncome += $other_income;
+            $SumOtherExpense += $other_expenses;
         }
         $financialReport->other_income_and_expenses_array = base64_encode(serialize($OtherOffice));
 
+        $financialReport->other_income_total = round($SumOtherIncome, 2);
+        $financialReport->other_expense_total = round($SumOtherExpense, 2);
+
+        // FINANCIAL SUMMARY
+        $SumTotalIncome = round($SumTotalDues + $SumServiceProjectIncome + $SumPartyIncome +
+            $SumInternationalEventIncome + $SumDonationIncome + $SumOtherIncome, 2);
+        $SumTotalExpense = round($SumMeetingRoomFees + $SumChildrensRoomFees + $SumPartyExpense +
+            $SumOfficeExpense + $SumReRegFee + $SumInternationalEventExpense + $SumOtherExpense, 2);
+        $NetProfitLoss = round($SumTotalIncome - $SumTotalExpense, 2);
+
+        $financialReport->sum_total_income = $SumTotalIncome;
+        $financialReport->sum_total_expense = $SumTotalExpense;
+        $financialReport->sum_total_net_income = $NetProfitLoss;
+
         // BANK RECONCILLIATION
-        $financialReport->bank_statement_included = $input['BankStatementIncluded'] ?? null;
-        $financialReport->bank_statement_included_explanation = $input['BankStatementIncludedExplanation'] ?? null;
-        $financialReport->wheres_the_money = $input['WheresTheMoney'] ?? null;
         $financialReport->amount_reserved_from_previous_year = isset($input['AmountReservedFromLastYear']) ? preg_replace('/[^\d.]/', '', $input['AmountReservedFromLastYear']) : null;
         $financialReport->bank_balance_now = isset($input['BankBalanceNow']) ? preg_replace('/[^\d.]/', '', $input['BankBalanceNow']) : null;
 
         // Bank Reconciliation (serialized)
         $BankRecArray = null;
+        $SumRecPayments = 0;
+        $SumRecDeposits = 0;
         $FieldCount = $input['BankRecRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
+            $rec_payments = (float) preg_replace('/[^\d.]/', '', $input['BankRecPaymentAmount'.$i] ?? 0);
+            $rec_deposits = (float) preg_replace('/[^\d.]/', '', $input['BankRecDepositAmount'.$i] ?? 0);
+
             $BankRecArray[$i]['bank_rec_date'] = $this->parseDateInput($input['BankRecDate'.$i] ?? null);
             $BankRecArray[$i]['bank_rec_check_no'] = $input['BankRecCheckNo'.$i] ?? null;
             $BankRecArray[$i]['bank_rec_desc'] = $input['BankRecDesc'.$i] ?? null;
             $BankRecArray[$i]['bank_rec_payment_amount'] = $input['BankRecPaymentAmount'.$i] ?? null;
             $BankRecArray[$i]['bank_rec_desposit_amount'] = $input['BankRecDepositAmount'.$i] ?? null;
+
+            $SumRecPayments += $rec_payments;
+            $SumRecDeposits += $rec_deposits;
         }
         $financialReport->bank_reconciliation_array = base64_encode(serialize($BankRecArray));
 
+        $SumReconciliation = round($SumRecDeposits - $SumRecPayments, 2);
+
+        $financialReport->bank_reconciliation = round($SumReconciliation, 2);
+
+        $BeginningBalance = (float) preg_replace('/[^\d.]/', '', $input['AmountReservedFromLastYear'] ?? 0);
+        $EndingBalance = round($BeginningBalance + $NetProfitLoss, 2);
+        $StatementBalance = (float) preg_replace('/[^\d.]/', '', $input['BankBalanceNow'] ?? 0);
+        $ReconciledBalance = round($StatementBalance + $SumReconciliation, 2);
+
+        $financialReport->beginning_balance = $BeginningBalance;
+        $financialReport->ending_balance = $EndingBalance;
+        $financialReport->statement_balance = $StatementBalance;
+        $financialReport->reconciled_balance = $ReconciledBalance;
+    }
+
+    public function saveAccordionQuestions(FinancialReport|FinancialReportFinal|FinancialReportQuestions $financialReportQuestions, array $input): void
+    {
+        // CHAPTER DUES
+        $financialReportQuestions->changed_dues = $input['optChangeDues'] ?? null;
+        $financialReportQuestions->different_dues = $input['optNewOldDifferent'] ?? null;
+        $financialReportQuestions->not_all_full_dues = $input['optNoFullDues'] ?? null;
+        $financialReportQuestions->not_full_dues_array = $input['Dues'] ?? null;
+        $financialReportQuestions->total_new_members = $input['TotalNewMembers'] ?? null;
+        $financialReportQuestions->total_renewed_members = $input['TotalRenewedMembers'] ?? null;
+        $financialReportQuestions->dues_per_member = $input['MemberDues'] ?? null;
+        $financialReportQuestions->total_new_members_changed_dues = $input['TotalNewMembersNewFee'] ?? null;
+        $financialReportQuestions->total_renewed_members_changed_dues = $input['TotalRenewedMembersNewFee'] ?? null;
+        $financialReportQuestions->dues_per_member_renewal = $input['MemberDuesRenewal'] ?? null;
+        $financialReportQuestions->dues_per_member_new_changed = $input['NewMemberDues'] ?? null;
+        $financialReportQuestions->dues_per_member_renewal_changed = $input['NewMemberDuesRenewal'] ?? null;
+        $financialReportQuestions->members_who_paid_no_dues = $input['MembersNoDues'] ?? null;
+        $financialReportQuestions->members_who_paid_partial_dues = $input['TotalPartialDuesMembers'] ?? null;
+        $financialReportQuestions->total_partial_fees_collected = $input['PartialDuesMemberDues'] ?? null;
+        $financialReportQuestions->total_associate_members = $input['TotalAssociateMembers'] ?? null;
+        $financialReportQuestions->associate_member_fee = $input['AssociateMemberDues'] ?? null;
+
+        // MONTHLY MEETING EXPENSES
+        $financialReportQuestions->meeting_speakers = $input['MeetingSpeakers'] ?? null;
+        $financialReportQuestions->meeting_speakers_array = $input['Speakers'] ?? null;
+        $financialReportQuestions->discussion_topic_frequency = $input['SpeakerFrequency'] ?? null;
+        $financialReportQuestions->childrens_room_sitters = $input['ChildrensRoom'] ?? null;
+
+        // SERVICE PROJECTS
+        $financialReportQuestions->at_least_one_service_project = $input['PerformServiceProject'] ?? null;
+        $financialReportQuestions->at_least_one_service_project_explanation = $input['PerformServiceProjectExplanation'] ?? null;
+        $financialReportQuestions->contributions_not_registered_charity = $input['ContributionsNotRegNP'] ?? null;
+        $financialReportQuestions->contributions_not_registered_charity_explanation = $input['ContributionsNotRegNPExplanation'] ?? null;
+
+        // INTERNATIONAL EVENTS & RE-REGISTRATION
+        $financialReportQuestions->international_event = $input['InternationalEvent'] ?? null;
+
+        // BANK RECONCILLIATION
+        $financialReportQuestions->bank_statement_included = $input['BankStatementIncluded'] ?? null;
+        $financialReportQuestions->bank_statement_included_explanation = $input['BankStatementIncludedExplanation'] ?? null;
+        $financialReportQuestions->wheres_the_money = $input['WheresTheMoney'] ?? null;
+
         // 990 IRS FILING
-        $financialReport->file_irs = $input['FileIRS'] ?? null;
-        $financialReport->file_irs_explanation = $input['FileIRSExplanation'] ?? null;
+        $financialReportQuestions->file_irs = $input['FileIRS'] ?? null;
+        $financialReportQuestions->file_irs_explanation = $input['FileIRSExplanation'] ?? null;
 
         // CHAPTER QUESTIONS
         // Question 1
-        $financialReport->bylaws_available = $input['ByLawsAvailable'] ?? null;
-        $financialReport->bylaws_available_explanation = $input['ByLawsAvailableExplanation'] ?? null;
+        $financialReportQuestions->bylaws_available = $input['ByLawsAvailable'] ?? null;
+        $financialReportQuestions->bylaws_available_explanation = $input['ByLawsAvailableExplanation'] ?? null;
         // Question 2
-        $financialReport->vote_all_activities = $input['VoteAllActivities'] ?? null;
-        $financialReport->vote_all_activities_explanation = $input['VoteAllActivitiesExplanation'] ?? null;
+        $financialReportQuestions->vote_all_activities = $input['VoteAllActivities'] ?? null;
+        $financialReportQuestions->vote_all_activities_explanation = $input['VoteAllActivitiesExplanation'] ?? null;
         // Question 3
-        $financialReport->child_outings = $input['ChildOutings'] ?? null;
-        $financialReport->child_outings_explanation = $input['ChildOutingsExplanation'] ?? null;
+        $financialReportQuestions->child_outings = $input['ChildOutings'] ?? null;
+        $financialReportQuestions->child_outings_explanation = $input['ChildOutingsExplanation'] ?? null;
         // Question 4
-        $financialReport->playgroups = $input['Playgroups'] ?? null;
-        $financialReport->had_playgroups_explanation = $input['PlaygroupsExplanation'] ?? null;
+        $financialReportQuestions->playgroups = $input['Playgroups'] ?? null;
+        $financialReportQuestions->had_playgroups_explanation = $input['PlaygroupsExplanation'] ?? null;
         // Question 5
-        $financialReport->park_day_frequency = $input['ParkDays'] ?? null;
-        $financialReport->park_day_frequency_explanation = $input['ParkDaysExplanation'] ?? null;
+        $financialReportQuestions->park_day_frequency = $input['ParkDays'] ?? null;
+        $financialReportQuestions->park_day_frequency_explanation = $input['ParkDaysExplanation'] ?? null;
         // Question 6
-        $financialReport->mother_outings = $input['MotherOutings'] ?? null;
-        $financialReport->mother_outings_explanation = $input['MotherOutingsExplanation'] ?? null;
+        $financialReportQuestions->mother_outings = $input['MotherOutings'] ?? null;
+        $financialReportQuestions->mother_outings_explanation = $input['MotherOutingsExplanation'] ?? null;
         // Question 7
-        $financialReport->activity_array = $input['Activity'] ?? null;
-        $financialReport->activity_other_explanation = $input['ActivityOtherExplanation'] ?? null;
+        $financialReportQuestions->activity_array = $input['Activity'] ?? null;
+        $financialReportQuestions->activity_other_explanation = $input['ActivityOtherExplanation'] ?? null;
         // Question 8
-        $financialReport->offered_merch = $input['OfferedMerch'] ?? null;
-        $financialReport->offered_merch_explanation = $input['OfferedMerchExplanation'] ?? null;
+        $financialReportQuestions->offered_merch = $input['OfferedMerch'] ?? null;
+        $financialReportQuestions->offered_merch_explanation = $input['OfferedMerchExplanation'] ?? null;
         // Question 9
-        $financialReport->bought_merch = $input['BoughtMerch'] ?? null;
-        $financialReport->bought_merch_explanation = $input['BoughtMerchExplanation'] ?? null;
+        $financialReportQuestions->bought_merch = $input['BoughtMerch'] ?? null;
+        $financialReportQuestions->bought_merch_explanation = $input['BoughtMerchExplanation'] ?? null;
         // Question 10
-        $financialReport->purchase_pins = $input['BoughtPins'] ?? null;
-        $financialReport->purchase_pins_explanation = $input['BoughtPinsExplanation'] ?? null;
+        $financialReportQuestions->purchase_pins = $input['BoughtPins'] ?? null;
+        $financialReportQuestions->purchase_pins_explanation = $input['BoughtPinsExplanation'] ?? null;
         // Question 11
-        $financialReport->receive_compensation = $input['ReceiveCompensation'] ?? null;
-        $financialReport->receive_compensation_explanation = $input['ReceiveCompensationExplanation'];
+        $financialReportQuestions->receive_compensation = $input['ReceiveCompensation'] ?? null;
+        $financialReportQuestions->receive_compensation_explanation = $input['ReceiveCompensationExplanation'];
         // Question 12
-        $financialReport->financial_benefit = $input['FinancialBenefit'] ?? null;
-        $financialReport->financial_benefit_explanation = $input['FinancialBenefitExplanation'] ?? null;
+        $financialReportQuestions->financial_benefit = $input['FinancialBenefit'] ?? null;
+        $financialReportQuestions->financial_benefit_explanation = $input['FinancialBenefitExplanation'] ?? null;
         // Question 13
-        $financialReport->influence_political = $input['InfluencePolitical'] ?? null;
-        $financialReport->influence_political_explanation = $input['InfluencePoliticalExplanation'] ?? null;
+        $financialReportQuestions->influence_political = $input['InfluencePolitical'] ?? null;
+        $financialReportQuestions->influence_political_explanation = $input['InfluencePoliticalExplanation'] ?? null;
         // Question 14
-        $financialReport->sister_chapter = $input['SisterChapter'] ?? null;
-        $financialReport->sister_chapter_explanation = $input['SisterChapterExplanation'] ?? null;
+        $financialReportQuestions->sister_chapter = $input['SisterChapter'] ?? null;
+        $financialReportQuestions->sister_chapter_explanation = $input['SisterChapterExplanation'] ?? null;
 
         // AWARDS
-        $financialReport->outstanding_follow_bylaws = $input['OutstandingFollowByLaws'] ?? null;
-        $financialReport->outstanding_well_rounded = $input['OutstandingWellRounded'] ?? null;
-        $financialReport->outstanding_communicated = $input['OutstandingCommunicated'] ?? null;
-        $financialReport->outstanding_support_international = $input['OutstandingSupportMomsClub'] ?? null;
+        $financialReportQuestions->outstanding_follow_bylaws = $input['OutstandingFollowByLaws'] ?? null;
+        $financialReportQuestions->outstanding_well_rounded = $input['OutstandingWellRounded'] ?? null;
+        $financialReportQuestions->outstanding_communicated = $input['OutstandingCommunicated'] ?? null;
+        $financialReportQuestions->outstanding_support_international = $input['OutstandingSupportMomsClub'] ?? null;
 
         // Awards (seralized)
         $ChapterAwards = null;
@@ -362,26 +551,8 @@ class FinancialReportController extends Controller implements HasMiddleware
             $ChapterAwards[$i]['awards_desc'] = $input['ChapterAwardsDesc'.$i] ?? null;
             $ChapterAwards[$i]['awards_approved'] = false;
         }
-        $financialReport->chapter_awards = base64_encode(serialize($ChapterAwards));
+        $financialReportQuestions->chapter_awards = base64_encode(serialize($ChapterAwards));
     }
-
-    // private function parseDateInput(?string $rawDate): ?string
-    // {
-    //     if (!$rawDate || str_contains($rawDate, '_') || $rawDate === '__/__/____') {
-    //         return null;
-    //     }
-    //     $rawDate = str_replace('.', '/', $rawDate);
-    //     try {
-    //         try {
-    //             return Carbon::createFromFormat('m/d/Y', $rawDate)->format('Y-m-d');
-    //         } catch (\Exception $e) {
-    //             return Carbon::createFromFormat('m/d/y', $rawDate)->format('Y-m-d');
-    //         }
-    //     } catch (\Exception $e) {
-    //         Log::error('Date parse error: ' . $rawDate . ' - ' . $e->getMessage());
-    //         return null;
-    //     }
-    // }
 
     private function parseDateInput(?string $rawDate): ?string
     {
@@ -447,13 +618,17 @@ class FinancialReportController extends Controller implements HasMiddleware
         $chapter = Chapters::find($chapterId);
         $documentsEOY = DocumentsEOY::find($chapterId);
         $financialReport = FinancialReport::find($chapterId);
+        $financialReportQuestions = FinancialReportQuestions::find($chapterId);
         $farthest_step_visited = max((int) $input['FurthestStep'], (int) $financialReport->farthest_step_visited_coord);
 
         DB::beginTransaction();
         try {
-            $this->saveAccordionFields($financialReport, $input);
+            $this->saveAccordionCalculations($financialReport, $input);
             $financialReport->farthest_step_visited = $farthest_step_visited;
             $financialReport->save();
+
+            $this->saveAccordionQuestions($financialReportQuestions, $input);
+            $financialReportQuestions->save();
 
             if ($reportReceived == 1) {
                 $financialReport->completed_name = $userName;
@@ -479,6 +654,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             $chIRSDocuments = $baseQuery['chIRSDocuments'];
             $chReportDocuments = $baseQuery['chReportDocuments'];
             $chFinancialReport = $baseQuery['chFinancialReport'];
+            $chFinancialReportQuestions = $baseQuery['chFinancialReportQuestions'];
             $chFinancialReportReview = $baseQuery['chFinancialReportReview'];
             $emailListChap = $baseQuery['emailListChap'];
             $emailListCoord = $baseQuery['emailListCoord'];
@@ -569,6 +745,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         $chIRSDocuments = $baseQuery['chIRSDocuments'];
         $chReportDocuments = $baseQuery['chReportDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReportFinal'];
+        $chFinancialReportQuestions = $baseQuery['chFinancialReportFinalQuestions'];
 
         $resources = Resources::with('resourceCategory')->get();
         $resourceCategories = ResourceCategory::all();
@@ -590,7 +767,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
             'chDisbanded' => $chDisbanded, 'chActiveId' => $chActiveId, 'resourceCategories' => $resourceCategories, 'userAdmin' => $userAdmin, 'chEOYDocuments' => $chEOYDocuments,
             'bdPositionId' => $bdPositionId, 'borDetails' => $borDetails, 'bdTypeId' => $bdTypeId, 'PresDetails' => $PresDetails,
-            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
+            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments, 'chFinancialReportQuestions' => $chFinancialReportQuestions
         ];
 
         return view('boards.disband.editdisbandchecklist')->with($data);
@@ -612,6 +789,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         $reportReceived = $input['submitted'] ?? null;
 
         $financialReport = FinancialReportFinal::find($chapterId);
+        $financialReportQuestions = FinancialReportFinalQuestions::find($chapterId);
         $farthest_step_visited = max((int) $input['FurthestStep'], (int) $financialReport->farthest_step_visited_coord);
 
         $documentsEOY = DocumentsEOY::find($chapterId);
@@ -620,9 +798,12 @@ class FinancialReportController extends Controller implements HasMiddleware
 
         DB::beginTransaction();
         try {
-            $this->saveAccordionFields($financialReport, $input);
+            $this->saveAccordionCalculations($financialReport, $input);
             $financialReport->farthest_step_visited = $farthest_step_visited;
             $financialReport->save();
+
+            $this->saveAccordionQuestions($financialReportQuestions, $input);
+            $financialReportQuestions->save();
 
             if ($reportReceived == 1) {
                 $financialReport->completed_name = $userName;
@@ -654,6 +835,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             $chIRSDocuments = $baseQuery['chIRSDocuments'];
             $chReportDocuments = $baseQuery['chReportDocuments'];
             $chFinancialReport = $baseQuery['chFinancialReportFinal'];
+            $chFinancialReportQuestions = $baseQuery['chFinancialReportFinalQuestions'];
             $emailListChap = $baseQuery['emailListChap'];
             $emailListCoord = $baseQuery['emailListCoord'];
             $pcDetails = $baseQuery['pcDetails'];
@@ -752,6 +934,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             $chIRSDocuments = $baseQuery['chIRSDocuments'];
             $chReportDocuments = $baseQuery['chReportDocuments'];
             $chFinancialReport = $baseQuery['chFinancialReport'];
+            $chFinancialReportQuestions = $baseQuery['chFinancialReportQuestions'];
             $emailListChap = $baseQuery['emailListChap'];
             $emailListCoord = $baseQuery['emailListCoord'];
             $pcDetails = $baseQuery['pcDetails'];

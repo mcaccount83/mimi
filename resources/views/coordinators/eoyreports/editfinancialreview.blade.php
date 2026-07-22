@@ -90,7 +90,7 @@
             <div class="row mb-1">
                     <div class="col-auto fw-bold">Excel roster attached and complete:</div>
                     <div class="col text-end">
-                         @php $val = $chFinancialReportReview->roster_attached; @endphp
+                         @php $val = $chFinancialReportReview->review_roster_attached; @endphp
                     <span class="badge {{ is_null($val) ? 'bg-secondary' : ($val == 1 ? 'bg-success' : 'bg-danger') }} fs-7">
                         {{ is_null($val) ? 'Please Review' : ($val == 1 ? 'YES' : 'NO') }}
                     </span>
@@ -99,7 +99,7 @@
             <div class="row mb-1">
                     <div class="col-auto fw-bold">Number of members/dues seems right:</div>
                     <div class="col text-end">
-                        @php $val = $chFinancialReportReview->renewal_seems_right; @endphp
+                        @php $val = $chFinancialReportReview->review_renewal_seems_right; @endphp
                     <span class="badge {{ is_null($val) ? 'bg-secondary' : ($val == 1 ? 'bg-success' : 'bg-danger') }} fs-7">
                         {{ is_null($val) ? 'Please Review' : ($val == 1 ? 'YES' : 'NO') }}
                     </span>
@@ -108,7 +108,7 @@
             <div class="row mb-1">
                     <div class="col-auto fw-bold">At least one service project completed:</div>
                     <div class="col text-end">
-                         @php $val = $chFinancialReportReview->minimum_service_project; @endphp
+                         @php $val = $chFinancialReportReview->review_minimum_service_project; @endphp
                     <span class="badge {{ is_null($val) ? 'bg-secondary' : ($val == 1 ? 'bg-success' : 'bg-danger') }} fs-7">
                         {{ is_null($val) ? 'Please Review' : ($val == 1 ? 'YES' : 'NO') }}
                     </span>
@@ -117,7 +117,7 @@
             <div class="row mb-1">
                     <div class="col-auto fw-bold">Donation to M2M Fund:</div>
                     <div class="col text-end">
-                         @php $val = $chFinancialReportReview->m2m_donation; @endphp
+                         @php $val = $chFinancialReportReview->review_m2m_donation; @endphp
                     <span class="badge {{ is_null($val) ? 'bg-secondary' : ($val == 1 ? 'bg-success' : 'bg-danger') }} fs-7">
                         {{ is_null($val) ? 'Please Review' : ($val == 1 ? 'YES' : 'NO') }}
                     </span>
@@ -177,10 +177,10 @@
                         }
 
                     $badgeClass = match(true) {
-                        is_null($chFinancialReportReview->party_percentage) => 'bg-secondary',
-                        $chFinancialReportReview->party_percentage == 0     => 'bg-danger',
-                        $chFinancialReportReview->party_percentage == 1     => 'bg-warning text-dark',
-                        $chFinancialReportReview->party_percentage == 2     => 'bg-success',
+                        is_null($chFinancialReportReview->review_party_percentage) => 'bg-secondary',
+                        $chFinancialReportReview->review_party_percentage == 0     => 'bg-danger',
+                        $chFinancialReportReview->review_party_percentage == 1     => 'bg-warning text-dark',
+                        $chFinancialReportReview->review_party_percentage == 2     => 'bg-success',
                         default                                             => 'bg-secondary',
                     };
                 @endphp
@@ -192,13 +192,13 @@
             <div class="row mb-1">
                 <div class="col-auto fw-bold">Party Percentage less than 15%:</div>
                     <div class="col text-end">
-                    @if(is_null($chFinancialReportReview->party_percentage))
+                    @if(is_null($chFinancialReportReview->review_party_percentage))
                         <span class="badge bg-secondary fs-7">Please Review</span>
-                    @elseif($chFinancialReportReview->party_percentage == 0)
+                    @elseif($chFinancialReportReview->review_party_percentage == 0)
                         <span class="badge bg-danger fs-7">They are over 20%</span>
-                    @elseif($chFinancialReportReview->party_percentage == 1)</span>
+                    @elseif($chFinancialReportReview->review_party_percentage == 1)</span>
                         <span class="badge bg-warning text-dark fs-7">They are between 15-20%
-                    @elseif($chFinancialReportReview->party_percentage == 2)
+                    @elseif($chFinancialReportReview->review_party_percentage == 2)
                         <span class="badge bg-success fs-7">They are under 15%</span>
                     @else
                         <span class="badge bg-secondary fs-7">Please Review</span>
@@ -208,7 +208,7 @@
              <div class="row mb-1">
                     <div class="col-auto fw-bold">Attended International Event:</div>
                     <div class="col text-end">
-                        @php $val = $chFinancialReportReview->attended_training; @endphp
+                        @php $val = $chFinancialReportReview->review_attended_training; @endphp
                     <span class="badge {{ is_null($val) ? 'bg-secondary' : ($val == 1 ? 'bg-success' : 'bg-danger') }} fs-7">
                         {{ is_null($val) ? 'Please Review' : ($val == 1 ? 'YES' : 'NO') }}
                     </span>
@@ -217,7 +217,7 @@
             <div class="row mb-1">
                     <div class="col-auto fw-bold">Total income/revenue less than $50,000:</div>
                     <div class="col text-end">
-                          @php $val = $chFinancialReportReview->total_income_less; @endphp
+                          @php $val = $chFinancialReportReview->review_total_income_less; @endphp
                     <span class="badge {{ is_null($val) ? 'bg-secondary' : ($val == 1 ? 'bg-success' : 'bg-danger') }} fs-7">
                         {{ is_null($val) ? 'Please Review' : ($val == 1 ? 'YES' : 'NO') }}
                     </span>
@@ -226,7 +226,7 @@
             <div class="row mb-1">
                 <div class="col-auto fw-bold">Beginning Balance Match:</div>
                 <div class="col text-end">
-                    @php $val = $chFinancialReportReview->beginning_balance; @endphp
+                    @php $val = $chFinancialReportReview->review_beginning_balance; @endphp
                     <span class="badge {{ is_null($val) ? 'bg-secondary' : ($val == 1 ? 'bg-success' : 'bg-danger') }} fs-7">
                         {{ is_null($val) ? 'Please Review' : ($val == 1 ? 'YES' : 'NO') }}
                     </span>
@@ -235,7 +235,7 @@
             <div class="row mb-1">
                 <div class="col-auto fw-bold">Current bank statement included:</div>
                 <div class="col text-end">
-                    @php $val = $chFinancialReportReview->bank_statement_included; @endphp
+                    @php $val = $chFinancialReportReview->review_bank_statement_included; @endphp
                     <span class="badge {{ is_null($val) ? 'bg-secondary' : ($val == 1 ? 'bg-success' : 'bg-danger') }} fs-7">
                         {{ is_null($val) ? 'Please Review' : ($val == 1 ? 'YES' : 'NO') }}
                     </span>
@@ -244,11 +244,11 @@
             <div class="row mb-1">
                     <div class="col-auto fw-bold">Treasury & Reconciled Balances Match:</div>
                     <div class="col text-end">
-                    @if(is_null($chFinancialReportReview->bank_statement_matches))
+                    @if(is_null($chFinancialReportReview->review_bank_statement_matches))
                         <span class="badge bg-secondary fs-7">Please Review</span>
-                    @elseif($chFinancialReportReview->bank_statement_matches == 1)
+                    @elseif($chFinancialReportReview->review_bank_statement_matches == 1)
                         <span class="badge bg-success fs-7">In Balance</span>
-                    @elseif($chFinancialReportReview->bank_statement_matches == 0)
+                    @elseif($chFinancialReportReview->review_bank_statement_matches == 0)
                         <span class="badge bg-danger fs-7">Out of balance</span>
                     @else
                         <span class="badge bg-secondary fs-7">Please Review</span>
@@ -258,11 +258,11 @@
             <div class="row mb-1">
                     <div class="col-auto fw-bold">Proof of 990N Filing <small class="text-muted">(7/1/{{ $reportYearStart}} - 6/30/{{ $reportYearEnd }})</small>:</div>
                     <div class="col text-end">
-                    @if(is_null($chFinancialReportReview->current_990N_included))
+                    @if(is_null($chFinancialReportReview->review_current_990N_included))
                         <span class="badge bg-secondary fs-7">Please Review</span>
-                    @elseif($chFinancialReportReview->current_990N_included == 1)
+                    @elseif($chFinancialReportReview->review_current_990N_included == 1)
                         <span class="badge bg-success fs-7">990N is filed</span>
-                    @elseif($chFinancialReportReview->current_990N_included == 0)
+                    @elseif($chFinancialReportReview->review_current_990N_included == 0)
                         <span class="badge bg-danger fs-7">990N has not been filed</span>
                     @else
                         <span class="badge bg-secondary fs-7">Please Review</span>
@@ -272,7 +272,7 @@
             <div class="row mb-1">
                     <div class="col-auto fw-bold">Purchased membership pins or had stock:</div>
                     <div class="col text-end">
-                        @php $val = $chFinancialReportReview->purchased_pins; @endphp
+                        @php $val = $chFinancialReportReview->review_purchased_pins; @endphp
                     <span class="badge {{ is_null($val) ? 'bg-secondary' : ($val == 1 ? 'bg-success' : 'bg-danger') }} fs-7">
                         {{ is_null($val) ? 'Please Review' : ($val == 1 ? 'YES' : 'NO') }}
                     </span>
@@ -281,7 +281,7 @@
             <div class="row mb-1">
                     <div class="col-auto fw-bold">Purchased MOMS Club merchandise:</div>
                     <div class="col text-end">
-                        @php $val = $chFinancialReportReview->purchased_mc_merch; @endphp
+                        @php $val = $chFinancialReportReview->review_purchased_mc_merch; @endphp
                     <span class="badge {{ is_null($val) ? 'bg-secondary' : ($val == 1 ? 'bg-success' : 'bg-danger') }} fs-7">
                         {{ is_null($val) ? 'Please Review' : ($val == 1 ? 'YES' : 'NO') }}
                     </span>
@@ -290,7 +290,7 @@
             <div class="row mb-1">
                     <div class="col-auto fw-bold">Offered MC merch or info to members:</div>
                     <div class="col text-end">
-                         @php $val = $chFinancialReportReview->offered_merch; @endphp
+                         @php $val = $chFinancialReportReview->review_offered_merch; @endphp
                     <span class="badge {{ is_null($val) ? 'bg-secondary' : ($val == 1 ? 'bg-success' : 'bg-danger') }} fs-7">
                         {{ is_null($val) ? 'Please Review' : ($val == 1 ? 'YES' : 'NO') }}
                     </span>
@@ -299,7 +299,7 @@
             <div class="row mb-1">
                     <div class="col-auto fw-bold">Manual/by-laws made available to members:</div>
                     <div class="col text-end">
-                         @php $val = $chFinancialReportReview->bylaws_available; @endphp
+                         @php $val = $chFinancialReportReview->review_bylaws_available; @endphp
                     <span class="badge {{ is_null($val) ? 'bg-secondary' : ($val == 1 ? 'bg-success' : 'bg-danger') }} fs-7">
                         {{ is_null($val) ? 'Please Review' : ($val == 1 ? 'YES' : 'NO') }}
                     </span>
@@ -308,7 +308,7 @@
                 <div class="row mb-1">
                     <div class="col-auto fw-bold">Sistered another chapter:</div>
                     <div class="col text-end">
-                         @php $val = $chFinancialReportReview->sistered_another_chapter; @endphp
+                         @php $val = $chFinancialReportReview->review_sistered_another_chapter; @endphp
                     <span class="badge {{ is_null($val) ? 'bg-secondary' : ($val == 1 ? 'bg-success' : 'bg-danger') }} fs-7">
                         {{ is_null($val) ? 'Please Review' : ($val == 1 ? 'YES' : 'NO') }}
                     </span>

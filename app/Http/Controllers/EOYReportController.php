@@ -170,6 +170,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $chIRSDocuments = $baseQuery['chIRSDocuments'];
         $chReportDocuments = $baseQuery['chReportDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
+        $chFinancialReportQuestions = $baseQuery['chFinancialReportQuestions'];
         $chFinancialReportReview = $baseQuery['chFinancialReportReview'];
         $allAwards = $baseQuery['allAwards'];
         $reviewComplete = $baseQuery['reviewComplete'];
@@ -192,6 +193,7 @@ class EOYReportController extends Controller implements HasMiddleware
             'reviewComplete' => $reviewComplete,  'rrList' => $rrList, 'chEOYDocuments' => $chEOYDocuments, 'chapterStatus' => $chapterStatus,
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
             'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments, 'chFinancialReportReview' => $chFinancialReportReview,
+            'chFinancialReportQuestions' => $chFinancialReportQuestions
         ];
 
         return view('coordinators.eoyreports.view')->with($data);
@@ -527,6 +529,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
+        $chFinancialReportQuestions = $baseQuery['chFinancialReportQuestions'];
         $chFinancialReportReview = $baseQuery['chFinancialReportReview'];
         $chDocuments = $baseQuery['chDocuments'];
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
@@ -541,36 +544,36 @@ class EOYReportController extends Controller implements HasMiddleware
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription, 'chFinancialReportReview' => $chFinancialReportReview,
             'chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'rrList' => $rrList, 'allAwards' => $allAwards, 'chDocuments' => $chDocuments, 'chEOYDocuments' => $chEOYDocuments,
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc, 'confId' => $confId, 'chConfId' => $chConfId,
-            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments, 'resources' => $resources,
+            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments, 'resources' => $resources, 'chFinancialReportQuestions' => $chFinancialReportQuestions
         ];
 
         return view('coordinators.eoyreports.editfinancialreview')->with($data);
     }
 
-    public function saveAccordionFields(FinancialReportReview $financialReportReview, array $input)
+    public function saveAccordionReview(FinancialReportReview $financialReportReview, array $input)
     {
         // CHAPTER DUES
-        $financialReportReview->roster_attached = $input['checkRosterAttached'] ?? null;
-        $financialReportReview->renewal_seems_right = $input['checkRenewalSeemsRight'] ?? null;
+        $financialReportReview->review_roster_attached = $input['checkRosterAttached'] ?? null;
+        $financialReportReview->review_renewal_seems_right = $input['checkRenewalSeemsRight'] ?? null;
         $financialReportReview->step_1_notes_log = $input['Step1_Log'] ?? null;
 
         // MONTHLY MEETING EXPENSES
         $financialReportReview->step_2_notes_log = $input['Step2_Log'] ?? null;
 
         // SERVICE PROJECTS
-        $financialReportReview->minimum_service_project = $input['checkServiceProject'] ?? null;
-        $financialReportReview->m2m_donation = $input['checkM2MDonation'] ?? null;
+        $financialReportReview->review_minimum_service_project = $input['checkServiceProject'] ?? null;
+        $financialReportReview->review_m2m_donation = $input['checkM2MDonation'] ?? null;
         $financialReportReview->step_3_notes_log = $input['Step3_Log'] ?? null;
 
         // PARTY EXPENSES
-        $financialReportReview->party_percentage = $input['checkPartyPercentage'] ?? null;
+        $financialReportReview->review_party_percentage = $input['checkPartyPercentage'] ?? null;
         $financialReportReview->step_4_notes_log = $input['Step4_Log'] ?? null;
 
         // OFFICE & OPERATING EXPENSES
         $financialReportReview->step_5_notes_log = $input['Step5_Log'] ?? null;
 
         // INTERNATIONAL EVENTS & RE-REGISTRATION
-        $financialReportReview->attended_training = $input['checkAttendedTraining'] ?? null;
+        $financialReportReview->review_attended_training = $input['checkAttendedTraining'] ?? null;
         $financialReportReview->step_6_notes_log = $input['Step6_Log'] ?? null;
 
         // DONATIONS TO CHAPTER
@@ -580,26 +583,26 @@ class EOYReportController extends Controller implements HasMiddleware
         $financialReportReview->step_8_notes_log = $input['Step8_Log'] ?? null;
 
         // FINANCIAL SUMMARY
-        $financialReportReview->total_income_less = $input['checkTotalIncome'] ?? null;
+        $financialReportReview->review_total_income_less = $input['checkTotalIncome'] ?? null;
         $financialReportReview->step_9_notes_log = $input['Step9_Log'] ?? null;
 
         // BANK RECONCILLIATION
-        $financialReportReview->beginning_balance = $input['checkBeginningBalance'] ?? null;
-        $financialReportReview->bank_statement_included = $input['checkBankStatementIncluded'] ?? null;
-        $financialReportReview->bank_statement_matches = $input['checkBankStatementMatches'] ?? null;
+        $financialReportReview->review_beginning_balance = $input['checkBeginningBalance'] ?? null;
+        $financialReportReview->review_bank_statement_included = $input['checkBankStatementIncluded'] ?? null;
+        $financialReportReview->review_bank_statement_matches = $input['checkBankStatementMatches'] ?? null;
         $financialReportReview->post_balance = isset($input['post_balance']) ? preg_replace('/[^\d.]/', '', $input['post_balance']) : null;
         $financialReportReview->step_10_notes_log = $input['Step10_Log'] ?? null;
 
         // 990 IRS FILING
-        $financialReportReview->current_990N_included = $input['checkCurrent990NAttached'] ?? null;
+        $financialReportReview->review_current_990N_included = $input['checkCurrent990NAttached'] ?? null;
         $financialReportReview->step_11_notes_log = $input['Step11_Log'] ?? null;
 
         // CHAPTER QUESTIONS
-        $financialReportReview->purchased_pins = $input['checkPurchasedPins'] ?? null;
-        $financialReportReview->purchased_mc_merch = $input['checkPurchasedMCMerch'] ?? null;
-        $financialReportReview->offered_merch = $input['checkOfferedMerch'] ?? null;
-        $financialReportReview->bylaws_available = $input['checkBylawsMadeAvailable'] ?? null;
-        $financialReportReview->sistered_another_chapter = $input['checkSisteredAnotherChapter'] ?? null;
+        $financialReportReview->review_purchased_pins = $input['checkPurchasedPins'] ?? null;
+        $financialReportReview->review_purchased_mc_merch = $input['checkPurchasedMCMerch'] ?? null;
+        $financialReportReview->review_offered_merch = $input['checkOfferedMerch'] ?? null;
+        $financialReportReview->review_bylaws_available = $input['checkBylawsMadeAvailable'] ?? null;
+        $financialReportReview->review_sistered_another_chapter = $input['checkSisteredAnotherChapter'] ?? null;
         $financialReportReview->step_12_notes_log = $input['Step12_Log'] ?? null;
     }
 
@@ -629,6 +632,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $chIRSDocuments = $baseQuery['chIRSDocuments'];
         $chReportDocuments = $baseQuery['chReportDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
+        $chFinancialReportQuestions = $baseQuery['chFinancialReportQuestions'];
 
         $chapter = Chapters::find($id);
         $documentsEOY = DocumentsEOY::find($id);
@@ -637,7 +641,7 @@ class EOYReportController extends Controller implements HasMiddleware
 
         DB::beginTransaction();
         try {
-            $this->saveAccordionFields($financialReportReview, $input);
+            $this->saveAccordionReview($financialReportReview, $input);
             $financialReportReview->reviewer_id = $reviewer_id ?? $coorId;
             $financialReportReview->farthest_step_visited_coord = $farthest_step_visited_coord;
 
@@ -881,13 +885,14 @@ class EOYReportController extends Controller implements HasMiddleware
         $chIRSDocuments = $baseQuery['chIRSDocuments'];
         $chReportDocuments = $baseQuery['chReportDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
+        $chFinancialReportQuestions = $baseQuery['chFinancialReportQuestions'];
         $chFinancialReportReview = $baseQuery['chFinancialReportReview'];
 
         $data = ['coorId' => $coorId, 'confId' => $confId,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
             'chEOYDocuments' => $chEOYDocuments, 'chapterStatus' => $chapterStatus, 'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
-            'chFinancialReportReview' => $chFinancialReportReview,
+            'chFinancialReportReview' => $chFinancialReportReview, 'chFinancialReportQuestions' => $chFinancialReportQuestions
         ];
 
         return view('coordinators.eoyreports.editattachments')->with($data);
@@ -994,6 +999,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $chConfId = $baseQuery['chConfId'];
         $chPcId = $baseQuery['chPcId'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
+        $chFinancialReportQuestions = $baseQuery['chFinancialReportQuestions'];
         $chFinancialReportReview = $baseQuery['chFinancialReportReview'];
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
         $chIRSDocuments = $baseQuery['chIRSDocuments'];
@@ -1002,7 +1008,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $data = ['coorId' => $coorId, 'confId' => $confId, 'chEOYDocuments' => $chEOYDocuments, 'chFinancialReportReview' => $chFinancialReportReview,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport, 'chapterStatus' => $chapterStatus,
-            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
+            'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments, 'chFinancialReportQuestions' => $chFinancialReportQuestions
         ];
 
         return view('coordinators.eoyreports.editboundaries')->with($data);
@@ -1161,6 +1167,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $chConfId = $baseQuery['chConfId'];
         $chPcId = $baseQuery['chPcId'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
+        $chFinancialReportQuestions = $baseQuery['chFinancialReportQuestions'];
         $chFinancialReportReview = $baseQuery['chFinancialReportReview'];
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
         $chIRSDocuments = $baseQuery['chIRSDocuments'];
@@ -1173,6 +1180,7 @@ class EOYReportController extends Controller implements HasMiddleware
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
             'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments, 'chFinancialReportReview' => $chFinancialReportReview,
+            'chFinancialReportQuestions' => $chFinancialReportQuestions
         ];
 
         return view('coordinators.eoyreports.editawards')->with($data);
@@ -1242,6 +1250,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
+        $chFinancialReportQuestions = $baseQuery['chFinancialReportQuestions'];
         $chFinancialReportReview = $baseQuery['chFinancialReportReview'];
         $chConfId = $baseQuery['chConfId'];
         $chPcId = $baseQuery['chPcId'];
@@ -1276,6 +1285,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chAwards' => $chAwards, 'currentApprovedAwards' => $currentApprovedAwards, 'awardTypes' => $awardTypes, 'confId' => $confId, 'chConfId' => $chConfId,
             'chapterStatus' => $chapterStatus, 'badgeLookup' => $badgeLookup, 'chFinancialReport' => $chFinancialReport, 'chFinancialReportReview' => $chFinancialReportReview,
+            'chFinancialReportQuestions' => $chFinancialReportQuestions
         ];
 
         return view('coordinators.eoyreports.awardhistory')->with($data);
@@ -1294,11 +1304,13 @@ class EOYReportController extends Controller implements HasMiddleware
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
+        $chFinancialReportQuestions = $baseQuery['chFinancialReportQuestions'];
         $chConfId = $baseQuery['chConfId'];
         $financialReportPdfs = $baseQuery['financialReportPdfs'];
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'financialReportPdfs' => $financialReportPdfs, 'confId' => $confId, 'chConfId' => $chConfId, 'chapterStatus' => $chapterStatus, 'chFinancialReport' => $chFinancialReport,
+            'chFinancialReportQuestions' => $chFinancialReportQuestions
         ];
 
         return view('coordinators.eoyreports.eoyreporthistory')->with($data);
@@ -1366,6 +1378,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $chEOYDocuments = $baseQuery['chEOYDocuments'];
         $chIRSDocuments = $baseQuery['chIRSDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
+        $chFinancialReportQuestions = $baseQuery['chFinancialReportQuestions'];
         $chFinancialReportReview = $baseQuery['chFinancialReportReview'];
 
         $allFilings = Irs990nFiling::where('chapter_id', $id)
@@ -1375,7 +1388,7 @@ class EOYReportController extends Controller implements HasMiddleware
         $data = ['coorId' => $coorId, 'confId' => $confId, 'chapterStatus' => $chapterStatus, 'chEOYDocuments' => $chEOYDocuments, 'chFinancialReportReview' => $chFinancialReportReview,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chActiveId' => $chActiveId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport, 'chIRSDocuments' => $chIRSDocuments,
-            'allFilings' => $allFilings,
+            'allFilings' => $allFilings, 'chFinancialReportQuestions' => $chFinancialReportQuestions
         ];
 
         return view('coordinators.eoyreports.editirssubmission')->with($data);

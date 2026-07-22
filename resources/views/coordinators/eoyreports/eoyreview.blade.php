@@ -89,23 +89,23 @@
                             <td @if($list->documentsEOY?->financial_report_received == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
                                 @if($list->documentsEOY?->financial_report_received == '1') YES @else NO @endif
                             </td>
-                            <td @if($list->financialReportReview?->roster_attached == '0') style="background-color:#dc3545; color: #ffffff;" @else style="background-color: transparent;" @endif>
-                                @if($list->financialReportReview?->roster_attached == '1') YES
-                                @elseif($list->financialReportReview?->roster_attached == '0') NO
+                            <td @if($list->financialReportReview?->review_roster_attached == '0') style="background-color:#dc3545; color: #ffffff;" @else style="background-color: transparent;" @endif>
+                                @if($list->financialReportReview?->review_roster_attached == '1') YES
+                                @elseif($list->financialReportReview?->review_roster_attached == '0') NO
                                 @else
                                 @endif
                             </td>
                             <td></td>
                             <td></td>
-                            <td @if($list->financialReportReview?->minimum_service_project == '0') style="background-color:#dc3545; color: #ffffff;" @else style="background-color: transparent;" @endif>
-                                @if($list->financialReportReview?->minimum_service_project == '1') YES
-                                @elseif($list->financialReportReview?->minimum_service_project == '0') NO
+                            <td @if($list->financialReportReview?->review_minimum_service_project == '0') style="background-color:#dc3545; color: #ffffff;" @else style="background-color: transparent;" @endif>
+                                @if($list->financialReportReview?->review_minimum_service_project == '1') YES
+                                @elseif($list->financialReportReview?->review_minimum_service_project == '0') NO
                                 @else
                                 @endif
                             </td>
-                            <td @if($list->financialReportReview?->m2m_donation == '0') style="background-color:#dc3545; color: #ffffff;" @else style="background-color: transparent;" @endif>
-                                @if($list->financialReportReview?->m2m_donation == '1') YES
-                                @elseif($list->financialReportReview?->m2m_donation == '0') NO
+                            <td @if($list->financialReportReview?->review_m2m_donation == '0') style="background-color:#dc3545; color: #ffffff;" @else style="background-color: transparent;" @endif>
+                                @if($list->financialReportReview?->review_m2m_donation == '1') YES
+                                @elseif($list->financialReportReview?->review_m2m_donation == '0') NO
                                 @else
                                 @endif
                             </td>

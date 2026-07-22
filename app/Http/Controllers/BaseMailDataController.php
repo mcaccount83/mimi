@@ -313,6 +313,7 @@ class BaseMailDataController extends Controller
         return [
             'completedName' => $chFinancialReport->completed_name ?? null,
             'completedEmail' => $chFinancialReport->completed_email ?? null,
+            'submitted' => $chFinancialReport->submitted,
         ];
     }
 

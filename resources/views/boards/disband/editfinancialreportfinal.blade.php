@@ -65,7 +65,8 @@
                                     @if ($chFinancialReport)
                                         @include('boards.partials.financial_accordion', [
                                             'chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'userTypeId' => $userTypeId, 'userName' => $userName,
-                                            'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'chActiveId' => $chActiveId
+                                            'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'chActiveId' => $chActiveId,
+                                            'chFinancialReportQuestions' => $chFinancialReportQuestions
                                         ])
                                     @else
                                         <div class="col-md-12 float-start">

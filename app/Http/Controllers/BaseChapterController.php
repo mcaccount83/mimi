@@ -15,6 +15,7 @@ use App\Models\DocumentsIRS;
 use App\Models\DocumentsEOY;
 use App\Models\DocumentsReport;
 use App\Models\FinancialReport;
+use App\Models\FinancialReportQuestions;
 use App\Models\FinancialReportReview;
 use App\Models\FinancialReportAwards;
 use App\Models\Month;
@@ -313,6 +314,7 @@ class BaseChapterController extends Controller
         $chIRSDocuments = $chDetails->documentsIRS ?? DocumentsIRS::firstOrNew(['chapter_id' => $chId]);
         $chReportDocuments = $chDetails->documentsReport ?? DocumentsReport::firstOrNew(['chapter_id' => $chId]);
         $chFinancialReport = $chDetails->financialReport ?? FinancialReport::firstOrNew(['chapter_id' => $chId]);
+        $chFinancialReportQuestions = $chDetails->financialReportQuestions ?? FinancialReportQuestions::firstOrNew(['chapter_id' => $chId]);
         $chFinancialReportFinal = $chDetails->financialReportFinal;
         $chFinancialReportReview = $chDetails->financialReportReview ?? FinancialReportReview::firstOrNew(['chapter_id' => $chId]);
 
@@ -384,7 +386,8 @@ class BaseChapterController extends Controller
             'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC, 'emailPC' => $emailPC, 'cc_id' => $cc_id,
             'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink, 'pcName' => $pcName, 'probationReason' => $probationReason,
             'allMonths' => $allMonths, 'pcDetails' => $pcDetails, 'allProbation' => $allProbation, 'chFinancialReportReview' => $chFinancialReportReview,
-            'dueDate' => $dueDate, 'startDate' => $startDate, 'renewalDate' => $renewalDate, 'chAwards' => $chAwards, "financialReportPdfs" => $financialReportPdfs
+            'dueDate' => $dueDate, 'startDate' => $startDate, 'renewalDate' => $renewalDate, 'chAwards' => $chAwards, "financialReportPdfs" => $financialReportPdfs,
+            'chFinancialReportQuestions' => $chFinancialReportQuestions
         ];
     }
 

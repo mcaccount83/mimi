@@ -1,0 +1,135 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Services\PositionConditionsService;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
+
+class basePDFDataController extends Controller
+{
+    public function __construct(
+        protected UserController $userController,
+        protected BaseChapterController $baseChapterController,
+        protected BaseCoordinatorController $baseCoordinatorController,
+        protected PositionConditionsService $positionConditionsService,
+    ) {}
+
+    public function getFinancialReportCalculationsData(object $chFinancialReport)
+    {
+        return [
+                'member_count_total' => $chFinancialReport->member_count_total,
+                'member_dues_total' => $chFinancialReport->member_dues_total,
+                'manditory_meeting_fees_paid' => $chFinancialReport->manditory_meeting_fees_paid,
+                'voluntary_donations_paid' => $chFinancialReport->voluntary_donations_paid,
+                'meeting_expenses_total' => $chFinancialReport->meeting_expenses_total,
+                'paid_baby_sitters' => $chFinancialReport->paid_baby_sitters,
+                'childrens_room_expenses' => $chFinancialReport->childrens_room_expenses,
+                'children_expenses_supplies' => $chFinancialReport->childrens_room_expenses,
+                'children_expenses_other' => $chFinancialReport->childrens_room_expenses,
+                'children_expenses_total' => $chFinancialReport->children_expenses_total,
+                'service_project_array' => $chFinancialReport->service_project_array,
+                'service_project_income_total' => $chFinancialReport->service_project_income_total,
+                'service_project_expenses_supplies' => $chFinancialReport->service_project_expenses_supplies,
+                'service_project_expenses_charity' => $chFinancialReport->service_project_expenses_charity,
+                'service_project_expenses_m2m' => $chFinancialReport->service_project_expenses_m2m,
+                'service_project_expenses_total' => $chFinancialReport->service_project_expenses_total,
+                'party_expense_array' => $chFinancialReport->party_expense_array,
+                'party_income_total' => $chFinancialReport->party_income_total,
+                'party_expense_total' => $chFinancialReport->party_expense_total,
+                'party_percentage' => $chFinancialReport->party_percentage,
+                'office_printing_costs' => $chFinancialReport->office_printing_costs,
+                'office_postage_costs' => $chFinancialReport->office_postage_costs,
+                'office_membership_pins_cost' => $chFinancialReport->office_membership_pins_cost,
+                'office_other_expenses' => $chFinancialReport->office_other_expenses,
+                'office_expenses_total' => $chFinancialReport->volunoffice_expenses_totaltary_donations_paid,
+                'annual_registration_fee' => $chFinancialReport->annual_registration_fee,
+                'international_event_array' => $chFinancialReport->international_event_array,
+                'international_event_income_total' => $chFinancialReport->international_event_income_total,
+                'international_event_expenses_total' => $chFinancialReport->international_event_expenses_total,
+                'monetary_donations_to_chapter' => $chFinancialReport->monetary_donations_to_chapter,
+                'donation_income_total' => $chFinancialReport->donation_income_total,
+                'non_monetary_donations_to_chapter' => $chFinancialReport->non_monetary_donations_to_chapter,
+                'other_income_and_expenses_array' => $chFinancialReport->other_income_and_expenses_array,
+                'other_income_total' => $chFinancialReport->other_income_total,
+                'office_expenses_other' => $chFinancialReport->office_expenses_other,
+                'other_expense_total' => $chFinancialReport->other_expense_total,
+                'sum_total_income' => $chFinancialReport->sum_total_income,
+                'sum_total_expense' => $chFinancialReport->sum_total_expense,
+                'sum_total_net_income' => $chFinancialReport->sum_total_net_income,
+                'amount_reserved_from_previous_year' => $chFinancialReport->amount_reserved_from_previous_year,
+                'bank_balance_now' => $chFinancialReport->bank_balance_now,
+                'bank_reconciliation_array' => $chFinancialReport->bank_reconciliation_array,
+                'bank_reconciliation' => $chFinancialReport->bank_reconciliation,
+                'beginning_balance' => $chFinancialReport->beginning_balance,
+                'ending_balance' => $chFinancialReport->ending_balance,
+                'statement_balance' => $chFinancialReport->statement_balance,
+                'reconciled_balance' => $chFinancialReport->reconciled_balance,
+        ];
+    }
+
+    public function getFinancialReportQuestionsData(object $chFinancialReportQuestions)
+    {
+        return [
+                'changed_dues' => $chFinancialReportQuestions->changed_dues,
+                'different_dues' => $chFinancialReportQuestions->different_dues,
+                'not_all_full_dues' => $chFinancialReportQuestions->not_all_full_dues,
+                'total_new_members' => $chFinancialReportQuestions->total_new_members,
+                'total_renewed_members' => $chFinancialReportQuestions->total_renewed_members,
+                'dues_per_member' => $chFinancialReportQuestions->dues_per_member,
+                'total_new_members_changed_dues' => $chFinancialReportQuestions->total_new_members_changed_dues,
+                'total_renewed_members_changed_dues' => $chFinancialReportQuestions->total_renewed_members_changed_dues,
+                'dues_per_member_renewal' => $chFinancialReportQuestions->dues_per_member_renewal,
+                'dues_per_member_new_changed' => $chFinancialReportQuestions->dues_per_member_new_changed,
+                'dues_per_member_renewal_changed' => $chFinancialReportQuestions->dues_per_member_renewal_changed,
+                'members_who_paid_no_dues' => $chFinancialReportQuestions->members_who_paid_no_dues,
+                'members_who_paid_partial_dues' => $chFinancialReportQuestions->members_who_paid_partial_dues,
+                'total_partial_fees_collected' => $chFinancialReportQuestions->total_partial_fees_collected,
+                'total_associate_members' => $chFinancialReportQuestions->total_associate_members,
+                'associate_member_fee' => $chFinancialReportQuestions->associate_member_fee,
+                'meeting_speakers' => $chFinancialReportQuestions->meeting_speakers,
+                'meeting_speakers_explanation' => $chFinancialReportQuestions->meeting_speakers_explanation,
+                'meeting_speakers_array' => $chFinancialReportQuestions->meeting_speakers_array,
+                'receive_compensation' => $chFinancialReportQuestions->receive_compensation,
+                'receive_compensation_explanation' => $chFinancialReportQuestions->receive_compensation_explanation,
+                'financial_benefit' => $chFinancialReportQuestions->financial_benefit,
+                'financial_benefit_explanation' => $chFinancialReportQuestions->financial_benefit_explanation,
+                'influence_political' => $chFinancialReportQuestions->influence_political,
+                'influence_political_explanation' => $chFinancialReportQuestions->influence_political_explanation,
+                'vote_all_activities' => $chFinancialReportQuestions->vote_all_activities,
+                'vote_all_activities_explanation' => $chFinancialReportQuestions->vote_all_activities_explanation,
+                'purchase_pins' => $chFinancialReportQuestions->purchase_pins,
+                'purchase_pins_explanation' => $chFinancialReportQuestions->purchase_pins_explanation,
+                'bought_merch' => $chFinancialReportQuestions->bought_merch,
+                'bought_merch_explanation' => $chFinancialReportQuestions->bought_merch_explanation,
+                'offered_merch' => $chFinancialReportQuestions->offered_merch,
+                'offered_merch_explanation' => $chFinancialReportQuestions->offered_merch_explanation,
+                'bylaws_available' => $chFinancialReportQuestions->bylaws_available,
+                'bylaws_available_explanation' => $chFinancialReportQuestions->bylaws_available_explanation,
+                'childrens_room_sitters' => $chFinancialReportQuestions->childrens_room_sitters,
+                'childrens_room_sitters_explanation' => $chFinancialReportQuestions->childrens_room_sitters_explanation,
+                'had_playgroups' => $chFinancialReportQuestions->had_playgroups,
+                'playgroups' => $chFinancialReportQuestions->playgroups,
+                'had_playgroups_explanation' => $chFinancialReportQuestions->had_playgroups_explanation,
+                'child_outings' => $chFinancialReportQuestions->child_outings,
+                'child_outings_explanation' => $chFinancialReportQuestions->child_outings_explanation,
+                'mother_outings' => $chFinancialReportQuestions->mother_outings,
+                'mother_outings_explanation' => $chFinancialReportQuestions->mother_outings_explanation,
+                'discussion_topic_frequency' => $chFinancialReportQuestions->discussion_topic_frequency,
+                'park_day_frequency' => $chFinancialReportQuestions->park_day_frequency,
+                'activity_array' => $chFinancialReportQuestions->activity_array,
+                'contributions_not_registered_charity' => $chFinancialReportQuestions->contributions_not_registered_charity,
+                'contributions_not_registered_charity_explanation' => $chFinancialReportQuestions->contributions_not_registered_charity_explanation,
+                'at_least_one_service_project' => $chFinancialReportQuestions->at_least_one_service_project,
+                'at_least_one_service_project_explanation' => $chFinancialReportQuestions->at_least_one_service_project_explanation,
+                'sister_chapter' => $chFinancialReportQuestions->sister_chapter,
+                'international_event' => $chFinancialReportQuestions->international_event,
+                'file_irs' => $chFinancialReportQuestions->file_irs,
+                'file_irs_explanation' => $chFinancialReportQuestions->file_irs_explanation,
+                'bank_statement_included' => $chFinancialReportQuestions->bank_statement_included,
+                'bank_statement_included_explanation' => $chFinancialReportQuestions->bank_statement_included_explanation,
+                'wheres_the_money' => $chFinancialReportQuestions->wheres_the_money,
+        ];
+    }
+
+}
