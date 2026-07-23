@@ -124,21 +124,69 @@
             </div>
             </div>
             <div class="row mb-1">
-                <div class="col-auto fw-bold">Party Percentage:</div>
-                <div class="col text-end">
+                    <div class="col-auto fw-bold">Party Percentage:</div>
+
                     @php
-                        $val = $chFinancialReportReview->review_party_percentage;
-                        $badgeClass = match(true) {
-                            is_null($val) => 'bg-secondary',
-                            $val == 0    => 'bg-danger',
-                            $val == 1    => 'bg-warning text-dark',
-                            $val == 2    => 'bg-success',
-                            default      => 'bg-secondary',
-                        };
-                    @endphp
-                    <span class="badge {{ $badgeClass }} fs-7">
-                        {{ number_format($chFinancialReport->party_percentage *100, 2) }}%
-                    </span>
+                        $newMembers = $chFinancialReport->total_new_members * $chFinancialReport->dues_per_member;
+                        $renewalMembers = $chFinancialReport->total_renewed_members * $chFinancialReport->dues_per_member;
+                        $renewalMembersDiff = $chFinancialReport->total_renewed_members * $chFinancialReport->dues_per_member_renewal;
+                        $newMembersNew = $chFinancialReport->total_new_members_changed_dues * $chFinancialReport->dues_per_member_new_changed;
+                        $renewMembersNew = $chFinancialReport->total_renewed_members_changed_dues * $chFinancialReport->dues_per_member_new_changed;
+                        $renewMembersNewDiff = $chFinancialReport->total_renewed_members_changed_dues * $chFinancialReport->dues_per_member_renewal_changed;
+                        // $partialMembers = $chFinancialReport->members_who_paid_partial_dues * $chFinancialReport->total_partial_fees_collected;
+                        $partialDues = $chFinancialReport->total_partial_fees_collected;
+                        $associateMembers = $chFinancialReport->total_associate_members * $chFinancialReport->associate_member_fee;
+
+                        $totalMembers = $chFinancialReport->total_new_members + $chFinancialReport->total_renewed_members + $chFinancialReport->total_new_members_changed_dues + $chFinancialReport->total_renewed_members_changed_dues
+                                + $chFinancialReport->members_who_paid_partial_dues + $chFinancialReport->total_associate_members + $chFinancialReport->members_who_paid_no_dues;
+
+                        if ($chFinancialReport->different_dues == 1 && $chFinancialReport->changed_dues == 1) {
+                            $totalDues = $newMembers + $renewalMembersDiff + $newMembersNew + $renewMembersNewDiff + $partialDues + $associateMembers;
+                        } elseif ($chFinancialReport->different_dues == 1) {
+                            $totalDues = $newMembers + $renewalMembersDiff + $partialDues + $associateMembers;
+                        } elseif ($chFinancialReport->changed_dues == 1) {
+                            $totalDues = $newMembers + $renewalMembers + $newMembersNew + $renewMembersNew + $partialDues + $associateMembers;
+                        } else {
+                            $totalDues = $newMembers + $renewalMembers + $partialDues + $associateMembers;
+                        }
+
+                        $party_expenses = null;
+                        $totalPartyIncome = 0;
+                        $totalPartyExpense = 0;
+                        $partyPercentage = 0;
+
+                        if (isset($chFinancialReport['party_expense_array'])) {  // ← Keep bracket notation for isset() on serialized data
+                            $blobData = base64_decode($chFinancialReport['party_expense_array']);  // ← Keep bracket notation here too
+                            $party_expenses = unserialize($blobData);
+
+                            if ($party_expenses != false) {
+                                foreach ($party_expenses as $row) {
+                                    $income = is_numeric(str_replace(',', '', $row['party_expense_income']))
+                                        ? floatval(str_replace(',', '', $row['party_expense_income'])) : 0;
+                                    $expense = is_numeric(str_replace(',', '', $row['party_expense_expenses']))
+                                        ? floatval(str_replace(',', '', $row['party_expense_expenses'])) : 0;
+
+                                    $totalPartyIncome += $income;
+                                    $totalPartyExpense += $expense;
+                                }
+
+                                if (!empty($totalDues) && $totalDues != 0) {
+                                    $partyPercentage = ($totalPartyExpense - $totalPartyIncome) / $totalDues;
+                                }
+                            }
+                        }
+
+                    $badgeClass = match(true) {
+                        is_null($chFinancialReportReview->review_party_percentage) => 'bg-secondary',
+                        $chFinancialReportReview->review_party_percentage == 0     => 'bg-danger',
+                        $chFinancialReportReview->review_party_percentage == 1     => 'bg-warning text-dark',
+                        $chFinancialReportReview->review_party_percentage == 2     => 'bg-success',
+                        default                                             => 'bg-secondary',
+                    };
+                @endphp
+
+                <div class="col text-end">
+                    <span class="badge {{ $badgeClass }} fs-7">{{ number_format($partyPercentage * 100, 2) }}%</span>
                 </div>
             </div>
             <div class="row mb-1">
@@ -194,13 +242,13 @@
                 </div>
             </div>
             <div class="row mb-1">
-                    <div class="col-auto fw-bold">Ending & Reconciled Balances Match:</div>
+                    <div class="col-auto fw-bold">Treasury & Reconciled Balances Match:</div>
                     <div class="col text-end">
-                    @if(is_null($chFinancialReportReview->review_balanced))
+                    @if(is_null($chFinancialReportReview->review_bank_statement_matches))
                         <span class="badge bg-secondary fs-7">Please Review</span>
-                    @elseif($chFinancialReportReview->review_balanced == 1)
+                    @elseif($chFinancialReportReview->review_bank_statement_matches == 1)
                         <span class="badge bg-success fs-7">In Balance</span>
-                    @elseif($chFinancialReportReview->review_balanced == 0)
+                    @elseif($chFinancialReportReview->review_bank_statement_matches == 0)
                         <span class="badge bg-danger fs-7">Out of balance</span>
                     @else
                         <span class="badge bg-secondary fs-7">Please Review</span>

@@ -117,39 +117,13 @@
             @endif
         </tbody>
    </table>
-    {{-- @php
-        $newMembers = $pdfData['total_new_members'] * $pdfData['dues_per_member'];
-        $renewalMembers = $pdfData['total_renewed_members'] * $pdfData['dues_per_member'];
-        $renewalMembersDiff = $pdfData['total_renewed_members'] * $pdfData['dues_per_member_renewal'];
-        $newMembersNew = $pdfData['total_new_members_changed_dues'] * $pdfData['dues_per_member_new_changed'];
-        $renewMembersNew = $pdfData['total_renewed_members_changed_dues'] * $pdfData['dues_per_member_new_changed'];
-        $renewMembersNewDiff = $pdfData['total_renewed_members_changed_dues'] * $pdfData['dues_per_member_renewal_changed'];
-        // $partialMembers = $pdfData['members_who_paid_partial_dues'] * $pdfData['total_partial_fees_collected'];
-        $partialDues = $pdfData['total_partial_fees_collected'];
-        $associateMembers = $pdfData['total_associate_members'] * $pdfData['associate_member_fee'];
-
-        $totalMembers = $pdfData['total_new_members'] + $pdfData['total_renewed_members'] + $pdfData['total_new_members_changed_dues'] + $pdfData['total_renewed_members_changed_dues']
-                + $pdfData['members_who_paid_partial_dues'] + $pdfData['total_associate_members'] + $pdfData['members_who_paid_no_dues'];
-
-        if ($pdfData['different_dues'] == 1 && $pdfData['changed_dues'] == 1) {
-            $totalDues = $newMembers + $renewalMembersDiff + $newMembersNew + $renewMembersNewDiff + $partialDues + $associateMembers;
-        } elseif ($pdfData['different_dues'] == 1) {
-            $totalDues = $newMembers + $renewalMembersDiff + $partialDues + $associateMembers;
-        } elseif ($pdfData['changed_dues'] == 1) {
-            $totalDues = $newMembers + $renewalMembers + $newMembersNew + $renewMembersNew + $partialDues + $associateMembers;
-        } else {
-            $totalDues = $newMembers + $renewalMembers + $partialDues + $associateMembers;
-        }
-    @endphp --}}
     <br>
     <table width="50%">
         <tbody>
             <tr><td><strong>Total Members:</strong></td>
                 <td><strong>{{ $pdfData['member_count_total'] }}</strong></td></tr>
-                {{-- <td><strong>{{ $totalMembers }}</strong></td></tr> --}}
             <tr><td><strong>Total Dues Collected:</strong></td>
                 <td><strong>{{ '$'.number_format($pdfData['member_dues_total'], 2) }}</strong></td></tr>
-                {{-- <td><strong>{{ '$'.number_format($totalDues, 2) }}</strong></td></tr>                 --}}
         </tbody>
     </table>
     <br>
@@ -165,7 +139,7 @@
             <tr><td>Voluntary Donations Paid:</td>
                     <td>{{ '$'.number_format($pdfData['voluntary_donations_paid'], 2) }}</td></tr>
             <tr><td><strong>Total Meeting Room Expenses:</strong></td>
-                    <td><strong>{{ '$'.number_format($pdfData['manditory_meeting_fees_paid'] + $pdfData['voluntary_donations_paid'], 2) }}</b></strong></tr>
+                    <td><strong>{{ '$'.number_format($pdfData['meeting_expenses_total'], 2) }}</b></strong></tr>
         </tbody>
     </table>
     <br>
@@ -265,17 +239,13 @@
                 <td colspan='3'>No data available.</td>
             </tr>
         @endif
-
-        @php
-            $totalChildrensRoomExpenses = $totalChildrenSupplies + $totalChildrenOther;
-        @endphp
     </tbody>
 </table>
     <br>
     <table width="50%">
         <tbody>
                 <tr><td><strong>Total Children's Room Expenses:</strong></td>
-                    <td><strong>{{ '$'.number_format($pdfData['paid_baby_sitters'] + $totalChildrensRoomExpenses, 2) }}</strong></td></tr>
+                    <td><strong>{{ '$'.number_format($pdfData['children_expenses_total'], 2) }}</strong></td></tr>
         </tbody>
     </table>
     <br>
@@ -348,19 +318,15 @@
                 <td colspan='5'>No Service Projects Entered.</td>
             </tr>
         @endif
-
-        @php
-            $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $totalServiceM2M;
-        @endphp
     </tbody>
 </table>
     <br>
     <table width="50%" >
         <tbody>
             <tr><td><strong>Total Service Project Income:</strong></td>
-                <td><strong>{{ '$'.number_format($totalServiceIncome, 2) }}</strong></td></tr>
+                <td><strong>{{ '$'.number_format($pdfData['service_project_income_total'], 2) }}</strong></td></tr>
             <tr><td><strong>Total Service Project Expenses:</strong></td>
-                <td><strong>{{ '$'.number_format($totalServiceProjectExpenses, 2) }}</strong></td></tr>
+                <td><strong>{{ '$'.number_format($pdfData['service_project_expenses_total'], 2) }}</strong></td></tr>
         </tbody>
     </table>
     <br>
@@ -420,25 +386,17 @@
                 <td colspan='3'>No data available.</td>
             </tr>
         @endif
-
-        @php
-            if ($totalDues == 0) {
-                $partyPercentage = 0;
-            } else {
-                $partyPercentage = ($totalPartyExpense - $totalPartyIncome) / $totalDues;
-            }
-        @endphp
     </tbody>
 </table>
     <br>
     <table width="50%">
         <tbody>
             <tr><td><strong>Total Member Benefit Income:</strong></td>
-                <td><strong>{{ '$'.number_format($totalPartyIncome, 2) }}</strong></td></tr>
+                <td><strong>{{ '$'.number_format($pdfData['party_income_total'], 2) }}</strong></td></tr>
             <tr><td><strong>Total Member Benefit Expenses:</strong></td>
-                <td><strong>{{ '$'.number_format($totalPartyExpense, 2) }}</strong></td></tr>
+                <td><strong>{{ '$'.number_format($pdfData['party_expense_total'], 2) }}</strong></td></tr>
             <tr><td><strong>Member Benefit/Dues Income Percentage:</strong></td>
-                <td><strong>{{ number_format($partyPercentage * 100, 2) }}%</strong></td>
+                <td><strong>{{ number_format($pdfData['party_percentage'] * 100, 2) }}%</strong></td>
         </tbody>
     </table>
     <br>
@@ -507,8 +465,7 @@
     <table width="50%" >
         <tbody>
             <tr><td><strong>Total Office/Operating Expenses:</strong></td>
-                <td><strong>{{ '$'.number_format($pdfData['office_printing_costs'] + $pdfData['office_postage_costs'] +
-                    $pdfData['office_membership_pins_cost'] + $totalOfficeExpense, 2) }}</strong></td></tr>
+                <td><strong>{{ '$'.number_format($pdfData['office_expenses_total'], 2) }}</strong></td></tr>
         </tbody>
     </table>
     <br>
@@ -590,9 +547,9 @@
     <table width="50%"  >
         <tbody>
             <tr><td><strong>Total Event Registration Income:</strong></td>
-                <td><strong>{{ '$'.number_format($totalEventIncome, 2) }}</strong></td></tr>
+                <td><strong>{{ '$'.number_format($pdfData['international_event_income_total'], 2) }}</strong></td></tr>
             <tr><td><b>Total Event Registration Expenses:</b></td>
-                <td><strong>{{ '$'.number_format($totalEventExpense, 2) }}</strong></td></tr>
+                <td><strong>{{ '$'.number_format($pdfData['international_event_expenses_total'], 2) }}</strong></td></tr>
         </tbody>
     </table>
     <br>
@@ -659,7 +616,7 @@
     <table width="50%" >
         <tbody>
             <tr><td><strong>Total Monetary Donations:</strong></td>
-                <td><strong>{{ '$'.number_format( $totalDonationAmount, 2) }}</strong></td></tr>
+                <td><strong>{{ '$'.number_format( $pdfData['donation_income_total'], 2) }}</strong></td></tr>
         </tbody>
     </table>
     <br>
@@ -766,9 +723,9 @@
     <table width="50%" >
         <tbody>
             <tr><td><strong>Total Other Income:</strong></td>
-                <td><strong>{{ '$'.number_format($totalOtherIncome, 2) }}</strong></td></tr>
+                <td><strong>{{ '$'.number_format($pdfData['other_income_total'], 2) }}</strong></td></tr>
             <tr><td><strong>Total Other Expenses:</strong></td>
-                <td><strong>{{ '$'.number_format($totalOtherExpenses, 2) }}</strong></td></tr>
+                <td><strong>{{ '$'.number_format($pdfData['other_expense_total'], 2) }}</strong></td></tr>
         </tbody>
     </table>
     <br>
@@ -777,13 +734,6 @@
     <b>FINANCIAL SUMMARY</b>
     <hr>
     </div>
-    {{-- @php
-        $totalIncome = $totalDues + $totalServiceIncome + $totalPartyIncome + $totalDonationAmount + $totalEventIncome + $totalOtherIncome;
-        $totalExpenses = $pdfData['manditory_meeting_fees_paid'] + $pdfData['voluntary_donations_paid'] + $pdfData['paid_baby_sitters'] + $totalChildrensRoomExpenses + $totalServiceProjectExpenses
-                + $totalPartyExpense + $pdfData['office_printing_costs'] + $pdfData['office_postage_costs'] +
-                    $pdfData['office_membership_pins_cost'] + $totalOfficeExpense + $pdfData['annual_registration_fee'] + $totalEventExpense + $totalOtherExpenses;
-        $treasuryBalance = $pdfData['amount_reserved_from_previous_year'] + $totalIncome - $totalExpenses;
-    @endphp --}}
     <table width="50%" style="border-collapse: collapse;">
         <tbody>
             <tr><td><strong>INCOME</strong></td></tr>
@@ -847,12 +797,7 @@
             <tr><td>&nbsp;</td></tr>
             <tr><td style="border-top: 1px solid #333; border-bottom: 1px solid #333;"><strong>PROFIT (LOSS)</strong></td>
             <td style="border-top: 1px solid #333; border-bottom: 1px solid #333;"><strong>
-            {{-- @php
-                 $netAmount = $totalIncome - $totalExpenses;
-                 $formattedAmount = ($netAmount < 0) ? '($' .number_format(abs($netAmount), 2) . ')' : '$' . number_format($netAmount, 2);
-             @endphp
-             {{ '$'.number_format($pdfData['sum_total_expense'], 2) }} --}}
-            {{ '$'.number_format($pdfData['sum_total_net_income'], 2) }}</strong></td></tr>
+                {{ '$'.number_format($pdfData['sum_total_net_income'], 2) }}</strong></td></tr>
         </tbody>
     </table>
     <br>

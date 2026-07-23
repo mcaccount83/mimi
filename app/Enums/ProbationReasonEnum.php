@@ -4,7 +4,7 @@ namespace App\Enums;
 
 class ProbationReasonEnum
 {
-    // Operating Status for Chapters
+    // Probation Reasons for Chapters
     const NOEOYREPORT = 1;
 
     const NOREREGPMT = 2;
@@ -12,4 +12,6 @@ class ProbationReasonEnum
     const EXCESSPARTY = 3;
 
     const OTHER = 4;
+
+    const WARNINGPARTY = 5;
 }

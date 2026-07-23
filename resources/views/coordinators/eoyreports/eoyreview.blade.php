@@ -33,7 +33,6 @@
               <thead>
     <tr>
         <th rowspan="2">Report</th>
-        <th rowspan="2">Email</th>
         <th rowspan="2">Conf/Reg</th>
         <th rowspan="2">State</th>
         <th rowspan="2">Name</th>
@@ -42,7 +41,7 @@
         <th colspan="3" class="text-center">Attachments</th>
         <th colspan="2" class="text-center">Srv Project</th>
         <th colspan="2" class="text-center">Mbr Benefit</th>
-        <th rowspan="2">Done!</th>
+        <th colspan="2" class="text-center">Review</th>
     </tr>
     <tr>
         <th>Roster</th>
@@ -52,6 +51,8 @@
         <th>Proj</th>
         <th>Party%</th>
         <th>Status</th>
+        <th>Balance</th>
+        <th>Done!</th>
     </tr>
 
 </thead>
@@ -61,11 +62,6 @@
                             <td class="text-center align-middle">
                                 @if($coordinatorCondition)
                                     <a href="{{ url("/eoyreports/editstatus/{$list->id}") }}"><i class="bi bi-file-earmark-bar-graph"></i></a>
-                                @endif
-                            </td>
-                            <td class="text-center align-middle">
-                                @if($coordinatorCondition && $conferenceCoordinatorCondition)
-                                    <a onclick="showEOYChapterEmailModal('{{ $list->name }}', {{ $list->id }}, 'late')"><i class="bi bi-envelope text-primary"></i></a>
                                 @endif
                             </td>
                             <td>
@@ -109,7 +105,19 @@
                                 @else
                                 @endif
                             </td>
+                            <td >
+                                @if($list->documentsEOY?->financial_report_received == '1' || $list->documentsEOY?->report_extension == '1')
+                                    {{ $list->financialReport->party_percentage * 100, 2 }}%
+                                @else
+                                @endif
+                            </td>
                             <td>
+                                @if($list->financialReportReview?->review_party_percentage == 0)
+                                    PROBATION
+                                @elseif($list->financialReportReview?->review_party_percentageS == 1)
+                                    WARNING
+                                @else
+                                @endif
                             </td>
                             <td>
                             </td>
