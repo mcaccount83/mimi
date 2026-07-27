@@ -53,9 +53,9 @@
                 <div class="card-body">
                     <div class="card-header bg-transparent border-0">
                         <h3>{{ $reportYearRange }} Chapter Awards</h3>
-                            Chapter Notified: {{ is_null($chFinancialReport->chapter_awards_notified) ? 'NO' : ($chFinancialReport->chapter_awards_notified == 0 ? 'NO'
-                            : ($chFinancialReport->chapter_awards_notified == 1 ? 'YES' : 'NO')) }}
-                            @if($chFinancialReport->chapter_awards_notified != '1')
+                            Chapter Notified: {{ is_null($chFinancialReportQuestions->chapter_awards_notified) ? 'NO' : ($chFinancialReportQuestions->chapter_awards_notified == 0 ? 'NO'
+                            : ($chFinancialReportQuestions->chapter_awards_notified == 1 ? 'YES' : 'NO')) }}
+                            @if($chFinancialReportQuestions->chapter_awards_notified != '1')
                     <button type="button" id="AwardNotify" class="btn btn-primary bg-gradient btn-xs ms-1" onclick="showChapterAwardsEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }})"><i class="bi bi-envelope-fill me-2"></i>Send Award Notification</button>
                         @endif
                         <br>
@@ -82,8 +82,8 @@
                         <tbody>
                             @php
                             $chapter_awards = null;
-                            if (isset($chFinancialReport['chapter_awards'])) {
-                                $blobData = base64_decode($chFinancialReport['chapter_awards']);
+                            if (isset($chFinancialReportQuestions['chapter_awards'])) {
+                                $blobData = base64_decode($chFinancialReportQuestions['chapter_awards']);
                                 $chapter_awards = unserialize($blobData);
                                 if ($chapter_awards == false) {
                                     $chapter_awards = [];

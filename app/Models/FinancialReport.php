@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Model;
 
-#[Table('financial_report', 'chapter_id')]
+#[Table('financial_report', 'chapter_id', incrementing: false)]
 #[Unguarded]
 class FinancialReport extends Model
 {

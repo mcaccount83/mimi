@@ -31,9 +31,8 @@
                     <h3 class="mb-0">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
                     <p class="mb-0">{{ $conferenceDescription }} Conference, {{ $regionLongName }} Region
                   </p>
-                    </div>
                   EIN: {{$chDetails->ein}}
-                  </p>
+                  </div>
                    <ul class="list-group list-group-flush mb-3">
                       <li class="list-group-item">
                             @include('coordinators.partials.paymentinfo')

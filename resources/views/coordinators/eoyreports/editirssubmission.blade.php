@@ -190,7 +190,7 @@
                                     aria-controls="collapse-{{ $filing->id }}">
                                 Tax Year {{ $filing->tax_year }}
                                 &nbsp;<small class="text-muted ms-2">
-                                    ({{ $filing->tax_period_begin?->format('m/d/Y') }} – {{ $filing->tax_period_end?->format('m/d/Y') }})
+                                    ({{ $filing->tax_period_begin_formatted }} – {{ $filing->tax_period_end_formatted }})
                                 </small>
                             </button>
                         </h2>
@@ -205,8 +205,8 @@
 
                                     <dt class="col-sm-4">Tax Period</dt>
                                     <dd class="col-sm-8">
-                                        {{ $filing->tax_period_begin?->format('m/d/Y') }} –
-                                        {{ $filing->tax_period_end?->format('m/d/Y') }}
+                                        {{ $filing->tax_period_begin_formatted }} –
+                                        {{ $filing->tax_period_end_formatted }}
                                     </dd>
 
                                     <dt class="col-sm-4">Last Synced</dt>

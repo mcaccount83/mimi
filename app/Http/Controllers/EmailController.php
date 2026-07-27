@@ -23,6 +23,7 @@ use App\Models\EmailFields;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportAwards;
 use App\Models\FinancialReportAwardsBadges;
+use App\Models\FinancialReportQuestions;
 use App\Models\InquiryApplication;
 use App\Models\RegionInquiry;
 use App\Models\Resources;
@@ -1152,8 +1153,8 @@ class EmailController extends Controller implements HasMiddleware
         $awardTypes = FinancialReportAwards::all()->keyBy('id');
 
         // Get approved awards from blob
-        $currentAwards = $chFinancialReport->chapter_awards
-            ? unserialize(base64_decode($chFinancialReport->chapter_awards))
+        $currentAwards = $chFinancialReportQuestions->chapter_awards
+            ? unserialize(base64_decode($chFinancialReportQuestions->chapter_awards))
             : [];
 
         $approvedAwards = array_filter($currentAwards, fn ($a) => ! empty($a['awards_approved']));
@@ -1200,11 +1201,11 @@ class EmailController extends Controller implements HasMiddleware
             }
         }
 
-        $chFinancialReport = FinancialReport::find($chapterId);
+        $chFinancialReportQuestions = FinancialReportQuestions::find($chapterId);
         try {
             DB::beginTransaction();
-            $chFinancialReport->chapter_awards_notified = 1;
-            $chFinancialReport->save();
+            $chFinancialReportQuestions->chapter_awards_notified = 1;
+            $chFinancialReportQuestions->save();
 
             $mailData = array_merge(
                 $this->baseMailDataController->getChapterData($chDetails, $stateShortName),

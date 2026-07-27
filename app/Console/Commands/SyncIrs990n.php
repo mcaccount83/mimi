@@ -125,6 +125,9 @@ class SyncIrs990n extends Command
                 continue;
             }
 
+            $documentsIrs = DocumentsIRS::where('chapter_id', $chapter->id)->first();
+            $wasAlreadyVerified = $documentsIrs?->irs_verified;
+
             $mostRecentYear = collect($matchesByEin[$ein])->max('tax_year');
 
             foreach ($matchesByEin[$ein] as $filing) {
@@ -148,7 +151,11 @@ class SyncIrs990n extends Command
             }
 
             if (!$this->option('dry-run') && (string) $mostRecentYear === (string) $currentReportYear) {
-                DocumentsIRS::where('chapter_id', $chapter->id)->update(['irs_verified' => 1]);
+                $documentsIrs?->update(['irs_verified' => 1]);
+            }
+
+            if (!$this->option('dry-run') && $wasAlreadyVerified) {
+                $this->flagIfVerifiedButDatesWrong($documentsIrs, $matchesByEin[$ein], $currentReportYear);
             }
         }
 
@@ -189,5 +196,23 @@ class SyncIrs990n extends Command
         fclose($fp);
 
         return $success && $httpCode === 200;
+    }
+
+    protected function flagIfVerifiedButDatesWrong(DocumentsIRS $documentsIrs, array $filings, string $currentReportYear): void
+    {
+        $currentYearFiling = collect($filings)->firstWhere('tax_year', $currentReportYear);
+
+        if (!$currentYearFiling) {
+            return; // no filing for the current report year to check against
+        }
+
+        $expectedPeriodBegin = "{$currentReportYear}-07-01";
+
+        if ($currentYearFiling['period_begin'] !== $expectedPeriodBegin) {
+            $documentsIrs->update([
+                'irs_issues' => 1,
+                'irs_filedwrong' => 1,
+            ]);
+        }
     }
 }

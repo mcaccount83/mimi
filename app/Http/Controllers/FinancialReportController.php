@@ -410,8 +410,8 @@ class FinancialReportController extends Controller implements HasMiddleware
         $financialReport->sum_total_net_income = $NetProfitLoss;
 
         // BANK RECONCILLIATION
-        $financialReport->amount_reserved_from_previous_year = isset($input['AmountReservedFromLastYear']) ? preg_replace('/[^\d.]/', '', $input['AmountReservedFromLastYear']) : null;
-        $financialReport->bank_balance_now = isset($input['BankBalanceNow']) ? preg_replace('/[^\d.]/', '', $input['BankBalanceNow']) : null;
+        $financialReport->beginning_balance = isset($input['BeginningBalance']) ? preg_replace('/[^\d.]/', '', $input['BeginningBalance']) : null;
+        $financialReport->statement_balance = isset($input['StatementBalance']) ? preg_replace('/[^\d.]/', '', $input['StatementBalance']) : null;
 
         // Bank Reconciliation (serialized)
         $BankRecArray = null;
@@ -437,9 +437,9 @@ class FinancialReportController extends Controller implements HasMiddleware
 
         $financialReport->bank_reconciliation = round($SumReconciliation, 2);
 
-        $BeginningBalance = (float) preg_replace('/[^\d.]/', '', $input['AmountReservedFromLastYear'] ?? 0);
+        $BeginningBalance = (float) preg_replace('/[^\d.]/', '', $input['BeginningBalance'] ?? 0);
         $EndingBalance = round($BeginningBalance + $NetProfitLoss, 2);
-        $StatementBalance = (float) preg_replace('/[^\d.]/', '', $input['BankBalanceNow'] ?? 0);
+        $StatementBalance = (float) preg_replace('/[^\d.]/', '', $input['StatementBalance'] ?? 0);
         $ReconciledBalance = round($StatementBalance + $SumReconciliation, 2);
 
         $financialReport->beginning_balance = $BeginningBalance;

@@ -14,18 +14,18 @@
                 <section>
                     <div class="col-md-12">
                         <span class="me-2">Did your chapter change dues this year?</span>
-                        <b>{{ is_null($chFinancialReport->changed_dues) ? 'Not Answered' : ($chFinancialReport->changed_dues == 0 ? 'NO'
-                            : ($chFinancialReport->changed_dues == 1 ? 'YES' : 'Not Answered')) }}</b>
+                        <b>{{ is_null($chFinancialReportQuestions->changed_dues) ? 'Not Answered' : ($chFinancialReportQuestions->changed_dues == 0 ? 'NO'
+                            : ($chFinancialReportQuestions->changed_dues == 1 ? 'YES' : 'Not Answered')) }}</b>
                     </div>
                     <div class="col-md-12">
                         <span class="me-2">Did your chapter charge different amounts for new and returning members?</span>
-                        <b>{{ is_null($chFinancialReport->different_dues) ? 'Not Answered' : ($chFinancialReport->different_dues == 0 ? 'NO'
-                            : ($chFinancialReport->different_dues == 1 ? 'YES' : 'Not Answered')) }}</b>
+                        <b>{{ is_null($chFinancialReportQuestions->different_dues) ? 'Not Answered' : ($chFinancialReportQuestions->different_dues == 0 ? 'NO'
+                            : ($chFinancialReportQuestions->different_dues == 1 ? 'YES' : 'Not Answered')) }}</b>
                     </div>
                     <div class="col-md-12">
                         <span class="me-2">Did your chapter have any members who didn't pay full dues?</span>
-                        <b>{{ is_null($chFinancialReport->not_all_full_dues) ? 'Not Answered' : ($chFinancialReport->not_all_full_dues == 0 ? 'NO'
-                            : ($chFinancialReport->not_all_full_dues == 1 ? 'YES' : 'Not Answered')) }}</b>
+                        <b>{{ is_null($chFinancialReportQuestions->not_all_full_dues) ? 'Not Answered' : ($chFinancialReportQuestions->not_all_full_dues == 0 ? 'NO'
+                            : ($chFinancialReportQuestions->not_all_full_dues == 1 ? 'YES' : 'Not Answered')) }}</b>
                     </div>
                     <br>
                     <style>
@@ -42,131 +42,106 @@
                         }
                     </style>
                     <div class="flex-container">
-                        @if ($chFinancialReport->changed_dues != 1)
+                        @if ($chFinancialReportQuestions->changed_dues != 1)
                             <div class="flex-item">
-                                New Members:&nbsp;&nbsp;&nbsp;<strong>{{ $chFinancialReport->total_new_members }}</strong>
+                                New Members:&nbsp;&nbsp;&nbsp;<strong>{{ $chFinancialReportQuestions->total_new_members }}</strong>
                             </div>
-                            @if ($chFinancialReport->different_dues != 1)
+                            @if ($chFinancialReportQuestions->different_dues != 1)
                                 <div class="flex-item">
-                                    Dues:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport->dues_per_member, 2) }}</strong>
+                                    Dues:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReportQuestions->dues_per_member, 2) }}</strong>
                                 </div>
                             @endif
-                            @if ($chFinancialReport->different_dues == 1)
+                            @if ($chFinancialReportQuestions->different_dues == 1)
                                 <div class="flex-item">
-                                    New Dues:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport->dues_per_member, 2) }}</strong>
+                                    New Dues:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReportQuestions->dues_per_member, 2) }}</strong>
                                 </div>
                             @endif
                             <div class="flex-item">
-                                Renewed Members:&nbsp;&nbsp;&nbsp;<strong>{{ $chFinancialReport->total_renewed_members }}</strong>
+                                Renewed Members:&nbsp;&nbsp;&nbsp;<strong>{{ $chFinancialReportQuestions->total_renewed_members }}</strong>
                             </div>
-                            @if ($chFinancialReport->different_dues != 1)
+                            @if ($chFinancialReportQuestions->different_dues != 1)
                                 <div class="flex-item">
                                     &nbsp;&nbsp;&nbsp;
                                 </div>
                             @endif
-                            @if ($chFinancialReport->different_dues == 1)
+                            @if ($chFinancialReportQuestions->different_dues == 1)
                                 <div class="flex-item">
-                                    Renewal Dues:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport->dues_per_member_renewal, 2) }}</strong>
+                                    Renewal Dues:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReportQuestions->dues_per_member_renewal, 2) }}</strong>
                                 </div>
                             @endif
                         @endif
 
-                        @if ($chFinancialReport->changed_dues == 1)
+                        @if ($chFinancialReportQuestions->changed_dues == 1)
                             <div class="flex-item">
-                                New Members (OLD dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ $chFinancialReport->total_new_members }}</strong>
+                                New Members (OLD dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ $chFinancialReportQuestions->total_new_members }}</strong>
                             </div>
-                            @if ($chFinancialReport->different_dues != 1)
+                            @if ($chFinancialReportQuestions->different_dues != 1)
                                 <div class="flex-item">
-                                    Dues (OLD dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport->dues_per_member, 2) }}</strong>
+                                    Dues (OLD dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReportQuestions->dues_per_member, 2) }}</strong>
                                 </div>
                             @endif
-                            @if ($chFinancialReport->different_dues == 1)
+                            @if ($chFinancialReportQuestions->different_dues == 1)
                                 <div class="flex-item">
-                                    New Dues (OLD dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport->dues_per_member, 2) }}</strong>
-                                </div>
-                            @endif
-                            <div class="flex-item">
-                                Renewed Members (OLD dues amount): <strong>{{ $chFinancialReport->total_renewed_members }}</strong>
-                            </div>
-                            @if ($chFinancialReport->different_dues == 1)
-                                <div class="flex-item">
-                                    Renewal Dues (OLD dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport->dues_per_member_renewal, 2) }}</strong>
+                                    New Dues (OLD dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReportQuestions->dues_per_member, 2) }}</strong>
                                 </div>
                             @endif
                             <div class="flex-item">
-                                New Members (NEW dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ $chFinancialReport->total_new_members_changed_dues }}</strong>
+                                Renewed Members (OLD dues amount): <strong>{{ $chFinancialReportQuestions->total_renewed_members }}</strong>
                             </div>
-                            @if ($chFinancialReport->different_dues != 1)
+                            @if ($chFinancialReportQuestions->different_dues == 1)
                                 <div class="flex-item">
-                                    Dues (NEW dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport->dues_per_member_new_changed, 2) }}</strong>
-                                </div>
-                            @endif
-                            @if ($chFinancialReport->different_dues == 1)
-                                <div class="flex-item">
-                                    New Dues (NEW dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport->dues_per_member_new_changed, 2) }}</strong>
+                                    Renewal Dues (OLD dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReportQuestions->dues_per_member_renewal, 2) }}</strong>
                                 </div>
                             @endif
                             <div class="flex-item">
-                                Renewed Members (NEW dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ $chFinancialReport->total_renewed_members_changed_dues }}</strong>
+                                New Members (NEW dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ $chFinancialReportQuestions->total_new_members_changed_dues }}</strong>
                             </div>
-                            @if ($chFinancialReport->different_dues == 1)
+                            @if ($chFinancialReportQuestions->different_dues != 1)
                                 <div class="flex-item">
-                                    Renewal Dues (NEW dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport->dues_per_member_renewal_changed, 2) }}</strong>
+                                    Dues (NEW dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReportQuestions->dues_per_member_new_changed, 2) }}</strong>
+                                </div>
+                            @endif
+                            @if ($chFinancialReportQuestions->different_dues == 1)
+                                <div class="flex-item">
+                                    New Dues (NEW dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReportQuestions->dues_per_member_new_changed, 2) }}</strong>
+                                </div>
+                            @endif
+                            <div class="flex-item">
+                                Renewed Members (NEW dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ $chFinancialReportQuestions->total_renewed_members_changed_dues }}</strong>
+                            </div>
+                            @if ($chFinancialReportQuestions->different_dues == 1)
+                                <div class="flex-item">
+                                    Renewal Dues (NEW dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReportQuestions->dues_per_member_renewal_changed, 2) }}</strong>
                                 </div>
                             @endif
                         @endif
 
-                        @if ($chFinancialReport->not_all_full_dues == 1)
+                        @if ($chFinancialReportQuestions->not_all_full_dues == 1)
                             <div class="flex-item">
-                                Members Who Paid No Dues:&nbsp;&nbsp;&nbsp;<strong>{{ $chFinancialReport->members_who_paid_no_dues }}</strong>
+                                Members Who Paid No Dues:&nbsp;&nbsp;&nbsp;<strong>{{ $chFinancialReportQuestions->members_who_paid_no_dues }}</strong>
                             </div>
                             <div class="flex-item">&nbsp;&nbsp;&nbsp;</div>
                             <div class="flex-item">
-                                Members Who Paid Partial Dues:&nbsp;&nbsp;&nbsp;<strong>{{ $chFinancialReport->members_who_paid_partial_dues }}</strong>
+                                Members Who Paid Partial Dues:&nbsp;&nbsp;&nbsp;<strong>{{ $chFinancialReportQuestions->members_who_paid_partial_dues }}</strong>
                             </div>
                             <div class="flex-item">
-                                Partial Dues:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport->total_partial_fees_collected, 2) }}</strong>
+                                Partial Dues:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReportQuestions->total_partial_fees_collected, 2) }}</strong>
                             </div>
                             <div class="flex-item">
-                                Associate Members:&nbsp;&nbsp;&nbsp;<strong>{{ $chFinancialReport->total_associate_members }}</strong>
+                                Associate Members:&nbsp;&nbsp;&nbsp;<strong>{{ $chFinancialReportQuestions->total_associate_members }}</strong>
                             </div>
                             <div class="flex-item">
-                                Associate Dues:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport->associate_member_fee, 2) }}</strong>
+                                Associate Dues:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReportQuestions->associate_member_fee, 2) }}</strong>
                             </div>
                         @endif
                     </div>
 
-                    @php
-                        $newMembers = $chFinancialReport->total_new_members * $chFinancialReport->dues_per_member;
-                        $renewalMembers = $chFinancialReport->total_renewed_members * $chFinancialReport->dues_per_member;
-                        $renewalMembersDiff = $chFinancialReport->total_renewed_members * $chFinancialReport->dues_per_member_renewal;
-                        $newMembersNew = $chFinancialReport->total_new_members_changed_dues * $chFinancialReport->dues_per_member_new_changed;
-                        $renewMembersNew = $chFinancialReport->total_renewed_members_changed_dues * $chFinancialReport->dues_per_member_new_changed;
-                        $renewMembersNewDiff = $chFinancialReport->total_renewed_members_changed_dues * $chFinancialReport->dues_per_member_renewal_changed;
-                        // $partialMembers = $chFinancialReport->members_who_paid_partial_dues * $chFinancialReport->total_partial_fees_collected;
-                        $partialDues = $chFinancialReport->total_partial_fees_collected;
-                        $associateMembers = $chFinancialReport->total_associate_members * $chFinancialReport->associate_member_fee;
-                        $totalMembers = $chFinancialReport->total_new_members + $chFinancialReport->total_renewed_members
-                            + $chFinancialReport->total_new_members_changed_dues + $chFinancialReport->total_renewed_members_changed_dues
-                            + $chFinancialReport->members_who_paid_partial_dues + $chFinancialReport->total_associate_members
-                            + $chFinancialReport->members_who_paid_no_dues;
-                        if ($chFinancialReport->different_dues == 1 && $chFinancialReport->changed_dues == 1) {
-                            $totalDues = $newMembers + $renewalMembersDiff + $newMembersNew + $renewMembersNewDiff + $partialDues + $associateMembers;
-                        } elseif ($chFinancialReport->different_dues == 1) {
-                            $totalDues = $newMembers + $renewalMembersDiff + $partialDues + $associateMembers;
-                        } elseif ($chFinancialReport->changed_dues == 1) {
-                            $totalDues = $newMembers + $renewalMembers + $newMembersNew + $renewMembersNew + $partialDues + $associateMembers;
-                        } else {
-                            $totalDues = $newMembers + $renewalMembers + $partialDues + $associateMembers;
-                        }
-                    @endphp
-
                     <br>
                     <div class="col-md-12">
-                        <label class="me-2">Total Members:</label><b>{{ $totalMembers }}</b>
+                        <label class="me-2">Total Members:</label><b>{{ $chFinancialReport->member_count_total }}</b>
                     </div>
                     <div class="col-md-12">
-                        <label class="me-2">Total Dues Collected:</label><b>{{ '$'.number_format($totalDues, 2) }}</b>
+                        <label class="me-2">Total Dues Collected:</label><b>{{ '$'.number_format($chFinancialReport->member_dues_total, 2) }}</b>
                     </div>
                     <br>
 
@@ -287,17 +262,17 @@
                     </div>
                     <div class="col-md-12">
                         <label class="me-2">Total Meeting Room Expenses:</label>
-                        <b>{{ '$'.number_format($chFinancialReport->manditory_meeting_fees_paid + $chFinancialReport->voluntary_donations_paid) }}</b>
+                        <b>{{ '$'.number_format($chFinancialReport->meeting_expenses_total) }}</b>
                     </div>
                     <br>
                     <div class="col-md-12">
                         <span class="me-2">Did you have speakers at any meetings?</span>
-                        <b>{{ is_null($chFinancialReport->meeting_speakers) ? 'Not Answered' : ($chFinancialReport->meeting_speakers == 0 ? 'NO'
-                            : ($chFinancialReport->meeting_speakers == 1 ? 'YES' : 'Not Answered')) }}
-                            <span class="ms-2">{{ $chFinancialReport->meeting_speakers_explanation }}</span></b>
-                        @if ($chFinancialReport->meeting_speakers == 1)
+                        <b>{{ is_null($chFinancialReportQuestions->meeting_speakers) ? 'Not Answered' : ($chFinancialReportQuestions->meeting_speakers == 0 ? 'NO'
+                            : ($chFinancialReportQuestions->meeting_speakers == 1 ? 'YES' : 'Not Answered')) }}
+                            <span class="ms-2">{{ $chFinancialReportQuestions->meeting_speakers_explanation }}</span></b>
+                        @if ($chFinancialReportQuestions->meeting_speakers == 1)
                             @php
-                                $meetingSpeakersArray = json_decode($chFinancialReport->meeting_speakers_array);
+                                $meetingSpeakersArray = json_decode($chFinancialReportQuestions->meeting_speakers_array);
                                 $meetingSpeakersMapping = [
                                     '0' => 'N/A', '1' => 'Child Rearing', '2' => 'Schools/Education',
                                     '3' => 'Home Management', '4' => 'Politics', '5' => 'Other Non-Profit', '6' => 'Other',
@@ -312,15 +287,15 @@
                     </div>
                     <div class="col-md-12">
                         <span class="me-2">Did you have any discussion topics at your meetings?</span>
-                        <b>{{ is_null($chFinancialReport->discussion_topic_frequency) ? 'Not Answered' : ($chFinancialReport->discussion_topic_frequency == 0 ? 'NO'
-                            : ($chFinancialReport->discussion_topic_frequency == 1 ? '1-3 Times' : ($chFinancialReport->discussion_topic_frequency == 2 ? '4-6 Times'
-                            : ($chFinancialReport->discussion_topic_frequency == 3 ? '7-9 Times' : ($chFinancialReport->discussion_topic_frequency == 4 ? '10+ Times' : 'Not Answered'))))) }}</b>
+                        <b>{{ is_null($chFinancialReportQuestions->discussion_topic_frequency) ? 'Not Answered' : ($chFinancialReportQuestions->discussion_topic_frequency == 0 ? 'NO'
+                            : ($chFinancialReportQuestions->discussion_topic_frequency == 1 ? '1-3 Times' : ($chFinancialReportQuestions->discussion_topic_frequency == 2 ? '4-6 Times'
+                            : ($chFinancialReportQuestions->discussion_topic_frequency == 3 ? '7-9 Times' : ($chFinancialReportQuestions->discussion_topic_frequency == 4 ? '10+ Times' : 'Not Answered'))))) }}</b>
                     </div>
                     <div class="col-md-12">
                         <span class="me-2">Did you have a children's room with babysitters?</span>
-                        <b>{{ is_null($chFinancialReport->childrens_room_sitters) ? 'Not Answered' : ($chFinancialReport->childrens_room_sitters == 0 ? 'NO'
-                            : ($chFinancialReport->childrens_room_sitters == 1 ? 'YES' : 'Not Answered')) }}
-                            &nbsp;&nbsp;{{ $chFinancialReport->childrens_room_sitters_explanation }}</b>
+                        <b>{{ is_null($chFinancialReportQuestions->childrens_room_sitters) ? 'Not Answered' : ($chFinancialReportQuestions->childrens_room_sitters == 0 ? 'NO'
+                            : ($chFinancialReportQuestions->childrens_room_sitters == 1 ? 'YES' : 'Not Answered')) }}
+                            &nbsp;&nbsp;{{ $chFinancialReportQuestions->childrens_room_sitters_explanation }}</b>
                     </div>
                     <br>
                     <div class="col-md-12">
@@ -375,13 +350,12 @@
                                     <td colspan="3">No Children's Room Expenses Entered.</td>
                                 </tr>
                             @endif
-                            @php $totalChildrensRoomExpenses = $totalChildrenSupplies + $totalChildrenOther; @endphp
                         </tbody>
                     </table>
                     <br>
                     <div class="col-md-12">
                         <label class="me-2">Total Children's Room Expenses:</label>
-                        <b>{{ '$'.number_format($chFinancialReport->paid_baby_sitters + $totalChildrensRoomExpenses, 2) }}</b>
+                        <b>{{ '$'.number_format($chFinancialReport->children_expenses_total, 2) }}</b>
                     </div>
                     <br>
 
@@ -440,15 +414,15 @@
                 <section>
                     <div class="col-md-12">
                         <span class="me-2">Did your chapter perform at least one service project to benefit mothers or children?</span>
-                        <b>{{ is_null($chFinancialReport->at_least_one_service_project) ? 'Not Answered' : ($chFinancialReport->at_least_one_service_project == 0 ? 'NO'
-                            : ($chFinancialReport->at_least_one_service_project == 1 ? 'YES' : 'Not Answered')) }}
-                            <span class="ms-2">{{ $chFinancialReport->at_least_one_service_project_explanation }}</span></b>
+                        <b>{{ is_null($chFinancialReportQuestions->at_least_one_service_project) ? 'Not Answered' : ($chFinancialReportQuestions->at_least_one_service_project == 0 ? 'NO'
+                            : ($chFinancialReportQuestions->at_least_one_service_project == 1 ? 'YES' : 'Not Answered')) }}
+                            <span class="ms-2">{{ $chFinancialReportQuestions->at_least_one_service_project_explanation }}</span></b>
                     </div>
                     <div class="col-md-12">
                         <span class="me-2">Did your chapter make any contributions to any organization or individual that is not registered with the government as a charity?</span>
-                        <b>{{ is_null($chFinancialReport->contributions_not_registered_charity) ? 'Not Answered' : ($chFinancialReport->contributions_not_registered_charity == 0 ? 'NO'
-                            : ($chFinancialReport->contributions_not_registered_charity == 1 ? 'YES' : 'Not Answered')) }}
-                            <span class="ms-2">{{ $chFinancialReport->contributions_not_registered_charity_explanation }}</span></b>
+                        <b>{{ is_null($chFinancialReportQuestions->contributions_not_registered_charity) ? 'Not Answered' : ($chFinancialReportQuestions->contributions_not_registered_charity == 0 ? 'NO'
+                            : ($chFinancialReportQuestions->contributions_not_registered_charity == 1 ? 'YES' : 'Not Answered')) }}
+                            <span class="ms-2">{{ $chFinancialReportQuestions->contributions_not_registered_charity_explanation }}</span></b>
                     </div>
                     <br>
                     <table width="100%" style="border-collapse: collapse;">
@@ -509,15 +483,14 @@
                                     <td colspan="5">No Service Projects Entered.</td>
                                 </tr>
                             @endif
-                            @php $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $totalServiceM2M; @endphp
                         </tbody>
                     </table>
                     <br>
                     <div class="col-md-12">
-                        <label class="me-2">Total Service Project Income:</label><b>{{ '$'.number_format($totalServiceIncome, 2) }}</b>
+                        <label class="me-2">Total Service Project Income:</label><b>{{ '$'.number_format($chFinancialReport['service_project_income_total'], 2) }}</b>
                     </div>
                     <div class="col-md-12">
-                        <label class="me-2">Total Service Project Expenses:</label><b>{{ '$'.number_format($totalServiceProjectExpenses, 2) }}</b>
+                        <label class="me-2">Total Service Project Expenses:</label><b>{{ '$'.number_format($chFinancialReport['service_project_expenses_total'], 2) }}</b>
                     </div>
                     <br>
 
@@ -645,26 +618,22 @@
                                     <td><strong>${{ number_format($totalPartyIncome, 2) }}</strong></td>
                                     <td><strong>${{ number_format($totalPartyExpense, 2) }}</strong></td>
                                 </tr>
-                                @php
-                                    $partyPercentage = $totalDues == 0 ? 0 : ($totalPartyExpense - $totalPartyIncome) / $totalDues;
-                                @endphp
                             @else
                                 <tr style="border-top: 1px solid #333;">
                                     <td colspan="3">No Parties or Member Benefits Entered.</td>
                                 </tr>
-                                @php $partyPercentage = 0; @endphp
                             @endif
                         </tbody>
                     </table>
                     <br>
                     <div class="col-md-12">
-                        <label class="me-2">Total Member Benefit Income:</label><b>{{ '$'.number_format($totalPartyIncome, 2) }}</b>
+                        <label class="me-2">Total Member Benefit Income:</label><b>{{ '$'.number_format($chFinancialReport['party_income_total'], 2) }}</b>
                     </div>
                     <div class="col-md-12">
-                        <label class="me-2">Total Member Benefit Expenses:</label><b>{{ '$'.number_format($totalPartyExpense, 2) }}</b>
+                        <label class="me-2">Total Member Benefit Expenses:</label><b>{{ '$'.number_format($chFinancialReport['party_expense_total'], 2) }}</b>
                     </div>
                     <div class="col-md-12">
-                        <label class="me-2">Member Benefit/Dues Income Percentage:</label><b>{{ number_format($partyPercentage * 100, 2) }}%</b>
+                        <label class="me-2">Member Benefit/Dues Income Percentage:</label><b>{{ number_format($chFinancialReport['party_percentage'] * 100, 2) }}%</b>
                     </div>
                     <br>
 
@@ -675,25 +644,43 @@
                                 <div class="card-title">ANNUAL REPORT REVIEW <small>(click to open/close)</small></div>
                             </div>
                             <div class="card-body">
-                                <div class="row mb-3">
-                                    <label>Is the Chapter's Party Expense under 15%?<span class="field-required">*&nbsp;</span></label>
-                                    <div class="col-12 d-flex gap-4">
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="checkPartyPercentage" value="2"
-                                                {{ $chFinancialReportReview->review_party_percentage == 2 ? 'checked' : '' }} required>
-                                            <label class="form-check-label">They are under 15%</label>
+                                <div class="card-body">
+                                    @php
+                                        $reviewPartyPercentage = $chFinancialReport->party_percentage > 0.20 ? 3
+                                            : ($chFinancialReport->party_percentage > 0.15 ? 2 : 1);
+                                    @endphp
+                                    <div class="row mb-3">
+                                        <label>Is the Chapter's Party Expense under 15%?<span class="field-required">*&nbsp;</span></label>
+                                        <div class="col-12 d-flex gap-4">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="checkPartyPercentage_display" value="1"
+                                                    {{ $reviewPartyPercentage == 1 ? 'checked' : '' }} disabled>
+                                                <label class="form-check-label">They are under 15%</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="checkPartyPercentage_display" value="2"
+                                                    {{ $reviewPartyPercentage == 2 ? 'checked' : '' }} disabled>
+                                                <label class="form-check-label">They are between 15-20%</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="checkPartyPercentage_display" value="3"
+                                                    {{ $reviewPartyPercentage == 3 ? 'checked' : '' }} disabled>
+                                                <label class="form-check-label">They are over 20%</label>
+                                            </div>
                                         </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="checkPartyPercentage" value="1"
-                                                {{ $chFinancialReportReview->review_party_percentage == 1 ? 'checked' : '' }}>
-                                            <label class="form-check-label">They are between 15-20%</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="checkPartyPercentage" value="0"
-                                                {{ !is_null($chFinancialReportReview->review_party_percentage) && $chFinancialReportReview->review_party_percentage == 0 ? 'checked' : '' }}>
-                                            <label class="form-check-label">They are over 20%</label>
-                                        </div>
+                                        <input type="hidden" name="checkPartyPercentage" value="{{ $reviewPartyPercentage }}">
                                     </div>
+                                    @if($chFinancialReport->party_percentage > 0.15)
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                @if($chFinancialReport->party_percentage > 0.20)
+                                                    Chapter's party expense is <b>over 20%</b> so the chapter should be placed on <b><span class="badge bg-danger">PROBATION</span></b>.
+                                                @else
+                                                    Chapter's party expense is <b>between 15-20%</b> so the chapter should be given a <b><span class="badge bg-warning text-dark">FORMAL WARNING</span></b>.
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
                                 <div class="row mb-3">
                                     <label for="Step4_Note">Add New Note:</label>
@@ -791,7 +778,7 @@
                     <br>
                     <div class="col-md-12">
                         <label class="me-2">Total Office/Operating Expenses:</label>
-                        <b>{{ '$'.number_format($chFinancialReport->office_printing_costs + $chFinancialReport->office_postage_costs + $chFinancialReport->office_membership_pins_cost + $totalOfficeExpense, 2) }}</b>
+                        <b>{{ '$'.number_format($chFinancialReport->office_expenses_total, 2) }}</b>
                     </div>
                     <br>
 
@@ -854,8 +841,8 @@
                     <br>
                     <div class="col-md-12">
                         <span class="me-2">Did your chapter attend an International Event?</span>
-                        <b>{{ is_null($chFinancialReport->international_event) ? 'Not Answered' : ($chFinancialReport->international_event == 0 ? 'NO'
-                            : ($chFinancialReport->international_event == 1 ? 'YES' : 'Not Answered')) }}</b>
+                        <b>{{ is_null($chFinancialReportQuestions->international_event) ? 'Not Answered' : ($chFinancialReportQuestions->international_event == 0 ? 'NO'
+                            : ($chFinancialReportQuestions->international_event == 1 ? 'YES' : 'Not Answered')) }}</b>
                     </div>
                     <br>
                     <table width="75%" style="border-collapse: collapse;">
@@ -908,10 +895,10 @@
                     </table>
                     <br>
                     <div class="col-md-12">
-                        <label class="me-2">Total Events Income:</label><b>{{ '$'.number_format($totalEventIncome, 2) }}</b>
+                        <label class="me-2">Total Events Income:</label><b>{{ '$'.number_format($chFinancialReport['international_event_income_total'], 2) }}</b>
                     </div>
                     <div class="col-md-12">
-                        <label class="me-2">Total Events Expenses:</label><b>{{ '$'.number_format($totalEventExpense, 2) }}</b>
+                        <label class="me-2">Total Events Expenses:</label><b>{{ '$'.number_format($chFinancialReport['international_event_expenses_total'], 2) }}</b>
                     </div>
                     <br>
 
@@ -1035,7 +1022,7 @@
                     </table>
                     <br>
                     <div class="col-md-12">
-                        <label class="me-2">Total Monetary Donations:</label><b>{{ '$'.number_format($totalDonationAmount, 2) }}</b>
+                        <label class="me-2">Total Monetary Donations:</label><b>{{ '$'.number_format($chFinancialReport['donation_income_total'], 2) }}</b>
                     </div>
                     <br>
                     Non-Monetary Donations:
@@ -1179,10 +1166,10 @@
                     </table>
                     <br>
                     <div class="col-md-12">
-                        <label class="me-2">Total Other Income:</label><b>{{ '$'.number_format($totalOtherIncome, 2) }}</b>
+                        <label class="me-2">Total Other Income:</label><b>{{ '$'.number_format($chFinancialReport['other_income_total'], 2) }}</b>
                     </div>
                     <div class="col-md-12">
-                        <label class="me-2">Total Other Expenses:</label><b>{{ '$'.number_format($totalOtherExpenses, 2) }}</b>
+                        <label class="me-2">Total Other Expenses:</label><b>{{ '$'.number_format($chFinancialReport['other_expense_total'], 2) }}</b>
                     </div>
                     <br>
 
@@ -1239,73 +1226,57 @@
         <div id="collapseNine" class="accordion-collapse collapse {{ $chFinancialReportReview->farthest_step_visited_coord == '9' ? 'show' : '' }}" data-bs-parent="#accordion">
             <div class="accordion-body">
                 <section>
-                    @php
-                        $totalIncome = $totalDues + $totalServiceIncome + $totalPartyIncome + $totalDonationAmount + $totalEventIncome + $totalOtherIncome;
-                        $totalExpenses = $chFinancialReport->manditory_meeting_fees_paid + $chFinancialReport->voluntary_donations_paid
-                            + $chFinancialReport->paid_baby_sitters + $totalChildrensRoomExpenses + $totalServiceProjectExpenses
-                            + $totalPartyExpense + $chFinancialReport->office_printing_costs + $chFinancialReport->office_postage_costs
-                            + $chFinancialReport->office_membership_pins_cost + $totalOfficeExpense
-                            + $chFinancialReport->annual_registration_fee + $totalEventExpense + $totalOtherExpenses;
-                        $treasuryBalance = $chFinancialReport->amount_reserved_from_previous_year + $totalIncome - $totalExpenses;
-                    @endphp
                     <table width="50%" style="border-collapse: collapse;">
                         <tbody>
                             <tr><td><strong>INCOME</strong></td></tr>
                             <tr>
                                 <td style="border-top: 1px solid #333;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Membership Dues Income</td>
-                                <td style="border-top: 1px solid #333;">{{ '$'.number_format($totalDues, 2) }}</td>
+                                <td style="border-top: 1px solid #333;">{{ '$'.number_format($chFinancialReport->member_dues_total, 2) }}</td>
                             </tr>
-                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Project Income</td><td>{{ '$'.number_format($totalServiceIncome, 2) }}</td></tr>
-                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Party/Member Benefit Income</td><td>{{ '$'.number_format($totalPartyIncome, 2) }}</td></tr>
-                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Monetary Donations to Chapter</td><td>{{ '$'.number_format($totalDonationAmount, 2) }}</td></tr>
-                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;International Event Registration</td><td>{{ '$'.number_format($totalEventIncome, 2) }}</td></tr>
-                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Other Income</td><td>{{ '$'.number_format($totalOtherIncome, 2) }}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Project Income</td><td>{{ '$'.number_format($chFinancialReport->service_project_income_total, 2) }}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Party/Member Benefit Income</td><td>{{ '$'.number_format($chFinancialReport->party_income_total, 2) }}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Monetary Donations to Chapter</td><td>{{ '$'.number_format($chFinancialReport->donation_income_total, 2) }}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;International Event Registration</td><td>{{ '$'.number_format($chFinancialReport->international_event_income_total, 2) }}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Other Income</td><td>{{ '$'.number_format($chFinancialReport->other_income_total, 2) }}</td></tr>
                             <tr>
                                 <td style="border-top: 1px solid #333;"><strong>TOTAL INCOME:</strong></td>
-                                <td style="border-top: 1px solid #333;"><strong>{{ '$'.number_format($totalIncome, 2) }}</strong></td>
+                                <td style="border-top: 1px solid #333;"><strong>{{ '$'.number_format($chFinancialReport->sum_total_income, 2) }}</strong></td>
                             </tr>
                             <tr><td>&nbsp;</td></tr>
                             <tr><td><strong>EXPENSES</strong></td></tr>
                             <tr>
                                 <td style="border-top: 1px solid #333;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Meeting Room Expenses</td>
-                                <td style="border-top: 1px solid #333;">{{ '$'.number_format($chFinancialReport->manditory_meeting_fees_paid + $chFinancialReport->voluntary_donations_paid, 2) }}</td>
+                                <td style="border-top: 1px solid #333;">{{ '$'.number_format($chFinancialReport->meeting_expenses_total, 2) }}</td>
                             </tr>
                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Children's Room Expenses:</td></tr>
-                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Supplies</td><td>{{ '$'.number_format($totalChildrenSupplies, 2) }}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Supplies</td><td>{{ '$'.number_format($chFinancialReport->children_expenses_supplies, 2) }}</td></tr>
                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Paid Sitters</td><td>{{ '$'.number_format($chFinancialReport->paid_baby_sitters, 2) }}</td></tr>
-                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Other</td><td>{{ '$'.number_format($totalChildrenOther, 2) }}</td></tr>
-                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Children's Room Expense Total</td><td>{{ '$'.number_format($chFinancialReport->paid_baby_sitters + $totalChildrensRoomExpenses, 2) }}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Other</td><td>{{ '$'.number_format($chFinancialReport->children_expenses_other, 2) }}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Children's Room Expense Total</td><td>{{ '$'.number_format($chFinancialReport->children_expenses_total, 2) }}</td></tr>
                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Project Expenses</td></tr>
-                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Supplies:</td><td>{{ '$'.number_format($totalServiceSupplies, 2) }}</td></tr>
-                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Charitable Donations</td><td>{{ '$'.number_format($totalServiceCharity, 2) }}</td></tr>
-                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;M2M fund Donation</td><td>{{ '$'.number_format($totalServiceM2M, 2) }}</td></tr>
-                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Project Expense Total</td><td>{{ '$'.number_format($totalServiceProjectExpenses, 2) }}</td></tr>
-                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Party/Member Benefit Expenses</td><td>{{ '$'.number_format($totalPartyExpense, 2) }}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Supplies:</td><td>{{ '$'.number_format($chFinancialReport->service_project_expenses_supplies, 2) }}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Charitable Donations</td><td>{{ '$'.number_format($chFinancialReport->service_project_expenses_charity, 2) }}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;M2M fund Donation</td><td>{{ '$'.number_format($chFinancialReport->service_project_expenses_m2m, 2) }}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Project Expense Total</td><td>{{ '$'.number_format($chFinancialReport->service_project_expenses_total, 2) }}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Party/Member Benefit Expenses</td><td>{{ '$'.number_format($chFinancialReport->party_expense_total, 2) }}</td></tr>
                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Office/Operating Expenses</td></tr>
                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Printing</td><td>{{ '$'.number_format($chFinancialReport->office_printing_costs, 2) }}</td></tr>
                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Postage</td><td>{{ '$'.number_format($chFinancialReport->office_postage_costs, 2) }}</td></tr>
                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Membership Pins</td><td>{{ '$'.number_format($chFinancialReport->office_membership_pins_cost, 2) }}</td></tr>
-                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Other</td><td>{{ '$'.number_format($totalOfficeExpense, 2) }}</td></tr>
-                            <tr>
-                                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Office/Operating Expense Total</td>
-                                <td>{{ '$'.number_format($chFinancialReport->office_printing_costs + $chFinancialReport->office_postage_costs + $chFinancialReport->office_membership_pins_cost + $totalOfficeExpense, 2) }}</td>
-                            </tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Other</td><td>{{ '$'.number_format($chFinancialReport->office_expenses_other, 2) }}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Office/Operating Expense Total</td><td>{{ '$'.number_format($chFinancialReport->office_expenses_total, 2) }}</td></tr>
                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Annual Chapter Re-registration Fee</td><td>{{ '$'.number_format($chFinancialReport->annual_registration_fee, 2) }}</td></tr>
-                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;International Event Registration</td><td>{{ '$'.number_format($totalEventExpense, 2) }}</td></tr>
-                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Other Expenses</td><td>{{ '$'.number_format($totalOtherExpenses, 2) }}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;International Event Registration</td><td>{{ '$'.number_format($chFinancialReport->international_event_expenses_total, 2) }}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Other Expenses</td><td>{{ '$'.number_format($chFinancialReport->other_expense_total, 2) }}</td></tr>
                             <tr>
                                 <td style="border-top: 1px solid #333;"><strong>TOTAL EXPENSES</strong></td>
-                                <td style="border-top: 1px solid #333;"><strong>{{ '$'.number_format($totalExpenses, 2) }}</strong></td>
+                                <td style="border-top: 1px solid #333;"><strong>{{ '$'.number_format($chFinancialReport->sum_total_expense, 2) }}</strong></td>
                             </tr>
                             <tr><td>&nbsp;</td></tr>
                             <tr>
                                 <td style="border-top: 1px solid #333; border-bottom: 1px solid #333;"><strong>PROFIT (LOSS)</strong></td>
                                 <td style="border-top: 1px solid #333; border-bottom: 1px solid #333;"><strong>
-                                    @php
-                                        $netAmount = $totalIncome - $totalExpenses;
-                                        $formattedAmount = ($netAmount < 0) ? '($' . number_format(abs($netAmount), 2) . ')' : '$' . number_format($netAmount, 2);
-                                    @endphp
-                                    {{ $formattedAmount }}
+                                    {{ '$'.number_format($chFinancialReport->sum_total_net_income, 2) }}
                                 </strong></td>
                             </tr>
                         </tbody>
@@ -1320,7 +1291,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="col-md-12">
-                                    <label class="me-2">Total Income/Revenue:</label><b>{{ '$'.number_format($totalIncome, 2) }}</b>
+                                    <label class="me-2">Total Income/Revenue:</label><b>{{ '$'.number_format($chFinancialReport->sum_total_income, 2) }}</b>
                                 </div>
                                 <br>
                                 <div class="row mb-3">
@@ -1384,35 +1355,35 @@
         <div id="collapseTen" class="accordion-collapse collapse {{ $chFinancialReportReview->farthest_step_visited_coord == '10' ? 'show' : '' }}" data-bs-parent="#accordion">
             <div class="accordion-body">
                 <section>
-                    <div class="col-md-12">
-                        <span class="me-2">Is a copy of your chapter's most recent bank statement included?</span>
-                        <b>{{ is_null($chFinancialReport->bank_statement_included) ? 'Not Answered' : ($chFinancialReport->bank_statement_included == 0 ? 'NO'
-                            : ($chFinancialReport->bank_statement_included == 1 ? 'YES' : 'Not Answered')) }}
-                            <span class="ms-2">{{ $chFinancialReport->bank_statement_included_explanation }}{{ $chFinancialReport->wheres_the_money }}</span></b>
-                    </div>
-                    <br>
+
                     <div class="row">
-                        <div class="col-md-4">
-                            <span class="me-2">Beginning Balance</span><b>{{ '$'.number_format($chFinancialReport->amount_reserved_from_previous_year, 2) }}</b>
-                        </div>
-                        <div class="col-md-8">
-                            <span class="me-2">Ending Bank Statement Balance</span><b>{{ '$'.number_format($chFinancialReport->bank_balance_now, 2) }}</b>
+                        <div class="col-md-12">
+                            <span class="me-2">Ending Balance on Last Year's Report:</span><b>{{ '$'.number_format($chFinancialReport->ending_balance_last_year, 2) }}</b>
+                            <br>
+                            <span class="me-2">Beginning Balance:</span><b>{{ '$'.number_format($chFinancialReport->beginning_balance, 2) }}</b>
+                            <br>
+                            <span class="me-2">Profit (Loss):</span><b>{{ '$'.number_format($chFinancialReport->sum_total_net_income, 2) }}</b>
+                            <br>
+                            <b><span class="me-2">Ending Balance:</span>{{ '$'.number_format($chFinancialReport->ending_balance, 2) }}</b>
                         </div>
                     </div>
-                    <div class="row">
+                    {{-- <div class="row">
                         <div class="col-md-4">
                             <span class="me-2">Profit (Loss)</span>
-                            <b>
-                                @php
-                                    $netAmount = $totalIncome - $totalExpenses;
-                                    $formattedAmount = ($netAmount < 0) ? '($' . number_format(abs($netAmount), 2) . ')' : '$' . number_format($netAmount, 2);
-                                @endphp
-                                {{ $formattedAmount }}
-                            </b>
+                            <b>{{ '$'.number_format($chFinancialReport->sum_total_net_income, 2) }}</b>
                         </div>
                         <div class="col-md-8">
-                            <span class="me-2">Ending Balance (Treasury Balance Now)</span><b>{{ '$'.number_format($treasuryBalance, 2) }}</b>
+                            <span class="me-2">Ending Balance</span><b>{{ '$'.number_format($chFinancialReport->ending_balance, 2) }}</b>
                         </div>
+                    </div> --}}
+                    <br>
+                    <div class="col-md-12">
+                        <span class="me-2">Is a copy of your chapter's most recent bank statement included?</span>
+                        <b>{{ is_null($chFinancialReportQuestions->bank_statement_included) ? 'Not Answered' : ($chFinancialReportQuestions->bank_statement_included == 0 ? 'NO'
+                            : ($chFinancialReportQuestions->bank_statement_included == 1 ? 'YES' : 'Not Answered')) }}
+                            <span class="ms-2">{{ $chFinancialReportQuestions->bank_statement_included_explanation }}{{ $chFinancialReportQuestions->wheres_the_money }}</span></b>
+                    <br>
+                    <span class="me-2">Ending Bank Statement Balance</span><b>{{ '$'.number_format($chFinancialReport->statement_balance, 2) }}</b>
                     </div>
                     <br>
                     <table width="75%" style="border-collapse: collapse;">
@@ -1470,13 +1441,12 @@
                                     <td colspan="5">No Reconciliation Transactions Entered.</td>
                                 </tr>
                             @endif
-                            @php $totalReconciliation = $totalDeposits - $totalPayments; @endphp
                         </tbody>
                     </table>
                     <br>
                     <div class="col-md-12">
-                        <label class="me-2">Reconciled Bank Statement:</label>
-                        <b>{{ '$'.number_format($chFinancialReport->bank_balance_now + $totalReconciliation, 2) }}</b>
+                        <label class="me-2">Reconciled Balance:</label>
+                        <b>{{ '$'.number_format($chFinancialReport->reconciled_balance, 2) }}</b>
                     </div>
                     <br>
 
@@ -1526,11 +1496,11 @@
                                 </div>
                                 <input type="hidden" name="Statement2File" id="Statement2Path" value="{{ $chEOYDocuments->statement_2_path }}">
                                 <br>
-                                <div class="col-md-12">
+                                {{-- <div class="col-md-12">
                                     <label class="me-2">Ending Balance on Last Year's Report:</label>
-                                    <b>{{ '$'.number_format($chFinancialReport->pre_balance, 2) }}</b>
+                                    <b>{{ '$'.number_format($chFinancialReport->ending_balance_last_year, 2) }}</b>
                                 </div>
-                                <br>
+                                <br> --}}
                                 <div class="row mb-3">
                                     <label>Does this year's Beginning Balance match last year's Ending Balance?<span class="field-required">*&nbsp;</span></label>
                                     <div class="col-12 d-flex gap-4">
@@ -1562,27 +1532,18 @@
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label>Treasury Balance Now matches Reconciled Bank Balance:<span class="field-required">*&nbsp;</span></label>
+                                    <label>Ending Balance matches Reconciled Balance:<span class="field-required">*&nbsp;</span></label>
                                     <div class="col-12 d-flex gap-4">
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="checkBankStatementMatches" value="1"
-                                                {{ $chFinancialReportReview->review_bank_statement_matches == 1 ? 'checked' : '' }}>
+                                            <input class="form-check-input" type="radio" name="checkReportBalances" value="1"
+                                                {{ $chFinancialReportReview->review_report_balance == 1 ? 'checked' : '' }}>
                                             <label class="form-check-label">Yes</label>
                                         </div>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="checkBankStatementMatches" value="0"
-                                                {{ !is_null($chFinancialReportReview->review_bank_statement_matches) && $chFinancialReportReview->review_bank_statement_matches == 0 ? 'checked' : '' }}>
+                                            <input class="form-check-input" type="radio" name="checkReportBalances" value="0"
+                                                {{ !is_null($chFinancialReportReview->review_report_balance) && $chFinancialReportReview->review_report_balance == 0 ? 'checked' : '' }}>
                                             <label class="form-check-label">No</label>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-12">
-                                        <label for="post_balance" class="me-2">Enter Ending Balance (to be used as beginning balance on next year's report):</label><br>
-                                        <small>This should be the Treasury Balance Now/Reconciled Bank Statement Amojnt.</small>
-                                    </div>
-                                    <div class="col-md-4">
-                                        @currencyInput('post_balance', !empty($chFinancialReport) ? $chFinancialReportReview->post_balance : '')
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -1638,9 +1599,9 @@
                     </div>
                     <div class="col-md-12">
                         <span class="me-2">Did your chapter file their IRS 990N?</span>
-                        <b>{{ is_null($chFinancialReport->file_irs) ? 'Not Answered' : ($chFinancialReport->file_irs == 0 ? 'NO'
-                            : ($chFinancialReport->file_irs == 1 ? 'YES' : 'Not Answered')) }}
-                            <span class="ms-2">{{ $chFinancialReport->file_irs_explanation }}</span></b>
+                        <b>{{ is_null($chFinancialReportQuestions->file_irs) ? 'Not Answered' : ($chFinancialReportQuestions->file_irs == 0 ? 'NO'
+                            : ($chFinancialReportQuestions->file_irs == 1 ? 'YES' : 'Not Answered')) }}
+                            <span class="ms-2">{{ $chFinancialReportQuestions->file_irs_explanation }}</span></b>
                     </div>
                     <br>
 
@@ -1743,9 +1704,9 @@
                             </tr>
                             <tr>
                                 <td></td>
-                                <td><b>{{ is_null($chFinancialReport->bylaws_available) ? 'Not Answered' : ($chFinancialReport->bylaws_available == 0 ? 'NO'
-                                    : ($chFinancialReport->bylaws_available == 1 ? 'YES' : 'Not Answered')) }}
-                                    <span class="ms-2">{{ $chFinancialReport->bylaws_available_explanation }}</span></b></td>
+                                <td><b>{{ is_null($chFinancialReportQuestions->bylaws_available) ? 'Not Answered' : ($chFinancialReportQuestions->bylaws_available == 0 ? 'NO'
+                                    : ($chFinancialReportQuestions->bylaws_available == 1 ? 'YES' : 'Not Answered')) }}
+                                    <span class="ms-2">{{ $chFinancialReportQuestions->bylaws_available_explanation }}</span></b></td>
                             </tr>
                             <tr>
                                 <td>2.</td>
@@ -1753,9 +1714,9 @@
                             </tr>
                             <tr>
                                 <td></td>
-                                <td><b>{{ is_null($chFinancialReport->vote_all_activities) ? 'Not Answered' : ($chFinancialReport->vote_all_activities == 0 ? 'NO'
-                                    : ($chFinancialReport->vote_all_activities == 1 ? 'YES' : 'Not Answered')) }}
-                                    <span class="ms-2">{{ $chFinancialReport->vote_all_activities_explanation }}</span></b></td>
+                                <td><b>{{ is_null($chFinancialReportQuestions->vote_all_activities) ? 'Not Answered' : ($chFinancialReportQuestions->vote_all_activities == 0 ? 'NO'
+                                    : ($chFinancialReportQuestions->vote_all_activities == 1 ? 'YES' : 'Not Answered')) }}
+                                    <span class="ms-2">{{ $chFinancialReportQuestions->vote_all_activities_explanation }}</span></b></td>
                             </tr>
                             <tr>
                                 <td>3.</td>
@@ -1763,9 +1724,9 @@
                             </tr>
                             <tr>
                                 <td></td>
-                                <td><b>{{ is_null($chFinancialReport->child_outings) ? 'Not Answered' : ($chFinancialReport->child_outings == 0 ? 'NO'
-                                    : ($chFinancialReport->child_outings == 1 ? 'YES' : 'Not Answered')) }}
-                                    <span class="ms-2">{{ $chFinancialReport->child_outings_explanation }}</span></b></td>
+                                <td><b>{{ is_null($chFinancialReportQuestions->child_outings) ? 'Not Answered' : ($chFinancialReportQuestions->child_outings == 0 ? 'NO'
+                                    : ($chFinancialReportQuestions->child_outings == 1 ? 'YES' : 'Not Answered')) }}
+                                    <span class="ms-2">{{ $chFinancialReportQuestions->child_outings_explanation }}</span></b></td>
                             </tr>
                             <tr>
                                 <td>4.</td>
@@ -1773,8 +1734,8 @@
                             </tr>
                             <tr>
                                 <td></td>
-                                <td><b>{{ is_null($chFinancialReport->playgroups) ? 'Not Answered' : ($chFinancialReport->playgroups == 0 ? 'NO'
-                                    : ($chFinancialReport->playgroups == 1 ? 'YES   Arranged by Age' : (['playgroups'] == 2 ? 'YES   Multi-aged Groups' : 'Not Answered'))) }}</b></td>
+                                <td><b>{{ is_null($chFinancialReportQuestions->playgroups) ? 'Not Answered' : ($chFinancialReportQuestions->playgroups == 0 ? 'NO'
+                                    : ($chFinancialReportQuestions->playgroups == 1 ? 'YES   Arranged by Age' : (['playgroups'] == 2 ? 'YES   Multi-aged Groups' : 'Not Answered'))) }}</b></td>
                             </tr>
                             <tr>
                                 <td>5.</td>
@@ -1782,9 +1743,9 @@
                             </tr>
                             <tr>
                                 <td></td>
-                                <td><b>{{ is_null($chFinancialReport->park_day_frequency) ? 'Not Answered' : ($chFinancialReport->park_day_frequency == 0 ? 'NO'
-                                    : ($chFinancialReport->park_day_frequency == 1 ? '1-3 Times' : ($chFinancialReport->park_day_frequency == 2 ? '4-6 Times'
-                                    : ($chFinancialReport->park_day_frequency == 3 ? '7-9 Times' : ($chFinancialReport->park_day_frequency == 4 ? '10+ Times' : 'Not Answered'))))) }}</b></td>
+                                <td><b>{{ is_null($chFinancialReportQuestions->park_day_frequency) ? 'Not Answered' : ($chFinancialReportQuestions->park_day_frequency == 0 ? 'NO'
+                                    : ($chFinancialReportQuestions->park_day_frequency == 1 ? '1-3 Times' : ($chFinancialReportQuestions->park_day_frequency == 2 ? '4-6 Times'
+                                    : ($chFinancialReportQuestions->park_day_frequency == 3 ? '7-9 Times' : ($chFinancialReportQuestions->park_day_frequency == 4 ? '10+ Times' : 'Not Answered'))))) }}</b></td>
                             </tr>
                             <tr>
                                 <td>6.</td>
@@ -1792,9 +1753,9 @@
                             </tr>
                             <tr>
                                 <td></td>
-                                <td><b>{{ is_null($chFinancialReport->mother_outings) ? 'Not Answered' : ($chFinancialReport->mother_outings == 0 ? 'NO'
-                                    : ($chFinancialReport->mother_outings == 1 ? 'YES' : 'Not Answered')) }}
-                                    <span class="ms-2">{{ $chFinancialReport->mother_outings_explanation }}</span></b></td>
+                                <td><b>{{ is_null($chFinancialReportQuestions->mother_outings) ? 'Not Answered' : ($chFinancialReportQuestions->mother_outings == 0 ? 'NO'
+                                    : ($chFinancialReportQuestions->mother_outings == 1 ? 'YES' : 'Not Answered')) }}
+                                    <span class="ms-2">{{ $chFinancialReportQuestions->mother_outings_explanation }}</span></b></td>
                             </tr>
                             <tr>
                                 <td>7.</td>
@@ -1804,7 +1765,7 @@
                                 <td></td>
                                 <td><b>
                                     @php
-                                        $activityArray = json_decode($chFinancialReport['activity_array']);
+                                        $activityArray = json_decode($chFinancialReportQuestions['activity_array']);
                                         $activityMapping = [
                                             '0' => 'N/A', '1' => 'Cooking', '2' => 'Cost Cutting Tips',
                                             '3' => 'Mommy Playgroup', '4' => 'Babysitting Co-op', '5' => 'MOMS Night Out', '6' => 'Other',
@@ -1822,50 +1783,50 @@
                             <tr><td>8.</td><td>Did you offer or inform your members about MOMS Club merchandise?</td></tr>
                             <tr>
                                 <td></td>
-                                <td><b>{{ is_null($chFinancialReport->offered_merch) ? 'Not Answered' : ($chFinancialReport->offered_merch == 0 ? 'NO'
-                                    : ($chFinancialReport->offered_merch == 1 ? 'YES' : 'Not Answered')) }}
-                                    <span class="ms-2">{{ $chFinancialReport->offered_merch_explanation }}</span></b></td>
+                                <td><b>{{ is_null($chFinancialReportQuestions->offered_merch) ? 'Not Answered' : ($chFinancialReportQuestions->offered_merch == 0 ? 'NO'
+                                    : ($chFinancialReportQuestions->offered_merch == 1 ? 'YES' : 'Not Answered')) }}
+                                    <span class="ms-2">{{ $chFinancialReportQuestions->offered_merch_explanation }}</span></b></td>
                             </tr>
                             <tr><td>9.</td><td>Did you purchase any merchandise from International other than pins?</td></tr>
                             <tr>
                                 <td></td>
-                                <td><b>{{ is_null($chFinancialReport->bought_merch) ? 'Not Answered' : ($chFinancialReport->bought_merch == 0 ? 'NO'
-                                    : ($chFinancialReport->bought_merch == 1 ? 'YES' : 'Not Answered')) }}
-                                    <span class="ms-2">{{ $chFinancialReport->bought_merch_explanation }}</span></b></td>
+                                <td><b>{{ is_null($chFinancialReportQuestions->bought_merch) ? 'Not Answered' : ($chFinancialReportQuestions->bought_merch == 0 ? 'NO'
+                                    : ($chFinancialReportQuestions->bought_merch == 1 ? 'YES' : 'Not Answered')) }}
+                                    <span class="ms-2">{{ $chFinancialReportQuestions->bought_merch_explanation }}</span></b></td>
                             </tr>
                             <tr><td>10.</td><td>Did you purchase pins from International?</td></tr>
                             <tr>
                                 <td></td>
-                                <td><b>{{ is_null($chFinancialReport->purchase_pins) ? 'Not Answered' : ($chFinancialReport->purchase_pins == 0 ? 'NO'
-                                    : ($chFinancialReport->purchase_pins == 1 ? 'YES' : 'Not Answered')) }}
-                                    <span class="ms-2">{{ $chFinancialReport->purchase_pins_explanation }}</span></b></td>
+                                <td><b>{{ is_null($chFinancialReportQuestions->purchase_pins) ? 'Not Answered' : ($chFinancialReportQuestions->purchase_pins == 0 ? 'NO'
+                                    : ($chFinancialReportQuestions->purchase_pins == 1 ? 'YES' : 'Not Answered')) }}
+                                    <span class="ms-2">{{ $chFinancialReportQuestions->purchase_pins_explanation }}</span></b></td>
                             </tr>
                             <tr><td>11.</td><td>Did anyone in your chapter receive any compensation or pay for their work with your chapter?</td></tr>
                             <tr>
                                 <td></td>
-                                <td><b>{{ is_null($chFinancialReport->receive_compensation) ? 'Not Answered' : ($chFinancialReport->receive_compensation == 0 ? 'NO'
-                                    : ($chFinancialReport->receive_compensation == 1 ? 'YES' : 'Not Answered')) }}
-                                    <span class="ms-2">{{ $chFinancialReport->receive_compensation_explanation }}</span></b></td>
+                                <td><b>{{ is_null($chFinancialReportQuestions->receive_compensation) ? 'Not Answered' : ($chFinancialReportQuestions->receive_compensation == 0 ? 'NO'
+                                    : ($chFinancialReportQuestions->receive_compensation == 1 ? 'YES' : 'Not Answered')) }}
+                                    <span class="ms-2">{{ $chFinancialReportQuestions->receive_compensation_explanation }}</span></b></td>
                             </tr>
                             <tr><td>12.</td><td>Did any officer, member or family of a member benefit financially in any way from the member's position with your chapter?</td></tr>
                             <tr>
                                 <td></td>
-                                <td><b>{{ is_null($chFinancialReport->financial_benefit) ? 'Not Answered' : ($chFinancialReport->financial_benefit == 0 ? 'NO'
-                                    : ($chFinancialReport->financial_benefit == 1 ? 'YES' : 'Not Answered')) }}
-                                    <span class="ms-2">{{ $chFinancialReport->financial_benefit_explanation }}</span></b></td>
+                                <td><b>{{ is_null($chFinancialReportQuestions->financial_benefit) ? 'Not Answered' : ($chFinancialReportQuestions->financial_benefit == 0 ? 'NO'
+                                    : ($chFinancialReportQuestions->financial_benefit == 1 ? 'YES' : 'Not Answered')) }}
+                                    <span class="ms-2">{{ $chFinancialReportQuestions->financial_benefit_explanation }}</span></b></td>
                             </tr>
                             <tr><td>13.</td><td>Did your chapter attempt to influence any national, state/provincial, or local legislation, or support any other organization that did?</td></tr>
                             <tr>
                                 <td></td>
-                                <td><b>{{ is_null($chFinancialReport->influence_political) ? 'Not Answered' : ($chFinancialReport->influence_political == 0 ? 'NO'
-                                    : ($chFinancialReport->influence_political == 1 ? 'YES' : 'Not Answered')) }}
-                                    <span class="ms-2">{{ $chFinancialReport->influence_political_explanation }}</span></b></td>
+                                <td><b>{{ is_null($chFinancialReportQuestions->influence_political) ? 'Not Answered' : ($chFinancialReportQuestions->influence_political == 0 ? 'NO'
+                                    : ($chFinancialReportQuestions->influence_political == 1 ? 'YES' : 'Not Answered')) }}
+                                    <span class="ms-2">{{ $chFinancialReportQuestions->influence_political_explanation }}</span></b></td>
                             </tr>
                             <tr><td>14.</td><td>Did your chapter sister another chapter?</td></tr>
                             <tr>
                                 <td></td>
-                                <td><b>{{ is_null($chFinancialReport->sister_chapter) ? 'Not Answered' : ($chFinancialReport->sister_chapter == 0 ? 'NO'
-                                    : ($chFinancialReport->sister_chapter == 1 ? 'YES' : 'Not Answered')) }}</b></td>
+                                <td><b>{{ is_null($chFinancialReportQuestions->sister_chapter) ? 'Not Answered' : ($chFinancialReportQuestions->sister_chapter == 0 ? 'NO'
+                                    : ($chFinancialReportQuestions->sister_chapter == 1 ? 'YES' : 'Not Answered')) }}</b></td>
                             </tr>
                         </tbody>
                     </table>

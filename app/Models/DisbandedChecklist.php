@@ -6,6 +6,6 @@ use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Model;
 
-#[Table('disbanded_checklist', 'chapter_id')]
+#[Table('disbanded_checklist', 'chapter_id', incrementing: false)]
 #[Unguarded]
 class DisbandedChecklist extends Model {}

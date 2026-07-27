@@ -754,23 +754,23 @@
             <tr><td>&nbsp;</td></tr>
             <tr><td><strong>EXPENSES<strong></td></tr>
             <tr><td style="border-top: 1px solid #333;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Meeting Room Expenses</td>
-            <td style="border-top: 1px solid #333;">{{ '$'.number_format($pdfData['sum_total_income'], 2) }}</td></tr>
+            <td style="border-top: 1px solid #333;">{{ '$'.number_format($pdfData['meeting_expenses_total'], 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Children's Room Expenses:</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Supplies</td>
-            <td>{{ '$'.number_format($$pdfData['children_expenses_supplies'], 2) }}</td></tr>
+            <td>{{ '$'.number_format($pdfData['children_expenses_supplies'], 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Paid Sitters</td>
             <td>{{ '$'.number_format($pdfData['paid_baby_sitters'], 2)  }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Other</td>
-            <td>{{ '$'.number_format($$pdfData['children_expenses_other'], 2) }}</td></tr>
+            <td>{{ '$'.number_format($pdfData['children_expenses_other'], 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Children's Room Expense Total</td>
             <td>{{ '$'.number_format($pdfData['children_expenses_total'], 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Project Expenses</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Supplies:</td>
-            <td>{{ '$'.number_format($$pdfData['service_project_expenses_supplies'], 2) }}</td></tr>
+            <td>{{ '$'.number_format($pdfData['service_project_expenses_supplies'], 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Charitable Donations</td>
-            <td>{{ '$'.number_format($$pdfData['service_project_expenses_charity'], 2) }}</td></tr>
+            <td>{{ '$'.number_format($pdfData['service_project_expenses_charity'], 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;M2M fund Donation</td>
-            <td>{{ '$'.number_format($$pdfData['service_project_expenses_m2m'], 2) }}</td></tr>
+            <td>{{ '$'.number_format($pdfData['service_project_expenses_m2m'], 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Project Expense Total</td>
             <td>{{ '$'.number_format($pdfData['service_project_expenses_total'], 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Party/Member Benefit Expenses</td>
@@ -783,7 +783,7 @@
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Membership Pins</td>
             <td>{{ '$'.number_format($pdfData['office_membership_pins_cost'], 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Other</td>
-            <td>{{ '$'.number_format($$pdfData['office_expenses_other'], 2) }}</td></tr>
+            <td>{{ '$'.number_format($pdfData['office_expenses_other'], 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Office/Operating Expense Total</td>
             <td>{{ '$'.number_format($pdfData['office_expenses_total'], 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Annual Chapter Re-registration Fee</td>
@@ -791,9 +791,9 @@
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;International Event Registration</td>
             <td>{{ '$'.number_format($pdfData['international_event_expenses_total'], 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Other Expenses</td>
-            <td>{{ '$'.number_format($pdfData['sum_total_expense'], 2) }}</td></tr>
+            <td>{{ '$'.number_format($pdfData['other_expense_total'], 2) }}</td></tr>
             <tr><td><strong>TOTAL EXPENSES</strong></td>
-            <td><strong>{{ '$'.number_format($pdfData['children_expenses_total'], 2) }}</strong></td></tr>
+            <td><strong>{{ '$'.number_format($pdfData['sum_total_expense'], 2) }}</strong></td></tr>
             <tr><td>&nbsp;</td></tr>
             <tr><td style="border-top: 1px solid #333; border-bottom: 1px solid #333;"><strong>PROFIT (LOSS)</strong></td>
             <td style="border-top: 1px solid #333; border-bottom: 1px solid #333;"><strong>
@@ -817,19 +817,14 @@
     <table width="100%" >
         <tbody>
             <tr><td>Beginning Balance<td>
-                    <td><strong>{{ '$'.number_format($pdfData ['amount_reserved_from_previous_year'], 2)}}</strong></td>
+                    <td><strong>{{ '$'.number_format($pdfData ['beginning_balance'], 2)}}</strong></td>
                 <td>Ending Bank Statement Balance<td>
-                    <td><strong>{{ '$'.number_format($pdfData ['bank_balance_now'], 2)}}</strong></td></tr>
+                    <td><strong>{{ '$'.number_format($pdfData ['statement_balance'], 2)}}</strong></td></tr>
             <tr><td>Profit (Loss)<td>
-                    <td><strong>
-                    @php
-                        $netAmount = $totalIncome - $totalExpenses;
-                        $formattedAmount = ($netAmount < 0) ? '($' . number_format(abs($netAmount), 2) . ')' : '$' . number_format($netAmount, 2);
-                    @endphp
-                    {{ $formattedAmount }}</strong></td>
+                    <td><strong>{{ '$'.number_format($pdfData ['sum_total_net_income'], 2)}}</strong></td></tr>
                 <td></td><td></td></tr>
-            <tr><td>Ending Balance (Treasury Balance Now)<td>
-                    <td><strong>{{ '$'.number_format($treasuryBalance, 2)}}</strong></td>
+            <tr><td>Ending Balance<td>
+                    <td><strong>{{ '$'.number_format($pdfData ['ending_balance'], 2)}}</strong></td>
                     <td></td><td></td></tr>
         </tbody>
     </table>
@@ -882,20 +877,16 @@
                 <td colspan='5'>No data available.</td>
             </tr>
         @endif
-
-        @php
-            $totalReconciliation = -$totalPayments + $totalDeposits;
-        @endphp
     </tbody>
 </table>
     <br>
     <table width="50%" >
         <tbody>
-            <tr>*NOTE: Reconciled Bank Statement & Treasury Balance Now MUST match for Financial Report to be in Balance.</tr>
-            <tr><td>Reconciled Bank Statement</td>
-                <td><strong>{{ '$'.number_format($pdfData ['bank_balance_now'] + $totalReconciliation, 2)}}</strong></td></tr>
-            <tr><td>Treasury Balance Now</td>
-                <td><strong>{{ '$'.number_format($treasuryBalance, 2)}}</strong></td></tr>
+            <tr>*NOTE: Reconciled Balance & Ending Balance MUST match for Financial Report to be in Balance.</tr>
+            <tr><td>Reconciled Balance</td>
+                <td><strong>{{ '$'.number_format($pdfData ['reconciled_balance'], 2)}}</strong></td></tr>
+            <tr><td>Ending Balance</td>
+                <td><strong>{{ '$'.number_format($pdfData ['ending_balance'], 2)}}</strong></td></tr>
         </tbody>
     </table>
     <br>
@@ -1018,8 +1009,8 @@
     <hr>
     <b>SUBMISSION INFORMATION</b>
     <hr>
-    Submitted by: {{ $pdfData ['completed_name']}}<br>
-    Email: {{ $pdfData ['completed_email']}}<br>
+    Submitted by: {{ $pdfData ['completedName']}}<br>
+    Email: {{ $pdfData ['completedEmail']}}<br>
     Date: {{ $pdfData ['submitted']}}
 </div>
 </body>

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Probation extends Model
 {
     public function percentage(): BelongsTo
-        {
-            return $this->belongsTo(ProbationPercentage::class, 'percentage', 'id');  // 'percentage' in probation BelongsTo 'id' in probation_percentage
-        }
+    {
+        return $this->belongsTo(ProbationPercentage::class, 'percentage', 'id');  // 'percentage' in probation BelongsTo 'id' in probation_percentage
+    }
 }

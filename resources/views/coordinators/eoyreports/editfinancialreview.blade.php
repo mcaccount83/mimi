@@ -130,9 +130,9 @@
                         $val = $chFinancialReportReview->review_party_percentage;
                         $badgeClass = match(true) {
                             is_null($val) => 'bg-secondary',
-                            $val == 0    => 'bg-danger',
-                            $val == 1    => 'bg-warning text-dark',
-                            $val == 2    => 'bg-success',
+                            $val == 3    => 'bg-danger',
+                            $val == 2    => 'bg-warning text-dark',
+                            $val == 1    => 'bg-success',
                             default      => 'bg-secondary',
                         };
                     @endphp
@@ -141,22 +141,26 @@
                     </span>
                 </div>
             </div>
-            <div class="row mb-1">
-                <div class="col-auto fw-bold">Party Percentage less than 15%:</div>
-                    <div class="col text-end">
-                    @if(is_null($chFinancialReportReview->review_party_percentage))
-                        <span class="badge bg-secondary fs-7">Please Review</span>
-                    @elseif($chFinancialReportReview->review_party_percentage == 0)
-                        <span class="badge bg-danger fs-7">They are over 20%</span>
-                    @elseif($chFinancialReportReview->review_party_percentage == 1)</span>
-                        <span class="badge bg-warning text-dark fs-7">They are between 15-20%
-                    @elseif($chFinancialReportReview->review_party_percentage == 2)
-                        <span class="badge bg-success fs-7">They are under 15%</span>
-                    @else
-                        <span class="badge bg-secondary fs-7">Please Review</span>
-                    @endif
-            </div>
-            </div>
+            @if($chFinancialReportReview->review_party_percentage > '1')
+                <div class="row mb-1">
+                    <div class="col-auto fw-bold">Party Probation Status:</div>
+                        <div class="col text-end">
+                            @php
+                                $val = $chFinancialReportReview->review_party_percentage;
+                                $badgeClass = match(true) {
+                                    is_null($val) => 'bg-secondary',
+                                    $val == 3    => 'bg-danger',
+                                    $val == 2    => 'bg-warning text-dark',
+                                    $val == 1    => 'bg-success',
+                                    default      => 'bg-secondary',
+                                };
+                            @endphp
+                            <span class="badge {{ $badgeClass }} fs-7">
+                                {{ $chFinancialReportReview->partyPercentage->status }}
+                            </span>
+                    </div>
+                </div>
+            @endif
              <div class="row mb-1">
                     <div class="col-auto fw-bold">Attended International Event:</div>
                     <div class="col text-end">
@@ -273,8 +277,8 @@
               </div>
     @php
         $chapter_awards_check = [];
-        if (!empty($chFinancialReport['chapter_awards'])) {
-            $decoded = unserialize(base64_decode($chFinancialReport['chapter_awards']));
+        if (!empty($$chFinancialReportQuestions['chapter_awards']['chapter_awards'])) {
+            $decoded = unserialize(base64_decode($$chFinancialReportQuestions['chapter_awards']['chapter_awards']));
             if (is_array($decoded)) {
                 $chapter_awards_check = array_filter($decoded, fn ($a) => !empty($a['awards_type']));
             }
@@ -443,8 +447,10 @@
               <div class="col-md-12">
                 <div class="card-body text-center mt-3">
                     @if ($confId == $chConfId)
+                        <button type="button" id="back-eoy" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('eoyreports.eoyoverview') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-clipboard2-data me-2"></i>Back to Financial Overview Report</button>
                         <button type="button" id="back-eoy" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('eoyreports.eoyfinancialreport') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-calculator-fill me-2"></i>Back to Financial Report</button>
                     @elseif ($confId != $chConfId && $ITCondition)
+                        <button type="button" id="back-eoy" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('eoyreports.eoyoverview', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-clipboard2-data me-2"></i>Back to International Financial Overview Report</button>
                         <button type="button" id="back-eoy" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('eoyreports.eoyfinancialreport', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-calculator-fill me-2"></i>Back to International Financial Report</button>
                     @endif
                     <button type="button" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-file-earmark-bar-graph-fill me-2"></i>Back to EOY Details</button>

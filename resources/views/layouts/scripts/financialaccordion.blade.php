@@ -613,16 +613,16 @@
             DepositTotal += parseFloat($(this).find('input[name^="BankRecDepositAmount"]').val()?.replace(/,/g, '') || 0) || 0;
         });
 
-        var BankBalanceNow = parseFloat($('#BankBalanceNow').val().replace(/,/g, '')) || 0;
-        var TotalFees = (BankBalanceNow - PaymentTotal + DepositTotal).toFixed(2);
-        $('#ReconciledBankBalance').val(TotalFees);
+        var StatementBalance = parseFloat($('#StatementBalance').val().replace(/,/g, '')) || 0;
+        var ReconciledBalance = (StatementBalance - PaymentTotal + DepositTotal).toFixed(2);
+        $('#ReconciledBankBalance').val(ReconciledBalance);
 
-        var TreasuryBalanceNow = parseFloat($('#TreasuryBalanceNow').val().replace(/,/g, '')) || 0;
+        var EndingBalance = parseFloat($('#EndingBalance').val().replace(/,/g, '')) || 0;
 
-        if (TotalFees != TreasuryBalanceNow) {
+        if (ReconciledBalance != EndingBalance) {
             $('#ReconciliationAlert').show();
             $('#ReconciledBankBalanceWarning')
-                .text('Reconciled Bank Balance does not match treasury balance now. These numbers must match for your report to be in balance')
+                .text('Reconciled Balance does not match Ending Balance. These numbers must match for your report to be in balance')
                 .css('border-style', 'none');
         } else {
             $('#ReconciliationAlert').hide();
@@ -680,19 +680,18 @@
         var SumInternationalEventIncome = parseNumber($('#SumInternationalEventIncome').val());
         var SumMonetaryDonationIncome = parseNumber($('#SumMonetaryDonationIncome').val());
         var SumChapterReRegistrationExpense = parseNumber($('#SumChapterReRegistrationExpense').val());
-        var TreasuryBalance = parseNumber($('#AmountReservedFromLastYear').val());
+        var BeginningBalance = parseNumber($('#BeginningBalance').val());
 
         var SumTotalExpense = SumTotalChildrensRoomExpense + SumMeetingRoomExpense + ServiceExpenseTotal + SumOtherExpense + SumPartyExpense + SumOperatingExpense + SumInternationalEventExpense + SumChapterReRegistrationExpense;
         var SumTotalIncome = ServiceIncomeTotal + SumOtherIncome + SumPartyIncome + SumMembershipDuesIncome + SumInternationalEventIncome + SumMonetaryDonationIncome;
-        var TreasuryBalanceNow = TreasuryBalance - SumTotalExpense + SumTotalIncome;
+        var EndingBalance = BeginningBalance - SumTotalExpense + SumTotalIncome;
         var SumTotalNetIncome = SumTotalIncome - SumTotalExpense;
 
         $('#SumTotalExpense').val(SumTotalExpense.toFixed(2));
         $('#SumTotalIncome').val(SumTotalIncome.toFixed(2));
         $('#TotalNetIncome').val(SumTotalNetIncome.toFixed(2));
         $('#SumTotalNetIncome').val(SumTotalNetIncome.toFixed(2));
-        $('#TreasuryBalanceNow').val(TreasuryBalanceNow.toFixed(2));
-        $('#TreasuryBalanceNowR').val(TreasuryBalanceNow.toFixed(2));
+        $('#EndingBalance').val(EndingBalance.toFixed(2));
 
         ChangeBankRec();
     }

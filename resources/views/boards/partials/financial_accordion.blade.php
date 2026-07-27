@@ -293,9 +293,9 @@
             <label>If yes, check any of the topics that were covered:<span class="field-required">*</span></label>
                 <div class="col-12 d-flex gap-4">
                 @php
-                    $selectedValues = is_null($chFinancialReport->meeting_speakers_array)
+                    $selectedValues = is_null($chFinancialReportQuestions->meeting_speakers_array)
                         ? []
-                        : json_decode($chFinancialReport->meeting_speakers_array);
+                        : json_decode($chFinancialReportQuestions->meeting_speakers_array);
                 @endphp
                                         <div class="form-check form-check-inline">
                     <input class="form-check-input" type="checkbox" id="Speakers0" name="Speakers[]" value="0" {{ in_array('0', $selectedValues) ? 'checked' : '' }} >
@@ -1692,63 +1692,20 @@
     <div class="clearfix"></div>
     <div class="col-md-12"><br></div>
 
-    <div class="col-12">
-                                        <div class="row mb-3">
-            <label>Is a copy of your chapter’s most recent bank statement included?<span class="field-required">*</span></label>
-                                    <div class="col-12 d-flex gap-4">
-                                        <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="BankStatementIncludedYes" name="BankStatementIncluded" value="1" {{ $chFinancialReportQuestions->bank_statement_included == 1 ? 'checked' : '' }} onchange="ToggleBankStatementIncludedExplanation()">
-                    <label class="form-check-label" for="BankStatementIncludedYes">Yes</label>
-                </div>
-                                        <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="BankStatementIncludedNo" name="BankStatementIncluded" value="0" {{ !is_null($chFinancialReportQuestions->bank_statement_included) && $chFinancialReportQuestions->bank_statement_included == 0 ? 'checked' : '' }} onchange="ToggleBankStatementIncludedExplanation()">
-                    <label class="form-check-label" for="BankStatementIncludedNo">No</label>
-                </div>
-            </div>
-
-        <div class="col-md-12">
-            <div class="col-sm-12" id="divBankStatementIncludedExplanation">
-                <label for="BankStatementIncludedExplanation">If no, briefly explain:</label>
-                <textarea class="form-control" rows="2" name="BankStatementIncludedExplanation" id="BankStatementIncludedExplanation">{{ $chFinancialReportQuestions->bank_statement_included_explanation }}</textarea>
-            </div>
-        </div>
-        <div class="col-sm-12" >
-            <div class="col-sm-12" id="WheresTheMoney">
-                <label style="display: block;">If your group does not have any bank accounts, where is the chapter money kept?</label>
-                <textarea class="form-control" rows="2" name="WheresTheMoney" id="WheresTheMoney">{{ $chFinancialReportQuestions->wheres_the_money }}</textarea>
-            </div>
-        </div>
-        </div>
-</div>
-
     <div class="col-12 form-row mb-3">
     <div class="col-md-6 ">
         <div class="mb-3">
-            <label for="LastYearReportEnding">
-                @if($userTypeId == \App\Enums\UserTypeEnum::DISBANDED)
-                Last Report's Ending Balance:
-                @else
-                Last Year's Report Ending Balance (June 30, {{ $reportYearStart }}):
-                @endif
-                <x-help-icon text="Automatically carried over from last year's ending balance. It should be your starting point for this year's report." />
-            </label>
-            <div class="mb-3">
-                @currencyInput('LastYearReportEnding', $chFinancialReport->pre_balance, true)
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 ">
-        <div class="mb-3">
-            <label for="AmountReservedFromLastYear">
+            <label for="BeginningBalance">
                 @if($userTypeId == \App\Enums\UserTypeEnum::DISBANDED)
                 Beginning Balance:
                 @else
-                This Year's Beginning Balance (July 1, {{ $reportYearStart }}):
-                <x-help-icon text="Enter your starting balance, this should be the same as last year's ending balance." />
+                Beginning Balance (July 1, {{ $reportYearStart }}):
                 @endif
+                <x-help-icon text="Enter your starting balance, this should be the same as last year's ending balance." /><br>
+                <small>Last Year's Ending/Reconciled Balance was ${{ number_format($chFinancialReport->ending_balance_last_year ?? 0, 2) }}</small>
             </label>
             <div class="mb-3">
-                @currencyInput('AmountReservedFromLastYear', $chFinancialReport->amount_reserved_from_previous_year, false, 'TreasuryBalanceChange()')
+                @currencyInput('BeginningBalance', $chFinancialReport->beginning_balance, false, 'TreasuryBalanceChange()')
             </div>
         </div>
     </div>
@@ -1764,33 +1721,61 @@
         </div>
     </div>
     <div class="col-md-6 ">
-        <br>
     </div>
     <div class="col-md-6 ">
         <div class="mb-3">
-            <label for="TreasuryBalanceNow">
-                Ending Balance (Treasury Balance Now):
+            <label for="EndingBalance">
+                @if($userTypeId == \App\Enums\UserTypeEnum::DISBANDED)
+                Ending Balance:
+                @else
+                Ending Balance (June 30, {{ $reportYearEnd }}):
+                @endif
                 <x-help-icon text="Automatically calculated as Beginning Balance + Profit/Loss. If this does not match your actual bank balance, you will need
                 to enter reconciliation transactions." />
             </label>
             <div class="mb-3">
-                @currencyInput('TreasuryBalanceNow', '', true)
+                @currencyInput('EndingBalance', '', true)
             </div>
         </div>
     </div>
+
+     <div class="col-12">
+        <div class="row mb-3">
+            <label>Is a copy of your chapter’s most recent bank statement included?<span class="field-required">*</span></label>
+            <div class="col-12 d-flex gap-4">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="BankStatementIncludedYes" name="BankStatementIncluded" value="1" {{ $chFinancialReportQuestions->bank_statement_included == 1 ? 'checked' : '' }} onchange="ToggleBankStatementIncludedExplanation()">
+                    <label class="form-check-label" for="BankStatementIncludedYes">Yes</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="BankStatementIncludedNo" name="BankStatementIncluded" value="0" {{ !is_null($chFinancialReportQuestions->bank_statement_included) && $chFinancialReportQuestions->bank_statement_included == 0 ? 'checked' : '' }} onchange="ToggleBankStatementIncludedExplanation()">
+                    <label class="form-check-label" for="BankStatementIncludedNo">No</label>
+                </div>
+            </div>
+        <div class="col-md-12">
+            <div class="col-sm-12" id="divBankStatementIncludedExplanation">
+                <label for="BankStatementIncludedExplanation">If no, briefly explain:</label>
+                <textarea class="form-control" rows="2" name="BankStatementIncludedExplanation" id="BankStatementIncludedExplanation">{{ $chFinancialReportQuestions->bank_statement_included_explanation }}</textarea>
+            </div>
+        </div>
+        <div class="col-sm-12" >
+            <div class="col-sm-12" id="WheresTheMoney">
+                <label style="display: block;">If your group does not have any bank accounts, where is the chapter money kept?</label>
+                <textarea class="form-control" rows="2" name="WheresTheMoney" id="WheresTheMoney">{{ $chFinancialReportQuestions->wheres_the_money }}</textarea>
+            </div>
+        </div>
+        </div>
+    </div>
+
     <div class="col-md-6 ">
         <div class="mb-3">
-            <label for="BankBalanceNow">
-                @if($userTypeId == \App\Enums\UserTypeEnum::DISBANDED)
-                Ending Bank Statement Balance:
-                @else
-                Ending Bank Statement Balance (June 30, {{ $reportYearEnd }}):
-                @endif
-                <x-help-icon text="Enter your actual bank statement balance. If this does not match your Treasury Balance Now, you will need
+            <label for="StatementBalance">
+                Statement Ending Balance:
+                <x-help-icon text="Enter your actual Statement Ending Balance. If this does not match your Ending Balance, you will need
                 to enter reconciliation transactions." />
             </label>
             <div class="mb-3">
-                @currencyInput('BankBalanceNow', $chFinancialReport->bank_balance_now, false, 'ChangeBankRec()')
+                @currencyInput('StatementBalance', $chFinancialReport->statement_balance, false, 'ChangeBankRec()')
         </div>
     </div>
 </div>
@@ -1798,8 +1783,8 @@
 <hr>
 </div>
 <div class="col-12 form-row mb-3">
-<p>If your most recent bank statement’s ending balance does not match your “Treasury Balance Now”, you must reconcile your checking account using the worksheet below so that the balances match.</p>
-<p>To balance your account, start with your bank statement’s ending balance, then list any deposits and any outstanding payments. When done, the new reconciled balance will match your treasury balance.</p>
+<p>If your most recent bank statement’s ending balance does not match your Ending Balance, you must reconcile your checking account using the worksheet below so that the balances match.</p>
+<p>To balance your account, start with your bank statement’s ending balance, then list any deposits and any outstanding payments. When done, the new reconciled balance should match your ending balance.</p>
 <p>View a step by step instruction video <a href="https://momsclub.org/elearning/courses/annual-financial-report-bank-reconciliation/">HERE</a>.</p>
 <br>
 <label>Bank Reconciliation:</label>
@@ -1866,22 +1851,15 @@
 </div>
 <div class="col-md-12"><br></div>
 <div class="col-md-12">
-    <div class="col-md-6">
-        <div class="mb-3">
-            <label for="TreasuryBalanceNowR">
-                Ending Balance (Treasury Balance Now):
-                <x-help-icon text="Automatically calculated as Treasury Balance Now +/- Reconiliation entries. If this does not match your Treasury Balance Now, you will need
-                to enter reconciliation transactions." />
-            </label>
-            <div class="mb-3">
-                @currencyInput('TreasuryBalanceNowR', '', true)
-            </div>
-        </div>
-    </div>
 <div class="col-md-6">
     <div class="mb-3">
         <label for="ReconciledBankBalance">
-            Reconciled Bank Balance:
+            @if($userTypeId == \App\Enums\UserTypeEnum::DISBANDED)
+            Reconciled Balance:
+            @else
+            Reconciled Balance (June 30, {{ $reportYearEnd }}):<br>
+            <small>This will be used as your Beginning Balance for Next Year</small>
+            @endif
         </label>
         <div class="mb-3">
             @currencyInput('ReconciledBankBalance', '', true)
@@ -2439,8 +2417,8 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
                 <tbody>
                     @php
                         $chapter_awards = null;
-                        if (isset($chFinancialReport['chapter_awards'])) {
-                            $chapter_awards = unserialize(base64_decode($chFinancialReport['chapter_awards']));
+                        if (isset($chFinancialReportQuestions['chapter_awards'])) {
+                            $chapter_awards = unserialize(base64_decode($chFinancialReportQuestions['chapter_awards']));
                             $ChapterAwardsRowCount = is_array($chapter_awards) ? count($chapter_awards) : 0;
                         } else {
                             $ChapterAwardsRowCount = 1;
@@ -2607,7 +2585,7 @@ The 990N filing is an IRS requirement that all chapters must complete, but it ca
                     </p>
                     <div class="checkbox">
                         <input class="form-check-input" type="checkbox" id="AwardsAgree" name="AwardsAgree"
-                            @checked(isset($chFinancialReport['award_agree']) && $chFinancialReport['award_agree'] == 1) required>
+                            @checked(isset($chFinancialReportQuestions['award_agree']) && $chFinancialReportQuestions['award_agree'] == 1) required>
                         <label class="form-check-label"><strong>I understand and agree to the above</strong></label>
                     </div>
                 </div>

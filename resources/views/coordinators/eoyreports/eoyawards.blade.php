@@ -74,7 +74,7 @@
                     </td>
                     <td>
                         @if(!empty($validChapterAwards))
-                            @if($list->financialReport->chapter_awards_notified == '1') YES
+                            @if($list->financialReportQuestions->chapter_awards_notified == '1') YES
                             @else
                                 <a onclick="showChapterAwardsEmailModal('{{ $list->name }}', {{ $list->id }})"><i class="bi bi-envelope text-primary"></i></a>
                             @endif

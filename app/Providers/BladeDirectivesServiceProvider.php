@@ -17,7 +17,7 @@ class BladeDirectivesServiceProvider extends ServiceProvider
         Inputmask("(999) 999-9999").mask($(".phone-mask"));
         $("[data-inputmask]:visible:not(.phone-mask)").inputmask({
             clearIncomplete: true
-        }); 
+        });
 
         // URL prefix behavior for .http-mask fields
         $(document).on("focus", ".http-mask", function() {
@@ -120,12 +120,12 @@ class BladeDirectivesServiceProvider extends ServiceProvider
             ?>";
         });
 
-        // Currency Display: @formatCurrency($chFinancialReport->bank_balance_now)
+        // Currency Display: @formatCurrency($chFinancialReport->statement_balance)
         Blade::directive('formatCurrency', function ($expression) {
             return "<?php echo !empty($expression) ? '$' . number_format((float){$expression}, 2) : '$0.00'; ?>";
         });
 
-        // Currency Input field: @currencyInput('BankBalanceNow', $chFinancialReport->bank_balance_now, false)
+        // Currency Input field: @currencyInput('StatementBalance', $chFinancialReport->statement_balance, false)
         Blade::directive('currencyInput', function ($expression) {
             $parts = array_map('trim', explode(',', $expression, 4));
             $name = trim($parts[0], "'\"");

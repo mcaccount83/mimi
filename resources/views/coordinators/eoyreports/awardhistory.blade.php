@@ -66,9 +66,9 @@
                         <div class="card-header bg-transparent border-0">
                             <h3>{{ $reportYearRange }} Chapter Awards</h3>
                             @if(count($currentApprovedAwards) > 0)
-                            Chapter Notified: {{ is_null($chFinancialReport->chapter_awards_notified) ? 'NO' : ($chFinancialReport->chapter_awards_notified == 0 ? 'NO'
-                            : ($chFinancialReport->chapter_awards_notified == 1 ? 'YES' : 'NO')) }}
-                            @if($chFinancialReport->chapter_awards_notified != '1')
+                            Chapter Notified: {{ is_null($chFinancialReportQuestions->chapter_awards_notified) ? 'NO' : ($chFinancialReportQuestions->chapter_awards_notified == 0 ? 'NO'
+                            : ($chFinancialReportQuestions->chapter_awards_notified == 1 ? 'YES' : 'NO')) }}
+                            @if($chFinancialReportQuestions->chapter_awards_notified != '1')
                     <button type="button" id="AwardNotify" class="btn btn-primary bg-gradient btn-xs ms-1" onclick="showChapterAwardsEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }})"><i class="bi bi-envelope-fill me-2"></i>Send Award Notification</button>
                         @endif
                         <br>
@@ -95,12 +95,11 @@
                 @if(!empty($award['awards_desc']))
                     Description: {{ $award['awards_desc'] }}
                 @endif
-                {{-- Approval: {{ ($award['awards_approved'] ?? null) == 1 ? 'Approved' : 'Not Approved' }} --}}
-<b><small>Approved</small></b>
-            </div>
-        </div>
-    </div>
-@endforeach
+                <b><small>Approved</small></b>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
                             @else
                             <div class="card-body">
                                 <p class="text-muted">No approved awards for the current year.</p>

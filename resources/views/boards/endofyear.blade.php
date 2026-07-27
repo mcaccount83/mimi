@@ -52,8 +52,8 @@
                                     @php
                                         $chapter_awards = null;
 
-                                        if (isset($chFinancialReport['chapter_awards']) && !empty($chFinancialReport['chapter_awards'])) {
-                                            $blobData = base64_decode($chFinancialReport['chapter_awards']);
+                                        if (isset($chFinancialReportQuestions['chapter_awards']) && !empty($chFinancialReportQuestions['chapter_awards'])) {
+                                            $blobData = base64_decode($chFinancialReportQuestions['chapter_awards']);
                                             $chapter_awards = unserialize($blobData);
                                         }
                                     @endphp

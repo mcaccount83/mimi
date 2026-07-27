@@ -40,6 +40,7 @@
                 <th>990N Attached</th>
                 <th>IRS Verified</th>
                 <th>Most Recent<br>990N Filed</th>
+                <th>Filing Period</th>
                 <th>Filing Issues</th>
                 <th>Issue Details</th>
                 <th>IRS Notified</th>
@@ -79,6 +80,9 @@
                         </td>
                         <td @if($list->irs990nFilings?->max('tax_year') == $reportYearStart) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             {{ $list->irs990nFilings?->max('tax_year') ?? 'None' }}
+                        </td>
+                        <td @if($list->tax_period_begin_formatted == '07/01/'.$reportYearStart) style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            {{ $list->tax_period_begin_formatted }} - {{ $list->tax_period_end_formatted }}
                         </td>
                         <td @if(!$list->documentsIRS?->irs_issues) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             @if($list->documentsIRS?->irs_issues) YES @else NO @endif

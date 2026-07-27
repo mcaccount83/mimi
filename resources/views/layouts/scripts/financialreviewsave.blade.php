@@ -188,12 +188,12 @@ function CheckReconciliation() {
     if (!document.querySelector('input[name="checkBankStatementIncluded"]:checked')) {
         missingQuestions.push("Is the bank statement included?");
     }
-    if (!document.querySelector('input[name="checkBankStatementMatches"]:checked')) {
-        missingQuestions.push("Does the bank statement match?");
+    if (!document.querySelector('input[name="checkReportBalances"]:checked')) {
+        missingQuestions.push("Does the ending balance match the reconciled balance?");
     }
-    if (!document.getElementById('post_balance')) {
-        missingQuestions.push("Is the post balance entered?");
-    }
+    // if (!document.getElementById('post_balance')) {
+    //     missingQuestions.push("Is the post balance entered?");
+    // }
 
     if (missingQuestions.length > 0) {
         var missingQuestionsText = missingQuestions.map(question => `<li>${question}</li>`).join('');

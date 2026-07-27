@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ProbationHistory extends Model
 {
     public function chapter(): BelongsTo
-        {
-            return $this->belongsTo(Chapters::class, 'chapter_id', 'id');  // 'chapter_id' in probation_history BelongsTo 'id' in chapters
-        }
+    {
+        return $this->belongsTo(Chapters::class, 'chapter_id', 'id');  // 'chapter_id' in probation_history BelongsTo 'id' in chapters
+    }
 }

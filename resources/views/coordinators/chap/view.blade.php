@@ -28,6 +28,15 @@
                     @endif
                     @endforeach
                 @endif
+                @if($chDetails->ein != null && ($coordinatorCondition && $conferenceCoordinatorCondition))
+                    <br>
+                    <button type="button" class="btn btn-primary bg-gradient btn-xs ms-1" onclick="updateEIN('{{ $chDetails->id }}')">
+                        Update EIN Number
+                    </button>
+                    <button type="button" class="btn btn-primary bg-gradient btn-xs ms-1" onclick="showFileUploadModal('{{ $chDetails->id }}')">
+                        Update EIN Letter
+                    </button>
+                @endif
                  </p>
                  </div>
                     <ul class="list-group list-group-flush mb-3">
@@ -42,6 +51,20 @@
                         <li class="list-group-item">
                             @include('coordinators.partials.paymentinfo')
                             @include('coordinators.partials.donationinfo')
+
+                             <div class="row">
+                                <div class="text-center">
+                                    <button type="button" class="btn btn-primary bg-gradient btn-xs ms-1" onclick="window.location.href='{{ route('payment.editpayment', ['id' => $chDetails->id]) }}'">
+                                        Enter Payment/Donation
+                                    </button>
+                                    @if($coordinatorCondition && $conferenceCoordinatorCondition)
+                                        <button type="button" class="btn btn-primary bg-gradient btn-xs ms-1" onclick="window.location.href='{{ route('payment.paymenthistory', ['id' => $chDetails->id]) }}'">
+                                            View Payment History
+                                        </button>
+                                    @endif
+                                </div>
+                            </div>
+
                         </li>
                         <li class="list-group-item">
                             @include('coordinators.partials.founderhistory')
@@ -549,8 +572,8 @@
     </div>
     @php
         $chapter_awards_check = [];
-        if (!empty($chFinancialReport['chapter_awards'])) {
-            $decoded = unserialize(base64_decode($chFinancialReport['chapter_awards']));
+        if (!empty($chFinancialReportQuestions['chapter_awards'])) {
+            $decoded = unserialize(base64_decode($chFinancialReportQuestions['chapter_awards']));
             if (is_array($decoded)) {
                 $chapter_awards_check = array_filter($decoded, fn ($a) => !empty($a['awards_type']));
             }
@@ -1028,19 +1051,19 @@
                     <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.edit', ['id' => $chDetails->id]) }}'"><i class="bi bi-house-fill me-2"></i>Update Chapter Information</button>
                     <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chDetails->id]) }}'"><i class="bi bi-person-bounding-box me-2"></i>Update Board Information</button>
                     @endif
+                <br>
                 @if ( $ITCondition || $eoyTestCondition && $displayEOYTESTING || $regionalCoordinatorCondition && $displayEOYLIVE )
                     <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-file-earmark-bar-graph-fill me-2"></i>Update EOY Information
                         @if ($ITCondition && !$displayEOYTESTING && !$displayEOYLIVE) *ADMIN*@endif
                         @if ($eoyTestCondition && $displayEOYTESTING) *TESTING*@endif
                     </button>
                 @endif
-                @if($coordinatorCondition && $conferenceCoordinatorCondition)
-                    <br>
-                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('payment.editpayment', ['id' => $chDetails->id]) }}'"><i class="bi bi-currency-dollar me-2"></i>Enter Payment/Donation</button>
-                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="updateEIN('{{ $chDetails->id }}')"><i class="bi bi-bank me-2"></i>Update EIN Number</button>
-                @endif
+                {{-- @if($coordinatorCondition && $conferenceCoordinatorCondition)                     --}}
+                    {{-- <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('payment.editpayment', ['id' => $chDetails->id]) }}'"><i class="bi bi-currency-dollar me-2"></i>Enter Payment/Donation</button> --}}
+                    {{-- <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="updateEIN('{{ $chDetails->id }}')"><i class="bi bi-bank me-2"></i>Update EIN Number</button> --}}
+                {{-- @endif --}}
                 @if($coordinatorCondition && $regionalCoordinatorCondition)
-                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showFileUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Update EIN Letter</button>
+                    {{-- <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showFileUploadModal('{{ $chDetails->id }}')"><i class="bi bi-upload me-2"></i>Update EIN Letter</button> --}}
                     @if($chActiveId == 1)
                         <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showDisbandChapterModal({{ $chDetails->id }})"><i class="bi bi-ban me-2"></i>Disband Chapter</button>
                     @elseif($chActiveId != 1)

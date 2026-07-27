@@ -229,7 +229,7 @@ class PDFController extends Controller
             $this->basePDFDataController->getFinancialReportCalculationsData($chFinancialReport),
             $this->basePDFDataController->getFinancialReportQuestionsData($chFinancialReportQuestions),
             [
-
+                'final_report_received' => $chFinancialReport->final_report_received ?? null,
             ],
         );
 

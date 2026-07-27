@@ -200,15 +200,15 @@
     }
 
     function EnsureReconciliation() {
-        var amountReservedFromLastYear = document.getElementById('AmountReservedFromLastYear').value.trim();
-        var bankBalanceNow = document.getElementById('BankBalanceNow').value.trim();
+        var beginningBalance = document.getElementById('BeginningBalance').value.trim();
+        var statementBalance = document.getElementById('StatementBalance').value.trim();
         var missingFields = [];
 
         // Check for missing fields and add to the list
-        if (amountReservedFromLastYear == '' || amountReservedFromLastYear == null) {
+        if (beginningBalance == '' || beginningBalance == null) {
             missingFields.push("This Year's Beginning Balance");
         }
-        if (bankBalanceNow == '' || bankBalanceNow == null) {
+        if (statementBalance == '' || statementBalance == null) {
             missingFields.push("Last Bank Statement Balance");
         }
 
@@ -245,15 +245,15 @@
             DepositTotal += depositValue;
         }
 
-        var BankBalanceNow = parseFloat(document.getElementById("BankBalanceNow").value.replace(/,/g, '')) || 0;
-        var TotalFees = (BankBalanceNow - PaymentTotal + DepositTotal).toFixed(2);
-        var TreasuryBalanceNow = parseFloat(document.getElementById("TreasuryBalanceNow").value.replace(/,/g, '')) || 0;
+        var StatementBalance = parseFloat(document.getElementById("StatementBalance").value.replace(/,/g, '')) || 0;
+        var ReconciledBalance = (StatementBalance - PaymentTotal + DepositTotal).toFixed(2);
+        var EndingBalance = parseFloat(document.getElementById("EndingBalance").value.replace(/,/g, '')) || 0;
 
-        if (TotalFees != TreasuryBalanceNow) {
+        if (ReconciledBalance != EndingBalance) {
             // Use await to wait for the SweetAlert result
             const result = await Swal.fire({
                 title: 'Report Does Not Balance',
-                text: "Your report does not balance. Your Treasury Balance Now and Reconciled Bank Balance should match before submitting your report.",
+                text: "Your report does not balance. Your Ending Balance and Reconciled Balance should match before submitting your report.",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Submit Anyway',

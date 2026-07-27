@@ -17,6 +17,7 @@ use App\Models\FinancialReport;
 use App\Models\FinancialReportAwards;
 use App\Models\FinancialReportAwardsBadges;
 use App\Models\FinancialReportFinal;
+use App\Models\FinancialReportQuestions;
 use App\Models\FinancialReportReview;
 use App\Models\Irs990nFiling;
 use App\Models\Resources;
@@ -49,6 +50,11 @@ class EOYReportController extends Controller implements HasMiddleware
             new Middleware('auth', except: ['logout']),
             \App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class,
         ];
+    }
+
+    function formatDateForDisplay(?string $date, string $format = 'm/d/Y'): ?string
+    {
+        return $date ? \Carbon\Carbon::parse($date)->format($format) : null;
     }
 
     /**
@@ -100,7 +106,7 @@ class EOYReportController extends Controller implements HasMiddleware
     /**
      * View the EOY Status list
      */
-    public function showEOYReview(Request $request): View
+    public function showEOYOverview(Request $request): View
     {
         $user = $this->userController->loadUserInformation($request);
         $coorId = $user['cdId'];
@@ -140,7 +146,7 @@ class EOYReportController extends Controller implements HasMiddleware
             'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
-        return view('coordinators.eoyreports.eoyreview')->with($data);
+        return view('coordinators.eoyreports.eoyoverview')->with($data);
     }
 
     /**
@@ -221,10 +227,10 @@ class EOYReportController extends Controller implements HasMiddleware
         $reviewer_id = isset($input['ch_reportrev']) && ! empty($input['ch_reportrev']) ? $input['ch_reportrev'] : $coorId;
 
         $chapter = Chapters::find($id);
-        $documentsEOY = DocumentsEOY::find($id);
-        $documentsIRS = DocumentsIRS::find($id);
-        $financialReport = FinancialReport::find($id);
-        $financialReportReview = FinancialReportReview::find($id);
+        $documentsEOY = DocumentsEOY::firstOrNew(['chapter_id' => $id]);
+        $documentsIRS = DocumentsIRS::firstOrNew(['chapter_id' => $id]);
+        $financialReport = FinancialReport::firstOrNew(['chapter_id' => $id]);
+        $financialReportReview = FinancialReportReview::firstOrNew(['chapter_id' => $id]);
 
         DB::beginTransaction();
         try {
@@ -589,8 +595,8 @@ class EOYReportController extends Controller implements HasMiddleware
         // BANK RECONCILLIATION
         $financialReportReview->review_beginning_balance = $input['checkBeginningBalance'] ?? null;
         $financialReportReview->review_bank_statement_included = $input['checkBankStatementIncluded'] ?? null;
-        $financialReportReview->review_bank_statement_matches = $input['checkBankStatementMatches'] ?? null;
-        $financialReportReview->post_balance = isset($input['post_balance']) ? preg_replace('/[^\d.]/', '', $input['post_balance']) : null;
+        $financialReportReview->review_report_balance = $input['checkReportBalances'] ?? null;
+        // $financialReportReview->post_balance = isset($input['post_balance']) ? preg_replace('/[^\d.]/', '', $input['post_balance']) : null;
         $financialReportReview->step_10_notes_log = $input['Step10_Log'] ?? null;
 
         // 990 IRS FILING
@@ -1109,10 +1115,10 @@ class EOYReportController extends Controller implements HasMiddleware
                 ->whereHas('financialReport', fn ($q) => $q->whereNotNull('chapter_awards'))
                 ->get()
                 ->filter(function ($chapter) {
-                    if (!isset($chapter->financialReport->chapter_awards)) {
+                    if (!isset($chapter->financialReportQuestions->chapter_awards)) {
                         return false;
                     }
-                    $awards = unserialize(base64_decode($chapter->financialReport->chapter_awards));
+                    $awards = unserialize(base64_decode($chapter->financialReportQuestions->chapter_awards));
                     if (!$awards) {
                         return false;
                     }
@@ -1126,8 +1132,8 @@ class EOYReportController extends Controller implements HasMiddleware
         $actualMaxAwards = 0;
 
         foreach ($chapterList as $list) {
-            if (isset($list->financialReport->chapter_awards)) {
-                $awards = unserialize(base64_decode($list->financialReport->chapter_awards));
+            if (isset($list->financialReportQuestions->chapter_awards)) {
+                $awards = unserialize(base64_decode($list->financialReportQuestions->chapter_awards));
                 if ($awards) {
                     $validAwards = collect($awards)->filter(fn ($award) => !empty($award['awards_type']))->count();
                     if ($validAwards > 0) {
@@ -1207,7 +1213,7 @@ class EOYReportController extends Controller implements HasMiddleware
 
         $chapter_awards = base64_encode(serialize($ChapterAwards));
         $chapter = Chapters::find($id);
-        $financialReport = FinancialReport::find($id);
+        $financialReportQuestions = FinancialReportQuestions::find($id);
 
         DB::beginTransaction();
         try {
@@ -1215,8 +1221,8 @@ class EOYReportController extends Controller implements HasMiddleware
             $chapter->updated_id = $updatedId;
             $chapter->save();
 
-            $financialReport->chapter_awards = $chapter_awards;
-            $financialReport->save();
+            $financialReportQuestions->chapter_awards = $chapter_awards;
+            $financialReportQuestions->save();
 
             DB::commit();
 
@@ -1258,10 +1264,10 @@ class EOYReportController extends Controller implements HasMiddleware
         $awardTypes = FinancialReportAwards::all()->keyBy('id');
 
         // Current year from the blob
-        $financialReport = FinancialReport::find($id);
-        $chapterAwards = $financialReport?->chapter_awards;
-        $currentAwards = $financialReport->chapter_awards
-            ? unserialize(base64_decode($financialReport->chapter_awards))
+        $financialReportQuestions = FinancialReportQuestions::find($id);
+        $chapterAwards = $financialReportQuestions?->chapter_awards;
+        $currentAwards = $financialReportQuestions->chapter_awards
+            ? unserialize(base64_decode($financialReportQuestions->chapter_awards))
             : [];
 
         // Filter to only approved ones for display
@@ -1344,6 +1350,11 @@ class EOYReportController extends Controller implements HasMiddleware
             })
             ->get();
 
+        $chapterList->each(function ($chapter) {
+            $chapter->tax_period_begin_formatted = $this->formatDateForDisplay($chapter->irs990nFilings?->max('tax_period_begin'));
+            $chapter->tax_period_end_formatted = $this->formatDateForDisplay($chapter->irs990nFilings?->max('tax_period_end'));
+        });
+
         $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
         $checkBox2Status = $baseQuery[CheckboxFilterEnum::REVIEWER];
         $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
@@ -1384,6 +1395,11 @@ class EOYReportController extends Controller implements HasMiddleware
         $allFilings = Irs990nFiling::where('chapter_id', $id)
             ->orderByDesc('tax_period_end')
             ->get();
+
+        $allFilings->each(function ($filing) {
+            $filing->tax_period_begin_formatted = $this->formatDateForDisplay($filing->tax_period_begin);
+            $filing->tax_period_end_formatted = $this->formatDateForDisplay($filing->tax_period_end);
+        });
 
         $data = ['coorId' => $coorId, 'confId' => $confId, 'chapterStatus' => $chapterStatus, 'chEOYDocuments' => $chEOYDocuments, 'chFinancialReportReview' => $chFinancialReportReview,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,

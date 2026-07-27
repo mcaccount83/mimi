@@ -26,6 +26,7 @@ use App\Models\Chapters;
 use App\Models\ChapterAwardHistory;
 use App\Models\DocumentsEOY;
 use App\Models\FinancialReport;
+use App\Models\FinancialReportQuestions;
 use App\Models\FinancialReportAwards;
 use App\Models\FinancialReportAwardsBadges;
 use App\Models\ForumCategorySubscription;
@@ -427,10 +428,10 @@ class BoardController extends Controller implements HasMiddleware
          $awardTypes = FinancialReportAwards::all()->keyBy('id');
 
         // Current year from the blob
-        $financialReport = FinancialReport::find($chId);
-        $chapterAwards = $financialReport?->chapter_awards;
-        $currentAwards = $financialReport->chapter_awards
-            ? unserialize(base64_decode($financialReport->chapter_awards))
+        $financialReportQuestions = FinancialReportQuestions::find($chId);
+        $chapterAwards = $financialReportQuestions?->chapter_awards;
+        $currentAwards = $financialReportQuestions->chapter_awards
+            ? unserialize(base64_decode($financialReportQuestions->chapter_awards))
             : [];
 
         // Filter to only approved ones for display

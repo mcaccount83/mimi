@@ -32,6 +32,7 @@ use App\Models\CoordinatorTree;
 use App\Models\Documents;
 use App\Models\DocumentsEOY;
 use App\Models\FinancialReport;
+use App\Models\FinancialReportQuestions;
 use App\Models\FinancialReportReview;
 use App\Models\FiscalYear;
 use App\Models\ForumCategorySubscription;
@@ -986,7 +987,7 @@ class TechReportController extends Controller implements HasMiddleware
         try {
             $this->deactivateOutgoingUsers();
             $this->clearBoardTables();
-            $this->updateChapterPreBalances();
+            $this->updateChapterEndingBalancesLastYear();
             $this->copyAwardsToHistory($reportYearOptions, $updatedId, $updatedBy);
             $this->resetFinancialReports($reportYearOptions);
             $this->resetChapterFlags();
@@ -1044,12 +1045,12 @@ class TechReportController extends Controller implements HasMiddleware
         BoardsIncoming::query()->delete();
     }
 
-    private function updateChapterPreBalances(): void
+    private function updateChapterEndingBalancesLastYear(): void
     {
         $chapters = Chapters::with('financialReportReview', 'documentsEOY')->get();
         foreach ($chapters as $chapter) {
             if ($chapter->financialReportReview && $chapter->documentsEOY) {
-                $chapter->documentsEOY->pre_balance = $chapter->financialReportReview->post_balance;
+                $chapter->documentsEOY->ending_balance_last_year = $chapter->financialReportReview->ending_balance;
                 $chapter->documentsEOY->save();
             }
         }
@@ -1060,7 +1061,7 @@ class TechReportController extends Controller implements HasMiddleware
         // $reportYearRange = $reportYearOptions['reportYearRange'];
         $reportYearId = $reportYearOptions['reportYearId'];
 
-        $allChapters = FinancialReport::whereNotNull('chapter_awards')->get();
+        $allChapters = FinancialReportQuestions::whereNotNull('chapter_awards')->get();
         foreach ($allChapters as $report) {
             $awards = unserialize(base64_decode($report->chapter_awards));
             if (! is_array($awards)) {
@@ -1201,9 +1202,9 @@ class TechReportController extends Controller implements HasMiddleware
 
         DB::beginTransaction();
         try {
-            $this->updateChapterPostBalancesLIVE();
+            $this->updateChapterEndingBalancesLIVE();
             $this->clearTablesLIVE();
-            $this->updateChapterPreBalancesLIVE();
+            $this->updateChapterBeginningBalancesLastYearLIVE();
             $this->resetDocumentsEOYLIVE($yearColumnName);
 
             $adminReport = AdminReport::where('report_year_id', $reportYearId)->firstOrFail();
@@ -1222,14 +1223,14 @@ class TechReportController extends Controller implements HasMiddleware
         }
     }
 
-    private function updateChapterPostBalancesLIVE(): void
+    private function updateChapterEndingBalancesLIVE(): void
     {
         // Fetch all chapters with their financial reports and update the balance BEFORE removing data from table
         $chapters = Chapters::with('financialReportLastYear', 'documentsEOY')->get();
         foreach ($chapters as $chapter) {
             if ($chapter->financialReportLastYear && $chapter->documentsEOY) {
                 $documentsEOY = $chapter->documentsEOY;
-                $documentsEOY->pre_balance = $chapter->financialReportLastYear->post_balance;
+                $documentsEOY->ending_balance_last_year = $chapter->financialReportLastYear->ending_balance;
                 $documentsEOY->save();
             }
         }
@@ -1242,15 +1243,15 @@ class TechReportController extends Controller implements HasMiddleware
         FinancialReport::query()->delete();
     }
 
-    private function updateChapterPreBalancesLIVE(): void
+    private function updateChapterBeginningBalancesLastYearLIVE(): void
     {
         // Fetch all active chapters and add balance into financial_report
         $activeChapters = Chapters::with('documentsEOY')->where('active_status', 1)->get();
         foreach ($activeChapters as $chapter) {
             FinancialReport::create([
                 'chapter_id' => $chapter->id,  // Ensure chapter_id is provided
-                'pre_balance' => $chapter->documentsEOY->pre_balance,
-                'amount_reserved_from_previous_year' => $chapter->documentsEOY->pre_balance,
+                'beginning_balance' => $chapter->documentsEOY->ending_balance_last_year,
+                'ending_balance_last_year' => $chapter->documentsEOY->ending_balance_last_year,
             ]);
         }
     }
