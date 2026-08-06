@@ -3,12 +3,16 @@
 
 ## {{ $thread->title }}
 
-{{ $post->content }}
+{!! $post->content !!}
 
 **Posted by:**
 {!! $authorNameWithPosition !!}
 
 ---
+
+@component('mail::button', ['url' => $thread->route])
+View Thread
+@endcomponent
 
 To stop receiving emails of new posts/replies: Log into your MIMI account, navigate to "Update Profile"
 and "Unsubscribe" from the appropriate list.

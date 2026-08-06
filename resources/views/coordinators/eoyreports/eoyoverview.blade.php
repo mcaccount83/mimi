@@ -41,8 +41,9 @@
                         <th colspan="3" class="text-center">Attachments</th>
                         <th rowspan="2">At Least<br>1 Project</th>
                         <th rowspan="2">M2M<br>Donation</th>
-                        <th rowspan="2">Party%</th>
-                        <th rowspan="2">Probation<br>Status</th>
+                        <th rowspan="2">Party% | Probation<br>THIS Year</th>
+                        <th rowspan="2">Probation<br>LAST Year</th>
+                        {{-- <th rowspan="2">Probation<br>Status</th> --}}
                         <th rowspan="2">Report<br>Balanced</th>
                         <th rowspan="2">Review<br>Complete</th>
 
@@ -110,15 +111,30 @@
                                 <td @if($list->financialReport->party_percentage > 0.20) style="background-color:#dc3545; color: #ffffff;"
                                     @elseif($list->financialReport->party_percentage > 0.15) style="background-color: #ffc107;"
                                     @else style="background-color:#28a745; color: #ffffff;" @endif>
-                                    {{ number_format(($list->financialReport->party_percentage ?? 0) * 100, 2) }}%
+                                        {{ number_format(($list->financialReport->party_percentage ?? 0) * 100, 2) }}%
+                                        @if($list->financialReport->party_percentage > 0.20) | PROBATION
+                                        @elseif($list->financialReport->party_percentage > 0.15) | WARNING
+                                        @else @endif
                                 </td>
                                 <td @if($list->financialReport->party_percentage > 0.20) style="background-color:#dc3545; color: #ffffff;"
+                                    @elseif($list->financialReport->party_percentage > 0.15) style="background-color: #ffc107;"
+                                    @else style="background-color:#28a745; color: #ffffff;" @endif>
+                                        @if($list->financialReport->party_percentage > 0.20)PROBATION
+                                        @elseif($list->financialReport->party_percentage > 0.15)WARNING
+                                        @else @endif
+                                </td>
+                                {{-- <td @if($list->financialReport->party_percentage > 0.20) style="background-color:#dc3545; color: #ffffff;"
+                                    @elseif($list->financialReport->party_percentage > 0.15) style="background-color: #ffc107;"
+                                    @else style="background-color:#28a745; color: #ffffff;" @endif>
+                                    {{ number_format(($list->financialReport->party_percentage ?? 0) * 100, 2) }}%
+                                </td> --}}
+                                {{-- <td @if($list->financialReport->party_percentage > 0.20) style="background-color:#dc3545; color: #ffffff;"
                                     @elseif($list->financialReport->party_percentage > 0.15) style="background-color: #ffc107;"
                                     @else style="background-color:#28a745; color: #ffffff;" @endif>
                                         @if($list->financialReport->party_percentage > 0.20) PROBATION
                                         @elseif($list->financialReport->party_percentage > 0.15) WARNING
                                         @else @endif
-                                </td>
+                                </td> --}}
                                 <td @if($list->financialReport->ending_balance == $list->financialReport->reconciled_balance) style="background-color:#28a745; color: #ffffff;"
                                     @else style="background-color:#dc3545; color: #ffffff;" @endif>
                                     @if($list->financialReport->ending_balance == $list->financialReport->reconciled_balance) YES @else NO @endif

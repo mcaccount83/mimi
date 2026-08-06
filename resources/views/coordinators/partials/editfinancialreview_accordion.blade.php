@@ -214,7 +214,7 @@
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote1" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(1)" disabled>
-                                            <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
+                                            <i class="bi bi-plus-lg me-2"></i>Add Note to Log
                                         </button>
                                     </div>
                                 </div>
@@ -374,7 +374,7 @@
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote2" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(2)" disabled>
-                                            <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
+                                            <i class="bi bi-plus-lg me-2"></i>Add Note to Log
                                         </button>
                                     </div>
                                 </div>
@@ -539,7 +539,7 @@
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote3" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(3)" disabled>
-                                            <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
+                                            <i class="bi bi-plus-lg me-2"></i>Add Note to Log
                                         </button>
                                     </div>
                                 </div>
@@ -690,7 +690,7 @@
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote4" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(4)" disabled>
-                                            <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
+                                            <i class="bi bi-plus-lg me-2"></i>Add Note to Log
                                         </button>
                                     </div>
                                 </div>
@@ -797,7 +797,7 @@
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote5" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(5)" disabled>
-                                            <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
+                                            <i class="bi bi-plus-lg me-2"></i>Add Note to Log
                                         </button>
                                     </div>
                                 </div>
@@ -932,7 +932,7 @@
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote6" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(6)" disabled>
-                                            <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
+                                            <i class="bi bi-plus-lg me-2"></i>Add Note to Log
                                         </button>
                                     </div>
                                 </div>
@@ -1078,7 +1078,7 @@
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote7" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(7)" disabled>
-                                            <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
+                                            <i class="bi bi-plus-lg me-2"></i>Add Note to Log
                                         </button>
                                     </div>
                                 </div>
@@ -1188,7 +1188,7 @@
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote8" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(8)" disabled>
-                                            <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
+                                            <i class="bi bi-plus-lg me-2"></i>Add Note to Log
                                         </button>
                                     </div>
                                 </div>
@@ -1317,7 +1317,7 @@
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote9" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(9)" disabled>
-                                            <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
+                                            <i class="bi bi-plus-lg me-2"></i>Add Note to Log
                                         </button>
                                     </div>
                                 </div>
@@ -1554,7 +1554,7 @@
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote10" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(10)" disabled>
-                                            <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
+                                            <i class="bi bi-plus-lg me-2"></i>Add Note to Log
                                         </button>
                                     </div>
                                 </div>
@@ -1658,7 +1658,7 @@
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote11" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(11)" disabled>
-                                            <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
+                                            <i class="bi bi-plus-lg me-2"></i>Add Note to Log
                                         </button>
                                     </div>
                                 </div>
@@ -1922,7 +1922,7 @@
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote12" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(12)" disabled>
-                                            <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
+                                            <i class="bi bi-plus-lg me-2"></i>Add Note to Log
                                         </button>
                                     </div>
                                 </div>

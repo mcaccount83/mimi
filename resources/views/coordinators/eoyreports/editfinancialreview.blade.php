@@ -519,12 +519,6 @@
         if (!CheckFinancial()) return false;
         if (!CheckReconciliation()) return false;
         if (!CheckQuestions()) return false;
-        var post_balance = document.getElementById('post_balance').value;
-        if (post_balance == null || post_balance == '') {
-            customWarningAlert('Please enter Ending Balance in the Bank Reconciliation Section');
-            document.getElementById('post_balance').focus();
-            return false;
-        }
         Swal.fire({
             title: 'Are you sure?',
             text: "This will finalize this report and flag it as 'review complete'. Do you wish to continue?",

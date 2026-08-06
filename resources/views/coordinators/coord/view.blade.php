@@ -196,42 +196,57 @@
                             <div class="card-body">
                         <div class="row">
                             <h4>ForumList Subscriptions</h4>
-                            @php
+                          @php
                                 $Subscriptions = $cdDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
                             @endphp
                             <dt class="col-sm-3">Public Announcements:</dt>
-                            <dd class="col-sm-2">{{ in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}</dd>
-                            @if ($assistConferenceCoordinatorCondition)
-                                <dd class="col-sm-6">
-                                    @if (in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
-                                        <button type="button" class="btn btn-danger bg-gradient btn-xs" onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $cdDetails->user_id }})"><i class="bi bi-ban me-2"></i>Unsubscribe</button>
+                            <dd class="col-sm-9">
+                                @if ($assistConferenceCoordinatorCondition)
+                                    @if(in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
+                                        <span class="badge bg-success">SUBSCRIBED</span>
+                                        <i class="bi bi-ban text-danger ms-2" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
+                                            onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $cdDetails->user_id }})"></i>
                                     @else
-                                        <button type="button" class="btn btn-success bg-gradient btn-xs" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $cdDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
+                                        <span class="badge bg-secondary" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $cdDetails->user_id }})">SUBSCRIBE NOW</span>
                                     @endif
-                                </dd>
-                            @endif
+                                @else
+                                    <span class="badge {{ in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions) ? 'bg-success' : 'bg-secondary' }}">
+                                        {{ in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}
+                                    </span>
+                                @endif
+                            </dd>
                             <dt class="col-sm-3">CoordinatorList:</dt>
-                            <dd class="col-sm-2">{{ in_array(\App\Enums\ForumCategoryEnum::COORDLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}</dd>
-                            @if ($assistConferenceCoordinatorCondition)
-                                <dd class="col-sm-6">
-                                    @if (in_array(\App\Enums\ForumCategoryEnum::COORDLIST, $Subscriptions))
-                                        <button type="button" class="btn btn-danger bg-gradient btn-xs" onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::COORDLIST }}, {{ $cdDetails->user_id }})"><i class="bi bi-ban me-2"></i>Unsubscribe</button>
+                            <dd class="col-sm-9">
+                                @if ($assistConferenceCoordinatorCondition)
+                                    @if(in_array(\App\Enums\ForumCategoryEnum::COORDLIST, $Subscriptions))
+                                        <span class="badge bg-success">SUBSCRIBED</span>
+                                        <i class="bi bi-ban text-danger ms-2" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
+                                            onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::COORDLIST }}, {{ $cdDetails->user_id }})"></i>
                                     @else
-                                        <button type="button" class="btn btn-success bg-gradient btn-xs" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::COORDLIST }}, {{ $cdDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
+                                        <span class="badge bg-secondary" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::COORDLIST }}, {{ $cdDetails->user_id }})">SUBSCRIBE NOW</span>
                                     @endif
-                                </dd>
-                            @endif
+                                @else
+                                    <span class="badge {{ in_array(\App\Enums\ForumCategoryEnum::COORDLIST, $Subscriptions) ? 'bg-success' : 'bg-secondary' }}">
+                                        {{ in_array(\App\Enums\ForumCategoryEnum::COORDLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}
+                                    </span>
+                                @endif
+                            </dd>
                             <dt class="col-sm-3">BoardList:</dt>
-                            <dd class="col-sm-2">{{ in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}</dd>
-                            @if ($assistConferenceCoordinatorCondition)
-                                <dd class="col-sm-6">
-                                    @if (in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
-                                        <button type="button" class="btn btn-danger bg-gradient btn-xs" onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $cdDetails->user_id }})"><i class="bi bi-ban me-2"></i>Unsubscribe</button>
+                            <dd class="col-sm-9">
+                                @if ($assistConferenceCoordinatorCondition)
+                                    @if(in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
+                                        <span class="badge bg-success">SUBSCRIBED</span>
+                                        <i class="bi bi-ban text-danger ms-2" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
+                                            onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $cdDetails->user_id }})"></i>
                                     @else
-                                        <button type="button" class="btn btn-success bg-gradient btn-xs" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $cdDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
+                                        <span class="badge bg-secondary" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $cdDetails->user_id }})">SUBSCRIBE NOW</span>
                                     @endif
-                                </dd>
-                            @endif
+                                @else
+                                    <span class="badge {{ in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions) ? 'bg-success' : 'bg-secondary' }}">
+                                        {{ in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}
+                                    </span>
+                                @endif
+                            </dd>
                         </div>
 
                         <div class="row mt-3">

@@ -81,6 +81,7 @@ return [
     |
     */
 
-    'utility_class' => TeamTeaTime\Forum\Support\Frontend\Forum::class,
+    // 'utility_class' => TeamTeaTime\Forum\Support\Frontend\Forum::class,
+    'utility_class' => App\Support\Forum::class,
 
 ];

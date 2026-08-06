@@ -81,7 +81,7 @@ class ViewServiceProvider extends ServiceProvider
             $pendingNewChapterCount = ($confId) ? $PendingConditionsService->getpendingNewChapterCount($confId) : 0;
             $pendingNewCoordCount = ($confId) ? $PendingConditionsService->getpendingNewCoordCount($confId) : 0;
             $dateOptions = $positionConditionsService->getDateOptions();
-            $getEmailCampaignData = $positionConditionsService->getEmailCampaignData();
+            // $getEmailCampaignData = $positionConditionsService->getEmailCampaignData();
 
             $probationParty = ($chDetails?->status_id == OperatingStatusEnum::PROBATION && $chDetails->probation_id == ProbationReasonEnum::EXCESSPARTY);
 
@@ -116,7 +116,7 @@ class ViewServiceProvider extends ServiceProvider
                 $getFiscalYearOptions,
                 $getReportYearOptions,
                 $dateOptions,
-                $getEmailCampaignData,
+                // $getEmailCampaignData,
                 ($userTypeId == UserTypeEnum::BOARD ? ['chDetails' => $chDetails] : []),
             );
 

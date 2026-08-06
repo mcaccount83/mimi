@@ -723,22 +723,26 @@
                                             $Subscriptions = $PresDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
                                         @endphp
                                         <dt class="col-sm-3">Public Announcements:</dt>
-                                        <dd class="col-sm-9">{{ in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}
-                                                @if (in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
-                                                    <button type="button" class="btn btn-danger bg-gradient btn-xs ms-2" onclick="unsubscribe(({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $PresDetails->user_id }})"><i class="bi bi-ban me-2"></i>Unsubscribe</button>
-                                                @else
-                                                    <button type="button" class="btn btn-success bg-gradient btn-xs ms-2" onclick="subscribe(({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $PresDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
-                                                @endif
-                                            </dd>
-                                            <dt class="col-sm-3">BoardList</dt>
-                                        <dd class="col-sm-9">{{ in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}
-                                                @if (in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
-                                                    <button type="button" class="btn btn-danger bg-gradient btn-xs ms-2" onclick="unsubscribe(({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $PresDetails->user_id }})"><i class="bi bi-ban me-2"></i>Unsubscribe</button>
-                                                @else
-                                                    <button type="button" class="btn btn-success bg-gradient btn-xs ms-2" onclick="subscribe(({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $PresDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
-                                                @endif
-                                            </dd>
-                                        <div class="col-md-12">
+                                        <dd class="col-sm-9">
+                                            @if(in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
+                                                <span class="badge bg-success ms-2">SUBSCRIBED</span>
+                                                <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
+                                                    onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $PresDetails->user_id }})"></i>
+                                            @else
+                                                <span class="badge bg-secondary ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $PresDetails->user_id }})">SUBSCRIBE NOW</span>
+                                            @endif
+                                        </dd>
+                                        <dt class="col-sm-3">BoardList</dt>
+                                        <dd class="col-sm-9">
+                                            @if(in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
+                                                <span class="badge bg-success ms-2">SUBSCRIBED</span>
+                                                <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
+                                                    onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $PresDetails->user_id }})"></i>
+                                            @else
+                                                <span class="badge bg-secondary ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $PresDetails->user_id }})">SUBSCRIBE NOW</span>
+                                            @endif
+                                        </dd>
+                                    <div class="col-md-12">
                                     <p>This will reset password to default "TempPass4You" for this user only.
                                     <br>
                                     <button type="button" class="btn btn-primary bg-gradient btn-xs reset-password-btn keep-enabled" data-user-id="{{ $PresDetails->user_id }}">Reset President Password</button>
@@ -792,21 +796,25 @@
                                             $Subscriptions = $AVPDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
                                         @endphp
                                      <dt class="col-sm-3">Public Announcements:</dt>
-                                        <dd class="col-sm-9">{{ in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}
-                                                @if (in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
-                                                    <button type="button" class="btn btn-danger bg-gradient btn-xs ms-2" onclick="unsubscribe(({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $AVPDetails->user_id }})"><i class="bi bi-ban me-2"></i>Unsubscribe</button>
-                                                @else
-                                                    <button type="button" class="btn btn-success bg-gradient btn-xs ms-2" onclick="subscribe(({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $AVPDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
-                                                @endif
-                                            </dd>
-                                    <dt class="col-sm-3">BoardList</dt>
-                                        <dd class="col-sm-9">{{ in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}
-                                                @if (in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
-                                                    <button type="button" class="btn btn-danger bg-gradient btn-xs ms-2" onclick="unsubscribe(({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $AVPDetails->user_id }})"><i class="bi bi-ban me-2"></i>Unsubscribe</button>
-                                                @else
-                                                    <button type="button" class="btn btn-success bg-gradient btn-xs ms-2" onclick="subscribe(({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $AVPDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
-                                                @endif
-                                            </dd>
+                                        <dd class="col-sm-9">
+                                            @if(in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
+                                                <span class="badge bg-success ms-2">SUBSCRIBED</span>
+                                                <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
+                                                    onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $AVPDetails->user_id }})"></i>
+                                            @else
+                                                <span class="badge bg-secondary ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $AVPDetails->user_id }})">SUBSCRIBE NOW</span>
+                                            @endif
+                                        </dd>
+                                        <dt class="col-sm-3">BoardList</dt>
+                                        <dd class="col-sm-9">
+                                            @if(in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
+                                                <span class="badge bg-success ms-2">SUBSCRIBED</span>
+                                                <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
+                                                    onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $AVPDetails->user_id }})"></i>
+                                            @else
+                                                <span class="badge bg-secondary ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $AVPDetails->user_id }})">SUBSCRIBE NOW</span>
+                                            @endif
+                                        </dd>
                                 <div class="col-md-12">
                                     <p>This will reset password to default "TempPass4You" for this user only.
                                     <br>
@@ -861,21 +869,25 @@
                                         $Subscriptions = $MVPDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
                                     @endphp
                                      <dt class="col-sm-3">Public Announcements:</dt>
-                                        <dd class="col-sm-9">{{ in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}
-                                                @if (in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
-                                                    <button type="button" class="btn btn-danger bg-gradient btn-xs ms-2" onclick="unsubscribe(({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $MVPDetails->user_id }})"><i class="bi bi-ban me-2"></i>Unsubscribe</button>
-                                                @else
-                                                    <button type="button" class="btn btn-success bg-gradient btn-xs ms-2" onclick="subscribe(({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $MVPDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
-                                                @endif
-                                            </dd>
-                                    <dt class="col-sm-3">BoardList</dt>
-                                        <dd class="col-sm-9">{{ in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}
-                                                @if (in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
-                                                    <button type="button" class="btn btn-danger bg-gradient btn-xs ms-2" onclick="unsubscribe(({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $MVPDetails->user_id }})"><i class="bi bi-ban me-2"></i>Unsubscribe</button>
-                                                @else
-                                                    <button type="button" class="btn btn-success bg-gradient btn-xs ms-2" onclick="subscribe(({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $MVPDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
-                                                @endif
-                                            </dd>
+                                        <dd class="col-sm-9">
+                                            @if(in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
+                                                <span class="badge bg-success ms-2">SUBSCRIBED</span>
+                                                <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
+                                                    onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $MVPDetails->user_id }})"></i>
+                                            @else
+                                                <span class="badge bg-secondary ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $MVPDetails->user_id }})">SUBSCRIBE NOW</span>
+                                            @endif
+                                        </dd>
+                                        <dt class="col-sm-3">BoardList</dt>
+                                        <dd class="col-sm-9">
+                                            @if(in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
+                                                <span class="badge bg-success ms-2">SUBSCRIBED</span>
+                                                <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
+                                                    onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $MVPDetails->user_id }})"></i>
+                                            @else
+                                                <span class="badge bg-secondary ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $MVPDetails->user_id }})">SUBSCRIBE NOW</span>
+                                            @endif
+                                        </dd>
                                     <div class="col-md-12">
                                         <p>This will reset password to default "TempPass4You" for this user only.
                                         <br>
@@ -930,21 +942,25 @@
                                         $Subscriptions = $TRSDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
                                     @endphp
                                      <dt class="col-sm-3">Public Announcements:</dt>
-                                        <dd class="col-sm-9">{{ in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}
-                                                @if (in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
-                                                    <button type="button" class="btn btn-danger bg-gradient btn-xs ms-2" onclick="unsubscribe(({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $TRSDetails->user_id }})"><i class="bi bi-ban me-2"></i>Unsubscribe</button>
-                                                @else
-                                                    <button type="button" class="btn btn-success bg-gradient btn-xs ms-2" onclick="subscribe(({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $TRSDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
-                                                @endif
-                                            </dd>
-                                    <dt class="col-sm-3">BoardList</dt>
-                                        <dd class="col-sm-9">{{ in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}
-                                                @if (in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
-                                                    <button type="button" class="btn btn-danger bg-gradient btn-xs ms-2" onclick="unsubscribe(({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $TRSDetails->user_id }})"><i class="bi bi-ban me-2"></i>Unsubscribe</button>
-                                                @else
-                                                    <button type="button" class="btn btn-success bg-gradient btn-xs ms-2" onclick="subscribe(({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $TRSDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
-                                                @endif
-                                            </dd>
+                                        <dd class="col-sm-9">
+                                            @if(in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
+                                                <span class="badge bg-success ms-2">SUBSCRIBED</span>
+                                                <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
+                                                    onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $TRSDetails->user_id }})"></i>
+                                            @else
+                                                <span class="badge bg-secondary ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $TRSDetails->user_id }})">SUBSCRIBE NOW</span>
+                                            @endif
+                                        </dd>
+                                        <dt class="col-sm-3">BoardList</dt>
+                                        <dd class="col-sm-9">
+                                            @if(in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
+                                                <span class="badge bg-success ms-2">SUBSCRIBED</span>
+                                                <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
+                                                    onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $TRSDetails->user_id }})"></i>
+                                            @else
+                                                <span class="badge bg-secondary ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $TRSDetails->user_id }})">SUBSCRIBE NOW</span>
+                                            @endif
+                                        </dd>
                                     <div class="col-md-12">
                                <p>This will reset password to default "TempPass4You" for this user only.
                               <br>
@@ -999,21 +1015,25 @@
                                     $Subscriptions = $SECDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
                                 @endphp
                                 <dt class="col-sm-3">Public Announcements:</dt>
-                                        <dd class="col-sm-9">{{ in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}
-                                                @if (in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
-                                                    <button type="button" class="btn btn-danger bg-gradient btn-xs ms-2" onclick="unsubscribe(({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $SECDetails->user_id }})"><i class="bi bi-ban me-2"></i>Unsubscribe</button>
-                                                @else
-                                                    <button type="button" class="btn btn-success bg-gradient btn-xs ms-2" onclick="subscribe(({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $SECDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
-                                                @endif
-                                            </dd>
-                                    <dt class="col-sm-3">BoardList</dt>
-                                        <dd class="col-sm-9">{{ in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}
-                                                @if (in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
-                                                    <button type="button" class="btn btn-danger bg-gradient btn-xs ms-2" onclick="unsubscribe(({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $SECDetails->user_id }})"><i class="bi bi-ban me-2"></i>Unsubscribe</button>
-                                                @else
-                                                    <button type="button" class="btn btn-success bg-gradient btn-xs ms-2" onclick="subscribe(({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $SECDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
-                                                @endif
-                                            </dd>
+                                        <dd class="col-sm-9">
+                                            @if(in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
+                                                <span class="badge bg-success ms-2">SUBSCRIBED</span>
+                                                <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
+                                                    onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $SECDetails->user_id }})"></i>
+                                            @else
+                                                <span class="badge bg-secondary ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $SECDetails->user_id }})">SUBSCRIBE NOW</span>
+                                            @endif
+                                        </dd>
+                                        <dt class="col-sm-3">BoardList</dt>
+                                        <dd class="col-sm-9">
+                                            @if(in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
+                                                <span class="badge bg-success ms-2">SUBSCRIBED</span>
+                                                <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
+                                                    onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $SECDetails->user_id }})"></i>
+                                            @else
+                                                <span class="badge bg-secondary ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $SECDetails->user_id }})">SUBSCRIBE NOW</span>
+                                            @endif
+                                        </dd>
                                 <div class="col-md-12">
                         <p>This will reset password to default "TempPass4You" for this user only.
                         <br>

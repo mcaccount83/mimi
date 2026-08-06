@@ -53,20 +53,38 @@
                         <td>
                             @php
                                 $Subscriptions = $list->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
+                                $NotificationFrequencies = $list->user?->categorySubscriptions?->pluck('notification_frequency', 'category_id')->toArray() ?? [];
+                                $isSubscribed = in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions);
+                                $frequency = $NotificationFrequencies[\App\Enums\ForumCategoryEnum::PUBLICLIST] ?? null;
                             @endphp
-                            {{ in_array(1, $Subscriptions) ? 'YES' : 'NO' }}
+                            {{ $isSubscribed ? 'YES' : 'NO' }}
+                            @if ($isSubscribed)
+                                | {{ $frequency === 'daily_digest' ? 'Daily Digest' : 'Individual Emails' }}
+                            @endif
                         </td>
                         <td>
                             @php
                                 $Subscriptions = $list->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
+                                $NotificationFrequencies = $list->user?->categorySubscriptions?->pluck('notification_frequency', 'category_id')->toArray() ?? [];
+                                $isSubscribed = in_array(\App\Enums\ForumCategoryEnum::COORDLIST, $Subscriptions);
+                                $frequency = $NotificationFrequencies[\App\Enums\ForumCategoryEnum::COORDLIST] ?? null;
                             @endphp
-                            {{ in_array(2, $Subscriptions) ? 'YES' : 'NO' }}
+                            {{ $isSubscribed ? 'YES' : 'NO' }}
+                            @if ($isSubscribed)
+                                | {{ $frequency === 'daily_digest' ? 'Daily Digest' : 'Individual Emails' }}
+                            @endif
                         </td>
                         <td>
                             @php
                                 $Subscriptions = $list->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
+                                $NotificationFrequencies = $list->user?->categorySubscriptions?->pluck('notification_frequency', 'category_id')->toArray() ?? [];
+                                $isSubscribed = in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions);
+                                $frequency = $NotificationFrequencies[\App\Enums\ForumCategoryEnum::BOARDLIST] ?? null;
                             @endphp
-                            {{ in_array(3, $Subscriptions) ? 'YES' : 'NO' }}
+                            {{ $isSubscribed ? 'YES' : 'NO' }}
+                            @if ($isSubscribed)
+                                | {{ $frequency === 'daily_digest' ? 'Daily Digest' : 'Individual Emails' }}
+                            @endif
                         </td>
                     </tr>
                     @endforeach

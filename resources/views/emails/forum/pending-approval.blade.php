@@ -3,8 +3,13 @@
 
 ## {{ $thread->title }}
 
-{{ $post->content }}
+{!! $post->content !!}
 
 **Posted by:**
 {!! $authorNameWithPosition !!}
+
+@component('mail::button', ['url' => $thread->route])
+View Thread
+@endcomponent
+
 @endcomponent

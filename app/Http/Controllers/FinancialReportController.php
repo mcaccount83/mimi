@@ -80,7 +80,6 @@ class FinancialReportController extends Controller implements HasMiddleware
         $chReportDocuments = $baseQuery['chReportDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
         $chFinancialReportQuestions = $baseQuery['chFinancialReportQuestions'];
-        $chFinancialReportQuestions = $baseQuery['chFinancialReportQuestions'];
         $awards = $baseQuery['awards'];
         $allAwards = $baseQuery['allAwards'];
 
@@ -127,7 +126,7 @@ class FinancialReportController extends Controller implements HasMiddleware
         $chIRSDocuments = $baseQuery['chIRSDocuments'];
         $chReportDocuments = $baseQuery['chReportDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReportFinal'];
-        $chFinancialReportQuestions = $baseQuery['chFinancialReportQuestions'];
+        $chFinancialReportQuestions = $baseQuery['chFinancialReportFinalQuestions'];
 
         $resources = Resources::with('resourceCategory')->get();
         $resourceCategories = ResourceCategory::all();
@@ -811,10 +810,8 @@ class FinancialReportController extends Controller implements HasMiddleware
                 $financialReport->submitted = Carbon::now();
                 $financialReport->save();
 
-                $documentsEOY->final_report_received = 1;
-                $documentsEOY->save();
-
                 $disbandChecklist->file_financial = 1;
+                $disbandChecklist->final_report_received = 1;
                 $disbandChecklist->save();
             }
 
@@ -826,6 +823,7 @@ class FinancialReportController extends Controller implements HasMiddleware
             $checklistComplete = ($disbandChecklistUpd->final_payment == '1' && $disbandChecklistUpd->donate_funds == '1' &&
             $disbandChecklistUpd->destroy_manual == '1' && $disbandChecklistUpd->remove_online == '1' &&
             $disbandChecklistUpd->file_irs == '1' && $disbandChecklistUpd->file_financial == '1');
+            $reportComplete = $disbandChecklistUpd->final_report_received == '1';
 
             $baseQuery = $this->baseBoardController->getChapterDetails($chapterId);
             $chDetails = $baseQuery['chDetails'];
@@ -853,7 +851,7 @@ class FinancialReportController extends Controller implements HasMiddleware
                 $this->baseMailDataController->getPresData($PresDetails),
             );
 
-            if ($documentsEOY->final_report_received == '1') {
+            if ($reportComplete == '1') {
                 $pdfPath = $this->pdfController->saveFinalFinancialReport($request, $chapterId, $PresDetails);   // Generate and Send the PDF
                 Mail::to($userEmail)
                     ->cc($emailListChap)
@@ -867,7 +865,7 @@ class FinancialReportController extends Controller implements HasMiddleware
                     ->queue(new DisbandReportCCNotice($mailData, $pdfPath));
             }
 
-            if ($documentsEOY->final_report_received == '1' && $checklistComplete) {
+            if ($reportComplete == '1' && $checklistComplete) {
                 Mail::to($userEmail)
                     ->cc($emailListChap)
                     ->queue(new DisbandChecklistCompleteThankYou($mailData));

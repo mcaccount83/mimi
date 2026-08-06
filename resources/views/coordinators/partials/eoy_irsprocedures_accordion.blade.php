@@ -57,7 +57,7 @@
         <div class="col-md-12">
             Submit filing updates to the IRS to include all chapters added or removed since the last update.<br>
             @if ($irsYear->file_sept != 1 && ( $currentMonth >= 9 && $currentMonth <= 10 ))
-                @php $juneFileDate = $irsYear->june_file_date ? \Carbon\Carbon::parse($irsYear->june_file_date)->format('Y-m-d') : ''; @endphp
+                @php $juneFileDate = $irsYear->previous_file_date ? \Carbon\Carbon::parse($irsYear->previous_file_date)->format('Y-m-d') : ''; @endphp
                 <button type="button" id="file-irssept" class="btn btn-primary bg-gradient mb-2" onclick="showIRSUpdatesModal('{{ $juneFileDate }}')">
                     <i class="bi bi-file-earmark-pdf-fill me-2"></i>Generate IRS Update</button>
                     <button type="button" id="update-eoy-irssept" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-envelope-paper me-2"></i>Record Filing as Sent</button>

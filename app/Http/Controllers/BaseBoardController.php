@@ -37,8 +37,8 @@ class BaseBoardController extends Controller
     {
         // Load chapter with common relations
         $chDetails = Chapters::with([
-            'country', 'state', 'startMonth', 'webLink', 'documents', 'financialReport', 'financialReportFinal', 'payments', 'financialReportReview',
-            'reportReviewer', 'primaryCoordinator', 'probation', 'disbandCheck', 'activeStatus', 'documentsEOY', 'documentsIRS', 'documentsReport',
+            'country', 'state', 'startMonth', 'webLink', 'documents', 'financialReport',  'financialReportQuestions', 'financialReportFinal', 'payments', 'financialReportReview',
+            'financialReportFinalQuestions', 'reportReviewer', 'primaryCoordinator', 'probation', 'disbandCheck', 'activeStatus', 'documentsEOY', 'documentsIRS', 'documentsReport',
         ])->find($id);
 
         $chId = $chDetails->id;
@@ -104,6 +104,7 @@ class BaseBoardController extends Controller
         $chFinancialReportQuestions = $chDetails->financialReportQuestions ?? FinancialReportQuestions::firstOrNew(['chapter_id' => $chId]);
         $chFinancialReportReview = $chDetails->financialReportReview ?? FinancialReportReview::firstOrNew(['chapter_id' => $chId]);
         $chFinancialReportFinal = $chDetails->financialReportFinal;
+        $chFinancialReportFinal = $chDetails->financialReportFinalQuestions;
         $chDisbanded = $chDetails->disbandCheck;
 
         $financialReportPdfs = [];

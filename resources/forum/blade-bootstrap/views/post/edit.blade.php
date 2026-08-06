@@ -17,7 +17,7 @@
             @method('PATCH')
 
             <div class="mb-3">
-                <textarea name="content" class="form-control">{{ old('content') !== null ? old('content') : $post->content }}</textarea>
+                <x-quill-editor name="content" :value="old('content') ?? $post->content" />
             </div>
 
             <div class="text-end">

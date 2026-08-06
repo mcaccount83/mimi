@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 
 // Note: This model has no fixed table. It dynamically resolves to the previous year's
 // archived financial report table (e.g. zzz_financial_report_12_2023) via getTable().
-// Used in EOY processing to carry forward post_balance to the new year's ending_balance_last_year.
+// Used in EOY processing to carry forward ending_balance to the new year's ending_balance_last_year.
 // See: Chapters::financialReportLastYear() relationship and updateChapterEndingBalancesLIVE()
 class FinancialReportLastYear extends Model
 {

@@ -21,6 +21,7 @@ use App\Models\Resources;
 use App\Services\PositionConditionsService;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Http\RedirectResponse;
@@ -975,5 +976,68 @@ class EmailCampaignController extends Controller
             Mail::to($coordEmail)
                 ->queue(new CampaignsSummary($summaryData, $pdfPath));
         }
+    }
+
+    private function buildCampaignMailable(string $campaignKey, $chapter, array $user, array $reportYearOptions, Request $request): ?\Illuminate\Mail\Mailable
+    {
+        $emailDetails = $this->baseChapterController->getChapterDetails($chapter->id);
+        $chDetails = $emailDetails['chDetails'];
+        $stateShortName = $emailDetails['stateShortName'];
+
+        $baseData = array_merge(
+            $this->baseMailDataController->getChapterData($chDetails, $stateShortName),
+            $this->baseMailDataController->getUserData($user),
+        );
+
+        // A few campaigns also merge in report year data
+        $withReportYear = array_merge($baseData, $this->baseMailDataController->getReportYearData($reportYearOptions));
+
+        return match ($campaignKey) {
+            'elections-timeline'        => new CampaignsElectionsTimeline($withReportYear, $this->getResourcePdfPath('Election Timetable')),
+            'annual-report'              => new CampaignsAnnualReport($withReportYear),
+            'budget-meeting'             => new CampaignsBudgetMeeting($baseData),
+            'code-of-conduct'            => new CampaignsCodeOfConduct($baseData),
+            'records-retention'          => new CampaignsRecordsRetention($baseData),
+            'holiday-break'              => new CampaignsHolidayBreak(array_merge($baseData, [
+                                                'fallBreak'   => $request->input('fallBreak', '[Fall Break dates]'),
+                                                'winterBreak' => $request->input('winterBreak', '[Winter Break dates]'),
+                                            ])),
+            'processing-reimbursements' => new CampaignsProcessingReimbursements($baseData),
+            'volunteer-push'             => new CampaignsVolunteerPush($baseData),
+            'service-projects'           => new CampaignsServiceProjects($baseData),
+            'member-benefits'            => new CampaignsMemberBenefits($baseData, $this->getResourcePdfPath('Party Expenses & 15% Rule')),
+            'board-report'               => new CampaignsBoardReport($withReportYear),
+            'financial-report'           => new CampaignsFinancialReport($withReportYear),
+            default => null,
+        };
+    }
+
+    private function getResourcePdfPath(string $resourceName): ?string
+    {
+        $resource = Resources::with('resourceCategory')->get()->where('name', $resourceName)->first();
+        return $resource ? 'https://drive.google.com/uc?export=download&id=' . $resource->file_path : null;
+    }
+
+    public function previewCampaign(Request $request, string $campaignKey): Response
+    {
+        $user = $this->userController->loadUserInformation($request);
+        $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
+
+        $baseQuery = $this->baseChapterController->getBaseQuery(
+            1, $user['cdId'], $user['confId'], $user['regId'], $user['cdPositionId'], $user['cdSecPositionId']
+        );
+        $sampleChapter = $baseQuery['query']->first();
+
+        if (! $sampleChapter) {
+            abort(404, 'No sample chapter available to preview.');
+        }
+
+        $mailable = $this->buildCampaignMailable($campaignKey, $sampleChapter, $user, $reportYearOptions, $request);
+
+        if (! $mailable) {
+            abort(404, 'Unknown campaign.');
+        }
+
+        return response($mailable->render())->header('Content-Type', 'text/html');
     }
 }

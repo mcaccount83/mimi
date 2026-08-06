@@ -123,7 +123,7 @@
 
                         <div class="row align-items-center">
                             <div class="col-sm-6 mt-1">
-                                <label class="col-form-label">Promoation Date:</label>
+                                <label class="col-form-label">Promotion Date:</label>
                             </div>
                             <div class="col-sm-6">
                                 @dateInput('CoordinatorPromoteDate', $cdDetails->last_promoted)

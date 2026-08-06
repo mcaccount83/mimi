@@ -1,6 +1,6 @@
 # The Executive Board
 
-**The Executive Board**
+{{-- **The Executive Board** --}}
 
 The Executive Board is made up of the five elected officers – the President, AVP, MVP, Secretary and Treasurer. Those are the ONLY members of the
 Executive Board. International MOMS Club does not recognize co-officers.

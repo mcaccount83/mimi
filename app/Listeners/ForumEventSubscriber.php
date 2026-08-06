@@ -37,13 +37,10 @@ class ForumEventSubscriber
 
             $this->sendForumBroadcast(
                 $usersToNotify,
-                fn ($user) => new ForumNewPost($post, $thread, $category, $authorNameWithPosition),
+                'reply',
                 "{$category->title} | RE:{$thread->title}",
                 $usersToNotify->count(),
-                $post,
-                $thread,
-                $category,
-                $authorNameWithPosition
+                $post, $thread, $category, $authorNameWithPosition
             );
         }
     }
@@ -59,13 +56,10 @@ class ForumEventSubscriber
 
             $this->sendForumBroadcast(
                 $usersToNotify,
-                fn ($user) => new ForumNewPost($post, $thread, $category, $authorNameWithPosition),
+                'thread',
                 "{$category->title} | RE:{$thread->title}",
                 $usersToNotify->count(),
-                $post,
-                $thread,
-                $category,
-                $authorNameWithPosition
+                $post, $thread, $category, $authorNameWithPosition
             );
         }
     }
@@ -81,13 +75,10 @@ class ForumEventSubscriber
 
         $this->sendForumBroadcast(
             $usersToNotify,
-            fn ($user) => new ForumNewPost($post, $thread, $category, $authorNameWithPosition),
+            'thread',
             "{$category->title} | RE:{$thread->title}",
             $usersToNotify->count(),
-            $post,
-            $thread,
-            $category,
-            $authorNameWithPosition
+            $post, $thread, $category, $authorNameWithPosition
         );
     }
 
@@ -112,13 +103,10 @@ class ForumEventSubscriber
 
         $this->sendForumBroadcast(
             $usersToNotify,
-            fn ($user) => new ForumNewPost($post, $thread, $category, $authorNameWithPosition),
+            'reply',
             "{$category->title} | RE:{$thread->title}",
             $usersToNotify->count(),
-            $post,
-            $thread,
-            $category,
-            $authorNameWithPosition
+            $post, $thread, $category, $authorNameWithPosition
         );
     }
 
@@ -143,29 +131,25 @@ class ForumEventSubscriber
 
         $this->sendForumBroadcast(
             $usersToNotify,
-            fn ($user) => new ForumNewPost($post, $thread, $category, $authorNameWithPosition),
+            'thread',
             "{$category->title} | RE:{$thread->title}",
             $usersToNotify->count(),
-            $post,
-            $thread,
-            $category,
-            $authorNameWithPosition
+            $post, $thread, $category, $authorNameWithPosition
         );
     }
 
     /**
      * Queue forum broadcast emails and write a single summary log entry.
      */
-    private function sendForumBroadcast(Collection $usersToNotify, callable $mailableFactory, string $subject, int $recipientCount,
+    private function sendForumBroadcast(Collection $usersToNotify, string $type, string $subject, int $recipientCount,
         Post $post, Thread $thread, Category $category, string $authorNameWithPosition): void
     {
         $delay = 0;
 
         foreach ($usersToNotify->chunk(25) as $userBatch) {
             foreach ($userBatch as $user) {
-                $mailable = $mailableFactory($user);
-                Mail::to($user->email)
-                    ->later(now()->addSeconds($delay), $mailable);
+                $mailable = new ForumNewPost($post, $thread, $category, $authorNameWithPosition, $type);
+                Mail::to($user->email)->later(now()->addSeconds($delay), $mailable);
                 $delay += 3;
             }
         }
@@ -175,9 +159,8 @@ class ForumEventSubscriber
 
         if ($listAdmin) {
             Mail::to($listAdmin)->queue(new ForumBroadcastSummary(
-                $subject, $recipientCount, $post, $thread, $category, $authorNameWithPosition
+                $subject, $recipientCount, $post, $thread, $category, $authorNameWithPosition, $type
             ));
-
         } else {
             SentEmail::create([
                 'date' => date('Y-m-d H:i:s'),
@@ -199,11 +182,22 @@ class ForumEventSubscriber
         $categoryId = $thread->category_id;
 
         return User::whereHas('categorySubscriptions', function ($query) use ($categoryId) {
-            $query->where('category_id', $categoryId);
+            $query->where('category_id', $categoryId)
+                ->where('notification_frequency', 'immediate');
         })
             ->where('is_active', UserStatusEnum::ACTIVE)
             ->get();
     }
+    // private function getUsersToNotify(Thread $thread)
+    // {
+    //     $categoryId = $thread->category_id;
+
+    //     return User::whereHas('categorySubscriptions', function ($query) use ($categoryId) {
+    //         $query->where('category_id', $categoryId);
+    //     })
+    //         ->where('is_active', UserStatusEnum::ACTIVE)
+    //         ->get();
+    // }
 
     /**
      * Register the listeners for the subscriber.

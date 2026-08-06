@@ -16,6 +16,7 @@
                 <section>
                     <div class="col-md-12">
                     To be used in BoardList and other display areas.<br>
+                    ** Automatically Resets on July 1st. **<br>
                         <button type="button" class="btn btn-danger bg-gradient mb-2" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year</button>
                 </div>
 </section>
@@ -40,6 +41,7 @@
                 <section>
                     <div class="col-md-12">
                     Complete in August, after activating boards, so new board members receive subscription to Lists.<br>
+                    ** Automatically runs on August 1st, but can be manually run with the button below. **<br>
                     @if ($adminYear->subscribe_list != 1 && ( $currentMonth >= 2 && $currentMonth <= 9 ))
                         <button type="button" id="update-eoy-subscribelists" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-plus-lg me-2"></i>Subscribe to Lists</button>
                     @else
@@ -79,11 +81,12 @@
         <section>
             <div class="col-md-12">
                 To be used for all End of Year buttons/links/emails/forms.<br>
-                @if ($reportYear->reset_report_year != 1 && ($currentMonth >= 1 && $currentMonth <= 5))
+                {{-- @if ($reportYear->reset_report_year != 1 && ($currentMonth >= 1 && $currentMonth <= 5))
                     <button type="button" id="reset-yeareoy" class="btn btn-danger bg-gradient mb-2"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year EOY</button>
-                @else
+                @else --}}
+                    ** Automatically Resets on January 1st. **<br>
                     <button type="button" class="btn btn-danger bg-gradient mb-2" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year EOY</button>
-                @endif
+                {{-- @endif --}}
                 <br>
                {{-- @if ($adminYear->test_eoy != 1) --}}
                 <button type="button" id="view-reportprocedures" class="btn btn-primary bg-gradient mb-2"><i class="bi bi-file-earmark-bar-graph-fill me-2"></i>View Report/Testing Procedures</button>
@@ -151,6 +154,7 @@
     <section>
         <div class="col-md-12">
             Complete in June, before new board reports are activated.<br>
+            ** Automatically runs on June 1st, but can be manually run with the button below. **<br>
             @if ($adminYear->subscribe_list == 1 && $adminYear->unsubscribe_list != 1 && ( $currentMonth >= 5 && $currentMonth <= 7 ))
                 <button type="button" id="update-eoy-unsubscribelists" class="btn btn-primary bg-gradient mb-3"><i class="bi bi-ban me-2"></i>Unsubscribe from Lists</button>
             @else
@@ -191,11 +195,12 @@
                 <section>
                     <div class="col-md-12">
                     To be used in BoardList and other display areas.<br>
-                    @if ($adminYear->unsubscribe_list == 1 && $fiscalYearRange == $reportYearRange && ( $currentMonth >= 6 && $currentMonth <= 9 ))
+                    {{-- @if ($adminYear->unsubscribe_list == 1 && $fiscalYearRange == $reportYearRange && ( $currentMonth >= 6 && $currentMonth <= 9 ))
                                 <button type="button" id="reset-year" class="btn btn-danger bg-gradient mb-2"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year</button>
-                            @else
+                            @else --}}
+                            ** Automatically Resets on July 1st. **<br>
                                 <button type="button" class="btn btn-danger bg-gradient mb-2" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year</button>
-                            @endif
+                            {{-- @endif --}}
                 </div>
 </section>
 </div><!-- end of accordion body -->

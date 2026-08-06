@@ -185,6 +185,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/adminreports/updateinquiriesmao/{id}', [AdminReportController::class, 'updateInquiriesMap'])->name('adminreports.updateinquiriesmap');
     Route::get('/adminreports/downloads', [AdminReportController::class, 'showDownloads'])->name('adminreports.downloads');
     Route::get('/adminreports/emailcampaigns', [AdminReportController::class, 'showEmailCampaigns'])->name('adminreports.emailcampaigns');
+    Route::post('/adminreports/addemailcampaign', [AdminReportController::class, 'addEmailCampaigns'])->name('adminreports.addemailcampaign');
+    Route::post('/adminreports/updateemailcampaign/{id}', [AdminReportController::class, 'updateEmailCampaigns'])->name('adminreports.updateemailcampaign');
+    Route::post('/adminreports/deleteemailcampaign', [AdminReportController::class, 'deleteEmailCampaigns'])->name('adminreports.deleteemailcampaign');
 });
 
 // User Controller Routes...Coordinator Login Required
@@ -332,6 +335,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/campaigns/sendvolunteerpush', [EmailCampaignController::class, 'sendVolunteerPushCampaign'])->name('campaigns.sendvolunteerpush');
     Route::post('/campaigns/sendboardreport', [EmailCampaignController::class, 'sendBoardReportCampaign'])->name('campaigns.sendboardreport');
     Route::post('/campaigns/sendfinancialreport', [EmailCampaignController::class, 'sendFinancialReportCampaign'])->name('campaigns.sendfinancialreport');
+    Route::get('/campaigns/preview/{campaignKey}', [EmailCampaignController::class, 'previewCampaign'])->name('campaigns.preview');
 });
 
 // New Chapter/Coordinator Controller Routes...Coordinator Login Required
@@ -522,6 +526,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/listadmin/coordinatorsubscriptionlist', [ForumSubscriptionController::class, 'showCoordinatorListSubscriptions'])->name('forum.coordinatorsubscriptionlist');
     Route::post('/listadmin/subscribecategory', [ForumSubscriptionController::class, 'subscribeCategory'])->name('forum.subscribecategory');
     Route::post('/listadmin/unsubscribecategory', [ForumSubscriptionController::class, 'unsubscribeCategory'])->name('forum.unsubscribecategory');
+    Route::post('/forum/set-notification-frequency', [ForumSubscriptionController::class, 'setNotificationFrequency'])->name('forum.setnotificationfrequency');
     Route::post('/listadmin/coordinatorlist/bulk-subscribe', [ForumSubscriptionController::class, 'bulkAddCoordinatorsList'])->name('forum.coordinatorlist.bulk-subscribe');
     Route::post('/listadmin/coordinatorboardlist/bulk-subscribe', [ForumSubscriptionController::class, 'bulkAddCoordinatorsBoardList'])->name('forum.coordinatorboardlist.bulk-subscribe');
     Route::post('/listadmin/coordinatorpublidannouncement/bulk-subscribe', [ForumSubscriptionController::class, 'bulkAddCoordinatorsPublicAnnounceements'])->name('forum.coordinatorpublidannouncement.bulk-subscribe');

@@ -16,11 +16,12 @@
     <section>
         <div class="col-md-12">
             To be used for all End of Year buttons/links/emails/forms.<br>
-            @if ($reportYear->reset_report_year != 1 && ($currentMonth >= 1 && $currentMonth <= 3))
+            {{-- @if ($reportYear->reset_report_year != 1 && ($currentMonth >= 1 && $currentMonth <= 3))
                 <button type="button" id="reset-yeareoy" class="btn btn-danger bg-gradient mb-2"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year EOY</button>
-            @else
+            @else --}}
+                ** Automatically Resets on January 1st. **<br>
                 <button type="button" class="btn btn-danger bg-gradient mb-2" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Fiscal Year EOY</button>
-            @endif
+            {{-- @endif --}}
         </div>
 </section>
 </div><!-- end of accordion body -->
@@ -131,7 +132,7 @@
                     @foreach($resetAFTERtestingItems as $item)
                                     <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
                                         @if($reportYear->reset_AFTER_testing == 1)
-                                            <i class="fas fa-check mr-2 ml-2"></i>{{ $item }}reset_AFTER_testing
+                                            <i class="fas fa-check mr-2 ml-2"></i>{{ $item }}
                                         @else
                                             <i class="far fa-square mr-2 ml-2"></i>{{ $item }}
                                         @endif

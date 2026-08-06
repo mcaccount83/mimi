@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Enums\CheckboxFilterEnum;
+use App\Http\Requests\AddEmailCampaignAdminReportRequest;
+use App\Http\Requests\UpdateEmailCampaignAdminReportRequest;
 use App\Models\Chapters;
-use App\Models\Conference;
+use App\Models\EmailCampaign;
 use App\Models\PaymentHistory;
 use App\Models\PaymentLog;
 use App\Models\Payments;
@@ -372,8 +374,101 @@ class AdminReportController extends Controller implements HasMiddleware
         return view('coordinators.adminreports.downloads')->with($data);
     }
 
-    public function showEmailCampaigns()
+    /**
+     * View the Email Campaigns List
+     */
+    public function showEmailCampaigns(): View
     {
-        return view('coordinators.adminreports.emailcampaigns');
+        $campaigns = EmailCampaign::orderBy('month')->orderBy('label')->get()->groupBy('month');
+
+        $monthNames = [
+            1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
+            5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
+            9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December',
+        ];
+
+        $data = ['campaigns' => $campaigns, 'monthNames' => $monthNames];
+
+        return view('coordinators.adminreports.emailcampaigns')->with($data);
+    }
+
+    public function addEmailCampaigns(AddEmailCampaignAdminReportRequest $request): JsonResponse
+    {
+        try {
+            $campaign = new EmailCampaign;
+            $campaign->campaign = $request->campaign;
+            $campaign->label = $request->label;
+            $campaign->month = $request->month;
+            $campaign->route_name = $request->route_name;
+            $campaign->confirm_fn = $request->confirm_fn;
+            $campaign->preview_slug = $request->preview_slug;
+            $campaign->attachments = $request->filled('attachments')
+                ? json_encode(array_filter(array_map('trim', explode(',', $request->attachments))))
+                : null;
+            $campaign->active = $request->boolean('active');
+            $campaign->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Email campaign added successfully!',
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Email campaign creation error: '.$e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error adding campaign. Please try again.',
+            ], 500);
+        }
+    }
+
+    public function updateEmailCampaigns(UpdateEmailCampaignAdminReportRequest $request, int $id): JsonResponse
+    {
+        try {
+            $campaign = EmailCampaign::findOrFail($id);
+            $campaign->campaign = $request->campaign;
+            $campaign->label = $request->label;
+            $campaign->month = $request->month;
+            $campaign->route_name = $request->route_name;
+            $campaign->confirm_fn = $request->confirm_fn;
+            $campaign->preview_slug = $request->preview_slug;
+            $campaign->attachments = $request->filled('attachments')
+                ? json_encode(array_filter(array_map('trim', explode(',', $request->attachments))))
+                : null;
+            $campaign->active = $request->boolean('active');
+            $campaign->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Email campaign updated successfully!',
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Email campaign update error: '.$e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error updating campaign. Please try again.',
+            ], 500);
+        }
+    }
+
+    public function deleteEmailCampaigns(Request $request): JsonResponse
+    {
+        $campaignId = $request->input('campaignId');
+
+        try {
+            DB::beginTransaction();
+
+            DB::table('email_campaigns')->where('id', $campaignId)->delete();
+
+            DB::commit();
+
+            return response()->json(['success' => 'Email campaign successfully deleted.']);
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+
+            return response()->json(['fail' => 'Something went wrong, Please try again.'], 500);
+        }
     }
 }

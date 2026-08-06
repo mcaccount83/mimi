@@ -77,6 +77,7 @@
                             <label class="col-sm-2">ForumList Subscriptions:</label>
                                 @php
                                     $Subscriptions = $borDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
+                                    $NotificationFrequencies = $borDetails->user?->categorySubscriptions?->pluck('notification_frequency', 'category_id')->toArray() ?? [];
                                 @endphp
                                 <div class="col-sm-10">
                                     @if ($boardListActive)
@@ -86,20 +87,34 @@
                                             If you'd like to udpate the settings for either list, simply subscribe or unsubscribe below.
                                         </div>
                                         <div class="mb-1"><b>Public Announcements:</b>
-                                        {{ in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}
-                                        @if (in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
-                                            <button type="button" class="btn btn-danger bg-gradient btn-xs ms-2" onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $borDetails->user_id }})"><i class="bi bi-ban me-2"></i>Unsubscribe</button>
-                                        @else
-                                            <button type="button" class="btn btn-success bg-gradient btn-xs ms-2" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $borDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
-                                        @endif
+                                            @if(in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
+                                                <span class="badge bg-success ms-2">SUBSCRIBED</span>
+                                            @else
+                                                <span class="badge bg-secondary ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $borDetails->user_id }})">SUBSCRIBE NOW</span>
+                                            @endif
+                                            @if (in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
+                                                <select class="form-select form-select-sm d-inline-block w-auto ms-2" onchange="setNotificationFrequency({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $borDetails->user_id }}, this.value)">
+                                                    <option value="immediate" {{ ($NotificationFrequencies[\App\Enums\ForumCategoryEnum::PUBLICLIST] ?? 'immediate') === 'immediate' ? 'selected' : '' }}>Individual Emails</option>
+                                                    <option value="daily_digest" {{ ($NotificationFrequencies[\App\Enums\ForumCategoryEnum::PUBLICLIST] ?? 'immediate') === 'daily_digest' ? 'selected' : '' }}>Daily Digest</option>
+                                                </select>
+                                                <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
+                                                    onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $borDetails->user_id }})"></i>
+                                            @endif
                                         </div>
                                         <div class="mb-1"><b>BoardList:</b>
-                                        {{ in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}
-                                        @if (in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
-                                            <button type="button" class="btn btn-danger bg-gradient btn-xs ms-2" onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $borDetails->user_id }})"><i class="bi bi-ban me-2"></i>Unsubscribe</button>
-                                        @else
-                                            <button type="button" class="btn btn-success bg-gradient btn-xs ms-2" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $borDetails->user_id }})"><i class="bi bi-check-lg me-2"></i>Subscribe</button>
-                                        @endif
+                                            @if(in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
+                                                <span class="badge bg-success ms-2">SUBSCRIBED</span>
+                                            @else
+                                                <span class="badge bg-secondary ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $borDetails->user_id }})">SUBSCRIBE NOW</span>
+                                            @endif
+                                            @if (in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
+                                                <select class="form-select form-select-sm d-inline-block w-auto ms-2" onchange="setNotificationFrequency({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $borDetails->user_id }}, this.value)">
+                                                    <option value="immediate" {{ ($NotificationFrequencies[\App\Enums\ForumCategoryEnum::BOARDLIST] ?? 'immediate') === 'immediate' ? 'selected' : '' }}>Individual Emails</option>
+                                                    <option value="daily_digest" {{ ($NotificationFrequencies[\App\Enums\ForumCategoryEnum::BOARDLIST] ?? 'immediate') === 'daily_digest' ? 'selected' : '' }}>Daily Digest</option>
+                                                </select>
+                                                <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
+                                                    onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $borDetails->user_id }})"></i>
+                                            @endif
                                         </div>
                                     @else
                                         <div class="mb-2">All board members will automatically be subscribed to Public Announcements and BoardList at the beginning of August.</div>

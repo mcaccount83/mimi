@@ -36,8 +36,12 @@ use App\Models\Country;
 use App\Models\DisbandedChecklist;
 use App\Models\Documents;
 use App\Models\DocumentsEOY;
+use App\Models\DocumentsIRS;
+use App\Models\DocumentsReport;
 use App\Models\FinancialReport;
+use App\Models\FinancialReportQuestions;
 use App\Models\FinancialReportFinal;
+use App\Models\FinancialReportFinalQuestions;
 use App\Models\FinancialReportReview;
 use App\Models\ForumCategorySubscription;
 use App\Models\Payments;
@@ -430,13 +434,20 @@ class ChapterController extends Controller implements HasMiddleware
             $documents->disband_letter = $disbandLetter;
             $documents->save();
 
-            DisbandedChecklist::create([
+            DisbandedChecklist::updateOrCreate([
                 'chapter_id' => $chapterid,
             ]);
 
-            FinancialReportFinal::create([
+            FinancialReportFinal::updateOrCreate(
+                ['chapter_id' => $chapterid],
+                [
+                    'ending_balance_last_year' => $endingBalanceLastYear,
+                    'beginning_balance' => $endingBalanceLastYear,
+                ]
+            );
+
+            FinancialReportFinalQuestions::updateOrCreate([
                 'chapter_id' => $chapterid,
-                'ending_balance_last_year' => $endingBalanceLastYear,
             ]);
 
             $boardDetails = Boards::where('chapter_id', $chapterid)->get();
@@ -556,11 +567,9 @@ class ChapterController extends Controller implements HasMiddleware
             $documents->disband_letter = null;
             $documents->save();
 
-            $documentsEOY->final_report_received = null;
-            $documentsEOY->save();
-
             DisbandedChecklist::where('chapter_id', $chapterid)->delete();
             FinancialReportFinal::where('chapter_id', $chapterid)->delete();
+            FinancialReportFinalQuestions::where('chapter_id', $chapterid)->delete();
 
             $boardDetails = BoardsDisbanded::where('chapter_id', $chapterid)->get();
             $userIds = $boardDetails->pluck('user_id')->toArray();
@@ -1977,25 +1986,20 @@ class ChapterController extends Controller implements HasMiddleware
             $chapter->updated_by = $updatedBy;
             $chapter->save();
 
-            FinancialReport::create([
-                'chapter_id' => $chapterId,
-            ]);
+            $models = [
+                FinancialReport::class,
+                FinancialReportQuestions::class,
+                FinancialReportReview::class,
+                Documents::class,
+                DocumentsEOY::class,
+                DocumentsIRS::class,
+                DocumentsReport::class,
+                Payments::class,
+            ];
 
-            FinancialReportReview::create([
-                'chapter_id' => $chapterId,
-            ]);
-
-            Documents::create([
-                'chapter_id' => $chapterId,
-            ]);
-
-            DocumentsEOY::create([
-                'chapter_id' => $chapterId,
-            ]);
-
-            Payments::create([
-                'chapter_id' => $chapterId,
-            ]);
+            foreach ($models as $model) {
+                $model::create(['chapter_id' => $chapterId]);
+            }
 
             foreach ($defaultBoardCategories as $categoryId) {
                 ForumCategorySubscription::create([

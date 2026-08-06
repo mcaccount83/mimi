@@ -13,7 +13,7 @@
             </div>
 
             <div class="mb-3">
-                <textarea name="content" class="form-control">{{ old('content') }}</textarea>
+                <x-quill-editor name="content" :value="old('content')" />
             </div>
 
             <div class="text-end">

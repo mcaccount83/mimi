@@ -31,6 +31,8 @@ use App\Models\Coordinators;
 use App\Models\CoordinatorTree;
 use App\Models\Documents;
 use App\Models\DocumentsEOY;
+use App\Models\DocumentsIRS;
+use App\Models\DocumentsReport;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportQuestions;
 use App\Models\FinancialReportReview;
@@ -434,11 +436,26 @@ class TechReportController extends Controller implements HasMiddleware
         $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
         $reportYear = $reportYearOptions['reportYear'];
 
+        // ADMIN PROCEDURES
         $subscribeListItems = [
             'Subscribe Board Members to BoardList',
             'Subscribe Board Members to Public Announcements',
         ];
 
+        $updateUserTablesItems = [
+            'Copy/Rename Chapters Table',
+            'Copy/Rename Boards Table',
+            'Copy/Rename Coordinators Table',
+            'Copy/Rename Users Table',
+        ];
+
+        $unSubscribeListItems = [
+            'Remove Board Members from BoardList',
+            'Remove Board Members from Publc Announcements',
+            'Copy/Reset BoardList Forum Category',
+        ];
+
+        // IRS PROCEDURES
         $irsCorrectsionsListItems = [
             'Chapters with Wrong Fiscal Year Dates',
             'Chapters Not Found in IRS Database',
@@ -461,24 +478,17 @@ class TechReportController extends Controller implements HasMiddleware
             'Chapters Removed since Last Update',
         ];
 
-        $unSubscribeListItems = [
-            'Remove Board Members from BoardList',
-            'Remove Board Members from Publc Announcements',
-            'Copy/Reset BoardList Forum Category',
-        ];
-
+        // REPORT PROCEDURES
         $resetEOYTableItems = [
-            'Set all Outgoing Users to Inactive',
-            'Clear Outgoing Board Member Table',
-            'Clear Incoming Board Member Table',
-            'Ending Balance Added to Documents from Financial Reports',
-            'Approved Awards Added to Awards History from Financial Reports',
+            'Add New EOY PDF Column to Table',
             'Copy/Rename Financial Report & Review Tables',
-            'Clear Financial Report & Review Tables',
-            'Pre-Balance Added to Financial Report & Review from Documents',
-            'EOY Fields Reset in Chapters Table',
-            'EOY Fields Reset in Documents Table',
-            'Add Outgoing Board Members from Board Details',
+            'Set all Outgoing Users to Inactive',
+            'Approved Awards Added to Awards History',
+            'Clear Outgoing & Incoming Board Member Table',
+            'Clear Financial Report, Questions, Documents & Review Tables',
+            'Reset Financial Report Fields & Prepopulate Last Years Balance & Party Percentage',
+            'Archive IRS Data in Table',
+            'Reset EOY Fields in Chapter, IRS & Report Tables',
             'Update Google Shared Drive to new year for Attachmnet Uploads',
         ];
 
@@ -488,50 +498,21 @@ class TechReportController extends Controller implements HasMiddleware
             'Display Financal Report Button for testers',
         ];
 
+        $resetAFTERtestingItems = [
+            'Clear Outgoing & Incoming Board Member Table',
+            'Clear Financial Report, Questions, Documents & Review Tables',
+            'Reset Financial Report Fields & Prepopulate Last Years Balance & Party Percentage',
+            'Reset EOY Fields in Chapter, IRS & Report Tables',
+        ];
+
         $displayLiveItemsItems = [
             'Display EOY Dashboard Menu Items for all Coordinators',
             'Display Board Election Report Button for Board Members after May 1st',
             'Display Financal Report Button for Board Members after June 1st',
         ];
 
-        $displayCoorindatorMenuItems = [
-            'Display EOY Dashboard Menu Items for testers',
-            'Display EOY Chapter Profile Buttons for testers',
-            'Financial Report for Chapters - button will be available after June 1st.',
-        ];
-
-        $displayCoorindatorMenuItems = [
-            'Display EOY Dashboard Menu Items for testers',
-            'Display EOY Chapter Profile Buttons for testers',
-            'Financial Report for Chapters - button will be available after June 1st.',
-        ];
-
-        $displayChapterButtonItems = [
-            'Board Election Report for Chapters - button will be available after May 1st.',
-            'Report Menu for Coordinators - menu will be available after May 1st.',
-        ];
-
-        $resetAFTERtestingItems = [
-            'Ending Balance Added to Documents from Last Year Financial Reports',
-            'Clear Outgoing Board Member Table',
-            'Clear Incoming Board Member Table',
-            'Clear Financial Reports Table',
-            'Pre-Balance Added to Financial Report from Documents',
-            'EOY Fields Reset in Chapters Table',
-            'EOY Fields Reset in Documents Table',
-            'Update Outgoing Board Members from Board Details',
-        ];
-
-        $updateUserTablesItems = [
-            'Copy/Rename Chapters Table',
-            'Copy/Rename Boards Table',
-            'Copy/Rename Coordinators Table',
-            'Copy/Rename Users Table',
-        ];
-
         $data = ['adminYear' => $adminYear, 'canEditFiles' => $canEditFiles, 'irsYear' => $irsYear, 'reportYear' => $reportYear, 'irsCorrectsionsListItems' => $irsCorrectsionsListItems,
-            'resetEOYTableItems' => $resetEOYTableItems, 'displayCoorindatorMenuItems' => $displayCoorindatorMenuItems, 'displayChapterButtonItems' => $displayChapterButtonItems,
-            'displayTestingItemsItems' => $displayTestingItemsItems, 'displayLiveItemsItems' => $displayLiveItemsItems, 'unSubscribeListItems' => $unSubscribeListItems,
+            'resetEOYTableItems' => $resetEOYTableItems, 'displayTestingItemsItems' => $displayTestingItemsItems, 'displayLiveItemsItems' => $displayLiveItemsItems, 'unSubscribeListItems' => $unSubscribeListItems,
             'resetAFTERtestingItems' => $resetAFTERtestingItems, 'updateUserTablesItems' => $updateUserTablesItems, 'subscribeListItems' => $subscribeListItems,
             'irsUpdateListItems1' => $irsUpdateListItems1, 'irsUpdateListItems2' => $irsUpdateListItems2, 'irsSubordinateListItems' => $irsSubordinateListItems,
         ];
@@ -630,45 +611,53 @@ class TechReportController extends Controller implements HasMiddleware
     /**
      * Reset Fiscal Year in Jul for Subscription Lists  // Step 1
      */
-    public function resetYear(): JsonResponse
-    {
-        // Calculate the new fiscal year (current year - next year)
-        $dateOptions = $this->positionConditionsService->getDateOptions();
-        $fiscal_start = $dateOptions['currentYear'];
-        $fiscal_end = $dateOptions['nextYear'];
-        $fiscal_year = $fiscal_start.'-'.$fiscal_end;
+    // public function resetYear(): JsonResponse
+    // {
+    //     // Resolve the CURRENT fiscal year before creating anything new
+    //     $currentFiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
+    //     $currentFiscalYearId = $currentFiscalYearOptions['fiscalYearId'];
 
-        DB::beginTransaction();
-        try {
-            $fiscalYear = new FiscalYear;
-            $fiscalYear->fiscal_year = $fiscal_year;
-            $fiscalYear->fiscal_start = $fiscal_start;
-            $fiscalYear->fiscal_end = $fiscal_end;
-            $fiscalYear->save();
+    //     // Calculate the new fiscal year (current year - next year)
+    //     $dateOptions = $this->positionConditionsService->getDateOptions();
+    //     $fiscal_start = $dateOptions['currentYear'];
+    //     $fiscal_end = $dateOptions['nextYear'];
+    //     $fiscal_year = $fiscal_start.'-'.$fiscal_end;
 
-            $fiscalYearId = $fiscalYear->id;
+    //     DB::beginTransaction();
+    //     try {
+    //         $fiscalYear = new FiscalYear;
+    //         $fiscalYear->fiscal_year = $fiscal_year;
+    //         $fiscalYear->fiscal_start = $fiscal_start;
+    //         $fiscalYear->fiscal_end = $fiscal_end;
+    //         $fiscalYear->save();
 
-            $adminYear = new AdminYear;
-            $adminYear->fiscal_year_id = $fiscalYearId;
-            $adminYear->save();
+    //         $fiscalYearId = $fiscalYear->id;
 
-            $adminIRS = new AdminIRS;
-            $adminIRS->fiscal_year_id = $fiscalYearId;
-            $adminIRS->save();
+    //         $adminYear = new AdminYear;
+    //         $adminYear->fiscal_year_id = $fiscalYearId;
+    //         $adminYear->save();
 
-            DB::commit(); // Commit transaction
+    //         // Grab the previous AdminIRS row using the resolved "old" fiscal year id
+    //         $previousAdminIRS = AdminIRS::where('fiscal_year_id', $currentFiscalYearId)->first();
 
-            return response()->json(['success' => 'Fiscal year reset successfully.']);
-        } catch (\Exception $e) {
-            DB::rollback(); // Rollback Transaction
-            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+    //         $adminIRS = new AdminIRS;
+    //         $adminIRS->fiscal_year_id = $fiscalYearId;
+    //         $adminIRS->previous_file_date = $previousAdminIRS?->june_file_date;
+    //         $adminIRS->save();
 
-            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
-        } finally {
-            // This ensures DB connections are released even if exceptions occur
-            DB::disconnect();
-        }
-    }
+    //         DB::commit(); // Commit transaction
+
+    //         return response()->json(['success' => 'Fiscal year reset successfully.']);
+    //     } catch (\Exception $e) {
+    //         DB::rollback(); // Rollback Transaction
+    //         Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+
+    //         return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+    //     } finally {
+    //         // This ensures DB connections are released even if exceptions occur
+    //         DB::disconnect();
+    //     }
+    // }
 
     /**
      * Subscribe Users to ForumLists  // Step 2
@@ -933,45 +922,45 @@ class TechReportController extends Controller implements HasMiddleware
     /**
      * Reset Fiscal Year EOY Files/Docs/Etc  // Step 3
      */
-    public function resetYearEOY(): JsonResponse
-    {
-        $fiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
-        $fiscalYearId = $fiscalYearOptions['fiscalYearId'];
-        $report_start = $fiscalYearOptions['reportYearStart'];
-        $report_end = $fiscalYearOptions['reportYearEnd'];
-        $report_year = $fiscalYearOptions['reportYearEnd'];
+    // public function resetYearEOY(): JsonResponse
+    // {
+    //     $fiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
+    //     $fiscalYearId = $fiscalYearOptions['fiscalYearId'];
+    //     $report_start = $fiscalYearOptions['reportYearStart'];
+    //     $report_end = $fiscalYearOptions['reportYearEnd'];
+    //     $report_year = $fiscalYearOptions['reportYearEnd'];
 
-        DB::beginTransaction();
-        try {
-            $fiscalYear = FiscalYear::findOrFail($fiscalYearId);
-            $fiscalYear->fiscal_year = $report_year;
-            $fiscalYear->fiscal_start = $report_start;
-            $fiscalYear->fiscal_end = $report_end;
-            $fiscalYear->save();
+    //     DB::beginTransaction();
+    //     try {
+    //         $fiscalYear = FiscalYear::findOrFail($fiscalYearId);
+    //         $fiscalYear->fiscal_year = $report_year;
+    //         $fiscalYear->fiscal_start = $report_start;
+    //         $fiscalYear->fiscal_end = $report_end;
+    //         $fiscalYear->save();
 
-            $adminReport = new AdminReport;
-            $adminReport->report_year_id = $fiscalYearId;
-            $adminReport->reset_report_year = '1';
-            $adminReport->save();
+    //         $adminReport = new AdminReport;
+    //         $adminReport->report_year_id = $fiscalYearId;
+    //         $adminReport->reset_report_year = '1';
+    //         $adminReport->save();
 
-            DB::commit();
+    //         DB::commit();
 
-            return response()->json(['success' => 'EOY Fiscal year reset successfully.']);
-        } catch (\Exception $e) {
-            DB::rollback(); // Rollback Transaction
-            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+    //         return response()->json(['success' => 'EOY Fiscal year reset successfully.']);
+    //     } catch (\Exception $e) {
+    //         DB::rollback(); // Rollback Transaction
+    //         Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
-            return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
-        } finally {
-            // This ensures DB connections are released even if exceptions occur
-            DB::disconnect();
-        }
-    }
+    //         return response()->json(['fail' => 'An error occurred while updating the data.'], 500);
+    //     } finally {
+    //         // This ensures DB connections are released even if exceptions occur
+    //         DB::disconnect();
+    //     }
+    // }
 
     /**
      * Udate EOY Database Tables  // Step 4
      */
-    public function updateEOYDatabase(Request $request): JsonResponse
+    public function updateEOYDatabaseTESTING(Request $request): JsonResponse
     {
         $user = $this->userController->loadUserInformation($request);
         $updatedId = $user['userId'];
@@ -979,22 +968,22 @@ class TechReportController extends Controller implements HasMiddleware
 
         $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
         $reportYearId = $reportYearOptions['reportYearId'];
+        $yearColumnName = $reportYearOptions['yearColumnName'];
+
+        $fiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
 
         $this->addFinancialPdfColumn($reportYearOptions);
-        $this->archiveFinancialTables($reportYearOptions);
+        $this->archiveFinancialTables($fiscalYearOptions);
 
         DB::beginTransaction();
         try {
             $this->deactivateOutgoingUsers();
-            $this->clearBoardTables();
-            $this->updateChapterEndingBalancesLastYear();
             $this->copyAwardsToHistory($reportYearOptions, $updatedId, $updatedBy);
-            $this->resetFinancialReports($reportYearOptions);
-            $this->resetChapterFlags();
-            $this->resetDocumentsEOY();
-            $this->resetDocumentsIRS();
+            $this->clearTables();
+            $this->resetFinancialReports($reportYearOptions, $fiscalYearOptions);
+            $this->archiveIRSData();
+            $this->resetEOYData($yearColumnName);
             $this->updateGoogleDriveYear($reportYearOptions);
-            // $this->markAdminEOYComplete($EOYOptions, $updatedId);
 
             $adminReport = AdminReport::where('report_year_id', $reportYearId)->firstOrFail();
             $adminReport->update([
@@ -1012,24 +1001,33 @@ class TechReportController extends Controller implements HasMiddleware
         }
     }
 
-    private function addFinancialPdfColumn(array $getFiscalYearOptions): void
+    private function addFinancialPdfColumn(array $fiscalYearOptions): void
     {
-        $newColumnName = $getFiscalYearOptions['fiscalYearEnd'].'_financial_pdf_path';
-        $afterColumnName = $getFiscalYearOptions['fiscalYearStart'].'_financial_pdf_path';
+        $newColumnName = $fiscalYearOptions['fiscalYearEnd'].'_financial_pdf_path';
+        $afterColumnName = $fiscalYearOptions['fiscalYearStart'].'_financial_pdf_path';
 
         Schema::table('documents_eoy', function (Blueprint $table) use ($newColumnName, $afterColumnName) {
             $table->string($newColumnName, 255)->nullable()->after($afterColumnName);
         });
     }
 
-    private function archiveFinancialTables(array $getFiscalYearOptions): void
+    private function archiveFinancialTables(array $fiscalYearOptions): void
     {
-        $fiscalYearStart = $getFiscalYearOptions['fiscalYearStart'];
+        $fiscalYearStart = $fiscalYearOptions['fiscalYearStart'];
 
-        DB::statement("CREATE TABLE zzz_financial_report_12_$fiscalYearStart LIKE financial_report");
-        DB::statement("INSERT INTO zzz_financial_report_12_$fiscalYearStart SELECT * FROM financial_report");
-        DB::statement("CREATE TABLE zzz_financial_report_review_12_$fiscalYearStart LIKE financial_report_review");
-        DB::statement("INSERT INTO zzz_financial_report_review_12_$fiscalYearStart SELECT * FROM financial_report_review");
+        $tablesToArchive = [
+            'financial_report',
+            'financial_report_questions',
+            'financial_report_review',
+        ];
+
+        foreach ($tablesToArchive as $table) {
+            $archiveTable = "zzz_{$table}_12_$fiscalYearStart";
+
+            DB::statement("DROP TABLE IF EXISTS $archiveTable");
+            DB::statement("CREATE TABLE $archiveTable LIKE $table");
+            DB::statement("INSERT INTO $archiveTable SELECT * FROM $table");
+        }
     }
 
     private function deactivateOutgoingUsers(): void
@@ -1039,26 +1037,8 @@ class TechReportController extends Controller implements HasMiddleware
             ->update(['is_active' => UserStatusEnum::INACTIVE]);
     }
 
-    private function clearBoardTables(): void
-    {
-        BoardsOutgoing::query()->delete();
-        BoardsIncoming::query()->delete();
-    }
-
-    private function updateChapterEndingBalancesLastYear(): void
-    {
-        $chapters = Chapters::with('financialReportReview', 'documentsEOY')->get();
-        foreach ($chapters as $chapter) {
-            if ($chapter->financialReportReview && $chapter->documentsEOY) {
-                $chapter->documentsEOY->ending_balance_last_year = $chapter->financialReportReview->ending_balance;
-                $chapter->documentsEOY->save();
-            }
-        }
-    }
-
     private function copyAwardsToHistory(array $reportYearOptions, int $updatedId, string $updatedBy): void
     {
-        // $reportYearRange = $reportYearOptions['reportYearRange'];
         $reportYearId = $reportYearOptions['reportYearId'];
 
         $allChapters = FinancialReportQuestions::whereNotNull('chapter_awards')->get();
@@ -1089,80 +1069,99 @@ class TechReportController extends Controller implements HasMiddleware
         }
     }
 
-    private function resetFinancialReports(array $EOYOptions): void
+    private function clearTables(): void
     {
-        FinancialReport::query()->delete();
-        FinancialReportReview::query()->delete();
+        // Clear/Delete data from the following tables
+        $models = [
+            BoardsOutgoing::class,
+            BoardsIncoming::class,
+            FinancialReport::class,
+            FinancialReportQuestions::class,
+            FinancialReportReview::class,
+            DocumentsEOY::class,
+        ];
 
-        $activeChapters = Chapters::with('documentsEOY')->where('active_status', 1)->get();
-        foreach ($activeChapters as $chapter) {
-            FinancialReport::create([
-                'chapter_id' => $chapter->id,
-                'pre_balance' => $chapter->documentsEOY->pre_balance,
-                'amount_reserved_from_previous_year' => $chapter->documentsEOY->pre_balance,
-            ]);
-            FinancialReportReview::create([
-                'chapter_id' => $chapter->id,
-                'pre_balance' => $chapter->documentsEOY->pre_balance,
-            ]);
+        foreach ($models as $model) {
+            $model::query()->delete();
         }
     }
 
-    private function resetChapterFlags(): void
+    private function resetFinancialReports(array $reportYearOptions, array $fiscalYearOptions): void
     {
-        Chapters::query()->update([
-            'boundary_issues' => null,
-            'boundary_issue_notes' => null,
-            'boundary_issue_resolved' => null,
+        $fiscalYearStart = $fiscalYearOptions['fiscalYearStart'];
+
+        // Pull original values from the archive, not the live table
+        $lastYearData = DB::table("zzz_financial_report_12_$fiscalYearStart")
+            ->get(['chapter_id', 'ending_balance', 'party_percentage'])
+            ->keyBy('chapter_id');
+
+        // Create new entries in the tables below
+        $activeChapters = Chapters::where('active_status', 1)->get();
+        foreach ($activeChapters as $chapter) {
+            $priorYear = $lastYearData->get($chapter->id);
+
+            FinancialReport::create([
+                'chapter_id' => $chapter->id,
+                'ending_balance_last_year' => $priorYear->ending_balance ?? 0,
+                'beginning_balance' => $priorYear->ending_balance ?? 0,
+                'party_percentage_last_year' => $priorYear->party_percentage ?? 0,
+            ]);
+
+            foreach ([
+                FinancialReportQuestions::class, FinancialReportReview::class, DocumentsEOY::class
+            ] as $model) {
+                $model::create(['chapter_id' => $chapter->id]);
+            }
+        }
+    }
+
+    private function archiveIRSData(): void
+    {
+        DocumentsIRS::query()->update([
+            'irs_notes_previous' => DB::raw('irs_notes'),
+            'irs_verified_previous' => DB::raw('irs_verified'),
+            'irs_issues_previous' => DB::raw('irs_issues'),
+            'irs_wrongdate_previous' => DB::raw('irs_wrongdate'),
+            'irs_notfound_previous' => DB::raw('irs_notfound'),
+            'irs_filedwrong_previous' => DB::raw('irs_filedwrong'),
+            'irs_notified_previous' => DB::raw('irs_notified'),
+            'irs_path_previous' => DB::raw('irs_path'),
         ]);
     }
 
-    private function resetDocumentsEOY(): void
+    private function resetEOYData(string $yearColumnName): void
     {
-        DocumentsEoy::query()->update([
-            'new_board_submitted' => null,
-            'new_board_active' => null,
-            'financial_report_received' => null,
-            'report_received' => null,
-            'financial_review_complete' => null,
-            'review_complete' => null,
-            'report_notes' => null,
-            'report_extension' => null,
-            'extension_notes' => null,
-            'roster_path' => null,
-            'statement_1_path' => null,
-            'statement_2_path' => null,
-            'award_path' => null,
-        ]);
+       $tablesToReset = [
+            Chapters::class => [
+                'boundary_issues',
+                'boundary_issue_notes',
+                'boundary_issue_resolved',
+            ],
+            DocumentsIRS::class => [
+                'irs_notes',
+                'irs_verified',
+                'irs_issues',
+                'irs_wrongdate',
+                'irs_notfound',
+                'irs_filedwrong',
+                'irs_notified',
+                'irs_path',
+            ],
+            DocumentsReport::class => [
+                $yearColumnName,
+            ],
+        ];
+
+        foreach ($tablesToReset as $model => $columns) {
+            $nulls = array_fill_keys($columns, null);
+            $model::query()->update($nulls);
+        }
     }
 
-    private function resetDocumentsIRS(): void
-    {
-        DB::statement('
-            UPDATE documents_irs SET
-                irs_notes_previous = irs_notes,
-                irs_verified_previous = irs_verified,
-                irs_issues_previous = irs_issues,
-                irs_wrongdate_previous = irs_wrongdate,
-                irs_notfound_previous = irs_notfound,
-                irs_filedwrong_previous = irs_filedwrong,
-                irs_notified_previous = irs_notified,
-                irs_path_previous = irs_path,
-                irs_notes = NULL,
-                irs_verified = NULL,
-                irs_issues = NULL,
-                irs_wrongdate = NULL,
-                irs_notfound = NULL,
-                irs_filedwrong = NULL,
-                irs_notified = NULL,
-                irs_path = NULL
-        ');
-    }
-
-    private function updateGoogleDriveYear(array $EOYOptions): void
+    private function updateGoogleDriveYear(array $reportYearOptions): void
     {
         GoogleDrive::where('name', 'eoy_uploads')
-            ->update(['version' => $EOYOptions['thisYearEOY']]);
+            ->update(['version' => $reportYearOptions['reportYearEnd']]);
     }
 
     /**
@@ -1194,18 +1193,19 @@ class TechReportController extends Controller implements HasMiddleware
     /**
      * Udate EOY Database Tables AFTER Testing  // Step 6
      */
-    public function updateEOYDatabaseAFTERTesting(Request $request): JsonResponse
+    public function updateEOYDatabaseLIVE(Request $request): JsonResponse
     {
         $reportYearOptions = $this->positionConditionsService->getReportYearOptions();
         $reportYearId = $reportYearOptions['reportYearId'];
         $yearColumnName = $reportYearOptions['yearColumnName'];
 
+        $fiscalYearOptions = $this->positionConditionsService->getFiscalYearOptions();
+
         DB::beginTransaction();
         try {
-            $this->updateChapterEndingBalancesLIVE();
-            $this->clearTablesLIVE();
-            $this->updateChapterBeginningBalancesLastYearLIVE();
-            $this->resetDocumentsEOYLIVE($yearColumnName);
+            $this->clearTables();
+            $this->resetFinancialReports($reportYearOptions, $fiscalYearOptions);
+            $this->resetEOYData($yearColumnName);
 
             $adminReport = AdminReport::where('report_year_id', $reportYearId)->firstOrFail();
             $adminReport->update([
@@ -1223,102 +1223,25 @@ class TechReportController extends Controller implements HasMiddleware
         }
     }
 
-    private function updateChapterEndingBalancesLIVE(): void
-    {
-        // Fetch all chapters with their financial reports and update the balance BEFORE removing data from table
-        $chapters = Chapters::with('financialReportLastYear', 'documentsEOY')->get();
-        foreach ($chapters as $chapter) {
-            if ($chapter->financialReportLastYear && $chapter->documentsEOY) {
-                $documentsEOY = $chapter->documentsEOY;
-                $documentsEOY->ending_balance_last_year = $chapter->financialReportLastYear->ending_balance;
-                $documentsEOY->save();
-            }
-        }
-    }
-
-    private function clearTablesLIVE(): void
-    {
-        BoardsOutgoing::query()->delete();
-        BoardsIncoming::query()->delete();
-        FinancialReport::query()->delete();
-    }
-
-    private function updateChapterBeginningBalancesLastYearLIVE(): void
-    {
-        // Fetch all active chapters and add balance into financial_report
-        $activeChapters = Chapters::with('documentsEOY')->where('active_status', 1)->get();
-        foreach ($activeChapters as $chapter) {
-            FinancialReport::create([
-                'chapter_id' => $chapter->id,  // Ensure chapter_id is provided
-                'beginning_balance' => $chapter->documentsEOY->ending_balance_last_year,
-                'ending_balance_last_year' => $chapter->documentsEOY->ending_balance_last_year,
-            ]);
-        }
-    }
-
-    private function resetDocumentsEOYLIVE(string $yearColumnName): void
-    {
-        // Update chapters table: Set specified columns to NULL
-        DB::table('chapters')->update([
-            'boundary_issues' => null,
-            'boundary_issue_notes' => null,
-            'boundary_issue_resolved' => null,
-        ]);
-
-        // Update documents table: Set specified columns to NULL
-        DB::table('documents_eoy')->update([
-            'new_board_submitted' => null,
-            'new_board_active' => null,
-            'financial_report_received' => null,
-            'report_received' => null,
-            'financial_review_complete' => null,
-            'review_complete' => null,
-            'report_notes' => null,
-            'report_extension' => null,
-            'extension_notes' => null,
-            'roster_path' => null,
-            'statement_1_path' => null,
-            'statement_2_path' => null,
-            'award_path' => null,
-        ]);
-
-        DB::table('documents_irs')->update([
-            'irs_notes' => null,
-            'irs_verified' => null,
-            'irs_issues' => null,
-            'irs_wrongdate' => null,
-            'irs_notfound' => null,
-            'irs_filedwrong' => null,
-            'irs_notified' => null,
-            'irs_path' => null,
-        ]);
-
-        DB::table('documents_report')->update([
-            $yearColumnName => null,
-        ]);
-
-    }
-
     private function copyTablesFINAL(int $currentMonth, int $currentYear): void
     {
-        // Copy and rename the `chapters` table
-        DB::statement("CREATE TABLE zzz_chapters_{$currentMonth}_{$currentYear} LIKE chapters");
-        DB::statement("INSERT INTO zzz_chapters_{$currentMonth}_{$currentYear} SELECT * FROM chapters");
+        $tablesToArchive = [
+            'chapters',
+            'boards',
+            'coordinators',
+            'users',
+        ];
 
-        // Copy and rename the `boards` table
-        DB::statement("CREATE TABLE zzz_boards_{$currentMonth}_{$currentYear} LIKE boards");
-        DB::statement("INSERT INTO zzz_boards_{$currentMonth}_{$currentYear} SELECT * FROM boards");
+        foreach ($tablesToArchive as $table) {
+            $archiveTable = "zzz_{$table}_{$currentMonth}_{$currentYear}";
 
-        // Copy and rename the `coordinators` table
-        DB::statement("CREATE TABLE zzz_coordinators_{$currentMonth}_{$currentYear} LIKE coordinators");
-        DB::statement("INSERT INTO zzz_coordinators_{$currentMonth}_{$currentYear} SELECT * FROM coordinators");
-
-        // Copy and rename the `users` table
-        DB::statement("CREATE TABLE zzz_users_{$currentMonth}_{$currentYear} LIKE users");
-        DB::statement("INSERT INTO zzz_users_{$currentMonth}_{$currentYear} SELECT * FROM users");
+            DB::statement("DROP TABLE IF EXISTS $archiveTable");
+            DB::statement("CREATE TABLE $archiveTable LIKE $table");
+            DB::statement("INSERT INTO $archiveTable SELECT * FROM $table");
+        }
     }
 
-    private function resetBoardList(int $currentYear): void
+    public function resetBoardList(int $currentYear): void
     {
         $lastYear = $currentYear - 1;
         $boardListId = ForumCategoryEnum::BOARDLIST;

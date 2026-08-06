@@ -11,6 +11,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\Attributes\Backoff;
 use Illuminate\Queue\Attributes\Tries;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\Middleware\RateLimited;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
@@ -20,6 +21,11 @@ use romanzipp\QueueMonitor\Traits\IsMonitored;
 abstract class BaseMailable extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
+
+    public function middleware(): array
+    {
+        return [new RateLimited('sendmail-throttle')];
+    }
 
     /**
      * Handle a job failure.

@@ -7,9 +7,12 @@ A notification was sent to **{{ $recipientCount }} subscribers** with the follow
 
 ## {{ $thread->title }}
 
-{{ $post->content }}
+{!! $post->content !!}
 
 **Posted by:**
 {!! $authorNameWithPosition !!}
 
+@component('mail::button', ['url' => $thread->route])
+View Thread
+@endcomponent
 @endcomponent

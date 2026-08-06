@@ -31,7 +31,7 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
         return [
             new Middleware('auth', except: ['logout']),
             new Middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class,
-                except: ['subscribeCategory', 'unsubscribeCategory']),
+                except: ['subscribeCategory', 'unsubscribeCategory', 'setNotificationFrequency']),
         ];
     }
 
@@ -80,6 +80,25 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
 
         return response()->json([
             'message' => 'Successfully unsubscribed from list',
+            'redirect' => back()->getTargetUrl(),
+        ]);
+    }
+
+    public function setNotificationFrequency(Request $request): JsonResponse
+    {
+        $request->validate([
+            'notification_frequency' => 'required|in:immediate,daily_digest',
+        ]);
+
+        ForumCategorySubscription::where([
+            'user_id' => $request->user_id,
+            'category_id' => $request->category_id,
+        ])->update([
+            'notification_frequency' => $request->notification_frequency,
+        ]);
+
+        return response()->json([
+            'message' => 'Successfully updated notification preference',
             'redirect' => back()->getTargetUrl(),
         ]);
     }

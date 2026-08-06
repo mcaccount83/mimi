@@ -596,7 +596,6 @@ class EOYReportController extends Controller implements HasMiddleware
         $financialReportReview->review_beginning_balance = $input['checkBeginningBalance'] ?? null;
         $financialReportReview->review_bank_statement_included = $input['checkBankStatementIncluded'] ?? null;
         $financialReportReview->review_report_balance = $input['checkReportBalances'] ?? null;
-        // $financialReportReview->post_balance = isset($input['post_balance']) ? preg_replace('/[^\d.]/', '', $input['post_balance']) : null;
         $financialReportReview->step_10_notes_log = $input['Step10_Log'] ?? null;
 
         // 990 IRS FILING
@@ -759,7 +758,6 @@ class EOYReportController extends Controller implements HasMiddleware
 
         DB::beginTransaction();
         try {
-            $documentsEOY->final_report_received = null;
             $documentsEOY->report_received = null;
             $documentsEOY->report_extension = '1';
             $documentsEOY->save();
@@ -768,6 +766,7 @@ class EOYReportController extends Controller implements HasMiddleware
             $financialReport->save();
 
             $disbandChecklist->file_financial = null;
+            $disbandChecklist->final_report_received = null;
             $disbandChecklist->save();
 
             $chapter->updated_by = $updatedBy;

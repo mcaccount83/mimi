@@ -205,6 +205,42 @@
     });
 }
 
+function setNotificationFrequency(categoryId, userId, frequency) {
+    $.ajax({
+        url: '{{ route('forum.setnotificationfrequency') }}',
+        type: 'POST',
+        data: {
+            user_id: userId,
+            category_id: categoryId,
+            notification_frequency: frequency,
+            _token: '{{ csrf_token() }}'
+        },
+        success: function(response) {
+            Swal.fire({
+                title: 'Success!',
+                text: response.message,
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1500,
+                customClass: {
+                    confirmButton: 'btn btn-sm btn-success'
+                }
+            });
+        },
+        error: function(jqXHR, exception) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Something went wrong, Please try again.',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    confirmButton: 'btn btn-sm btn-success'
+                }
+            });
+        }
+    });
+}
+
 function showResetProbationSubmisionModel() {
     Swal.fire({
         title: 'Reset Quarterly Reports for all Chapters',

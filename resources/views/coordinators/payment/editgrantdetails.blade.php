@@ -73,7 +73,7 @@
                 <textarea class="form-control" style="width:100%" rows="3" name="Review_Note" id="Review_Note" {{ $grantDetails['review_complete'] != "" ? 'readonly' : '' }}></textarea>
                 <div class="row mb-3" style="margin-left: 5px; margin-top: 5px">
                     <button type="button" id="AddNote" class="btn btn-success bg-gradient btn-sm disabled" disabled>
-                    <i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Note to Log
+                    <i class="bi bi-plus-lg me-2"></i>Add Note to Log
                 </button>
                     </div>
                 </div>

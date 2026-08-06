@@ -191,10 +191,6 @@ function CheckReconciliation() {
     if (!document.querySelector('input[name="checkReportBalances"]:checked')) {
         missingQuestions.push("Does the ending balance match the reconciled balance?");
     }
-    // if (!document.getElementById('post_balance')) {
-    //     missingQuestions.push("Is the post balance entered?");
-    // }
-
     if (missingQuestions.length > 0) {
         var missingQuestionsText = missingQuestions.map(question => `<li>${question}</li>`).join('');
         var message = `<p>The following questions in the RECONCILIATION section are required, please answer the required questions to continue.</p>

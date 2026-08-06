@@ -28,22 +28,32 @@
                     <th>Conf/Reg</th>
           			<th>State</th>
                     <th>Chapter</th>
-                    <th>President<br>
-                        PA|BL</th>
-                    <th>AVP<br>
-                        PA|BL</th>
-                    <th>MVP<br>
-                        PA|BL</th>
-                    <th>Secretary<br>
-                        PA|BL</th>
-                    <th>Treasurer<br>
-                        PA|BL</th>
+                    <th>President</th>
+                    <th>AVP</th>
+                    <th>MVP</th>
+                    <th>Secretary</th>
+                    <th>Treasurer</th>
                 </tr>
                 </thead>
                 <tbody>
+                    @php
+                        $renderSubscriptionStatus = function ($user) {
+                            $subs = $user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
+                            $freqs = $user?->categorySubscriptions?->pluck('notification_frequency', 'category_id')->toArray() ?? [];
+                            $paSubscribed = in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $subs);
+                            $paFreq = $freqs[\App\Enums\ForumCategoryEnum::PUBLICLIST] ?? null;
+                            $blSubscribed = in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $subs);
+                            $blFreq = $freqs[\App\Enums\ForumCategoryEnum::BOARDLIST] ?? null;
+
+                            return [
+                                'pa' => $paSubscribed ? ('YES' . ($paFreq === 'daily_digest' ? ' | Daily Digest' : ' | Individual Emails')) : 'NO',
+                                'bl' => $blSubscribed ? ('YES' . ($blFreq === 'daily_digest' ? ' | Daily Digest' : ' | Individual Emails')) : 'NO',
+                            ];
+                        };
+                    @endphp
                     @foreach($chapterList as $list)
-                  <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="bi bi-eye"></i></a></td>
+                    <tr>
+                        <td class="text-center align-middle"><a href="{{ url("/chapter/details/{$list->id}") }}"><i class="bi bi-eye"></i></a></td>
                         <td>
                             @if ($list->state->conference_id > 0)
                                 {{ $list->state->conference->short_name }} / {{ $list->state->region->short_name }}
@@ -60,59 +70,49 @@
                         </td>
                         <td>{{ $list->name }}</td>
                         <td>
-                            @php
-                                $presSubscriptions = $list->president?->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
-                            @endphp
-                            {{ in_array(1, $presSubscriptions) ? 'YES' : 'NO' }} |
-                            {{ in_array(3, $presSubscriptions) ? 'YES' : 'NO' }}
+                            @php $s = $renderSubscriptionStatus($list->president?->user); @endphp
+                            <div>PA: {{ $s['pa'] }}</div>
+                            <div>BL: {{ $s['bl'] }}</div>
                         </td>
                         <td>
                             @if($list->avp)
-                                @php
-                                    $avpSubscriptions = $list->avp?->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
-                                @endphp
-                                {{ in_array(1, $avpSubscriptions) ? 'YES' : 'NO' }} |
-                                {{ in_array(3, $avpSubscriptions) ? 'YES' : 'NO' }}
+                                @php $s = $renderSubscriptionStatus($list->avp->user); @endphp
+                                <div>PA: {{ $s['pa'] }}</div>
+                                <div>BL: {{ $s['bl'] }}</div>
                             @else
                                 &nbsp;
                             @endif
                         </td>
                         <td>
                             @if($list->mvp)
-                                @php
-                                    $mvpSubscriptions = $list->mvp?->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
-                                @endphp
-                                {{ in_array(1, $mvpSubscriptions) ? 'YES' : 'NO' }} |
-                                {{ in_array(3, $mvpSubscriptions) ? 'YES' : 'NO' }}
+                                @php $s = $renderSubscriptionStatus($list->mvp->user); @endphp
+                                <div>PA: {{ $s['pa'] }}</div>
+                                <div>BL: {{ $s['bl'] }}</div>
                             @else
                                 &nbsp;
                             @endif
                         </td>
                         <td>
                             @if($list->secretary)
-                                @php
-                                    $secSubscriptions = $list->secretary?->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
-                                @endphp
-                                {{ in_array(1, $secSubscriptions) ? 'YES' : 'NO' }} |
-                                {{ in_array(3, $secSubscriptions) ? 'YES' : 'NO' }}
+                                @php $s = $renderSubscriptionStatus($list->secretary->user); @endphp
+                                <div>PA: {{ $s['pa'] }}</div>
+                                <div>BL: {{ $s['bl'] }}</div>
                             @else
                                 &nbsp;
                             @endif
                         </td>
                         <td>
                             @if($list->treasurer)
-                                @php
-                                    $tresSubscriptions = $list->treasurer?->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
-                                @endphp
-                                {{ in_array(1, $tresSubscriptions) ? 'YES' : 'NO' }} |
-                                {{ in_array(3, $tresSubscriptions) ? 'YES' : 'NO' }}
+                                @php $s = $renderSubscriptionStatus($list->treasurer->user); @endphp
+                                <div>PA: {{ $s['pa'] }}</div>
+                                <div>BL: {{ $s['bl'] }}</div>
                             @else
                                 &nbsp;
                             @endif
                         </td>
                     </tr>
                     @endforeach
-                  </tbody>
+                </tbody>
                 </table>
             </div>
              <!-- /.card-body -->
