@@ -7,6 +7,7 @@ use App\Http\Requests\AddEmailCampaignAdminReportRequest;
 use App\Http\Requests\UpdateEmailCampaignAdminReportRequest;
 use App\Models\Chapters;
 use App\Models\EmailCampaign;
+use App\Models\Month;
 use App\Models\PaymentHistory;
 use App\Models\PaymentLog;
 use App\Models\Payments;
@@ -381,11 +382,10 @@ class AdminReportController extends Controller implements HasMiddleware
     {
         $campaigns = EmailCampaign::orderBy('month')->orderBy('label')->get()->groupBy('month');
 
-        $monthNames = [
-            1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
-            5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
-            9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December',
-        ];
+        $allMonths = Month::orderBy('id')->pluck('month_long_name', 'id');
+
+        // Reorder starting from July (7) through June (6) to match fiscal year
+        $monthNames = $allMonths->slice(6)->union($allMonths->slice(0, 6));
 
         $data = ['campaigns' => $campaigns, 'monthNames' => $monthNames];
 
@@ -403,8 +403,8 @@ class AdminReportController extends Controller implements HasMiddleware
             $campaign->confirm_fn = $request->confirm_fn;
             $campaign->preview_slug = $request->preview_slug;
             $campaign->attachments = $request->filled('attachments')
-                ? json_encode(array_filter(array_map('trim', explode(',', $request->attachments))))
-                : null;
+    ? array_filter(array_map('trim', explode(',', $request->attachments)))
+    : null;
             $campaign->active = $request->boolean('active');
             $campaign->save();
 
@@ -433,8 +433,8 @@ class AdminReportController extends Controller implements HasMiddleware
             $campaign->confirm_fn = $request->confirm_fn;
             $campaign->preview_slug = $request->preview_slug;
             $campaign->attachments = $request->filled('attachments')
-                ? json_encode(array_filter(array_map('trim', explode(',', $request->attachments))))
-                : null;
+    ? array_filter(array_map('trim', explode(',', $request->attachments)))
+    : null;
             $campaign->active = $request->boolean('active');
             $campaign->save();
 
@@ -454,20 +454,12 @@ class AdminReportController extends Controller implements HasMiddleware
 
     public function deleteEmailCampaigns(Request $request): JsonResponse
     {
-        $campaignId = $request->input('campaignId');
-
         try {
-            DB::beginTransaction();
-
-            DB::table('email_campaigns')->where('id', $campaignId)->delete();
-
-            DB::commit();
+            EmailCampaign::where('id', $request->input('campaignId'))->delete();
 
             return response()->json(['success' => 'Email campaign successfully deleted.']);
         } catch (\Exception $e) {
-            DB::rollback();
             Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
-
             return response()->json(['fail' => 'Something went wrong, Please try again.'], 500);
         }
     }

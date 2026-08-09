@@ -8,7 +8,9 @@ use App\Models\AdminEmail;
 use App\Models\AdminIRS;
 use App\Models\AdminReport;
 use App\Models\AdminYear;
+use App\Models\EmailCampaign;
 use App\Models\FiscalYear;
+use App\Models\Month;
 use Illuminate\Support\Facades\Request;
 
 class PositionConditionsService
@@ -118,36 +120,33 @@ class PositionConditionsService
         ];
     }
 
-    // public function getEmailCampaignData()
-    // {
-    //     $campaigns = [
-    //         8  => [['id' => 'BudgetMeetingCampaign', 'label' => 'The Executive Board', 'route' => route('campaigns.sendbudgetmeeting'), 'previewRoute' => route('campaigns.preview', 'budget-meeting')]],
-    //         // 9  => [['id' => 'ServiceProjectsCampaign', 'label' => 'Service Projects', 'route' => route('campaigns.sendserviceprojects')]],
-    //         // 10 => [['id' => 'CodeOfConductCampaign', 'label' => 'Code of Conduct', 'route' => route('campaigns.sendcodeofconduct')]],
-    //         11 => [
-    //             ['id' => 'MemberBenefitsCampaign', 'label' => 'Parties/Member Benefits', 'route' => route('campaigns.sendmemberbenefits'), 'previewRoute' => route('campaigns.preview', 'member-benefits'), 'attachments' => ['Party Expenses & 15% Rule.pdf']],
-    //             ['id' => 'HolidayBreakCampaign', 'label' => 'Holiday Break', 'route' => route('campaigns.sendholidaybreak'), 'fn' => 'confirmSendHolidayBreak', 'previewRoute' => route('campaigns.preview', 'holiday-break')],
-    //         ],
-    //         // 12 => [['id' => 'RecordsRetentionCampaign', 'label' => 'Records Retention', 'route' => route('campaigns.sendrecordsretention')]],
-    //         1  => [['id' => 'VolunteerPush', 'label' => 'Volunteer Push', 'route' => route('campaigns.sendvolunteerpush'), 'previewRoute' => route('campaigns.preview', 'volunteer-push')]],
-    //         2  => [['id' => 'ElectionsTimelineCampaign', 'label' => 'Election Information', 'route' => route('campaigns.sendelectionstimeline'), 'previewRoute' => route('campaigns.preview', 'elections-timeline'), 'attachments' => ['Election Timetable.pdf']]],
-    //         // 3  => [['id' => 'ProcessingReimbursementsCampaign', 'label' => 'Processing Reimbursements', 'route' => route('campaigns.sendprocessingreimbursements')]],
-    //         4  => [['id' => 'AnnualReportCampaign', 'label' => 'EOY Report Info', 'route' => route('campaigns.sendannualreport'), 'previewRoute' => route('campaigns.preview', 'annual-report')]],
-    //         5  => [['id' => 'BoardReportCampaign', 'label' => 'Board Report Info', 'route' => route('campaigns.sendboardreport'), 'previewRoute' => route('campaigns.preview', 'board-report')]],
-    //         6  => [['id' => 'FinancialReportCampaign', 'label' => 'Financial Report Info', 'route' => route('campaigns.sendfinancialreport'), 'previewRoute' => route('campaigns.preview', 'financial-report')]],
-    //     ];
+    public function getEmailCampaignData(): array
+    {
+        $campaigns = EmailCampaign::where('active', true)
+            ->get()
+            ->groupBy('month')
+            ->map(function ($group) {
+                return $group->map(function ($c) {
+                    return [
+                        'id' => $c->id,
+                        'label' => $c->label,
+                        'fn' => $c->confirm_fn ?: 'confirmSendCampaign',
+                        'route' => $c->send_url ?? '#',
+                        'previewRoute' => $c->preview_url,
+                        'attachments' => $c->attachments ?? [],
+                        'sent_date' => $c->sent ? $c->sent_date : null,
+                    ];
+                })->toArray();
+            })
+            ->toArray();
 
-    //     $monthNames = [
-    //         1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
-    //         5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
-    //         9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December',
-    //     ];
+        $monthNames = Month::orderBy('id')->pluck('month_long_name', 'id');
 
-    //     return [
-    //         'campaigns' => $campaigns,
-    //         'monthNames' => $monthNames,
-    //     ];
-    // }
+        return [
+            'campaigns' => $campaigns,
+            'monthNames' => $monthNames,
+        ];
+    }
 
     /**
      * Get EOY Date options based on fiscal year // Loaded automatically for blades in ViewServiceProvider & Called manually when needed

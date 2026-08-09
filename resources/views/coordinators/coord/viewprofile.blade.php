@@ -243,3 +243,6 @@
     </section>
     <!-- /.content -->
 @endsection
+
+<!-- Email Preview Modal -->
+@include('coordinators.partials.email_preview_modal')

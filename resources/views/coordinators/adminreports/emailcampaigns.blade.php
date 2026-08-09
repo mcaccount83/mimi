@@ -53,9 +53,8 @@
                                 @foreach($campaigns[$m] as $campaign)
                                    @php
                                         $fn = $campaign->confirm_fn ?: 'confirmSendCampaign';
-                                        $sendUrl = \Illuminate\Support\Facades\Route::has($campaign->route_name) ? route($campaign->route_name) : '#';
-                                        $previewUrl = $campaign->preview_slug ? route('campaigns.preview', $campaign->preview_slug) : null;
-                                        $attachmentList = $campaign->attachments ?? [];
+                                        $sendUrl = $campaign->send_url ?? '#';
+                                        $previewUrl = $campaign->preview_url;
                                     @endphp
                                     <tr data-id="{{ $campaign->id }}">
                                         <td class="text-center align-middle">
@@ -73,8 +72,8 @@
                                         <td>{{ $name }}</td>
                                         <td>{{ $campaign->label }}</td>
                                         <td>
-                                            @if(!empty($attachmentList))
-                                                {{ implode(', ', $attachmentList) }}
+                                            @if(!empty($campaign->attachments))
+                                                {{ implode(', ', $campaign->attachments) }}
                                             @endif
                                         </td>
                                         <td class="text-center align-middle">
@@ -115,19 +114,7 @@
 @endsection
 
 <!-- Email Preview Modal -->
-<div class="modal fade" id="emailPreviewModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="emailPreviewLabel">Email Preview</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body p-0">
-        <iframe id="emailPreviewFrame" style="width:100%; height:75vh; border:0;"></iframe>
-      </div>
-    </div>
-  </div>
-</div>
+@include('coordinators.partials.email_preview_modal')
 
 <!-- Add/Edit Campaign Modal -->
 <div class="modal fade" id="campaignModal" tabindex="-1" aria-hidden="true">
@@ -138,18 +125,33 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+        <div class="alert alert-warning py-2 px-3 mb-3" style="font-size: 0.85rem;">
+            <i class="bi bi-exclamation-triangle-fill me-1"></i>
+            <strong>Reminder:</strong> Adding a campaign here only creates the database entry and send buttons in MIMI. The email template, send route/controller logic,
+            and any attachments must still be manually coded before the campaign will actually work. Start with <code>EmailCampaignController.php</code>.
+        </div>
         <form id="campaignForm">
             <input type="hidden" id="campaignId" value="">
             <div class="mb-3">
                 <label class="form-label">Campaign Key</label>
-                <input type="text" class="form-control" id="campaignKey" placeholder="BudgetMeetingCampaign">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="campaignKey" oninput="updateCampaignPreview()">
+                    <span class="input-group-text">Campaign</span>
+                    <div class="text-muted" style="font-size: 0.8rem;">This is the unique campaign key. There should be no spaces and each word should be capatalized (ex: BudgetMeeting).</div>
+                </div>
+                <div class="text-muted mt-1" style="font-size: 0.85rem;">
+                    <div>Route: <span id="previewRoute"></span></div>
+                    <div>Slug: <span id="previewSlug"></span></div>
+                    <div>Confirm Fn: <span id="previewConfirmFn"></span></div>
+                </div>
             </div>
             <div class="mb-3">
-                <label class="form-label">Label</label>
-                <input type="text" class="form-control" id="campaignLabel" placeholder="The Executive Board">
+                <label class="form-label">Campaign Title</label>
+                <input type="text" class="form-control" id="campaignLabel">
+                <div class="text-muted" style="font-size: 0.8rem;">This is the title of the campaign as it will appear in lists and on buttons (ex: The Executive Board).</div>
             </div>
             <div class="mb-3">
-                <label class="form-label">Month</label>
+                <label class="form-label">Month to Send</label>
                 <select class="form-select" id="campaignMonth">
                     <option value="">—</option>
                     @foreach($monthNames as $m => $name)
@@ -157,21 +159,19 @@
                     @endforeach
                 </select>
             </div>
-            <div class="mb-3">
-                <label class="form-label">Route Name</label>
-                <input type="text" class="form-control" id="campaignRoute" placeholder="campaigns.sendbudgetmeeting">
+            <div class="form-check mb-2">
+                <input type="checkbox" class="form-check-input" id="campaignUsesConfirmFn" onchange="updateCampaignPreview()">
+                <label class="form-check-label" for="campaignUsesConfirmFn">Uses Custom Confirm Function</label>
+                <div class="text-muted" style="font-size: 0.8rem;">Only check this if the campaign needs extra input (ex: Holiday Break's break dates). You'll need to hand-write a matching <code>confirmSend&lt;Key&gt;</code> JS function, or the Send button will error.</div>
             </div>
-            <div class="mb-3">
-                <label class="form-label">Confirm Function (optional)</label>
-                <input type="text" class="form-control" id="campaignConfirmFn" placeholder="confirmSendHolidayBreak">
+            <div class="form-check mb-2">
+                <input type="checkbox" class="form-check-input" id="campaignHasAttachments" onchange="toggleAttachmentsField()">
+                <label class="form-check-label" for="campaignHasAttachments">Has Attachments</label>
             </div>
-            <div class="mb-3">
-                <label class="form-label">Preview Slug</label>
-                <input type="text" class="form-control" id="campaignPreviewSlug" placeholder="budget-meeting">
-            </div>
-            <div class="mb-3">
+            <div class="mb-3" id="campaignAttachmentsWrapper" style="display: none;">
                 <label class="form-label">Attachments (comma-separated filenames)</label>
-                <input type="text" class="form-control" id="campaignAttachments" placeholder="Election Timetable.pdf">
+                <input type="text" class="form-control" id="campaignAttachments">
+                <div class="text-muted" style="font-size: 0.8rem;">This is just a list of attachments, it does not connect the actual attahments themselves. List as comma-separated filenames (ex: Electon Timeline.pdf).</div>
             </div>
             <div class="form-check">
                 <input type="checkbox" class="form-check-input" id="campaignActive" checked>
@@ -191,25 +191,46 @@
 <script>
 const campaignsData = @json($campaigns->flatten());
 
-function previewCampaign(url, label) {
-    document.getElementById('emailPreviewLabel').innerText = label + ' — Preview';
-    const frame = document.getElementById('emailPreviewFrame');
-    frame.src = '';
+function deriveCampaignFields(key) {
+    const slug = key.replace(/(?!^)([A-Z])/g, '-$1').toLowerCase();
+    return {
+        campaign: key + 'Campaign',
+        route_name: 'campaigns.send' + key.toLowerCase(),
+        preview_slug: slug,
+    };
+}
 
-    fetch(url)
-        .then(res => res.text())
-        .then(html => {
-            frame.srcdoc = html;
-            new bootstrap.Modal(document.getElementById('emailPreviewModal')).show();
-        })
-        .catch(() => {
-            Swal.fire('Error', 'Could not load email preview.', 'error');
-        });
+function updateCampaignPreview() {
+    const key = document.getElementById('campaignKey').value.trim();
+    const usesConfirmFn = document.getElementById('campaignUsesConfirmFn').checked;
+
+    if (!key) {
+        document.getElementById('previewRoute').textContent = '—';
+        document.getElementById('previewSlug').textContent = '—';
+        document.getElementById('previewConfirmFn').textContent = '—';
+        return;
+    }
+
+    const derived = deriveCampaignFields(key);
+    document.getElementById('previewRoute').textContent = derived.route_name;
+    document.getElementById('previewSlug').textContent = derived.preview_slug;
+    document.getElementById('previewConfirmFn').textContent = usesConfirmFn ? ('confirmSend' + key) : 'none';
+}
+
+function toggleAttachmentsField() {
+    const checked = document.getElementById('campaignHasAttachments').checked;
+    const wrapper = document.getElementById('campaignAttachmentsWrapper');
+    wrapper.style.display = checked ? 'block' : 'none';
+    if (!checked) {
+        document.getElementById('campaignAttachments').value = '';
+    }
 }
 
 function openCampaignModal() {
     document.getElementById('campaignForm').reset();
     document.getElementById('campaignId').value = '';
+    toggleAttachmentsField();
+    updateCampaignPreview();
     document.getElementById('campaignModalTitle').textContent = 'Add Campaign';
     bootstrap.Modal.getOrCreateInstance(document.getElementById('campaignModal')).show();
 }
@@ -218,27 +239,43 @@ function editCampaign(id) {
     const c = campaignsData.find(c => c.id === id);
     if (!c) return;
 
+    const key = c.campaign.replace(/Campaign$/, '');
+
     document.getElementById('campaignId').value = c.id;
-    document.getElementById('campaignKey').value = c.campaign;
+    document.getElementById('campaignKey').value = key;
     document.getElementById('campaignLabel').value = c.label ?? '';
     document.getElementById('campaignMonth').value = c.month ?? '';
-    document.getElementById('campaignRoute').value = c.route_name;
-    document.getElementById('campaignPreviewSlug').value = c.preview_slug ?? '';
+    document.getElementById('campaignUsesConfirmFn').checked = !!c.confirm_fn;
+    document.getElementById('campaignHasAttachments').checked = !!(c.attachments && c.attachments.length);
     document.getElementById('campaignAttachments').value = c.attachments ? c.attachments.join(', ') : '';
     document.getElementById('campaignActive').checked = !!c.active;
+    toggleAttachmentsField();
+    updateCampaignPreview();
     document.getElementById('campaignModalTitle').textContent = 'Edit Campaign';
     bootstrap.Modal.getOrCreateInstance(document.getElementById('campaignModal')).show();
 }
 
 function saveCampaign() {
     const id = document.getElementById('campaignId').value;
+    const key = document.getElementById('campaignKey').value.trim();
+
+    if (!key) {
+        Swal.fire('Error', 'Campaign Key is required.', 'error');
+        return;
+    }
+
+    const derived = deriveCampaignFields(key);
+    const usesConfirmFn = document.getElementById('campaignUsesConfirmFn').checked;
+    const hasAttachments = document.getElementById('campaignHasAttachments').checked;
+
     const payload = {
-        campaign: document.getElementById('campaignKey').value,
+        campaign: derived.campaign,
         label: document.getElementById('campaignLabel').value,
         month: document.getElementById('campaignMonth').value,
-        route_name: document.getElementById('campaignRoute').value,
-        preview_slug: document.getElementById('campaignPreviewSlug').value,
-        attachments: document.getElementById('campaignAttachments').value,
+        route_name: derived.route_name,
+        confirm_fn: usesConfirmFn ? ('confirmSend' + key) : null,
+        preview_slug: derived.preview_slug,
+        attachments: hasAttachments ? document.getElementById('campaignAttachments').value : '',
         active: document.getElementById('campaignActive').checked,
     };
 
@@ -250,6 +287,7 @@ function saveCampaign() {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
         },
         body: JSON.stringify(payload),

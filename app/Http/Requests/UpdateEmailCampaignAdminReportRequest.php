@@ -18,7 +18,6 @@ class UpdateEmailCampaignAdminReportRequest extends FormRequest
             'label'        => 'nullable|string|max:255',
             'month'        => 'nullable|integer|min:1|max:12',
             'route_name'   => 'required|string|max:255',
-            'confirm_fn'   => 'required|string|max:255',
             'preview_slug' => 'nullable|string|max:255',
             'attachments'  => 'nullable|string|max:255',
             'active'       => 'boolean',

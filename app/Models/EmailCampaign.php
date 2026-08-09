@@ -30,4 +30,9 @@ class EmailCampaign extends Model
             ? route('campaigns.preview', $this->preview_slug)
             : null;
     }
+
+    public function monthRelation()
+    {
+        return $this->belongsTo(Month::class, 'month', 'id');
+    }
 }
