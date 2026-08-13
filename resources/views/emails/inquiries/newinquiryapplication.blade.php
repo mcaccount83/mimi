@@ -15,7 +15,7 @@ MIMI Database Administrator
 <table style="width:100%; border-collapse: collapse; font-family: inherit; font-size: inherit;">
     <tbody>
         <tr>
-            <td colspan="2" style="background-color: #D0D0D0; padding: 8px; text-align: center;"><strong>Inquiry Information</strong></td>
+            <td colspan="2" style="background-color: #ced4da; padding: 8px; text-align: center;"><strong>Inquiry Information</strong></td>
         </tr>
         <tr>
             <td style="padding: 8px;">Name</td>

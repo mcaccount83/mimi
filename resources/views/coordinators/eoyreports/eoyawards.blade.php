@@ -110,9 +110,9 @@
                                 @endphp
                                 {{ $awardType }}<br>
                                 @if ($validChapterAwards[$i]['awards_approved'])
-                                    <div style="background-color:#28a745; color: #ffffff;">YES</div>
+                                    <div class="bg-success text-white">YES</div>
                                 @else
-                                    <div style="background-color:#dc3545; color: #ffffff;">NO</div>
+                                    <div class="bg-danger text-white">NO</div>
                                 @endif
                             @else
                                 &nbsp;

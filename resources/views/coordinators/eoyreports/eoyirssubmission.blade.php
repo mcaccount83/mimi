@@ -72,29 +72,27 @@
 						<td>{{ $list->name }}</td>
                         <td>{{ $list->ein }}</td>
                         </td>
-                        <td @if($list->documentsIRS?->irs_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                        <td class="{{ $list->documentsIRS?->irs_path != null ? '' : 'bg-danger text-white' }}">
                             @if($list->documentsIRS?->irs_path != null) YES @else NO @endif
                         </td>
-                        <td @if($list->documentsIRS?->irs_verified) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                        <td class="{{ $list->documentsIRS?->irs_verified ? '' : 'bg-danger text-white' }}">
                             @if($list->documentsIRS?->irs_verified) YES @else NO @endif
                         </td>
-                        <td @if($list->irs990nFilings?->max('tax_year') == $reportYearStart) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                        <td class="{{ $list->irs990nFilings?->max('tax_year') == $reportYearStart ? '' : 'bg-danger text-white' }}">
                             {{ $list->irs990nFilings?->max('tax_year') ?? 'None' }}
                         </td>
-                        <td @if($list->tax_period_begin_formatted == '07/01/'.$reportYearStart) style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                        <td class="{{ $list->tax_period_begin_formatted == '07/01/'.$reportYearStart ? '' : 'bg-danger text-white' }}">
                             {{ $list->tax_period_begin_formatted }} - {{ $list->tax_period_end_formatted }}
                         </td>
-                        <td @if(!$list->documentsIRS?->irs_issues) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                        <td class="{{ !$list->documentsIRS?->irs_issues ? '' : 'bg-danger text-white' }}">
                             @if($list->documentsIRS?->irs_issues) YES @else NO @endif
                         </td>
-                        <td @if(!$list->documentsIRS?->irs_wrongdate && !$list->documentsIRS?->irs_notfound && !$list->documentsIRS?->irs_filedwrong) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                        <td class="{{ (!$list->documentsIRS?->irs_wrongdate && !$list->documentsIRS?->irs_notfound && !$list->documentsIRS?->irs_filedwrong) ? '' : 'bg-danger text-white' }}">
                             @if($list->documentsIRS?->irs_wrongdate) WRONG DATES @endif
                             @if($list->documentsIRS?->irs_notfound) NOT FOUND @endif
                             @if($list->documentsIRS?->irs_filedwrong) FILED W/WRONG DATES @endif
                         </td>
-                        <td @if(!$list->documentsIRS?->irs_notified && $list->documentsIRS?->irs_issues) style="background-color:#dc3545; color: #ffffff;"
-                            @elseif($list->documentsIRS?->irs_notified && $list->documentsIRS?->irs_issues) style="background-color:#28a745; color: #ffffff;"
-                            @else style="background-color: #transparent;" @endif>
+                        <td class="{{ (!$list->documentsIRS?->irs_notified && $list->documentsIRS?->irs_issues) ? 'bg-danger text-white' : (($list->documentsIRS?->irs_notified && $list->documentsIRS?->irs_issues) ? 'bg-success text-white' : '') }}">
                             @if($list->documentsIRS?->irs_notified) YES @elseif(!$list->documentsIRS?->irs_notified && $list->documentsIRS?->irs_issues) NO @endif
                         </td>
                         <td>{{ $list->documentsIRS?->irs_notes?? null }}</td>

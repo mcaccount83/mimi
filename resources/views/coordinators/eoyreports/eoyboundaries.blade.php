@@ -68,7 +68,7 @@
                         @endif
                         <td>{{ $list->territory}}</td>
                         @if ($list->boundary_issue_notes != '')
-                            <td @if($list->boundary_issue_resolved == '1') style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            <td class="{{ $list->boundary_issue_resolved == '1' ? '' : 'bg-danger text-white' }}">
                                 @if($list->boundary_issue_resolved == '1') YES @else NO @endif
                             </td>
                         @else

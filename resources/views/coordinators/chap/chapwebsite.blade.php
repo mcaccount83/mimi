@@ -56,8 +56,8 @@
                         @endif
                     </td>
                     <td>{{ $list->name }}</td>
-                    <td @if ( $list->website_status == 3 ) style="background-color: #dc3545; color: #ffffff;"
-                        @elseif ( $list->website_status == 2 ) style="background-color: #ffc107;"
+                    <td @if ( $list->website_status == 3 ) class="bg-danger text-white"
+                        @elseif ( $list->website_status == 2 ) class="bg-warning"
                         @endif>
                     {{ $list->webLink->link_status?? null }}</td>
                     <td>

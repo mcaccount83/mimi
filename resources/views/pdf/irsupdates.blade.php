@@ -28,7 +28,7 @@
     }
 
     .zap-table th {
-        background-color: #eee;
+        background-color: #e9ecef;
     }
 
     /* Add table styling */
@@ -43,7 +43,7 @@
     }
 
     .add-table th {
-        background-color: #dff0d8;
+        background-color: #d1e7dd;
     }
 
     /* Table structure helpers */
@@ -58,7 +58,7 @@
     .label {
         font-weight: bold;
         width: 150px;
-        background-color: #f5f5f5;
+        background-color: #f8f9fa;
     }
 
     /* First page footer only */
@@ -70,7 +70,7 @@
         font-size: 10px;
         line-height: 1.3;
         text-align: justify;
-        border-top: 1px solid #ccc;
+        border-top: 1px solid #dee2e6;
         padding-top: 10px;
         background-color: white;
     }

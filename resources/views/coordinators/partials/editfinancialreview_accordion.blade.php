@@ -674,9 +674,9 @@
                                         <div class="row mb-3">
                                             <div class="col-12">
                                                 @if($chFinancialReport->party_percentage > 0.20)
-                                                    Chapter's party expense is <b>over 20%</b> so the chapter should be placed on <b><span class="badge bg-danger">PROBATION</span></b>.
+                                                    Chapter's party expense is <b>over 20%</b> so the chapter should be placed on <b><span class="badge bg-danger badge-inherit-size">PROBATION</span></b>.
                                                 @else
-                                                    Chapter's party expense is <b>between 15-20%</b> so the chapter should be given a <b><span class="badge bg-warning text-dark">FORMAL WARNING</span></b>.
+                                                    Chapter's party expense is <b>between 15-20%</b> so the chapter should be given a <b><span class="badge bg-warning badge-inherit-size text-dark">FORMAL WARNING</span></b>.
                                                 @endif
                                             </div>
                                         </div>

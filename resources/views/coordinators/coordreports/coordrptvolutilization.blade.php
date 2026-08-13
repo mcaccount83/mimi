@@ -46,7 +46,7 @@
                         </td>
                         <td>{{ $list->first_name }} {{ $list->last_name }}</td>
                         @if ( $list->on_leave == 1 )
-                        <td @if ( $list->on_leave == 1 ) style="background-color: #ffc107;" @endif>ON LEAVE</td><td></td>
+                        <td @if ( $list->on_leave == 1 ) class="bg-warning" @endif>ON LEAVE</td><td></td>
                     @else
                         <td>{{ $list->displayPosition->long_title }}</td>
                         <td>

@@ -27,9 +27,9 @@
                         <div class="col-md-12 mb-1">
                             <label class="me-2">Status:</label>
                             @if ($chDetails->active_status == 2)
-                                <span class="badge bg-warning text-dark fs-7">Chapter is PENDING</span>
+                                <span class="badge bg-warning badge-inherit-size text-dark fw-bold">Chapter is PENDING</span>
                             @elseif ($chDetails->active_status == 3)
-                                <span class="badge bg-warning text-dark fs-7">Chapter was NOT APPROVED</span><br>
+                                <span class="badge bg-warning badge-inherit-size text-dark fw-bold">Chapter was NOT APPROVED</span><br>
                             @endif
                         </div>
                         <div class="col-md-12 mb-1">

@@ -2,14 +2,6 @@
 
 @section('page_title', 'User Reports')
 @section('breadcrumb', 'Edit Board')
-<style>
-.disabled-link {
-    pointer-events: none; /* Prevent click events */
-    cursor: default; /* Change cursor to default */
-    color: #343a40; /* Font color */
-}
-
-</style>
 
 @section('content')
     <!-- Main content -->
@@ -34,7 +26,7 @@
                   <ul class="list-group list-group-flush mb-2">
                       <li class="list-group-item">
                        <div class="row">
-                            <div class="col-auto fw-bold">Re-Registration Dues:</div>
+                            <div class="col-auto"><label>Re-Registration Dues:</label></div>
                             <div class="col text-end">
                                 @if ($chPayments->rereg_members)
                                     <b>{{ $chPayments->rereg_members }} Members</b> on <b>@formatDate($chPayments->rereg_date)</b>
@@ -44,7 +36,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-auto fw-bold">M2M Donation:</div>
+                            <div class="col-auto"><label>M2M Donation:</label></div>
                             <div class="col text-end">
                             @if ($chPayments->m2m_donation)
                                 <b>${{ $chPayments->m2m_donation }}</b> on <b>@formatDate($chPayments->m2m_date)</b>
@@ -54,7 +46,7 @@
                          </div>
                         </div>
                         <div class="row">
-                            <div class="col-auto fw-bold">Sustaining Chapter Donation:</div>
+                            <div class="col-auto"><label>Sustaining Chapter Donation:</label></div>
                             <div class="col text-end">
                             @if ($chPayments->sustaining_donation)
                                 <b>${{ $chPayments->sustaining_donation }}</b> on <b>@formatDate($chPayments->sustaining_date)</b>
@@ -66,19 +58,19 @@
                     </li>
                     <li class="list-group-item">
                         <div class="row">
-                            <div class="col-auto fw-bold">Founded:</div>
+                            <div class="col-auto"><label>Founded:</label></div>
                             <div class="col text-end">
                                 {{ $startMonthName }} {{ $chDetails->start_year }}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-auto fw-bold">Formerly Known As:</div>
+                            <div class="col-auto"><label>Formerly Known As:</label></div>
                             <div class="col text-end">
                                 {{ $chDetails->former_name }}
                                 </div>
                         </div>
                         <div class="row">
-                            <div class="col-auto fw-bold">Sistered By:</div>
+                            <div class="col-auto"><label>Sistered By:</label></div>
                             <div class="col text-end">
                                 {{ $chDetails->sistered_by }}
                                 </div>

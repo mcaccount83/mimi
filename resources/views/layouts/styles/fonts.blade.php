@@ -20,11 +20,4 @@
         font-size: 16px;
         line-height: 1.5em;
     } */
-
-     .quill-editor-container .ql-editor {
-    min-height: 150px;
-    max-height: 500px;
-    overflow-y: auto;
-    resize: vertical;
-}
 </style>

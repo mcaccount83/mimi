@@ -19,15 +19,15 @@
                                             {{ $course['title']['rendered'] }}
                                         </a>
                                         @if(!empty($course['progress']) && $course['progress']['status'] === 'completed')
-                                            <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Completed</span>
+                                            <span class="badge bg-success badge-inherit-size"><i class="bi bi-check-circle me-1"></i>Completed</span>
                                         @elseif(!empty($course['progress']) && $course['progress']['status'] === 'in_progress')
-                                            <span class="badge bg-warning"><i class="bi bi-clock-history me-1"></i>In Progress</span>
+                                            <span class="badge bg-warning badge-inherit-size text-dark"><i class="bi bi-clock-history me-1"></i>In Progress</span>
                                             <div class="progress mt-2" style="height: 8px;">
                                                 <div class="progress-bar bg-primary" style="width: {{ $course['progress']['percent'] }}%"></div>
                                             </div>
                                             <small class="text-muted">{{ $course['progress']['percent'] }}% complete ({{ $course['progress']['steps_completed'] }}/{{ $course['progress']['steps_total'] }} steps)</small>
                                         @else
-                                            <span class="badge bg-danger"><i class="bi bi-x-circle me-1"></i>Not Started</span>
+                                            <span class="badge bg-danger badge-inherit-size"><i class="bi bi-x-circle me-1"></i>Not Started</span>
                                         @endif
                                     </li>
                                 @endforeach

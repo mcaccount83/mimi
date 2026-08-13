@@ -80,6 +80,7 @@ class BaseBoardController extends Controller
         $currentAwards = $chapterAwards
             ? unserialize(base64_decode($chapterAwards))
             : [];
+        $currentAwards = is_array($currentAwards) ? $currentAwards : [];
 
         $currentApprovedAwards = array_filter(
             $currentAwards,

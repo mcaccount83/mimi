@@ -88,9 +88,9 @@
                                         </div>
                                         <div class="mb-1"><b>Public Announcements:</b>
                                             @if(in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
-                                                <span class="badge bg-success ms-2">SUBSCRIBED</span>
+                                                <span class="badge bg-success badge-inherit-size ms-2">SUBSCRIBED</span>
                                             @else
-                                                <span class="badge bg-secondary ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $borDetails->user_id }})">SUBSCRIBE NOW</span>
+                                                <span class="badge bg-primary badge-inherit-size ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $borDetails->user_id }})">SUBSCRIBE NOW</span>
                                             @endif
                                             @if (in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
                                                 <select class="form-select form-select-sm d-inline-block w-auto ms-2" onchange="setNotificationFrequency({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $borDetails->user_id }}, this.value)">
@@ -103,9 +103,9 @@
                                         </div>
                                         <div class="mb-1"><b>BoardList:</b>
                                             @if(in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
-                                                <span class="badge bg-success ms-2">SUBSCRIBED</span>
+                                                <span class="badge bg-success badge-inherit-size ms-2">SUBSCRIBED</span>
                                             @else
-                                                <span class="badge bg-secondary ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $borDetails->user_id }})">SUBSCRIBE NOW</span>
+                                                <span class="badge bg-primary badge-inherit-size ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $borDetails->user_id }})">SUBSCRIBE NOW</span>
                                             @endif
                                             @if (in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
                                                 <select class="form-select form-select-sm d-inline-block w-auto ms-2" onchange="setNotificationFrequency({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $borDetails->user_id }}, this.value)">

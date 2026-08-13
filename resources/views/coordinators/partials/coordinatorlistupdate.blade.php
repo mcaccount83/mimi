@@ -1,7 +1,8 @@
 
 @if ($chDetails->active_status == 1)
     <div class="row">
-        <label class="col-auto fw-bold">Primary Coordinator:</label>
+        <div class="col-auto"><label>Primary Coordinator:</label></div>
+        {{-- <label class="col-auto">Primary Coordinator:</label> --}}
         <div class="col text-end">
             <select name="ch_primarycor" id="ch_primarycor" class="form-control" onchange="loadCoordinatorList(this.value)" required>
                 <option value="">Select Primary Coordinator</option>
@@ -20,7 +21,8 @@
 
 @elseif ($chDetails->active_status == 2)
     <div class="row">
-        <label class="col-auto fw-bold">Primary Coordinator:</label>
+        <div class="col-auto"><label>Primary Coordinator:</label></div>
+        {{-- <label class="col-auto">Primary Coordinator:</label> --}}
         <div class="col text-end">
             <select name="ch_primarycor" id="ch_primarycor" class="form-control" onchange="loadCoordinatorList(this.value)" required>
                 <option value="">Select Primary Coordinator</option>

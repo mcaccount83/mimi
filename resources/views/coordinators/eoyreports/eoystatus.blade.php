@@ -72,19 +72,19 @@
                                 @endif
                             </td>
                             <td>{{ $list->name }}</td>
-                            <td @if($list->documentsEOY?->report_extension == '1') style="background-color: #ffc107;" @else style="background-color: transparent;" @endif>
+                            <td class="{{ $list->documentsEOY?->report_extension == '1' ? 'bg-warning' : '' }}">
                                 @if($list->documentsEOY?->report_extension == '1') YES @else @endif
                             </td>
-                            <td @if($list->documentsEOY?->new_board_submitted == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            <td class="{{ $list->documentsEOY?->new_board_submitted == '1' ? '' : 'bg-danger text-white' }}">
                                 @if($list->documentsEOY?->new_board_submitted == '1') YES @else NO @endif
                             </td>
-                            <td @if($list->documentsEOY?->new_board_active == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            <td class="{{ $list->documentsEOY?->new_board_active == '1' ? '' : 'bg-danger text-white' }}">
                                 @if($list->documentsEOY?->new_board_active == '1') YES @else NO @endif
                             </td>
-                            <td @if($list->documentsEOY?->financial_report_received == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            <td class="{{ $list->documentsEOY?->financial_report_received == '1' ? '' : 'bg-danger text-white' }}">
                                 @if($list->documentsEOY?->financial_report_received == '1') YES @else NO @endif
                             </td>
-                            <td @if($list->documentsEOY?->financial_review_complete == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            <td class="{{ $list->documentsEOY?->financial_review_complete == '1' ? '' : 'bg-danger text-white' }}">
                                 @if($list->documentsEOY?->financial_review_complete == '1') YES @else NO @endif
                             </td>
                         </tr>

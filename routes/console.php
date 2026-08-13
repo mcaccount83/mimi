@@ -7,7 +7,7 @@ Schedule::command('queue:work --stop-when-empty --tries=3 --timeout=50 --sleep=2
     ->withoutOverlapping();
 
 Schedule::command('irs:sync-990n')
-    ->weeklyOn(1, '06:00') // Mondays 6am
+    ->weeklyOn(1, '10:00') // Mondays 10am
     ->timezone('America/New_York')
     ->withoutOverlapping();
 

@@ -73,9 +73,9 @@
                             Your next payment:
                             @if ($currentDate->gte($dueDate))
                                 @if ($chDetails->start_month_id == $currentMonth)
-                                    <span class="badge bg-success fs-7">Due Now (@formatDate( $renewalDate))</span>
+                                    <span class="badge bg-success badge-inherit-size fw-bold">Due Now (@formatDate( $renewalDate))</span>
                                 @else
-                                    <span class="badge bg-danger fs-7">Overdue (@formatDate($renewalDate))</span>
+                                    <span class="badge bg-danger badge-inherit-size fw-bold">Overdue (@formatDate($renewalDate))</span>
                                 @endif
                             @else
                                 Due on @formatDate($renewalDate)

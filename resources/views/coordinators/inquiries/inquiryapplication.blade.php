@@ -65,7 +65,7 @@
                                 @else
                                 @endif
                             </td>
-                            <td @if($list->response == '1') style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            <td class="{{ $list->response == '1' ? '' : 'bg-danger text-white' }}">
                                 @if($list->response == '1') YES @else NO @endif
                             </td>
                             <td></td>

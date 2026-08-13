@@ -26,13 +26,13 @@
             @can('approveThreads')
                 <li><a class="dropdown-item" href="{{ route('forum.pending-approval.threads') }}">{{ trans('forum::threads.pending_approval') }}
                     @if($pendingThreadsCount > 0)
-                        <span class="badge bg-danger ms-2">{{ $pendingThreadsCount }} Pending</span>
+                        <span class="badge bg-danger badge-pill notification-badge ms-2">{{ $pendingThreadsCount }} Pending</span>
                     @endif</a></li>
             @endcan
             @can('approvePosts')
                 <li><a class="dropdown-item" href="{{ route('forum.pending-approval.posts') }}">{{ trans('forum::posts.pending_approval') }}
                     @if($pendingPostsCount > 0)
-                        <span class="badge bg-danger ms-2">{{ $pendingPostsCount }} Pending</span>
+                        <span class="badge bg-danger badge-pill notification-badge ms-2">{{ $pendingPostsCount }} Pending</span>
                     @endif</a></li>
             @endcan
         @endif

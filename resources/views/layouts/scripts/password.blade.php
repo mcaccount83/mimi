@@ -1,48 +1,66 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-    document.querySelectorAll('.reset-password-btn').forEach(button => {
-        button.addEventListener('click', function (e) {
-            e.preventDefault();
+        document.querySelectorAll('.reset-password-btn').forEach(button => {
+            button.addEventListener('click', function (e) {
+                e.preventDefault();
 
-            const userId = this.getAttribute('data-user-id');
-            const newPassword = "TempPass4You";
+                const userId = this.getAttribute('data-user-id');
+                const newPassword = "TempPass4You";
 
-            $.ajax({
-                url: '{{ route('updatepassword') }}',
-                type: 'POST',  // Changed from PUT
-                data: {
-                    user_id: userId,
-                    new_password: newPassword,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(result) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: result.message.replace('<br>', '\n'),
-                        icon: 'success',
-                        confirmButtonText: 'OK',
-                        customClass: {
-                            confirmButton: 'btn btn-sm btn-success'
+                Swal.fire({
+                    title: 'Reset Password?',
+                    text: 'This will reset the password to "TempPass4You" for this user.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, Reset Password',
+                    cancelButtonText: 'Cancel',
+                    customClass: {
+                        confirmButton: 'btn btn-sm btn-success',
+                        cancelButton: 'btn btn-sm btn-danger'
+                    },
+                    buttonsStyling: false
+                }).then((result) => {
+                    if (!result.isConfirmed) {
+                        return;
+                    }
+
+                    $.ajax({
+                        url: '{{ route('updatepassword') }}',
+                        type: 'POST',
+                        data: {
+                            user_id: userId,
+                            new_password: newPassword,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(result) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: result.message.replace('<br>', '\n'),
+                                icon: 'success',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn btn-sm btn-success'
+                                }
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            console.error("Failed to reset password:", exception);
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Unable to reset password. Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn btn-sm btn-success'
+                                }
+                            });
                         }
                     });
-                },
-                error: function(jqXHR, exception) {
-                    console.error("Failed to reset password:", exception);
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Unable to reset password. Please try again.',
-                        icon: 'error',
-                        confirmButtonText: 'OK',
-                        customClass: {
-                            confirmButton: 'btn btn-sm btn-success'
-                        }
-                    });
-                }
+                });
             });
         });
     });
-});
 
     function showChangePasswordAlert(user_id) {
         Swal.fire({

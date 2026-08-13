@@ -2,22 +2,7 @@
 
 @section('page_title', 'Chapter Details')
 @section('breadcrumb', 'Board Information')
-<style>
-.disabled-link {
-    pointer-events: none; /* Prevent click events */
-    cursor: default; /* Change cursor to default */
-    color: #343a40; /* Font color */
-}
 
-.custom-span {
-    border: none !important;
-    background-color: transparent !important;
-    padding: 0.375rem 0 !important; /* Match the vertical padding of form-control */
-    box-shadow: none !important;
-}
-
-
-</style>
 @section('content')
     <!-- Main content -->
     <form class="form-horizontal" method="POST" action='{{ route("payment.updategrantdetails", $grantDetails->id) }}'>

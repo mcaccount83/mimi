@@ -177,9 +177,9 @@
                                     <label class="me-2">Next Re-Registration Payment:</label>
                                     @if ($currentDate->gte($dueDate))
                                         @if ($chDetails->start_month_id == $currentMonth)
-                                            <span class="badge bg-success fs-7">Due Now (@formatDate($renewalDate))</span>
+                                            <span class="badge bg-success badge-inherit-size fw-bold">Due Now (@formatDate($renewalDate))</span>
                                         @else
-                                            <span class="badge bg-danger fs-7">Overdue (@formatDate($renewalDate))</span>
+                                            <span class="badge bg-danger badge-inherit-size fw-bold">Overdue (@formatDate($renewalDate))</span>
                                         @endif
                                     @else
                                         Due on @formatDate($renewalDate)
@@ -539,7 +539,7 @@
                                                         @endphp
 
                                                         <label class="me-2">{{ $awardType }}:</label>
-                                                        <span class="badge {{ is_null($approved) ? 'bg-secondary' : ($approved == 1 ? 'bg-success' : 'bg-danger') }} fs-7">
+                                                        <span class="badge badge-inherit-size {{ is_null($approved) ? 'bg-secondary' : ($approved == 1 ? 'bg-success' : 'bg-danger') }}">
                                                             {{ is_null($approved) ? 'Not Reviewed' : ($approved == 1 ? 'Approved' : 'Not Approved') }}
                                                         </span>
                                                     @endforeach

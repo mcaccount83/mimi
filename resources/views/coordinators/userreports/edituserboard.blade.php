@@ -2,14 +2,6 @@
 
 @section('page_title', 'User Details')
 @section('breadcrumb', 'Edit User')
-<style>
-.disabled-link {
-    pointer-events: none; /* Prevent click events */
-    cursor: default; /* Change cursor to default */
-    color: #343a40; /* Font color */
-}
-
-</style>
 
 @section('content')
     <!-- Main content -->
@@ -32,7 +24,7 @@
                 <ul class="list-group list-group-flush mb-3">
                     <li class="list-group-item">
                          <div class="row">
-                            <div class="col-auto fw-bold">Position:</div>
+                            <div class="col-auto"><label>Position:</label></div>
                             <div class="col text-end">
                                         {{$bdPosition}}
                                  </div>

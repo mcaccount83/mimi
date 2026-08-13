@@ -3,7 +3,7 @@
         <a class="dropdown-item" href="{{ route('inquiries.inquiryapplication') }}">
             Inquiries Received List
             @if($pendingInquiryCount > 0)
-                <span class="badge bg-danger ms-2">{{ $pendingInquiryCount }} Pending</span>
+                <span class="badge bg-danger badge-pill notification-badge ms-2">{{ $pendingInquiryCount }} Pending</span>
             @endif
         </a>
         <a class="dropdown-item" href="{{ route('chapters.chapinquiries', ['check3' => 'yes']) }}">Inquiries Active Chapter List</a>

@@ -84,62 +84,44 @@
                                 @endif
                             </td>
                             <td>{{ $list->name }}</td>
-                            <td @if($list->documentsEOY->report_extension == '1') style="background-color: #ffc107;" @else style="background-color: transparent;" @endif>
-                                @if($list->documentsEOY->report_extension == '1') YES @else @endif
+                            <td @if($list->documentsEOY->report_extension == '1') class="bg-warning" @endif>
+                                @if($list->documentsEOY->report_extension == '1') YES @endif
                             </td>
-                            <td @if($list->documentsEOY->financial_report_received == '1') style="background-color:#28a745; color: #ffffff;"
-                                @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                                    @if($list->documentsEOY?->financial_report_received == '1') YES @else NO @endif
+                            <td class="{{ $list->documentsEOY->financial_report_received == '1' ? 'bg-success text-white' : 'bg-danger text-white' }}">
+                                @if($list->documentsEOY?->financial_report_received == '1') YES @else NO @endif
                             </td>
 
                             @if($list->documentsEOY->report_extension == '1' || $list->documentsEOY?->financial_report_received == '1')
-                                <td @if($list->documentsEOY?->roster_path != null) style="background-color:#28a745; color: #ffffff;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                                        @if($list->documentsEOY?->roster_path != null) YES @else NO @endif
+                                <td class="{{ $list->documentsEOY?->roster_path != null ? 'bg-success text-white' : 'bg-danger text-white' }}">
+                                    @if($list->documentsEOY?->roster_path != null) YES @else NO @endif
                                 </td>
-                                <td @if($list->documentsEOY->statement_1_path != null) style="background-color:#28a745; color: #ffffff;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                                        @if($list->documentsEOY->statement_1_path != null) YES @else NO @endif
+                                <td class="{{ $list->documentsEOY->statement_1_path != null ? 'bg-success text-white' : 'bg-danger text-white' }}">
+                                    @if($list->documentsEOY->statement_1_path != null) YES @else NO @endif
                                 </td>
-                                <td @if($list->documentsIRS->irs_path != null) style="background-color:#28a745; color: #ffffff;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                                        @if($list->documentsIRS->irs_path != null) YES @else NO @endif
+                                <td class="{{ $list->documentsIRS->irs_path != null ? 'bg-success text-white' : 'bg-danger text-white' }}">
+                                    @if($list->documentsIRS->irs_path != null) YES @else NO @endif
                                 </td>
-                                <td @if($list->financialReport->service_project_array != null) style="background-color:#28a745; color: #ffffff;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                                        @if($list->financialReport->service_project_array != null) YES @else NO @endif
+                                <td class="{{ $list->financialReport->service_project_array != null ? 'bg-success text-white' : 'bg-danger text-white' }}">
+                                    @if($list->financialReport->service_project_array != null) YES @else NO @endif
                                 </td>
-                                <td @if($list->financialReport->service_project_expenses_m2m > '0') style="background-color:#28a745; color: #ffffff;" @else style="background-color: #ffc107;" @endif>
+                                <td class="{{ $list->financialReport->service_project_expenses_m2m > '0' ? 'bg-success text-white' : 'bg-warning' }}">
                                     ${{ number_format(($list->financialReport->service_project_expenses_m2m ?? 0) , 2) }}
                                 </td>
-                                <td @if($list->financialReport->party_percentage > 0.20) style="background-color:#dc3545; color: #ffffff;"
-                                    @elseif($list->financialReport->party_percentage > 0.15) style="background-color: #ffc107;"
-                                    @else style="background-color:#28a745; color: #ffffff;" @endif>
-                                        {{ number_format(($list->financialReport->party_percentage ?? 0) * 100, 2) }}%
-                                        @if($list->financialReport->party_percentage > 0.20) | PROBATION
-                                        @elseif($list->financialReport->party_percentage > 0.15) | WARNING
-                                        @else @endif
-                                </td>
-                                <td @if($list->financialReport->party_percentage > 0.20) style="background-color:#dc3545; color: #ffffff;"
-                                    @elseif($list->financialReport->party_percentage > 0.15) style="background-color: #ffc107;"
-                                    @else style="background-color:#28a745; color: #ffffff;" @endif>
-                                        @if($list->financialReport->party_percentage > 0.20)PROBATION
-                                        @elseif($list->financialReport->party_percentage > 0.15)WARNING
-                                        @else @endif
-                                </td>
-                                {{-- <td @if($list->financialReport->party_percentage > 0.20) style="background-color:#dc3545; color: #ffffff;"
-                                    @elseif($list->financialReport->party_percentage > 0.15) style="background-color: #ffc107;"
-                                    @else style="background-color:#28a745; color: #ffffff;" @endif>
+                                <td class="{{ $list->financialReport->party_percentage > 0.20 ? 'bg-danger text-white' : ($list->financialReport->party_percentage > 0.15 ? 'bg-warning' : 'bg-success text-white') }}">
                                     {{ number_format(($list->financialReport->party_percentage ?? 0) * 100, 2) }}%
-                                </td> --}}
-                                {{-- <td @if($list->financialReport->party_percentage > 0.20) style="background-color:#dc3545; color: #ffffff;"
-                                    @elseif($list->financialReport->party_percentage > 0.15) style="background-color: #ffc107;"
-                                    @else style="background-color:#28a745; color: #ffffff;" @endif>
-                                        @if($list->financialReport->party_percentage > 0.20) PROBATION
-                                        @elseif($list->financialReport->party_percentage > 0.15) WARNING
-                                        @else @endif
-                                </td> --}}
-                                <td @if($list->financialReport->ending_balance == $list->financialReport->reconciled_balance) style="background-color:#28a745; color: #ffffff;"
-                                    @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                                    @if($list->financialReport->party_percentage > 0.20) | PROBATION
+                                    @elseif($list->financialReport->party_percentage > 0.15) | WARNING
+                                    @else @endif
+                                </td>
+                                <td class="{{ $list->financialReport->party_percentage > 0.20 ? 'bg-danger text-white' : ($list->financialReport->party_percentage > 0.15 ? 'bg-warning' : 'bg-success text-white') }}">
+                                    @if($list->financialReport->party_percentage > 0.20) PROBATION
+                                    @elseif($list->financialReport->party_percentage > 0.15) WARNING
+                                    @else @endif
+                                </td>
+                                <td class="{{ $list->financialReport->ending_balance == $list->financialReport->reconciled_balance ? 'bg-success text-white' : 'bg-danger text-white' }}">
                                     @if($list->financialReport->ending_balance == $list->financialReport->reconciled_balance) YES @else NO @endif
                                 </td>
-                                <td @if($list->documentsEOY->financial_review_complete == '1') style="background-color:#28a745; color: #ffffff;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                                <td class="{{ $list->documentsEOY->financial_review_complete == '1' ? 'bg-success text-white' : 'bg-danger text-white' }}">
                                     @if($list->documentsEOY->financial_review_complete == '1') YES @else NO @endif
                                 </td>
                             @else

@@ -115,7 +115,7 @@ class PaymentController extends Controller implements HasMiddleware
         }
 
         try {
-            $result = $this->paymentReminderService->sendReRegistrationReminders();
+            $result = $this->paymentReminderService->sendReRegistrationReminders($user['confId'] ?? null);
             return response()->json($result, $result['status'] === 'info' ? 422 : 200);
         } catch (\Exception $e) {
             Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
@@ -141,7 +141,7 @@ class PaymentController extends Controller implements HasMiddleware
         }
 
         try {
-            $result = $this->paymentReminderService->sendLateReRegistrationReminders();
+            $result = $this->paymentReminderService->sendLateReRegistrationReminders($user['confId'] ?? null);
             return response()->json($result, $result['status'] === 'info' ? 422 : 200);
         } catch (\Exception $e) {
             Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);

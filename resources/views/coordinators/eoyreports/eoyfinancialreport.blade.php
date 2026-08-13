@@ -96,21 +96,21 @@
                         <td>{{ $list->name }}</td>
                         <td>{{ $list->primaryCoordinator->first_name }} {{ $list->primaryCoordinator->last_name }}</td>
                         <td>{{ $list->reportReviewer->first_name?? null }} {{ $list->reportReviewer->last_name?? null }}</td>
-                        <td @if($list->documentsEOY->report_extension == '1') style="background-color: #ffc107;" @else style="background-color: transparent;" @endif>
+                        <td class="{{ $list->documentsEOY->report_extension == '1' ? 'bg-warning' : '' }}">
                             @if($list->documentsEOY->report_extension == '1') YES @else @endif
                         </td>
-                        <td @if($list->documentsEOY->financial_report_received == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                        <td class="{{ $list->documentsEOY->financial_report_received == '1' ? '' : 'bg-danger text-white' }}">
                             @if($list->documentsEOY->financial_report_received == '1') YES @else NO @endif
                         </td>
                         <td data-sort="@sortDate($list->documentsEOY->report_received)"
-                            @if($list->documentsEOY->financial_report_received == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            class="{{ $list->documentsEOY->financial_report_received == '1' ? '' : 'bg-danger text-white' }}">
                             @if($list->documentsEOY->financial_report_received != null)@formatDate($list->documentsEOY->report_received)@endif
                         </td>
-                        <td @if($list->documentsEOY->financial_review_complete == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                        <td class="{{ $list->documentsEOY->financial_review_complete == '1' ? '' : 'bg-danger text-white' }}">
                             @if($list->documentsEOY->financial_review_complete == '1') YES @else NO @endif
                         </td>
                         <td data-sort="@sortDate($list->documentsEOY->review_complete)"
-                            @if($list->documentsEOY->financial_review_complete == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            class="{{ $list->documentsEOY->financial_review_complete == '1' ? '' : 'bg-danger text-white' }}">
                             @if($list->documentsEOY->review_complete != null)@formatDate($list->documentsEOY->review_complete)@endif
                         </td>
                     </tr>

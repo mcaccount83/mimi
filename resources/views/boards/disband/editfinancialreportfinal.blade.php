@@ -38,11 +38,11 @@
                             <div class="col-md-12 mb-3">
 
                             @if ($chEOYDocuments->final_report_received != '1')
-                                <label class="me-2">Report Status:</label><span class="badge bg-danger fs-7">Due Now</span><br><br>
+                                <label class="me-2">Report Status:</label><span class="badge bg-danger badge-inherit-size fw-bold">Due Now</span><br><br>
                                 Please complete the report below with final finanacial information about your chapter.<br>
                                 Your final report is due upon chapter termination.<br>
                             @elseif ($chEOYDocuments->final_report_received == '1')
-                                <label class="me-2">Report Status:</label><span class="badge bg-success fs-7">Submitted</span><br><br>
+                                <label class="me-2">Report Status:</label><span class="badge bg-success badge-inherit-size fw-bold">Submitted</span><br><br>
                                     Your chapter's final Financial Report Review has been submitted.<br>
                                     Please save a copy of the PDF for your records.</span><br>
                                 <br>

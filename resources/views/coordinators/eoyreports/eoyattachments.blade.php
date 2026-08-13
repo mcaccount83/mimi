@@ -68,19 +68,19 @@
                         </td>
 						<td>{{ $list->name }}</td>
                         </td>
-                        <td @if($list->documentsEOY?->roster_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                        <td class="{{ $list->documentsEOY?->roster_path != null ? '' : 'bg-danger text-white' }}">
                             @if($list->documentsEOY?->roster_path != null) YES @else NO @endif
                         </td>
-                        <td @if($list->documentsEOY?->statement_1_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                        <td class="{{ $list->documentsEOY?->statement_1_path != null ? '' : 'bg-danger text-white' }}">
                             @if($list->documentsEOY?->statement_1_path != null) YES @else NO @endif
                         </td>
                         <td>
                             @if($list->documentsEOY?->statement_2_path != null) YES @else NO @endif
                         </td>
-                        <td @if($list->documentsIRS?->irs_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                        <td class="{{ $list->documentsIRS?->irs_path != null ? '' : 'bg-danger text-white' }}">
                             @if($list->documentsIRS?->irs_path != null) YES @else NO @endif
                         </td>
-                        <td @if($list->documentsIRS?->irs_verified == 1) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                        <td class="{{ $list->documentsIRS?->irs_verified == 1 ? '' : 'bg-danger text-white' }}">
                             @if($list->documentsIRS?->irs_verified == 1) YES @else NO @endif
                         </td>
                         <td>{{ $list->documentsIRS?->irs_notes?? null }}</td>

@@ -3,18 +3,6 @@
 @section('page_title', 'IT Reports')
 @section('breadcrumb', 'System Error Logs')
   <style>
-    /* body {
-      padding: 25px;
-    } */
-
-    /* h1 {
-      font-size: 1.5em;
-      margin-top: 0;
-    } */
-
-    /* #table-log {
-        font-size: 0.85rem;
-    } */
     .stack {
       font-size: 0.85em;
     }
@@ -32,9 +20,9 @@
     }
 
     a.llv-active {
-      z-index: 2;
-      background-color: #f5f5f5;
-      border-color: #777;
+        z-index: 2;
+        background-color: var(--bs-gray-100);
+        border-color: var(--bs-gray-600);
     }
 
     .list-group-item {

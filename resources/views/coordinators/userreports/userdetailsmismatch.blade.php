@@ -69,15 +69,15 @@
                         </td>
                         <td>
                             @if($list->missing_from !== null && empty($list->wrong_tables))
-                                <span class="badge bg-danger fs-7">Make user inactive</span>
+                                <span class="badge bg-danger badge-inherit-size">Make user inactive</span>
 
                             @elseif(!empty($list->wrong_tables))
                                 @foreach($list->wrong_tables as $table)
-                                    <span class="badge bg-warning text-dark fs-7">Change user type to match {{ $table }}</span>
+                                    <span class="badge bg-warning badge-inherit-size text-dark">Change user type to match {{ $table }}</span>
                                 @endforeach
 
                             @else
-                                <span class="badge bg-success fs-7">No action needed</span>
+                                <span class="badge bg-success badge-inherit-size">No action needed</span>
                             @endif
                         </td>
 			        </tr>

@@ -23,19 +23,19 @@
                   <ul class="list-group list-group-flush mb-3">
                       <li class="list-group-item">
                           <div class="row">
-                            <div class="col-auto fw-bold">Supervising Coordinator:</div>
+                            <div class="col-auto"><label>Supervising Coordinator:</label></div>
                             <div class="col text-end">
                                 <a href="mailto:{{ $cdDetails->reportsTo?->email }}">{{ $ReportTo }} </a>
                             </div>
                           </div>
                           <div class="row">
-                            <div class="col-auto fw-bold">Primary Position:</div>
+                            <div class="col-auto"><label>Primary Position:</label></div>
                             <div class="col text-end">
                                 {{ $displayPosition->long_title }}
                            </div>
                           </div>
                           <div class="row">
-                            <div class="col-auto fw-bold">Secondary Positions:</div>
+                            <div class="col-auto"><label>Secondary Positions:</label></div>
                             <div class="col text-end">
                                 @forelse($cdDetails->secondaryPosition as $position)
                                     {{ $position->long_title }}@if(!$loop->last)<br>@endif
@@ -47,60 +47,61 @@
                       </li>
                       <li class="list-group-item">
                           <div class="row">
-                            <div class="col-auto fw-bold">Start Date:</div>
+                            <div class="col-auto"><label>Start Date:</label></div>
                             <div class="col text-end">
                                 {{ $cdDetails->coordinator_start_date }}
                                 </div>
                           </div>
                           <div class="row">
-                            <div class="col-auto fw-bold">Last Promotion Date:</div>
+                            <div class="col-auto"><label>Last Promotion Date:</label></div>
                             <div class="col text-end">
                                 {{ $cdDetails->last_promoted }}
                            </div>
                           </div>
                           <div class="row">
-                            <div class="col-auto fw-bold">Home Chapter:
+                            <div class="col-auto"><label>Home Chapter:</label></div>
+                            <div class="col text-end">
                                 {{ $cdDetails->home_chapter }}
-                                 </div>
+                            </div>
                           </div>
                       </li>
                       <li class="list-group-item mt-2">
                         <div class="row">
-                            <div class="col-auto fw-bold">Birthday:</div>
+                            <div class="col-auto"><label>Birthday:</label></div>
                             <div class="col text-end">
                                 {{$cdDetails->birthdayMonth->month_long_name}} {{$cdDetails->birthday_day}}
                         </div>
                           </div>
                           <div class="row">
-                            <div class="col-auto fw-bold">Email:</div>
+                            <div class="col-auto"><label>Email:</label></div>
                             <div class="col text-end">
                                 @mailto($cdDetails->email)
                         @if ($cdDetails->sec_email != null )
                         </div>
                           </div>
                           <div class="row">
-                            <div class="col-auto fw-bold">Secondary Email:</div>
+                            <div class="col-auto"><label>Secondary Email:</label></div>
                             <div class="col text-end">
                                 @mailto($cdDetails->sec_email)
                         @endif
                         </div>
                           </div>
                           <div class="row">
-                            <div class="col-auto fw-bold">Phone:</div>
+                            <div class="col-auto"><label>Phone:</label></div>
                             <div class="col text-end">
                                 @tel($cdDetails->phone)
                         @if ($cdDetails->alt_phone != null )
                         </div>
                           </div>
                           <div class="row">
-                            <div class="col-auto fw-bold">Atl Phone:</div>
+                            <div class="col-auto"><label>Atl Phone:</label></div>
                             <div class="col text-end">
                                 @tel($cdDetails->alt_phone)
                         @endif
                         </div>
                           </div>
                           <div class="row">
-                            <div class="col-auto fw-bold">Address:</div>
+                            <div class="col-auto"><label>Address:</label></div>
                             <div class="col text-end">
                                 {{$cdDetails->address}}<br>
                         {{$cdDetails->city}}, {{$cdDetails->state->state_short_name}}&nbsp;{{$cdDetails->zip}}
@@ -124,16 +125,6 @@
                             <div class="mb-2">
                                 @include('coordinators.partials.emailcampaigns-button')
                             </div>
-                            {{-- <div class="mb-2">
-                                {{$currentMonthWords}} Re-Reg Reminders <small class="text-muted"><small>(CC Only)</small></small>:
-                                <a class="btn btn-xs btn-outline-primary ms-2" href="{{ route('payment.chapreregreminder') }}"><i class="bi bi-envelope me-2">
-                                    </i>Send Current Month Reminders</a>
-                            </div>
-                            <div class="mb-2">
-                                Re-Reg Late Notices <small class="text-muted"><small>(CC Only)</small></small>:
-                                <a class="btn btn-xs btn-outline-primary ms-2" href="{{ route('payment.chaprereglatereminder') }}"><i class="bi bi-envelope me-2">
-                                    </i>Send One Month Late Notices</a>
-                            </div> --}}
                         @endif
                     </div>
                     <!-- /.card-header -->
@@ -163,7 +154,7 @@
                                                 <td>{{ $coordinator->first_name }}</td>
                                                 <td>{{ $coordinator->last_name }}</td>
                                                 @if ( $coordinator->on_leave == 1 )
-                                                    <td style="background-color: #ffc107;">ON LEAVE</td>
+                                                    <td class="bg-warning">ON LEAVE</td>
                                                 @else
                                                 <td>
                                                     {{ $coordinator->displayPosition->short_title }}

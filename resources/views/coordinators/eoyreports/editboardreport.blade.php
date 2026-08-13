@@ -45,19 +45,19 @@
                     <ul class="list-group list-group-flush mb-3">
                     <li class="list-group-item">
                         @if ($chEOYDocuments->new_board_submitted != '1' )
-                            <label class="me-2">Report Status:</label><span class="badge bg-danger fs-7">Not Submitted</span><br><br>
+                            <label class="me-2">Report Status:</label><span class="badge bg-danger badge-inherit-size fw-bold">Not Submitted</span><br><br>
                                 Chapter needs to Complete and Submit the Board Election Report before new board members can be activated in MIMI.<br>
                                 Submission can also be made by a Coordinator <strong>HERE</strong>.<br>
                         @endif
                         @if ($chEOYDocuments->new_board_submitted == '1' && $chEOYDocuments->new_board_active !='1')
-                            <label class="me-2">Report Status:</label><span class="badge bg-warning text-dark fs-7">Submitted</span><br><br>
+                            <label class="me-2">Report Status:</label><span class="badge bg-warning badge-inherit-size text-dark fw-bold">Submitted</span><br><br>
                                 Changes are can no longer be made by the Chapter, but can be updated by a Coordinator <strong>HERE</strong> prior to Activation.<br>
                                 <br>
                                 New Board Members will need to be activated by a Coordinator after July 1st! Once activated, they will have full MIMI Access.<br>
                                 Outgoing board members will have access to Financial Reports Only.<br>
                         @endif
                         @if ($chEOYDocuments->new_board_active =='1')
-                            <label class="me-2">Report Status:</label><span class="badge bg-success fs-7">Activated</span><br><br>
+                            <label class="me-2">Report Status:</label><span class="badge bg-success badge-inherit-size fw-bold">Activated</span><br><br>
                                 New board members now have full MIMI Access.<br>
                                 <br>
                                 Outgoing board members have access to Financial Reports Only.<br>

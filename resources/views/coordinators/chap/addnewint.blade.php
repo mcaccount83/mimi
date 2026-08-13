@@ -2,14 +2,7 @@
 
 @section('page_title', 'New Chapter Details')
 @section('breadcrumb', 'New Chapter')
-<style>
-.disabled-link {
-    pointer-events: none; /* Prevent click events */
-    cursor: default; /* Change cursor to default */
-    color: #343a40; /* Font color */
-}
 
-</style>
 @section('content')
     <!-- Main content -->
     <form class="form-horizontal" method="POST" action='{{ route("chapters.updatenewint") }}'>

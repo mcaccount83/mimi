@@ -19,7 +19,7 @@ class PaymentReminderService
     /**
      * Send re-registration reminders to chapters due this month, across all conferences.
      */
-    public function sendReRegistrationReminders(): array
+    public function sendReRegistrationReminders(?int $confId = null): array
     {
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentDate = $dateOptions['currentDate'];
@@ -34,6 +34,7 @@ class PaymentReminderService
         $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
 
         $chapters = Chapters::with(['state.conference'])
+            ->when($confId, fn ($q) => $q->whereHas('state.conference', fn ($q2) => $q2->where('conference.id', $confId)))
             ->where('start_month_id', $currentMonth)
             ->where('next_renewal_year', $currentYear)
             ->where('active_status', 1)
@@ -84,7 +85,7 @@ class PaymentReminderService
     /**
      * Send re-registration LATE reminders to chapters overdue as of last month, across all conferences.
      */
-    public function sendLateReRegistrationReminders(): array
+    public function sendLateReRegistrationReminders(?int $confId = null): array
     {
         $dateOptions = $this->positionConditionsService->getDateOptions();
         $currentDate = $dateOptions['currentDate'];
@@ -105,6 +106,7 @@ class PaymentReminderService
         $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
 
         $chapters = Chapters::with(['state.conference'])
+            ->when($confId, fn ($q) => $q->whereHas('state.conference', fn ($q2) => $q2->where('conference.id', $confId)))
             ->where('start_month_id', $lastMonth)
             ->where('next_renewal_year', $currentYear)
             ->where('active_status', 1)

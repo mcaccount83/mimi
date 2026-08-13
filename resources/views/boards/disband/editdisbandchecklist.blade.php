@@ -26,14 +26,19 @@
 
                         <label class="me-2">Chapter Status:</label>
                          @if ($chDetails->active_status == 1 )
-                            <span class="badge bg-success fs-7">Chapter is ACTIVE</span>
-                            {{ $chapterStatus }}
+                            <span class="badge bg-success badge-inherit-size fw-bold">Chapter is ACTIVE</span>
+                            {{-- @if ($chDetails->status_id != \App\Enums\OperatingStatusEnum::OK)
+                                {{ $chapterStatus }}
+                                @if ($chDetails->probation_id != \App\Enums\ProbationReasonEnum::OTHER)
+                                    <br>{{$probationReason}}
+                                @endif
+                            @endif --}}
                         @elseif ($chDetails->active_status == 2)
-                            <span class="badge bg-warning text-dark fs-7">Chapter is PENDING</span>
+                            <span class="badge bg-warning badge-inherit-size text-dark fw-bold">Chapter is PENDING</small><br>
                         @elseif ($chDetails->active_status == 3)
-                            <span class="badge bg-warning text-dark fs-7">Chapter was NOT APPROVED</span><br>
+                            <span class="badge bg-warning badge-inherit-size text-dark fw-bold">Chapter was NOT APPROVED</small><br>
                         @elseif ($chDetails->active_status == 0)
-                            <span class="badge bg-danger fs-7">Chapter is NOT ACTIVE</span><br>
+                            <span class="badge bg-danger badge-inherit-size fw-bold">Chapter is NOT ACTIVE</span><br>
                         @endif
                         <br>
                         Our records indicate that your chapter has disbanded.<br>

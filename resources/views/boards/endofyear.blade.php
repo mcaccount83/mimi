@@ -73,7 +73,7 @@
                                                 @endphp
 
                                                 <label class="me-2">{{ $awardType }}:</label>
-                                                <span class="badge {{ is_null($approved) ? 'bg-secondary' : ($approved == 1 ? 'bg-success' : 'bg-danger') }} fs-7">
+                                                <span class="badge badge-inherit-size {{ is_null($approved) ? 'bg-secondary' : ($approved == 1 ? 'bg-success' : 'bg-danger') }}">
                                                     {{ is_null($approved) ? 'Not Reviewed' : ($approved == 1 ? 'Approved' : 'Not Approved') }}
                                                 </span>
                                             @endforeach

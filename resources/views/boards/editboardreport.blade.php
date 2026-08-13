@@ -40,17 +40,20 @@
                          <div class="row">
                             <div class="col-md-12 mb-3">
                                 @if ($chEOYDocuments->new_board_submitted != '1' )
-                                    <label class="me-2">Report Status:</label><span class="badge bg-danger fs-7">Due June 30th</span><br><br>
+                                    <label class="me-2">Report Status:</label>
+                                    <span class="badge bg-danger badge-inherit-size fw-bold">Due June 30th</span><br><br>
                                     Please complete the report below with information about your newly elected board. This will ensure they have access to all the tools they need to be successful in the upcoming year.<br>
                                     Once submited, your report will be activated after July 1st and new board members will have full MIMI Access. Outgoing board members will have access to Financial Reports Only.<br>
                                 @endif
                                 @if ($chEOYDocuments->new_board_submitted == '1' && $chEOYDocuments->new_board_active !='1')
-                                    <label class="me-2">Report Status:</label><span class="badge bg-warning text-dark fs-7">Submitted</span><br><br>
+                                    <label class="me-2">Report Status:</label>
+                                    <span class="badge bg-warning badge-inherit-size text-dark fw-bold">Submitted</span><br><br>
                                     Your submitted report will be activated after July 1st and new board members will have full MIMI Access. Outgoing board members will have access to Financial Reports Only.<br>
                                     Submitted entries are READ ONLY. If you need to make changes, please contact your Primary Coordinator.<br>
                                 @endif
                                 @if ($chEOYDocuments->new_board_active =='1')
-                                    <label class="me-2">Report Status:</label><span class="badge bg-success fs-7">Activated</span><br><br>
+                                    <label class="me-2">Report Status:</label>
+                                    <span class="badge bg-success badge-inherit-size fw-bold">Activated</span><br><br>
                                     New board members now have full MIMI Access. Outgoing board members have access to Financial Reports Only.<br>
                                     Futrue board member changes can be made on your chapter's main profile page.<br>
                                 @endif

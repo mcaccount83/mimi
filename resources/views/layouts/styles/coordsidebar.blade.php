@@ -40,9 +40,8 @@
         padding: 0 5px;
         font-size: 12px;
         line-height: 18px;
-        /* background-color: #dc3545; */
-        background-color: #28a745;
-        color: #ffffff;
+        background-color: var(--bs-success);
+        color: var(--bs-white);
         border-radius: 10px;
         display: flex;
         align-items: center;
@@ -55,7 +54,6 @@
 
     /* Optional: Add hover effect */
     .notification-badge:hover {
-        /* background-color: #c82333; */
-        background-color: #28a745;
+        background-color: var(--bs-success);
     }
 </style>

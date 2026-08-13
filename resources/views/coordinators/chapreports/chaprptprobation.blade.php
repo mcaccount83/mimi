@@ -59,8 +59,8 @@
                             @endif
                         </td>
                         <td>{{ $list->name }}</td>
-                       <td @if ( $list->status_id == \App\Enums\OperatingStatusEnum::ONHOLDDNR || $list->status_id == \App\Enums\OperatingStatusEnum::PROBATIONDNR) style="background-color: #dc3545; color: #ffffff;"
-                                @elseif ( $list->status_id == \App\Enums\OperatingStatusEnum::PROBATION) style="background-color: #ffc107;"
+                       <td @if ( $list->status_id == \App\Enums\OperatingStatusEnum::ONHOLDDNR || $list->status_id == \App\Enums\OperatingStatusEnum::PROBATIONDNR) class="bg-danger text-white"
+                                @elseif ( $list->status_id == \App\Enums\OperatingStatusEnum::PROBATION) class="bg-warning"
                             @endif>
                         {{ $list->status->chapter_status }}</td>
                         <td>{{ $list->probation?->probation_reason }}</td>

@@ -84,10 +84,11 @@
                             </td>
                             <td>{{ $list->name }}</td>
                             <td>{{ $list->primaryCoordinator->first_name }} {{ $list->primaryCoordinator->last_name }}</td>
-                            <td @if($list->documentsEOY->new_board_submitted == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            <td>{{ $list->primaryCoordinator->first_name }} {{ $list->primaryCoordinator->last_name }}</td>
+                            <td class="{{ $list->documentsEOY->new_board_submitted == '1' ? '' : 'bg-danger text-white' }}">
                                 @if($list->documentsEOY->new_board_submitted == '1') YES @else NO @endif
                             </td>
-                            <td @if($list->documentsEOY->new_board_active == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            <td class="{{ $list->documentsEOY->new_board_active == '1' ? '' : 'bg-danger text-white' }}">
                                 @if($list->documentsEOY->new_board_active == '1') YES @else NO @endif
                             </td>
                         </tr>

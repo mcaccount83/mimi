@@ -21,28 +21,33 @@
                 @if ( $chDetails->ein == null && $conferenceCoordinatorCondition)
                     <br>
                     Apply for an EIN:
-                    <button type="button" class="btn btn-primary bg-gradient btn-xs ms-1" type="button" id="irs-ein" onclick="window.open('https://sa.www4.irs.gov/modiein/individual/index.jsp', '_blank')">Link to IRS</button>
+                    <span class="badge bg-primary badge-btn badge-inherit-size" style="cursor: pointer;" id="irs-ein" onclick="window.open('https://sa.www4.irs.gov/modiein/individual/index.jsp', '_blank')">Link to IRS</span>
+                    {{-- <button type="button" class="btn btn-primary bg-gradient btn-xs ms-1" type="button" id="irs-ein" onclick="window.open('https://sa.www4.irs.gov/modiein/individual/index.jsp', '_blank')">Link to IRS</button> --}}
                     @foreach($resources as $resourceItem)
                     @if ($resourceItem->name == 'Applying for a Chapter EIN')
-                        <button type="button" class="btn btn-primary bg-gradient btn-xs ms-1" type="button" id="apply-ein" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">Instuctions</button>
+                        <span class="badge bg-primary badge-btn badge-inherit-size" style="cursor: pointer;" id="apply-ein" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">Instuctions</span>
+                        {{-- <button type="button" class="btn btn-primary bg-gradient btn-xs ms-1" type="button" id="apply-ein" onclick="openPdfViewer('{{ $resourceItem->file_path }}')">Instuctions</button> --}}
                     @endif
                     @endforeach
                 @endif
                 @if($chDetails->ein != null && ($coordinatorCondition && $conferenceCoordinatorCondition))
                     <br>
-                    <button type="button" class="btn btn-primary bg-gradient btn-xs ms-1" onclick="updateEIN('{{ $chDetails->id }}')">
+                    <span class="badge bg-primary badge-btn badge-inherit-size" style="cursor: pointer;" onclick="updateEIN('{{ $chDetails->id }}')">Update EIN Number</span>
+                    <span class="badge bg-primary badge-btn badge-inherit-size" style="cursor: pointer;" onclick="showFileUploadModal('{{ $chDetails->id }}')">Update EIN Letter</span>
+
+                    {{-- <button type="button" class="btn btn-primary bg-gradient btn-xs ms-1" onclick="updateEIN('{{ $chDetails->id }}')">
                         Update EIN Number
                     </button>
                     <button type="button" class="btn btn-primary bg-gradient btn-xs ms-1" onclick="showFileUploadModal('{{ $chDetails->id }}')">
                         Update EIN Letter
-                    </button>
+                    </button> --}}
                 @endif
                  </p>
                  </div>
                     <ul class="list-group list-group-flush mb-3">
                         <li class="list-group-item">
                             <div class="row">
-                                <div class="col-auto fw-bold">EIN Notes:</div>
+                                <div class="col-auto"><label>EIN Notes:</label></div>
                                 <div class="col text-end">
                                     {{$chDocuments->ein_notes}}
                                 </div>
@@ -54,13 +59,15 @@
 
                              <div class="row">
                                 <div class="text-center">
-                                    <button type="button" class="btn btn-primary bg-gradient btn-xs ms-1" onclick="window.location.href='{{ route('payment.editpayment', ['id' => $chDetails->id]) }}'">
+                                    <span class="badge bg-primary badge-btn badge-inherit-size" style="cursor: pointer;" onclick="window.location.href='{{ route('payment.editpayment', ['id' => $chDetails->id]) }}'">Enter Payment/Donation</span>
+                                    {{-- <button type="button" class="btn btn-primary bg-gradient btn-xs ms-1" onclick="window.location.href='{{ route('payment.editpayment', ['id' => $chDetails->id]) }}'">
                                         Enter Payment/Donation
-                                    </button>
+                                    </button> --}}
                                     @if($coordinatorCondition && $conferenceCoordinatorCondition)
-                                        <button type="button" class="btn btn-primary bg-gradient btn-xs ms-1" onclick="window.location.href='{{ route('payment.paymenthistory', ['id' => $chDetails->id]) }}'">
+                                        <span class="badge bg-primary badge-btn badge-inherit-size" style="cursor: pointer;" onclick="window.location.href='{{ route('payment.paymenthistory', ['id' => $chDetails->id]) }}'">View Payment History</span>
+                                        {{-- <button type="button" class="btn btn-primary bg-gradient btn-xs ms-1" onclick="window.location.href='{{ route('payment.paymenthistory', ['id' => $chDetails->id]) }}'">
                                             View Payment History
-                                        </button>
+                                        </button> --}}
                                     @endif
                                 </div>
                             </div>
@@ -108,26 +115,16 @@
                   <div class="active tab-pane" id="general">
                     <div class="general-field">
                         <div class="card-header bg-transparent border-0">
-                            <h3>General Information
-                                {{-- @if ($chDetails->active_status == \App\Enums\ChapterStatusEnum::ACTIVE)
-                                    <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('board.chapterprofile', ['id' => $chDetails->id]) }}'">View Chapter Profile As President</button>
-                                @elseif ($chDetails->active_status == \App\Enums\ChapterStatusEnum::ZAPPED)
-                                    <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('board.editdisbandchecklist', ['id' => $chDetails->id]) }}'">View Disband Checklist As President</button>
-                                @elseif ($chDetails->active_status == \App\Enums\ChapterStatusEnum::PENDING ||
-                                        $chDetails->active_status == \App\Enums\ChapterStatusEnum::NOTAPPROVED)
-                                    <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('board.newchapterstatus', ['id' => $chDetails->id]) }}'">View Chapter Status As Founder</button>
-                                @endif --}}
-                        </h3>
+                            <h3>General Information</h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
                             <div class="row">
-                                    <div class="col-md-12">
-                                        <label>Boundaries:</label> {{ $chDetails->territory}}
-                                <br>
-                                <label>Status:</label> {{$chapterStatus}}
-                                @if ($chDetails->status_id != \App\Enums\OperatingStatusEnum::OK
-                                )
+                                <div class="col-md-12">
+                                    <label>Boundaries:</label> {{ $chDetails->territory}}
+                                    <br>
+                                    <label>Status:</label> {{$chapterStatus}}
+                                @if ($chDetails->status_id != \App\Enums\OperatingStatusEnum::OK)
                                     <br>
                                     <label>Probation Reason:</label> {{$probationReason}}
                                 @endif
@@ -191,7 +188,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                  <div class="card-header bg-transparent border-0">
-                                        <h3>PDF Letters</h3>
+                                    <h3>PDF Letters</h3>
                                 </div>
                                 <!-- /.card-header -->
                             <div class="card-body">
@@ -202,9 +199,11 @@
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     @if($chDocuments->disband_letter_path != null)
-                                        <button type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="disband-letter" onclick="openPdfViewer('{{ $chDocuments->disband_letter_path }}')">Disband Letter</button>
+                                        <span class="badge bg-primary badge-inherit-size badge-btn keep-enabled" style="cursor: pointer;" id="disband-letter" onclick="openPdfViewer('{{ $chDocuments->disband_letter_path }}')">Disband Letter</span>
+                                        {{-- <button type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="disband-letter" onclick="openPdfViewer('{{ $chDocuments->disband_letter_path }}')">Disband Letter</button> --}}
                                     @else
-                                        <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No Disband Letter on File</button>
+                                        <span class="badge bg-secondary badge-btn badge-inherit-size keep-enabled">No Disband Letter on File</span>
+                                        {{-- <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No Disband Letter on File</button> --}}
                                     @endif
                                 </div>
                             </div>
@@ -214,9 +213,11 @@
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     @if($chDisbanded?->file_financial == 1 && $chReportDocuments->final_financial_pdf_path != null)
-                                        <button type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="final-pdf" onclick="openPdfViewer('{{ $chReportDocuments->final_financial_pdf_path }}')">Final Financial PDF</button>
+                                        <span class="badge bg-primary badge-inherit-size badge-btn keep-enabled" style="cursor: pointer;" id="final-pdf" onclick="openPdfViewer('{{ $chReportDocuments->final_financial_pdf_path }}')">Final Financial PDF</span>
+                                        {{-- <button type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="final-pdf" onclick="openPdfViewer('{{ $chReportDocuments->final_financial_pdf_path }}')">Final Financial PDF</button> --}}
                                     @else
-                                        <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" type="button" disabled>Final PDF Not Available</button>
+                                        <span class="badge bg-secondary badge-btn badge-inherit-size keep-enabled">Final PDF Not Available</span>
+                                        {{-- <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" type="button" disabled>Final PDF Not Available</button> --}}
                                     @endif
                                 </div>
                             </div>
@@ -228,7 +229,8 @@
                                     <label>EIN Fax Coversheet:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button type="button" id="GoodStanding" class="btn btn-primary bg-gradient btn-sm" onclick="openPdfViewer('{{ route('pdf.newchapfaxcover', ['id' => $chDetails->id]) }}')">EIN Fax Coversheet</button><br>
+                                    <span class="badge bg-primary badge-inherit-size badge-btn" style="cursor: pointer;" id="GoodStanding" onclick="openPdfViewer('{{ route('pdf.newchapfaxcover', ['id' => $chDetails->id]) }}')">EIN Fax Coversheet</span>
+                                    {{-- <button type="button" id="GoodStanding" class="btn btn-primary bg-gradient btn-sm" onclick="openPdfViewer('{{ route('pdf.newchapfaxcover', ['id' => $chDetails->id]) }}')">EIN Fax Coversheet</button><br> --}}
                                 </div>
                             </div>
                         @endif
@@ -319,7 +321,6 @@
                         @endif
                         </div>
                         </div>
-
 
                         @if($chDetails->active_status == \App\Enums\ChapterStatusEnum::ACTIVE)
                         <div class="col-md-6">
@@ -550,45 +551,29 @@
                                 @endif
                             </div>
 
-                            {{-- <div class="row mb-2">
+                            <div class="row mb-2">
                                 <div class="col-sm-3">
                                     <label>Chapter Awards:</label>
                                 </div>
-                                    @if(($chFinancialReport?->award_1_nomination_type != null)  || ($chFinancialReport?->award_2_nomination_type != null) || ($chFinancialReport?->award_3_nomination_type != null)
-                                        || ($chFinancialReport?->award_4_nomination_type != null) || ($chFinancialReport?->award_5_nomination_type != null))
-                                 <div class="col-sm-9">
-                                    Chapter was nominated for one or more awards.
-                                </div>
-                                    @else
-                                <div class="col-sm-9">
-                                    Chapter was not nominated for any awards.
-                                </div>
-                                    @endif
-                            </div> --}}
-
-<div class="row mb-2">
-    <div class="col-sm-3">
-        <label>Chapter Awards:</label>
-    </div>
-    @php
-        $chapter_awards_check = [];
-        if (!empty($chFinancialReportQuestions['chapter_awards'])) {
-            $decoded = unserialize(base64_decode($chFinancialReportQuestions['chapter_awards']));
-            if (is_array($decoded)) {
-                $chapter_awards_check = array_filter($decoded, fn ($a) => !empty($a['awards_type']));
-            }
-        }
-    @endphp
-    @if (count($chapter_awards_check) > 0)
-        <div class="col-sm-9">
-            Chapter was nominated for one or more awards.
-        </div>
-    @else
-        <div class="col-sm-9">
-            Chapter was not nominated for any awards.
-        </div>
-    @endif
-</div>
+                                @php
+                                    $chapter_awards_check = [];
+                                    if (!empty($chFinancialReportQuestions['chapter_awards'])) {
+                                        $decoded = unserialize(base64_decode($chFinancialReportQuestions['chapter_awards']));
+                                        if (is_array($decoded)) {
+                                            $chapter_awards_check = array_filter($decoded, fn ($a) => !empty($a['awards_type']));
+                                        }
+                                    }
+                                @endphp
+                                @if (count($chapter_awards_check) > 0)
+                                    <div class="col-sm-9">
+                                        Chapter was nominated for one or more awards.
+                                    </div>
+                                @else
+                                    <div class="col-sm-9">
+                                        Chapter was not nominated for any awards.
+                                    </div>
+                                @endif
+                            </div>
 
                         @else
                             <strong>Report Status/Links are not available at this time.</strong>
@@ -599,7 +584,8 @@
                                 <label>Chapter Awards History:</label>
                             </div>
                             <div class="col-sm-9">
-                                <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='{{ route('eoyreports.awardhistory', ['id' => $chDetails->id]) }}'">View Award History</button>
+                                <span class="badge bg-primary badge-inherit-size" style="cursor: pointer;" onclick="window.location.href='{{ route('eoyreports.awardhistory', ['id' => $chDetails->id]) }}'">View Award History</span>
+                                {{-- <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='{{ route('eoyreports.awardhistory', ['id' => $chDetails->id]) }}'">View Award History</button> --}}
                             </div>
                         </div>
 
@@ -608,7 +594,8 @@
                                 <label>Financial Report History:</label>
                             </div>
                             <div class="col-sm-9">
-                                <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='{{ route('eoyreports.eoyreporthistory', ['id' => $chDetails->id]) }}'">View Report History</button>
+                                <span class="badge bg-primary badge-inherit-size" style="cursor: pointer;" onclick="window.location.href='{{ route('eoyreports.eoyreporthistory', ['id' => $chDetails->id]) }}'">View Report History</span>
+                                {{-- <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='{{ route('eoyreports.eoyreporthistory', ['id' => $chDetails->id]) }}'">View Report History</button> --}}
                             </div>
                         </div>
 
@@ -693,17 +680,15 @@
 
                   <div class="tab-pane" id="pre">
                         <div class="pre-field">
-                             {{-- <div class="card-header bg-transparent border-0">
-                                    <h3>President Information</h3>
-                            </div> --}}
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <h3 class="mb-0">{{$PresDetails->first_name}} {{$PresDetails->last_name}}
-                                            <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('impersonate.start', ['userId' => $PresDetails->user_id]) }}'">
-                                                View as {{ $PresDetails->first_name }} {{ $PresDetails->last_name }}
-                                            </button>
+                                            <small><small>
+                                                <i class="bi bi-eye-fill text-primary" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="View as {{ $PresDetails->first_name }} {{ $PresDetails->last_name }}"
+                                                    onclick="window.location.href='{{ route('impersonate.start', ['userId' => $PresDetails->user_id]) }}'"></i>
+                                            </small></small>
                                         </h3>
                                         @mailto($PresDetails->email)
                                         <br>
@@ -725,27 +710,27 @@
                                         <dt class="col-sm-3">Public Announcements:</dt>
                                         <dd class="col-sm-9">
                                             @if(in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
-                                                <span class="badge bg-success ms-2">SUBSCRIBED</span>
+                                                <span class="badge bg-success badge-inherit-size ms-2">SUBSCRIBED</span>
                                                 <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
                                                     onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $PresDetails->user_id }})"></i>
                                             @else
-                                                <span class="badge bg-secondary ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $PresDetails->user_id }})">SUBSCRIBE NOW</span>
+                                                <span class="badge bg-primary badge-inherit-size ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $PresDetails->user_id }})">SUBSCRIBE NOW</span>
                                             @endif
                                         </dd>
                                         <dt class="col-sm-3">BoardList</dt>
                                         <dd class="col-sm-9">
                                             @if(in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
-                                                <span class="badge bg-success ms-2">SUBSCRIBED</span>
+                                                <span class="badge bg-success badge-inherit-size ms-2">SUBSCRIBED</span>
                                                 <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
                                                     onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $PresDetails->user_id }})"></i>
                                             @else
-                                                <span class="badge bg-secondary ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $PresDetails->user_id }})">SUBSCRIBE NOW</span>
+                                                <span class="badge bg-primary badge-inherit-size ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $PresDetails->user_id }})">SUBSCRIBE NOW</span>
                                             @endif
                                         </dd>
                                     <div class="col-md-12">
                                     <p>This will reset password to default "TempPass4You" for this user only.
                                     <br>
-                                    <button type="button" class="btn btn-primary bg-gradient btn-xs reset-password-btn keep-enabled" data-user-id="{{ $PresDetails->user_id }}">Reset President Password</button>
+                                    <span class="badge bg-primary reset-password-btn keep-enabled badge-inherit-size" style="cursor: pointer;" data-user-id="{{ $PresDetails->user_id }}">Reset {{ $PresDetails->first_name }}'s Password</span>
                                     </p>
                                 </div>
                             </div>
@@ -766,17 +751,15 @@
                             </div>
                         @else
                             <div class="avp-field">
-                                {{-- <div class="card-header bg-transparent border-0">
-                                    <h3>Administrative Vice President Information</h3>
-                                </div> --}}
                                 <!-- /.card-header -->
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <h3 class="mb-0">{{$AVPDetails->first_name}} {{$AVPDetails->last_name}}
-                                            <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('impersonate.start', ['userId' => $AVPDetails->user_id]) }}'">
-                                                View as {{ $AVPDetails->first_name }} {{ $AVPDetails->last_name }}
-                                            </button>
+                                            <small><small>
+                                                <i class="bi bi-eye-fill text-primary" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="View as {{ $AVPDetails->first_name }} {{ $AVPDetails->last_name }}"
+                                                    onclick="window.location.href='{{ route('impersonate.start', ['userId' => $AVPDetails->user_id]) }}'"></i>
+                                            </small></small>
                                         </h3>
                                         @mailto($AVPDetails->email)
                                         <br>
@@ -798,27 +781,27 @@
                                      <dt class="col-sm-3">Public Announcements:</dt>
                                         <dd class="col-sm-9">
                                             @if(in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
-                                                <span class="badge bg-success ms-2">SUBSCRIBED</span>
+                                                <span class="badge bg-success badge-inherit-size ms-2">SUBSCRIBED</span>
                                                 <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
                                                     onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $AVPDetails->user_id }})"></i>
                                             @else
-                                                <span class="badge bg-secondary ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $AVPDetails->user_id }})">SUBSCRIBE NOW</span>
+                                                <span class="badge bg-primary badge-inherit-size ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $AVPDetails->user_id }})">SUBSCRIBE NOW</span>
                                             @endif
                                         </dd>
                                         <dt class="col-sm-3">BoardList</dt>
                                         <dd class="col-sm-9">
                                             @if(in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
-                                                <span class="badge bg-success ms-2">SUBSCRIBED</span>
+                                                <span class="badge bg-success badge-inherit-size ms-2">SUBSCRIBED</span>
                                                 <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
                                                     onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $AVPDetails->user_id }})"></i>
                                             @else
-                                                <span class="badge bg-secondary ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $AVPDetails->user_id }})">SUBSCRIBE NOW</span>
+                                                <span class="badge bg-primary badge-inherit-size ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $AVPDetails->user_id }})">SUBSCRIBE NOW</span>
                                             @endif
                                         </dd>
                                 <div class="col-md-12">
                                     <p>This will reset password to default "TempPass4You" for this user only.
                                     <br>
-                                    <button type="button" class="btn btn-primary bg-gradient btn-xs reset-password-btn keep-enabled" data-user-id="{{ $AVPDetails->user_id }}">Reset AVP Password</button>
+                                    <span class="badge bg-primary reset-password-btn badge-inherit-size keep-enabled" style="cursor: pointer;" data-user-id="{{ $AVPDetails->user_id }}">Reset {{ $AVPDetails->first_name }}'s Password</span>
                                     </p>
                                 </div>
                                 </div>
@@ -839,17 +822,15 @@
                             </div>
                         @else
                             <div class="mvp-field">
-                                 {{-- <div class="card-header bg-transparent border-0">
-                                        <h3>Membership Vice President Information</h3>
-                                </div> --}}
                                 <!-- /.card-header -->
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <h3 class="mb-0">{{$MVPDetails->first_name}} {{$MVPDetails->last_name}}
-                                            <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('impersonate.start', ['userId' => $MVPDetails->user_id]) }}'">
-                                                View as {{ $MVPDetails->first_name }} {{ $MVPDetails->last_name }}
-                                            </button>
+                                            <small><small>
+                                                <i class="bi bi-eye-fill text-primary" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="View as {{ $MVPDetails->first_name }} {{ $MVPDetails->last_name }}"
+                                                    onclick="window.location.href='{{ route('impersonate.start', ['userId' => $MVPDetails->user_id]) }}'"></i>
+                                            </small></small>
                                         </h3>
                                         @mailto($MVPDetails->email)
                                         <br>
@@ -871,27 +852,27 @@
                                      <dt class="col-sm-3">Public Announcements:</dt>
                                         <dd class="col-sm-9">
                                             @if(in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
-                                                <span class="badge bg-success ms-2">SUBSCRIBED</span>
+                                                <span class="badge bg-success badge-inherit-size ms-2">SUBSCRIBED</span>
                                                 <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
                                                     onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $MVPDetails->user_id }})"></i>
                                             @else
-                                                <span class="badge bg-secondary ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $MVPDetails->user_id }})">SUBSCRIBE NOW</span>
+                                                <span class="badge bg-primary badge-inherit-size ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $MVPDetails->user_id }})">SUBSCRIBE NOW</span>
                                             @endif
                                         </dd>
                                         <dt class="col-sm-3">BoardList</dt>
                                         <dd class="col-sm-9">
                                             @if(in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
-                                                <span class="badge bg-success ms-2">SUBSCRIBED</span>
+                                                <span class="badge bg-success badge-inherit-size ms-2">SUBSCRIBED</span>
                                                 <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
                                                     onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $MVPDetails->user_id }})"></i>
                                             @else
-                                                <span class="badge bg-secondary ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $MVPDetails->user_id }})">SUBSCRIBE NOW</span>
+                                                <span class="badge bg-primary badge-inherit-size ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $MVPDetails->user_id }})">SUBSCRIBE NOW</span>
                                             @endif
                                         </dd>
                                     <div class="col-md-12">
                                         <p>This will reset password to default "TempPass4You" for this user only.
                                         <br>
-                                        <button type="button" class="btn btn-primary bg-gradient btn-xs reset-password-btn keep-enabled" data-user-id="{{ $MVPDetails->user_id }}">Reset MVP Password</button>
+                                        <span class="badge bg-primary reset-password-btn badge-inherit-size keep-enabled" style="cursor: pointer;" data-user-id="{{ $MVPDetails->user_id }}">Reset {{ $MVPDetails->first_name }}'s Password</span>
                                         </p>
                                     </div>
                                 </div>
@@ -912,17 +893,15 @@
                           </div>
                         @else
                           <div class="trs-field">
-                            {{-- <div class="card-header bg-transparent border-0">
-                                        <h3>Treasurer Information</h3>
-                                </div> --}}
                                 <!-- /.card-header -->
                             <div class="card-body">
                               <div class="row">
                                 <div class="col-md-6">
                                     <h3 class="mb-0">{{$TRSDetails->first_name}} {{$TRSDetails->last_name}}
-                                        <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('impersonate.start', ['userId' => $TRSDetails->user_id]) }}'">
-                                            View as {{ $TRSDetails->first_name }} {{ $TRSDetails->last_name }}
-                                        </button>
+                                        <small><small>
+                                            <i class="bi bi-eye-fill text-primary" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="View as {{ $TRSDetails->first_name }} {{ $TRSDetails->last_name }}"
+                                                onclick="window.location.href='{{ route('impersonate.start', ['userId' => $TRSDetails->user_id]) }}'"></i>
+                                        </small></small>
                                     </h3>
                                     @mailto($TRSDetails->email)
                                     <br>
@@ -944,27 +923,27 @@
                                      <dt class="col-sm-3">Public Announcements:</dt>
                                         <dd class="col-sm-9">
                                             @if(in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
-                                                <span class="badge bg-success ms-2">SUBSCRIBED</span>
+                                                <span class="badge bg-success badge-inherit-size ms-2">SUBSCRIBED</span>
                                                 <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
                                                     onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $TRSDetails->user_id }})"></i>
                                             @else
-                                                <span class="badge bg-secondary ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $TRSDetails->user_id }})">SUBSCRIBE NOW</span>
+                                                <span class="badge bg-primary badge-inherit-size ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $TRSDetails->user_id }})">SUBSCRIBE NOW</span>
                                             @endif
                                         </dd>
                                         <dt class="col-sm-3">BoardList</dt>
                                         <dd class="col-sm-9">
                                             @if(in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
-                                                <span class="badge bg-success ms-2">SUBSCRIBED</span>
+                                                <span class="badge bg-success badge-inherit-size ms-2">SUBSCRIBED</span>
                                                 <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
                                                     onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $TRSDetails->user_id }})"></i>
                                             @else
-                                                <span class="badge bg-secondary ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $TRSDetails->user_id }})">SUBSCRIBE NOW</span>
+                                                <span class="badge bg-primary badge-inherit-size ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $TRSDetails->user_id }})">SUBSCRIBE NOW</span>
                                             @endif
                                         </dd>
                                     <div class="col-md-12">
                                <p>This will reset password to default "TempPass4You" for this user only.
                               <br>
-                              <button type="button" class="btn btn-primary bg-gradient btn-xs reset-password-btn keep-enabled" data-user-id="{{ $TRSDetails->user_id }}">Reset Treasurer Password</button>
+                                <span class="badge bg-primary reset-password-btn badge-inherit-size keep-enabled" style="cursor: pointer;" data-user-id="{{ $TRSDetails->user_id }}">Reset {{ $TRSDetails->first_name }}'s Password</span>
                             </p>
                         </div>
                     </div>
@@ -985,17 +964,15 @@
                     </div>
                   @else
                     <div class="sec-field">
-                         {{-- <div class="card-header bg-transparent border-0">
-                                        <h3>Secretary Information</h3>
-                                </div> --}}
-                                <!-- /.card-header -->
-                            <div class="card-body">
+                        <!-- /.card-header -->
+                    <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
                                 <h3 class="mb-0">{{$SECDetails->first_name}} {{$SECDetails->last_name}}
-                                    <button type="button" class="btn btn-primary bg-gradient btn-xs ms-2 keep-enabled" onclick="window.location.href='{{ route('impersonate.start', ['userId' => $SECDetails->user_id]) }}'">
-                                        View as {{ $SECDetails->first_name }} {{ $SECDetails->last_name }}
-                                    </button>
+                                    <small><small>
+                                        <i class="bi bi-eye-fill text-primary" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="View as {{ $SECDetails->first_name }} {{ $SECDetails->last_name }}"
+                                            onclick="window.location.href='{{ route('impersonate.start', ['userId' => $SECDetails->user_id]) }}'"></i>
+                                    </small></small>
                                 </h3>
                                 @mailto($SECDetails->email)
                                 <br>
@@ -1017,32 +994,32 @@
                                 <dt class="col-sm-3">Public Announcements:</dt>
                                         <dd class="col-sm-9">
                                             @if(in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
-                                                <span class="badge bg-success ms-2">SUBSCRIBED</span>
+                                                <span class="badge bg-success badge-inherit-size ms-2">SUBSCRIBED</span>
                                                 <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
                                                     onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $SECDetails->user_id }})"></i>
                                             @else
-                                                <span class="badge bg-secondary ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $SECDetails->user_id }})">SUBSCRIBE NOW</span>
+                                                <span class="badge bg-primary badge-inherit-size ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $SECDetails->user_id }})">SUBSCRIBE NOW</span>
                                             @endif
                                         </dd>
                                         <dt class="col-sm-3">BoardList</dt>
                                         <dd class="col-sm-9">
                                             @if(in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
-                                                <span class="badge bg-success ms-2">SUBSCRIBED</span>
+                                                <span class="badge bg-success badge-inherit-size ms-2">SUBSCRIBED</span>
                                                 <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
                                                     onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $SECDetails->user_id }})"></i>
                                             @else
-                                                <span class="badge bg-secondary ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $SECDetails->user_id }})">SUBSCRIBE NOW</span>
+                                                <span class="badge bg-primary badge-inherit-size ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $SECDetails->user_id }})">SUBSCRIBE NOW</span>
                                             @endif
                                         </dd>
                                 <div class="col-md-12">
                         <p>This will reset password to default "TempPass4You" for this user only.
                         <br>
-                        <button type="button" class="btn btn-primary bg-gradient btn-xs reset-password-btn keep-enabled" data-user-id="{{ $SECDetails->user_id }}">Reset Secretary Password</button>
+                        <span class="badge bg-primary reset-password-btn badge-inherit-size keep-enabled" style="cursor: pointer;" data-user-id="{{ $SECDetails->user_id }}">Reset {{ $SECDetails->first_name }}'s Password</span>
                         </p>
                     </div>
                 </div>
 
-     </div>
+            </div>
                     <!-- /.card-body -->
                 </div>
                  @endif

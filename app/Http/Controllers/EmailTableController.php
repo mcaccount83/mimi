@@ -17,7 +17,7 @@ class EmailTableController extends Controller
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
-        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+        $headerStyle = 'background-color: #ced4da; text-align: center; padding: 6px; font-weight: bold;';
 
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';
@@ -33,7 +33,7 @@ class EmailTableController extends Controller
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
-        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+        $headerStyle = 'background-color: #ced4da; text-align: center; padding: 6px; font-weight: bold;';
 
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';
@@ -49,7 +49,7 @@ class EmailTableController extends Controller
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
-        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+        $headerStyle = 'background-color: #ced4da; text-align: center; padding: 6px; font-weight: bold;';
 
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';
@@ -65,7 +65,7 @@ class EmailTableController extends Controller
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
-        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+        $headerStyle = 'background-color: #ced4da; text-align: center; padding: 6px; font-weight: bold;';
 
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';
@@ -81,7 +81,7 @@ class EmailTableController extends Controller
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
-        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+        $headerStyle = 'background-color: #ced4da; text-align: center; padding: 6px; font-weight: bold;';
 
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';
@@ -97,7 +97,7 @@ class EmailTableController extends Controller
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
-        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+        $headerStyle = 'background-color: #ced4da; text-align: center; padding: 6px; font-weight: bold;';
 
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';
@@ -113,7 +113,7 @@ class EmailTableController extends Controller
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
-        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+        $headerStyle = 'background-color: #ced4da; text-align: center; padding: 6px; font-weight: bold;';
 
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';
@@ -129,7 +129,7 @@ class EmailTableController extends Controller
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
-        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+        $headerStyle = 'background-color: #ced4da; text-align: center; padding: 6px; font-weight: bold;';
 
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';
@@ -148,7 +148,7 @@ class EmailTableController extends Controller
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
-        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+        $headerStyle = 'background-color: #ced4da; text-align: center; padding: 6px; font-weight: bold;';
 
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';
@@ -168,7 +168,7 @@ class EmailTableController extends Controller
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
-        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+        $headerStyle = 'background-color: #ced4da; text-align: center; padding: 6px; font-weight: bold;';
 
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';
@@ -188,7 +188,7 @@ class EmailTableController extends Controller
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
-        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+        $headerStyle = 'background-color: #ced4da; text-align: center; padding: 6px; font-weight: bold;';
 
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';
@@ -208,7 +208,7 @@ class EmailTableController extends Controller
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
-        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+        $headerStyle = 'background-color: #ced4da; text-align: center; padding: 6px; font-weight: bold;';
 
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';
@@ -230,7 +230,7 @@ class EmailTableController extends Controller
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
-        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+        $headerStyle = 'background-color: #ced4da; text-align: center; padding: 6px; font-weight: bold;';
 
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';
@@ -250,7 +250,7 @@ class EmailTableController extends Controller
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
-        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+        $headerStyle = 'background-color: #ced4da; text-align: center; padding: 6px; font-weight: bold;';
 
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';
@@ -270,7 +270,7 @@ class EmailTableController extends Controller
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
-        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+        $headerStyle = 'background-color: #ced4da; text-align: center; padding: 6px; font-weight: bold;';
 
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';
@@ -294,7 +294,7 @@ class EmailTableController extends Controller
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
-        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+        $headerStyle = 'background-color: #ced4da; text-align: center; padding: 6px; font-weight: bold;';
 
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';
@@ -317,7 +317,7 @@ class EmailTableController extends Controller
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
-        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+        $headerStyle = 'background-color: #ced4da; text-align: center; padding: 6px; font-weight: bold;';
 
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';
@@ -333,7 +333,7 @@ class EmailTableController extends Controller
     {
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
-        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+        $headerStyle = 'background-color: #ced4da; text-align: center; padding: 6px; font-weight: bold;';
 
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';
@@ -676,7 +676,7 @@ class EmailTableController extends Controller
 
         $cellStyle = 'text-align: center; padding: 6px;';
         $cellLeftStyle = 'padding: 6px;';
-        $headerStyle = 'background-color: #D0D0D0; text-align: center; padding: 6px; font-weight: bold;';
+        $headerStyle = 'background-color: #ced4da; text-align: center; padding: 6px; font-weight: bold;';
 
         $tableHtml = '<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
             <tbody>';

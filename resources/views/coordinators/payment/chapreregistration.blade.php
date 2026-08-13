@@ -78,8 +78,8 @@
                             </td>
                             <td>{{ $list->name }}</td>
                             <td>{{ $list->payments->rereg_notes }}</td>
-                            <td @if ($overdue > 1) style="background-color: #dc3545; color: #ffffff;"
-                                @elseif ($overdue == 1) style="background-color: #ffc107;"
+                            <td @if ($overdue > 1) class="bg-danger text-white"
+                                @elseif ($overdue == 1) class="bg-warning"
                                 @endif
                                 data-sort="{{ $list->next_renewal_year . '-' . str_pad($list->start_month_id, 2, '0', STR_PAD_LEFT) }}">
                                 {{ $due }}

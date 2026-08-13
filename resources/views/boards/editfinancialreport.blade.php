@@ -28,17 +28,20 @@
                             <div class="col-md-12 mb-3">
 
                             @if ($chEOYDocuments->financial_report_received != '1')
-                                <label class="me-2">Report Status:</label><span class="badge bg-danger fs-7">Due July 15th</span><br><br>
+                                <label class="me-2">Report Status:</label>
+                                <span class="badge bg-danger badge-inherit-size fw-bold">Due July 15th</span><br><br>
                                 Please complete the report below with finanacial information about your chapter.<br>
                                 Reports are due by July 15th.<br>
                             @elseif ($chEOYDocuments->financial_report_received == '1' && $chEOYDocuments->financial_review_complete != '1')
-                                <label class="me-2">Report Status:</label><span class="badge bg-warning text-dark fs-7">Submitted</span><br><br>
+                                <label class="me-2">Report Status:</label>
+                                <span class="badge bg-danger badge-inherit-size text-dark fw-bold">Submitted</span><br><br>
                                     Your chapter's Financial Report has been Submitted. A coordinator will review your report and let you know if there are any questions.<br>
                                     Please save a copy of the PDF for your records.</span><br>
                                 <br>
                                 <button type="button" id="btn-download-pdf" class="btn btn-primary bg-gradient" onclick="openPdfViewer('{{ $chReportDocuments->$yearColumnName }}')">{{$financialPDFName}}</button>
                             @elseif ($chEOYDocuments->financial_report_received == '1' && $chEOYDocuments->financial_review_complete == '1')
-                                <label class="me-2">Report Status:</label><span class="badge bg-success fs-7">Reviewed</span><br><br>
+                                <label class="me-2">Report Status:</label>
+                                <span class="badge bg-success badge-inherit-size fw-bold">Reviewed</span><br><br>
                                     Your chapter's Financial Report Review has been completed.<br>
                                     Please save a copy of the PDF for your records.</span><br>
                                 <br>

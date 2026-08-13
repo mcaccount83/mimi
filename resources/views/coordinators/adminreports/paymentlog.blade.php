@@ -97,11 +97,11 @@
                                      <td>${{ number_format($log->amount, 2) }}</td>
                                     <td>
                                         @if($log->status == 'success')
-                                            <span class="badge bg-success text-white">
+                                            <span class="badge bg-success badge-inherit-size">
                                         @elseif($log->status == 'failed')
-                                            <span class="badge bg-danger text-white">
+                                            <span class="badge bg-danger badge-inherit-size">
                                         @else
-                                            <span class="badge bg-secondary text-white">
+                                            <span class="badge bg-secondary badge-inherit-size">
                                         @endif
                                             {{ ucfirst($log->status) }}
                                         </span>

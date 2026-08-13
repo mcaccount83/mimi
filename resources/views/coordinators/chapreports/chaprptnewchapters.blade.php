@@ -55,15 +55,13 @@
                         <td data-sort="{{ $list->start_year . '-' . str_pad($list->start_month_id, 2, '0', STR_PAD_LEFT) }}">
                             {{ $list->startMonth->month_short_name }} {{ $list->start_year }}
                         </td>
-                        <td  @if($list->documents->ein_letter_path != null)style="background-color: transparent;"
-                            @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                        <td class="{{ $list->documents->ein_letter_path != null ? '' : 'bg-danger text-white' }}">
                             @if($list->documents->ein_letter_path != null)
                                 YES
                             @else
                                 NO
                             @endif
                         </td>
-
                         <td>{{ $list->primaryCoordinator->first_name }} {{ $list->primaryCoordinator->last_name }}</td>
 			        </tr>
                   @endforeach

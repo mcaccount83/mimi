@@ -91,7 +91,7 @@
                                                 <td>{{ $coordinator->first_name }}</td>
                                                 <td>{{ $coordinator->last_name }}</td>
                                                 @if ( $coordinator->on_leave == 1 )
-                                                    <td style="background-color: #ffc107;">ON LEAVE</td>
+                                                    <td class="bg-warning">ON LEAVE</td>
                                                 @else
                                                 <td>
                                                     {{ $coordinator->displayPosition->short_title }}
@@ -203,14 +203,14 @@
                             <dd class="col-sm-9">
                                 @if ($assistConferenceCoordinatorCondition)
                                     @if(in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
-                                        <span class="badge bg-success">SUBSCRIBED</span>
+                                        <span class="badge bg-success badge-inherit-size ms-2">SUBSCRIBED</span>
                                         <i class="bi bi-ban text-danger ms-2" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
                                             onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $cdDetails->user_id }})"></i>
                                     @else
-                                        <span class="badge bg-secondary" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $cdDetails->user_id }})">SUBSCRIBE NOW</span>
+                                        <span class="badge bg-primary badge-inherit-size ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $cdDetails->user_id }})">SUBSCRIBE NOW</span>
                                     @endif
                                 @else
-                                    <span class="badge {{ in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions) ? 'bg-success' : 'bg-secondary' }}">
+                                    <span class="badge badge-inherit-size ms-2 {{ in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions) ? 'bg-success' : 'bg-secondary' }}">
                                         {{ in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}
                                     </span>
                                 @endif
@@ -219,14 +219,14 @@
                             <dd class="col-sm-9">
                                 @if ($assistConferenceCoordinatorCondition)
                                     @if(in_array(\App\Enums\ForumCategoryEnum::COORDLIST, $Subscriptions))
-                                        <span class="badge bg-success">SUBSCRIBED</span>
+                                        <span class="badge bg-success badge-inherit-size ms-2">SUBSCRIBED</span>
                                         <i class="bi bi-ban text-danger ms-2" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
                                             onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::COORDLIST }}, {{ $cdDetails->user_id }})"></i>
                                     @else
-                                        <span class="badge bg-secondary" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::COORDLIST }}, {{ $cdDetails->user_id }})">SUBSCRIBE NOW</span>
+                                        <span class="badge bg-primary badge-inherit-size ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::COORDLIST }}, {{ $cdDetails->user_id }})">SUBSCRIBE NOW</span>
                                     @endif
                                 @else
-                                    <span class="badge {{ in_array(\App\Enums\ForumCategoryEnum::COORDLIST, $Subscriptions) ? 'bg-success' : 'bg-secondary' }}">
+                                    <span class="badge badge-inherit-size ms-2 {{ in_array(\App\Enums\ForumCategoryEnum::COORDLIST, $Subscriptions) ? 'bg-success' : 'bg-secondary' }}">
                                         {{ in_array(\App\Enums\ForumCategoryEnum::COORDLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}
                                     </span>
                                 @endif
@@ -235,14 +235,14 @@
                             <dd class="col-sm-9">
                                 @if ($assistConferenceCoordinatorCondition)
                                     @if(in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
-                                        <span class="badge bg-success">SUBSCRIBED</span>
+                                        <span class="badge bg-success badge-inherit-size ms-2">SUBSCRIBED</span>
                                         <i class="bi bi-ban text-danger ms-2" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
                                             onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $cdDetails->user_id }})"></i>
                                     @else
-                                        <span class="badge bg-secondary" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $cdDetails->user_id }})">SUBSCRIBE NOW</span>
+                                        <span class="badge bg-primary badge-inherit-size ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $cdDetails->user_id }})">SUBSCRIBE NOW</span>
                                     @endif
                                 @else
-                                    <span class="badge {{ in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions) ? 'bg-success' : 'bg-secondary' }}">
+                                    <span class="badge badge-inherit-size ms-2 {{ in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions) ? 'bg-success' : 'bg-secondary' }}">
                                         {{ in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions) ? 'SUBSCRIBED' : 'NOT SUBSCRIBED' }}
                                     </span>
                                 @endif

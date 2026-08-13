@@ -35,6 +35,15 @@
     );
 
     document.addEventListener('DOMContentLoaded', function () {
+        function disableBadges() {
+            $('.badge-btn').not('.keep-enabled').each(function () {
+                $(this).addClass('badge-disabled');
+                $(this).removeAttr('style');
+                $(this).off('click');
+                $(this).removeAttr('onclick');
+            });
+        }
+
         if (disableFieldsMode == 'disable-all') {
             if (activeId != 0 && !hasITAccess) {
                 $('input, select, textarea, button').prop('disabled', true);
@@ -42,6 +51,7 @@
                     $(this).addClass('disabled-link').attr('href', 'javascript:void(0);');
                     $(this).on('click', function(e) { e.preventDefault(); });
                 });
+                disableBadges();
                 $('.keep-enabled').prop('disabled', false);
             }
         } else {
@@ -51,6 +61,7 @@
                     $(this).addClass('disabled-link').attr('href', 'javascript:void(0);');
                     $(this).on('click', function(e) { e.preventDefault(); });
                 });
+                disableBadges();
                 $('.keep-enabled').prop('disabled', false);
             }
         }

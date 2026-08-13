@@ -1,8 +1,27 @@
 <style>
+    .quill-editor-container .ql-editor {
+        min-height: 150px;
+        max-height: 500px;
+        overflow-y: auto;
+        resize: vertical;
+    }
+
+    .badge-inherit-size {
+        font-size: .875em;
+        font-weight: normal;
+        cursor: default;
+    }
+
     .disabled-link {
-        pointer-events: none; /* Prevent click events */
-        cursor: default; /* Change cursor to default */
-        color: #6c757d; /* Muted color */
+        pointer-events: none;
+        cursor: default;
+        color: var(--bs-gray-600);
+    }
+
+    .badge-disabled {
+        /* pointer-events: none; */
+        /* cursor: default !important; */
+        opacity: 0.6;
     }
 
     .custom-span {
@@ -28,15 +47,15 @@
     }
 
     .form-switch .form-check-input:not(:checked) ~ .form-check-label {
-        color: #b0b0b0;
+        color: var(--bs-gray-500);
         opacity: 0.6;
     }
 
     .form-control[readonly] {
-        background-color: #e9ecef !important;
+        background-color: var(--bs-gray-200) !important;
         opacity: 1;
     }
     .input-group:has(.form-control[readonly]) .input-group-text {
-        background-color: #e9ecef;
+        background-color: var(--bs-gray-200);
     }
 </style>

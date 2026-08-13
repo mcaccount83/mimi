@@ -39,17 +39,12 @@
                                             <div class="card-header">
                                               <h5 class="card-title">{{ $adminItem->task }}</h5>
                                               <div class="card-tools">
-                                                <h5
-                                                    @if ($adminItem->priority == 1)
-                                                        style="background-color:#28a745; color: #ffffff;"
-                                                    @elseif ($adminItem->priority == 2)
-                                                        style="background-color:#ffc107;"
-                                                    @elseif ($adminItem->priority == 3)
-                                                        style="background-color:#dc3545; color: #ffffff;"
-                                                    @else
-                                                        style="background-color:#FFFFFF;"
-                                                    @endif
-                                                        >{{ $adminItem->priority_word }}</h5>
+                                                <h5 class="{{ match(true) {
+                                                    $adminItem->priority == 1 => 'bg-success text-white',
+                                                    $adminItem->priority == 2 => 'bg-warning',
+                                                    $adminItem->priority == 3 => 'bg-danger text-white',
+                                                    default => 'bg-white',
+                                                } }}">{{ $adminItem->priority_word }}</h5>
                                               </div>
                                             </div>
                                             <div class="card-body">
@@ -134,17 +129,12 @@
                                                 <div class="card-header">
                                                 <h5 class="card-title">{{ $adminItem->task }}</h5>
                                                 <div class="card-tools">
-                                                    <h5
-                                                        @if ($adminItem->priority == 1)
-                                                            style="background-color:#28a745; color: #ffffff;"
-                                                        @elseif ($adminItem->priority == 2)
-                                                            style="background-color:#ffc107;"
-                                                        @elseif ($adminItem->priority == 3)
-                                                            style="background-color:#dc3545; color: #ffffff;"
-                                                        @else
-                                                            style="background-color:#FFFFFF;"
-                                                        @endif
-                                                            >{{ $adminItem->priority_word }}</h5>
+                                                    <h5 class="{{ match(true) {
+                                                        $adminItem->priority == 1 => 'bg-success text-white',
+                                                        $adminItem->priority == 2 => 'bg-warning',
+                                                        $adminItem->priority == 3 => 'bg-danger text-white',
+                                                        default => 'bg-white',
+                                                    } }}">{{ $adminItem->priority_word }}</h5>
                                                 </div>
                                                 </div>
                                                 <div class="card-body">
@@ -235,17 +225,12 @@
                                                 <div class="card-header">
                                                 <h5 class="card-title">{{ $adminItem->task }}</h5>
                                                 <div class="card-tools">
-                                                    <h5
-                                                        @if ($adminItem->priority == 1)
-                                                            style="background-color:#28a745; color: #ffffff;"
-                                                        @elseif ($adminItem->priority == 2)
-                                                            style="background-color:#ffc107;"
-                                                        @elseif ($adminItem->priority == 3)
-                                                            style="background-color:#dc3545; color: #ffffff;"
-                                                        @else
-                                                            style="background-color:#FFFFFF;"
-                                                        @endif
-                                                            >{{ $adminItem->priority_word }}</h5>
+                                                    <h5 class="{{ match(true) {
+                                                        $adminItem->priority == 1 => 'bg-success text-white',
+                                                        $adminItem->priority == 2 => 'bg-warning',
+                                                        $adminItem->priority == 3 => 'bg-danger text-white',
+                                                        default => 'bg-white',
+                                                    } }}">{{ $adminItem->priority_word }}</h5>
                                                 </div>
                                                 </div>
                                                 <div class="card-body">

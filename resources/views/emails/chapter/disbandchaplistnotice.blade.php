@@ -13,14 +13,14 @@ International MOMS Club
 <table style="width:100%; border-collapse: collapse; font-family: inherit; font-size: inherit;">
     <tbody>
         <tr>
-            <td colspan="3" style="background-color: #D0D0D0; padding: 8px; text-align: center;"><strong>Chapter Information</strong></td>
+            <td colspan="3" style="background-color: #ced4da; padding: 8px; text-align: center;"><strong>Chapter Information</strong></td>
         </tr>
         <tr>
             <td style="padding: 8px;">Chapter Email</td>
             <td style="padding: 8px;" colspan="2">{{ $mailData['chapterEmail'] }}</td>
         </tr>
         <tr>
-            <td colspan="3" style="background-color: #D0D0D0; padding: 8px; text-align: center;"><strong>Board Information</strong></td>
+            <td colspan="3" style="background-color: #ced4da; padding: 8px; text-align: center;"><strong>Board Information</strong></td>
         </tr>
         <tr>
             <td style="padding: 8px;">President</td>

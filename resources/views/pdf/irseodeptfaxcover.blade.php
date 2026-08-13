@@ -27,7 +27,7 @@
         .label {
             font-weight: bold;
             width: 150px;
-            background-color: #f5f5f5;
+            background-color: #f8f9fa;
         }
 
         .footer {
@@ -38,7 +38,7 @@
             font-size: 10px;
             line-height: 1.3;
             text-align: justify;
-            border-top: 1px solid #ccc;
+            border-top: 1px solid #dee2e6;
             padding-top: 10px;
             background-color: white;
         }

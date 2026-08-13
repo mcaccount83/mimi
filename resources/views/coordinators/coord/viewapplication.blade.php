@@ -2,13 +2,7 @@
 
 @section('page_title', 'Coordinator Details')
 @section('breadcrumb', 'Coordinator Details')
-<style>
-.disabled-link {
-    pointer-events: none; /* Prevent click events */
-    cursor: default; /* Change cursor to default */
-    color: #343a40; /* Font color */
-}
-</style>
+
 @section('content')
     <!-- Main content -->
     <form class="form-horizontal" method="POST" action='{{ route("coordinators.updatepending",$cdDetails->id) }}'>
@@ -121,51 +115,35 @@
                                 </select>
                             </div>
                         </div>
-                        {{-- @if ($ITCondition)
-                            <div class="row align-items-center">
-                                <div class="col-sm-6 mt-1">
-                                    <label class="col-form-label">MIMI Admin:</label>
-                                </div>
-                                <div class="col-sm-6">
-                                    <select name="is_admin" id="is_admin" class="form-control" style="width: 100%;" required>
-                                        @foreach($allAdminRoles as $admin)
-                                                <option value="{{$admin->id}}" {{$cdUserAdmin == $admin->id  ? 'selected' : ''}}>
-                                                    {{$admin->admin_role}}
-                                                </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        @endif --}}
                       </li>
 
                     <li class="list-group-item">
                       <div class="row">
-                            <div class="col-auto fw-bold">Email:</div>
+                            <div class="col-auto"><label>Email:</label></div>
                             <div class="col text-end">
                                 {{ $cdDetails->email }}
                                 </div>
                         </div>
                         <div class="row">
-                            <div class="col-auto fw-bold">Secondary Email::</div>
+                            <div class="col-auto"><label>Secondary Email:</label></div>
                             <div class="col text-end">
                                 {{ $cdDetails->sec_email }}
                                 </div>
                         </div>
                         <div class="row">
-                            <div class="col-auto fw-bold">Phone:</div>
+                            <div class="col-auto"><label>Phone:</abel></div>
                             <div class="col text-end">
                                 {{ $cdDetails->phone}}
                                 </div>
                         </div>
                         <div class="row">
-                            <div class="col-auto fw-bold">Alt Phone:</div>
+                            <div class="col-auto"><label>Alt Phone:</label></div>
                             <div class="col text-end">
                                 {{ $cdDetails->alt_phone}}
                                 </div>
                         </div>
                         <div class="row">
-                            <div class="col-auto fw-bold">Address:</div>
+                            <div class="col-auto"><label>Address:</label></div>
                             <div class="col text-end">
                                 {{ $cdDetails->address }}<br>
                                 {{$cdDetails->city}}, {{$cdDetails->state->state_short_name}}&nbsp;{{$cdDetails->zip}}<br>
@@ -176,14 +154,14 @@
 
                   <li class="list-group-item ">
                     <div class="row">
-                        <div class="col-auto fw-bold">Application Date:</div>
+                        <div class="col-auto"><label>Application Date:</label></div>
                             <div class="col text-end">
                             @formatDate($cdDetails->coordinator_start_date)
                         </div>
                     </div>
 
                    <div class="row">
-                        <div class="col-auto fw-bold">Home Chapter:</div>
+                        <div class="col-auto"><label>Home Chapter:</label></div>
                             <div class="col text-end">
                                 {{ $cdDetails->home_chapter }}
                         </div>

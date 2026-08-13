@@ -73,10 +73,10 @@
                 <span class="badge rounded-pill bg-danger">{{ trans('forum::general.deleted') }}</span>
             @endif
             @if ($thread->pinned)
-                <span class="badge rounded-pill bg-info">{{ trans('forum::threads.pinned') }}</span>
+                <span class="badge rounded-pill bg-info text-dark">{{ trans('forum::threads.pinned') }}</span>
             @endif
             @if ($thread->locked)
-                <span class="badge rounded-pill bg-warning">{{ trans('forum::threads.locked') }}</span>
+                <span class="badge rounded-pill bg-warning text-dark">{{ trans('forum::threads.locked') }}</span>
             @endif
         </div>
 

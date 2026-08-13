@@ -73,8 +73,7 @@
                             {{ $list->startMonth->month_short_name }} {{ $list->start_year }}
                         </td>
 						<td>{{ $list->ein }}</td>
-                        <td @if($list->documents->ein_letter_path != null)style="background-color: transparent;"
-                            @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                        <td class="{{ $list->documents->ein_letter_path != null ? '' : 'bg-danger text-white' }}">
                             @if($list->documents->ein_letter_path != null)
                                 YES
                             @else
