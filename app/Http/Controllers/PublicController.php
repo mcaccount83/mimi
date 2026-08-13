@@ -671,7 +671,7 @@ class PublicController extends Controller
     /**
      * Process payments with Authorize.net
      */
-    public function processPublicPayment(Request $request, string $name, string $description, string $shortDescription, string $transactionType, int $confId, string $shippingCountry,
+    public function processPublicPayment(Request $request, string $name, string $description, string $shortDescription, string $transactionType, ?int $confId, string $shippingCountry,
         string $shippingFirst, string $shippingLast, string $shippingCompany, string $shippingAddress, string $shippingCity, string $shippingState, string $shippingZip)
     {
         if (app()->environment('local')) {
