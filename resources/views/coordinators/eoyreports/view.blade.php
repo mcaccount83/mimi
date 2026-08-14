@@ -21,6 +21,12 @@
           <div class="col-md-4">
             <input type="hidden" name="hid_extension_notes" value="{{$chEOYDocuments->extension_notes}}">
             <input type="hidden" name="hid_irs_notes" value="{{ $chIRSDocuments->irs_notes }}">
+            <input type="hidden" name="hid_new_board_submitted" id="hid_new_board_submitted" value="{{ $chEOYDocuments->new_board_submitted }}">
+            <input type="hidden" name="hid_new_board_active" id="hid_new_board_active" value="{{ $chEOYDocuments->new_board_active }}">
+            <input type="hidden" name="hid_financial_report_received" id="hid_financial_report_received" value="{{ $chEOYDocuments->financial_report_received }}">
+            <input type="hidden" name="hid_financial_review_complete" id="hid_financial_review_complete" value="{{ $chEOYDocuments->financial_review_complete }}">
+            <input type="hidden" name="hid_report_extension" id="hid_report_extension" value="{{ $chEOYDocuments->report_extension }}">
+            <input type="hidden" name="hid_irs_verified" id="hid_irs_verified" value="{{ $chIRSDocuments->irs_verified }}">
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
@@ -37,6 +43,7 @@
                             <label class="col-form-label mb-0 me-2">New Board Submitted:</label>
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="new_board_submitted" id="new_board_submitted" class="form-check-input"
+                                onchange="syncHiddenToggle(this, 'hid_new_board_submitted')"
                                 @if($regionalCoordinatorCondition)
                                         {{$chEOYDocuments->new_board_submitted == 1 ? 'checked' : ''}}>
                                 @else
@@ -50,6 +57,7 @@
                             <label class="col-form-label mb-0 me-2">New Board Activated:</label>
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="new_board_active" id="new_board_active" class="form-check-input"
+                                onchange="syncHiddenToggle(this, 'hid_new_board_active')"
                                 @if($regionalCoordinatorCondition)
                                         {{$chEOYDocuments->new_board_active == 1 ? 'checked' : ''}}>
                                         @else
@@ -62,7 +70,8 @@
                           <div class="d-flex align-items-center justify-content-between w-100">
                             <label class="col-form-label mb-0 me-2">Financial Report Received:</label>
                             <div class="form-check form-switch">
-                                <input type="checkbox" name="financial_report_received" id="financial_report_received" class="form-check-input"
+                               <input type="checkbox" name="financial_report_received" id="financial_report_received" class="form-check-input"
+                                onchange="syncHiddenToggle(this, 'hid_financial_report_received')"
                                 @if($regionalCoordinatorCondition)
                                     {{$chEOYDocuments->financial_report_received == 1 ? 'checked' : ''}}>
                                     @else
@@ -76,6 +85,7 @@
                             <label class="col-form-label mb-0 me-2">Financial Review Complete:</label>
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="financial_review_complete" id="financial_review_complete" class="form-check-input"
+                                onchange="syncHiddenToggle(this, 'hid_financial_review_complete')"
                                 @if($regionalCoordinatorCondition)
                                     {{$chEOYDocuments->financial_review_complete == 1 ? 'checked' : ''}}>
                                     @else
@@ -91,7 +101,7 @@
                             </label>
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="report_extension" id="report_extension" class="form-check-input"
-                                       onchange="toggleExtensionNotes()"
+                                       onchange="toggleExtensionNotes(); syncHiddenToggle(this, 'hid_report_extension')"
                                        @if($regionalCoordinatorCondition)
                                             {{$chEOYDocuments->report_extension == 1 ? 'checked' : ''}}>
                                             @else
@@ -105,7 +115,7 @@
                             <label class="col-form-label mb-0 me-2">990N Verifed on irs.gov:</label>
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="irs_verified" id="irs_verified" class="form-check-input"
-                                       onchange="toggleIRSVerified()"
+                                       onchange="syncHiddenToggle(this, 'hid_irs_verified'); toggleIRSVerified()"
                                        @if($regionalCoordinatorCondition)
                                             {{$chIRSDocuments->irs_verified == 1 ? 'checked' : ''}}>
                                             @else
@@ -391,6 +401,10 @@
     @include('layouts.scripts.disablefields', ['includeEoyConditions' => true])
 
 <script>
+function syncHiddenToggle(checkbox, hiddenFieldId) {
+    document.getElementById(hiddenFieldId).value = checkbox.checked ? 1 : 0;
+}
+
 document.addEventListener("DOMContentLoaded", function() {
         // Initialize the state when the page loads
         toggleExtensionNotes();

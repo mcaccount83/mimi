@@ -216,12 +216,12 @@ class EOYReportController extends Controller implements HasMiddleware
         $updatedBy = $user['userName'];
 
         $input = $request->all();
-        $new_board_submitted = ! isset($input['new_board_submitted']) ? null : ($input['new_board_submitted'] == 'on' ? 1 : 0);
-        $new_board_active = ! isset($input['new_board_active']) ? null : ($input['new_board_active'] == 'on' ? 1 : 0);
-        $financial_report_received = ! isset($input['financial_report_received']) ? null : ($input['financial_report_received'] == 'on' ? 1 : 0);
-        $financial_review_complete = ! isset($input['financial_review_complete']) ? null : ($input['financial_review_complete'] == 'on' ? 1 : 0);
-        $report_extension = ! isset($input['report_extension']) ? null : ($input['report_extension'] == 'on' ? 1 : 0);
-        $irs_verified = ! isset($input['irs_verified']) ? null : ($input['irs_verified'] == 'on' ? 1 : 0);
+        $new_board_submitted = isset($input['new_board_submitted']) ? ($input['new_board_submitted'] == 'on' ? 1 : 0) : (int) $request->input('hid_new_board_submitted', 0);
+        $new_board_active = isset($input['new_board_active']) ? ($input['new_board_active'] == 'on' ? 1 : 0) : (int) $request->input('hid_new_board_active', 0);
+        $financial_report_received = isset($input['financial_report_received']) ? ($input['financial_report_received'] == 'on' ? 1 : 0) : (int) $request->input('hid_financial_report_received', 0);
+        $financial_review_complete = isset($input['financial_review_complete']) ? ($input['financial_review_complete'] == 'on' ? 1 : 0) : (int) $request->input('hid_financial_review_complete', 0);
+        $report_extension = isset($input['report_extension']) ? ($input['report_extension'] == 'on' ? 1 : 0) : (int) $request->input('hid_report_extension', 0);
+        $irs_verified = isset($input['irs_verified']) ? ($input['irs_verified'] == 'on' ? 1 : 0) : (int) $request->input('hid_irs_verified', 0);
         $extension_notes = $request->filled('extension_notes') ? $request->input('extension_notes') : $request->input('hid_extension_notes');
         $irs_notes = $request->filled('irs_notes') ? $request->input('irs_notes') : $request->input('hid_irs_notes');
         $reviewer_id = isset($input['ch_reportrev']) && ! empty($input['ch_reportrev']) ? $input['ch_reportrev'] : $coorId;
