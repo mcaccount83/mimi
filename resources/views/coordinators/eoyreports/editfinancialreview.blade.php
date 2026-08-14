@@ -277,8 +277,8 @@
               </div>
     @php
         $chapter_awards_check = [];
-        if (!empty($$chFinancialReportQuestions['chapter_awards']['chapter_awards'])) {
-            $decoded = unserialize(base64_decode($$chFinancialReportQuestions['chapter_awards']['chapter_awards']));
+        if (!empty($chFinancialReportQuestions['chapter_awards']['chapter_awards'])) {
+            $decoded = unserialize(base64_decode($chFinancialReportQuestions['chapter_awards']['chapter_awards']));
             if (is_array($decoded)) {
                 $chapter_awards_check = array_filter($decoded, fn ($a) => !empty($a['awards_type']));
             }
