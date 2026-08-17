@@ -115,6 +115,53 @@ class GoogleController extends Controller
     }
 
     /**
+     * Get or create a same-day date-stamped subfolder under a parent Drive folder.
+     * Used by scheduled exports so re-runs on the same day reuse the same folder
+     * instead of creating duplicates.
+     */
+    public function getOrCreateDateFolder(string $folderName, string $parentId): string
+    {
+        $accessToken = $this->token();
+        $client = new Client;
+
+        $safeName = str_replace("'", "\\'", $folderName);
+        $query = "name = '{$safeName}' and '{$parentId}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false";
+
+        $searchResponse = $client->request('GET', 'https://www.googleapis.com/drive/v3/files', [
+            'headers' => ['Authorization' => 'Bearer '.$accessToken],
+            'query' => [
+                'q' => $query,
+                'supportsAllDrives' => 'true',
+                'includeItemsFromAllDrives' => 'true',
+                'corpora' => 'allDrives',
+                'fields' => 'files(id, name)',
+            ],
+        ]);
+
+        $results = json_decode($searchResponse->getBody()->getContents(), true);
+
+        if (! empty($results['files'])) {
+            return $results['files'][0]['id'];
+        }
+
+        $folderMetadata = [
+            'name' => $folderName,
+            'parents' => [$parentId],
+            'mimeType' => 'application/vnd.google-apps.folder',
+        ];
+
+        $createResponse = $client->request('POST', 'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true', [
+            'headers' => [
+                'Authorization' => 'Bearer '.$accessToken,
+                'Content-Type' => 'application/json',
+            ],
+            'json' => $folderMetadata,
+        ]);
+
+        return json_decode($createResponse->getBody()->getContents(), true)['id'];
+    }
+
+    /**
      * downloading from Google Drive
      */
     public function downloadFromGoogleDrive(string $fileId): ?string

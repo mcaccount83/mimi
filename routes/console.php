@@ -46,3 +46,8 @@ Schedule::command('forum:send-daily-digest')
     ->timezone('America/New_York')
     ->withoutOverlapping();
 
+Schedule::command('exports:international-to-drive')
+    ->monthlyOn(30, '08:00')
+    ->withoutOverlapping()
+    ->onOneServer();
+

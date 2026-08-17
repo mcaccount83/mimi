@@ -148,11 +148,13 @@ class BaseChapterController extends Controller
      */
     private function applySorting(Builder $baseQuery): array
     {
-        $isPendingPage = request()->route()->getName() == 'chapters.chaplistpending';
-        $isNotApprovedPage = request()->route()->getName() == 'chapters.chaplistdeclined';
-        $isZappedPage = request()->route()->getName() == 'chapters.chapzapped';
-        $isZappedViewPage = request()->route()->getName() == 'techreports.viewaschapter.disbanded';
-        $isReregPage = request()->route()->getName() == 'payment.chapreregistration';
+        $routeName = request()->route()?->getName();
+
+        $isPendingPage = $routeName === 'chapters.chaplistpending';
+        $isNotApprovedPage = $routeName === 'chapters.chaplistdeclined';
+        $isZappedPage = $routeName === 'chapters.chapzapped';
+        $isZappedViewPage = $routeName === 'techreports.viewaschapter.disbanded';
+        $isReregPage = $routeName === 'payment.chapreregistration';
 
         if ($isPendingPage || $isNotApprovedPage) {
             $baseQuery->orderByDesc('chapters.created_at');
@@ -252,17 +254,22 @@ class BaseChapterController extends Controller
     /**
      * Get base query for chapters with any active status
      */
-    public function getBaseQuery(int $activeStatus, int $coorId, int $confId, int $regId, int $positionId, array $secPositionId): array
-    {
-        return $this->buildChapterQuery([
+    public function getBaseQuery(int $activeStatus, ?int $coorId = null, ?int $confId = null, ?int $regId = null, ?int $positionId = null, ?array $secPositionId = null
+            ): array {
+        $params = [
             'activeStatus' => $activeStatus,
-            'coorId' => $coorId,
-            'confId' => $confId,
-            'regId' => $regId,
-            'positionId' => $positionId,
-            'secPositionId' => $secPositionId,
             'queryType' => $this->getQueryType($activeStatus),
-        ]);
+        ];
+
+        if ($coorId !== null) {
+            $params['coorId'] = $coorId;
+            $params['confId'] = $confId;
+            $params['regId'] = $regId;
+            $params['positionId'] = $positionId;
+            $params['secPositionId'] = $secPositionId;
+        }
+
+        return $this->buildChapterQuery($params);
     }
 
     /**

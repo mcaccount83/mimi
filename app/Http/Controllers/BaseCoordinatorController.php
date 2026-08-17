@@ -92,11 +92,13 @@ class BaseCoordinatorController extends Controller
      */
     private function applySorting(Builder $baseQuery): array
     {
-        $isPendingPage = request()->route()->getName() == 'coordinators.coordpending';
-        $isNotApprovedPage = request()->route()->getName() == 'chapters.coordrejected';
-        $isRetiredPage = request()->route()->getName() == 'coordinators.coordretired';
-        $isBirthdayPage = request()->route()->getName() == 'coordreports.coordrptbirthdays';
-        $isUtilizationPage = request()->route()->getName() == 'coordreports.coordrptvolutilization';
+        $routeName = request()->route()?->getName();
+
+        $isPendingPage = $routeName === 'coordinators.coordpending';
+        $isNotApprovedPage = $routeName === 'chapters.coordrejected';
+        $isRetiredPage = $routeName === 'coordinators.coordretired';
+        $isBirthdayPage = $routeName === 'coordreports.coordrptbirthdays';
+        $isUtilizationPage = $routeName === 'coordreports.coordrptvolutilization';
 
         if ($isPendingPage || $isNotApprovedPage) {
             $baseQuery->orderByDesc('created_at');
@@ -193,17 +195,22 @@ class BaseCoordinatorController extends Controller
     /**
      * Public methods for different query types
      */
-    public function getBaseQuery(int $activeStatus, int $coorId, int $confId, int $regId, int $positionId, ?array $secPositionId): array
-    {
-        return $this->buildCoordinatorQuery([
+    public function getBaseQuery(int $activeStatus, ?int $coorId = null, ?int $confId = null, ?int $regId = null, ?int $positionId = null, ?array $secPositionId = null
+            ): array {
+        $params = [
             'activeStatus' => $activeStatus,
-            'coorId' => $coorId,
-            'confId' => $confId,
-            'regId' => $regId,
-            'positionId' => $positionId,
-            'secPositionId' => $secPositionId,
             'queryType' => $this->getQueryType($activeStatus),
-        ]);
+        ];
+
+        if ($coorId !== null) {
+            $params['coorId'] = $coorId;
+            $params['confId'] = $confId;
+            $params['regId'] = $regId;
+            $params['positionId'] = $positionId;
+            $params['secPositionId'] = $secPositionId;
+        }
+
+        return $this->buildCoordinatorQuery($params);
     }
 
     /**
