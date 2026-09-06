@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CheckboxFilterEnum;
 use App\Models\Region;
 // use Dcblogdev\LaravelSentEmails\Controllers\SentEmailsController;
 use App\Services\PositionConditionsService;
@@ -17,6 +18,7 @@ class MySentEmailsController extends Controller implements HasMiddleware
     public function __construct(
         protected UserController $userController,
         protected PositionConditionsService $positionConditionsService,
+        protected BaseConditionsController $baseConditionsController,
     ) {}
 
     public static function middleware(): array
@@ -48,34 +50,25 @@ class MySentEmailsController extends Controller implements HasMiddleware
         $adminEmail = $this->positionConditionsService->getAdminEmail();
         $listAdmin = $adminEmail['list_admin'];
 
-        $checkBox5Status = $request->has(\App\Enums\CheckboxFilterEnum::LIST);
-        $checkBox7Status = $request->has(\App\Enums\CheckboxFilterEnum::INQUIRIES);
-        $checkBox81Status = $request->has(\App\Enums\CheckboxFilterEnum::ADMIN);
-        $checkBox57Status = $request->has(\App\Enums\CheckboxFilterEnum::INTERNATIONALINQUIRIES);
+        $checkStatuses = $this->baseConditionsController->getCheckboxStatuses();
 
-        // Determine which emails to filter by
         $filterEmails = [];
         $regions = [];
 
-        if ($checkBox81Status) {
-            // Show ALL emails - no filter needed
+        if ($checkStatuses[CheckboxFilterEnum::ADMIN] === 'checked') {
             $filterEmails = null;
+            $regions = Region::with('inquiries')->get();
 
-        } elseif ($checkBox5Status) {
-            // Show LIST admin emails only
+        } elseif ($checkStatuses[CheckboxFilterEnum::LIST] === 'checked') {
             $filterEmails = [$listAdmin];
 
-        } elseif ($checkBox7Status || $checkBox57Status) {
-            // Get inquiries emails based on checkbox
-            if ($checkBox57Status || $inquiriesInternationalCondition) {
-                // All inquiries emails
+        } elseif ($checkStatuses[CheckboxFilterEnum::INQUIRIES] === 'checked' || $checkStatuses[CheckboxFilterEnum::INTERNATIONALINQUIRIES] === 'checked') {
+            if ($checkStatuses[CheckboxFilterEnum::INTERNATIONALINQUIRIES] === 'checked' || $inquiriesInternationalCondition) {
                 $regions = Region::with('inquiries')->get();
             } elseif (($coordinatorCondition && $conferenceCoordinatorCondition) || $inquiriesCondition) {
                 if ($regId && $regId > 0) {
-                    // Specific region
                     $regions = Region::with('inquiries')->where('id', $regId)->get();
                 } else {
-                    // Conference regions
                     $regions = Region::with('inquiries')->where('conference_id', $confId)->get();
                 }
             }
@@ -115,10 +108,7 @@ class MySentEmailsController extends Controller implements HasMiddleware
                 ->appends($request->only(['check5', 'check7', 'check57', 'check81']));
         }
 
-        return view('sentemails::index', compact(
-            'emails',
-            'checkBox81Status', 'checkBox5Status', 'checkBox7Status', 'checkBox57Status'
-        ));
+        return view('sentemails::index', compact('emails', 'checkStatuses'));
     }
 
     public function downloadAttachment(string $id)

@@ -40,7 +40,7 @@
                     <th>Email</th>
                     <th>Phone</th>
                     <th>Primary Coordinator</th>
-                    @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
+                    @if ($ITCondition && ($checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] ?? '') == 'checked')
                         <th>Delete</th>
                     @endif
                   </tr>
@@ -74,7 +74,7 @@
                             </td>
                             <td>@tel($list->president->phone)</td>
                             <td>{{ $list->primaryCoordinator?->first_name }} {{ $list->primaryCoordinator?->last_name }}</td>
-                           @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
+                           @if ($ITCondition && ($checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] ?? '') == 'checked')
                         <td class="text-center align-middle"><i class="bi bi-ban"
                             onclick="showDeleteChapterModal({{ $list->id }}, '{{ $list->name }}', '{{ $list->activeStatus->active_status }}')"
                             style="cursor: pointer; color: #dc3545;"></i>
@@ -90,14 +90,14 @@
             <div class="card-body">
                 <div class="col-sm-12">
                     <div class="form-check form-switch">
-                        <input type="checkbox" name="showPrimary" id="showPrimary" class="form-check-input" {{ $checkBox1Status ? 'checked' : '' }} onchange="showPrimary()" />
+                        <input type="checkbox" name="showPrimary" id="showPrimary" class="form-check-input" {{ $checkStatuses[\App\Enums\CheckboxFilterEnum::PC_DIRECT] }} onchange="showPrimary()" />
                         <label class="form-check-label" for="showPrimary">Only show chapters I am primary for</label>
                     </div>
                 </div>
                 @if ($coordinatorCondition && $assistRegionalCoordinatorCondition)
                     <div class="col-sm-12">
                         <div class="form-check form-switch">
-                            <input type="checkbox" name="showConfReg" id="showConfReg" class="form-check-input" {{ $checkBox3Status ? 'checked' : '' }} onchange="showConfReg()" />
+                            <input type="checkbox" name="showConfReg" id="showConfReg" class="form-check-input" {{ $checkStatuses[\App\Enums\CheckboxFilterEnum::CONFERENCE_REGION] }} onchange="showConfReg()" />
                             @if ($assistConferenceCoordinatorCondition)
                                     <label class="form-check-label" for="showConfReg">Show All Chapters in Conference (Export Available)</label>
                                 @else
@@ -109,7 +109,7 @@
                 @if ($ITCondition || $einCondition)
                     <div class="col-sm-12">
                         <div class="form-check form-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{ $checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] }} onchange="showIntl()" />
                             <label class="form-check-label" for="showIntl">Show All International Chapters (Export Available)</label>
                         </div>
                     </div>
@@ -119,21 +119,21 @@
 
             <div class="card-body text-center mt-3">
                 @if ($coordinatorCondition && $regionalCoordinatorCondition)
-                     @if ($checkBox51Status)
-                            <a class="btn btn-primary bg-gradient mb-2" href="{{ route('chapters.chaplistpending', ['check5' => 'yes']) }}"><i class="bi bi-house-add-fill me-2"></i>New International Chapters Pending</a>
+                     @if ($checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL])
+                            <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.chaplistpending', [\App\Enums\CheckboxFilterEnum::INTERNATIONAL => 'yes']) }}'"><i class="bi bi-house-add-fill me-2"></i>New International Chapters Pending</button>
                         @else
                             <a class="btn btn-primary bg-gradient mb-2" href="{{ route('chapters.chaplistpending') }}"><i class="bi bi-house-add-fill me-2"></i>New Chapters Pending</a>
                         @endif
-                        @if ($checkBox3Status)
+                        @if ($checkStatuses[\App\Enums\CheckboxFilterEnum::CONFERENCE_REGION])
                             <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="startExport('chapter', 'Chapter List')"><i class="bi bi-download me-2"></i>Export Chapter List</button>
-                        @elseif ($checkBox51Status)
+                        @elseif ($checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL])
                             <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="startExport('intchapter', 'International Chapter List')"><i class="bi bi-download me-2"></i>Export International Chapter List</button>
                         @endif
                 @endif
-                @if ($checkBox1Status && !$checkBox51Status && !$checkBox3Status)
+                @if ($checkStatuses[\App\Enums\CheckboxFilterEnum::PC_DIRECT] && !$checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] && !$checkStatuses[\App\Enums\CheckboxFilterEnum::CONFERENCE_REGION])
                     <a class="btn btn-primary bg-gradient mb-2" onclick="showChapterPrimaryEmailModal('{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="bi bi-envelope-fill me-2"></i>E-mail Primary Chapters</a>
                 @endif
-                @if (!$checkBox51Status && !$checkBox3Status && !$checkBox1Status)
+                @if (!$checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] && !$checkStatuses[\App\Enums\CheckboxFilterEnum::CONFERENCE_REGION] && !$checkStatuses[\App\Enums\CheckboxFilterEnum::PC_DIRECT])
                     <a class="btn btn-primary bg-gradient mb-2" onclick="showChapterAllEmailModal('{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="bi bi-envelope-fill me-2"></i>E-mail All Chapters</a>
                 @endif
             </div>

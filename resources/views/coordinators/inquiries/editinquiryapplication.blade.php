@@ -21,21 +21,12 @@
                         <h3 class="mb-0">{{ $inqDetails->state->state_long_name}}</h3>
                         <p class="mb-0">{{ $inqDetails->state->conference->conference_description }} Conference, {{ $inqDetails->state->region->long_name }} Region
                         </p>
-                        <br>
                         @if ($inquiriesMapLink)
-                            {{-- <a href="{{ $inquiriesMapLink }}" target="_blank" class="btn btn-primary bg-gradient btn-xs m-1">
-                                <i class="bi bi-pin-map-fill me-2"></i>VIEW REGION MAP
-                            </a> --}}
-                            <a href="{{ $inquiriesMapLink }}"
-                                target="_blank"
-                                class="btn btn-primary bg-gradient btn-xs m-1"
-                                onclick="copyAddressAndOpen(event, this)">
-                                    <i class="bi bi-pin-map-fill me-2"></i>VIEW REGION MAP
+                            <a href="{{ $inquiriesMapLink }}" target="_blank" class="badge bg-success badge-inherit-size mb-2" style="cursor: pointer;"
+                                onclick="copyAddressAndOpen(event, this)"><i class="bi bi-pin-map-fill me-2"></i>VIEW REGION MAP
                             </a>
                         @else
-                            <button type="button" class="btn btn-primary bg-gradient btn-xs m-1" disabled>
-                                <i class="bi bi-pin-map-fill me-2"></i>VIEW REGION MAP
-                            </button>
+                            <span class="badge bg-success badge-inherit-size mt-2"><i class="bi bi-check-lg me-2"></i>VIEW REGION MAP</span>
                         @endif
                     </div>
 
@@ -82,34 +73,30 @@
                             <div class="card-body text-center mt-3">
                                 Send email responses to Inquiring Member & Chapter
                                 @if (($inqDetails->response != 1) && ($inqDetails->chapter_id != null))
-                                    <button type="button" class="btn btn-success bg-gradient btn-sm m-1"
-                                        onclick="showYesChapterInquiryEmailModal({{ $inqDetails->id }}, '{{ $inqDetails->inquiry_first_name }}', '{{ $inqDetails->inquiry_last_name }}', '{{ $chDetails->name }}', {{ $chapterId }})">
-                                        <i class="bi bi-envelope-fill me-2"></i>YES CHAPTER RESPONSE</button>
+                                    <span class="badge bg-success badge-inherit-size mt-2" style="cursor: pointer;" onclick="showYesChapterInquiryEmailModal({{ $inqDetails->id }}, '{{ $inqDetails->inquiry_first_name }}', '{{ $inqDetails->inquiry_last_name }}', '{{ $chDetails->name }}', {{ $chapterId }})">
+                                        <i class="bi bi-envelope-fill me-2"></i>YES CHAPTER RESPONSE</span>
                                 @elseif ($inqDetails->response != 1)
-                                    <button type="button" class="btn btn-success bg-gradient btn-sm m-1" disabled>
-                                        <i class="bi bi-envelope-fill me-2"></i>YES CHAPTER RESPONSE</button>
+                                    <span class="badge bg-success badge-inherit-size badge-disabled mt-2"><i class="bi bi-envelope-fill me-2"></i>YES CHAPTER RESPONSE</span>
+                                @endif
+
+                                @if ($inqDetails->response != 1 && ($inqDetails->chapter_id == null))
+                                    <span class="badge bg-danger badge-inherit-size mt-2" style="cursor: pointer;" onclick="showNoChapterInquiryEmailModal({{ $inqDetails->id }}, '{{ $inqDetails->inquiry_first_name }}', '{{ $inqDetails->inquiry_last_name }}')">
+                                        <i class="bi bi-envelope-fill me-2"></i>NO CHAPTER RESPONSE</span>
+                                @elseif ($inqDetails->response != 1)
+                                    <span class="badge bg-danger badge-inherit-size badge-disabled mt-2"><i class="bi bi-envelope-fill me-2"></i>NO CHAPTER RESPONSE</span>
+                                @endif
+                                <br>
+                                    <span class="badge bg-primary badge-inherit-size mt-2" style="cursor: pointer;" onclick="showMemberInquiryEmailModal('{{ $inqDetails->id }}', '{{ $inqDetails->inquiry_first_name }}', '{{ $inqDetails->inquiry_last_name }}', '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">
+                                    <i class="bi bi-envelope-fill me-2"></i>SEND CUSTOM EMAIL TO MEMBER</span>
+                                <br>
+                                @if ($inqDetails->chapter_id != null)
+                                    <span class="badge bg-primary badge-inherit-size mt-2" style="cursor: pointer;" onclick="showChapterInquiryEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $inqDetails->id }}', '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">
+                                        <i class="bi bi-envelope-fill me-2"></i>SEND CUSTOM EMAIL TO CHAPTER</span>
+                                @else
+                                    <span class="badge bg-primary badge-inherit-size badge-disabled mt-2"><i class="bi bi-envelope-fill me-2"></i>SEND CUSTOM EMAIL TO CHAPTER</span>
                                 @endif
 
                                 @if ($inqDetails->response != 1)
-                                    <button type="button" class="btn btn-danger bg-gradient btn-sm m-1"
-                                        onclick="showNoChapterInquiryEmailModal({{ $inqDetails->id }}, '{{ $inqDetails->inquiry_first_name }}', '{{ $inqDetails->inquiry_last_name }}')">
-                                        <i class="bi bi-envelope-fill me-2"></i>NO CHAPTER RESPONSE</button>
-                                @endif
-                                <br>
-                                <button type="button" class="btn btn-primary bg-gradient btn-sm m-1"
-                                    onclick="showMemberInquiryEmailModal('{{ $inqDetails->id }}', '{{ $inqDetails->inquiry_first_name }}', '{{ $inqDetails->inquiry_last_name }}', '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">
-                                    <i class="bi bi-envelope-fill me-2"></i>SEND CUSTOM EMAIL TO MEMBER</button>
-                                <br>
-                                @if ($inqDetails->chapter_id != null)
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm m-1"
-                                        onclick="showChapterInquiryEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $inqDetails->id }}', '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">
-                                        <i class="bi bi-envelope-fill me-2"></i>SEND CUSTOM EMAIL TO CHAPTER</button>
-                                @else
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm m-1" disabled>
-                                        <i class="bi bi-envelope-fill me-2"></i>SEND CUSTOM EMAIL TO CHAPTER</button>
-                                @endif
-
-                                 @if ($inqDetails->response != 1)
                                     <br>
                                     <br>
                                     <span style="color: #dc3545;">NOTE: Sending a Yes or No response email will automatically mark as sent.
@@ -119,10 +106,8 @@
                                     <form id="mark-response-form" action="{{ route('inquiries.updateinquiryresponse', ['id' => $inqDetails->id]) }}" method="POST" style="display: none;">
                                         @csrf
                                     </form>
-                                    <button type="button" class="btn btn-success bg-gradient btn-sm m-1"
-                                            onclick="document.getElementById('mark-response-form').submit()">
-                                        <i class="bi bi-check-lg me-2"></i>MARK RESPONSE AS SENT
-                                    </button>
+                                    <span class="badge bg-success badge-inherit-size mt-2" style="cursor: pointer;" onclick="document.getElementById('mark-response-form').submit()">
+                                        <i class="bi bi-check-lg me-2"></i>MARK RESPONSE AS SENT</span>
                                 @elseif ($inqDetails->response == 1)
                                      <br>
                                     <br>
@@ -132,10 +117,8 @@
                                     <form id="mark-response-form" action="{{ route('inquiries.clearinquiryresponse', ['id' => $inqDetails->id]) }}" method="POST" style="display: none;">
                                         @csrf
                                     </form>
-                                    <button type="button" class="btn btn-danger bg-gradient btn-sm m-1"
-                                            onclick="document.getElementById('mark-response-form').submit()">
+                                    <span class="badge bg-danger badge-inherit-size mt-2" style="cursor: pointer;" onclick="document.getElementById('mark-response-form').submit()">
                                         <i class="bi bi-ban me-2"></i>CLEAR SENT RESPONSE
-                                    </button>
                                 @endif
                             </div>
                         </li>
@@ -250,7 +233,7 @@
                 @if ($confId == $inqConfId)
                     <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient m-1 keep-enabled" onclick="window.location.href='{{ route('inquiries.inquiryapplication') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-pin-map-fill me-2"></i>Back to Inquiries Application List</button>
                 @elseif ($confId != $inqConfId && ($inquiriesInternationalCondition || $ITCondition))
-                    <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient m-1 keep-enabled" onclick="window.location.href='{{ route('inquiries.inquiryapplication', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-pin-map-fill me-2"></i>Back to International Inquiries Application List</button>
+                    <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient m-1 keep-enabled" onclick="window.location.href='{{ route('inquiries.inquiryapplication', [\App\Enums\CheckboxFilterEnum::INTERNATIONALINQUIRIES => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-pin-map-fill me-2"></i>Back to International Inquiries Application List</button>
                 @endif
                </div>
             </div>

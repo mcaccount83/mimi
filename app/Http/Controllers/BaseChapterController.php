@@ -18,6 +18,8 @@ use App\Models\FinancialReport;
 use App\Models\FinancialReportQuestions;
 use App\Models\FinancialReportReview;
 use App\Models\FinancialReportAwards;
+use App\Models\FinancialReportFinal;
+use App\Models\FinancialReportFinalQuestions;
 use App\Models\Month;
 use App\Models\Probation;
 use App\Models\Region;
@@ -37,37 +39,29 @@ class BaseChapterController extends Controller
     ) {}
 
     /**
+     * Extract checkbox statuses from a getBaseQuery() result for use in views
+     */
+    public function buildCheckStatuses(array $baseQuery): array
+    {
+        return array_diff_key($baseQuery, ['query' => null]);
+    }
+
+    /**
      * Apply checkbox filters to the query
      */
-    private function applyCheckboxFilters(Builder $baseQuery, int $coorId, $conditions = null, $confId = null, $regId = null)
+    private function applyCheckboxFilters(Builder $baseQuery, array $checkboxStatus, int $coorId, $conditions = null, $confId = null, $regId = null): Builder
     {
-        $checkboxStatus = [
-            CheckboxFilterEnum::PC_DIRECT => '',
-            CheckboxFilterEnum::REVIEWER => '',
-            CheckboxFilterEnum::CONFERENCE_REGION => '',
-            CheckboxFilterEnum::INTERNATIONAL => '',
-            CheckboxFilterEnum::INTERNATIONALEOY => '',
-            CheckboxFilterEnum::INTERNATIONALREREG => '',
-        ];
-
-        // Checkbox1
-        if (isset($_GET[CheckboxFilterEnum::PC_DIRECT]) && $_GET[CheckboxFilterEnum::PC_DIRECT] == 'yes') {
-            $checkboxStatus[CheckboxFilterEnum::PC_DIRECT] = 'checked';
+        if ($checkboxStatus[CheckboxFilterEnum::PC_DIRECT] === 'checked') {
             $baseQuery->where('primary_coordinator_id', '=', $coorId);
         }
 
-        // Checkbox2
-        if (isset($_GET[CheckboxFilterEnum::REVIEWER]) && $_GET[CheckboxFilterEnum::REVIEWER] == 'yes') {
-            $checkboxStatus[CheckboxFilterEnum::REVIEWER] = 'checked';
+        if ($checkboxStatus[CheckboxFilterEnum::REVIEWER] === 'checked') {
             $baseQuery->whereHas('financialReportReview', function ($query) use ($coorId) {
                 $query->where('reviewer_id', '=', $coorId);
             });
         }
 
-        // Checkbox3
-        if (isset($_GET[CheckboxFilterEnum::CONFERENCE_REGION]) && $_GET[CheckboxFilterEnum::CONFERENCE_REGION] == 'yes') {
-            $checkboxStatus[CheckboxFilterEnum::CONFERENCE_REGION] = 'checked';
-            // Position conditions already applied in buildChapterQuery
+        if ($checkboxStatus[CheckboxFilterEnum::CONFERENCE_REGION] === 'checked') {
             if ($conditions && ($conditions['inquiriesConferenceCondition'] || $conditions['coordinatorCondition'])) {
                 if ($regId && $regId > 0) {
                     $baseQuery->where('region_id', '=', $regId);
@@ -77,46 +71,25 @@ class BaseChapterController extends Controller
             }
         }
 
-        // Checkbox51
-        if (isset($_GET[CheckboxFilterEnum::INTERNATIONAL]) && $_GET[CheckboxFilterEnum::INTERNATIONAL] == 'yes') {
-            $checkboxStatus[CheckboxFilterEnum::INTERNATIONAL] = 'checked';
-            // Position conditions were skipped in buildChapterQuery
-            if ($conditions && (
-                ! $conditions['inquiriesInternationalCondition'] &&
-                ! $conditions['ITCondition'] &&
-                ! $conditions['einCondition'])) {
-                // User doesn't have international permissions, show nothing
+        if ($checkboxStatus[CheckboxFilterEnum::INTERNATIONAL] === 'checked') {
+            if ($conditions && (! $conditions['inquiriesInternationalCondition'] && ! $conditions['ITCondition'] && ! $conditions['einCondition'])) {
                 $baseQuery->whereRaw('1 = 0');
             }
         }
 
-        // Checkbox52
-        if (isset($_GET[CheckboxFilterEnum::INTERNATIONALEOY]) && $_GET[CheckboxFilterEnum::INTERNATIONALEOY] == 'yes') {
-            $checkboxStatus[CheckboxFilterEnum::INTERNATIONALEOY] = 'checked';
-            // Position conditions were skipped in buildChapterQuery
-            if ($conditions && (
-                ! $conditions['inquiriesInternationalCondition'] &&
-                ! $conditions['ITCondition'] &&
-                ! $conditions['einCondition'])) {
-                // User doesn't have international permissions, show nothing
+        if ($checkboxStatus[CheckboxFilterEnum::INTERNATIONALEOY] === 'checked') {
+            if ($conditions && (! $conditions['inquiriesInternationalCondition'] && ! $conditions['ITCondition'] && ! $conditions['einCondition'])) {
                 $baseQuery->whereRaw('1 = 0');
             }
         }
 
-        // Checkbox56
-        if (isset($_GET[CheckboxFilterEnum::INTERNATIONALREREG]) && $_GET[CheckboxFilterEnum::INTERNATIONALREREG] == 'yes') {
-            $checkboxStatus[CheckboxFilterEnum::INTERNATIONALREREG] = 'checked';
-            // Position conditions were skipped in buildChapterQuery
-            if ($conditions && (
-                ! $conditions['inquiriesInternationalCondition'] &&
-                ! $conditions['ITCondition'] &&
-                ! $conditions['einCondition'])) {
-                // User doesn't have international permissions, show nothing
+        if ($checkboxStatus[CheckboxFilterEnum::INTERNATIONALREREG] === 'checked') {
+            if ($conditions && (! $conditions['inquiriesInternationalCondition'] && ! $conditions['ITCondition'] && ! $conditions['einCondition'])) {
                 $baseQuery->whereRaw('1 = 0');
             }
         }
 
-        return ['query' => $baseQuery, 'status' => $checkboxStatus];
+        return $baseQuery;
     }
 
     /**
@@ -146,7 +119,7 @@ class BaseChapterController extends Controller
     /**
      * Apply sorting based on query type and page
      */
-    private function applySorting(Builder $baseQuery): array
+    private function applySorting(Builder $baseQuery, array $checkboxStatus = []): array
     {
         $routeName = request()->route()?->getName();
 
@@ -168,7 +141,10 @@ class BaseChapterController extends Controller
             return ['query' => $baseQuery];
         }
 
-        if ($isReregPage && ! ((isset($_GET['check3']) && $_GET['check3'] == 'yes') || (isset($_GET['check5']) && $_GET['check5'] == 'yes'))) {
+        if ($isReregPage && ! (
+            ($checkboxStatus[CheckboxFilterEnum::CONFERENCE_REGION] ?? '') === 'checked' ||
+            ($checkboxStatus[CheckboxFilterEnum::LIST] ?? '') === 'checked'
+        )) {
             $baseQuery->select('chapters.*')
                 ->join('state', 'chapters.state_id', '=', 'state.id')
                 ->orderByDesc('next_renewal_year')
@@ -200,7 +176,7 @@ class BaseChapterController extends Controller
     private function buildChapterQuery(array $params): array
     {
         $baseQuery = $this->getBaseQueryWithRelations($params['activeStatus']);
-        $checkboxStatus = [];
+        $checkboxStatus = $this->baseConditionsController->getCheckboxStatuses();
 
         if (isset($params['coorId'])) {
             $secPositionId = is_array($params['secPositionId']) ? array_map('intval', $params['secPositionId']) : [intval($params['secPositionId'])];
@@ -211,11 +187,13 @@ class BaseChapterController extends Controller
                 $secPositionId
             );
 
-            // Only apply position conditions if NEITHER International nor InternationalReReg is selected
-            if ((! isset($_GET[CheckboxFilterEnum::INTERNATIONAL]) || $_GET[CheckboxFilterEnum::INTERNATIONAL] !== 'yes') &&
-                (! isset($_GET[CheckboxFilterEnum::INTERNATIONALREREG]) || $_GET[CheckboxFilterEnum::INTERNATIONALREREG] !== 'yes') &&
-                (! isset($_GET[CheckboxFilterEnum::CONFERENCE_REGION]) || $_GET[CheckboxFilterEnum::CONFERENCE_REGION] !== 'yes')) {
-
+            if ($checkboxStatus[CheckboxFilterEnum::CONFERENCE_REGION] !== 'checked' &&
+                $checkboxStatus[CheckboxFilterEnum::INTERNATIONAL] !== 'checked' &&
+                $checkboxStatus[CheckboxFilterEnum::INTERNATIONALREREG] !== 'checked' &&
+                $checkboxStatus[CheckboxFilterEnum::INTERNATIONALEOY] !== 'checked' &&
+                $checkboxStatus[CheckboxFilterEnum::INTERNATIONALINQUIRIES] !== 'checked' &&
+                $checkboxStatus[CheckboxFilterEnum::INTERNATIONALM2M] !== 'checked' &&
+                $checkboxStatus[CheckboxFilterEnum::INTERNATIONALEIN] !== 'checked') {
                 $baseQuery = $this->baseConditionsController->applyPositionConditions(
                     $baseQuery,
                     $conditionsData['conditions'],
@@ -225,30 +203,19 @@ class BaseChapterController extends Controller
                 );
             }
 
-            // Apply checkbox filters with conditions
-            $checkboxResults = $this->applyCheckboxFilters(
+            $baseQuery = $this->applyCheckboxFilters(
                 $baseQuery,
+                $checkboxStatus,
                 $params['coorId'],
                 $conditionsData['conditions'],
                 $params['confId'] ?? null,
                 $params['regId'] ?? null
             );
-
-            $baseQuery = $checkboxResults['query'];
-            $checkboxStatus = $checkboxResults['status'];
         }
 
-        $sortingResults = $this->applySorting($baseQuery);
+        $sortingResults = $this->applySorting($baseQuery, $checkboxStatus);
 
-        return [
-            'query' => $sortingResults['query'],
-            CheckboxFilterEnum::PC_DIRECT => $checkboxStatus[CheckboxFilterEnum::PC_DIRECT] ?? '',
-            CheckboxFilterEnum::REVIEWER => $checkboxStatus[CheckboxFilterEnum::REVIEWER] ?? '',
-            CheckboxFilterEnum::CONFERENCE_REGION => $checkboxStatus[CheckboxFilterEnum::CONFERENCE_REGION] ?? '',
-            CheckboxFilterEnum::INTERNATIONAL => $checkboxStatus[CheckboxFilterEnum::INTERNATIONAL] ?? '',
-            CheckboxFilterEnum::INTERNATIONALEOY => $checkboxStatus[CheckboxFilterEnum::INTERNATIONALEOY] ?? '',
-            CheckboxFilterEnum::INTERNATIONALREREG => $checkboxStatus[CheckboxFilterEnum::INTERNATIONALREREG] ?? '',
-        ];
+        return array_merge(['query' => $sortingResults['query']], $checkboxStatus);
     }
 
     /**
@@ -317,13 +284,13 @@ class BaseChapterController extends Controller
         $chPayments = $chDetails->payments;
         $chDocuments = $chDetails->documents ?? Documents::firstOrNew(['chapter_id' => $chId]);
         $chEOYDocuments = $chDetails->documentsEOY ?? DocumentsEOY::firstOrNew(['chapter_id' => $chId]);
-        $reviewComplete = $chDetails->documentsEOY?->review_complete ?? null;
+        // $reviewComplete = $chDetails->documentsEOY?->review_complete ?? null;
         $chIRSDocuments = $chDetails->documentsIRS ?? DocumentsIRS::firstOrNew(['chapter_id' => $chId]);
         $chReportDocuments = $chDetails->documentsReport ?? DocumentsReport::firstOrNew(['chapter_id' => $chId]);
         $chFinancialReport = $chDetails->financialReport ?? FinancialReport::firstOrNew(['chapter_id' => $chId]);
         $chFinancialReportQuestions = $chDetails->financialReportQuestions ?? FinancialReportQuestions::firstOrNew(['chapter_id' => $chId]);
-        $chFinancialReportFinal = $chDetails->financialReportFinal;
-        $chFinancialReportFinal = $chDetails->financialReportFinalQuestions;
+        $chFinancialReportFinal = $chDetails->financialReportFinal ?? FinancialReportFinal::firstOrNew(['chapter_id' => $chId]);
+        $chFinancialReportFinalQuestions = $chDetails->financialReportFinalQuestions ?? FinancialReportFinalQuestions::firstOrNew(['chapter_id' => $chId]);
         $chFinancialReportReview = $chDetails->financialReportReview ?? FinancialReportReview::firstOrNew(['chapter_id' => $chId]);
 
         $allActive = ActiveStatus::all();  // Full List for Dropdown Menu
@@ -388,14 +355,14 @@ class BaseChapterController extends Controller
 
         return ['chDetails' => $chDetails, 'chActiveId' => $chActiveId, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'allActive' => $allActive,
             'conferenceDescription' => $conferenceDescription, 'chConfId' => $chConfId, 'chRegId' => $chRegId, 'chPcId' => $chPcId, 'chId' => $chId, 'chFinancialReportFinal' => $chFinancialReportFinal,
-            'chDocuments' => $chDocuments, 'reviewComplete' => $reviewComplete, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards, 'chPayments' => $chPayments,
+            'chDocuments' => $chDocuments, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards, 'chPayments' => $chPayments,
             'allRegions' => $allRegions, 'allCountries' => $allCountries, 'chEOYDocuments' => $chEOYDocuments, 'chIRSDocuments' => $chIRSDocuments, 'chReportDocuments' => $chReportDocuments,
             'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'pcList' => $pcList, 'rrList' => $rrList, 'emailCCData' => $emailCCData, 'chActiveStatus' => $chActiveStatus,
             'allWebLinks' => $allWebLinks, 'allStatuses' => $allStatuses, 'allStates' => $allStates, 'emailCC' => $emailCC, 'emailPC' => $emailPC, 'cc_id' => $cc_id,
             'startMonthName' => $startMonthName, 'chapterStatus' => $chapterStatus, 'websiteLink' => $websiteLink, 'pcName' => $pcName, 'probationReason' => $probationReason,
             'allMonths' => $allMonths, 'pcDetails' => $pcDetails, 'allProbation' => $allProbation, 'chFinancialReportReview' => $chFinancialReportReview,
             'dueDate' => $dueDate, 'startDate' => $startDate, 'renewalDate' => $renewalDate, 'chAwards' => $chAwards, "financialReportPdfs" => $financialReportPdfs,
-            'chFinancialReportQuestions' => $chFinancialReportQuestions
+            'chFinancialReportQuestions' => $chFinancialReportQuestions, 'chFinancialReportFinalQuestions' => $chFinancialReportFinalQuestions
         ];
     }
 

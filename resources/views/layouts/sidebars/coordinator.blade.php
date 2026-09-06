@@ -13,11 +13,11 @@
         if ($coordinatorCondition) {
             $chaptersRoute = route('chapters.chaplist');
         } elseif ($einCondition || $ITCondition) {
-            $chaptersRoute = route('chapters.chaplist', ['check5' => 'yes']);
+            $chaptersRoute = route('chapters.chaplist', [\App\Enums\CheckboxFilterEnum::INTERNATIONAL => 'yes']);
         } elseif ($inquiriesCondition) {
-            $chaptersRoute = route('chapters.chapinquiries', ['check3' => 'yes']);
+            $chaptersRoute = route('chapters.chapinquiries', [\App\Enums\CheckboxFilterEnum::CONFERENCE_REGION => 'yes']);
         } elseif ($inquiriesInternationalCondition) {
-            $chaptersRoute = route('chapters.chapinquiries', ['check5' => 'yes']);
+            $chaptersRoute = route('chapters.chapinquiries', [\App\Enums\CheckboxFilterEnum::INTERNATIONALINQUIRIES => 'yes']);
         }
         $activeChapterRoutes = [
             'chapter/*',
@@ -37,7 +37,7 @@
         if ($supervisingCoordinatorCondition) {
             $coordinatorsRoute = route('coordinators.coordlist');
         } elseif ($ITCondition) {
-            $coordinatorsRoute = route('coordinators.coordlist', ['check5' => 'yes']);
+            $coordinatorsRoute = route('coordinators.coordlist', [\App\Enums\CheckboxFilterEnum::INTERNATIONAL => 'yes']);
         }
         $activeCoordinatorsRoutes = [
             'coordinator/*',
@@ -57,7 +57,7 @@
         if ($coordinatorCondition && $regionalCoordinatorCondition) {
             $paymentsRoute = route('payment.chapreregistration');
         } elseif ($m2mCondition || $ITCondition) {
-            $paymentsRoute = route('payment.chapreregistration', ['check5' => 'yes']);
+            $paymentsRoute = route('payment.chapreregistration', [\App\Enums\CheckboxFilterEnum::INTERNATIONALREREG => 'yes']);
         }
         $activePaymentsRoutes = [
             'payment/*'
@@ -77,9 +77,9 @@
         if ($coordinatorCondition && !$webReviewCondition) {
             $websiteRoute = route('chapters.chapwebsite');
         } elseif ($webReviewCondition) {
-            $websiteRoute = route('chapters.chapwebsite', ['check3' => 'yes']);
+            $websiteRoute = route('chapters.chapwebsite', [\App\Enums\CheckboxFilterEnum::CONFERENCE_REGION => 'yes']);
         } elseif ($ITCondition) {
-            $websiteRoute = route('chapters.chapwebsite', ['check5' => 'yes']);
+            $websiteRoute = route('chapters.chapwebsite', [\App\Enums\CheckboxFilterEnum::INTERNATIONAL => 'yes']);
         }
         $activeWebsiteRoutes = [
             'online/*'
@@ -99,7 +99,7 @@
     if (($coordinatorCondition && $conferenceCoordinatorCondition) || $inquiriesCondition) {
             $inquiriesRoute = route('inquiries.inquiryapplication');
         } elseif ($inquiriesInternationalCondition || $ITCondition) {
-            $inquiriesRoute = route('inquiries.inquiryapplication', ['check5' => 'yes']);
+            $inquiriesRoute = route('inquiries.inquiryapplication', [\App\Enums\CheckboxFilterEnum::INTERNATIONAL => 'yes']);
         }
         $activeInquiriesRoutes = [
             'inquiries/*',
@@ -125,7 +125,7 @@
         if ($coordinatorCondition && $conferenceCoordinatorCondition) {
             $newChaptersRoute = route('chapters.chaplistpending');
         } elseif ($ITCondition) {
-            $newChaptersRoute = route('chapters.chaplistpending', ['check5' => 'yes']);
+            $newChaptersRoute = route('chapters.chaplistpending', [\App\Enums\CheckboxFilterEnum::INTERNATIONAL => 'yes']);
         }
         $activeNewChapterRoutes = [
             'application/*',
@@ -152,7 +152,7 @@
             if ($listAdminCondition || $ITCondition) {
                 $listSubscriptionRoute = route('forum.chaptersubscriptionlist');
             } elseif ($listAdminCondition || $ITCondition) {
-                $listSubscriptionRoute = route('forum.chaptersubscriptionlist', ['check5' => 'yes']);
+                $listSubscriptionRoute = route('forum.chaptersubscriptionlist', [\App\Enums\CheckboxFilterEnum::LIST => 'yes']);
             }
             $activeChapterRoutes = [
                 'listadmin/*',
@@ -199,9 +199,9 @@
         if ($coordinatorCondition && $regionalCoordinatorCondition) {
             $chapterReportsRoute = route('chapreports.chaprptchapterstatus');
         } elseif ($ITCondition) {
-            $coordReportsRoute = route('chapreports.chaprptchapterstatus', ['check5' => 'yes']);
+            $coordReportsRoute = route('chapreports.chaprptchapterstatus', [\App\Enums\CheckboxFilterEnum::INTERNATIONAL => 'yes']);
         } elseif ($einCondition) {
-            $coordReportsRoute = route('chapreports.chaprpteinstatus', ['check5' => 'yes']);
+            $coordReportsRoute = route('chapreports.chaprpteinstatus', [\App\Enums\CheckboxFilterEnum::INTERNATIONAL => 'yes']);
         }
         $activeChapterReportsRoutes = [
             'chapterreports/*'
@@ -221,7 +221,7 @@
         if ($supervisingCoordinatorCondition && $assistConferenceCoordinatorCondition) {
             $coordReportsRoute = route('coordreports.coordrptvolutilization');
         } elseif ($ITCondition) {
-            $coordReportsRoute = route('coordreports.coordrptvolutilization', ['check5' => 'yes']);
+            $coordReportsRoute = route('coordreports.coordrptvolutilization', [\App\Enums\CheckboxFilterEnum::INTERNATIONAL => 'yes']);
         } elseif ($coordinatorCondition) {
             $coordReportsRoute = route('coordreports.coordrptreportingtree');
         }
@@ -246,9 +246,9 @@
             if (($coordinatorCondition && $displayEOYLIVE) || ($eoyReportCondition && $displayEOYLIVE) || ($eoyTestCondition && $displayEOYTESTING)) {
                 $eoyReportsRoute = route('eoyreports.eoystatus');
             } elseif ($ITCondition) {
-                $eoyReportsRoute = route('eoyreports.eoystatus', ['check5' => 'yes']);
+                $eoyReportsRoute = route('eoyreports.eoystatus', [\App\Enums\CheckboxFilterEnum::INTERNATIONALEOY => 'yes']);
             } elseif ($einCondition && $displayEOYLIVE) {
-                $eoyReportsRoute = route('eoyreports.eoyirssubmission', ['check5' => 'yes']);
+                $eoyReportsRoute = route('eoyreports.eoyirssubmission', [\App\Enums\CheckboxFilterEnum::INTERNATIONALEIN => 'yes']);
             }
             $activeEOYReportsRoutes = [
                 'eoyreports/*',

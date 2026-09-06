@@ -33,7 +33,7 @@
                     <th>President</th>
                     <th>Email</th>
                     <th>Phone</th>
-                    @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
+                    @if ($ITCondition && ($checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] ?? '') == 'checked')
                         <th>Delete</th>
                     @endif
                   </tr>
@@ -68,7 +68,7 @@
                                 @mailto($list->pendingPresident->email)
                             </td>
                             <td>@tel($list->pendingPresident->phone)</td>
-                            @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
+                            @if ($ITCondition && ($checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] ?? '') == 'checked')
                         <td class="text-center align-middle"><i class="bi bi-ban"
                             onclick="showDeleteChapterModal({{ $list->id }}, '{{ $list->name }}', '{{ $list->activeStatus->active_status }}')"
                             style="cursor: pointer; color: #dc3545;"></i>
@@ -85,7 +85,7 @@
                  @if ($ITCondition)
                 <div class="col-sm-12">
                         <div class="form-check form-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{ $checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] }} onchange="showIntl()" />
                             <label class="form-check-label" for="showIntl">Show All International Chapters</label>
                         </div>
                     </div>
@@ -96,7 +96,7 @@
                 <div class="card-body text-center mt-3">
                 @if ($regionalCoordinatorCondition)
                 If your new chapter is not listed above, you can manually add them.<br>
-                    @if ($checkBox51Status)
+                    @if ($checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL])
                         <a class="btn btn-primary bg-gradient mb-2" href="{{ route('chapters.addnewint') }}"><i class="bi bi-plus me-2"></i>Manually Add New Chapter (Any Confernces)</a>
                     @else
                         <a class="btn btn-primary bg-gradient mb-2" href="{{ route('chapters.addnew') }}"><i class="bi bi-plus me-2"></i>Manually Add New Chapter</a>

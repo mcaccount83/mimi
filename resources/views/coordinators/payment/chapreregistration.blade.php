@@ -106,14 +106,14 @@
             <div class="card-body">
                 <div class="col-sm-12">
                     <div class="form-check form-switch">
-                        <input type="checkbox" name="showPrimary" id="showPrimary" class="form-check-input" {{$checkBox1Status ? 'checked' : '' }} onchange="showPrimary()" />
+                        <input type="checkbox" name="showPrimary" id="showPrimary" class="form-check-input" {{$checkStatuses[\App\Enums\CheckboxFilterEnum::PC_DIRECT] }} onchange="showPrimary()" />
                         <label class="form-check-label" for="showPrimary">Only show chapters I am primary for</label>
                     </div>
                 </div>
                 @if ($coordinatorCondition && $assistRegionalCoordinatorCondition)
                 <div class="col-sm-12">
                         <div class="form-check form-switch">
-                            <input type="checkbox" name="showConfReg" id="showConfReg" class="form-check-input" {{$checkBox3Status ? 'checked' : '' }} onchange="showConfReg()" />
+                            <input type="checkbox" name="showConfReg" id="showConfReg" class="form-check-input" {{$checkStatuses[\App\Enums\CheckboxFilterEnum::CONFERENCE_REGION] }} onchange="showConfReg()" />
                             @if ($assistConferenceCoordinatorCondition)
                                     <label class="form-check-label" for="showConfReg">Show All Chapters in Conference</label>
                                 @else
@@ -125,13 +125,13 @@
                 @if ($ITCondition || $einCondition)
                 <div class="col-sm-12">
                         <div class="form-check form-switch">
-                            <input type="checkbox" name="showIntlReReg" id="showIntlReReg" class="form-check-input" {{$checkBox56Status ? 'checked' : '' }} onchange="showIntlReReg()" />
+                            <input type="checkbox" name="showIntlReReg" id="showIntlReReg" class="form-check-input" {{$checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONALREREG] }} onchange="showIntlReReg()" />
                             <label class="form-check-label" for="showIntlReReg">Show International Chapters Due</label>
                         </div>
                     </div>
                 <div class="col-sm-12">
                         <div class="form-check form-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{$checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{$checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] }} onchange="showIntl()" />
                             <label class="form-check-label" for="showIntl">Show All International Chapters</label>
                         </div>
                     </div>
@@ -140,7 +140,7 @@
             <!-- /.card-body for checkboxes -->
 
                 <div class="card-body text-center mt-3">
-                    {{-- @if(!$checkBox1Status && !$checkBox3Status && !$checkBox51Status && !$checkBox56Status)
+                    {{-- @if(!$checkStatuses[\App\Enums\CheckboxFilterEnum::PC_DIRECT] && !$checkStatuses[\App\Enums\CheckboxFilterEnum::CONFERENCE_REGION] && !$checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] && !$checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONALREREG])
                         <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="confirmSendReRegReminder('Send Current Month Reminders?',
                                 'This will send re-registration reminders to all chapters due this month.', '{{ route('payment.chapreregreminder') }}')">
                             <i class="bi bi-envelope-fill me-2"></i>Send Current Month Reminders</button>
@@ -151,7 +151,7 @@
                     @endif --}}
                             Current Month Reminders will AutoSend on the 1st of Each Month.<br>
                             One Month Late Notices will AutoSend on the 10th of Each Month.<br>
-                    @if(!$checkBox1Status && !$checkBox3Status && !$checkBox51Status && !$checkBox56Status)
+                    @if(!$checkStatuses[\App\Enums\CheckboxFilterEnum::PC_DIRECT] && !$checkStatuses[\App\Enums\CheckboxFilterEnum::CONFERENCE_REGION] && !$checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] && !$checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONALREREG])
                         @if(($coordinatorCondition && $conferenceCoordinatorCondition))
                             Manually Send with Buttons Below.<br>
                             <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="confirmSendReRegReminder('Send Current Month Reminders?',

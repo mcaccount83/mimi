@@ -32,7 +32,7 @@
 					<th>Hire Date</th>
                     <th>Email</th>
                     <th>Reports To</th>
-                     @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
+                     @if ($ITCondition && ($checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] ?? '') == 'checked')
                         <th>Delete</th>
                     @endif
                 </tr>
@@ -68,7 +68,7 @@
                         </td>
                       <td>@mailto($list->email)</td>
                       <td>{{ $list->reportsTo?->first_name }} {{ $list->reportsTo?->last_name }}</td>
-                      @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
+                      @if ($ITCondition && ($checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] ?? '') == 'checked')
                         <td class="text-center align-middle"><i class="bi bi-ban"
                             onclick="showDeleteCoordModal({{ $list->id }}, '{{ $list->first_name }}', '{{ $list->last_name }}', '{{ $list->activeStatus->active_status }}')"
                             style="cursor: pointer; color: #dc3545;"></i>
@@ -84,14 +84,14 @@
               <div class="card-body">
                 <div class="col-sm-12">
                     <div class="form-check form-switch">
-                        <input type="checkbox" name="showDirect" id="showDirect" class="form-check-input" {{$checkBox1Status ? 'checked' : '' }} onchange="showDirect()" />
+                        <input type="checkbox" name="showDirect" id="showDirect" class="form-check-input" {{$checkStatuses[\App\Enums\CheckboxFilterEnum::PC_DIRECT] }} onchange="showDirect()" />
                         <label class="form-check-label" for="showDirect">Only show my Direct Reports</label>
                     </div>
                 </div>
                 @if ($coordinatorCondition && $assistRegionalCoordinatorCondition)
                     <div class="col-sm-12">
                         <div class="form-check form-switch">
-                            <input type="checkbox" name="showConfReg" id="showConfReg" class="form-check-input" {{$checkBox3Status ? 'checked' : '' }} onchange="showConfReg()" />
+                            <input type="checkbox" name="showConfReg" id="showConfReg" class="form-check-input" {{$checkStatuses[\App\Enums\CheckboxFilterEnum::CONFERENCE_REGION] }} onchange="showConfReg()" />
                                 @if ($assistConferenceCoordinatorCondition)
                                     <label class="form-check-label" for="showConfReg">Show All Coordinators in Conference (Export Available)</label>
                                 @else
@@ -103,7 +103,7 @@
                 @if ($ITCondition)
                     <div class="col-sm-12">
                         <div class="form-check form-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{$checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{$checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] }} onchange="showIntl()" />
                             <label class="form-check-label" for="showIntl">Show All International Coordinators (Export Available)</label>
                         </div>
                     </div>
@@ -113,23 +113,23 @@
 
                 <div class="card-body text-center mt-3">
                 @if($coordinatorCondition && $conferenceCoordinatorCondition)
-                    @if ($checkBox51Status)
-                        <a class="btn btn-primary bg-gradient mb-2" href="{{ route('coordinators.coordpending', ['check5' => 'yes']) }}"><i class="bi bi-person-fill-add me-2"></i>New International Coordinators Pending</a>
+                    @if ($checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL])
+                        <a class="btn btn-primary bg-gradient mb-2" href="{{ route('coordinators.coordpending', [\App\Enums\CheckboxFilterEnum::INTERNATIONAL => 'yes']) }}"><i class="bi bi-person-fill-add me-2"></i>New International Coordinators Pending</a>
                     @else
                         <a class="btn btn-primary bg-gradient mb-2" href="{{ route('coordinators.coordpending') }}"><i class="bi bi-person-fill-add me-2"></i>New Coordinators Pending</a>
                     @endif
                 @endif
                 @if ($coordinatorCondition && $regionalCoordinatorCondition)
-                    @if ($checkBox3Status)
+                    @if ($checkStatuses[\App\Enums\CheckboxFilterEnum::CONFERENCE_REGION])
                         <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="startExport('coordinator', 'Coordinator List')"><i class="bi bi-download me-2"></i>Export Coordinator List</button>
-                    @elseif ($checkBox51Status)
+                    @elseif ($checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL])
                         <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="startExport('intcoordinator', 'International Coordinator List')"><i class="bi bi-download me-2"></i>Export International Coordinator List</button>
                     @endif
                 @endif
-                @if ($checkBox1Status && !$checkBox51Status && !$checkBox3Status)
+                @if ($checkStatuses[\App\Enums\CheckboxFilterEnum::PC_DIRECT] && !$checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] && !$checkStatuses[\App\Enums\CheckboxFilterEnum::CONFERENCE_REGION])
                     <a class="btn btn-primary bg-gradient mb-2" onclick="showCoordReportToEmailModal('{{ $userCoordId }}', '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="bi bi-envelope-fill me-2"></i>E-mail Direct Report Coordinators</a>
                 @endif
-                @if (!$checkBox51Status && !$checkBox3Status && !$checkBox1Status)
+                @if (!$checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] && !$checkStatuses[\App\Enums\CheckboxFilterEnum::CONFERENCE_REGION] && !$checkStatuses[\App\Enums\CheckboxFilterEnum::PC_DIRECT])
                     <a class="btn btn-primary bg-gradient mb-2" onclick="showCoordUplineEmailModal('{{ $userCoordId }}', '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')"><i class="bi bi-envelope-fill me-2"></i>E-mail All Downline Coordinators</a>
                 @endif
             </div>

@@ -26,42 +26,33 @@ class BaseCoordinatorController extends Controller
     ) {}
 
     /**
+     * Extract checkbox statuses from a getBaseQuery() result for use in views
+     */
+    public function buildCheckStatuses(array $baseQuery): array
+    {
+        return array_diff_key($baseQuery, ['query' => null]);
+    }
+
+    /**
      * Apply checkbox filters to the query
      */
-    private function applyCheckboxFilters(Builder $baseQuery, int $coorId, ?array $conditions = null, ?int $confId = null, ?int $regId = null): array
+    private function applyCheckboxFilters(Builder $baseQuery, array $checkboxStatus, int $coorId, ?array $conditions = null, ?int $confId = null, ?int $regId = null): Builder
     {
-        $checkboxStatus = [
-            CheckboxFilterEnum::PC_DIRECT => '',
-            CheckboxFilterEnum::CONFERENCE_REGION => '',
-            CheckboxFilterEnum::INTERNATIONAL => '',
-        ];
-
-        // Checkbox1
-        if (isset($_GET[CheckboxFilterEnum::PC_DIRECT]) && $_GET[CheckboxFilterEnum::PC_DIRECT] == 'yes') {
-            $checkboxStatus[CheckboxFilterEnum::PC_DIRECT] = 'checked';
+        if ($checkboxStatus[CheckboxFilterEnum::PC_DIRECT] === 'checked') {
             $baseQuery->where('report_id', '=', $coorId);
         }
 
-        // Checkbox3
-        if (isset($_GET[CheckboxFilterEnum::CONFERENCE_REGION]) && $_GET[CheckboxFilterEnum::CONFERENCE_REGION] == 'yes') {
-            $checkboxStatus[CheckboxFilterEnum::CONFERENCE_REGION] = 'checked';
-            // Position conditions already applied in buildChapterQuery
+        if ($checkboxStatus[CheckboxFilterEnum::CONFERENCE_REGION] === 'checked') {
+            // Position conditions already applied in buildCoordinatorQuery
         }
 
-        // Checkbox5
-        if (isset($_GET[CheckboxFilterEnum::INTERNATIONAL]) && $_GET[CheckboxFilterEnum::INTERNATIONAL] == 'yes') {
-            $checkboxStatus[CheckboxFilterEnum::INTERNATIONAL] = 'checked';
-            // Position conditions were skipped in buildChapterQuery
-            if ($conditions && (
-                ! $conditions['inquiriesInternationalCondition'] &&
-                ! $conditions['ITCondition'] &&
-                ! $conditions['einCondition'])) {
-                // User doesn't have international permissions, show nothing
+        if ($checkboxStatus[CheckboxFilterEnum::INTERNATIONAL] === 'checked') {
+            if ($conditions && (! $conditions['inquiriesInternationalCondition'] && ! $conditions['ITCondition'] && ! $conditions['einCondition'])) {
                 $baseQuery->whereRaw('1 = 0');
             }
         }
 
-        return ['query' => $baseQuery, 'status' => $checkboxStatus];
+        return $baseQuery;
     }
 
     /**
@@ -90,7 +81,7 @@ class BaseCoordinatorController extends Controller
     /**
      * Apply sorting based on query type and page
      */
-    private function applySorting(Builder $baseQuery): array
+    private function applySorting(Builder $baseQuery, array $checkboxStatus = []): array
     {
         $routeName = request()->route()?->getName();
 
@@ -119,7 +110,7 @@ class BaseCoordinatorController extends Controller
                 ->orderBy('birthday_month_id')
                 ->orderBy('birthday_day');
 
-            return ['query' => $baseQuery, 'checkBoxStatus' => ''];
+            return ['query' => $baseQuery];
         }
 
         if ($isUtilizationPage) {
@@ -131,7 +122,7 @@ class BaseCoordinatorController extends Controller
                     ->limit(1))
                 ->orderBy('coordinator_start_date');
 
-            return ['query' => $baseQuery, 'checkBoxStatus' => ''];
+            return ['query' => $baseQuery];
         }
 
         return ['query' => $baseQuery->orderBy(Conference::select(DB::raw("CASE WHEN short_name = 'Intl' THEN '' ELSE short_name END"))
@@ -147,7 +138,7 @@ class BaseCoordinatorController extends Controller
     private function buildCoordinatorQuery(array $params): array
     {
         $baseQuery = $this->getBaseQueryWithRelations($params['activeStatus']);
-        $checkboxStatus = [];
+        $checkboxStatus = $this->baseConditionsController->getCheckboxStatuses();
 
         if (isset($params['coorId'])) {
             $secPositionId = is_array($params['secPositionId']) ? array_map('intval', $params['secPositionId']) : ($params['secPositionId'] !== null ? [intval($params['secPositionId'])] : []);
@@ -158,8 +149,7 @@ class BaseCoordinatorController extends Controller
                 $secPositionId
             );
 
-            // Only apply position conditions if check5 is NOT selected
-            if (! isset($_GET[CheckboxFilterEnum::INTERNATIONAL]) || $_GET[CheckboxFilterEnum::INTERNATIONAL] !== 'yes') {
+            if ($checkboxStatus[CheckboxFilterEnum::INTERNATIONAL] !== 'checked') {
                 $baseQuery = $this->baseConditionsController->applyCordPositionConditions(
                     $baseQuery,
                     $conditionsData['conditions'],
@@ -169,27 +159,19 @@ class BaseCoordinatorController extends Controller
                 );
             }
 
-            // Apply checkbox filters with conditions
-            $checkboxResults = $this->applyCheckboxFilters(
+            $baseQuery = $this->applyCheckboxFilters(
                 $baseQuery,
+                $checkboxStatus,
                 $params['coorId'],
                 $conditionsData['conditions'],
                 $params['confId'] ?? null,
                 $params['regId'] ?? null
             );
-
-            $baseQuery = $checkboxResults['query'];
-            $checkboxStatus = $checkboxResults['status'];
         }
 
-        $sortingResults = $this->applySorting($baseQuery);
+        $sortingResults = $this->applySorting($baseQuery, $checkboxStatus);
 
-        return [
-            'query' => $sortingResults['query'],
-            CheckboxFilterEnum::PC_DIRECT => $checkboxStatus[CheckboxFilterEnum::PC_DIRECT] ?? '',
-            CheckboxFilterEnum::CONFERENCE_REGION => $checkboxStatus[CheckboxFilterEnum::CONFERENCE_REGION] ?? '',
-            CheckboxFilterEnum::INTERNATIONAL => $checkboxStatus[CheckboxFilterEnum::INTERNATIONAL] ?? '',
-        ];
+        return array_merge(['query' => $sortingResults['query']], $checkboxStatus);
     }
 
     /**

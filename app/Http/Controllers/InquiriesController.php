@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CheckboxFilterEnum;
 use App\Models\Chapters;
 use App\Models\InquiryApplication;
 use App\Models\RegionInquiry;
@@ -20,6 +21,7 @@ class InquiriesController extends Controller implements HasMiddleware
         protected UserController $userController,
         protected BaseChapterController $baseChapterController,
         protected PositionConditionsService $positionConditionsService,
+        protected BaseConditionsController $baseConditionsController,
     ) {}
 
     public static function middleware(): array
@@ -42,17 +44,14 @@ class InquiriesController extends Controller implements HasMiddleware
         $positionId = $user['cdPositionId'];
         $secPositionId = $user['cdSecPositionId'];
 
-        // Check if checkbox is checked
-        $checkBox51Status = $request->has(\App\Enums\CheckboxFilterEnum::INTERNATIONAL);
-        $checkBox7Status = $request->has(\App\Enums\CheckboxFilterEnum::INQUIRIES);
-        $checkBox57Status = $request->has(\App\Enums\CheckboxFilterEnum::INTERNATIONALINQUIRIES);
+        $checkStatuses = $this->baseConditionsController->getCheckboxStatuses();
 
         // Use the appropriate query based on checkbox status
-        if ($checkBox51Status) {
+        if ($checkStatuses[CheckboxFilterEnum::INTERNATIONAL]) {
             $inquiryList = InquiryApplication::with('state', 'country')
                 ->orderByDesc('id')
                 ->get();
-        } elseif ($checkBox7Status) {
+        } elseif ($checkStatuses[CheckboxFilterEnum::INQUIRIES]) {
             $inquiryList = InquiryApplication::with('state', 'country')
                 ->select('inquiry_application.*')  // Add this to be explicit about which columns
                 ->join('state', 'inquiry_application.state_id', '=', 'state.id')  // Also be explicit in join
@@ -63,7 +62,7 @@ class InquiriesController extends Controller implements HasMiddleware
                 })
                 ->orderByDesc('id')
                 ->get();
-        } elseif ($checkBox57Status) {
+        } elseif ($checkStatuses[CheckboxFilterEnum::INTERNATIONALINQUIRIES]) {
             $inquiryList = InquiryApplication::with('state', 'country')
                 ->where(function ($query) {
                     $query->where('response', '!=', 1)
@@ -81,8 +80,7 @@ class InquiriesController extends Controller implements HasMiddleware
         }
 
         $data = [
-            'inquiryList' => $inquiryList, 'checkBox51Status' => $checkBox51Status,
-            'checkBox7Status' => $checkBox7Status, 'checkBox57Status' => $checkBox57Status,
+            'inquiryList' => $inquiryList, 'checkStatuses' => $checkStatuses,
         ];
 
         return view('coordinators.inquiries.inquiryapplication')->with($data);

@@ -27,4 +27,8 @@ return [
         'project_id' => env('GOOGLE_CLOUD_PROJECT'),
     ],
 
+    'mailgun_inbound' => [
+        'signing_key' => env('MAILGUN_WEBHOOK_SIGNING_KEY'),
+    ],
+
 ];

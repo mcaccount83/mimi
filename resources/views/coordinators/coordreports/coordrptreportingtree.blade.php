@@ -5,7 +5,7 @@
 
 @section('content')
 @php
-    $founderCondition = isset($checkBox86Status) && $checkBox86Status === 'checked' ? true : $founderCondition;
+    $founderCondition = isset($checkStatuses[\App\Enums\CheckboxFilterEnum::REPORTING_TREE]) && $checkStatuses[\App\Enums\CheckboxFilterEnum::REPORTING_TREE] === 'checked' ? true : $founderCondition;
 @endphp
 
     <!-- Main content -->
@@ -262,7 +262,7 @@
     @if ($ITCondition)
         <div class="col-sm-12">
             <div class="form-check form-switch">
-                <input type="checkbox" name="showFullTree" id="showFullTree" class="form-check-input" {{$checkBox86Status ? 'checked' : '' }} onchange="showFullTree()" />
+                <input type="checkbox" name="showFullTree" id="showFullTree" class="form-check-input" {{$checkStatuses[\App\Enums\CheckboxFilterEnum::REPORTING_TREE] }} onchange="showFullTree()" />
                 <label class="form-check-label" for="showFullTree">Show Full International Reporting Tree</label>
             </div>
         </div>

@@ -231,9 +231,9 @@
                      @elseif ($confId != $chConfId)
                         @if ($ITCondition )
                             @if ($chActiveId == '2')
-                                <button type="button" id="back-pending" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplistpending', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-add-fill me-2"></i>Back to International Pending Chapter List</button>
+                                <button type="button" id="back-pending" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplistpending', [\App\Enums\CheckboxFilterEnum::INTERNATIONAL => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-add-fill me-2"></i>Back to International Pending Chapter List</button>
                             @elseif ($chActiveId == '3')
-                                <button type="button" id="back-declined" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplistdeclined', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-x-fill me-2"></i>Back to International Not Approved Chapter List</button>
+                                <button type="button" id="back-declined" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplistdeclined', [\App\Enums\CheckboxFilterEnum::INTERNATIONAL => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-x-fill me-2"></i>Back to International Not Approved Chapter List</button>
                             @endif
                         @endif
                     @endif

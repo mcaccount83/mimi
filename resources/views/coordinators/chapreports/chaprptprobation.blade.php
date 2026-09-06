@@ -75,14 +75,14 @@
             <div class="card-body">
                 <div class="col-sm-12">
                     <div class="form-check form-switch">
-                        <input type="checkbox" name="showPrimary" id="showPrimary" class="form-check-input" {{ $checkBox1Status ? 'checked' : '' }} onchange="showPrimary()" />
+                        <input type="checkbox" name="showPrimary" id="showPrimary" class="form-check-input" {{ $checkStatuses[\App\Enums\CheckboxFilterEnum::PC_DIRECT] }} onchange="showPrimary()" />
                         <label class="form-check-label" for="showPrimary">Only show chapters I am primary for</label>
                     </div>
                 </div>
                 @if ($ITCondition || $einCondition)
                     <div class="col-sm-12">
                         <div class="form-check form-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{ $checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] }} onchange="showIntl()" />
                             <label class="form-check-label" for="showIntl">Show International Chapters</label>
                         </div>
                     </div>
@@ -92,7 +92,7 @@
 
                 <div class="card-body text-center mt-3">
                     @if ($ITCondition)
-                        @if ($checkBox51Status)
+                        @if ($checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL])
                             <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showResetProbationSubmisionModel()" ><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Quarterly Report Data</button>
                         @else
                             <button type="button" class="btn btn-primary bg-gradient mb-2 disabled" onclick="showResetProbationSubmisionModel()" disabled><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Quarterly Report Data</button>

@@ -215,15 +215,15 @@
                 @elseif($inquiriesCondition || ($ITCondition && !$coordinatorCondition))
                     <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient mb-2" onclick="window.location.window.location.href='{{ route('chapters.chapinquiries') }}'"><i class="bi bi-eye-fill me-2"></i>View Inquiries Chapter List</button>
                 @elseif($einCondition || $ITCondition)
-                    <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.chaplist', ['check5' => 'yes']) }}'"><i class="bi bi-house-fill me-2"></i>View International Active Chapter List</button>
+                    <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.chaplist', [\App\Enums\CheckboxFilterEnum::INTERNATIONAL => 'yes']) }}'"><i class="bi bi-house-fill me-2"></i>View International Active Chapter List</button>
                 @elseif($inquiriesInternationalCondition || ($ITCondition && !$coordinatorCondition))
-                    <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.chapinquiries', ['check5' => 'yes']) }}'"><i class="bi bi-pin-map-fill me-2"></i>View International Active Inquiries List</button>
+                    <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('chapters.chapinquiries', [\App\Enums\CheckboxFilterEnum::INTERNATIONALINQUIRIES => 'yes']) }}'"><i class="bi bi-pin-map-fill me-2"></i>View International Active Inquiries List</button>
                 @endif
 
                 @if ($supervisingCoordinatorCondition || $ITCondition)
                     <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="bi bi-people-fill me-2"></i>View Coordinator List</button>
                 @elseif($ITCondition && !$supervisingCoordinatorCondition)
-                    <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.coordlist', ['check5' => 'yes']) }}'"><i class="bi bi-people-fill me-2"></i>View International Active Coordinator List</button>
+                    <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('coordinators.coordlist', [\App\Enums\CheckboxFilterEnum::INTERNATIONAL => 'yes']) }}'"><i class="bi bi-people-fill me-2"></i>View International Active Coordinator List</button>
                 @endif
             </div>
             </div>

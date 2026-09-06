@@ -117,13 +117,10 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
-        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
-        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
-        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
+        $checkStatuses = $this->baseChapterController->buildCheckStatuses($baseQuery);
 
         $countList = $chapterList->count();
-        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status,
-            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
+        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkStatuses' => $checkStatuses,
         ];
 
         return view('coordinators.forum.chaptersubscriptionlist')->with($data);
@@ -143,15 +140,12 @@ class ForumSubscriptionController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
-        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
-        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
-        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
+        $checkStatuses = $this->baseChapterController->buildCheckStatuses($baseQuery);
 
         $emailListCord = $coordinatorList->pluck('email')->filter()->implode(';');
 
         $countList = count($coordinatorList);
-        $data = ['countList' => $countList, 'coordinatorList' => $coordinatorList, 'checkBox1Status' => $checkBox1Status,
-            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'emailListCord' => $emailListCord,
+        $data = ['countList' => $countList, 'coordinatorList' => $coordinatorList, 'checkStatuses' => $checkStatuses, 'emailListCord' => $emailListCord,
         ];
 
         return view('coordinators.forum.coordinatorsubscriptionlist')->with($data);

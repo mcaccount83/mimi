@@ -145,20 +145,20 @@
             <div class="card-body">
             <div class="col-sm-12">
                 <div class="form-check form-switch">
-                    <input type="checkbox" name="showPrimary" id="showPrimary" class="form-check-input" {{$checkBox1Status ? 'checked' : '' }} onchange="showPrimary()" />
+                    <input type="checkbox" name="showPrimary" id="showPrimary" class="form-check-input" {{$checkStatuses[\App\Enums\CheckboxFilterEnum::PC_DIRECT] }} onchange="showPrimary()" />
                     <label class="form-check-label" for="showPrimary">Only show chapters I am primary for</label>
                 </div>
             </div>
             <div class="col-sm-12">
                 <div class="form-check form-switch">
-                    <input type="checkbox" name="showReviewer" id="showReviewer" class="form-check-input" {{$checkBox2Status ? 'checked' : '' }} onchange="showReviewer()" />
+                    <input type="checkbox" name="showReviewer" id="showReviewer" class="form-check-input" {{$checkStatuses[\App\Enums\CheckboxFilterEnum::REVIEWER] }} onchange="showReviewer()" />
                     <label class="form-check-label" for="showReviewer">Only show chapters I am Assigned Reviewer for</label>
                 </div>
             </div>
             @if ($coordinatorCondition && $assistRegionalCoordinatorCondition)
                     <div class="col-sm-12">
                         <div class="form-check form-switch">
-                            <input type="checkbox" name="showConfReg" id="showConfReg" class="form-check-input" {{$checkBox3Status ? 'checked' : '' }} onchange="showConfReg()" />
+                            <input type="checkbox" name="showConfReg" id="showConfReg" class="form-check-input" {{$checkStatuses[\App\Enums\CheckboxFilterEnum::CONFERENCE_REGION] }} onchange="showConfReg()" />
                             @if ($assistConferenceCoordinatorCondition)
                                     <label class="form-check-label" for="showConfReg">Show All Chapters in Conference (Export Available)</label>
                                 @else
@@ -170,7 +170,7 @@
                 @if ($ITCondition || $einCondition)
                     <div class="col-sm-12">
                         <div class="form-check form-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{$checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{$checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] }} onchange="showIntl()" />
                             <label class="form-check-label" for="showIntl">Show All International Chapters (Export Available)</label>
                         </div>
                     </div>
@@ -185,9 +185,9 @@
                     </button>
                 {{-- @endif
                 @if ($assistConferenceCoordinatorCondition) --}}
-                    @if ($checkBox3Status)
+                    @if ($checkStatuses[\App\Enums\CheckboxFilterEnum::CONFERENCE_REGION])
                         <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="startExport('eoystatus', 'EOY Status Lis')"><i class="bi bi-download me-2"></i>Export EOY Status List</button>
-                    @elseif ($checkBox51Status)
+                    @elseif ($checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL])
                         <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="startExport('inteoystatus', 'International EOY Status List')"><i class="bi bi-download me-2"></i>Export International EOY Status List</button>
                     @endif
                 @endif

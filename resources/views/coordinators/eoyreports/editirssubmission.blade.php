@@ -181,41 +181,41 @@
         @if($allFilings->isNotEmpty())
             <div class="accordion" id="filingHistoryAccordion">
                 @foreach($allFilings as $index => $filing)
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading-{{ $filing->id }}">
-                            <button class="accordion-button {{ $index >= 3 ? 'collapsed' : '' }}"
-                                    type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapse-{{ $filing->id }}"
-                                    aria-expanded="{{ $index < 3 ? 'true' : 'false' }}"
-                                    aria-controls="collapse-{{ $filing->id }}">
-                                Tax Year {{ $filing->tax_year }}
-                                &nbsp;<small class="text-muted ms-2">
-                                    ({{ $filing->tax_period_begin_formatted }} – {{ $filing->tax_period_end_formatted }})
-                                </small>
-                            </button>
-                        </h2>
-                        <div id="collapse-{{ $filing->id }}"
-                             class="accordion-collapse collapse {{ $index < 3 ? 'show' : '' }}"
-                             aria-labelledby="heading-{{ $filing->id }}"
-                             data-bs-parent="#filingHistoryAccordion">
-                            <div class="accordion-body">
-                                <dl class="row mb-0">
-                                    <dt class="col-sm-4">Organization Name on File</dt>
-                                    <dd class="col-sm-8">{{ $filing->organization_name }}</dd>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="heading-{{ $filing->id }}">
+            <button class="accordion-button {{ $index !== 0 ? 'collapsed' : '' }}"
+                    type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapse-{{ $filing->id }}"
+                    aria-expanded="{{ $index === 0 ? 'true' : 'false' }}"
+                    aria-controls="collapse-{{ $filing->id }}">
+                Tax Year {{ $filing->tax_year }}
+                &nbsp;<small class="text-muted ms-2">
+                    ({{ $filing->tax_period_begin_formatted }} – {{ $filing->tax_period_end_formatted }})
+                </small>
+            </button>
+        </h2>
+        <div id="collapse-{{ $filing->id }}"
+             class="accordion-collapse collapse {{ $index === 0 ? 'show' : '' }}"
+             aria-labelledby="heading-{{ $filing->id }}"
+             data-bs-parent="#filingHistoryAccordion">
+            <div class="accordion-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Organization Name on File</dt>
+                    <dd class="col-sm-8">{{ $filing->organization_name }}</dd>
 
-                                    <dt class="col-sm-4">Tax Period</dt>
-                                    <dd class="col-sm-8">
-                                        {{ $filing->tax_period_begin_formatted }} –
-                                        {{ $filing->tax_period_end_formatted }}
-                                    </dd>
+                    <dt class="col-sm-4">Tax Period</dt>
+                    <dd class="col-sm-8">
+                        {{ $filing->tax_period_begin_formatted }} –
+                        {{ $filing->tax_period_end_formatted }}
+                    </dd>
 
-                                    <dt class="col-sm-4">Last Synced</dt>
-                                    <dd class="col-sm-8">{{ $filing->synced_at->format('m/d/Y g:i A') }}</dd>
-                                </dl>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
+                    <dt class="col-sm-4">Last Synced</dt>
+                    <dd class="col-sm-8">{{ $filing->synced_at->format('m/d/Y g:i A') }}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+@endforeach
             </div>
         @else
             <p class="text-muted mb-0">No IRS filing records found yet for this chapter's EIN.</p>
@@ -238,7 +238,7 @@
                     <button type="button" id="back-irs" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('eoyreports.eoyirssubmission') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-bank me-2"></i>Back to Filing Report</button>
                 @elseif ($confId != $chConfId)
                     @if ($einCondition || $ITCondition )
-                        <button type="button" id="back-irs" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('eoyreports.eoyirssubmission', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-bank me-2"></i>Back to International Filing Report</button>
+                        <button type="button" id="back-irs" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('eoyreports.eoyirssubmission', [\App\Enums\CheckboxFilterEnum::INTERNATIONALEOY => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-bank me-2"></i>Back to International Filing Report</button>
                     @endif
                 @endif
                 <button type="button" id="back-eoy" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-file-earmark-bar-graph-fill me-2"></i>Back to EOY Details</button>

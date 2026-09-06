@@ -31,7 +31,7 @@
 					<th>Display Position</th>
                     <th>Reason Not Approved</th>
                     <th>Rejected By</th>
-                    @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
+                    @if ($ITCondition && ($checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] ?? '') == 'checked')
                         <th>Delete</th>
                     @endif
                 </tr>
@@ -54,7 +54,7 @@
                             <td>{{ $list->displayPosition->long_title }}</td>
                       <td>{{ $list->reason_retired }}</td>
                       <td>{{ $list->reportsTo?->first_name }} {{ $list->reportsTo?->last_name }}</td>
-                      @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
+                      @if ($ITCondition && ($checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] ?? '') == 'checked')
                         <td class="text-center align-middle"><i class="bi bi-ban"
                             onclick="showDeleteCoordModal({{ $list->id }}, '{{ $list->first_name }}', '{{ $list->last_name }}', '{{ $list->activeStatus->active_status }}')"
                             style="cursor: pointer; color: #dc3545;"></i>
@@ -71,7 +71,7 @@
               @if ($ITCondition)
                 <div class="col-sm-12">
                         <div class="form-check form-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{$checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{$checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] }} onchange="showIntl()" />
                             <label class="form-check-label" for="showIntl">Show All International Coordinators</label>
                         </div>
                     </div>

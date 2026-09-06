@@ -50,7 +50,7 @@
                 disableFields();
             }
         } else if (disableEOYMode === 'disable-board') {
-            if (disableBoardEdits == '1') {
+            if (disableBoardEdits == '1' && activated != '1') {
                 disableButtons();
                 disableFields();
             }

@@ -59,14 +59,14 @@
             <div class="card-body">
             <div class="col-sm-12">
                     <div class="form-check form-switch">
-                        <input type="checkbox" name="showDirect" id="showDirect" class="form-check-input" {{$checkBox1Status ? 'checked' : '' }} onchange="showDirect()" />
+                        <input type="checkbox" name="showDirect" id="showDirect" class="form-check-input" {{$checkStatuses[\App\Enums\CheckboxFilterEnum::PC_DIRECT] }} onchange="showDirect()" />
                         <label class="form-check-label" for="showDirect">Only show my Direct Reports</label>
                     </div>
                 </div>
                 @if ($coordinatorCondition && $assistRegionalCoordinatorCondition)
                     <div class="col-sm-12">
                         <div class="form-check form-switch">
-                            <input type="checkbox" name="showConfReg" id="showConfReg" class="form-check-input" {{$checkBox3Status ? 'checked' : '' }} onchange="showConfReg()" />
+                            <input type="checkbox" name="showConfReg" id="showConfReg" class="form-check-input" {{$checkStatuses[\App\Enums\CheckboxFilterEnum::CONFERENCE_REGION] }} onchange="showConfReg()" />
                                 @if ($assistConferenceCoordinatorCondition)
                                     <label class="form-check-label" for="showConfReg">Show All Coordinators in Conference</label>
                                 @else
@@ -78,7 +78,7 @@
                 @if ($ITCondition)
                     <div class="col-sm-12">
                         <div class="form-check form-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{$checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{$checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] }} onchange="showIntl()" />
                             <label class="form-check-label" for="showIntl">Show All International Coordinators</label>
                         </div>
                     </div>

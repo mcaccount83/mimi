@@ -9,6 +9,6 @@
         <a class="dropdown-item" href="{{ route('eoyreports.eoyboundaries') }}">Boundary Issues Report</a>
         <a class="dropdown-item" href="{{ route('eoyreports.eoyawards') }}">Chapter Awards Report</a>
      @elseif ($einCoordinator)
-        <a class="dropdown-item" href="{{ route('chapters.eoyirssubmission', ['check5' => 'yes']) }}">International 990N Filing Report</a>
+        <a class="dropdown-item" href="{{ route('chapters.eoyirssubmission', [\App\Enums\CheckboxFilterEnum::INTERNATIONALEOY => 'yes']) }}">International 990N Filing Report</a>
     @endif
 </div>

@@ -30,7 +30,7 @@
                     <th>EIN</th>
                     <th>Disband Date</th>
                     <th>Reason</th>
-                    @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
+                    @if ($ITCondition && ($checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] ?? '') == 'checked')
                         <th>Delete</th>
                     @endif
                 </tr>
@@ -59,7 +59,7 @@
                         @formatDate($list->zap_date)
                     </td>
                     <td>{{ $list->disband_reason }}</td>
-                   @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
+                   @if ($ITCondition && ($checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] ?? '') == 'checked')
                         <td class="text-center align-middle"><i class="bi bi-ban"
                             onclick="showDeleteChapterModal({{ $list->id }}, '{{ $list->name }}', '{{ $list->activeStatus->active_status }}')"
                             style="cursor: pointer; color: #dc3545;"></i>
@@ -76,7 +76,7 @@
                 @if ($ITCondition || $einCondition)
                 <div class="col-sm-12">
                         <div class="form-check form-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{ $checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] }} onchange="showIntl()" />
                             <label class="form-check-label" for="showIntl">Show All International Chapters (Export Available)</label>
                         </div>
                     </div>
@@ -86,7 +86,7 @@
 
             <div class="card-body text-center mt-3">
                 @if ($assistConferenceCoordinatorCondition)
-                    @if ($checkBox51Status)
+                    @if ($checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL])
                         <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="startExport('intzapchapter', 'International Zapped Chapter List')"><i class="bi bi-download me-2"></i>Export International Zapped Chapter List</button>
                     @endif
                 @endif

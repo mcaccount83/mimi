@@ -77,7 +77,7 @@
                     <div class="col-sm-12">
                         <div class="form-check form-switch">
                             <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input"
-                                {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                                {{ $checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] }} onchange="showIntl()" />
                             <label class="form-check-label" for="showAll">Show All International Regions</label>
                         </div>
                     </div>

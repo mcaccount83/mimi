@@ -20,6 +20,7 @@ use App\Http\Controllers\ForumSubscriptionController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImpersonationController;
+use App\Http\Controllers\InboundMailController;
 use App\Http\Controllers\InquiriesController;
 use App\Http\Controllers\MySentEmailsController;
 use App\Http\Controllers\PaymentController;
@@ -125,6 +126,9 @@ Route::get('adminreports/sentemails/attachment-{id}', [MySentEmailsController::c
 Route::get(config('sentemails.routepath').'/{id}', [\Dcblogdev\LaravelSentEmails\Controllers\SentEmailsController::class, 'show'])
     ->middleware(config('sentemails.middleware'))
     ->name('sentemails.show');
+
+// routes/web.php
+Route::post('/mail/inbound', [InboundMailController::class, 'handle']);
 
 // Allow error log to be viewed without login
 Route::get('techreports/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');

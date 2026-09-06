@@ -81,7 +81,7 @@
                 <div class="col-sm-12">
                         <div class="form-check form-switch">
                             <input type="checkbox" name="showInquiries" id="showInquiries" class="form-check-input"
-                                {{ $checkBox7Status ? 'checked' : '' }} onchange="showInquiries()" />
+                                {{ $checkStatuses[\App\Enums\CheckboxFilterEnum::INQUIRIES] ? 'checked' : '' }} onchange="showInquiries()" />
                             <label class="form-check-label" for="showInquiries">Show Only Outstanding Inquiries</label>
                         </div>
                     </div>
@@ -91,14 +91,14 @@
                 <div class="col-sm-12">
                         <div class="form-check form-switch">
                             <input type="checkbox" name="showIntlInquiries" id="showIntlInquiries" class="form-check-input"
-                                {{ $checkBox57Status ? 'checked' : '' }} onchange="showIntlInquiries()" />
+                                {{ $checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONALINQUIRIES] ? 'checked' : '' }} onchange="showIntlInquiries()" />
                             <label class="form-check-label" for="showIntlInquiries">Show Only Outstanding International Inquiries</label>
                         </div>
                     </div>
                 <div class="col-sm-12">
                         <div class="form-check form-switch">
                             <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input"
-                                {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                                {{ $checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] ? 'checked' : '' }} onchange="showIntl()" />
                             <label class="form-check-label" for="showIntl">Show All International Inquiries</label>
                         </div>
                     </div>

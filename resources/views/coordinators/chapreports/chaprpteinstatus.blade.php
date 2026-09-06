@@ -91,14 +91,14 @@
             <div class="card-body">
             <div class="col-sm-12">
                 <div class="form-check form-switch">
-                    <input type="checkbox" name="showPrimary" id="showPrimary" class="form-check-input" {{ $checkBox1Status ? 'checked' : '' }} onchange="showPrimary()" />
+                    <input type="checkbox" name="showPrimary" id="showPrimary" class="form-check-input" {{ $checkStatuses[\App\Enums\CheckboxFilterEnum::PC_DIRECT] }} onchange="showPrimary()" />
                     <label class="form-check-label" for="showPrimary">Only show chapters I am primary for</label>
                 </div>
             </div>
             @if ($coordinatorCondition && $assistRegionalCoordinatorCondition)
                     <div class="col-sm-12">
                         <div class="form-check form-switch">
-                            <input type="checkbox" name="showConfReg" id="showConfReg" class="form-check-input" {{ $checkBox3Status ? 'checked' : '' }} onchange="showConfReg()" />
+                            <input type="checkbox" name="showConfReg" id="showConfReg" class="form-check-input" {{ $checkStatuses[\App\Enums\CheckboxFilterEnum::CONFERENCE_REGION] }} onchange="showConfReg()" />
                             @if ($assistConferenceCoordinatorCondition)
                                     <label class="form-check-label" for="showConfReg">Show All Chapters in Conference (Export Available)</label>
                                 @else
@@ -110,7 +110,7 @@
                 @if ($ITCondition || $einCondition)
                     <div class="col-sm-12">
                         <div class="form-check form-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{ $checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] }} onchange="showIntl()" />
                             <label class="form-check-label" for="showIntl">Show All International Chapters (Export & Fax Info Available)</label>
                         </div>
                     </div>
@@ -120,15 +120,15 @@
 
                 <div class="card-body text-center mt-3">
                     @if ($assistConferenceCoordinatorCondition)
-                        @if ($checkBox3Status)
+                        @if ($checkStatuses[\App\Enums\CheckboxFilterEnum::CONFERENCE_REGION])
                             <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="startExport('einstatus', 'EIN Status List')"><i class="bi bi-download me-2"></i></i>Export EIN Status List</button>
-                        @elseif ($checkBox51Status)
+                        @elseif ($checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL])
                             <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="startExport('inteinstatus', 'International EIN Status List')"><i class="bi bi-download me-2"></i>Export International EIN Status List</button>
                         @endif
                     @endif
                 {{-- <br> --}}
                     @if ($einCondition || $ITCondition)
-                        @if ($checkBox51Status)
+                        @if ($checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL])
                             <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showEODeptCoverSheetModal()"><i class="bi bi-file-earmark-pdf-fill me-2"></i>EO Dept Fax Coversheet</button>
                             {{-- <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showIRSUpdatesModal()"><i class="bi bi-file-earmark-pdf-fill me-2"></i>IRS Updates to EO Dept</button> --}}
                             {{-- <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="showSubordinateFilingModal()"><i class="bi bi-file-earmark-pdf-fill me-2"></i>Subordinate Filing PDF</button> --}}

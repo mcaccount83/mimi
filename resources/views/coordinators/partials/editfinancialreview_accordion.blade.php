@@ -210,7 +210,7 @@
                                     <label for="Step1_Note">Add New Note:</label>
                                     <div class="col-12">
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(1)" name="Step1_Note" id="Step1_Note"
-                                            {{ $chFinancialReportReview->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                            {{ $chEOYDocuments->financial_review_complete == "1" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote1" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(1)" disabled>
@@ -370,7 +370,7 @@
                                     <label for="Step2_Note">Add New Note:</label>
                                     <div class="col-12">
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(2)" name="Step2_Note" id="Step2_Note"
-                                            {{ $chFinancialReportReview->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                            {{ $chEOYDocuments->financial_review_complete == "1" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote2" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(2)" disabled>
@@ -535,7 +535,7 @@
                                     <label for="Step3_Note">Add New Note:</label>
                                     <div class="col-12">
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(3)" name="Step3_Note" id="Step3_Note"
-                                            {{ $chFinancialReportReview->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                            {{ $chEOYDocuments->financial_review_complete == "1" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote3" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(3)" disabled>
@@ -686,7 +686,7 @@
                                     <label for="Step4_Note">Add New Note:</label>
                                     <div class="col-12">
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(4)" name="Step4_Note" id="Step4_Note"
-                                            {{ $chFinancialReportReview->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                            {{ $chEOYDocuments->financial_review_complete == "1" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote4" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(4)" disabled>
@@ -793,7 +793,7 @@
                                     <label for="Step5_Note">Add New Note:</label>
                                     <div class="col-12">
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(5)" name="Step5_Note" id="Step5_Note"
-                                            {{ $chFinancialReportReview->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                            {{ $chEOYDocuments->financial_review_complete == "1" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote5" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(5)" disabled>
@@ -928,7 +928,7 @@
                                     <label for="Step6_Note">Add New Note:</label>
                                     <div class="col-12">
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(6)" name="Step6_Note" id="Step6_Note"
-                                            {{ $chFinancialReportReview->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                            {{ $chEOYDocuments->financial_review_complete == "1" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote6" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(6)" disabled>
@@ -1074,7 +1074,7 @@
                                     <label for="Step7_Note">Add New Note:</label>
                                     <div class="col-12">
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(7)" name="Step7_Note" id="Step7_Note"
-                                            {{ $chFinancialReportReview->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                            {{ $chEOYDocuments->financial_review_complete == "1" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote7" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(7)" disabled>
@@ -1184,7 +1184,7 @@
                                     <label for="Step8_Note">Add New Note:</label>
                                     <div class="col-12">
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(8)" name="Step8_Note" id="Step8_Note"
-                                            {{ $chFinancialReportReview->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                            {{ $chEOYDocuments->financial_review_complete == "1" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote8" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(8)" disabled>
@@ -1313,7 +1313,7 @@
                                     <label for="Step9_Note">Add New Note:</label>
                                     <div class="col-12">
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(9)" name="Step9_Note" id="Step9_Note"
-                                            {{ $chFinancialReportReview->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                            {{ $chEOYDocuments->financial_review_complete == "1" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote9" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(9)" disabled>
@@ -1550,7 +1550,7 @@
                                     <label for="Step10_Note">Add New Note:</label>
                                     <div class="col-12">
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(10)" name="Step10_Note" id="Step10_Note"
-                                            {{ $chFinancialReportReview->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                            {{ $chEOYDocuments->financial_review_complete == "1" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote10" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(10)" disabled>
@@ -1654,7 +1654,7 @@
                                     <label for="Step11_Note">Add New Note:</label>
                                     <div class="col-12">
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(11)" name="Step11_Note" id="Step11_Note"
-                                            {{ $chFinancialReportReview->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                            {{ $chEOYDocuments->financial_review_complete == "1" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote11" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(11)" disabled>
@@ -1918,7 +1918,7 @@
                                     <label for="Step12_Note">Add New Note:</label>
                                     <div class="col-12">
                                         <textarea class="form-control" rows="3" oninput="EnableNoteLogButton(12)" name="Step12_Note" id="Step12_Note"
-                                            {{ $chFinancialReportReview->review_complete != "" ? 'readonly' : '' }}></textarea>
+                                            {{ $chEOYDocuments->financial_review_complete == "1" ? 'readonly' : '' }}></textarea>
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button type="button" id="AddNote12" class="btn btn-success bg-gradient btn-sm disabled" onclick="AddNote(12)" disabled>

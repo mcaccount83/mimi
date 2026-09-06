@@ -31,7 +31,7 @@
                     <th>Name</th>
                     <th>President</th>
                     <th>Reason Not Approved</th>
-                    @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
+                    @if ($ITCondition && ($checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] ?? '') == 'checked')
                         <th>Delete</th>
                     @endif
                   </tr>
@@ -62,7 +62,7 @@
                             <td>{{ $list->name }}</td>
                             <td>{{ $list->pendingPresident->first_name }} {{ $list->pendingPresident->last_name }}</td>
                             <td>{{ $list->disband_reason }}</td>
-                             @if ($ITCondition && ($checkBox51Status ?? '') == 'checked')
+                             @if ($ITCondition && ($checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] ?? '') == 'checked')
                         <td class="text-center align-middle"><i class="bi bi-ban"
                             onclick="showDeleteChapterModal({{ $list->id }}, '{{ $list->name }}', '{{ $list->activeStatus->active_status }}')"
                             style="cursor: pointer; color: #dc3545;"></i>
@@ -79,7 +79,7 @@
             @if ($ITCondition || $einCondition)
                 <div class="col-sm-12">
                         <div class="form-check form-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{ $checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] }} onchange="showIntl()" />
                             <label class="form-check-label" for="showIntl">Show All International Chapters</label>
                         </div>
                     </div>

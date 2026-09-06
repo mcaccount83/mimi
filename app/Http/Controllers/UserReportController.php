@@ -109,11 +109,11 @@ class UserReportController extends Controller implements HasMiddleware
             ->having(DB::raw('count(email)'), '>', 1)
             ->pluck('email');
 
-        $boardList = Boards::with('user.coordinator')
+        $boardDupList = Boards::with('user.coordinator')
             ->whereIn('email', $boardData)
             ->get();
 
-        $data = ['boardList' => $boardList];
+        $data = ['boardDupList' => $boardDupList];
 
         return view('coordinators.userreports.duplicateboardid')->with($data);
     }

@@ -272,23 +272,44 @@ class PublicController extends Controller
                     'Authorization' => 'Bearer '.$accessToken,
                 ],
                 'stream' => true,
-                'timeout' => 30,
+                'connect_timeout' => 10,
+                'timeout' => 120, // whole-transfer budget, not just connect
+                'http_errors' => false, // let us inspect the status instead of throwing
             ]);
+
+            if ($response->getStatusCode() >= 400) {
+                Log::error('Google Drive API returned error status', [
+                    'status' => $response->getStatusCode(),
+                    'file_id' => $fileId,
+                ]);
+                return response()->json(['error' => 'Failed to fetch file from Google Drive'], 502);
+            }
 
             $contentType = $response->getHeaderLine('Content-Type');
             $disposition = $request->query('download') ? 'attachment' : 'inline';
 
             return response()->stream(
-                function () use ($response) {
+                function () use ($response, $fileId) {
                     $body = $response->getBody();
-                    while (! $body->eof()) {
-                        echo $body->read(1024);
+                    try {
+                        while (! $body->eof()) {
+                            echo $body->read(8192); // bigger chunks = fewer reads
+                            flush();
+                        }
+                    } catch (\Throwable $e) {
+                        // Connection to Google dropped mid-stream. Headers are already
+                        // sent, so we can't return a proper error response — just log
+                        // and stop, instead of letting this bubble into Laravel's
+                        // exception handler (which triggers the header-already-sent cascade).
+                        Log::error('Google Drive stream read failed mid-transfer', [
+                            'message' => $e->getMessage(),
+                            'file_id' => $fileId,
+                        ]);
                     }
                 },
                 200,
                 [
                     'Content-Type' => $contentType ?: 'application/pdf',
-                    // 'Content-Disposition' => 'inline; filename="document.pdf"',
                     'Content-Disposition' => $disposition.'; filename="'.basename($fileId).'"',
                     'Cache-Control' => 'no-cache',
                 ]
@@ -304,6 +325,7 @@ class PublicController extends Controller
                 'error' => 'Failed to fetch file from Google Drive',
                 'message' => $e->getMessage(),
             ], 500);
+
         }
     }
 

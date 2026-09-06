@@ -79,7 +79,7 @@ class TechReportController extends Controller implements HasMiddleware
      */
     public function listActiveChapters(Request $request): View
     {
-        // Simulate the check5=yes parameter to get international chapters
+        // Simulate the check51=yes parameter to get international chapters
         $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);
@@ -117,7 +117,7 @@ class TechReportController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
-        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
+        $checkStatuses = $this->baseChapterController->buildCheckStatuses($baseQuery);
 
         $chapterBdData = [];
         foreach ($chapterList as $chapter) {
@@ -142,7 +142,7 @@ class TechReportController extends Controller implements HasMiddleware
 
         $countList = $chapterList->count();
         $data = ['countList' => $countList, 'chapterList' => $chapterList,
-            'checkBox51Status' => $checkBox51Status, 'chapterBdData' => $chapterBdData, 'userTypeId' => $userTypeId,
+            'checkStatuses' => $checkStatuses, 'chapterBdData' => $chapterBdData, 'userTypeId' => $userTypeId,
         ];
 
         $countList = $chapterList->count();
@@ -170,7 +170,7 @@ class TechReportController extends Controller implements HasMiddleware
         $chapterList = $baseQuery['query']
             ->where('zap_date', '>=', $oneYearAgo)
             ->get();
-        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
+        $checkStatuses = $this->baseChapterController->buildCheckStatuses($baseQuery);
 
         $chapterBdData = [];
         foreach ($chapterList as $chapter) {
@@ -195,7 +195,7 @@ class TechReportController extends Controller implements HasMiddleware
 
         $countList = $chapterList->count();
         $data = ['countList' => $countList, 'chapterList' => $chapterList,
-            'checkBox51Status' => $checkBox51Status, 'chapterBdData' => $chapterBdData, 'userTypeId' => $userTypeId,
+            'checkStatuses' => $checkStatuses, 'chapterBdData' => $chapterBdData, 'userTypeId' => $userTypeId,
         ];
 
         $countList = $chapterList->count();
@@ -218,7 +218,7 @@ class TechReportController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseChapterController->getBaseQuery(2, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
-        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
+       $checkStatuses = $this->baseChapterController->buildCheckStatuses($baseQuery);
 
         $chapterBdData = [];
         foreach ($chapterList as $chapter) {
@@ -243,7 +243,7 @@ class TechReportController extends Controller implements HasMiddleware
 
         $countList = $chapterList->count();
         $data = ['countList' => $countList, 'chapterList' => $chapterList,
-            'checkBox51Status' => $checkBox51Status, 'chapterBdData' => $chapterBdData, 'userTypeId' => $userTypeId,
+            'checkStatuses' => $checkStatuses, 'chapterBdData' => $chapterBdData, 'userTypeId' => $userTypeId,
         ];
 
         $countList = $chapterList->count();
@@ -267,10 +267,10 @@ class TechReportController extends Controller implements HasMiddleware
 
         $chapterIdsWithOutgoing = BoardsOutgoing::pluck('chapter_id')->unique();
 
-    $chapterList = $baseQuery['query']
+        $chapterList = $baseQuery['query']
             ->whereIn('chapters.id', $chapterIdsWithOutgoing)
             ->get();
-        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
+        $checkStatuses = $this->baseChapterController->buildCheckStatuses($baseQuery);
 
         $chapterBdData = [];
         foreach ($chapterList as $chapter) {
@@ -292,7 +292,7 @@ class TechReportController extends Controller implements HasMiddleware
 
         $countList = $chapterList->count();
         $data = ['countList' => $countList, 'chapterList' => $chapterList,
-            'checkBox51Status' => $checkBox51Status, 'chapterBdData' => $chapterBdData, 'userTypeId' => $userTypeId,
+            'checkStatuses' => $checkStatuses, 'chapterBdData' => $chapterBdData, 'userTypeId' => $userTypeId,
         ];
 
         return view('coordinators.techreports.viewasoutgoingchapter')->with($data);
@@ -313,7 +313,7 @@ class TechReportController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
-        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
+        $checkStatuses = $this->baseChapterController->buildCheckStatuses($baseQuery);
 
         $coordinatorData = [];
         foreach ($coordinatorList as $coordinator) {
@@ -324,7 +324,7 @@ class TechReportController extends Controller implements HasMiddleware
         $countList = $coordinatorList->count();
 
         $data = ['countList' => $countList, 'coordinatorList' => $coordinatorList,
-            'checkBox51Status' => $checkBox51Status, 'coordinatorData' => $coordinatorData, 'userTypeId' => $userTypeId,
+            'checkStatuses' => $checkStatuses, 'coordinatorData' => $coordinatorData, 'userTypeId' => $userTypeId,
         ];
 
         return view('coordinators.techreports.viewasactivecoordinator')->with($data);
@@ -335,7 +335,7 @@ class TechReportController extends Controller implements HasMiddleware
      */
     public function listZappedChapters(Request $request): View
     {
-        // Simulate the check5=yes parameter to get international chapters
+        // Simulate the check51=yes parameter to get international chapters
         $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);
@@ -363,7 +363,7 @@ class TechReportController extends Controller implements HasMiddleware
      */
     public function listPendingChapters(Request $request): View
     {
-        // Simulate the check5=yes parameter to get international chapters
+        // Simulate the check51=yes parameter to get international chapters
         $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);

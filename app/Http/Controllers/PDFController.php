@@ -947,7 +947,7 @@ class PDFController extends Controller
      */
     public function generateSubordinateFiling(Request $request, $streamResponse = true)
     {
-        // Simulate the check5=yes parameter to get international chapters
+        // Simulate the check51=yes parameter to get international chapters
         $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);
@@ -1076,7 +1076,7 @@ class PDFController extends Controller
      */
     public function generateIRSUpdates(Request $request, $streamResponse = true)
     {
-        // Simulate the check5=yes parameter to get international chapters
+        // Simulate the check51=yes parameter to get international chapters
         $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);
@@ -1320,7 +1320,7 @@ class PDFController extends Controller
      */
     public function generateIRSFilingCorrections(Request $request, $streamResponse = true)
     {
-        // Simulate the check5=yes parameter to get international chapters
+        // Simulate the check51=yes parameter to get international chapters
         $_GET[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] = 'yes';
 
         $user = $this->userController->loadUserInformation($request);

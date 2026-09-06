@@ -200,10 +200,8 @@
                                 <div class="col-sm-6 mb-2">
                                     @if($chDocuments->disband_letter_path != null)
                                         <span class="badge bg-primary badge-inherit-size badge-btn keep-enabled" style="cursor: pointer;" id="disband-letter" onclick="openPdfViewer('{{ $chDocuments->disband_letter_path }}')">Disband Letter</span>
-                                        {{-- <button type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="disband-letter" onclick="openPdfViewer('{{ $chDocuments->disband_letter_path }}')">Disband Letter</button> --}}
                                     @else
                                         <span class="badge bg-secondary badge-btn badge-inherit-size keep-enabled">No Disband Letter on File</span>
-                                        {{-- <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No Disband Letter on File</button> --}}
                                     @endif
                                 </div>
                             </div>
@@ -214,10 +212,8 @@
                                 <div class="col-sm-6 mb-2">
                                     @if($chDisbanded?->file_financial == 1 && $chReportDocuments->final_financial_pdf_path != null)
                                         <span class="badge bg-primary badge-inherit-size badge-btn keep-enabled" style="cursor: pointer;" id="final-pdf" onclick="openPdfViewer('{{ $chReportDocuments->final_financial_pdf_path }}')">Final Financial PDF</span>
-                                        {{-- <button type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="final-pdf" onclick="openPdfViewer('{{ $chReportDocuments->final_financial_pdf_path }}')">Final Financial PDF</button> --}}
                                     @else
                                         <span class="badge bg-secondary badge-btn badge-inherit-size keep-enabled">Final PDF Not Available</span>
-                                        {{-- <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" type="button" disabled>Final PDF Not Available</button> --}}
                                     @endif
                                 </div>
                             </div>
@@ -230,7 +226,6 @@
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     <span class="badge bg-primary badge-inherit-size badge-btn" style="cursor: pointer;" id="GoodStanding" onclick="openPdfViewer('{{ route('pdf.newchapfaxcover', ['id' => $chDetails->id]) }}')">EIN Fax Coversheet</span>
-                                    {{-- <button type="button" id="GoodStanding" class="btn btn-primary bg-gradient btn-sm" onclick="openPdfViewer('{{ route('pdf.newchapfaxcover', ['id' => $chDetails->id]) }}')">EIN Fax Coversheet</button><br> --}}
                                 </div>
                             </div>
                         @endif
@@ -241,9 +236,11 @@
                             </div>
                             <div class="col-sm-6 mb-2">
                                 @if($chDocuments->ein_letter_path != null)
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chDocuments->ein_letter_path }}')">EIN Letter from IRS</button>
+                                    <span class="badge bg-primary badge-inherit-size badge-btn keep-enabled" style="cursor: pointer;" id="ein-letter" onclick="openPdfViewer('{{ $chDocuments->ein_letter_path }}')">EIN Letter from IRS</span>
+                                    {{-- <button type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="ein-letter" onclick="openPdfViewer('{{ $chDocuments->ein_letter_path }}')">EIN Letter from IRS</button> --}}
                                 @else
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No EIN Letter on File</button>
+                                    <span class="badge bg-primary badge-btn badge-inherit-size badge-disabled">No EIN Letter on File</span>
+                                    {{-- <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No EIN Letter on File</button> --}}
                                 @endif
                             </div>
                         </div>
@@ -254,9 +251,11 @@
                             </div>
                             <div class="col-sm-6 mb-2">
                                 @if($chEOYDocuments->roster_path != null)
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="roster-file" onclick="openPdfViewer('{{ $chEOYDocuments->roster_path }}')">Most Current Roster</button>
+                                    <span class="badge bg-primary badge-inherit-size badge-btn keep-enabled" style="cursor: pointer;" id="roster-file" onclick="openPdfViewer('{{ $chEOYDocuments->roster_path }}')">Most Current Roster</span>
+                                    {{-- <button type="button" class="btn btn-primary bg-gradient btn-sm keep-enabled" type="button" id="roster-file" onclick="openPdfViewer('{{ $chEOYDocuments->roster_path }}')">Most Current Roster</button> --}}
                                 @else
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No Roster on File</button>
+                                    <span class="badge bg-primary badge-btn badge-inherit-size badge-disabled">No Roster on File</span>
+                                    {{-- <button type="button" class="btn btn-primary bg-gradient btn-sm disabled" disabled>No Roster on File</button> --}}
                                 @endif
                             </div>
                         </div>
@@ -264,11 +263,11 @@
                         @if($chDetails->active_status == \App\Enums\ChapterStatusEnum::ACTIVE)
                             <div class="row">
                                 <div class="col-sm-6 mb-2">
-                                    <label>Chapter in Good Standing Letter:</label>
+                                    <label>Good Standing Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button type="button" id="GoodStanding" class="btn btn-primary bg-gradient btn-sm" onclick="openPdfViewer('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}')">Good Standing Chapter Letter</button><br>
-
+                                    <span class="badge bg-primary badge-inherit-size badge-btn" style="cursor: pointer;" id="GoodStanding" onclick="openPdfViewer('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}')">Good Standing Chapter Letter</span>
+                                    {{-- <button type="button" id="GoodStanding" class="btn btn-primary bg-gradient btn-sm" onclick="openPdfViewer('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}')">Good Standing Chapter Letter</button><br> --}}
                                 </div>
                             </div>
 
@@ -278,7 +277,8 @@
                                     <label>Probation Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="probation-file" onclick="openPdfViewer('{{ $chDocuments->probation_path }}')">Probation Letter</button>
+                                    <span class="badge bg-primary badge-inherit-size badge-btn" style="cursor: pointer;" id="probation-file" onclick="openPdfViewer('{{ $chDocuments->probation_path }}')">Probation Letter</span>
+                                    {{-- <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="probation-file" onclick="openPdfViewer('{{ $chDocuments->probation_path }}')">Probation Letter</button> --}}
                                 </div>
                             </div>
                             @endif
@@ -289,7 +289,8 @@
                                     <label>Probation Release Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="probaton-release-file" onclick="openPdfViewer('{{ $chDocuments->probation_release_path }}')">Probation Release Letter</button>
+                                    <span class="badge bg-primary badge-inherit-size badge-btn" style="cursor: pointer;" id="probaton-release-file" onclick="openPdfViewer('{{ $chDocuments->probation_release_path }}')">Probation Release Letter</span>
+                                    {{-- <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="probaton-release-file" onclick="openPdfViewer('{{ $chDocuments->probation_release_path }}')">Probation Release Letter</button> --}}
                                 </div>
                             </div>
                             @endif
@@ -300,7 +301,8 @@
                                     <label>Name Change Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="name-change-file" onclick="openPdfViewer('{{ $chDocuments->name_change_letter_path }}')">Name Change Letter</button>
+                                    <span class="badge bg-primary badge-inherit-size badge-btn" style="cursor: pointer;" id="name-change-file" onclick="openPdfViewer('{{ $chDocuments->name_change_letter_path }}')">Name Change Letter</span>
+                                    {{-- <button type="button" class="btn btn-primary bg-gradient btn-sm" type="button" id="name-change-file" onclick="openPdfViewer('{{ $chDocuments->name_change_letter_path }}')">Name Change Letter</button> --}}
                                 </div>
                             </div>
                             @endif
@@ -312,7 +314,8 @@
                                     </div>
                                     <div class="col-sm-6 mb-2">
                                         @foreach ($financialReportPdfs as $year => $path)
-                                            <button type="button" class="btn btn-primary bg-gradient btn-sm me-1 mb-1 keep-enabled" onclick="openPdfViewer('{{ $path }}')">{{ $year - 1 }}-{{ $year }} Financial Report</button><br>
+                                            <span class="badge bg-primary badge-inherit-size badge-btn keep-enabled" style="cursor: pointer;" onclick="openPdfViewer('{{ $path }}')">{{ $year - 1 }}-{{ $year }} Financial Report</span>
+                                            {{-- <button type="button" class="btn btn-primary bg-gradient btn-sm me-1 mb-1 keep-enabled" onclick="openPdfViewer('{{ $path }}')">{{ $year - 1 }}-{{ $year }} Financial Report</button><br> --}}
                                         @endforeach
                                     </div>
                                 </div>
@@ -334,7 +337,9 @@
                                     <label>Custom Message:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">Email Board in MIMI</button>
+                                    <span class="badge bg-primary badge-inherit-size badge-btn" style="cursor: pointer;"
+                                        onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">Email Board in MIMI</span>
+                                    {{-- <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showChapterEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }}, '{{ $userName }}', '{{ $userPosition }}', '{{ $userConfName }}', '{{ $userConfDesc }}')">Email Board in MIMI</button> --}}
                                 </div>
                             </div>
                             @php
@@ -347,7 +352,9 @@
                                     <label>Blank Email:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $chDetails->name . ', ' . $stateShortName) }}'">Blank Email to Board</button>
+                                    <span class="badge bg-primary badge-inherit-size badge-btn keep-enabled" style="cursor: pointer;"
+                                        onclick="window.location.href='mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $chDetails->name . ', ' . $stateShortName) }}'">Blank Email to Board</span>
+                                    {{-- <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $chDetails->name . ', ' . $stateShortName) }}'">Blank Email to Board</button> --}}
                                 </div>
                             </div>
                             @if ($startDate->greaterThanOrEqualTo($threeMonthsAgo))
@@ -367,19 +374,21 @@
 
                             <div class="row">
                                 <div class="col-sm-6 mb-2">
-                                    <label>Re-Registration Reminder:</label>
+                                    <label>Re-Reg Reminder:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showChapterReRegEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }})">Email Re-Registration</button>
+                                    <span class="badge bg-primary badge-inherit-size badge-btn" style="cursor: pointer;" onclick="showChapterReRegEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }})">Email Re-Registration</span>
+                                    {{-- <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showChapterReRegEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }})">Email Re-Registration</button> --}}
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-sm-6 mb-2">
-                                    <label>Re-Registration Late Reminder:</label>
+                                    <label>Re-Reg Late Reminder:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showChapterReRegLateEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }})">Email Late Notice</button>
+                                    <span class="badge bg-primary badge-inherit-size badge-btn" style="cursor: pointer;" onclick="showChapterReRegLateEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }})">Email Late Notice</span>
+                                    {{-- <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showChapterReRegLateEmailModal('{{ $chDetails->name }}', {{ $chDetails->id }})">Email Late Notice</button> --}}
                                 </div>
                             </div>
 
@@ -388,7 +397,8 @@
                                     <label>Probation/Warning Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showProbationLetterModal('{{ $chDetails->name }}', {{ $chDetails->id }})">Email Probation/Warning</button>
+                                    <span class="badge bg-primary badge-inherit-size badge-btn" style="cursor: pointer;" onclick="showProbationLetterModal('{{ $chDetails->name }}', {{ $chDetails->id }})">Email Probation/Warning</span>
+                                    {{-- <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showProbationLetterModal('{{ $chDetails->name }}', {{ $chDetails->id }})">Email Probation/Warning</button> --}}
                                 </div>
                             </div>
 
@@ -397,7 +407,8 @@
                                     <label>Probation Release Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showProbationReleaseModal('{{ $chDetails->name }}', {{ $chDetails->id }})">Email Probation Release</button>
+                                    <span class="badge bg-primary badge-inherit-size badge-btn" style="cursor: pointer;" onclick="showProbationReleaseModal('{{ $chDetails->name }}', {{ $chDetails->id }})">Email Probation Release</span>
+                                    {{-- <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="showProbationReleaseModal('{{ $chDetails->name }}', {{ $chDetails->id }})">Email Probation Release</button> --}}
                                 </div>
                             </div>
                         </div>
@@ -585,7 +596,6 @@
                             </div>
                             <div class="col-sm-9">
                                 <span class="badge bg-primary badge-inherit-size" style="cursor: pointer;" onclick="window.location.href='{{ route('eoyreports.awardhistory', ['id' => $chDetails->id]) }}'">View Award History</span>
-                                {{-- <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='{{ route('eoyreports.awardhistory', ['id' => $chDetails->id]) }}'">View Award History</button> --}}
                             </div>
                         </div>
 
@@ -595,7 +605,6 @@
                             </div>
                             <div class="col-sm-9">
                                 <span class="badge bg-primary badge-inherit-size" style="cursor: pointer;" onclick="window.location.href='{{ route('eoyreports.eoyreporthistory', ['id' => $chDetails->id]) }}'">View Report History</span>
-                                {{-- <button type="button" class="btn btn-primary bg-gradient btn-sm" onclick="window.location.href='{{ route('eoyreports.eoyreporthistory', ['id' => $chDetails->id]) }}'">View Report History</button> --}}
                             </div>
                         </div>
 
@@ -605,435 +614,178 @@
             </div>
             <!-- /.tab-pane -->
 
-                  <!-- /.tab-pane -->
-                  <div class="tab-pane" id="disband">
-                    <div class="disband-field">
-                        <div class="card-header bg-transparent border-0">
-                            <h3>Disband Checklist</h3>
+            <!-- /.tab-pane -->
+            <div class="tab-pane" id="disband">
+                <div class="disband-field">
+                    <div class="card-header bg-transparent border-0">
+                        <h3>Disband Checklist</h3>
                     </div>
                     <!-- /.card-header -->
-                            <div class="card-body">
-                            <div class="row mb-2">
-                                <div class="col-sm-6 mb-2">
-                                    <label>Final Re-Reg Payment:</label>
-                                </div>
-                                <div class="col-sm-6 mb-2">
-                                    {{ $chDisbanded?->final_payment == 1 ? 'YES' : 'NO' }}
-                                </div>
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-sm-6 mb-2">
+                                <label>Final Re-Reg Payment:</label>
                             </div>
-
-                            <div class="row mb-2">
-                                <div class="col-sm-6 mb-2">
-                                    <label>Funds Donated:</label>
-                                </div>
-                                <div class="col-sm-6 mb-2">
-                                    {{ $chDisbanded?->donate_funds == 1 ? 'YES' : 'NO' }}
-                                </div>
+                            <div class="col-sm-6 mb-2">
+                                {{ $chDisbanded?->final_payment == 1 ? 'YES' : 'NO' }}
                             </div>
-
-                            <div class="row mb-2">
-                                <div class="col-sm-6 mb-2">
-                                    <label>Manual Returned/Destroyed:</label>
-                                </div>
-                                <div class="col-sm-6 mb-2">
-                                    {{ $chDisbanded?->destroy_manual == 1 ? 'YES' : 'NO' }}
-                                </div>
-                            </div>
-
-                            <div class="row mb-2">
-                                <div class="col-sm-6 mb-2">
-                                    <label>Online Accounts Removed:</label>
-                                </div>
-                                <div class="col-sm-6 mb-2">
-                                    {{ $chDisbanded?->remove_online == 1 ? 'YES' : 'NO' }}
-                                </div>
-                            </div>
-
-                            <div class="row mb-2">
-                                <div class="col-sm-6 mb-2">
-                                    <label>Final 990N Filed:</label>
-                                </div>
-                                <div class="col-sm-6 mb-2">
-                                    {{ $chDisbanded?->file_irs == 1 ? 'YES' : 'NO' }}
-                                </div>
-                            </div>
-
-                            <div class="row mb-2">
-                                <div class="col-sm-6 mb-2">
-                                    <label>Final Financial Report Submitted:</label>
-                                </div>
-                                <div class="col-sm-6 mb-2">
-                                    {{ $chDisbanded?->file_financial == 1 ? 'YES' : 'NO' }}
-                                    @if ( $chDisbanded?->file_financial == 1)
-                                    <button type="button" class="btn btn-danger bg-gradient btn-sm ms-2 keep-enabled keep-enabled" id="unsubmit">UnSubmit Report</button>
-                                    @else
-                                    <button type="button" class="btn btn-danger bg-gradient btn-sm ms-2" disabled>UnSubmit Report</button>
-                                    @endif
-                                </div>
-                            </div>
-                        <br><br>
-                     </div>
-                    <!-- /.card-body -->
-                </div>
-            </div>
-            <!-- /.tab-pane -->
-
-                  <div class="tab-pane" id="pre">
-                        <div class="pre-field">
-                            <!-- /.card-header -->
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h3 class="mb-0">{{$PresDetails->first_name}} {{$PresDetails->last_name}}
-                                            <small><small>
-                                                <i class="bi bi-eye-fill text-primary" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="View as {{ $PresDetails->first_name }} {{ $PresDetails->last_name }}"
-                                                    onclick="window.location.href='{{ route('impersonate.start', ['userId' => $PresDetails->user_id]) }}'"></i>
-                                            </small></small>
-                                        </h3>
-                                        @mailto($PresDetails->email)
-                                        <br>
-                                        @tel($PresDetails->phone)
-                                        <br>
-                                        {{$PresDetails->street_address}}
-                                        <br>
-                                        {{$PresDetails->city}},{{$PresDetails->state->state_short_name}}&nbsp;{{$PresDetails->zip}}
-                                         <br>
-                                        {{$PresDetails->country->short_name}}
-                                    </div>
-                                    <div class="col-md-6">
-                                    </div>
-                                </div>
-                                    <div class="row mt-3">
-                                        @php
-                                            $Subscriptions = $PresDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
-                                        @endphp
-                                        <dt class="col-sm-3">Public Announcements:</dt>
-                                        <dd class="col-sm-9">
-                                            @if(in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
-                                                <span class="badge bg-success badge-inherit-size ms-2">SUBSCRIBED</span>
-                                                <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
-                                                    onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $PresDetails->user_id }})"></i>
-                                            @else
-                                                <span class="badge bg-primary badge-inherit-size ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $PresDetails->user_id }})">SUBSCRIBE NOW</span>
-                                            @endif
-                                        </dd>
-                                        <dt class="col-sm-3">BoardList</dt>
-                                        <dd class="col-sm-9">
-                                            @if(in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
-                                                <span class="badge bg-success badge-inherit-size ms-2">SUBSCRIBED</span>
-                                                <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
-                                                    onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $PresDetails->user_id }})"></i>
-                                            @else
-                                                <span class="badge bg-primary badge-inherit-size ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $PresDetails->user_id }})">SUBSCRIBE NOW</span>
-                                            @endif
-                                        </dd>
-                                    <div class="col-md-12">
-                                    <p>This will reset password to default "TempPass4You" for this user only.
-                                    <br>
-                                    <span class="badge bg-primary reset-password-btn keep-enabled badge-inherit-size" style="cursor: pointer;" data-user-id="{{ $PresDetails->user_id }}">Reset {{ $PresDetails->first_name }}'s Password</span>
-                                    </p>
-                                </div>
-                            </div>
-                  </div>
-                    <!-- /.card-body -->
-                </div>
-            </div>
-            <!-- /.tab-pane -->
-
-                  <!-- /.tab-pane -->
-                  <div class="tab-pane" id="avp">
-                        @if ($AVPDetails->user_id == '')
-                            <div class="avp-field-vacant">
-                                <div class="card-header bg-transparent border-0">
-                                        <h3>Administrative Vice President Position is Vacant</h3>
-                                </div>
-                                <br><br>
-                            </div>
-                        @else
-                            <div class="avp-field">
-                                <!-- /.card-header -->
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h3 class="mb-0">{{$AVPDetails->first_name}} {{$AVPDetails->last_name}}
-                                            <small><small>
-                                                <i class="bi bi-eye-fill text-primary" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="View as {{ $AVPDetails->first_name }} {{ $AVPDetails->last_name }}"
-                                                    onclick="window.location.href='{{ route('impersonate.start', ['userId' => $AVPDetails->user_id]) }}'"></i>
-                                            </small></small>
-                                        </h3>
-                                        @mailto($AVPDetails->email)
-                                        <br>
-                                        @tel($AVPDetails->phone)
-                                        <br>
-                                        {{$AVPDetails->street_address}}
-                                        <br>
-                                        {{$AVPDetails->city}},{{$AVPDetails->state?->state_short_name}}&nbsp;{{$AVPDetails->zip}}
-                                        <br>
-                                        {{$AVPDetails->country?->short_name}}
-                                    </div>
-                                    <div class="col-md-6">
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                        @php
-                                            $Subscriptions = $AVPDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
-                                        @endphp
-                                     <dt class="col-sm-3">Public Announcements:</dt>
-                                        <dd class="col-sm-9">
-                                            @if(in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
-                                                <span class="badge bg-success badge-inherit-size ms-2">SUBSCRIBED</span>
-                                                <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
-                                                    onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $AVPDetails->user_id }})"></i>
-                                            @else
-                                                <span class="badge bg-primary badge-inherit-size ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $AVPDetails->user_id }})">SUBSCRIBE NOW</span>
-                                            @endif
-                                        </dd>
-                                        <dt class="col-sm-3">BoardList</dt>
-                                        <dd class="col-sm-9">
-                                            @if(in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
-                                                <span class="badge bg-success badge-inherit-size ms-2">SUBSCRIBED</span>
-                                                <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
-                                                    onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $AVPDetails->user_id }})"></i>
-                                            @else
-                                                <span class="badge bg-primary badge-inherit-size ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $AVPDetails->user_id }})">SUBSCRIBE NOW</span>
-                                            @endif
-                                        </dd>
-                                <div class="col-md-12">
-                                    <p>This will reset password to default "TempPass4You" for this user only.
-                                    <br>
-                                    <span class="badge bg-primary reset-password-btn badge-inherit-size keep-enabled" style="cursor: pointer;" data-user-id="{{ $AVPDetails->user_id }}">Reset {{ $AVPDetails->first_name }}'s Password</span>
-                                    </p>
-                                </div>
-                                </div>
-
-                         </div>
-                    <!-- /.card-body -->
-                </div>
-                @endif
-            </div>
-            <!-- /.tab-pane -->
-                  <div class="tab-pane" id="mvp">
-                        @if ($MVPDetails->user_id == '')
-                            <div class="mvp-field-vacant">
-                                 <div class="card-header bg-transparent border-0">
-                                        <h3>Membership Vice President Position is Vacant</h3>
-                                </div>
-                                <br><br>
-                            </div>
-                        @else
-                            <div class="mvp-field">
-                                <!-- /.card-header -->
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h3 class="mb-0">{{$MVPDetails->first_name}} {{$MVPDetails->last_name}}
-                                            <small><small>
-                                                <i class="bi bi-eye-fill text-primary" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="View as {{ $MVPDetails->first_name }} {{ $MVPDetails->last_name }}"
-                                                    onclick="window.location.href='{{ route('impersonate.start', ['userId' => $MVPDetails->user_id]) }}'"></i>
-                                            </small></small>
-                                        </h3>
-                                        @mailto($MVPDetails->email)
-                                        <br>
-                                        @tel($MVPDetails->phone)
-                                        <br>
-                                        {{$MVPDetails->street_address}}
-                                        <br>
-                                        {{$MVPDetails->city}},{{$MVPDetails->state?->state_short_name}}&nbsp;{{$MVPDetails->zip}}
-                                        <br>
-                                        {{$MVPDetails->country?->short_name}}
-                                    </div>
-                                    <div class="col-md-6">
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                    @php
-                                        $Subscriptions = $MVPDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
-                                    @endphp
-                                     <dt class="col-sm-3">Public Announcements:</dt>
-                                        <dd class="col-sm-9">
-                                            @if(in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
-                                                <span class="badge bg-success badge-inherit-size ms-2">SUBSCRIBED</span>
-                                                <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
-                                                    onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $MVPDetails->user_id }})"></i>
-                                            @else
-                                                <span class="badge bg-primary badge-inherit-size ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $MVPDetails->user_id }})">SUBSCRIBE NOW</span>
-                                            @endif
-                                        </dd>
-                                        <dt class="col-sm-3">BoardList</dt>
-                                        <dd class="col-sm-9">
-                                            @if(in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
-                                                <span class="badge bg-success badge-inherit-size ms-2">SUBSCRIBED</span>
-                                                <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
-                                                    onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $MVPDetails->user_id }})"></i>
-                                            @else
-                                                <span class="badge bg-primary badge-inherit-size ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $MVPDetails->user_id }})">SUBSCRIBE NOW</span>
-                                            @endif
-                                        </dd>
-                                    <div class="col-md-12">
-                                        <p>This will reset password to default "TempPass4You" for this user only.
-                                        <br>
-                                        <span class="badge bg-primary reset-password-btn badge-inherit-size keep-enabled" style="cursor: pointer;" data-user-id="{{ $MVPDetails->user_id }}">Reset {{ $MVPDetails->first_name }}'s Password</span>
-                                        </p>
-                                    </div>
-                                </div>
-
-                     </div>
-                    <!-- /.card-body -->
-                </div>
-                 @endif
-            </div>
-            <!-- /.tab-pane -->
-                    <div class="tab-pane" id="trs">
-                        @if ($TRSDetails->user_id == '')
-                          <div class="trs-field-vacant">
-                            <div class="card-header bg-transparent border-0">
-                                        <h3>Treasurer Position is Vacant</h3>
-                                </div>
-                              <br><br>
-                          </div>
-                        @else
-                          <div class="trs-field">
-                                <!-- /.card-header -->
-                            <div class="card-body">
-                              <div class="row">
-                                <div class="col-md-6">
-                                    <h3 class="mb-0">{{$TRSDetails->first_name}} {{$TRSDetails->last_name}}
-                                        <small><small>
-                                            <i class="bi bi-eye-fill text-primary" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="View as {{ $TRSDetails->first_name }} {{ $TRSDetails->last_name }}"
-                                                onclick="window.location.href='{{ route('impersonate.start', ['userId' => $TRSDetails->user_id]) }}'"></i>
-                                        </small></small>
-                                    </h3>
-                                    @mailto($TRSDetails->email)
-                                    <br>
-                                    @tel($TRSDetails->phone)
-                                    <br>
-                                    {{$TRSDetails->street_address}}
-                                    <br>
-                                    {{$TRSDetails->city}},{{$TRSDetails->state?->state_short_name}}&nbsp;{{$TRSDetails->zip}}
-                                    <br>
-                                        {{$TRSDetails->country?->short_name}}
-                                </div>
-                                <div class="col-md-6">
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                    @php
-                                        $Subscriptions = $TRSDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
-                                    @endphp
-                                     <dt class="col-sm-3">Public Announcements:</dt>
-                                        <dd class="col-sm-9">
-                                            @if(in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
-                                                <span class="badge bg-success badge-inherit-size ms-2">SUBSCRIBED</span>
-                                                <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
-                                                    onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $TRSDetails->user_id }})"></i>
-                                            @else
-                                                <span class="badge bg-primary badge-inherit-size ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $TRSDetails->user_id }})">SUBSCRIBE NOW</span>
-                                            @endif
-                                        </dd>
-                                        <dt class="col-sm-3">BoardList</dt>
-                                        <dd class="col-sm-9">
-                                            @if(in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
-                                                <span class="badge bg-success badge-inherit-size ms-2">SUBSCRIBED</span>
-                                                <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
-                                                    onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $TRSDetails->user_id }})"></i>
-                                            @else
-                                                <span class="badge bg-primary badge-inherit-size ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $TRSDetails->user_id }})">SUBSCRIBE NOW</span>
-                                            @endif
-                                        </dd>
-                                    <div class="col-md-12">
-                               <p>This will reset password to default "TempPass4You" for this user only.
-                              <br>
-                                <span class="badge bg-primary reset-password-btn badge-inherit-size keep-enabled" style="cursor: pointer;" data-user-id="{{ $TRSDetails->user_id }}">Reset {{ $TRSDetails->first_name }}'s Password</span>
-                            </p>
                         </div>
-                    </div>
 
-                 </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-6 mb-2">
+                                <label>Funds Donated:</label>
+                            </div>
+                            <div class="col-sm-6 mb-2">
+                                {{ $chDisbanded?->donate_funds == 1 ? 'YES' : 'NO' }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-6 mb-2">
+                                <label>Manual Returned/Destroyed:</label>
+                            </div>
+                            <div class="col-sm-6 mb-2">
+                                {{ $chDisbanded?->destroy_manual == 1 ? 'YES' : 'NO' }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-6 mb-2">
+                                <label>Online Accounts Removed:</label>
+                            </div>
+                            <div class="col-sm-6 mb-2">
+                                {{ $chDisbanded?->remove_online == 1 ? 'YES' : 'NO' }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-6 mb-2">
+                                <label>Final 990N Filed:</label>
+                            </div>
+                            <div class="col-sm-6 mb-2">
+                                {{ $chDisbanded?->file_irs == 1 ? 'YES' : 'NO' }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-6 mb-2">
+                                <label>Final Financial Report Submitted:</label>
+                            </div>
+                            <div class="col-sm-6 mb-2">
+                                {{ $chDisbanded?->file_financial == 1 ? 'YES' : 'NO' }}
+                                @if ( $chDisbanded?->file_financial == 1)
+                                <button type="button" class="btn btn-danger bg-gradient btn-sm ms-2 keep-enabled keep-enabled" id="unsubmit">UnSubmit Report</button>
+                                @else
+                                <button type="button" class="btn btn-danger bg-gradient btn-sm ms-2" disabled>UnSubmit Report</button>
+                                @endif
+                            </div>
+                        </div>
+                        <br><br>
+                     </div>
                     <!-- /.card-body -->
                 </div>
+            </div>
+            <!-- /.tab-pane -->
+
+            <div class="tab-pane" id="pre">
+                <div class="pre-field">
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        @include('coordinators.partials.board_member_details', ['Details' => $PresDetails])
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+            </div>
+            <!-- /.tab-pane -->
+
+            <div class="tab-pane" id="avp">
+                @if ($AVPDetails->user_id == '')
+                    <div class="avp-field-vacant">
+                        <div class="card-header bg-transparent border-0">
+                            <h3>Administrative Vice President Position is Vacant</h3>
+                        </div>
+                        <br><br>
+                    </div>
+                @else
+                    <div class="avp-field">
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            @include('coordinators.partials.board_member_details', ['Details' => $AVPDetails])
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
                 @endif
             </div>
             <!-- /.tab-pane -->
-                  <div class="tab-pane" id="sec">
-                  @if ($SECDetails->user_id == '')
-                    <div class="sec-field-vacant">
-                         <div class="card-header bg-transparent border-0">
-                                        <h3>Secretary Position is Vacant</h3>
-                                </div>
+
+            <div class="tab-pane" id="mvp">
+                @if ($MVPDetails->user_id == '')
+                    <div class="mvp-field-vacant">
+                        <div class="card-header bg-transparent border-0">
+                            <h3>Membership Vice President Position is Vacant</h3>
+                        </div>
                         <br><br>
                     </div>
-                  @else
+                @else
+                    <div class="mvp-field">
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            @include('coordinators.partials.board_member_details', ['Details' => $MVPDetails])
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                @endif
+            </div>
+            <!-- /.tab-pane -->
+
+            <div class="tab-pane" id="trs">
+                @if ($TRSDetails->user_id == '')
+                    <div class="trs-field-vacant">
+                        <div class="card-header bg-transparent border-0">
+                            <h3>Treasurer Position is Vacant</h3>
+                        </div>
+                        <br><br>
+                    </div>
+                @else
+                    <div class="trs-field">
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            @include('coordinators.partials.board_member_details', ['Details' => $TRSDetails])
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                @endif
+            </div>
+            <!-- /.tab-pane -->
+
+            <div class="tab-pane" id="sec">
+                @if ($SECDetails->user_id == '')
+                    <div class="sec-field-vacant">
+                        <div class="card-header bg-transparent border-0">
+                            <h3>Secretary Position is Vacant</h3>
+                        </div>
+                        <br><br>
+                    </div>
+                @else
                     <div class="sec-field">
                         <!-- /.card-header -->
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h3 class="mb-0">{{$SECDetails->first_name}} {{$SECDetails->last_name}}
-                                    <small><small>
-                                        <i class="bi bi-eye-fill text-primary" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="View as {{ $SECDetails->first_name }} {{ $SECDetails->last_name }}"
-                                            onclick="window.location.href='{{ route('impersonate.start', ['userId' => $SECDetails->user_id]) }}'"></i>
-                                    </small></small>
-                                </h3>
-                                @mailto($SECDetails->email)
-                                <br>
-                                @tel($SECDetails->phone)
-                                <br>
-                                {{$SECDetails->street_address}}
-                                <br>
-                                {{$SECDetails->city}},{{$SECDetails->state?->state_short_name}}&nbsp;{{$SECDetails->zip}}
-                                <br>
-                                        {{$SECDetails->country?->short_name}}
-                           </div>
-                                    <div class="col-md-6">
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                @php
-                                    $Subscriptions = $SECDetails->user?->categorySubscriptions?->pluck('category_id')->toArray() ?? [];
-                                @endphp
-                                <dt class="col-sm-3">Public Announcements:</dt>
-                                        <dd class="col-sm-9">
-                                            @if(in_array(\App\Enums\ForumCategoryEnum::PUBLICLIST, $Subscriptions))
-                                                <span class="badge bg-success badge-inherit-size ms-2">SUBSCRIBED</span>
-                                                <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
-                                                    onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $SECDetails->user_id }})"></i>
-                                            @else
-                                                <span class="badge bg-primary badge-inherit-size ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::PUBLICLIST }}, {{ $SECDetails->user_id }})">SUBSCRIBE NOW</span>
-                                            @endif
-                                        </dd>
-                                        <dt class="col-sm-3">BoardList</dt>
-                                        <dd class="col-sm-9">
-                                            @if(in_array(\App\Enums\ForumCategoryEnum::BOARDLIST, $Subscriptions))
-                                                <span class="badge bg-success badge-inherit-size ms-2">SUBSCRIBED</span>
-                                                <i class="bi bi-ban text-danger" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="right" title="Unsubscribe from List"
-                                                    onclick="unsubscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $SECDetails->user_id }})"></i>
-                                            @else
-                                                <span class="badge bg-primary badge-inherit-size ms-2" style="cursor: pointer;" onclick="subscribe({{ \App\Enums\ForumCategoryEnum::BOARDLIST }}, {{ $SECDetails->user_id }})">SUBSCRIBE NOW</span>
-                                            @endif
-                                        </dd>
-                                <div class="col-md-12">
-                        <p>This will reset password to default "TempPass4You" for this user only.
-                        <br>
-                        <span class="badge bg-primary reset-password-btn badge-inherit-size keep-enabled" style="cursor: pointer;" data-user-id="{{ $SECDetails->user_id }}">Reset {{ $SECDetails->first_name }}'s Password</span>
-                        </p>
+                        <div class="card-body">
+                            @include('coordinators.partials.board_member_details', ['Details' => $SECDetails])
+                        </div>
+                        <!-- /.card-body -->
                     </div>
-                </div>
-
-            </div>
-                    <!-- /.card-body -->
-                </div>
-                 @endif
+                @endif
             </div>
             <!-- /.tab-pane -->
 
-                 </div>
-                <!-- /.tab-content -->
-              </div>
-              <!-- /.card-body -->
             </div>
-            <!-- /.card -->
-          </div>
-          <!-- /.col -->
+        <!-- /.tab-content -->
+        </div>
+        <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+    </div>
+    <!-- /.col -->
 
           <div class="col-md-12">
             <div class="card-body text-center mt-3">
@@ -1077,24 +829,24 @@
                             @endif
                             @if ($inquiriesCondition || $assistConferenceCoordinatorCondition)
                                 @if ($chActiveId == \App\Enums\ChapterStatusEnum::ACTIVE)
-                                    <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquiries', ['check3' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-pin-map-fill me-2"></i>Back to Active Inquiries List</button>
+                                    <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquiries', [\App\Enums\CheckboxFilterEnum::INQUIRIES => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-pin-map-fill me-2"></i>Back to Active Inquiries List</button>
                                 @elseif ($chActiveId == \App\Enums\ChapterStatusEnum::ZAPPED)
-                                    <button type="button" id="back-inquiries-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquirieszapped', ['check3' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-pin-map-fill me-2"></i>Back to Zapped Inquiries List</button>
+                                    <button type="button" id="back-inquiries-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquirieszapped', [\App\Enums\CheckboxFilterEnum::INQUIRIES => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-pin-map-fill me-2"></i>Back to Zapped Inquiries List</button>
                                 @endif
                             @endif
                      @elseif ($confId != $chConfId)
                         @if ($einCondition || $inquiriesInternationalCondition || $ITCondition)
                             @if ($chActiveId == \App\Enums\ChapterStatusEnum::ACTIVE)
-                                <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplist', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to International Active Chapter List</button>
+                                <button type="button" id="back-list" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chaplist', [\App\Enums\CheckboxFilterEnum::INTERNATIONAL => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i>Back to International Active Chapter List</button>
                             @elseif ($chActiveId == \App\Enums\ChapterStatusEnum::ZAPPED)
-                                <button type="button" id="back-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapzapped', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-slash-fill me-2"></i>Back to International Zapped Chapter List</button>
+                                <button type="button" id="back-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapzapped', [\App\Enums\CheckboxFilterEnum::INTERNATIONAL => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-slash-fill me-2"></i>Back to International Zapped Chapter List</button>
                             @endif
                         @endif
                          @if ($inquiriesInternationalCondition || $ITCondition)
                             @if ($chActiveId == \App\Enums\ChapterStatusEnum::ACTIVE)
-                                <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquiries', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-pin-map-fill me-2"></i>Back to International Active Inquiries List</button>
+                                <button type="button" id="back-inquiries" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquiries', [\App\Enums\CheckboxFilterEnum::INTERNATIONALINQUIRIES => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-pin-map-fill me-2"></i>Back to International Active Inquiries List</button>
                             @elseif ($chActiveId == \App\Enums\ChapterStatusEnum::ZAPPED)
-                                <button type="button" id="back-inquiries-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquirieszapped', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-pin-map-fill me-2"></i>Back to International Zapped Inquiries List</button>
+                                <button type="button" id="back-inquiries-zapped" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.chapinquirieszapped', [\App\Enums\CheckboxFilterEnum::INTERNATIONALINQUIRIES => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-pin-map-fill me-2"></i>Back to International Zapped Inquiries List</button>
                             @endif
                         @endif
                     @endif

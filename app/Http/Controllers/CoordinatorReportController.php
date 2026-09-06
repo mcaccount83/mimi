@@ -42,9 +42,7 @@ class CoordinatorReportController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
-        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
-        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
-        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
+        $checkStatuses = $this->baseCoordinatorController->buildCheckStatuses($baseQuery);
 
         foreach ($coordinatorList as $list) {
             $cdCoorId = $list->id;
@@ -55,8 +53,7 @@ class CoordinatorReportController extends Controller implements HasMiddleware
             $list->total_report = $reportingData['total_report'];
         }
 
-        $data = ['coordinatorList' => $coordinatorList, 'checkBox1Status' => $checkBox1Status,
-            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
+        $data = ['coordinatorList' => $coordinatorList, 'checkStatuses' => $checkStatuses,
         ];
 
         return view('coordinators.coordreports.coordrptvolutilization')->with($data);
@@ -76,12 +73,9 @@ class CoordinatorReportController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
-        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
-        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
-        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
+        $checkStatuses = $this->baseCoordinatorController->buildCheckStatuses($baseQuery);
 
-        $data = ['coordinatorList' => $coordinatorList, 'checkBox1Status' => $checkBox1Status,
-            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
+        $data = ['coordinatorList' => $coordinatorList, 'checkStatuses' => $checkStatuses,
         ];
 
         return view('coordinators.coordreports.coordrptappreciation')->with($data);
@@ -98,17 +92,13 @@ class CoordinatorReportController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
+        $checkStatuses = $this->baseCoordinatorController->buildCheckStatuses($baseQuery);
 
         // Collect all emails and fetch progress in one API call
         $emails = $coordinatorList->pluck('email')->filter()->values()->toArray();
         $bulkProgress = $this->learnDashService->getBulkUserProgress($emails);
 
-        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
-        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
-        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
-
-        $data = ['coordinatorList' => $coordinatorList, 'bulkProgress' => $bulkProgress, 'checkBox1Status' => $checkBox1Status,
-            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
+        $data = ['coordinatorList' => $coordinatorList, 'bulkProgress' => $bulkProgress, 'checkStatuses' => $checkStatuses,
         ];
 
         return view('coordinators.coordreports.coordrptelearning')->with($data);
@@ -125,12 +115,9 @@ class CoordinatorReportController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
-        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
-        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
-        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
+        $checkStatuses = $this->baseCoordinatorController->buildCheckStatuses($baseQuery);
 
-        $data = ['coordinatorList' => $coordinatorList, 'checkBox1Status' => $checkBox1Status,
-            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
+        $data = ['coordinatorList' => $coordinatorList, 'checkStatuses' => $checkStatuses,
         ];
 
         return view('coordinators.coordreports.old_coordrptappreciation')->with($data);
@@ -150,12 +137,9 @@ class CoordinatorReportController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
-        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
-        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
-        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
+        $checkStatuses = $this->baseCoordinatorController->buildCheckStatuses($baseQuery);
 
-        $data = ['coordinatorList' => $coordinatorList, 'checkBox1Status' => $checkBox1Status,
-            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
+        $data = ['coordinatorList' => $coordinatorList, 'checkStatuses' => $checkStatuses,
         ];
 
         return view('coordinators.coordreports.coordrptbirthdays')->with($data);
@@ -191,10 +175,9 @@ class CoordinatorReportController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseCoordinatorController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $coordinatorList = $baseQuery['query']->get();
+        $checkStatuses = $this->baseCoordinatorController->buildCheckStatuses($baseQuery);
 
-        $checkBox86Status = $showFullTree ? 'checked' : '';
-
-        $data = ['coordinatorList' => $coordinatorList, 'checkBox86Status' => $checkBox86Status];
+        $data = ['coordinatorList' => $coordinatorList, 'checkStatuses' => $checkStatuses];
 
         return view('coordinators.coordreports.coordrptreportingtree')->with($data);
     }

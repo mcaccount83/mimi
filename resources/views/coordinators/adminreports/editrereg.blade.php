@@ -115,7 +115,7 @@
                  @if ($confId == $chConfId)
                     <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('adminreports.rereg') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-credit-card-fill me-2"></i>Back to Re-Reg Admin Report</button>
                 @elseif ($confId != $chConfId)
-                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('adminreports.rereg', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-credit-card-fill me-2"></i>Back to International Re-Reg Admin Report</button>
+                    <button type="button" class="btn btn-primary bg-gradient mb-2" onclick="window.location.href='{{ route('adminreports.rereg', [CheckboxFilterEnum::INTERNATIONALREREG => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-credit-card-fill me-2"></i>Back to International Re-Reg Admin Report</button>
                 @endif
                 <button type="button" id="back-details" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('payment.paymenthistory', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-file-earmark-text me-2"></i>Back to Payment History</button>
              </div>

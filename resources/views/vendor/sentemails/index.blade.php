@@ -35,13 +35,13 @@
             <div class="card-body">
                 <div class="mb-3">
                     <span class="text font-medium text-gray-600">Viewing: </span>
-                    @if ($checkBox81Status)
+                    @if ($checkStatuses[\App\Enums\CheckboxFilterEnum::ADMIN])
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-red-100 text-red-800">All International Emails</span>
-                    @elseif ($checkBox5Status)
+                    @elseif ($checkStatuses[\App\Enums\CheckboxFilterEnum::LIST])
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">List Admin Emails</span>
-                    @elseif ($checkBox57Status)
+                    @elseif ($checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONALINQUIRIES])
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-purple-100 text-purple-800">International Inquiries Emails</span>
-                    @elseif ($checkBox7Status)
+                    @elseif ($checkStatuses[\App\Enums\CheckboxFilterEnum::INQUIRIES])
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">My Inquiries Emails</span>
                     @else
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">My Personal Emails</span>
@@ -144,7 +144,7 @@
                 @if ($listAdminCondition || $ITCondition)
                         <div class="col-sm-12">
                             <div class="form-check form-switch">
-                                <input type="checkbox" name="showListAdmin" id="showListAdmin" class="form-check-input" {{ $checkBox5Status ? 'checked' : '' }} onchange="showListAdmin()" />
+                                <input type="checkbox" name="showListAdmin" id="showListAdmin" class="form-check-input" {{ $checkStatuses[\App\Enums\CheckboxFilterEnum::LIST] ? 'checked' : '' }} onchange="showListAdmin()" />
                                 <label class="form-check-label" for="showListAdmin">Show ListAdmin Emails</label>
                             </div>
                         </div>
@@ -152,7 +152,7 @@
                     @if(($coordinatorCondition && $conferenceCoordinatorCondition) || $inquiriesCondition || $inquiriesInternationalCondition || $ITCondition)
                     <div class="col-sm-12">
                             <div class="form-check form-switch">
-                                <input type="checkbox" name="showInquiries" id="showInquiries" class="form-check-input" {{ $checkBox7Status ? 'checked' : '' }} onchange="showInquiries()" />
+                                <input type="checkbox" name="showInquiries" id="showInquiries" class="form-check-input" {{ $checkStatuses[\App\Enums\CheckboxFilterEnum::INQUIRIES] ? 'checked' : '' }} onchange="showInquiries()" />
                                 <label class="form-check-label" for="showInquiries">Show Inquiry Emails</label>
                             </div>
                         </div>
@@ -160,13 +160,13 @@
                     @if ($ITCondition)
                         <div class="col-sm-12">
                             <div class="form-check form-switch">
-                                <input type="checkbox" name="showIntlInquiries" id="showIntlInquiries" class="form-check-input" {{ $checkBox57Status ? 'checked' : '' }} onchange="showIntlInquiries()" />
+                                <input type="checkbox" name="showIntlInquiries" id="showIntlInquiries" class="form-check-input" {{ $checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONALINQUIRIES] ? 'checked' : '' }} onchange="showIntlInquiries()" />
                                 <label class="form-check-label" for="showIntlInquiries">Show All Inquiry Emails</label>
                             </div>
                         </div>
                         <div class="col-sm-12">
                             <div class="form-check form-switch">
-                                <input type="checkbox" name="showAdminAll" id="showAdminAll" class="form-check-input" {{ $checkBox81Status ? 'checked' : '' }} onchange="showAdminAll()" />
+                                <input type="checkbox" name="showAdminAll" id="showAdminAll" class="form-check-input" {{ $checkStatuses[\App\Enums\CheckboxFilterEnum::ADMIN] ? 'checked' : '' }} onchange="showAdminAll()" />
                                 <label class="form-check-label" for="showAdminAll">Show All Emails</label>
                             </div>
                         </div>

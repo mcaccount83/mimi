@@ -379,7 +379,7 @@
                       @if ($confId == $chConfId)
                         <button type="button" id="back-eoystatus" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('eoyreports.eoystatus') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-file-earmark-bar-graph-fill me-2"></i>Back to EOY Status Report</button>
                     @elseif ($confId != $chConfId && $ITCondition)
-                        <button type="button" id="back-eoystatus" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('eoyreports.eoystatus', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-file-earmark-bar-graph-fill me-2"></i>Back to International EOY Status Report</button>
+                        <button type="button" id="back-eoystatus" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('eoyreports.eoystatus', [\App\Enums\CheckboxFilterEnum::INTERNATIONALEOY => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-file-earmark-bar-graph-fill me-2"></i>Back to International EOY Status Report</button>
                     @endif
                     <button type="button" id="back-eoy" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-house-fill me-2"></i></i>Back to Chapter Details</button>
 

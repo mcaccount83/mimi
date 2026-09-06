@@ -28,6 +28,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append(HandlePageExpired::class);
         $middleware->append(PreventBackHistory::class);
         $middleware->throttleApi();
+        $middleware->validateCsrfTokens(except: [
+            'mail/inbound',
+        ]);
         $middleware->alias([
             'coordinatorlistC.access' => CoordinatorListAccessCMiddleware::class,
             'coordinatorlistT.access' => CoordinatorListAccessTMiddleware::class,

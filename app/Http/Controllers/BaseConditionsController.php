@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CheckboxFilterEnum;
 use App\Services\PositionConditionsService;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -67,5 +68,21 @@ class BaseConditionsController extends Controller
         }
 
         return $baseQuery;
+    }
+
+    /**
+     * Build checkbox status ('checked'/'') for every checkbox from the request.
+     * Available to any controller, independent of chapter/coordinator query building.
+     */
+    public function getCheckboxStatuses(): array
+    {
+        $checkboxStatus = [];
+        foreach (CheckboxFilterEnum::all() as $checkbox) {
+            $checkboxStatus[$checkbox] = (isset($_GET[$checkbox]) && $_GET[$checkbox] == 'yes')
+                ? 'checked'
+                : '';
+        }
+
+        return $checkboxStatus;
     }
 }

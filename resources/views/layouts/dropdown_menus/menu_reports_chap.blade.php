@@ -7,6 +7,6 @@
         <a class="dropdown-item" href="{{ route('chapreports.chaprptprobation') }}">Chapter Probation Report</a>
         <a class="dropdown-item" href="{{ route('chapreports.chaprptcoordinators') }}">Chapter Coordinators Report</a>
     @elseif ($einCondition)
-        <a class="dropdown-item" href="{{ route('chapreports.chaprpteinstatus', ['check5' => 'yes']) }}">International IRS Status Report</a>
+        <a class="dropdown-item" href="{{ route('chapreports.chaprpteinstatus', [\App\Enums\CheckboxFilterEnum::INTERNATIONALEIN => 'yes']) }}">International IRS Status Report</a>
     @endif
 </div>

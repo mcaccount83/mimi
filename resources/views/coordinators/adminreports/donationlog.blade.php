@@ -70,7 +70,7 @@
 
                 <div class="col-sm-12">
                         <div class="form-check form-switch">
-                            <input type="checkbox" name="showM2M" id="showM2M" class="form-check-input" {{ $checkBox8Status ? 'checked' : '' }} onchange="showM2M()" />
+                            <input type="checkbox" name="showM2M" id="showM2M" class="form-check-input" {{ $checkStatuses[\App\Enums\CheckboxFilterEnum::M2M] }} onchange="showM2M()" />
                             <label class="form-check-label" for="showM2M">Show Only M2M Donations</label>
                         </div>
                     </div>
@@ -78,13 +78,13 @@
                 @if ($ITCondition)
                     <div class="col-sm-12">
                         <div class="form-check form-switch">
-                            <input type="checkbox" name="showIntlM2M" id="showIntlM2M" class="form-check-input" {{ $checkBox58Status ? 'checked' : '' }} onchange="showIntlM2M()" />
+                            <input type="checkbox" name="showIntlM2M" id="showIntlM2M" class="form-check-input" {{ $checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONALM2M] }} onchange="showIntlM2M()" />
                             <label class="form-check-label" for="showIntlM2M">Show Only M2M International Donations</label>
                         </div>
                     </div>
                     <div class="col-sm-12">
                         <div class="form-check form-switch">
-                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{ $checkBox51Status ? 'checked' : '' }} onchange="showIntl()" />
+                            <input type="checkbox" name="showIntl" id="showIntl" class="form-check-input" {{ $checkStatuses[\App\Enums\CheckboxFilterEnum::INTERNATIONAL] }} onchange="showIntl()" />
                             <label class="form-check-label" for="showIntl">Show All International Donations</label>
                         </div>
                     </div>

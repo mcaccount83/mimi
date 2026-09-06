@@ -7,9 +7,26 @@
     }
 
     .badge-inherit-size {
-        font-size: .875em;
+        font-size: .875rem;
         font-weight: normal;
         cursor: default;
+        text-decoration: none;
+    }
+
+    .badge-btn:hover {
+        background-color: color-mix(in srgb, var(--bs-primary) 85%, black);
+        color: white;
+    }
+
+    .badge-outline-primary {
+        color: var(--bs-primary);
+        background-color: transparent;
+        border: none;
+        box-shadow: inset 0 0 0 1px var(--bs-primary);
+    }
+    .badge-outline-primary:hover {
+        background-color: color-mix(in srgb, var(--bs-primary) 85%, black);
+        color: white;
     }
 
     .disabled-link {

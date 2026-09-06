@@ -34,6 +34,7 @@ class PaymentController extends Controller implements HasMiddleware
         protected BaseMailDataController $baseMailDataController,
         protected PositionConditionsService $positionConditionsService,
         protected PaymentReminderService $paymentReminderService,
+        protected BaseConditionsController $baseConditionsController,
     ) {}
 
     public static function middleware(): array
@@ -65,12 +66,9 @@ class PaymentController extends Controller implements HasMiddleware
         $currentYear = $dateOptions['currentYear'];
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
-        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
-        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
-        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
-        $checkBox56Status = $baseQuery[CheckboxFilterEnum::INTERNATIONALREREG];
+        $checkStatuses = $this->baseChapterController->buildCheckStatuses($baseQuery);
 
-        if ($checkBox3Status || $checkBox51Status) {
+        if ($checkStatuses[CheckboxFilterEnum::CONFERENCE_REGION] || $checkStatuses[CheckboxFilterEnum::INTERNATIONAL]) {
             $reChapterList = $baseQuery['query']
                 ->get();
         } else {
@@ -86,12 +84,8 @@ class PaymentController extends Controller implements HasMiddleware
         }
 
         $countList = count($reChapterList);
-        $data = ['countList' => $countList, 'reChapterList' => $reChapterList, 'checkBox1Status' => $checkBox1Status,
-            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status, 'checkBox56Status' => $checkBox56Status,
-            'userName' => $userName,
-            'userPosition' => $userPosition,
-            'userConfName' => $userConfName,
-            'userConfDesc' => $userConfDesc,
+        $data = ['countList' => $countList, 'reChapterList' => $reChapterList, 'checkStatuses' => $checkStatuses,
+            'userName' => $userName, 'userPosition' => $userPosition, 'userConfName' => $userConfName, 'userConfDesc' => $userConfDesc,
         ];
 
         return view('coordinators.payment.chapreregistration')->with($data);
@@ -334,13 +328,10 @@ class PaymentController extends Controller implements HasMiddleware
 
         $baseQuery = $this->baseChapterController->getBaseQuery(1, $coorId, $confId, $regId, $positionId, $secPositionId);
         $chapterList = $baseQuery['query']->get();
-        $checkBox1Status = $baseQuery[CheckboxFilterEnum::PC_DIRECT];
-        $checkBox3Status = $baseQuery[CheckboxFilterEnum::CONFERENCE_REGION];
-        $checkBox51Status = $baseQuery[CheckboxFilterEnum::INTERNATIONAL];
+        $checkStatuses = $this->baseChapterController->buildCheckStatuses($baseQuery);
 
         $countList = count($chapterList);
-        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBox1Status' => $checkBox1Status,
-            'checkBox3Status' => $checkBox3Status, 'checkBox51Status' => $checkBox51Status,
+        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkStatuses' => $checkStatuses,
         ];
 
         return view('coordinators.payment.chapdonations')->with($data);
@@ -578,10 +569,10 @@ class PaymentController extends Controller implements HasMiddleware
         $coorId = $user['cdId'];
         $confId = $user['confId'];
 
-        $checkBox51Status = $request->has(\App\Enums\CheckboxFilterEnum::INTERNATIONAL);
+        $checkStatuses = $this->baseConditionsController->getCheckboxStatuses();
 
         // Use the appropriate query based on checkbox status
-        if ($checkBox51Status) {
+        if ($checkStatuses[CheckboxFilterEnum::INTERNATIONAL]) {
             $grantList = GrantRequest::with('chapters', 'chapterstate')
                 ->orderByDesc('submitted_at')
                 ->get();
@@ -595,7 +586,7 @@ class PaymentController extends Controller implements HasMiddleware
                 ->get();
         }
 
-        $data = ['grantList' => $grantList, 'checkBox51Status' => $checkBox51Status];
+        $data = ['grantList' => $grantList, 'checkStatuses' => $checkStatuses];
 
         return view('coordinators.payment.grantlist')->with($data);
     }

@@ -34,7 +34,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($boardList as $list)
+                @foreach($boardDupList as $list)
                         <tr>
                             <td>{{ $list->email }}</td>
                             <td>{{ $list->id }}</td>
