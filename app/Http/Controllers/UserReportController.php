@@ -13,6 +13,7 @@ use App\Models\BoardsOutgoing;
 use App\Models\BoardsPending;
 use App\Models\Chapters;
 use App\Models\Coordinators;
+use App\Models\ForumCategorySubscription;
 use App\Models\User;
 use App\Models\UserStatus;
 use App\Models\UserType;
@@ -696,4 +697,27 @@ class UserReportController extends Controller implements HasMiddleware
 
         return view('coordinators.userreports.disbandedboard')->with($data);
     }
+
+
+
+
+    public function showSubscribeList(): View
+    {
+        $disbandedList = User::where('is_active', UserStatusEnum::ACTIVE)
+            ->where(function ($query) {
+                $query->where('type_id', UserTypeEnum::BOARD)
+                    ->orWhere('type_id', UserTypeEnum::COORD);
+            })
+            ->where()
+            ->get();
+
+        $countList = count($disbandedList);
+        $data = ['countList' => $countList, 'disbandedList' => $disbandedList];
+
+        return view('coordinators.userreports.disbandedboard')->with($data);
+    }
+
+
+
+
 }

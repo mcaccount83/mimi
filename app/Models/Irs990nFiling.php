@@ -10,8 +10,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Table('irs_990n_filings', 'id')]
 class Irs990nFiling extends Model
 {
-    protected $fillable = ['chapter_id', 'ein', 'tax_year', 'tax_period_begin', 'tax_period_end', 'organization_name', 'synced_at'];
-    protected $casts = ['tax_period_begin' => 'date', 'tax_period_end' => 'date', 'synced_at' => 'datetime'];
+    protected $fillable = ['chapter_id', 'ein', 'tax_year', 'tax_period_begin', 'tax_period_end', 'organization_name', 'officer_name',
+        'officer_address', 'mailing_address', 'synced_at', 'first_synced_at',
+    ];
+
+    protected $casts = ['tax_period_begin' => 'date', 'tax_period_end' => 'date', 'first_synced_at' => 'date', 'synced_at' => 'datetime'];
 
     public function chapter(): BelongsTo
     {

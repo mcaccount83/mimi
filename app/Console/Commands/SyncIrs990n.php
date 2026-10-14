@@ -91,10 +91,10 @@ class SyncIrs990n extends Command
         $matchesByEin = []; // ein => [ [tax_year, period_begin, period_end, org_name], ... ]
         $lineCount = 0;
 
-        while (($line = fgetcsv($handle, 0, '|')) !== false) {
+        while (($line = fgetcsv($handle, 0, '|', "\0", "\0")) !== false) {
             $lineCount++;
 
-            $ein = $line[0] ?? null;
+            $ein = isset($line[0]) ? preg_replace('/\D/', '', $line[0]) : null;
             if (!$ein || !isset($chapterByEin[$ein])) {
                 continue; // not one of ours, skip immediately
             }
@@ -104,13 +104,16 @@ class SyncIrs990n extends Command
                 'org_name' => $line[2] ?? null,
                 'period_begin' => $this->parseDate($line[5] ?? null),
                 'period_end' => $this->parseDate($line[6] ?? null),
+                'officer_name' => $line[8] ?? null,
+                'officer_address' => $this->formatAddress($line, 9),
+                'mailing_address' => $this->formatAddress($line, 16),
             ];
         }
 
         fclose($handle);
 
         if (!$localPath) {
-            @unlink($filePath); // cleanup the downloaded copy
+            // @unlink($filePath); // cleanup the downloaded copy
         }
 
         $this->info("Scanned {$lineCount} rows. Found filings for ".count($matchesByEin).' of your tracked EINs.');
@@ -136,6 +139,10 @@ class SyncIrs990n extends Command
                     continue;
                 }
 
+                $existingFiling = Irs990nFiling::where('chapter_id', $chapter->id)
+                    ->where('tax_year', $filing['tax_year'])
+                    ->first();
+
                 Irs990nFiling::updateOrCreate(
                     ['chapter_id' => $chapter->id, 'tax_year' => $filing['tax_year']],
                     [
@@ -143,7 +150,11 @@ class SyncIrs990n extends Command
                         'tax_period_begin' => $filing['period_begin'],
                         'tax_period_end' => $filing['period_end'],
                         'organization_name' => $filing['org_name'],
+                        'officer_name' => $filing['officer_name'],
+                    'officer_address' => $filing['officer_address'],
+                    'mailing_address' => $filing['mailing_address'],
                         'synced_at' => now(),
+                        'first_synced_at' => $existingFiling?->first_synced_at ?? now(),
                     ]
                 );
 
@@ -214,5 +225,22 @@ class SyncIrs990n extends Command
                 'irs_filedwrong' => 1,
             ]);
         }
+    }
+
+    protected function formatAddress(array $line, int $startIndex): ?string
+    {
+        $addr1 = $line[$startIndex] ?? null;
+        $addr2 = $line[$startIndex + 1] ?? null;
+        $city = $line[$startIndex + 2] ?? null;
+        $state = $line[$startIndex + 4] ?? null;
+        $zip = $line[$startIndex + 5] ?? null;
+
+        if (!$addr1) return null;
+
+        $parts = array_filter([$addr1, $addr2]);
+        $line1 = implode(', ', $parts);
+        $cityStateZip = trim("{$city}, {$state} {$zip}", ', ');
+
+        return $line1 ? "{$line1}, {$cityStateZip}" : $cityStateZip;
     }
 }

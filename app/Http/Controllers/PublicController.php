@@ -587,8 +587,8 @@ class PublicController extends Controller
         $description = 'Sustaining Chapter & M2M Fund Donations';
         $shortDescription = 'Donation';
         $transactionType = 'authCaptureTransaction';
-        $name = 'N/A';
-        $confId = 'N/A';
+        $name = 'N/A';   // display value for invoice/notification
+        $confId = 'N/A';   // display value for invoice/notification
 
         $shippingFirst = $input['ship_fname'];
         $shippingLast = $input['ship_lname'];

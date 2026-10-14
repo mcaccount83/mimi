@@ -137,6 +137,11 @@ class BladeDirectivesServiceProvider extends ServiceProvider
             return "<?php echo '<div class=\"input-group\"><span class=\"input-group-text\">$</span><input type=\"text\" name=\"{$name}\" id=\"{$name}\" class=\"form-control currency-input\" {$readonly} {$oninputAttr} value=\"' . htmlspecialchars({$value} ?? '') . '\"></div>'; ?>";
         });
 
+        // EIN Display: @formatEIN($chDetails->ein, $filing->ein)
+        Blade::directive('formatEIN', function ($expression) {
+            return "<?php echo !empty($expression) ? preg_replace('/^(\d{2})(\d{7})$/', '$1-$2', preg_replace('/[^0-9]/', '', $expression)) : ''; ?>";
+        });
+
         // add more here as needed
     }
 }

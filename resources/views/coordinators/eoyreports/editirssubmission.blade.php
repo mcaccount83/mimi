@@ -76,7 +76,7 @@
                     <div class="row mb-2 align-middle">
                         <label class="col-sm-3 col-form-label">990N Verified on IRS Website:</label>
                         <div class="col-sm-9">
-                            @if ($assistConferenceCoordinatorCondition)
+                            @if ($ITCondition)
                                 <div class="form-check form-switch">
                                     <input type="checkbox" name="irs_verified" id="irs_verified" class="form-check-input"
                                     {{ $chIRSDocuments->irs_verified == 1 ? 'checked' : ''}}>
@@ -200,17 +200,35 @@
              data-bs-parent="#filingHistoryAccordion">
             <div class="accordion-body">
                 <dl class="row mb-0">
-                    <dt class="col-sm-4">Organization Name on File</dt>
+                    <dt class="col-sm-4">Organization Name</dt>
                     <dd class="col-sm-8">{{ $filing->organization_name }}</dd>
-
+                    <dt class="col-sm-4">EIN</dt>
+                    <dd class="col-sm-8">@formatEIN($filing->ein)</dd>
                     <dt class="col-sm-4">Tax Period</dt>
                     <dd class="col-sm-8">
-                        {{ $filing->tax_period_begin_formatted }} –
-                        {{ $filing->tax_period_end_formatted }}
+                        {{ $filing->tax_year }}
+                        ({{ $filing->tax_period_begin_formatted }} –
+                        {{ $filing->tax_period_end_formatted }})
                     </dd>
-
-                    <dt class="col-sm-4">Last Synced</dt>
-                    <dd class="col-sm-8">{{ $filing->synced_at->format('m/d/Y g:i A') }}</dd>
+                    @if($filing->officer_name || $filing->officer_address)
+                        <dt class="col-sm-4">Officer Name/Address</dt>
+                        <dd class="col-sm-8">
+                            {{ $filing->officer_name }}
+                            @if($filing->officer_address)
+                                <br>{{ $filing->officer_address }}
+                            @endif
+                        </dd>
+                    @endif
+                    @if($filing->mailing_address)
+                        <dt class="col-sm-4">Mailing Address</dt>
+                        <dd class="col-sm-8">
+                            {{ $filing->mailing_address }}
+                        </dd>
+                    @endif
+                    <dt class="col-sm-4">Data Synced</dt>
+                    <dd class="col-sm-8">
+                        @formatDate($filing->first_synced_at)
+                    </dd>
                 </dl>
             </div>
         </div>
@@ -238,7 +256,7 @@
                     <button type="button" id="back-irs" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('eoyreports.eoyirssubmission') }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-bank me-2"></i>Back to Filing Report</button>
                 @elseif ($confId != $chConfId)
                     @if ($einCondition || $ITCondition )
-                        <button type="button" id="back-irs" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('eoyreports.eoyirssubmission', [\App\Enums\CheckboxFilterEnum::INTERNATIONALEOY => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-bank me-2"></i>Back to International Filing Report</button>
+                        <button type="button" id="back-irs" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('eoyreports.eoyirssubmission', ['check5' => 'yes']) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-bank me-2"></i>Back to International Filing Report</button>
                     @endif
                 @endif
                 <button type="button" id="back-eoy" class="btn btn-primary bg-gradient mb-2 keep-enabled" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="bi bi-arrow-left-short"></i><i class="bi bi-file-earmark-bar-graph-fill me-2"></i>Back to EOY Details</button>

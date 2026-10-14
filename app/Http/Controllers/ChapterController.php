@@ -1293,7 +1293,7 @@ class ChapterController extends Controller implements HasMiddleware
     {
         User::where('id', $user->id)->update([
             'type_id' => UserTypeEnum::OUTGOING,
-            'is_active' => UserStatusEnum::INACTIVE,
+            // 'is_active' => UserStatusEnum::INACTIVE,
         ]);
     }
 
@@ -1334,10 +1334,18 @@ class ChapterController extends Controller implements HasMiddleware
         $stateId = $requestData->input($prefix.'state');
         $countryId = $requestData->input($prefix.'country') ?? '198';
 
-        if ($chStatus == ChapterStatusEnum::ACTIVE || $chStatus == ChapterStatusEnum::PENDING) {
+        if ($chStatus == ChapterStatusEnum::ACTIVE) {
             $isActive = UserStatusEnum::ACTIVE;
+            $userType = UserTypeEnum::BOARD;
+        } elseif($chStatus == ChapterStatusEnum::PENDING) {
+            $isActive = UserStatusEnum::ACTIVE;
+            $userType = UserTypeEnum::PENDING;
+        } elseif ($chStatus == ChapterStatusEnum::NOTAPPROVED) {
+             $isActive = UserStatusEnum::INACTIVE;
+             $userType = UserTypeEnum::DISBANDED;
         } elseif ($chStatus == ChapterStatusEnum::ZAPPED || $chStatus == ChapterStatusEnum::NOTAPPROVED) {
-            $isActive = UserStatusEnum::INACTIVE;
+            $isActive = UserStatusEnum::ACTIVE;
+            $userType = UserTypeEnum::DISBANDED;
         } else {
             throw new \RuntimeException("Unexpected chapter status: {$chStatus}");
         }
@@ -1346,6 +1354,8 @@ class ChapterController extends Controller implements HasMiddleware
             'first_name' => $firstName,
             'last_name' => $lastName,
             'email' => $email,
+            'is_active' => $isActive,
+            'type_id' => $userType,
         ]);
 
         $boardMember->update([
@@ -1385,10 +1395,18 @@ class ChapterController extends Controller implements HasMiddleware
         $countryId = $requestData->input($prefix.'country') ?? '198';
         $chapterId = $chapter->id;
 
-        if ($chStatus == ChapterStatusEnum::ACTIVE || $chStatus == ChapterStatusEnum::PENDING) {
+         if ($chStatus == ChapterStatusEnum::ACTIVE) {
             $isActive = UserStatusEnum::ACTIVE;
+            $userType = UserTypeEnum::BOARD;
+        } elseif($chStatus == ChapterStatusEnum::PENDING) {
+            $isActive = UserStatusEnum::ACTIVE;
+            $userType = UserTypeEnum::PENDING;
+        } elseif ($chStatus == ChapterStatusEnum::NOTAPPROVED) {
+             $isActive = UserStatusEnum::INACTIVE;
+             $userType = UserTypeEnum::DISBANDED;
         } elseif ($chStatus == ChapterStatusEnum::ZAPPED || $chStatus == ChapterStatusEnum::NOTAPPROVED) {
-            $isActive = UserStatusEnum::INACTIVE;
+            $isActive = UserStatusEnum::ACTIVE;
+            $userType = UserTypeEnum::DISBANDED;
         } else {
             throw new \RuntimeException("Unexpected chapter status: {$chStatus}");
         }
@@ -1403,7 +1421,7 @@ class ChapterController extends Controller implements HasMiddleware
             $existingUser->update([
                 'first_name' => $firstName,
                 'last_name' => $lastName,
-                'type_id' => UserTypeEnum::BOARD,
+                'type_id' => $userType,
                 'is_active' => $isActive,
             ]);
             $user = $existingUser;
@@ -1414,7 +1432,7 @@ class ChapterController extends Controller implements HasMiddleware
                 'last_name' => $lastName,
                 'email' => $email,
                 'password' => Hash::make('TempPass4You'),
-                'type_id' => UserTypeEnum::BOARD,
+                'type_id' => $userType,
                 'is_active' => $isActive,
             ]);
         }
@@ -2088,6 +2106,7 @@ class ChapterController extends Controller implements HasMiddleware
 
             User::where('id', $president->user_id)->update([
                 'is_active' => UserStatusEnum::INACTIVE,
+                'type_id' => UserTypeEnum::REJECTED,
             ]);
 
             DB::commit();

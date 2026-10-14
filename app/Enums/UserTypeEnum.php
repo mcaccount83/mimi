@@ -17,6 +17,10 @@ class UserTypeEnum
 
     const INCOMING = 5;
 
+    const REJECTED = 6;
+
+    const RETIRED = 7;
+
     public static function label(?int $typeId): string
     {
         if ($typeId === null) {
@@ -30,6 +34,8 @@ class UserTypeEnum
             self::PENDING => 'Pending',
             self::OUTGOING => 'Outgoing',
             self::INCOMING => 'Incoming',
+            self::REJECTED => 'Rejected',
+            self::RETIRED => 'Retired',
             default => 'N/A',
         };
     }
